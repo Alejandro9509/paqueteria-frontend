@@ -5,6 +5,9 @@ import {
   Redirect
 } from 'react-router-dom';
 import Departamento from './Views/Departamento';
+import GrupoCliente from './Views/GrupoCliente';
+import Puesto from './Views/Puesto';
+
 import Login from './Views/Login';
 import {AplicationConsumer, AplicationProvider} from "./Util/Contexts/AplicationContext";
 import {ACCESS_TOKEN} from './Constants';
@@ -27,7 +30,8 @@ render(){
             {dashboardRoutes.map((r, key) => {
                   return (<Route exact key={key} path={r.path} component={r.component} />)
               })}
-            <Redirect from="/" to="/departamento"/>
+              <Route path="/grupoCliente" component={GrupoCliente} />
+              <Route path="/puesto" component={Puesto} />
           </Switch>
         ) : (
           <div className="app">
