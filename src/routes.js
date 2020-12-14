@@ -1,6 +1,6 @@
 import DepartamentoPage from './Views/Departamento';
 import RecoleccionPage from './Views/Recoleccion';
-
+import EmbalajesPage from './Views/Embalajes'
 
 const dashboardRoutes = [
   {
@@ -50,6 +50,12 @@ const dashboardRoutes = [
     name: "Viajes",
     icon: "fa fa-road",
     component: DepartamentoPage,
+  },
+  {
+    path: "/Embalajes",
+    name: "Embalajes",
+    icon: "fa fa-cube",
+    component: EmbalajesPage,
   },
 ];
 
