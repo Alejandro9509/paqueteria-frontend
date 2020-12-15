@@ -435,6 +435,7 @@ function Table({ columns, data}) {
                               type="text"
                               placeholder={state.codigoPuesto}
                               id="codigoPuesto"
+                              maxLength="3"
                             />
                           </div>
                         </div>
@@ -456,6 +457,7 @@ function Table({ columns, data}) {
                               type="text"
                               placeholder={state.puesto}
                               id="puesto"
+                              maxLength="50"
                             />
                           </div>
                         </div>
