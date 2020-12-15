@@ -8,39 +8,146 @@ import ExportPDF from "../Components/Template/ExportPDF";
 import * as XLSX from 'xlsx';
 import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy } from 'react-table'
 
-function Recoleccion() {
+function Guia() {
 
 const [data, setData] = React.useState([])
 const [state, setState] = React.useState({
     showPopUp: false,
-    idDepartamento: 0,
+    idGuia: 0,
     agregar: "Agregar",
     sucursal: "",
     folioRecoleccion: "",
     folioEmbarque: "",
     folioGuía: "",
     folioInforme: "",
-    fechaHoraCreacion: "",
-    estatusRecoleccion: "",
-    moneda: "",
-    tipoCambio: "",
-    tipoCobro: ""
+    fecha: "",
+    estatus: "",
+    origen: "",
+    destino:"",
+    usuarioCancela:"",
+    fechaCancelado:"",
+    idGuia: 0,
+    hora: "",
+    idEstatusGuia:0,
+    idMoneda:0,
+    tipoCambio:0, 
+	  idTipoCobro:0,
+	  nombreRemitente:"",
+	  rfcRemitente:"",
+	  domicilioRemitente:"",
+	  idCodigoPostalRemitente:0,
+	  ciudadRemitente:0, 
+	  correoRemitente:"",
+	  telefonoRemitente:"",
+    contactoRemitente:"",
+    idCiudadOrigen:0,
+    sNombreDestinatario:"", 
+	  sRFCDestinatario:"",
+	  sDomicilioDestinatario:"",
+	  idCodigoPostalDestinatario:"", 
+	  sCorreoDestinatario:"",
+	  idCIudadDestinatario:0,
+	  sTelefonoDestinatario:"",
+	  sContactoDestinatario:"",
+	  idCiudadDestino:0,
+	  fechaEntrega:"",
+	  HoraEntrega:"",
+	  NoPaquetes:0,
+    NoSobres:0,	
+    idOperador:0, 
+	  idCiudadRemitente:0,
+	  idUnidad:0,
+	  fechaSalida:"",
+	  horaSalida:"",
+	  arrClsDetalle:[],
+	  FechaCancelacion:"",
+	  usuarioCancelacion:0,
+	  MotivoCancelacion:"",
+	  entregarMismoDomicilio:false,
+	  fechaLlegada:"", 
+	  horaLlegada:"", 
+	  codigoPostalEntrega:0, 
+	  idCiudadEntrega:0,
+	  idZonaEntrega:0,
+	  domicilioEntrega:"", 
+	  entregarEn:"" ,
+	  datosAdicionalesis:""  ,
+	  tracking:0,
+	  arClsGuiaConceptos:[],
+	  creadoPor:0,
+	  modificadoPor:0,
+	  creadoEl:"",
+	  modificadoEl:"",
+	  idSucursal:0
 })
 const [fileUploaded, setFileUploaded] = React.useState([])
-
 
 const handleAceptar = (e) => {
   e.preventDefault()
 	var params = {
 
-	  "Codigo": state.codigoDepartamento,
-	  "Descripcion": state.descripcionDepartamento,
-	  "CreadoPor":1,
-    "ModificadoPor":1
+	"sucursal" : state.sucursal,
+  "folioGuía": state.folioGuia,
+  "fecha": state.fecha,
+  "estatus": state.estatus,
+  "origen": state.origen,
+  "destino":state.destino,
+  "usuarioCancela":state.usuarioCancela,
+  "fechaCancelado":state.fechaCancelado,
+  "hora": state.hora,
+  "idEstatusGuia":state.idEstatusGuia,
+  "idMoneda":state.idMoneda,
+  "tipoCambio":state.tipoCambio, 
+	"idTipoCobro":state.idTipoCobro,
+	"nombreRemitente":state.nombreRemitente,
+	"rfcRemitente":state.rfcRemitente,
+	"domicilioRemitente":state.domicilioRemitente,
+	"idCodigoPostalRemitente":state.idCodigoPostalRemitente,
+	"ciudadRemitente":state.ciudadRemitente, 
+	"correoRemitente":state.correoRemitente,
+	"telefonoRemitente":state.telefonoRemitente,
+  "contactoRemitente":state.contactoRemitente,
+  "idCiudadOrigen":state.idCiudadOrigen,
+  "sNombreDestinatario":state.sNombreDestinatario, 
+	"sRFCDestinatario":state.sRFCDestinatario,
+	"sDomicilioDestinatario":state.sDomicilioDestinatario,
+	"idCodigoPostalDestinatario":state.idCodigoPostalDestinatario, 
+	"sCorreoDestinatario":state.sCorreoDestinatario,
+	"idCIudadDestinatario":state.idCIudadDestinatario,
+	"sTelefonoDestinatario":state.sTelefonoDestinatario,
+	"sContactoDestinatario":state.sContactoDestinatario,
+  "idCiudadDestino":state.idCiudadDestino,
+	"fechaEntrega":state.fechaEntrega,
+	"HoraEntrega":state.HoraEntrega,
+	"NoPaquetes":state.NoPaquetes,
+  "NoSobres":state.NoSobres,	
+  "idOperador":state.idOperador, 
+	"idCiudadRemitente":state.idCiudadRemitente,
+	"idUnidad":state.idUnidad,
+	"fechaSalida":state.fechaSalida,
+	"horaSalida":state.horaSalida,
+	  arrClsDetalle:[],
+	"FechaCancelacion":state.FechaCancelacion,
+	"usuarioCancelacion":state.usuarioCancelacion,
+	"MotivoCancelacion":state.MotivoCancelacion,
+	"entregarMismoDomicilio":state.entregarMismoDomicilio,
+	"fechaLlegada":state.fechaLlegada, 
+	"horaLlegada":state.horaLlegada, 
+	"codigoPostalEntrega":state.codigoPostalEntrega, 
+	"idCiudadEntrega":state.idCiudadEntrega,
+	"idZonaEntrega":state.idZonaEntrega,
+	"domicilioEntrega":state.domicilioEntrega, 
+	"entregarEn":state.entregarEn ,
+	  "datosAdicionalesis":state.datosAdicionalesis  ,
+	  "tracking":state.tracking,
+	  arClsGuiaConceptos:[],
+	  "creadoPor":1,
+	  "modificadoPor":1,
+	  "creadoEl":state.creadoEl,
+	  "modificadoEl":state.modificadoEl,
   }
-  console.log(params)
-  if(state.idDepartamento != 0){
-    const url = "http://localhost/Departamento/Modificar/" + state.idDepartamento;
+  if(state.idGuia != 0){
+    const url = "http://localhost/Guia/Modificar/" + state.idGuia;
     axios.put(url, Object.assign({}, params), {headers}).then(respuesta => {
     alert(respuesta.data)
     window.location.reload();
@@ -49,7 +156,7 @@ const handleAceptar = (e) => {
     alert("err")
   });
   } else {
-  const url = "http://localhost/Departamento/Agregar";
+  const url = "http://localhost/Guia/Agregar";
   axios.post(url, Object.assign({}, params), {headers}).then(respuesta => {
     alert(respuesta.data)
     window.location.reload();
@@ -62,7 +169,7 @@ const handleAceptar = (e) => {
 }
 
 function handleEliminar(id){
-  const url = "http://localhost/Departamento/Eliminar/" + id;
+  const url = "http://localhost/Guia/Eliminar/" + id;
   axios.delete(url, {headers}).then(respuesta => {
     console.log(respuesta)
   }).catch(err => {
@@ -71,8 +178,9 @@ function handleEliminar(id){
 }
 
 function handleShowModificar(row){
-  console.log(row.original.m_nIdDepartamento)
-  const url = "http://localhost/Departamento/GetById/" + row.original.m_nIdDepartamento;
+  console.log(row.original.m_nIdGuia)
+  //TODO
+  const url = "http://localhost/Guia/GetById/" + row.original.m_nIdGuia;
     axios.get(url, {headers}).then(respuesta => {
       console.log(respuesta.data)
       setState({
@@ -91,10 +199,72 @@ function handleShowAgregar() {
       ...state,
       agregar: "Agregar",
       showPopUp: true,
-      idDepartamento: 0,
-      codigoDepartamento: 0,
-      descripcionDepartamento: ""
-    })
+      idGuia: 0,
+      sucursal: "",
+      folioRecoleccion: "",
+      folioEmbarque: "",
+      folioGuía: "",
+      folioInforme: "",
+      fecha: "",
+      estatus: "",
+      origen: "",
+      destino:"",
+      usuarioCancela:"",
+      fechaCancelado:"",
+      idGuia: 0,
+      hora: "",
+      idEstatusGuia:0,
+      idMoneda:0,
+      tipoCambio:0, 
+      idTipoCobro:0,
+      nombreRemitente:"",
+      rfcRemitente:"",
+      domicilioRemitente:"",
+      idCodigoPostalRemitente:0,
+      ciudadRemitente:0, 
+      correoRemitente:"",
+      telefonoRemitente:"",
+      contactoRemitente:"",
+      idCiudadOrigen:0,
+      sNombreDestinatario:"", 
+      sRFCDestinatario:"",
+      sDomicilioDestinatario:"",
+      idCodigoPostalDestinatario:"", 
+      sCorreoDestinatario:"",
+      idCIudadDestinatario:0,
+      sTelefonoDestinatario:"",
+      sContactoDestinatario:"",
+      idCiudadDestino:0,
+      fechaEntrega:"",
+      HoraEntrega:"",
+      NoPaquetes:0,
+      NoSobres:0,	
+      idOperador:0, 
+      idCiudadRemitente:0,
+      idUnidad:0,
+      fechaSalida:"",
+      horaSalida:"",
+      arrClsDetalle:[],
+      FechaCancelacion:"",
+      usuarioCancelacion:0,
+      MotivoCancelacion:"",
+      entregarMismoDomicilio:false,
+      fechaLlegada:"", 
+      horaLlegada:"", 
+      codigoPostalEntrega:0, 
+      idCiudadEntrega:0,
+      idZonaEntrega:0,
+      domicilioEntrega:"", 
+      entregarEn:"" ,
+      datosAdicionalesis:""  ,
+      tracking:0,
+      arClsGuiaConceptos:[],
+      creadoPor:0,
+      modificadoPor:0,
+      creadoEl:"",
+      modificadoEl:"",
+      idSucursal:0
+      })
 }
 
 const handleChange = event => {
@@ -107,51 +277,68 @@ const handleChange = event => {
 
   const columns = useMemo(() => [{
     cell: (row) => <div>
-          <a data-toggle="tab" data-target="#Agregar" onClick={() => (handleShowModificar(row.m_nIdDepartamento))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
-          <a href="#" onClick={() => (handleEliminar(row.m_nIdDepartamento))} className="btn btn-default btn-sm m-user-delete"><i className="zmdi zmdi-close" /></a>
+          <a data-toggle="tab" data-target="#Agregar" onClick={() => (handleShowModificar(row.m_nIdGuia))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
+          <a href="#" onClick={() => (handleEliminar(row.m_nIdGuia))} className="btn btn-default btn-sm m-user-delete"><i className="zmdi zmdi-close" /></a>
       </div>,
     ignoreRowClick: true,
     allowOverflow: true,
     button: true,
   },
   {
-    name:"IdDepartamento",
-    selector: "m_nIdDepartamento",
+    name:"IdGuia",
+    selector: "m_nIdGuia",
     omit: "true",
     type: "int"
   },
   {
     visible: true,
-    name:"Código",
-    selector: "m_nCodigo",
+    name:"fecha",
+    selector: "m_dFecha",
     sortable: true
   },{
     visible: true,
-    name:"Descripción",
-    selector: "m_sDescripcion",
+    name:"Sucursal",
+    selector: "m_sSucursal",
     sortable: true
   },{
     visible: true,
-    name:"Creado El",
-    selector: "m_dtCreadoEl",
+    name:"idEstatusGuia",
+    selector: "m_sEstatusGuia",
     sortable: true
   },{
     visible: true,
-    name:"Creado Por",
-    selector: "m_nCreadoPor",
+    name:"Origen",
+    selector: "m_sCiudadOrigen",
     sortable: true
   },{
     visible: true,
-    name:"Modificado El",
-    selector: "m_dtModificadoEl",
+    name:"Destino",
+    selector: "m_sCiudadDestino",
     sortable: true
   },{
     visible: true,
-    name:"Modificado Por",
-    selector: "m_nModificadoPor",
+    name:"Folio Informe",
+    selector: "m_nFolioInforme",
+    sortable: true
+  },{
+    visible: true,
+    name:"Folio Embarque",
+    selector: "m_nFolioEmbarque",
+    sortable: true
+  }
+  ,{
+    visible: true,
+    name:"Fecha Cancelación",
+    selector: "m_dtFechaCancelacion",
     sortable: true
   }
   
+  ,{
+    visible: true,
+    name:"Usuario Cancelación",
+    selector: "m_nUsuarioCancelacion",
+    sortable: true
+  }
   ]);
   
   const columns2 = React.useMemo(() => [
@@ -182,7 +369,7 @@ const handleChange = event => {
   }, []);
 
   async function getAllData() {
-    const url = "http://localhost/Departamento/GetListado";
+    const url = "http://localhost/Guia/GetListado";
     await axios.get(url, {headers}).then(respuesta => {
       setData(respuesta.data)
     });
@@ -263,7 +450,7 @@ function Table({ columns, data}) {
   const defaultColumn = React.useMemo(
       () => ({
           // Default Filter UI
-          Filter: DefaultColumnFilter,
+          Filter: DefaultColumnFilter
       }),
       []
   )
@@ -290,16 +477,10 @@ function Table({ columns, data}) {
 
   return (
     <div className="col-md-12">
-      <GlobalFilter
-        preGlobalFilteredRows={preGlobalFilteredRows}
-        globalFilter={state.globalFilter}
-        setGlobalFilter={setGlobalFilter}
-      />
       <table className="table" {...getTableProps()}>
-        <thead>
+        <thead className="col-md-12">
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
-              <th></th>
               {headerGroup.headers.map(column => (
               // Add the sorting props to control sorting. For this example
               // we can add them into the header props
@@ -378,16 +559,16 @@ function Table({ columns, data}) {
             <i className="fa fa-plus-circle"/> {state.agregar}
             </a>
           </li>
-          <li>
+          <li className="hide">
             <a data-toggle="tab" href="#Importar">
             <i className="fa fa-upload"/> Importar
             </a>
           </li>
           <li>
-            <ExportCSV csvData={data} fileName="Departamento_Listado" />
+            <ExportCSV csvData={data} fileName="Guia_Listado" />
           </li>
           <li>
-            <ExportPDF data={data} column={columns} fileName="Departamento"/>
+            <ExportPDF data={data} column={columns} fileName="Guia"/>
           </li>
         </ul>
       
@@ -987,4 +1168,4 @@ function Table({ columns, data}) {
   );
 }
 
-export default Recoleccion;
+export default Guia;

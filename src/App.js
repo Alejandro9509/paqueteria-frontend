@@ -7,6 +7,7 @@ import {
 import Departamento from './Views/Departamento';
 import GrupoCliente from './Views/GrupoCliente';
 import Puesto from './Views/Puesto';
+import Guia from './Views/Guia';
 
 import Login from './Views/Login';
 import {AplicationConsumer, AplicationProvider} from "./Util/Contexts/AplicationContext";
@@ -32,6 +33,7 @@ render(){
               })}
               <Route path="/grupoCliente" component={GrupoCliente} />
               <Route path="/puesto" component={Puesto} />
+              <Route path="/guia" component={Guia} />
           </Switch>
         ) : (
           <div className="app">
