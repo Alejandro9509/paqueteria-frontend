@@ -3760,7 +3760,7 @@ a.waves-effect .waves-ripple {
   -o-box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
   color: rgba(0, 0, 0, 0.54);
-  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 15px;
   margin: 0 auto;
   max-width: 320px;
@@ -3878,7 +3878,7 @@ a.waves-effect .waves-ripple {
 .popup-list > ul > li {
   border-left: 1px solid rgba(0, 0, 0, 0.12);
   display: inline-block;
-  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 16px;
   line-height: 45px;
   padding: 0 20px;
@@ -4527,7 +4527,7 @@ div.tagsinput span.tag {
   color: #444;
   margin-right: 5px;
   margin-bottom: 5px;
-  font-family: helvetica;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 13px;
 }
 div.tagsinput span.tag a {
@@ -4539,7 +4539,7 @@ div.tagsinput span.tag a {
 div.tagsinput input {
   width: 80px;
   margin: 0px;
-  font-family: helvetica;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 13px;
   border: 1px solid transparent;
   padding: 5px;
@@ -6301,7 +6301,7 @@ div.tagsinput div {
 }
 .daterangepicker .calendar th,
 .daterangepicker .calendar td {
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   white-space: nowrap;
   text-align: center;
   min-width: 32px;
