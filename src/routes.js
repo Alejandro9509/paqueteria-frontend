@@ -2,6 +2,10 @@ import DepartamentoPage from './Views/Departamento';
 import RecoleccionPage from './Views/Recoleccion';
 import EmbalajesPage from './Views/Embalajes'
 import GrupoUnidadesPage from './Views/GrupoUnidades'
+import UnidadesPage from './Views/Unidades';
+import RemitentesDestinatariosPage from './Views/RemitentesDestinatarios';
+import OperadoresPage from './Views/Operadores';
+
 
 const dashboardRoutes = [
   {
@@ -63,6 +67,23 @@ const dashboardRoutes = [
     name: "Grupo de Unidades",
     icon: "fa fa-truck",
     component: GrupoUnidadesPage,
+  },  {
+    path: "/Unidades",
+    name: "Unidades",
+    icon: "fa fa-cube",
+    component: UnidadesPage,
+  },
+  {
+    path: "/RemitentesDestinatarios",
+    name: "RemitentesDestinatarios",
+    icon: "fa fa-cube",
+    component: RemitentesDestinatariosPage,
+  },
+  {
+    path: "/Operadores",
+    name: "Operadores",
+    icon: "fa fa-cube",
+    component: OperadoresPage,
   }
 ];
 
