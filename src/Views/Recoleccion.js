@@ -7,64 +7,151 @@ import ExportCSV from '../Components/Template/Export';
 import ExportPDF from "../Components/Template/ExportPDF";
 import * as XLSX from 'xlsx';
 import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy } from 'react-table'
+import $ from 'jquery';
+window.jQuery = window.$ = $;
 
-function Departamento() {
+function Recoleccion() {
 
 const [data, setData] = React.useState([])
+const [dataSucursal, setDataSucursal] = React.useState([]);
+const [dataEstatusRecoleccion, setEstatusRecoleccion] = React.useState([]);
+const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
 const [state, setState] = React.useState({
     showPopUp: false,
-    idDepartamento: 0,
     agregar: "Agregar",
-    sucursal: "",
+    fechaInicial: "",
+    fechaIcinial2: "",
+    sucursalListado: 0,
+    estatusListado: 0,
+    idSucursalAgregar: 0,
     folioRecoleccion: "",
     folioEmbarque: "",
     folioGuía: "",
     folioInforme: "",
     fechaHoraCreacion: "",
-    estatusRecoleccion: "",
+    estatusRecoleccion: 0,
     moneda: "",
     tipoCambio: "",
-    tipoCobro: ""
+    tipoCobro: "",
+    nombreRemitente: "",
+    RFCRemitente: "",
+    domicilioRemitente: "",
+    codigoPostalRemitente: "",
+    ciudadRemitente: "",
+    correoRemitente: "",
+    telefonoRemitente: "",
+    contactoRemitente: "",
+    origenRemitente: "",
+    nombreDestinatario: "",
+    RFCDestinatario: "",
+    domicilioDestinatario: "",
+    codigoPostalDestinatario: "",
+    ciudadDestinatario: "",
+    correoDestinatario: "",
+    telefonoDestinatario: "",
+    contactoDestinatario: "",
+    destinoDestinatario: "",
+    ciudadRemitente: "",
+    ciudadDestinatario: "",
+    fechaRecoleccion: "",
+    horaRecoleccion: "",
+    fechaEntrega: "",
+    horaEntrega: "",
+    codigoPostalRecoleccion: "",
+    ciudadRecoleccion: "",
+    zonaRecoleccion: "",
+    domicilioRecoleccion: "",
+    recogerEn: "",
+    datosAdicionalesRecoleccion: "",
+    codigoPostalEntrega: "",
+    ciudadEntrega: "",
+    zonaEntrega: "",
+    domicilioEntrega: "",
+    entregaEn: "",
+    datosAdicionalesEntrega: "",
 })
 const [fileUploaded, setFileUploaded] = React.useState([])
+const [stepActive, setStepActive] = React.useState(1);
 
 
 const handleAceptar = (e) => {
   e.preventDefault()
 	var params = {
 
-	  "Codigo": state.codigoDepartamento,
-	  "Descripcion": state.descripcionDepartamento,
-	  "CreadoPor":1,
-    "ModificadoPor":1
+    "m_nIdSucursal": state.idSucursalAgregar,
+    "m_nIdEmbarque": state.folioEmbarque,
+    "m_nIdGuia": state.folioGuía,
+    "m_nIdInforme": state.folioInforme,
+    "m_dFecha": state.fechaHoraCreacion,
+    "m_tHora": state.fechaHoraCreacion,
+    "m_nMoneda": state.moneda,
+    "m_rTipoCambio": state.tipoCambio,
+    "m_nIdTipoDeCobro": state.tipoCobro,
+    "m_sNombreRemitente": state.nombreRemitente,
+    "m_sNombreDestinatario": state.nombreDestinatario,
+    "m_sRFCRemitente": state.RFCRemitente,
+    "m_sRFCDestinatario": state.RFCDestinatario,
+    "m_sDomicilioRemitente": state.domicilioRemitente,
+    "m_sDomicilioDestinatario": state.domicilioDestinatario,
+    "m_sIdCodigoPostalRemitente": state.codigoPostalRemitente,
+    "m_sIdCodigoPostalDestinatario": state.codigoPostalDestinatario,
+    "m_nIdCiudadRemitente": state.ciudadRemitente,
+    "m_nIdCiudadDestinatario": state.ciudadDestinatario,
+    "m_sCorreoRemitente": state.correoRemitente,
+    "m_sCorreoDestinatario": state.correoDestinatario,
+    "m_sTelefonoRemitente": state.telefonoRemitente,
+    "m_sTelefonoDestinatario": state.telefonoDestinatario,
+    "m_sContactoRemitente": state.contactoRemitente,
+    "m_sContactoDestinatario": state.contactoDestinatario,
+    "m_nIdCiudadOrigen": state.ciudadRemitente,
+    "m_nIdCiudadDestino": state.ciudadDestinatario,
+    "m_dFechaDetalleRecoleccion": state.fechaRecoleccion,
+    "m_tHoraDetalleRecoleccion": state.horaRecoleccion,
+    "m_tFechaDetalleEntrega": state.fechaEntrega,
+    "m_tHoraDetalleEntrega": state.horaEntrega,
+    "m_nIdCPDetalleRecoleccion": state.codigoPostalRecoleccion,
+    "m_nIdCiudadDetalleRecoleccion": state.ciudadRecoleccion,
+    "m_nIdZonaDetalleRecoleccion": state.zonaRecoleccion,
+    "m_sDomicilioDetalleRecoleccion": state.domicilioRecoleccion,
+    "m_sRecogerEnDetalleRecoleccion": state.recogerEn,
+    "m_sDatosAdicionalesDetalleRecoleccion": state.datosAdicionalesRecoleccion,
+    "m_nIdCPDetalleEntrega": state.codigoPostalEntrega,
+    "m_nIdCiudadDetalleEntrega": state.ciudadEntrega,
+    "m_nIdZonaDetalleEntrega": state.zonaEntrega,
+    "m_sDomicilioDetalleEntrega": state.domicilioEntrega,
+    "m_sEntregarEnDetalleEntrega": state.entregaEn,
+    "m_sDatosAdicionalesDetalleEntrega": state.datosAdicionalesEntrega,
+
   }
   console.log(params)
-  if(state.idDepartamento != 0){
-    const url = "http://localhost/Departamento/Modificar/" + state.idDepartamento;
-    axios.put(url, Object.assign({}, params), {headers}).then(respuesta => {
-    alert(respuesta.data)
-    window.location.reload();
-  }).catch(err => {
-    console.log(err)
-    alert("err")
-  });
-  } else {
-  const url = "http://localhost/Departamento/Agregar";
-  axios.post(url, Object.assign({}, params), {headers}).then(respuesta => {
-    alert(respuesta.data)
-    window.location.reload();
-  }).catch(err => {
-    console.log(err)
-    alert(err)
-  });
-  }
+  alert(JSON.stringify(params))
+  //if(state.idDepartamento != 0){
+  //  const url = "http://localhost/Departamento/Modificar/" + state.idDepartamento;
+  //  axios.put(url, Object.assign({}, params), {headers}).then(respuesta => {
+  //  alert(respuesta.data)
+  //  window.location.reload();
+  //}).catch(err => {
+  //  console.log(err)
+  //  alert("err")
+  //});
+  //} else {
+  //const url = "http://localhost/Departamento/Agregar";
+  //  axios.post(url, Object.assign({}, params), {headers}).then(respuesta => {
+  //  alert(respuesta.data)
+  //  window.location.reload();
+  //}).catch(err => {
+  //  console.log(err)
+  //  alert(err)
+  //});
+  //}
 
 }
 
 function handleEliminar(id){
   const url = "http://localhost/Departamento/Eliminar/" + id;
   axios.delete(url, {headers}).then(respuesta => {
-    console.log(respuesta)
+    alert(respuesta.data)
+    window.location.reload();
   }).catch(err => {
     alert(err)
   });
@@ -105,58 +192,9 @@ const handleChange = event => {
   });
 };
 
-  const columns = useMemo(() => [{
-    cell: (row) => <div>
-          <a data-toggle="tab" data-target="#Agregar" onClick={() => (handleShowModificar(row.m_nIdDepartamento))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
-          <a href="#" onClick={() => (handleEliminar(row.m_nIdDepartamento))} className="btn btn-default btn-sm m-user-delete"><i className="zmdi zmdi-close" /></a>
-      </div>,
-    ignoreRowClick: true,
-    allowOverflow: true,
-    button: true,
-  },
-  {
-    name:"IdDepartamento",
-    selector: "m_nIdDepartamento",
-    omit: "true",
-    type: "int"
-  },
-  {
-    visible: true,
-    name:"Código",
-    selector: "m_nCodigo",
-    sortable: true
-  },{
-    visible: true,
-    name:"Descripción",
-    selector: "m_sDescripcion",
-    sortable: true
-  },{
-    visible: true,
-    name:"Creado El",
-    selector: "m_dtCreadoEl",
-    sortable: true
-  },{
-    visible: true,
-    name:"Creado Por",
-    selector: "m_nCreadoPor",
-    sortable: true
-  },{
-    visible: true,
-    name:"Modificado El",
-    selector: "m_dtModificadoEl",
-    sortable: true
-  },{
-    visible: true,
-    name:"Modificado Por",
-    selector: "m_nModificadoPor",
-    sortable: true
-  }
-  
-  ]);
-  
-  const columns2 = React.useMemo(() => [
+const columns = React.useMemo(() => [
     {
-      Name:"Código",
+      Name:"Folio",
       accessor: "m_nCodigo",
     },{
       Name:"Descripción",
@@ -179,14 +217,38 @@ const handleChange = event => {
 
   useEffect(value => {
     getAllData();
+    getAllSucursales();
+    getAllEstatusRecoleccion();
+    getAllTipoCobro();
   }, []);
 
-  async function getAllData() {
-    const url = "http://localhost/Departamento/GetListado";
-    await axios.get(url, {headers}).then(respuesta => {
+  function getAllData() {
+    const url = "http://localhost/Recoleccion/GetListado";
+    axios.get(url, {headers}).then(respuesta => {
       setData(respuesta.data)
     });
   };
+
+  function getAllSucursales() {
+    const url = "http://localhost/Sucursales/GetListado";
+    axios.get(url, { headers }).then((respuesta) => {
+      setDataSucursal(respuesta.data);
+    });
+  }
+
+  function getAllEstatusRecoleccion() {
+    const url = "http://localhost/SisEstatus/getListadoRecoleccion";
+    axios.get(url, { headers }).then((respuesta) => {
+      setEstatusRecoleccion(respuesta.data);
+    });
+  }
+
+  function getAllTipoCobro() {
+    const url = "http://localhost/TipoCobro/GetListado";
+    axios.get(url, { headers }).then((respuesta) => {
+      setDataTipoCobro(respuesta.data);
+    });
+  }
 
   const handleUpload = (e) => {
     e.preventDefault();
@@ -212,33 +274,6 @@ const handleChange = event => {
 const headers = {
   'Content-Type': 'application/json',
 //    'access-control-allow-origin': '*'
-}
-
-function GlobalFilter({
-  preGlobalFilteredRows,
-  globalFilter,
-  setGlobalFilter,
-}) {
-  const count = preGlobalFilteredRows.length
-  const [value, setValue] = React.useState(globalFilter)
-  const onChange = useAsyncDebounce(value => {
-      setGlobalFilter(value || undefined)
-  }, 200)
-
-  return (
-      <span>
-          Buscar:{' '}
-          <input
-              className="form-control"
-              value={value || ""}
-              onChange={e => {
-                  setValue(e.target.value);
-                  onChange(e.target.value);
-              }}
-              placeholder={`${count} registros...`}
-          />
-      </span>
-  )
 }
 
 function DefaultColumnFilter({
@@ -290,11 +325,6 @@ function Table({ columns, data}) {
 
   return (
     <div className="col-md-12">
-      <GlobalFilter
-        preGlobalFilteredRows={preGlobalFilteredRows}
-        globalFilter={state.globalFilter}
-        setGlobalFilter={setGlobalFilter}
-      />
       <table className="table" {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => (
@@ -344,6 +374,66 @@ function Table({ columns, data}) {
       </table>
     </div>
   )
+}
+
+function openSection(index) {
+  closeSeccions()
+      var $section;
+  switch (index) {
+    case 1:
+      setStepActive(1);
+     $section= $("#informacionGeneral")
+      break;
+    case 2:
+      setStepActive(2);
+      $section= $("#remitenteDestinatario")
+      
+      break;
+    case 3:
+      setStepActive(3);
+      $section= $("#detallesDeLaRecoleccion")
+     
+      break;
+    case 4:
+      setStepActive(4);
+      $section= $("#informacionAdicional")
+      break;
+    case 5:
+      setStepActive(5);
+      $section= $("#general")
+      break;
+    case 6:
+      setStepActive(6);
+      $section= $("#contacto")
+      break;
+    case 7:
+      setStepActive(7);
+      $section= $("#otros")
+      break;
+    default:
+  }
+
+  var $welem = $section.parentsUntil(".widget-action-bar").parentsUntil(".w-action").parents(".widget-header").next(".widget-container");
+
+  $welem.slideDown();
+  $section.children("a").children("i").removeClass("zmdi-chevron-up");
+  $section.children("a").children("i").addClass("zmdi-chevron-down");
+  $('html, body').animate({
+      scrollTop: parseInt($section.offset().top)
+  }, 200);
+
+
+}
+
+function closeSeccions() {
+  //Cerrar todas las seciones
+  var $section = $(".widget-toggle")
+  $section.each(function () {
+      var $welem = $(this).parentsUntil(".widget-action-bar").parentsUntil(".w-action").parents(".widget-header").next(".widget-container");
+      $welem.slideUp();
+      $(this).children("a").children("i").removeClass("zmdi-chevron-down");
+      $(this).children("a").children("i").addClass("zmdi-chevron-up");
+  });
 }
 
   return (
@@ -412,79 +502,178 @@ function Table({ columns, data}) {
                             Fecha Inicial
                         </label>
                         <div className="input-group date addon-datepicker">
-                          <input type="text" className="form-control" /><span className="input-group-addon"><i className="fa fa-calendar" /></span>
+                          <input 
+                            type="text" 
+                            className="form-control"
+                            onChange={handleChange}
+                            id="fechaInicial"
+                          />
+                          <span className="input-group-addon">
+                            <i className="fa fa-calendar" />
+                          </span>
                         </div>
                       </div>
-                    
+
                       <div className="col-sm-6 col-md-3 unit">
                         <label className="label">
                           Sucursal
                         </label>
-                        <div className="input">
-                          <input
-                            onChange={handleChange}
+                        <label className="input select">
+                          <select
                             className="form-control"
-                            type="select"
-                            placeholder={state.codigoDepartamento}
-                            id="codigoDepartamento"
-                          />
-                        </div>
-                      </div>
+                            required
+                            onChange={handleChange}
+                            id="sucursal"
+                          >
+                            <option value="0">
+                              Todas
+                            </option>
+                            {dataSucursal.map(
+                              (sucursal) => (
+                                <option key={sucursal.m_nIdSucursal} value={sucursal.m_nIdSucursal}>
+                                  {
+                                    sucursal.m_sSucursal
+                                  }
+                                </option>
+                              )
+                            )}
+                          </select>
+                        <i></i>
+                      </label>
+                    </div>
 
                       <div className="col-sm-6 col-md-3 unit">
                         <label className="label">
                           Estatus
                         </label>
-                        <div className="input">
+                        <label className="input select">
                           <select
-                            onChange={handleChange}
                             className="form-control"
-                            type="calendar"
-                            placeholder={state.codigoDepartamento}
-                            id="codigoDepartamento"
-                          />
-                        </div>
-                      </div>
-
+                            required
+                            onChange={handleChange}
+                            id="estatus"
+                          >
+                            <option value="0">
+                              Todos
+                            </option>
+                            {dataEstatusRecoleccion.map(
+                              (estatus) => (
+                                <option key={estatus.m_nIdEstatusRecoleccion} value={estatus.m_nIdEstatusRecoleccion}>
+                                  {
+                                    estatus.m_sEstatus
+                                  }
+                                </option>
+                              )
+                            )}
+                          </select>
+                        <i></i>
+                      </label>
+                    </div>
 
                     </div>
                     </form>
                   </div>
                 <div className="row">
-                  <Table columns={columns2} data={data} />
+                  <Table columns={columns} data={data} />
                 </div>
               </div>
           </div>
         </div>
 
         <div id="Agregar" className="tab-pane fade">
+
           <div className="widget-wrap">
-            <div className="widget-header">
-              <h2>Información General</h2>
+            <div className="wizard-breadcrumb number-style"style={{position: "sticky", top: "50px", padding: "5px", backgroundColor: "white", zIndex:100}}>
+              <div className="row">
+                <div className={"col-md-2 col-sm-2 step" + (stepActive == 1 && "active-step")}
+                onClick={() => openSection(1)}
+                >
+                  <div className={"steps"}>
+                    <span className={"step-number"}>1</span>
+                    <p>Información General</p>
+                  </div>
+                </div>
+                <div className={"col-md-2 col-sm-2 step" + (stepActive == 2 && "active-step")}
+                  onClick={() => openSection(2)}
+                >
+              <div className="steps">
+                <span className="step-number">2</span>
+                <p>Remitentes / Destinatario</p>
+              </div>
             </div>
-            <div className="widget-container">
-              <div className="widget-content">
-                <div className="row">
-                  <div className="col-md-12">
-                    <form className="j-forms">
-                      <div className="form-content">
-                        
-                        <div className="col-sm-4 col-md-2-5 unit">
+                <div className={"col-md-2 col-sm-2 step" + (stepActive == 3 && "active-step")}
+                  onClick={() => openSection(3)}
+                >
+              <div className="steps">
+                <span className="step-number">3</span>
+                <p>Detalles de la Recolección</p>
+              </div>
+            </div>
+                <div className={"col-md-2-5 col-sm-2 step" + (stepActive == 4 && "active-step")}
+                  onClick={() => openSection(4)}
+                >
+              <div className="steps">
+                <span className="step-number">4</span>
+                <p>Información Adicional del Pago</p>
+              </div>
+            </div>
+                <div className={"col-md-1-5 col-sm-2 step" + (stepActive == 5 && "active-step")}
+                  onClick={() => openSection(5)}
+                >
+              <div className="steps">
+                <span className="step-number">5</span>
+                <p>General</p>
+              </div>
+            </div>
+                <div className={"col-md-1 col-sm-2 step" + (stepActive == 6 && "active-step")}
+                  onClick={() => openSection(6)}
+                >
+              <div className="steps">
+                <span className="step-number">6</span>
+                <p>Contacto</p>
+              </div>
+            </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="widget-wrap" id="informacionGeneral">
+          <div className="widget-header">
+              <h2>Información General</h2>
+          </div>
+          <div className="widget-container">
+            <div className="widget-content">
+              <div className="row">
+                <div className="col-md-12">
+                  <form className="j-forms">
+                    <div className="form-content">
+                    
+                      <div className="col-sm-4 col-md-2-5 unit">
                           <label className="label">
                             Sucursal
                           </label>
-                          <div className="input">
-                            <input
-                              onChange={handleChange}
-                              className="form-control"
-                              type="text"
-                              placeholder={state.sucursal}
-                              id="sucursal"
-                            />
-                          </div>
+                          <label className="input select">
+                          <select
+                            className="form-control"
+                            required
+                            onChange={handleChange}
+                            id="sucursalAgregar"
+                          >
+                            {dataSucursal.map(
+                              (sucursal) => (
+                                <option key={sucursal.m_nIdSucursal} value={sucursal.m_nIdSucursal}>
+                                  {
+                                    sucursal.m_sSucursal
+                                  }
+                                </option>
+                              )
+                            )}
+                          </select>
+                        <i className="fa fa-arrow-down"/>
+                      </label>
                         </div>
                         
-                        <div className="col-sm-4 col-md-2-5 unit">
+                      <div className="col-sm-4 col-md-2-5 unit">
                           <label className="label">
                             Folio Recolección
                           </label>
@@ -495,11 +684,12 @@ function Table({ columns, data}) {
                               type="text"
                               placeholder={state.folioRecoleccion}
                               id="folioRecoleccion"
+                              readOnly
                             />
                           </div>
                         </div>
 
-                        <div className="col-sm-4 col-md-2-5 unit">
+                      <div className="col-sm-4 col-md-2-5 unit">
                           <label className="label">
                             Folio Embarque
                           </label>
@@ -510,11 +700,12 @@ function Table({ columns, data}) {
                               type="text"
                               placeholder={state.folioEmbarque}
                               id="folioEmbarque"
+                              readOnly
                             />
                           </div>
                         </div>
                         
-                        <div className="col-sm-4 col-md-2-5 unit">
+                      <div className="col-sm-4 col-md-2-5 unit">
                           <label className="label">
                             Folio Guía
                           </label>
@@ -525,11 +716,12 @@ function Table({ columns, data}) {
                               type="text"
                               placeholder={state.folioGuía}
                               id="folioGuía"
+                              readOnly
                             />
                           </div>
                         </div>
 
-                        <div className="col-sm-4 col-md-2-5 unit">
+                      <div className="col-sm-4 col-md-2-5 unit">
                           <label className="label">
                             Folio Informe
                           </label>
@@ -540,41 +732,51 @@ function Table({ columns, data}) {
                               type="text"
                               placeholder={state.folioInforme}
                               id="folioInforme"
+                              readOnly
                             />
                           </div>
                         </div>
                         
-                        <div className="col-sm-4 col-md-2-5 unit">
+                      <div className="col-sm-4 col-md-2-5 unit">
                           <label className="label">
                             Fecha / Hora
                           </label>
-                          <div className="input">
-                            <input
-                              onChange={handleChange}
-                              className="form-control"
-                              type="text"
-                              placeholder={state.fechaHoraCreacion}
-                              id="fechaHoraCreacion"
-                            />
-                          </div>
+                        <div className="input">
+                          <input 
+                            onChange={handleChange}
+                            type="datetime-local" 
+                            className="form-control"
+                            id="fechaHora"
+                          />
+                        </div>
                         </div>
                         
-                        <div className="col-sm-4 col-md-2-5 unit">
+                      <div className="col-sm-4 col-md-2-5 unit">
                           <label className="label">
                             Estatus de la Recolección
                           </label>
-                          <div className="input">
-                            <input
-                              onChange={handleChange}
-                              className="form-control"
-                              type="text"
-                              placeholder={state.estatusRecoleccion}
-                              id="estatusRecoleccion"
-                            />
-                          </div>
+                          <label className="input select">
+                          <select
+                            className="form-control"
+                            required
+                            onChange={handleChange}
+                            id="estatus"
+                          >
+                            {dataEstatusRecoleccion.map(
+                              (estatus) => (
+                                <option key={estatus.m_nIdEstatusRecoleccion} value={estatus.m_nIdEstatusRecoleccion}>
+                                  {
+                                    estatus.m_sEstatus
+                                  }
+                                </option>
+                              )
+                            )}
+                          </select>
+                          <i></i>
+                          </label>
                         </div>
 
-                        <div className="col-sm-4 col-md-2-5 unit">
+                      <div className="col-sm-4 col-md-2-5 unit">
                           <label className="label">
                             Moneda
                           </label>
@@ -589,7 +791,7 @@ function Table({ columns, data}) {
                           </div>
                         </div>
                         
-                        <div className="col-sm-4 col-md-2-5 unit">
+                      <div className="col-sm-4 col-md-2-5 unit">
                           <label className="label">
                             Tipo de Cambio
                           </label>
@@ -604,17 +806,491 @@ function Table({ columns, data}) {
                           </div>
                         </div>
 
-                        <div className="col-sm-4 col-md-2-5 unit">
+                      <div className="col-sm-4 col-md-2-5 unit">
                           <label className="label">
                             Tipo Cobro
+                          </label>
+                          <label className="input select">
+                          <select
+                            className="form-control"
+                            required
+                            onChange={handleChange}
+                            id="tipoCobro"
+                          >
+                            <option value="0">
+                              Tipo Cobro
+                            </option>
+                            {dataTipoCobro.map(
+                              (tipoCobro) => (
+                                <option key={tipoCobro.m_nIdTipoCobro} value={tipoCobro.m_nIdTipoCobro}>
+                                  {
+                                    tipoCobro.m_sDescripcion
+                                  }
+                                </option>
+                              )
+                            )}
+                          </select>
+                          <i></i>
+                          </label>
+                        </div>
+                        
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+
+        <div className="col-md-9">
+          <div className="widget-wrap">
+            <div className="widget-header">
+              <div className="col-md-6">
+                <h2>
+                  Remitente
+                </h2>
+              </div>
+              <div className="col-md-6">
+                <h2>
+                  Destinatario
+                </h2>
+              </div>
+            </div>
+            <div className="widget-container">
+              <div className="widget-content">
+                <div className="row">
+                  <div className="col-md-6">
+                  <form className="j-forms">
+                    <div className="form-content">
+                      
+                      <div className="col-sm-4 col-md-6 unit">
+                        <label className="label">
+                          Nombre
+                        </label>
+                        <div className="input">
+                          <input
+                            onChange={handleChange}
+                            className="form-control"
+                            type="text"
+                            placeholder={state.nombreRemitente}
+                            id="nombreRemitente"
+                          />
+                        </div>
+                      </div>
+                        
+                      <div className="col-sm-4 col-md-6 unit">
+                        <label className="label">
+                          RFC
+                        </label>
+                        <div className="input">
+                          <input
+                            onChange={handleChange}
+                            className="form-control"
+                            type="text"
+                            placeholder={state.RFCRemitente}
+                            id="RFCRemitente"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-sm-4 col-md-6 unit">
+                        <label className="label">
+                          Domicilio
+                        </label>
+                        <div className="input">
+                          <input
+                            onChange={handleChange}
+                            className="form-control"
+                            type="text"
+                            placeholder={state.domicilioRemitente}
+                            id="domicilioRemitente"
+                          />
+                        </div>
+                      </div>
+                        
+                      <div className="col-sm-4 col-md-6 unit">
+                        <label className="label">
+                          Código Postal
+                        </label>
+                        <div className="input">
+                          <input
+                            onChange={handleChange}
+                            className="form-control"
+                            type="text"
+                            placeholder={state.codigoPostalRemitente}
+                            id="codigoPostalRemitente"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-sm-4 col-md-6 unit">
+                        <label className="label">
+                          Ciudad
+                        </label>
+                        <div className="input">
+                          <input
+                            onChange={handleChange}
+                            className="form-control"
+                            type="text"
+                            placeholder={state.ciudadRemitente}
+                            id="ciudadRemitente"
+                          />
+                        </div>
+                      </div>
+                        
+                      <div className="col-sm-4 col-md-6 unit">
+                        <label className="label">
+                          Correo Electrónico
+                        </label>
+                        <div className="input">
+                          <input
+                            onChange={handleChange}
+                            className="form-control"
+                            type="text"
+                            placeholder={state.correoRemitente}
+                            id="correoRemitente"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="col-sm-4 col-md-6 unit">
+                        <label className="label">
+                          Teléfono
+                        </label>
+                        <div className="input">
+                          <input
+                            onChange={handleChange}
+                            className="form-control"
+                            type="text"
+                            placeholder={state.telefonoRemitente}
+                            id="telefonoRemitente"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-sm-4 col-md-6 unit">
+                        <label className="label">
+                          Contacto
+                        </label>
+                        <div className="input">
+                          <input
+                            onChange={handleChange}
+                            className="form-control"
+                            type="text"
+                            placeholder={state.contactoRemitente}
+                            id="contactoRemitente"
+                          />
+                        </div>
+                      </div>
+                      
+                    </div>
+                  </form>
+                  </div>
+                  <div className="col-md-6">
+                    <form className="j-forms">
+                      <div className="form-content">
+                        
+                        <div className="col-sm-4 col-md-6 unit">
+                          <label className="label">
+                            Nombre
                           </label>
                           <div className="input">
                             <input
                               onChange={handleChange}
                               className="form-control"
                               type="text"
-                              placeholder={state.tipoCobro}
-                              id="tipoCobro"
+                              placeholder={state.nombreDestinatario}
+                              id="nombreDestinatario"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="col-sm-4 col-md-6 unit">
+                          <label className="label">
+                            RFC
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.RFCDestinatario}
+                              id="RFCDestinatario"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="col-sm-4 col-md-6 unit">
+                          <label className="label">
+                            Domicilio
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.domicilioDestinatario}
+                              id="domicilioDestinatario"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="col-sm-4 col-md-6 unit">
+                          <label className="label">
+                            Código Postal
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.codigoPostalDestinatario}
+                              id="codigoPostalDestinatario"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="col-sm-4 col-md-6 unit">
+                          <label className="label">
+                            Ciudad
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.ciudadDestinatario}
+                              id="ciudadDestinatario"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="col-sm-4 col-md-6 unit">
+                          <label className="label">
+                            Correo Electrónico
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.correoDestinatario}
+                              id="correoDestinatario"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="col-sm-4 col-md-6 unit">
+                          <label className="label">
+                            Teléfono
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.telefonoDestinatario}
+                              id="telefonoDestinatario"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="col-sm-4 col-md-6 unit">
+                          <label className="label">
+                            Contacto
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.contactoDestinatario}
+                              id="contactoDestinatario"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="col-sm-4 col-md-6 unit">
+                          <label className="label">
+                            Destino
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.destinoDestinatario}
+                              id="destinoDestinatario"
+                            />
+                          </div>
+                        </div>  
+                      
+                      </div>
+                    </form>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          </div>
+
+        <div className="col-md-3">
+          <div className="widget-container">
+            <div className="widget-content">
+              <form className="j-forms">
+                <div className="form-content">
+                      
+                  <div className="col-sm-12 col-md-3 unit">
+                    <label className="label">
+                      Nombre
+                    </label>
+                    <div className="input">
+                      <input
+                        onChange={handleChange}
+                        className="form-control"
+                        type="text"
+                        placeholder={state.nombreRemitente}
+                        id="nombreRemitente"
+                      />
+                    </div>
+                  </div>
+                                             
+                </div>
+              </form>
+            </div>  
+          </div>  
+        </div>  
+
+          <div className="widget-wrap" id="detallesDeLaRecoleccion">
+            <div className="widget-header">
+              <h2>Detalles de la Recolección</h2>
+            </div>
+            <div className="widget-container">
+              <div className="widget-content">
+                <div className="row">
+                  <div className="col-md-12">
+                    <form className="j-forms">
+                      <div className="form-content">
+                        
+                        <div className="col-sm-4 col-md-2 unit">
+                          <label className="label">
+                            Fecha
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.fechaRecoleccion}
+                              id="fechaRecoleccion"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="col-sm-4 col-md-2 unit">
+                          <label className="label">
+                            Hora
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.horaRecoleccion}
+                              id="horaRecoleccion"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="col-sm-4 col-md-4 unit">
+                          <label className="label">
+                            Código Postal
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.codigoPostalRecoleccion}
+                              id="codigoPostalRecoleccion"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="col-sm-4 col-md-4 unit">
+                          <label className="label">
+                            Ciudad
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.ciudadRecoleccion}
+                              id="ciudadRecoleccion"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="col-sm-4 col-md-4 unit">
+                          <label className="label">
+                            Zona
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.zonaRecoleccion}
+                              id="zonaRecoleccion"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="col-sm-4 col-md-8 unit">
+                          <label className="label">
+                            Domicilio
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.domicilioRecoleccion}
+                              id="domicilioRecoleccion"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="col-sm-4 col-md-12 unit">
+                          <label className="label">
+                            Recoger En
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.recogerEn}
+                              id="recogerEn"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="col-sm-4 col-md-12 unit">
+                          <label className="label">
+                            Datos Adicionales para la Recolección
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.datosAdicionalesRecoleccion}
+                              id="datosAdicionalesRecoleccion"
                             />
                           </div>
                         </div>
@@ -625,10 +1301,495 @@ function Table({ columns, data}) {
                 </div>
               </div>
             </div>
-          </div>
-          <div className="widget-wrap">
             <div className="widget-header">
-              <h2>Remitente</h2>
+              <h2>Detalles de la Entrega</h2>
+            </div>
+            <div className="widget-container">
+              <div className="widget-content">
+                <div className="row">
+                  <div className="col-md-12">
+                    <form className="j-forms">
+                      <div className="form-content">
+                        
+                        <div className="col-sm-4 col-md-2 unit">
+                          <label className="label">
+                            Fecha
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.fechaEntrega}
+                              id="fechaEntrega"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="col-sm-4 col-md-2 unit">
+                          <label className="label">
+                            Hora
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.horaEntrega}
+                              id="horaEntrega"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="col-sm-4 col-md-4 unit">
+                          <label className="label">
+                            Código Postal
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.codigoPostalEntrega}
+                              id="codigoPostalEntrega"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="col-sm-4 col-md-4 unit">
+                          <label className="label">
+                            Ciudad
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.ciudadEntrega}
+                              id="ciudadEntrega"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="col-sm-4 col-md-4 unit">
+                          <label className="label">
+                            Zona
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.zonaEntrega}
+                              id="zonaEntrega"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="col-sm-4 col-md-8 unit">
+                          <label className="label">
+                            Domicilio
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.domicilioEntrega}
+                              id="domicilioEntrega"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="col-sm-4 col-md-12 unit">
+                          <label className="label">
+                            Entrega En
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.entregaEn}
+                              id="entregaEn"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="col-sm-4 col-md-12 unit">
+                          <label className="label">
+                            Datos Adicionales para la Entrega
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.datosAdicionalesEntrega}
+                              id="datosAdicionalesEntrega"
+                            />
+                          </div>
+                        </div>
+                        
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+          <div className="widget-wrap" id="informacionAdicionalDePago">
+            <div className="widget-header">
+              <h2>Paquetes</h2>
+            </div>
+            <div className="widget-container">
+            <div className="widget-content">
+                <div className="row">
+                  <div className="col-md-12">
+                    <form className="j-forms">
+                      <div className="form-content">
+                      <div className="clone-widget">
+                      
+                      <div className="toclone clone-link">
+                  <a href="#" className="link clone"><i className="zmdi zmdi-plus"></i> Agregar Paquete</a>
+                  <a href="#" className="link delete"><i className="zmdi zmdi-delete"></i>  Eliminar Paquete</a>
+                <div className="col-md-12">
+                  
+                <div className="col-sm-4 col-md-1-5 unit">
+                  <label className="label" htmlFor="peso">
+                    Peso
+                  </label>
+                  <div className="input">
+                    <input
+                      onChange={handleChange}
+                      className="form-control"
+                      type="text"
+                      placeholder={state.peso}
+                      id="peso"
+                    />
+                  </div>
+                </div>
+                
+                <div className="col-sm-4 col-md-1-5 unit">
+                  <label className="label" htmlFor="largo">
+                    Largo
+                  </label>
+                  <div className="input">
+                    <input
+                      onChange={handleChange}
+                      className="form-control"
+                      type="text"
+                      placeholder={state.peso}
+                      id="largo"
+                    />
+                  </div>
+                </div>
+
+                <div className="col-sm-4 col-md-1-5 unit">
+                  <label className="label" htmlFor="ancho">
+                    Ancho
+                  </label>
+                  <div className="input">
+                    <input
+                      onChange={handleChange}
+                      className="form-control"
+                      type="text"
+                      placeholder={state.peso}
+                      id="ancho"
+                    />
+                  </div>
+                </div>
+
+                <div className="col-sm-4 col-md-1-5 unit">
+                  <label className="label" htmlFor="alto">
+                    Alto
+                  </label>
+                  <div className="input">
+                    <input
+                      onChange={handleChange}
+                      className="form-control"
+                      type="text"
+                      placeholder={state.peso}
+                      id="alto"
+                    />
+                  </div>
+                </div>
+
+                <div className="col-sm-4 col-md-1-5 unit">
+                  <label className="label" htmlFor="volumen">
+                    Volumen
+                  </label>
+                  <div className="input">
+                    <input
+                      onChange={handleChange}
+                      className="form-control"
+                      type="text"
+                      placeholder={state.peso}
+                      id="volumen"
+                    />
+                  </div>
+                </div>
+
+                <div className="col-sm-4 col-md-4-5 unit">
+                  <label className="label">
+                    Tipo de Embalaje
+                  </label>
+                  <div className="input">
+                    <input
+                      onChange={handleChange}
+                      className="form-control"
+                      type="text"
+                      placeholder={state.peso}
+                      id="peso"
+                    />
+                  </div>
+                </div>
+
+                <div className="col-sm-4 col-md-3 unit">
+                  <label className="label">
+                    Valor Declarado
+                  </label>
+                  <div className="input">
+                    <input
+                      onChange={handleChange}
+                      className="form-control"
+                      type="text"
+                      placeholder={state.peso}
+                      id="peso"
+                    />
+                  </div>
+                </div>
+
+                <div className="col-sm-4 col-md-7-5 unit">
+                  <label className="label">
+                    Descripción
+                  </label>
+                  <div className="input">
+                    <input
+                      onChange={handleChange}
+                      className="form-control"
+                      type="text"
+                      placeholder={state.peso}
+                      id="peso"
+                    />
+                  </div>
+                </div>
+
+                <div className="col-sm-4 col-md-1-5 unit">
+                  <label className="label" htmlFor="volumen">
+                    Ctd
+                  </label>
+                  <div className="input">
+                    <input
+                      onChange={handleChange}
+                      className="form-control"
+                      type="text"
+                      placeholder={state.peso}
+                      id="volumen"
+                    />
+                  </div>
+                </div>
+
+                <div className="col-sm-4 col-md-12 unit">
+                  <label className="label" htmlFor="volumen">
+                    Observaciones
+                  </label>
+                  <div className="input">
+                    <input
+                      onChange={handleChange}
+                      className="form-control"
+                      type="text"
+                      placeholder={state.peso}
+                      id="volumen"
+                    />
+                  </div>
+                </div>
+
+
+                </div>
+
+              </div>
+            
+                      </div>
+
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+        </div>
+
+          <div className="widget-wrap" id="general">
+            <div className="widget-header">
+              <h2>General</h2>
+            </div>
+            <div className="widget-container">
+              <div className="widget-content">
+                <div className="row">
+                  <div className="col-md-12">
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="widget-header">
+              <h2>Destinatario</h2>
+            </div>
+            <div className="widget-container">
+              <div className="widget-content">
+                <div className="row">
+                  <div className="col-md-12">
+                    <form className="j-forms">
+                      <div className="form-content">
+                        
+                        <div className="col-sm-4 col-md-2-5 unit">
+                          <label className="label">
+                            Nombre
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.nombreDestinatario}
+                              id="nombreDestinatario"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="col-sm-4 col-md-2-5 unit">
+                          <label className="label">
+                            RFC
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.RFCDestinatario}
+                              id="RFCDestinatario"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="col-sm-4 col-md-2-5 unit">
+                          <label className="label">
+                            Domicilio
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.domicilioDestinatario}
+                              id="domicilioDestinatario"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="col-sm-4 col-md-2-5 unit">
+                          <label className="label">
+                            Código Postal
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.codigoPostalDestinatario}
+                              id="codigoPostalDestinatario"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="col-sm-4 col-md-2-5 unit">
+                          <label className="label">
+                            Ciudad
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.ciudadDestinatario}
+                              id="ciudadDestinatario"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="col-sm-4 col-md-2-5 unit">
+                          <label className="label">
+                            Correo Electrónico
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.correoDestinatario}
+                              id="correoDestinatario"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="col-sm-4 col-md-2-5 unit">
+                          <label className="label">
+                            Teléfono
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.telefonoDestinatario}
+                              id="telefonoDestinatario"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="col-sm-4 col-md-2-5 unit">
+                          <label className="label">
+                            Contacto
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.contactoDestinatario}
+                              id="contactoDestinatario"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="col-sm-4 col-md-2-5 unit">
+                          <label className="label">
+                            Origen
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.origenDestinatario}
+                              id="origenDestinatario"
+                            />
+                          </div>
+                        </div>  
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+          <div className="widget-wrap" id="contacto">
+            <div className="widget-header">
+              <h2>Contacto</h2>
             </div>
             <div className="widget-container">
               <div className="widget-content">
@@ -922,12 +2083,17 @@ function Table({ columns, data}) {
                           </div>
                         </div>  
                       </div>
+                      <div className="form-footer" className="col-md-12">
+                        <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
+                        <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
+                      </div>
                     </form>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+        </div>
+
         </div>
       
         <div id="Importar" className="tab-pane fade">
@@ -987,4 +2153,4 @@ function Table({ columns, data}) {
   );
 }
 
-export default Departamento;
+export default Recoleccion;
