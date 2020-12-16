@@ -1,6 +1,7 @@
 import DepartamentoPage from './Views/Departamento';
 import RecoleccionPage from './Views/Recoleccion';
 import EmbalajesPage from './Views/Embalajes'
+import GrupoUnidadesPage from './Views/GrupoUnidades'
 
 const dashboardRoutes = [
   {
@@ -57,6 +58,12 @@ const dashboardRoutes = [
     icon: "fa fa-cube",
     component: EmbalajesPage,
   },
+  {
+    path: "/GrupoDeUnidades",
+    name: "Grupo de Unidades",
+    icon: "fa fa-truck",
+    component: GrupoUnidadesPage,
+  }
 ];
 
 export default dashboardRoutes;
