@@ -126,7 +126,7 @@ const handleAceptar = (e) => {
 	"idUnidad":state.idUnidad,
 	"fechaSalida":state.fechaSalida,
 	"horaSalida":state.horaSalida,
-	  arrClsDetalle:[],
+	"arrClsDetalle":[],
 	"FechaCancelacion":state.FechaCancelacion,
 	"usuarioCancelacion":state.usuarioCancelacion,
 	"MotivoCancelacion":state.MotivoCancelacion,
@@ -138,13 +138,13 @@ const handleAceptar = (e) => {
 	"idZonaEntrega":state.idZonaEntrega,
 	"domicilioEntrega":state.domicilioEntrega, 
 	"entregarEn":state.entregarEn ,
-	  "datosAdicionalesis":state.datosAdicionalesis  ,
-	  "tracking":state.tracking,
-	  arClsGuiaConceptos:[],
-	  "creadoPor":1,
-	  "modificadoPor":1,
-	  "creadoEl":state.creadoEl,
-	  "modificadoEl":state.modificadoEl,
+	"datosAdicionalesis":state.datosAdicionalesis  ,
+	"tracking":state.tracking,
+	"arClsGuiaConceptos":[],
+	"creadoPor":1,
+	"modificadoPor":1,
+	"creadoEl":state.creadoEl,
+	"modificadoEl":state.modificadoEl,
   }
   if(state.idGuia != 0){
     const url = "http://localhost/Guia/Modificar/" + state.idGuia;
@@ -302,14 +302,14 @@ const handleChange = event => {
     sortable: true
   },{
     visible: true,
-    name:"idEstatusGuia",
+    name:"EstatusGuia",
     selector: "m_sEstatusGuia",
     sortable: true
   },{
     visible: true,
     name:"Origen",
     selector: "m_sCiudadOrigen",
-    sortable: true
+    sortable: true,
   },{
     visible: true,
     name:"Destino",
@@ -343,23 +343,34 @@ const handleChange = event => {
   
   const columns2 = React.useMemo(() => [
     {
-      Name:"Código",
-      accessor: "m_nCodigo",
+      Name:"Fecha",
+      accessor: "m_dFecha",
     },{
-      Name:"Descripción",
-      accessor: "m_sDescripcion",
+      Name:"Sucursal",
+      accessor: "m_sSucursal",
     },{
-      Name:"Creado El",
-      accessor: "m_dtCreadoEl",
+      Name:"Estatus Guia",
+      accessor: "m_sEstatusGuia",
     },{
-      Name:"Creado Por",
-      accessor: "m_nCreadoPor",
+      Name:"Origen",
+      accessor: "m_sCiudadOrigen",      
     },{
-      Name:"Modificado El",
-      accessor: "m_dtModificadoEl",
+      Name:"Destino",
+      accessor: "m_sCiudadDestino",
     },{
-      Name:"Modificado Por",
-      accessor: "m_nModificadoPor",
+      Name:"Folio Informe",
+      accessor: "m_nFolioInforme",    
+    },{
+      Name:"Folio Embarque",
+      accessor: "m_nFolioEmbarque",
+    },
+    {
+      Name:"Fecha de Cancelacion",
+      accessor: "m_dtFechaCancelacion"
+    },
+    {
+      Name:"Usuario de Cancelacion",
+      accessor: "m_nUsuarioCancelacion"
     }
     
     ]);
@@ -472,16 +483,19 @@ function Table({ columns, data}) {
       },
       useFilters,
       useGlobalFilter,
-      useSortBy
+      useSortBy,      
   )
 
   return (
     <div className="col-md-12">
       <table className="table" {...getTableProps()}>
-        <thead className="col-md-12">
+        <thead className="">
+        
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
+              <th></th>
               {headerGroup.headers.map(column => (
+                
               // Add the sorting props to control sorting. For this example
               // we can add them into the header props
               <th {...column.getHeaderProps(column.getSortByToggleProps())}>
