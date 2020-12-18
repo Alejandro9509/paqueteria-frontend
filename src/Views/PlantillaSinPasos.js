@@ -19,6 +19,74 @@ const headers = {
   "Content-Type": "application/json",
 };
 function App(props) {
+  const [stepActive, setStepActive] = React.useState(1);
+
+  function openSection(index) {
+    closeSeccions();
+    var $section;
+    switch (index) {
+      case 1:
+        setStepActive(1);
+        $section = $("#infogral");
+        break;
+      case 2:
+        setStepActive(2);
+        $section = $("#caracteristicas");
+
+        break;
+      case 3:
+        setStepActive(3);
+        $section = $("#combustible");
+
+        break;
+      case 4:
+        setStepActive(4);
+        $section = $("#seguros");
+        break;
+
+      default:
+    }
+
+    var $welem = $section
+      .parentsUntil(".widget-action-bar")
+      .parentsUntil(".w-action")
+      .parents(".widget-header")
+      .next(".widget-container");
+
+    $welem.slideDown();
+    $section.children("a").children("i").removeClass("zmdi-chevron-up");
+    $section.children("a").children("i").addClass("zmdi-chevron-down");
+    $("html, body").animate(
+      {
+        scrollTop: parseInt($section.offset().top),
+      },
+      200
+    );
+  }
+
+  function value(event) {
+    console.log(event.target.value);
+  }
+
+  function closeSeccions() {
+    //Cerrar todas las seciones
+    var $section = $(".widget-toggle");
+    $section.each(function () {
+      var $welem = $(this)
+        .parentsUntil(".widget-action-bar")
+        .parentsUntil(".w-action")
+        .parents(".widget-header")
+        .next(".widget-container");
+      $welem.slideUp();
+      $(this).children("a").children("i").removeClass("zmdi-chevron-down");
+      $(this).children("a").children("i").addClass("zmdi-chevron-up");
+    });
+  }
+
+  useEffect((value) => {
+    closeSeccions();
+  }, []);
+
   return (
     <div>
       <header className="topbar clearfix">
@@ -99,51 +167,371 @@ function App(props) {
             Importar
           </div>
           <div id="Agregar" className="tab-pane fade ">
-                                    {/*INICIO DE ESTRUCTURA */}
+            {/*INICIO DE ESTRUCTURA */}
+            <div className="row">
+              <div className="col-md-12">
+                <div className="widget-wrap">
+                  <div className="widget-container margin-top-0">
+                    <div className="widget-content">
+                      <form className="j-forms j-multistep" id="j-forms">
+                        {/*Inicio de ejemplo*/}
+
+                        {/* start steps */}
+                        <div
+                          className="wizard-breadcrumb number-style"
+                          style={{
+                            position: "sticky",
+                            top: "50px",
+                            padding: "5px",
+                            backgroundColor: "white",
+                            zIndex: 100,
+                          }}
+                        >
+                          <div className="row">
+                            <div
+                              className={
+                                "col-md-3 col-sm-3 step " +
+                                (stepActive == 1 && "active-step")
+                              }
+                              onClick={() => openSection(1)}
+                            >
+                              <div className={"steps"}>
+                                <span className={"step-number"}>1</span>
+                                <p>Información General</p>
+                              </div>
+                            </div>
+                            <div
+                              className={
+                                "col-md-3 col-sm-3 step " +
+                                (stepActive == 2 && "active-step")
+                              }
+                              onClick={() => openSection(2)}
+                            >
+                              <div className="steps">
+                                <span className="step-number">2</span>
+                                <p>Detalles</p>
+                              </div>
+                            </div>
+                            <div
+                              className={
+                                "col-md-3 col-sm-3 step " +
+                                (stepActive == 3 && "active-step")
+                              }
+                              onClick={() => openSection(3)}
+                            >
+                              <div className="steps">
+                                <span className="step-number">3</span>
+                                <p>Detalles de la operacion</p>
+                              </div>
+                            </div>
+                            <div
+                              className={
+                                "col-md-3 col-sm-3 step " +
+                                (stepActive == 4 && "active-step")
+                              }
+                              onClick={() => openSection(4)}
+                            >
+                              <div className="steps">
+                                <span className="step-number">4</span>
+                                <p>Paquetes</p>
+                              </div>
+                            </div>
+                            <div></div>
+                          </div>
+                        </div>
+                        {/* end steps */}
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             <div className="row">
               <div className="col-md-8">
                 <div className="widget-wrap">
                   <div className="widget-container margin-top-0">
                     <div className="widget-content">
-                        <div className="widget-container">
-                          <div className="widget-content">
-                            <div className="row">
-                              <div className="col-md-12">
-                                <form action="#" className="j-forms" noValidate>
-                                  <div className="form-content">
+                      <div className="widget-container">
+                        <div className="widget-content">
+                          <div className="row">
+                            <div className="col-md-12">
+                              <div className="row">
+                                <div className="col-md-12">
 
 
+                                  <div className="widget-wrap">
+                                    <div className="widget-header block-header margin-bottom-0 clearfix">
+                                      <div className="pull-left">
+                                        <h3>Información General</h3>
+                                      </div>
+                                      <div className="pull-right w-action">
+                                        <ul className="widget-action-bar">
+                                          <li className="dropdown">
+                                            <a
+                                              href="#"
+                                              className="dropdown-toggle"
+                                              data-toggle="dropdown"
+                                            >
+                                              <i className="zmdi zmdi-more" />
+                                            </a>
+                                            <ul className="dropdown-menu">
+                                              <li className="widget-reload">
+                                                <a href="#">
+                                                  <i className="zmdi zmdi-refresh-alt" />
+                                                </a>
+                                              </li>
+                                              <li
+                                                className="widget-toggle"
+                                                id="infogral"
+                                              >
+                                                <a href="#">
+                                                  <i className="zmdi zmdi-chevron-down" />
+                                                </a>
+                                              </li>
+                                              <li className="widget-fullscreen">
+                                                <a href="#">
+                                                  <i className="zmdi zmdi-fullscreen" />
+                                                </a>
+                                              </li>
+                                              <li className="widget-exit">
+                                                <a href="#">
+                                                  <i className="zmdi zmdi-power" />
+                                                </a>
+                                              </li>
+                                            </ul>
+                                          </li>
+                                        </ul>
+                                        
+
+                                      </div>
+                                    </div>
+
+
+                                    <div className="widget-container">
+                                  <div className="widget-content">
+                                    <div className="row">
+                                      <div className="col-md-12">
+                                        <form
+                                          action="#"
+                                          className="j-forms"
+                                          noValidate
+                                        >
+                                          <div className="form-content">
+                                            FORM 1 
+                                            </div>
+                                            </form>
+                                            </div>
+                                            </div>
+                                            </div>
+                                            </div>
                                   </div>
-                                </form>
+
+                                
+
+
+
+                                </div>
+                              </div>
+                              <div className="row">
+                                <div className="col-md-12">
+                                  <div className="widget-wrap">
+                                    <div className="widget-header block-header margin-bottom-0 clearfix">
+                                      <div className="pull-left">
+                                        <h3>Detalles de Recolección</h3>
+                                      </div>
+                                      <div className="pull-right w-action">
+                                        <ul className="widget-action-bar">
+                                          <li className="dropdown">
+                                            <a
+                                              href="#"
+                                              className="dropdown-toggle"
+                                              data-toggle="dropdown"
+                                            >
+                                              <i className="zmdi zmdi-more" />
+                                            </a>
+                                            <ul className="dropdown-menu">
+                                              <li className="widget-reload">
+                                                <a href="#">
+                                                  <i className="zmdi zmdi-refresh-alt" />
+                                                </a>
+                                              </li>
+                                              <li
+                                                className="widget-toggle"
+                                                id="caracteristicas"
+                                              >
+                                                <a href="#">
+                                                  <i className="zmdi zmdi-chevron-down" />
+                                                </a>
+                                              </li>
+                                              <li className="widget-fullscreen">
+                                                <a href="#">
+                                                  <i className="zmdi zmdi-fullscreen" />
+                                                </a>
+                                              </li>
+                                              <li className="widget-exit">
+                                                <a href="#">
+                                                  <i className="zmdi zmdi-power" />
+                                                </a>
+                                              </li>
+                                            </ul>
+                                          </li>
+                                        </ul>
+                                      </div>
+                                    </div>
+                                    <div className="widget-container">
+                                  <div className="widget-content">
+                                    <div className="row">
+                                      <div className="col-md-12">
+                                        <form
+                                          action="#"
+                                          className="j-forms"
+                                          noValidate
+                                        >
+                                          <div className="form-content">
+                                            FORM 2
+                                            </div>
+                                            </form>
+                                            </div>
+                                            </div>
+                                            </div>
+                                            </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="row">
+                                <div className="col-md-12">
+                                  <div className="widget-wrap">
+                                    <div className="widget-header block-header margin-bottom-0 clearfix">
+                                      <div className="pull-left">
+                                        <h3>Detalles de la operación</h3>
+                                      </div>
+                                      <div className="pull-right w-action">
+                                        <ul className="widget-action-bar">
+                                          <li className="dropdown">
+                                            <a
+                                              href="#"
+                                              className="dropdown-toggle"
+                                              data-toggle="dropdown"
+                                            >
+                                              <i className="zmdi zmdi-more" />
+                                            </a>
+                                            <ul className="dropdown-menu">
+                                              <li className="widget-reload">
+                                                <a href="#">
+                                                  <i className="zmdi zmdi-refresh-alt" />
+                                                </a>
+                                              </li>
+                                              <li
+                                                className="widget-toggle"
+                                                id="combustible"
+                                              >
+                                                <a href="#">
+                                                  <i className="zmdi zmdi-chevron-down" />
+                                                </a>
+                                              </li>
+                                              <li className="widget-fullscreen">
+                                                <a href="#">
+                                                  <i className="zmdi zmdi-fullscreen" />
+                                                </a>
+                                              </li>
+                                              <li className="widget-exit">
+                                                <a href="#">
+                                                  <i className="zmdi zmdi-power" />
+                                                </a>
+                                              </li>
+                                            </ul>
+                                          </li>
+                                        </ul>
+                                      </div>
+                                    </div>
+                                    <div className="widget-container">
+                                  <div className="widget-content">
+                                    <div className="row">
+                                      <div className="col-md-12">
+                                        <form
+                                          action="#"
+                                          className="j-forms"
+                                          noValidate
+                                        >
+                                          <div className="form-content">
+                                            FORM 3
+                                            </div>
+                                            </form>
+                                            </div>
+                                            </div>
+                                            </div>
+                                            </div>
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
               <div className="col-md-4">
                 <div className="widget-wrap">
-                  <div className="widget-container margin-top-0">
-                    <div className="widget-content">
-                        <div className="widget-container">
-                          <div className="widget-content">
-                            <div className="row">
-                              <div className="col-md-12">
-                                <form action="#" className="j-forms" noValidate>
-                                  <div className="form-content">
-
-
-                                  </div>
-                                </form>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                  <div className="widget-header block-header margin-bottom-0 clearfix">
+                    <div className="pull-left">
+                      <h3>Paquetes</h3>
+                    </div>
+                    <div className="pull-right w-action">
+                      <ul className="widget-action-bar">
+                        <li className="dropdown">
+                          <a
+                            href="#"
+                            className="dropdown-toggle"
+                            data-toggle="dropdown"
+                          >
+                            <i className="zmdi zmdi-more" />
+                          </a>
+                          <ul className="dropdown-menu">
+                            <li className="widget-reload">
+                              <a href="#">
+                                <i className="zmdi zmdi-refresh-alt" />
+                              </a>
+                            </li>
+                            <li className="widget-toggle" id="seguros">
+                              <a href="#">
+                                <i className="zmdi zmdi-chevron-down" />
+                              </a>
+                            </li>
+                            <li className="widget-fullscreen">
+                              <a href="#">
+                                <i className="zmdi zmdi-fullscreen" />
+                              </a>
+                            </li>
+                            <li className="widget-exit">
+                              <a href="#">
+                                <i className="zmdi zmdi-power" />
+                              </a>
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
                     </div>
                   </div>
+                  <div className="widget-container">
+                                  <div className="widget-content">
+                                    <div className="row">
+                                      <div className="col-md-12">
+                                        <form
+                                          action="#"
+                                          className="j-forms"
+                                          noValidate
+                                        >
+                                          <div className="form-content">
+                                            FORM CLONAR
+                                            </div>
+                                            </form>
+                                            </div>
+                                            </div>
+                                            </div>
+                                            </div>
                 </div>
               </div>
             </div>
