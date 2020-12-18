@@ -1,60 +1,61 @@
 import DepartamentoPage from './Views/Departamento';
 import RecoleccionPage from './Views/Recoleccion';
-import EmbalajesPage from './Views/Embalajes'
+import EmbalajesPage from './Views/Embalajes';
+import EmbarquePage from './Views/Embarque';
 
 const dashboardRoutes = [
   {
     path: "/Departamento",
     name: "Indicadores",
-    icon: "fa fa-pie-chart",
+    icon: <i className="fa fa-pie-chart" />,
     component: DepartamentoPage,
   },
   {
     path: "/Departamento",
     name: "Configuraciones",
-    icon: "fa fa-cog",
+    icon: <i className="fa fa-cog" />,                   //<IconoConfiguraciones className="fa" />,
     component: DepartamentoPage,
   },
   {
     path: "/Departamento",
     name: "Catálogos",
-    icon: "fa fa-book",
+    icon: <i className="fa fa-book" />,                   //<IconoCatalogo />,
     component: DepartamentoPage,
   },
   {
     path: "/Recolección",
     name: "Recolección",
-    icon: "zmdi zmdi-local-shipping",
+    icon: <i className="zmdi zmdi-local-shipping" />,
     component: RecoleccionPage,
   },
   {
-    path: "/Departamento",
+    path: "/Embarque",
     name: "Embarque",
-    icon: "fa fa-dropbox",
-    component: DepartamentoPage,
+    icon: <i className="fa fa-dropbox" />,
+    component: EmbarquePage,
   },
   {
     path: "/Departamento",
     name: "Guías",
-    icon: "zmdi zmdi-assignment",
+    icon: <i className="zmdi zmdi-assignment" />,
     component: DepartamentoPage,
   },
   {
     path: "/Departamento",
     name: "Informes",
-    icon: "fa fa-file-text",
+    icon: <i className="fa fa-file-text" />,
     component: DepartamentoPage,
   },
   {
     path: "/Departamento",
     name: "Viajes",
-    icon: "fa fa-road",
+    icon: <i className="fa fa-road" />,
     component: DepartamentoPage,
   },
   {
     path: "/Embalajes",
     name: "Embalajes",
-    icon: "fa fa-cube",
+    icon: <i className="fa fa-cube" />,
     component: EmbalajesPage,
   },
 ];
