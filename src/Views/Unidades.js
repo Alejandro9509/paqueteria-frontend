@@ -164,11 +164,6 @@ function App(props) {
     });
   };
 
-  function handleShowModificar(id) {
-  
-
-    
-  }
 
   function handleShowModificar(id) {
   
@@ -927,6 +922,7 @@ function App(props) {
                                                     type="text"
                                                     placeholder=""
                                                     id="text"
+                                                    disabled
                                                   />
                                                 </div>
                                               </div>
@@ -941,6 +937,7 @@ function App(props) {
                                                     type="text"
                                                     placeholder=""
                                                     id="text"
+                                                    disabled
                                                   />
                                                 </div>
                                               </div>
@@ -949,7 +946,7 @@ function App(props) {
                                                   Marca de la llanta
                                                 </label>
                                                 <label className="input select">
-                                                  <select className="form-control">
+                                                  <select className="form-control" disabled>
                                                     <option value="none">
                                                       Todos
                                                     </option>
@@ -962,7 +959,7 @@ function App(props) {
                                                   Modelo de la llanta
                                                 </label>
                                                 <label className="input select">
-                                                  <select className="form-control">
+                                                  <select className="form-control" disabled>
                                                     <option value="none">
                                                       Todos
                                                     </option>
@@ -975,7 +972,7 @@ function App(props) {
                                                   Medida de la llanta
                                                 </label>
                                                 <label className="input select">
-                                                  <select className="form-control">
+                                                  <select className="form-control" disabled>
                                                     <option value="none"></option>
                                                   </select>
                                                   <i></i>
@@ -986,7 +983,7 @@ function App(props) {
                                                   Tipo de llanta
                                                 </label>
                                                 <label className="input select">
-                                                  <select className="form-control">
+                                                  <select className="form-control" disabled>
                                                     <option value="none"></option>
                                                   </select>
                                                   <i></i>
@@ -1010,6 +1007,7 @@ function App(props) {
                                                     type="text"
                                                     placeholder=""
                                                     id="text"
+                                                    
                                                   />
                                                 </div>
                                               </div>
@@ -1024,6 +1022,7 @@ function App(props) {
                                                     type="text"
                                                     placeholder=""
                                                     id="text"
+                                                    
                                                   />
                                                 </div>
                                               </div>
@@ -1340,8 +1339,12 @@ function App(props) {
                                                 <div className="input">
                                                 
 
-                                                <input  class="form-control" type="text" id="date-icon" placeholder="12/20/2020" readonly=""/>
-                                                </div>
+                                                <input
+                                                    className="form-control"
+                                                    type="date"
+                                                    placeholder=""
+                                                    id="text"
+                                                  />                                                </div>
                                               </div>
                                               <div className="col-sm-12 col-md-4 col-lg-4 unit">
                                                 <div className="inline-group">
@@ -1351,7 +1354,7 @@ function App(props) {
                                                   <label className="radio">
                                                     <input
                                                       type="radio"
-                                                      name="i-radio"
+                                                      name="i-radio1"
                                                       defaultChecked
                                                     />
                                                     <i />
@@ -1360,7 +1363,7 @@ function App(props) {
                                                   <label className="radio">
                                                     <input
                                                       type="radio"
-                                                      name="i-radio"
+                                                      name="i-radio1"
                                                     />
                                                     <i />
                                                     Limitada
@@ -1368,7 +1371,7 @@ function App(props) {
                                                   <label className="radio">
                                                     <input
                                                       type="radio"
-                                                      name="i-radio"
+                                                      name="i-radio1"
                                                     />
                                                     <i />
                                                     S/Cobertura
@@ -1426,8 +1429,12 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                  
-                                                <input  class="form-control" type="text" id="date-icon" placeholder="12/20/2020" readonly=""/>
-
+                                                <input
+                                                    className="form-control"
+                                                    type="date"
+                                                    placeholder=""
+                                                    id="text"
+                                                  />
                                                 </div>
                                               </div>
                                               <div className="col-sm-12 col-md-4 col-lg-4 unit">
@@ -1680,10 +1687,14 @@ function App(props) {
                                                           Vencimiento
                                                         </label>
                                                         <div className="input">
-                                                         
-                                                        <input  class="form-control" type="text" id="date-icon" placeholder="12/20/2020" readonly=""/>
-
-                                                        </div>
+                                                 
+                                                <input
+                                                    className="form-control"
+                                                    type="date"
+                                                    placeholder=""
+                                                    id="text"
+                                                  />
+                                                </div>
                                                       </div>
                                                       <div className="col-sm-6 col-md-3 col-lg-3  unit ">
                                                         <label className="label">
@@ -1704,10 +1715,14 @@ function App(props) {
                                                           Vencimiento
                                                         </label>
                                                         <div className="input">
-                                                        
-                                                        <input  class="form-control"  type="text" name="vencimiento1" id="date-icon2" placeholder="12/20/2020" readonly=""/>
-
-                                                        </div>
+                                                 
+                                                 <input
+                                                     className="form-control"
+                                                     type="date"
+                                                     placeholder=""
+                                                     id="text"
+                                                   />
+                                                 </div>
                                                       </div>
                                                     </div>
                                                     <div className="row">
@@ -1762,10 +1777,14 @@ function App(props) {
                                                           Vencimiento
                                                         </label>
                                                         <div className="input">
-                                                          
-                                                        <input  class="form-control" name="vencimiento2" type="text" id="date-icon2" placeholder="12/20/2020" readonly=""/>
-
-                                                        </div>
+                                                 
+                                                 <input
+                                                     className="form-control"
+                                                     type="date"
+                                                     placeholder=""
+                                                     id="text"
+                                                   />
+                                                 </div>
                                                       </div>
                                                     </div>
                                                   </div>
@@ -2255,7 +2274,7 @@ function App(props) {
                                         <input
                                           className="form-control"
                                           type="text"
-                                          placeholder=""
+                                          placeholder="00:00"
                                           id="text"
                                         />
                                       </div>
@@ -2331,7 +2350,7 @@ function App(props) {
                                         <input
                                           className="form-control"
                                           type="text"
-                                          placeholder="Carga de Aceleración"
+                                          placeholder=""
                                           id="text"
                                         />
                                       </div>
@@ -2355,7 +2374,7 @@ function App(props) {
                                         Propietario
                                       </label>
                                       <label className="input select">
-                                        <select className="form-control">
+                                        <select className="form-control" disabled>
                                           <option value="0">
                                             Sin Propietario
                                           </option>
