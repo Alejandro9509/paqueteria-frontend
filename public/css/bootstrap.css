@@ -37,6 +37,12 @@ audio:not([controls]) {
 template {
   display: none;
 }
+.bordeslaterales{
+  border-left: 4px solid #F9A03E;
+  border-right: 4px solid #F9A03E;
+  padding-right: 10px;
+  padding-left: 10px;
+}
 a {
   background-color: transparent;
 }
