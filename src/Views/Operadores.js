@@ -65,7 +65,6 @@ function App(props) {
     {
       visible: true,
       name: "Activo",
-      type: "boolean",
       selector: "m_bActivo",
     },
   ]);
@@ -475,12 +474,7 @@ function App(props) {
                                                   Número
                                                 </label>
                                                 <div className="input">
-                                                  <label
-                                                    className="icon-left"
-                                                    htmlFor="text"
-                                                  >
-                                                    <i className="fa fa-edit" />
-                                                  </label>
+                                                 
                                                   <input
                                                     onChange={value}
                                                     className="form-control"
@@ -523,16 +517,11 @@ function App(props) {
                                                   Apellido Paterno
                                                 </label>
                                                 <div className="input">
-                                                  <label
-                                                    className="icon-left"
-                                                    htmlFor="text"
-                                                  >
-                                                    <i className="fa fa-edit" />
-                                                  </label>
+                                                 
                                                   <input
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder="Some text"
+                                                    placeholder=""
                                                     id="text"
                                                     required
                                                     native
@@ -543,61 +532,37 @@ function App(props) {
                                                 <label className="label">
                                                   Apellido Materno
                                                 </label>
-                                                <div className="input">
-                                                  <label
-                                                    className="icon-left"
-                                                    htmlFor="text"
-                                                  >
-                                                    <i className="fa fa-edit" />
-                                                  </label>
+                                                
                                                   <div className="input">
-                                                    <label
-                                                      className="icon-left"
-                                                      htmlFor="text"
-                                                    >
-                                                      <i className="fa fa-edit" />
-                                                    </label>
+                                                  
 
                                                     <input
                                                       className="form-control"
                                                       type="text"
-                                                      placeholder="Some text"
+                                                      placeholder=""
                                                       id="text"
                                                       required
                                                       native
                                                     />
                                                   </div>{" "}
-                                                </div>
                                               </div>
                                               <div className="col-md-3 unit">
                                                 <label className="label">
                                                   Nombre
                                                 </label>
                                                 <div className="input">
-                                                  <label
-                                                    className="icon-left"
-                                                    htmlFor="text"
-                                                  >
-                                                    <i className="fa fa-edit" />
-                                                  </label>
-                                                  <div className="input">
-                                                    <label
-                                                      className="icon-left"
-                                                      htmlFor="text"
-                                                    >
-                                                      <i className="fa fa-edit" />
-                                                    </label>
+                                              
+                                                    
 
                                                     <input
                                                       className="form-control"
                                                       type="text"
-                                                      placeholder="Some text"
+                                                      placeholder=""
                                                       id="text"
                                                       required
                                                       native
                                                     />
                                                   </div>{" "}
-                                                </div>
                                               </div>
                                               <div className="col-md-3 unit">
                                                 <label className="label">
@@ -627,30 +592,17 @@ function App(props) {
                                                 Nombre Completo
                                               </label>
                                               <div className="input">
-                                                <label
-                                                  className="icon-left"
-                                                  htmlFor="text"
-                                                >
-                                                  <i className="fa fa-edit" />
-                                                </label>
-                                                <div className="input">
-                                                  <label
-                                                    className="icon-left"
-                                                    htmlFor="text"
-                                                  >
-                                                    <i className="fa fa-edit" />
-                                                  </label>
+                                              
 
                                                   <input
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder="Some text"
+                                                    placeholder=""
                                                     id="text"
                                                     required
                                                     native
                                                   />
                                                 </div>{" "}
-                                              </div>
                                             </div>
 
                                             {/* end search */}
@@ -662,16 +614,11 @@ function App(props) {
                                                   RFC
                                                 </label>
                                                 <div className="input">
-                                                  <label
-                                                    className="icon-left"
-                                                    htmlFor="text"
-                                                  >
-                                                    <i className="fa fa-edit" />
-                                                  </label>
+                                                  
                                                   <input
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder="Some text"
+                                                    placeholder=""
                                                     id="text"
                                                     required
                                                     native
@@ -683,12 +630,7 @@ function App(props) {
                                                   CURP
                                                 </label>
                                                 <div className="input">
-                                                  <label
-                                                    className="icon-left"
-                                                    htmlFor="text"
-                                                  >
-                                                    <i className="fa fa-edit" />
-                                                  </label>
+                                               
 
                                                   <input
                                                     class="form-control"
@@ -704,16 +646,11 @@ function App(props) {
                                                   Fecha de Contratación
                                                 </label>
                                                 <div className="input">
-                                                  <label
-                                                    className="icon-left"
-                                                    htmlFor="date_to"
-                                                  >
-                                                    <i className="fa fa-calendar" />
-                                                  </label>
+                                                
                                                   <input
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder="Some text"
+                                                    placeholder=""
                                                   />
                                                 </div>
                                               </div>
@@ -750,17 +687,12 @@ function App(props) {
                                                   Teléfono
                                                 </label>
                                                 <div className="input">
-                                                  <label
-                                                    className="icon-left"
-                                                    htmlFor="text"
-                                                  >
-                                                    <i className="fa fa-edit" />
-                                                  </label>
+                                              
 
                                                   <input
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder="Some text"
+                                                    placeholder=""
                                                     id="text"
                                                     native
                                                   />
@@ -771,16 +703,11 @@ function App(props) {
                                                   Tel. Celular
                                                 </label>
                                                 <div className="input">
-                                                  <label
-                                                    className="icon-left"
-                                                    htmlFor="text"
-                                                  >
-                                                    <i className="fa fa-edit" />
-                                                  </label>
+                                                
                                                   <input
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder="Some text"
+                                                    placeholder=""
                                                     id="text"
                                                     native
                                                   />
@@ -792,16 +719,11 @@ function App(props) {
                                                 Domicilio
                                               </label>
                                               <div className="input">
-                                                <label
-                                                  className="icon-left"
-                                                  htmlFor="text"
-                                                >
-                                                  <i className="fa fa-edit" />
-                                                </label>
+                                               
                                                 <input
                                                   className="form-control"
                                                   type="text"
-                                                  placeholder="Some text"
+                                                  placeholder=""
                                                   id="text"
                                                   native
                                                 />
@@ -869,16 +791,11 @@ function App(props) {
                                                 Hash GMT GPS
                                               </label>
                                               <div className="input">
-                                                <label
-                                                  className="icon-left"
-                                                  htmlFor="text"
-                                                >
-                                                  <i className="fa fa-edit" />
-                                                </label>
+                                                
                                                 <input
                                                   className="form-control"
                                                   type="text"
-                                                  placeholder="Some text"
+                                                  placeholder=""
                                                   id="text"
                                                   native
                                                 />
@@ -964,16 +881,11 @@ function App(props) {
                                                       Licencia
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="text"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
+                                                     
                                                       <input
                                                         className="form-control"
                                                         type="text"
-                                                        placeholder="Some text"
+                                                        placeholder=""
                                                         id="text"
                                                         native
                                                       />
@@ -984,17 +896,9 @@ function App(props) {
                                                       Vencimiento
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="date_to"
-                                                      >
-                                                        <i className="fa fa-calendar" />
-                                                      </label>
-                                                      <input
-                                                        className="form-control"
-                                                        type="text"
-                                                        placeholder="Some text"
-                                                      />
+                                                    
+                                                    <input  class="form-control" type="text" id="date-icon" placeholder="12/20/2020" readonly=""/>
+
                                                     </div>
                                                   </div>
                                                 </div>
@@ -1033,16 +937,11 @@ function App(props) {
                                                       Pasaporte
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="text"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
+                                                     
                                                       <input
                                                         className="form-control"
                                                         type="text"
-                                                        placeholder="Some text"
+                                                        placeholder=""
                                                         id="text"
                                                         native
                                                       />
@@ -1053,17 +952,9 @@ function App(props) {
                                                       Vencimiento
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="date_to"
-                                                      >
-                                                        <i className="fa fa-calendar" />
-                                                      </label>
-                                                      <input
-                                                        className="form-control"
-                                                        type="text"
-                                                        placeholder="Some text"
-                                                      />
+                                                      
+                                                    <input  class="form-control" type="text" id="date-icon" placeholder="12/20/2020" readonly=""/>
+
                                                     </div>
                                                   </div>
                                                 </div>
@@ -1076,16 +967,11 @@ function App(props) {
                                                       Núm. IMSS
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="text"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
+                                                    
                                                       <input
                                                         className="form-control"
                                                         type="text"
-                                                        placeholder="Some text"
+                                                        placeholder=""
                                                         id="text"
                                                         native
                                                       />
@@ -1136,16 +1022,11 @@ function App(props) {
                                                       Núm. IMSS
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="text"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
+                                                    
                                                       <input
                                                         className="form-control"
                                                         type="text"
-                                                        placeholder="Some text"
+                                                        placeholder=""
                                                         id="text"
                                                         native
                                                       />
@@ -1156,16 +1037,11 @@ function App(props) {
                                                       Cuenta CLABE
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="text"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
+                                                     
                                                       <input
                                                         className="form-control"
                                                         type="text"
-                                                        placeholder="Some text"
+                                                        placeholder=""
                                                         id="text"
                                                         native
                                                       />
@@ -1176,16 +1052,11 @@ function App(props) {
                                                       Núm. Tarjeta
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="text"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
+                                                  
                                                       <input
                                                         className="form-control"
                                                         type="text"
-                                                        placeholder="Some text"
+                                                        placeholder=""
                                                         id="text"
                                                         native
                                                       />
@@ -1196,16 +1067,11 @@ function App(props) {
                                                       <h3>Observaciones</h3>
                                                     </div>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="text"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
+                                                    
                                                       <input
                                                         className="form-control"
                                                         type="text"
-                                                        placeholder="Some text"
+                                                        placeholder=""
                                                         id="text"
                                                         native
                                                       />
@@ -1223,7 +1089,7 @@ function App(props) {
                                                   </div>
                                                   <div className="unit">
                                                     <div className="j-row toclone-widget-right toclone">
-                                                      <div className="span3 unit">
+                                                      <div className="span4 unit">
                                                         <div className="input">
                                                           <input
                                                             className="form-control"
@@ -1232,7 +1098,7 @@ function App(props) {
                                                           />
                                                         </div>
                                                       </div>
-                                                      <div className="span4 unit">
+                                                      <div className="span3 unit">
                                                         <div className="input">
                                                           <input
                                                             className="form-control"
@@ -1241,7 +1107,7 @@ function App(props) {
                                                           />
                                                         </div>
                                                       </div>
-                                                      <div className="span3 unit">
+                                                      <div className="span2 unit">
                                                         <div className="input">
                                                           <label className="checkbox">
                                                             <input
@@ -1254,34 +1120,24 @@ function App(props) {
                                                           </label>
                                                         </div>
                                                       </div>
-                                                      <div className="span2 unit">
+                                                      <div className="span3 unit">
                                                         <div className="input">
                                                           <div className="input">
-                                                            <label
-                                                              className="icon-left"
-                                                              htmlFor="date_to"
-                                                            >
-                                                              <i className="fa fa-calendar" />
-                                                            </label>
-                                                            <input
-                                                              className="form-control"
-                                                              type="text"
-                                                              placeholder="15/06/2020"
-                                                              id="date_to"
-                                                              name="date_to"
-                                                            />
+                                                            
+                                                          <input  class="form-control" type="text" id="date-icon" placeholder="12/20/2020" readonly=""/>
+
                                                           </div>
                                                         </div>
                                                       </div>
                                                       <button
                                                         type="button"
-                                                        className="primary-btn clone-btn-right clone"
+                                                        className="btn btn-primary clone-btn-right clone"
                                                       >
                                                         <i className="fa fa-plus" />
                                                       </button>
                                                       <button
                                                         type="button"
-                                                        className="secondary-btn clone-btn-right delete"
+                                                        className="btn btn-secondary clone-btn-right delete"
                                                       >
                                                         <i className="fa fa-minus" />
                                                       </button>
@@ -1449,16 +1305,11 @@ function App(props) {
                                                   Correo
                                                 </label>
                                                 <div className="input">
-                                                  <label
-                                                    className="icon-left"
-                                                    htmlFor="text"
-                                                  >
-                                                    <i className="fa fa-edit" />
-                                                  </label>
+                                                 
                                                   <input
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder="Some text"
+                                                    placeholder=""
                                                     id="text"
                                                     native
                                                   />
@@ -1551,18 +1402,9 @@ function App(props) {
                                                   Fecha de vencimiento
                                                 </label>
                                                 <div className="input">
-                                                  <label
-                                                    className="icon-left"
-                                                    htmlFor="text"
-                                                  >
-                                                    <i className="fa fa-edit" />
-                                                  </label>
-                                                  <input
-                                                    className="form-control"
-                                                    type="text"
-                                                    placeholder="Some text"
-                                                    id="text"
-                                                  />
+                                                  
+                                                <input  class="form-control" type="text" id="date-icon" placeholder="12/20/2020" readonly=""/>
+
                                                 </div>
                                               </div>
                                               <div className="col-sm-12 col-md-3 unit">
@@ -1586,16 +1428,11 @@ function App(props) {
                                                   Factor VSM Infonavit
                                                 </label>
                                                 <div className="input">
-                                                  <label
-                                                    className="icon-left"
-                                                    htmlFor="date_to"
-                                                  >
-                                                    <i className="fa fa-calendar" />
-                                                  </label>
+                                                
                                                   <input
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder="Some text"
+                                                    placeholder=""
                                                   />
                                                 </div>
                                               </div>
@@ -1606,16 +1443,11 @@ function App(props) {
                                                   Beneficiario de Fallecimiento
                                                 </label>
                                                 <div className="input">
-                                                  <label
-                                                    className="icon-left"
-                                                    htmlFor="text"
-                                                  >
-                                                    <i className="fa fa-edit" />
-                                                  </label>
+                                                  
                                                   <input
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder="Some text"
+                                                    placeholder=""
                                                     id="text"
                                                   />
                                                 </div>
@@ -1625,16 +1457,11 @@ function App(props) {
                                                   Factor % Infonavit
                                                 </label>
                                                 <div className="input">
-                                                  <label
-                                                    className="icon-left"
-                                                    htmlFor="text"
-                                                  >
-                                                    <i className="fa fa-edit" />
-                                                  </label>
+                                                  
                                                   <input
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder="Some text"
+                                                    placeholder=""
                                                     id="text"
                                                   />
                                                 </div>
@@ -1644,16 +1471,11 @@ function App(props) {
                                                   En caso de accidente avisar a
                                                 </label>
                                                 <div className="input">
-                                                  <label
-                                                    className="icon-left"
-                                                    htmlFor="text"
-                                                  >
-                                                    <i className="fa fa-edit" />
-                                                  </label>
+                                                  
                                                   <input
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder="Some text"
+                                                    placeholder=""
                                                     id="text"
                                                   />
                                                 </div>
@@ -1663,16 +1485,11 @@ function App(props) {
                                                   Retención Diaria Infonavit
                                                 </label>
                                                 <div className="input">
-                                                  <label
-                                                    className="icon-left"
-                                                    htmlFor="text"
-                                                  >
-                                                    <i className="fa fa-edit" />
-                                                  </label>
+                                                  
                                                   <input
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder="Some text"
+                                                    placeholder=""
                                                     id="text"
                                                   />
                                                 </div>
@@ -1704,16 +1521,11 @@ function App(props) {
                                                   Retención Diaria Fonacot
                                                 </label>
                                                 <div className="input">
-                                                  <label
-                                                    className="icon-left"
-                                                    htmlFor="text"
-                                                  >
-                                                    <i className="fa fa-edit" />
-                                                  </label>
+                                                  
                                                   <input
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder="Some text"
+                                                    placeholder=""
                                                     id="text"
                                                   />
                                                 </div>
@@ -1822,18 +1634,9 @@ function App(props) {
                                                       Fecha
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="text"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
-                                                      <input
-                                                        className="form-control"
-                                                        type="text"
-                                                        placeholder="Some text"
-                                                        id="text"
-                                                      />
+                                                     
+                                                    <input  class="form-control" type="text" id="date-icon" placeholder="12/20/2020" readonly=""/>
+
                                                     </div>
                                                   </div>
                                                 </div>
@@ -1843,16 +1646,11 @@ function App(props) {
                                                       Observaciones
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="text"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
+                                                    
                                                       <input
                                                         className="form-control"
                                                         type="text"
-                                                        placeholder="Some text"
+                                                        placeholder=""
                                                         id="text"
                                                       />
                                                     </div>
@@ -1861,13 +1659,13 @@ function App(props) {
 
                                                 <button
                                                   type="button"
-                                                  className="primary-btn clone-btn-right clone"
+                                                  className="btn btn-primary clone-btn-right clone"
                                                 >
                                                   <i className="fa fa-plus" />
                                                 </button>
                                                 <button
                                                   type="button"
-                                                  className="secondary-btn clone-btn-right delete"
+                                                  className="btn btn-secondary clone-btn-right delete"
                                                 >
                                                   <i className="fa fa-minus" />
                                                 </button>
@@ -1959,16 +1757,11 @@ function App(props) {
                                                   Usuario
                                                 </label>
                                                 <div className="input">
-                                                  <label
-                                                    className="icon-left"
-                                                    htmlFor="text"
-                                                  >
-                                                    <i className="fa fa-edit" />
-                                                  </label>
+                                                  
                                                   <input
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder="Some text"
+                                                    placeholder=""
                                                     id="text"
                                                   />
                                                 </div>
@@ -1979,16 +1772,11 @@ function App(props) {
                                                   Contraseña
                                                 </label>
                                                 <div className="input">
-                                                  <label
-                                                    className="icon-left"
-                                                    htmlFor="text"
-                                                  >
-                                                    <i className="fa fa-edit" />
-                                                  </label>
+                                                  
                                                   <input
                                                     className="form-control"
                                                     type="password"
-                                                    placeholder="Some text"
+                                                    placeholder=""
                                                     id="password"
                                                   />
                                                 </div>
@@ -2014,16 +1802,11 @@ function App(props) {
                                                   Usuario
                                                 </label>
                                                 <div className="input">
-                                                  <label
-                                                    className="icon-left"
-                                                    htmlFor="text"
-                                                  >
-                                                    <i className="fa fa-edit" />
-                                                  </label>
+                                                  
                                                   <input
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder="Some text"
+                                                    placeholder=""
                                                     id="text"
                                                   />
                                                 </div>
@@ -2034,16 +1817,11 @@ function App(props) {
                                                   Contraseña
                                                 </label>
                                                 <div className="input">
-                                                  <label
-                                                    className="icon-left"
-                                                    htmlFor="text"
-                                                  >
-                                                    <i className="fa fa-edit" />
-                                                  </label>
+                                                  
                                                   <input
                                                     className="form-control"
                                                     type="password"
-                                                    placeholder="Some text"
+                                                    placeholder=""
                                                     id="password"
                                                   />
                                                 </div>
@@ -2163,13 +1941,13 @@ function App(props) {
 
                                                         <button
                                                           type="button"
-                                                          className="primary-btn clone-btn-right clone"
+                                                          className="btn btn-primary clone-btn-right clone"
                                                         >
                                                           <i className="fa fa-plus" />
                                                         </button>
                                                         <button
                                                           type="button"
-                                                          className="secondary-btn clone-btn-right delete"
+                                                          className="btn btn-secondary clone-btn-right delete"
                                                         >
                                                           <i className="fa fa-minus" />
                                                         </button>
@@ -2185,12 +1963,8 @@ function App(props) {
                               {/*Fin de ejemplo*/}
                             </div>
                             <div class="btn-ex-container">
-                              <a
-                                href=""
-                                class="btn btn-success  btn-lg pull-right"
-                              >
-                                Aceptar
-                              </a>
+                            <button className="btn btn-primary primary-btn">Aceptar</button>
+
                             </div>
                           </div>
                         </form>
