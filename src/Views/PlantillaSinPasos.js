@@ -19,7 +19,6 @@ const headers = {
   "Content-Type": "application/json",
 };
 function App(props) {
- 
   return (
     <div>
       <header className="topbar clearfix">
@@ -100,21 +99,49 @@ function App(props) {
             Importar
           </div>
           <div id="Agregar" className="tab-pane fade ">
+                                    {/*INICIO DE ESTRUCTURA */}
+
             <div className="row">
-              <div className="col-md-12">
+              <div className="col-md-8">
                 <div className="widget-wrap">
                   <div className="widget-container margin-top-0">
                     <div className="widget-content">
-                      <form className="j-forms j-multistep" id="j-forms">
-                        {/*Inicio de ejemplo*/}
                         <div className="widget-container">
                           <div className="widget-content">
                             <div className="row">
-                              <div className="col-md-12"></div>
+                              <div className="col-md-12">
+                                <form action="#" className="j-forms" noValidate>
+                                  <div className="form-content">
+
+
+                                  </div>
+                                </form>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-4">
+                <div className="widget-wrap">
+                  <div className="widget-container margin-top-0">
+                    <div className="widget-content">
+                        <div className="widget-container">
+                          <div className="widget-content">
+                            <div className="row">
+                              <div className="col-md-12">
+                                <form action="#" className="j-forms" noValidate>
+                                  <div className="form-content">
+
+
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                     </div>
                   </div>
                 </div>
