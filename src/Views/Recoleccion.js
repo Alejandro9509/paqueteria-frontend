@@ -73,6 +73,10 @@ const [state, setState] = React.useState({
 const [fileUploaded, setFileUploaded] = React.useState([])
 const [stepActive, setStepActive] = React.useState(1);
 
+const headers = {
+  'Content-Type': 'application/json',
+//    'access-control-allow-origin': '*'
+}
 
 const handleAceptar = (e) => {
   e.preventDefault()
@@ -271,9 +275,12 @@ const columns = React.useMemo(() => [
     reader.readAsBinaryString(f)
 }
 
-const headers = {
-  'Content-Type': 'application/json',
-//    'access-control-allow-origin': '*'
+function conDatos(){
+  if(data.length == 0){
+    return false
+  } else {
+    return true
+  }
 }
 
 function DefaultColumnFilter({
@@ -574,7 +581,12 @@ function closeSeccions() {
                     </form>
                   </div>
                 <div className="row">
+                  {conDatos() ?
                   <Table columns={columns} data={data} />
+                  :
+                  <div>
+                    Sin datos
+                  </div>}
                 </div>
               </div>
           </div>
@@ -637,11 +649,11 @@ function closeSeccions() {
             </div>
           </div>
 
-          <div className="widget-wrap" id="informacionGeneral">
-          <div className="widget-header">
+          <div className="widget-wrap col-md-7" id="informacionGeneral">
+            <div className="widget-header">
               <h2>Información General</h2>
           </div>
-          <div className="widget-container">
+            <div className="widget-container">
             <div className="widget-content">
               <div className="row">
                 <div className="col-md-12">
@@ -843,8 +855,9 @@ function closeSeccions() {
           
         </div>
 
-        <div className="col-md-9">
-          <div className="widget-wrap">
+        <div className="col-md-1"  style={{width: '30px'}}></div>
+
+          <div className="wiget-wrap col-md-4">
             <div className="widget-header">
               <div className="col-md-6">
                 <h2>
@@ -1110,22 +1123,7 @@ function closeSeccions() {
                             />
                           </div>
                         </div>
-                        
-                        <div className="col-sm-4 col-md-6 unit">
-                          <label className="label">
-                            Destino
-                          </label>
-                          <div className="input">
-                            <input
-                              onChange={handleChange}
-                              className="form-control"
-                              type="text"
-                              placeholder={state.destinoDestinatario}
-                              id="destinoDestinatario"
-                            />
-                          </div>
-                        </div>  
-                      
+                                              
                       </div>
                     </form>
 
@@ -1133,36 +1131,201 @@ function closeSeccions() {
                 </div>
               </div>
             </div>
-          </div>
-
-          </div>
-
-        <div className="col-md-3">
-          <div className="widget-container">
-            <div className="widget-content">
-              <form className="j-forms">
-                <div className="form-content">
-                      
-                  <div className="col-sm-12 col-md-3 unit">
-                    <label className="label">
-                      Nombre
-                    </label>
-                    <div className="input">
-                      <input
-                        onChange={handleChange}
-                        className="form-control"
-                        type="text"
-                        placeholder={state.nombreRemitente}
-                        id="nombreRemitente"
-                      />
-                    </div>
-                  </div>
-                                             
-                </div>
-              </form>
-            </div>  
+ 
           </div>  
-        </div>  
+
+          
+
+          <div className="widget-wrap">
+            <div className="widget-header">
+              <h2>Número de Paquetes</h2>
+            </div>
+            <div className="widget-container">
+              <div className="widget-content">
+
+                <div className="clone-widget">
+                    <div className="toclone">
+
+                    <button type="button" className="delete">
+                      <i className="fa fa-minus" />
+                    </button>
+                    <button type="button" className="clone">
+                      <i className="fa fa-plus" />
+                    </button>
+
+                      <form className="j-forms">
+                      <div className="form-content">
+                      
+                      <div className="col-md-3 unit">
+                        <label className="label">
+                          Peso
+                        </label>
+                        <div className="input">
+                          <input
+                            onChange={handleChange}
+                            className="form-control"
+                            type="text"
+                            placeholder={state.pesoPaquete}
+                            id="pesoPaquete"
+                          />
+                        </div>
+                      </div>
+                        
+                      <div className="col-md-3 unit">
+                        <label className="label">
+                          Largo
+                        </label>
+                        <div className="input">
+                          <input
+                            onChange={handleChange}
+                            className="form-control"
+                            type="text"
+                            placeholder={state.largoPaquete}
+                            id="largoPaquete"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-md-3 unit">
+                        <label className="label">
+                          Ancho
+                        </label>
+                        <div className="input">
+                          <input
+                            onChange={handleChange}
+                            className="form-control"
+                            type="text"
+                            placeholder={state.anchoPaquete}
+                            id="anchoPaquete"
+                          />
+                        </div>
+                      </div>
+                        
+                      <div className="col-md-3 unit">
+                        <label className="label">
+                          Alto
+                        </label>
+                        <div className="input">
+                          <input
+                            onChange={handleChange}
+                            className="form-control"
+                            type="text"
+                            placeholder={state.altoPaquete}
+                            id="altoPaquete"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-md-6 unit">
+                        <label className="label">
+                          Valor Deciarado
+                        </label>
+                        <div className="input">
+                          <input
+                            onChange={handleChange}
+                            className="form-control"
+                            type="text"
+                            placeholder={state.valorDeciarado}
+                            id="valorDeciarado"
+                          />
+                        </div>
+                      </div>
+                        
+                      <div className="col-md-6 unit">
+                        <label className="label">
+                          Descripción
+                        </label>
+                        <div className="input">
+                          <input
+                            onChange={handleChange}
+                            className="form-control"
+                            type="text"
+                            placeholder={state.descripcionPaquete}
+                            id="descripcionPaquete"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="col-md-3 unit">
+                        <label className="label">
+                          Cantidad
+                        </label>
+                        <div className="input">
+                          <input
+                            onChange={handleChange}
+                            className="form-control"
+                            type="text"
+                            placeholder={state.cantidadPaquete}
+                            id="cantidadPaquete"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-md-9 unit">
+                        <label className="label">
+                          Observaciones
+                        </label>
+                        <div className="input">
+                          <input
+                            onChange={handleChange}
+                            className="form-control"
+                            type="text"
+                            placeholder={state.observacionesPaquete}
+                            id="observacionesPaquete"
+                          />
+                        </div>
+                      </div>
+                      
+                    </div>
+                  </form>
+                  </div>
+                </div>
+              
+              </div>
+            </div>
+            
+            <div className="widget-header">
+              <h2>Número de Sobres</h2>
+            </div>
+            <div className="widget-container">
+              <div className="widget-content">
+                <div className="row">
+                <div className="clone-widget">
+                    <div className="toclone">
+
+                    <button type="button" className="delete">
+                      <i className="fa fa-minus" />
+                    </button>
+                    <button type="button" className="clone">
+                      <i className="fa fa-plus" />
+                    </button>
+                  <form className="j-forms">
+                    <div className="form-content">
+                      
+                      <div className="col-md-12 unit">
+                        <label className="label">
+                          Descripción
+                        </label>
+                        <div className="input">
+                          <input
+                            onChange={handleChange}
+                            className="form-control"
+                            type="text"
+                            placeholder={state.descripcionSobre}
+                            id="descripcionSobre"
+                          />
+                        </div>
+                      </div>
+                    
+                    </div>
+                  </form>
+                </div>
+                </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
 
           <div className="widget-wrap" id="detallesDeLaRecoleccion">
             <div className="widget-header">
