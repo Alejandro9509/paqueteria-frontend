@@ -1,6 +1,6 @@
 /*! normalize.css v3.0.2 | MIT License | git.io/normalize */
 html {
-  font-family: sans-serif;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
 }
@@ -36,6 +36,12 @@ audio:not([controls]) {
 [hidden],
 template {
   display: none;
+}
+.bordeslaterales{
+  border-left: 4px solid #F9A03E;
+  border-right: 4px solid #F9A03E;
+  padding-right: 10px;
+  padding-left: 10px;
 }
 a {
   background-color: transparent;
@@ -99,7 +105,7 @@ code,
 kbd,
 pre,
 samp {
-  font-family: monospace, monospace;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 1em;
 }
 button,
@@ -1072,7 +1078,7 @@ html {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 14px;
   line-height: 1.846;
   color: #333333;
@@ -1514,7 +1520,7 @@ code,
 kbd,
 pre,
 samp {
-  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 code {
   padding: 2px 4px;
@@ -1932,6 +1938,9 @@ pre code {
   .col-md-8 {
     width: 66.66666667%;
   }
+  .col-md-7-5 {
+    width: 62.5%;
+  }
   .col-md-7 {
     width: 58.33333333%;
   }
@@ -1940,6 +1949,9 @@ pre code {
   }
   .col-md-5 {
     width: 41.66666667%;
+  }
+  .col-md-4-5 {
+    width: 37.5%;
   }
   .col-md-4 {
     width: 33.33333333%;
@@ -1952,6 +1964,9 @@ pre code {
   }
   .col-md-2 {
     width: 16.66666667%;
+  }
+  .col-md-1-5 {
+    width: 12.5%;
   }
   .col-md-1 {
     width: 8.33333333%;
@@ -2534,9 +2549,8 @@ output {
 .form-control {
   display: block;
   width: 100%;
-  height: 39px;
-  padding: 6px 12px;
-  font-size: 14px;
+  height: 24px;
+  font-size: 12px;
   line-height: 1.846;
   color: #555555;
   background-color: #ffffff;
@@ -5816,7 +5830,7 @@ button.close {
   position: absolute;
   z-index: 1070;
   display: block;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 12px;
   font-weight: normal;
   line-height: 1.4;
@@ -5923,7 +5937,7 @@ button.close {
   display: none;
   max-width: 276px;
   padding: 1px;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 14px;
   font-weight: normal;
   line-height: 1.846;

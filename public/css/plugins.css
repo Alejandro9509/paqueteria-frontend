@@ -669,7 +669,7 @@ svg.nvd3-svg {
   border: 1px solid rgba(0, 0, 0, 0.2);
   z-index: 10000;
   display: block;
-  font-family: Arial;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 13px;
   text-align: left;
   pointer-events: none;
@@ -796,7 +796,7 @@ body.stop-scrolling {
 }
 .sweet-alert {
   background-color: white;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   width: 478px;
   padding: 17px;
   border-radius: 4px;
