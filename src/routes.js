@@ -1,6 +1,7 @@
 import DepartamentoPage from './Views/Departamento';
 import RecoleccionPage from './Views/Recoleccion';
-import EmbalajesPage from './Views/Embalajes'
+import EmbalajesPage from './Views/Embalajes';
+import EmbarquePage from './Views/Embarque';
 
 const dashboardRoutes = [
   {
@@ -28,10 +29,10 @@ const dashboardRoutes = [
     component: RecoleccionPage,
   },
   {
-    path: "/Departamento",
+    path: "/Embarque",
     name: "Embarque",
     icon: "fa fa-dropbox",
-    component: DepartamentoPage,
+    component: EmbarquePage,
   },
   {
     path: "/Departamento",
