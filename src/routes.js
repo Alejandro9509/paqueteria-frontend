@@ -6,6 +6,8 @@ import GrupoUnidadesPage from './Views/GrupoUnidades'
 import UnidadesPage from './Views/Unidades';
 import RemitentesDestinatariosPage from './Views/RemitentesDestinatarios';
 import OperadoresPage from './Views/Operadores';
+import PlantillaPage from './Views/PlantillaSinPasos';
+
 
 
 const dashboardRoutes = [
@@ -85,6 +87,13 @@ const dashboardRoutes = [
     name: "Operadores",
     icon: "fa fa-cube",
     component: OperadoresPage,
+  }
+  ,
+  {
+    path: "/PlantillaSinPasos",
+    name: "Plantilla",
+    icon: "fa fa-cube",
+    component: PlantillaPage,
   }
 ];
 
