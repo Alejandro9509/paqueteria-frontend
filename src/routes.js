@@ -68,31 +68,31 @@ const dashboardRoutes = [
   {
     path: "/GrupoDeUnidades",
     name: "Grupo de Unidades",
-    icon: "fa fa-truck",
+    icon: <i className="fa fa-truck"/>,
     component: GrupoUnidadesPage,
   },  {
     path: "/Unidades",
     name: "Unidades",
-    icon: "fa fa-cube",
+    icon: <i className="fa fa-cube"/>,
     component: UnidadesPage,
   },
   {
     path: "/RemitentesDestinatarios",
     name: "RemitentesDestinatarios",
-    icon: "fa fa-cube",
+    icon: <i className="fa fa-cube" />,
     component: RemitentesDestinatariosPage,
   },
   {
     path: "/Operadores",
     name: "Operadores",
-    icon: "fa fa-cube",
+    icon: <i className="fa fa-cube" />,
     component: OperadoresPage,
   }
   ,
   {
     path: "/PlantillaSinPasos",
     name: "Plantilla",
-    icon: "fa fa-cube",
+    icon: <i className="fa fa-cube" />,
     component: PlantillaPage,
   }
 ];
