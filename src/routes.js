@@ -2,6 +2,7 @@ import DepartamentoPage from './Views/Departamento';
 import RecoleccionPage from './Views/Recoleccion';
 import EmbalajesPage from './Views/Embalajes'
 import GrupoUnidadesPage from './Views/GrupoUnidades'
+import InformesPage from './Views/Informes'
 
 const dashboardRoutes = [
   {
@@ -41,10 +42,10 @@ const dashboardRoutes = [
     component: DepartamentoPage,
   },
   {
-    path: "/Departamento",
-    name: "Informes",
-    icon: "fa fa-file-text",
-    component: DepartamentoPage,
+      path: "/Informes",
+      name: "Informes",
+      icon: "fa fa-file-text",
+      component: InformesPage,
   },
   {
     path: "/Departamento",

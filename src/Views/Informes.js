@@ -1,0 +1,1164 @@
+
+import React, { useEffect, useState, setData, useMemo, Component } from "react";
+
+import axios from "axios";
+import { FormControl, Input, InputLabel } from "@material-ui/core";
+
+import DataTable from "react-data-table-component";
+import Cabecera from "../Components/Template/Cabecera";
+import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
+import $ from "jquery";
+import { useTable, useFilters, useSortBy } from "react-table";
+import TextField from "@material-ui/core/TextField";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+
+window.jQuery = window.$ = $;
+const headers = {
+  "Content-Type": "application/json",
+};
+function Informes(props) {
+  const [stepActive, setStepActive] = React.useState(1);
+  const [data, setData] = React.useState([])
+  const [dataSucursal, setDataSucursal] = React.useState([]);
+  const [dataEstatusInformes, setEstatusInformes] = React.useState([]);
+
+
+const [state, setState] = React.useState({
+    showPopUp: false,
+    IdGrupoUnidad: 0,
+    Codigo: 0,
+    GrupoUnidad: "",
+    DefinidoPorSistema: 0,
+    Color: "",
+    ColorLetra: 0,
+    agregar: "Agregar"
+})
+
+function getAllEstatusInformes() {
+  const url = "http://localhost/SisEstatus/getListadoInformes";
+  axios.get(url, { headers }).then((respuesta) => {
+    setEstatusInformes(respuesta.data);
+  });
+}
+
+function getAllSucursales() {
+  const url = "http://localhost/Sucursales/GetListado";
+  axios.get(url, { headers }).then((respuesta) => {
+    setDataSucursal(respuesta.data);
+  });
+}
+
+function handleShowAgregar() {
+  setState({
+    ...state,
+    agregar: "Agregar",
+    showPopUp: true,
+    IdGrupoUnidad: 0,
+    Codigo: 0,
+    GrupoUnidad: "",
+    Color: ""
+  })
+}
+
+const columns2 = React.useMemo(() => [
+  {
+    Name:"Folio/Serie",
+    accessor: "m_nFolioInforme",
+  },{
+    Name:"Fecha",
+    accessor: "m_dFecha",
+  },{
+    Name:"Hora Elaboración",
+    accessor: "m_tHora",
+  },{
+    Name:"Viaje",
+    accessor: "m_nIdViaje",
+  },{
+    Name:"Oficina Emisora",
+    accessor: "m_nIdSucursalEmisora",
+  },{
+    Name:"Oficina Receptora",
+    accessor: "m_nIdSucursalReceptora",
+  },{
+    Name:"Operador",
+    accessor: "m_nIdOperador",
+  },{
+    Name:"Unidad",
+    accessor: "m_nIdUnidad",
+  },{
+    Name:"Remolque",
+    accessor: "m_nIdRemolque",
+  },{
+    Name:"Origen",
+    accessor: "m_nIdCiudadOrigen",
+  },{
+    Name:"Destino",
+    accessor: "m_nIdCiudadDestino",
+  },{
+    Name:"Ruta",
+    accessor: "m_nIdRuta",
+  },{
+    Name:"Cancelado",
+    accessor: "m_nIdEstatusInforme",
+  },{
+    Name:"Usuario que cancela",
+    accessor: "m_nModificadoPor",
+  }
+  ]);
+
+useEffect(value => {
+  getAllData();
+  getAllEstatusInformes();
+  getAllSucursales();
+}, []);
+
+function getAllData() {
+  const url = "http://localhost/Informes/GetListado";
+  axios.get(url, {headers}).then(respuesta => {
+    setData(respuesta.data)
+  });
+};
+
+
+  function openSection(index) {
+    closeSeccions();
+    var $section;
+    switch (index) {
+      case 1:
+        setStepActive(1);
+        $section = $("#infogral");
+        break;
+      case 2:
+        setStepActive(2);
+        $section = $("#caracteristicas");
+
+        break;
+      case 3:
+        setStepActive(3);
+        $section = $("#combustible");
+
+        break;
+      case 4:
+        setStepActive(4);
+        $section = $("#seguros");
+        break;
+
+      default:
+    }
+
+    var $welem = $section
+      .parentsUntil(".widget-action-bar")
+      .parentsUntil(".w-action")
+      .parents(".widget-header")
+      .next(".widget-container");
+
+    $welem.slideDown();
+    $section.children("a").children("i").removeClass("zmdi-chevron-up");
+    $section.children("a").children("i").addClass("zmdi-chevron-down");
+    $("html, body").animate(
+      {
+        scrollTop: parseInt($section.offset().top),
+      },
+      200
+    );
+  }
+
+  function value(event) {
+    console.log(event.target.value);
+  }
+
+  function closeSeccions() {
+    //Cerrar todas las seciones
+    var $section = $(".widget-toggle");
+    $section.each(function () {
+      var $welem = $(this)
+        .parentsUntil(".widget-action-bar")
+        .parentsUntil(".w-action")
+        .parents(".widget-header")
+        .next(".widget-container");
+      $welem.slideUp();
+      $(this).children("a").children("i").removeClass("zmdi-chevron-down");
+      $(this).children("a").children("i").addClass("zmdi-chevron-up");
+    });
+  }
+
+  useEffect((value) => {
+    closeSeccions();
+  }, []);
+
+  return (
+    <div>
+      <header className="topbar clearfix">
+        <Cabecera />
+      </header>
+      {/*Topbar End Here*/}
+      {/*Leftbar Start Here*/}
+      <aside className="iconic-leftbar">
+        <BarraLateralIzquierda />
+      </aside>
+
+      <section className="main-container">
+        <div className="container-fluid">
+          <div className="page-header filled full-block light">
+            <div className="row">
+              <div className="col-md-6 col-sm-6">
+                <h2>Plantilla sin pasos</h2>
+              </div>
+              <div className="col-md-6 col-sm-6">
+                <ul className="list-page-breadcrumb">
+                  <li>
+                    <a href="#">
+                      Home <i className="zmdi zmdi-chevron-right" />
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      Layout <i className="zmdi zmdi-chevron-right" />
+                    </a>
+                  </li>
+                  <li className="active-page"> Dashboard</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <ul className="nav nav-tabs">
+          <li className="active">
+            <a data-toggle="tab" href="#Listado">
+            <i className="fa fa-list"/> Listado
+            </a>
+          </li>
+          <li>
+            <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
+            <i className="fa fa-plus-circle"/> {state.agregar}
+            </a>
+          </li>
+          
+          <li>
+            <a data-toggle="tab" href="#Imprimir">
+              <i className="fa fa-print"/> Imprimir
+            </a>
+          </li>
+         
+          <li>
+            <a data-toggle="tab" href="#Cancelar">
+              <i className="fa fa-ban"/> Cancelar
+            </a>
+          </li>
+
+          <li>
+            <a data-toggle="tab" href="#Cubicar">
+              <i className="fa fa-adjust"/> Cubicar / Optimizar Rutas
+            </a>
+          </li>
+        </ul>
+
+        <div className="tab-content">
+          <div
+            className="widget-wrap"
+            id="Listado"
+            className="tab-pane fade in active"
+          >
+            <div className="widget-wrap">
+              <div className="widget-content">
+                <div className="row">Listado</div>
+              </div>
+            </div>
+          </div>
+          <div id="Importar" className="tab-pane fade "></div>
+          <div id="Imprimir" className="tab-pane fade ">
+            Imprimir
+          </div>
+          <div id="Importar" className="tab-pane fade ">
+            Importar
+          </div>
+          <div id="Agregar" className="tab-pane fade ">
+            {/*INICIO DE ESTRUCTURA */}
+            <div className="row">
+              <div className="col-md-12">
+                <div className="widget-wrap">
+                  <div className="widget-container margin-top-0">
+                    <div className="widget-content">
+                      <form className="j-forms j-multistep" id="j-forms">
+                        {/*Inicio de ejemplo*/}
+
+                        {/* start steps */}
+                        <div
+                          className="wizard-breadcrumb number-style"
+                          style={{
+                            position: "sticky",
+                            top: "50px",
+                            padding: "5px",
+                            backgroundColor: "white",
+                            zIndex: 100,
+                          }}
+                        >
+                          <div className="row">
+                            <div
+                              className={
+                                "col-md-3 col-sm-3 step " +
+                                (stepActive == 1 && "active-step")
+                              }
+                              onClick={() => openSection(1)}
+                            >
+                              <div className={"steps"}>
+                                <span className={"step-number"}>1</span>
+                                <p>Información De Envio</p>
+                              </div>
+                            </div>
+                            <div
+                              className={
+                                "col-md-3 col-sm-3 step " +
+                                (stepActive == 2 && "active-step")
+                              }
+                              onClick={() => openSection(2)}
+                            >
+                              <div className="steps">
+                                <span className="step-number">2</span>
+                                <p>Asignar a un Viaje</p>
+                              </div>
+                            </div>
+                            <div
+                              className={
+                                "col-md-3 col-sm-3 step " +
+                                (stepActive == 3 && "active-step")
+                              }
+                              onClick={() => openSection(3)}
+                            >
+                              <div className="steps">
+                                <span className="step-number">3</span>
+                                <p>Detalles de la operacion</p>
+                              </div>
+                            </div>
+                            <div
+                              className={
+                                "col-md-3 col-sm-3 step " +
+                                (stepActive == 4 && "active-step")
+                              }
+                              onClick={() => openSection(4)}
+                            >
+                              <div className="steps">
+                                <span className="step-number">4</span>
+                                <p>Detalles de Guias</p>
+                              </div>
+                            </div>
+                            <div></div>
+                          </div>
+                        </div>
+                        {/* end steps */}
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="row">
+              <div className="col-md-8">
+                <div className="widget-wrap">
+                  <div className="widget-container margin-top-0">
+                    <div className="widget-content">
+                      <div className="widget-container">
+                        <div className="widget-content">
+                          <div className="row">
+                            <div className="col-md-12">
+                              <div className="row">
+                                <div className="col-md-12">
+
+
+                                  <div className="widget-wrap">
+                                    <div className="widget-header block-header margin-bottom-0 clearfix">
+                                      <div className="pull-left">
+                                        <h3>Información De Envio</h3>
+                                      </div>
+                                      <div className="pull-right w-action">
+                                        <ul className="widget-action-bar">
+                                          <li className="dropdown">
+                                            <a
+                                              href="#"
+                                              className="dropdown-toggle"
+                                              data-toggle="dropdown"
+                                            >
+                                              <i className="zmdi zmdi-more" />
+                                            </a>
+                                            <ul className="dropdown-menu">
+                                              <li className="widget-reload">
+                                                <a href="#">
+                                                  <i className="zmdi zmdi-refresh-alt" />
+                                                </a>
+                                              </li>
+                                              <li
+                                                className="widget-toggle"
+                                                id="infogral"
+                                              >
+                                                <a href="#">
+                                                  <i className="zmdi zmdi-chevron-down" />
+                                                </a>
+                                              </li>
+                                              <li className="widget-fullscreen">
+                                                <a href="#">
+                                                  <i className="zmdi zmdi-fullscreen" />
+                                                </a>
+                                              </li>
+                                              <li className="widget-exit">
+                                                <a href="#">
+                                                  <i className="zmdi zmdi-power" />
+                                                </a>
+                                              </li>
+                                            </ul>
+                                          </li>
+                                        </ul>
+
+
+                                      </div>
+                                    </div>
+
+
+                                    <div className="widget-container">
+                                      <div className="widget-content">
+                                        <div className="row">
+                                          <div className="col-md-12">
+                                            <form
+                                              action="#"
+                                              className="j-forms"
+                                              noValidate
+                                            >
+                                              <div className="form-content">
+                                              <div className="row">
+{/*****************************************Sucursal**********************************************************/}
+<div className="col-sm-6 col-md-2 unit">
+                        <label className="label">
+                          Sucursal
+                        </label>
+                        <label className="input select">
+                          <select
+                            className="form-control"
+                            required
+
+                            id="sucursal"
+                          >
+                            <option value="0">
+                              Todas
+                            </option>
+                            {dataSucursal.map(
+                              (sucursal) => (
+                                <option key={sucursal.m_nIdSucursal} value={sucursal.m_nIdSucursal}>
+                                  {
+                                    sucursal.m_sSucursal
+                                  }
+                                </option>
+                              )
+                            )}
+                          </select>
+                      </label>
+                    </div>
+{/*****************************************Folio************************************************************/}
+                                                <div className="col-sm-12 col-md-2 unit">
+                                                  <label className="label">
+                                                    Folio
+                          </label>
+                                                  <div className="input">
+                                                    <label
+                                                      className="icon-left"
+                                                      htmlFor="Folio"
+                                                    >
+                                                      <i className="fa fa-edit" />
+                                                    </label>
+                                                    <input
+
+                                                      className="form-control"
+                                                      type="text"
+
+                                                      id="Folio"
+                                                    />
+                                                  </div>
+                                                </div>
+                                                {/*****************************************Fecha*******************************************************/}
+                                                <div className="col-sm-12 col-md-2 unit">
+                                                  <label className="label">
+                                                    Fecha
+                          </label>
+                                                  <div className="input">
+                                                    <label
+                                                      className="icon-left"
+                                                      htmlFor="Fecha"
+                                                    >
+                                                      <i className="fa fa-edit" />
+                                                    </label>
+                                                    <input
+
+                                                      className="form-control"
+                                                      type="text"
+
+                                                      id="Fecha"
+                                                    />
+                                                  </div>
+                                                </div>
+                                                {/*****************************************Hora*******************************************************/}
+                                                <div className="col-sm-12 col-md-2 unit">
+                                                  <label className="label">
+                                                    Hora
+                          </label>
+                                                  <div className="input">
+                                                    <label
+                                                      className="icon-left"
+                                                      htmlFor="Hora"
+                                                    >
+                                                      <i className="fa fa-edit" />
+                                                    </label>
+                                                    <input
+
+                                                      className="form-control"
+                                                      type="text"
+
+                                                      id="Hora"
+                                                    />
+                                                  </div>
+                                                </div>
+{/*****************************************Oficina Emisora***************************************************/}
+<div className="col-sm-6 col-md-2 unit">
+                        <label className="label">
+                          Oficina Emisora
+                        </label>
+                        <label className="input select">
+                          <select
+                            className="form-control"
+                            required
+
+                            id="Oficina Emisora"
+                          >
+                            <option value="0">
+                              Todas
+                            </option>
+                            {dataSucursal.map(
+                              (sucursal) => (
+                                <option key={sucursal.m_nIdSucursal} value={sucursal.m_nIdSucursal}>
+                                  {
+                                    sucursal.m_sSucursal
+                                  }
+                                </option>
+                              )
+                            )}
+                          </select>
+                      </label>
+                    </div>
+{/*****************************************Oficina Receptora*************************************************/}
+<div className="col-sm-6 col-md-2 unit">
+                        <label className="label">
+                          Oficina Receptora
+                        </label>
+                        <label className="input select">
+                          <select
+                            className="form-control"
+                            required
+
+                            id="Oficina Receptora"
+                          >
+                            <option value="0">
+                              Todas
+                            </option>
+                            {dataSucursal.map(
+                              (sucursal) => (
+                                <option key={sucursal.m_nIdSucursal} value={sucursal.m_nIdSucursal}>
+                                  {
+                                    sucursal.m_sSucursal
+                                  }
+                                </option>
+                              )
+                            )}
+                          </select>
+                      </label>
+                    </div>
+</div>
+{/*****************************************Estatus de Entrega*************************************************/}
+                                                <div className="row">
+                                                <div className="col-sm-6 col-md-3 unit">
+                        <label className="label">
+                          Estatus
+                        </label>
+                        <label className="input select">
+                          <select
+                            className="form-control"
+                            required
+                            id="estatus"
+                          >
+                            <option value="0">
+                              Todos
+                            </option>
+                            {dataEstatusInformes.map(
+                              (estatus) => (
+                                <option key={estatus.m_nIdEstatusRecoleccion} value={estatus.m_nIdEstatusRecoleccion}>
+                                  {
+                                    estatus.m_sEstatus
+                                  }
+                                </option>
+                              )
+                            )}
+                          </select>
+                        <i></i>
+                      </label>
+                    </div>
+
+</div>
+
+ {/*****************************************Operador*************************************************/}
+ <div className="row">
+                                                <div className="col-sm-12 col-md-6 unit">
+                                                  <label className="label">
+                                                    Operador
+                          </label>
+                                                  <div className="input">
+                                                    <label
+                                                      className="icon-left"
+                                                      htmlFor="Operador"
+                                                    >
+                                                      <i className="fa fa-edit" />
+                                                    </label>
+                                                    <input
+
+                                                      className="form-control"
+                                                      type="text"
+
+                                                      id="Operador"
+                                                    />
+                                                  </div>
+                                                </div>
+</div>
+
+{/*****************************************Unidad*************************************************/}
+                                                <div className="row">
+                                                <div className="col-sm-12 col-md-6 unit">
+                                                  <label className="label">
+                                                    Unidad
+                          </label>
+                                                  <div className="input">
+                                                    <label
+                                                      className="icon-left"
+                                                      htmlFor="Estatus de Entrega"
+                                                    >
+                                                      <i className="fa fa-edit" />
+                                                    </label>
+                                                    <input
+
+                                                      className="form-control"
+                                                      type="text"
+
+                                                      id="Unidad"
+                                                    />
+                                                  </div>
+                                                </div>
+
+{/*****************************************Placa Int*************************************************/}
+                                                <div className="col-sm-12 col-md-2 unit">
+                                                  <label className="label">
+                                                    Placa Int
+                          </label>
+                                                  <div className="input">
+                                                    <label
+                                                      className="icon-left"
+                                                      htmlFor="Placa Int"
+                                                    >
+                                                      <i className="fa fa-edit" />
+                                                    </label>
+                                                    <input
+
+                                                      className="form-control"
+                                                      type="text"
+
+                                                      id="Placa Int"
+                                                    />
+                                                  </div>
+                                                </div>
+
+
+
+</div>
+
+
+
+
+
+{/*****************************************Remolque*************************************************/}
+<div className="row">
+                                                <div className="col-sm-12 col-md-6 unit">
+                                                  <label className="label">
+                                                    Remolque
+                          </label>
+                                                  <div className="input">
+                                                    <label
+                                                      className="icon-left"
+                                                      htmlFor="Remolque"
+                                                    >
+                                                      <i className="fa fa-edit" />
+                                                    </label>
+                                                    <input
+
+                                                      className="form-control"
+                                                      type="text"
+
+                                                      id="Remolque"
+                                                    />
+                                                  </div>
+                                                </div>
+
+{/*****************************************Placa Int*************************************************/}
+                                                <div className="col-sm-12 col-md-2 unit">
+                                                  <label className="label">
+                                                    Placa Int
+                          </label>
+                                                  <div className="input">
+                                                    <label
+                                                      className="icon-left"
+                                                      htmlFor="Placa Int"
+                                                    >
+                                                      <i className="fa fa-edit" />
+                                                    </label>
+                                                    <input
+
+                                                      className="form-control"
+                                                      type="text"
+
+                                                      id="Placa Int"
+                                                    />
+                                                  </div>
+                                                </div>
+
+
+
+</div>
+
+
+
+
+{/*****************************************Origen*************************************************/}
+<div className="row">
+                                                <div className="col-sm-12 col-md-6 unit">
+                                                  <label className="label">
+                                                    Origen
+                          </label>
+                                                  <div className="input">
+                                                    <label
+                                                      className="icon-left"
+                                                      htmlFor="Origen"
+                                                    >
+                                                      <i className="fa fa-edit" />
+                                                    </label>
+                                                    <input
+
+                                                      className="form-control"
+                                                      type="text"
+
+                                                      id="Origen"
+                                                    />
+                                                  </div>
+                                                </div>
+
+{/*****************************************Destino*************************************************/}
+                                                <div className="col-sm-12 col-md-6 unit">
+                                                  <label className="label">
+                                                  Destino
+                          </label>
+                                                  <div className="input">
+                                                    <label
+                                                      className="icon-left"
+                                                      htmlFor="Destino"
+                                                    >
+                                                      <i className="fa fa-edit" />
+                                                    </label>
+                                                    <input
+
+                                                      className="form-control"
+                                                      type="text"
+
+                                                      id="Destino"
+                                                    />
+                                                  </div>
+                                                </div>
+
+
+
+</div>
+
+
+
+{/*****************************************Ruta*************************************************/}
+<div className="row">
+                                                <div className="col-sm-12 col-md-6 unit">
+                                                  <label className="label">
+                                                    Ruta
+                          </label>
+                                                  <div className="input">
+                                                    <label
+                                                      className="icon-left"
+                                                      htmlFor="Ruta"
+                                                    >
+                                                      <i className="fa fa-edit" />
+                                                    </label>
+                                                    <input
+
+                                                      className="form-control"
+                                                      type="text"
+
+                                                      id="Ruta"
+                                                    />
+                                                  </div>
+                                                </div>
+</div>
+
+
+
+                                              </div>
+                                            </form>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+
+
+
+
+                                </div>
+                              </div>
+                              <div className="row">
+                                <div className="col-md-12">
+                                  <div className="widget-wrap">
+                                    <div className="widget-header block-header margin-bottom-0 clearfix">
+                                      <div className="pull-left">
+                                        <h3>Asignar a un Viaje</h3>
+                                      </div>
+                                      <div className="pull-right w-action">
+                                        <ul className="widget-action-bar">
+                                          <li className="dropdown">
+                                            <a
+                                              href="#"
+                                              className="dropdown-toggle"
+                                              data-toggle="dropdown"
+                                            >
+                                              <i className="zmdi zmdi-more" />
+                                            </a>
+                                            <ul className="dropdown-menu">
+                                              <li className="widget-reload">
+                                                <a href="#">
+                                                  <i className="zmdi zmdi-refresh-alt" />
+                                                </a>
+                                              </li>
+                                              <li
+                                                className="widget-toggle"
+                                                id="caracteristicas"
+                                              >
+                                                <a href="#">
+                                                  <i className="zmdi zmdi-chevron-down" />
+                                                </a>
+                                              </li>
+                                              <li className="widget-fullscreen">
+                                                <a href="#">
+                                                  <i className="zmdi zmdi-fullscreen" />
+                                                </a>
+                                              </li>
+                                              <li className="widget-exit">
+                                                <a href="#">
+                                                  <i className="zmdi zmdi-power" />
+                                                </a>
+                                              </li>
+                                            </ul>
+                                          </li>
+                                        </ul>
+                                      </div>
+                                    </div>
+                                    <div className="widget-container">
+                                      <div className="widget-content">
+                                        <div className="row">
+                                          <div className="col-md-12">
+                                            <form
+                                              action="#"
+                                              className="j-forms"
+                                              noValidate
+                                            >
+                                              <div className="form-content">
+{/*****************************************Viaje*************************************************/}
+<div className="row">
+                                                <div className="col-sm-12 col-md-6 unit">
+                                                  <label className="label">
+                                                  Viaje
+                          </label>
+                                                  <div className="input">
+                                                    <label
+                                                      className="icon-left"
+                                                      htmlFor="Viaje"
+                                                    >
+                                                      <i className="fa fa-edit" />
+                                                    </label>
+                                                    <input
+
+                                                      className="form-control"
+                                                      type="text"
+
+                                                      id="Viaje"
+                                                    />
+                                                  </div>
+                                                </div>
+
+{/*****************************************Ruta2*************************************************/}
+                                                <div className="col-sm-12 col-md-6 unit">
+                                                  <label className="label">
+                                                  Ruta
+                          </label>
+                                                  <div className="input">
+                                                    <label
+                                                      className="icon-left"
+                                                      htmlFor="Ruta2"
+                                                    >
+                                                      <i className="fa fa-edit" />
+                                                    </label>
+                                                    <input
+
+                                                      className="form-control"
+                                                      type="text"
+
+                                                      id="Ruta2"
+                                                    />
+                                                  </div>
+                                                </div>
+
+
+
+</div>
+
+
+{/*****************************************Operador2*************************************************/}
+<div className="row">
+                                                <div className="col-sm-12 col-md-6 unit">
+                                                  <label className="label">
+                                                  Operador
+                          </label>
+                                                  <div className="input">
+                                                    <label
+                                                      className="icon-left"
+                                                      htmlFor="Operador2"
+                                                    >
+                                                      <i className="fa fa-edit" />
+                                                    </label>
+                                                    <input
+
+                                                      className="form-control"
+                                                      type="text"
+
+                                                      id="Operador2"
+                                                    />
+                                                  </div>
+                                                </div>
+
+{/*****************************************Unidad2*************************************************/}
+                                                <div className="col-sm-12 col-md-6 unit">
+                                                  <label className="label">
+                                                  Unidad
+                          </label>
+                                                  <div className="input">
+                                                    <label
+                                                      className="icon-left"
+                                                      htmlFor="Unidad2"
+                                                    >
+                                                      <i className="fa fa-edit" />
+                                                    </label>
+                                                    <input
+
+                                                      className="form-control"
+                                                      type="text"
+
+                                                      id="Unidad2"
+                                                    />
+                                                  </div>
+                                                </div>
+
+
+
+</div>
+
+
+
+
+{/*****************************************Remolque2*************************************************/}
+<div className="row">
+                                                <div className="col-sm-12 col-md-6 unit">
+                                                  <label className="label">
+                                                    Remolque
+                          </label>
+                                                  <div className="input">
+                                                    <label
+                                                      className="icon-left"
+                                                      htmlFor="Remolque2"
+                                                    >
+                                                      <i className="fa fa-edit" />
+                                                    </label>
+                                                    <input
+
+                                                      className="form-control"
+                                                      type="text"
+
+                                                      id="Remolque2"
+                                                    />
+                                                  </div>
+                                                </div>
+
+
+
+
+</div>
+
+
+                                            </div>
+                                            </form>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="row">
+                                <div className="col-md-12">
+                                  <div className="widget-wrap">
+                                    <div className="widget-header block-header margin-bottom-0 clearfix">
+                                      <div className="pull-left">
+                                        <h3>Detalles de la operación</h3>
+                                      </div>
+                                      <div className="pull-right w-action">
+                                        <ul className="widget-action-bar">
+                                          <li className="dropdown">
+                                            <a
+                                              href="#"
+                                              className="dropdown-toggle"
+                                              data-toggle="dropdown"
+                                            >
+                                              <i className="zmdi zmdi-more" />
+                                            </a>
+                                            <ul className="dropdown-menu">
+                                              <li className="widget-reload">
+                                                <a href="#">
+                                                  <i className="zmdi zmdi-refresh-alt" />
+                                                </a>
+                                              </li>
+                                              <li
+                                                className="widget-toggle"
+                                                id="combustible"
+                                              >
+                                                <a href="#">
+                                                  <i className="zmdi zmdi-chevron-down" />
+                                                </a>
+                                              </li>
+                                              <li className="widget-fullscreen">
+                                                <a href="#">
+                                                  <i className="zmdi zmdi-fullscreen" />
+                                                </a>
+                                              </li>
+                                              <li className="widget-exit">
+                                                <a href="#">
+                                                  <i className="zmdi zmdi-power" />
+                                                </a>
+                                              </li>
+                                            </ul>
+                                          </li>
+                                        </ul>
+                                      </div>
+                                    </div>
+                                    <div className="widget-container">
+                                      <div className="widget-content">
+                                        <div className="row">
+                                          <div className="col-md-12">
+                                            <form
+                                              action="#"
+                                              className="j-forms"
+                                              noValidate
+                                            >
+                                              <div className="form-content">
+                                                FORM 3
+                                            </div>
+                                            </form>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-4">
+                <div className="widget-wrap">
+                  <div className="widget-header block-header margin-bottom-0 clearfix">
+                    <div className="pull-left">
+                      <h3>Detalles de Guias</h3>
+                    </div>
+                    <div className="pull-right w-action">
+                      <ul className="widget-action-bar">
+                        <li className="dropdown">
+                          <a
+                            href="#"
+                            className="dropdown-toggle"
+                            data-toggle="dropdown"
+                          >
+                            <i className="zmdi zmdi-more" />
+                          </a>
+                          <ul className="dropdown-menu">
+                            <li className="widget-reload">
+                              <a href="#">
+                                <i className="zmdi zmdi-refresh-alt" />
+                              </a>
+                            </li>
+                            <li className="widget-toggle" id="seguros">
+                              <a href="#">
+                                <i className="zmdi zmdi-chevron-down" />
+                              </a>
+                            </li>
+                            <li className="widget-fullscreen">
+                              <a href="#">
+                                <i className="zmdi zmdi-fullscreen" />
+                              </a>
+                            </li>
+                            <li className="widget-exit">
+                              <a href="#">
+                                <i className="zmdi zmdi-power" />
+                              </a>
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="widget-container">
+                    <div className="widget-content">
+                      <div className="row">
+                        <div className="col-md-12">
+                          <form
+                            action="#"
+                            className="j-forms"
+                            noValidate
+                          >
+                            <div className="form-content">
+                              FORM CLONAR
+                                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+export default Informes;
