@@ -2,6 +2,7 @@ import DepartamentoPage from './Views/Departamento';
 import RecoleccionPage from './Views/Recoleccion';
 import EmbalajesPage from './Views/Embalajes';
 import EmbarquePage from './Views/Embarque';
+import CatalogosPage from './Views/Catalogos';
 
 const dashboardRoutes = [
   {
@@ -17,10 +18,10 @@ const dashboardRoutes = [
     component: DepartamentoPage,
   },
   {
-    path: "/Departamento",
+    path: "/Catalogos",
     name: "Catálogos",
     icon: "fa fa-book",
-    component: DepartamentoPage,
+    component: CatalogosPage,
   },
   {
     path: "/Recolección",
