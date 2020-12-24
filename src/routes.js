@@ -7,8 +7,7 @@ import UnidadesPage from './Views/Unidades';
 import RemitentesDestinatariosPage from './Views/RemitentesDestinatarios';
 import OperadoresPage from './Views/Operadores';
 import PlantillaPage from './Views/PlantillaSinPasos';
-
-
+import CatalogosPage from './Views/Catalogos';
 
 const dashboardRoutes = [
   {
@@ -24,10 +23,10 @@ const dashboardRoutes = [
     component: DepartamentoPage,
   },
   {
-    path: "/Departamento",
+    path: "/Catalogos",
     name: "Catálogos",
     icon: <i className="fa fa-book" />,                   //<IconoCatalogo />,
-    component: DepartamentoPage,
+    component: CatalogosPage,
   },
   {
     path: "/Recolección",
