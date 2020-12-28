@@ -2,26 +2,21 @@ import React from "react";
 import Departamento from "../../Views/Departamento";
 import AM from "../Departamento/AMDepartamento";
 import Login from "../../Views/Login";
-import {
-  Route,
-  Link,
-  NavLink,
-} from 'react-router-dom';
-import dashboardRoutes from '../../routes'
-import { BrowserRouter as Router } from 'react-router-dom';
+import { Route, Link, NavLink } from "react-router-dom";
+import dashboardRoutes from "../../routes";
+import { BrowserRouter as Router } from "react-router-dom";
+import SvgIcon from "@material-ui/core/SvgIcon";
 
 function BarraLateralDerecha() {
-
-  function logout(){
+  function logout() {
     localStorage.removeItem("accessToken");
   }
 
-  function cambioDePagina(){
+  function cambioDePagina() {
     window.open("/AM");
   }
 
-    return (
-
+  return (
     <div className="iconic-aside-container">
       <div className="user-profile-container">
         <div className="user-profile clearfix">
@@ -30,45 +25,91 @@ function BarraLateralDerecha() {
           </div>
           <div className="admin-user-info">
             <ul>
-              <li><a href="index.html">Kamrujaman Shohel</a></li>
-              <li><a href="index.html">Info@jaman.me</a></li>
+              <li>
+                <a href="index.html">Kamrujaman Shohel</a>
+              </li>
+              <li>
+                <a href="index.html">Info@jaman.me</a>
+              </li>
             </ul>
           </div>
         </div>
         <div className="admin-bar">
           <ul>
             <li>
-              <a href="login" onClick={() => (logout())}>
+              <a href="login" onClick={() => logout()}>
                 <i className="zmdi zmdi-power" />
               </a>
             </li>
-            <li><a href="index.html"><i className="zmdi zmdi-account" />
+            <li>
+              <a href="index.html">
+                <i className="zmdi zmdi-account" />
               </a>
             </li>
-            <li><a href="index.html"><i className="zmdi zmdi-key" />
+            <li>
+              <a href="index.html">
+                <i className="zmdi zmdi-key" />
               </a>
             </li>
-            <li><a href="index.html"><i className="zmdi zmdi-settings" />
+            <li>
+              <a href="index.html">
+                <i className="zmdi zmdi-settings" />
               </a>
             </li>
           </ul>
         </div>
       </div>
       <ul className="list-accordion">
-      {
-        dashboardRoutes.map((r, index) => {
-          return (
-            <li key={index}>
-              <Link to={r.path}><i className={r.icon} /><span className="list-label">{r.name}</span></Link>
+        {dashboardRoutes.map((r, index) => {
+          return r.single ? (
+            <li>
+              <Link component="a" to={r.path}>
+                <i>
+                  <SvgIcon
+                    component={r.icon}
+                    style={{
+                      height: "100%",
+                      textAlign: "center",
+                      width: "50%",
+                    }}
+                    viewBox="0 0 40 40"
+                  />
+                </i>
+                <span class="list-label">{r.name}</span>
+              </Link>
+            </li>
+          ) : (
+            <li>
+              <a href="#">
+                <i>
+                  <SvgIcon
+                    component={r.icon}
+                    style={{
+                      height: "100%",
+                      textAlign: "center",
+                      width: "50%",
+                    }}
+                    viewBox="0 0 40 40"
+                  />
+                </i>
+                <span class="list-label">{r.name}</span>
+              </a>
+              <ul>
+                {r.child.map((c) => (
+                  <li key={c.name}>
+                    <Link component="a" to={c.path}>
+                      {c.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </li>
           )
-        })
-      }
+        })}
       </ul>
       <Route exact path="/" component={Login} />
       <Route path="/AM" component={AM} />
     </div>
-
   );
 }
 
