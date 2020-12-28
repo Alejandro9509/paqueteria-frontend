@@ -10,7 +10,7 @@ import { useTable, useFilters, useGlobalFilter, useSortBy } from 'react-table'
 import $ from 'jquery';
 window.jQuery = window.$ = $;
 
-function Recoleccion() {
+function Embarque() {
 
   const [data, setData] = React.useState([])
   const [dataSucursal, setDataSucursal] = React.useState([]);
@@ -72,7 +72,6 @@ function Recoleccion() {
     datosAdicionalesEntrega: "",
     cantidadDePaquetes: 0,
     cantidadDeSobres: 0,
-    diferenteRecoleccion: false,
     diferenteEntrega: false,
   })
   const [fileUploaded, setFileUploaded] = React.useState([])
@@ -129,6 +128,7 @@ function Recoleccion() {
       "m_sDomicilioDetalleEntrega": state.domicilioEntrega,
       "m_sEntregarEnDetalleEntrega": state.entregaEn,
       "m_sDatosAdicionalesDetalleEntrega": state.datosAdicionalesEntrega,
+
     }
     console.log(params)
     alert(JSON.stringify(params))
@@ -481,7 +481,7 @@ function Recoleccion() {
         <div className="container-fluid">
 
           <div className="page-header full-block light">
-            <h2>Recolección</h2>
+            <h2>Embarque</h2>
           </div>
 
           <ul className="nav nav-tabs">
@@ -865,7 +865,6 @@ function Recoleccion() {
 
                   </div>
 
-
                   <div className="col-md-7">
 
                     <div className="widget-wrap">
@@ -998,20 +997,6 @@ function Recoleccion() {
                                     type="text"
                                     placeholder={state.contactoRemitente}
                                     id="contactoRemitente"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-12 col-md-6 unit">
-                                <label className="label">
-                                  Recolección en Diferente Domicilio
-                                </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleRecoleccionCheckboxChange}
-                                    className="form-control"
-                                    type="checkbox"
-                                    id="diferenteRecoleccion"
                                   />
                                 </div>
                               </div>
@@ -1160,130 +1145,8 @@ function Recoleccion() {
                       </div>
                     </div>
 
-                    {(state.diferenteRecoleccion || state.diferenteEntrega) ?
+                    {state.diferenteEntrega ?
                       <div className="widget-wrap" id="detallesDeLaRecoleccion">
-                        {state.diferenteRecoleccion ?
-                          <div>
-                            <div className="widget-header">
-                              <h2>Detalles de la Recolección</h2>
-                            </div>
-                            <div className="widget-container">
-                              <div className="widget-content">
-                                <div className="row">
-                                  <div className="col-md-12">
-
-                                    <div className="col-sm-4 col-md-4 unit">
-                                      <label className="label">
-                                        Fecha y Hora
-                                            </label>
-                                      <div className="input">
-                                        <input
-                                          onChange={handleChange}
-                                          className="form-control"
-                                          type="datetime-local"
-                                          placeholder={state.fechaRecoleccion}
-                                          id="fechaRecoleccion"
-                                        />
-                                      </div>
-                                    </div>
-
-                                    <div className="col-sm-4 col-md-4 unit">
-                                      <label className="label">
-                                        Código Postal
-                                            </label>
-                                      <div className="input">
-                                        <input
-                                          onChange={handleChange}
-                                          className="form-control"
-                                          type="text"
-                                          placeholder={state.codigoPostalRecoleccion}
-                                          id="codigoPostalRecoleccion"
-                                        />
-                                      </div>
-                                    </div>
-
-                                    <div className="col-sm-4 col-md-4 unit">
-                                      <label className="label">
-                                        Ciudad
-                                            </label>
-                                      <div className="input">
-                                        <input
-                                          onChange={handleChange}
-                                          className="form-control"
-                                          type="text"
-                                          placeholder={state.ciudadRecoleccion}
-                                          id="ciudadRecoleccion"
-                                        />
-                                      </div>
-                                    </div>
-
-                                    <div className="col-sm-4 col-md-4 unit">
-                                      <label className="label">
-                                        Zona
-                                            </label>
-                                      <div className="input">
-                                        <input
-                                          onChange={handleChange}
-                                          className="form-control"
-                                          type="text"
-                                          placeholder={state.zonaRecoleccion}
-                                          id="zonaRecoleccion"
-                                        />
-                                      </div>
-                                    </div>
-
-                                    <div className="col-sm-4 col-md-8 unit">
-                                      <label className="label">
-                                        Domicilio
-                                            </label>
-                                      <div className="input">
-                                        <input
-                                          onChange={handleChange}
-                                          className="form-control"
-                                          type="text"
-                                          placeholder={state.domicilioRecoleccion}
-                                          id="domicilioRecoleccion"
-                                        />
-                                      </div>
-                                    </div>
-
-                                    <div className="col-sm-4 col-md-12 unit">
-                                      <label className="label">
-                                        Recoger En
-                                            </label>
-                                      <div className="input">
-                                        <input
-                                          onChange={handleChange}
-                                          className="form-control"
-                                          type="text"
-                                          placeholder={state.recogerEn}
-                                          id="recogerEn"
-                                        />
-                                      </div>
-                                    </div>
-
-                                    <div className="col-sm-4 col-md-12 unit">
-                                      <label className="label">
-                                        Datos Adicionales para la Recolección
-                                            </label>
-                                      <div className="input">
-                                        <input
-                                          onChange={handleChange}
-                                          className="form-control"
-                                          type="text"
-                                          placeholder={state.datosAdicionalesRecoleccion}
-                                          id="datosAdicionalesRecoleccion"
-                                        />
-                                      </div>
-                                    </div>
-
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          : <div></div>
-                        }
 
                         {state.diferenteEntrega ?
                           <div>
@@ -1409,7 +1272,7 @@ function Recoleccion() {
                         }
 
                       </div>
-                    : <div></div>
+                      : <div></div>
                     }
 
                     <div className="widget-wrap" id="informacionAdicionalDePago">
@@ -2297,4 +2160,4 @@ function Recoleccion() {
   );
 }
 
-export default Recoleccion;
+export default Embarque;
