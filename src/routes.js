@@ -6,6 +6,8 @@ import UnidadesPage from './Views/Unidades';
 import RemitentesDestinatariosPage from './Views/RemitentesDestinatarios';
 import OperadoresPage from './Views/Operadores';
 import PlantillaPage from './Views/PlantillaSinPasos';
+import RutasPage from './Views/Rutas';
+
 
 
 
@@ -93,6 +95,12 @@ const dashboardRoutes = [
     name: "Plantilla",
     icon: "fa fa-cube",
     component: PlantillaPage,
+  },
+  {
+    path: "/Rutas",
+    name: "Rutas",
+    icon: "fa fa-cube",
+    component: RutasPage,
   }
 ];
 
