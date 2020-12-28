@@ -27,7 +27,7 @@ function App(props) {
   const [state, setState] = React.useState({
     showPopUp: false,
     idRemitenteDestinatario: 0,
-    idCliente: 0,
+    idCliente: {},
     numero: 0,
     nombre: "",
     rfc: "",
@@ -521,13 +521,12 @@ function App(props) {
                                   {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
                                   <Autocomplete
                                     freeSolo
-                                    onChange={handleChange}
+                                    onChange={(event, newVaule) => setState({...state, idCliente: newValue})}
                                     placeholder={state.idCliente}
                                     id="idCliente"
                                     disableClearable
-                                    options={dataClientes.map(
-                                      (option) => option.m_sNombreFiscal
-                                    )}
+                                    getOptionLabel={(option) => option.m_sNombreFiscal}
+                                    options={dataClientes}
                                     renderInput={(params) => (
                                       <TextField
                                         {...params}
@@ -588,13 +587,12 @@ function App(props) {
                                 <div className="input">
                                   <Autocomplete
                                     freeSolo
-                                    onChange={handleChange}
+                                    onChange={(event, newVaule) => setState({...state, codigoPostal: newValue})}
                                     placeholder={state.codigoPostal}
                                     id="codigoPostal"
                                     disableClearable
-                                    options={dataCP.map(
-                                      (option) => option.m_sCP
-                                    )}
+                                    options={dataCP}
+                                    getOptionLabel={(option) => option.m_sCP}
                                     renderInput={(params) => (
                                       <TextField
                                         {...params}
