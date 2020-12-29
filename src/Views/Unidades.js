@@ -203,7 +203,7 @@ function App(props) {
     alto: 0,
     capacidad: 0,
     numeroEjes: 0,
-    numeroLlanda: 0,
+    numeroLlanta: 0,
     llantaRefaccion: 0,
     tipoLlanta: 0,
     marcaLlanta: 0,
@@ -223,13 +223,13 @@ function App(props) {
     telefono1: "",
     numeroSeguro1: "",
     vencimientoSeguro1: "",
-    tipoCobertura1: "",
+    tipoCobertura1: 0,
     companiaSeguros: "",
     telefono: "",
     numeroSeguro: "",
     vencimientoSeguro: "",
-    tipoCobertura: "",
-    paroMotor: true,
+    tipoCobertura: 0,
+    paroMotor: false,
     tiempoParo: 0,
     placas: "",
     placasVencimiento: "",
@@ -311,6 +311,14 @@ function App(props) {
     setState({
       ...state,
       activo: !state.activo,
+    });
+  };
+
+  const handleChangeParoMotor = (event) => {
+    console.log(event.target.name+" " + state.paroMotor);
+    setState({
+      ...state,
+      paroMotor: !state.paroMotor,
     });
   };
 
@@ -1299,10 +1307,12 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
+                                                 onChange={handleChange}
                                                     className="form-control"
-                                                    type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                    type="number"
+                                                    placeholder={state.numeroLlanta}
+                                                    id="numeroLlanta"
+                                                    name="numeroLlanta"
                                                     disabled
                                                   />
                                                 </div>
@@ -1313,10 +1323,12 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
-                                                    type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                    type="number"
+                                                    placeholder={state.llantaRefaccion}
+                                                    id="llantaRefaccion"
+                                                    name="llantaRefaccion"
                                                     disabled
                                                   />
                                                 </div>
@@ -1327,8 +1339,12 @@ function App(props) {
                                                 </label>
                                                 <label className="input select">
                                                   <select
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     disabled
+                                                    placeholder={state.marcaLlanta}
+                                                    id="marcaLlanta"
+                                                    name="marcaLlanta"
                                                   >
                                                     <option value="none">
                                                       Todos
@@ -1343,8 +1359,12 @@ function App(props) {
                                                 </label>
                                                 <label className="input select">
                                                   <select
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     disabled
+                                                    placeholder={state.modeloLlanta}
+                                                    id="modeloLlanta"
+                                                    name="modeloLlanta"
                                                   >
                                                     <option value="none">
                                                       Todos
@@ -1359,8 +1379,12 @@ function App(props) {
                                                 </label>
                                                 <label className="input select">
                                                   <select
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     disabled
+                                                    placeholder={state.medidaLlanta}
+                                                    id="medidaLlanta"
+                                                    name="medidaLlanta"
                                                   >
                                                     <option value="none"></option>
                                                   </select>
@@ -1373,8 +1397,12 @@ function App(props) {
                                                 </label>
                                                 <label className="input select">
                                                   <select
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     disabled
+                                                    placeholder={state.tipoLlanta}
+                                                    id="tipoLlanta"
+                                                    name="tipoLlanta"
                                                   >
                                                     <option value="none"></option>
                                                   </select>
@@ -1394,10 +1422,12 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                    placeholder={state.tipoMotor}
+                                                    id="tipoMotor"
+                                                    name="tipoMotor"
                                                   />
                                                 </div>
                                               </div>
@@ -1407,10 +1437,12 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                    placeholder={state.serieMotor}
+                                                    id="serieMotor"
+                                                    name="serieMotor"
                                                   />
                                                 </div>
                                               </div>
@@ -1420,10 +1452,12 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                    placeholder={state.tipoTransmision}
+                                                    id="tipoTransmision"
+                                                    name="tipoTransmision"
                                                   />
                                                 </div>
                                               </div>
@@ -1433,6 +1467,7 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
+                                                  disabled
                                                     className="form-control"
                                                     type="text"
                                                     placeholder=""
@@ -1514,9 +1549,26 @@ function App(props) {
                                                   Tipo de combustible
                                                 </label>
                                                 <label className="input select">
-                                                  <select className="form-control">
+                                                  <select className="form-control"
+                                                  onChange={handleChange}
+                                                              placeholder={state.tipoCombustible}
+                                                              id="tipoCombustible"
+                                                              name="tipoCombustible"
+                                                  >
                                                     <option value="none">
                                                       Todos
+                                                    </option>
+                                                    <option value="1">
+                                                      Por Materiales
+                                                    </option>
+                                                    <option value="2">
+                                                      Gasolina
+                                                    </option>
+                                                    <option value="3">
+                                                      Gas
+                                                    </option>
+                                                    <option value="4">
+                                                      Etanol
                                                     </option>
                                                   </select>
                                                   <i></i>
@@ -1529,10 +1581,12 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
-                                                    type="text"
-                                                    placeholder="Gal."
-                                                    id="text"
+                                                    type="number"
+                                                    placeholder={state.capacidadTanqueGal}
+                                                    id="capacidadTanqueGal"
+                                                    name="capacidadTanqueGal"
                                                   />
                                                 </div>
                                               </div>
@@ -1542,10 +1596,12 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
-                                                    type="text"
-                                                    placeholder="Kms/Lts"
-                                                    id="text"
+                                                    type="number"
+                                                    placeholder={state.rendimientoCargado}
+                                                    id="rendimientoCargado"
+                                                    name="rendimientoCargado"
                                                   />
                                                 </div>
                                               </div>
@@ -1555,10 +1611,12 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
-                                                    type="text"
-                                                    placeholder="Kms/Lts"
-                                                    id="text"
+                                                    type="number"
+                                                    placeholder={state.rendimientoVacio}
+                                                    id="rendimientoVacio"
+                                                    name="rendimientoVacio"
                                                   />
                                                 </div>
                                               </div>
@@ -1568,10 +1626,12 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                    placeholder={state.tarjetaDiesel1}
+                                                    id="tarjetaDiesel1"
+                                                    name="tarjetaDiesel1"
                                                   />
                                                 </div>
                                               </div>
@@ -1581,10 +1641,12 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                    placeholder={state.tarjetaDiesel2}
+                                                    id="tarjetaDiesel2"
+                                                    name="tarjetaDiesel2"
                                                   />
                                                 </div>
                                               </div>
@@ -1594,10 +1656,12 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                    placeholder={state.tarjetaDiesel3}
+                                                    id="tarjetaDiesel3"
+                                                    name="tarjetaDiesel3"
                                                   />
                                                 </div>
                                               </div>
@@ -1676,10 +1740,12 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                    placeholder={state.companiaSeguros1}
+                                                    id="companiaSeguros1"
+                                                    name="companiaSeguros1"
                                                   />
                                                 </div>
                                               </div>
@@ -1689,10 +1755,12 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
+                                                  onChange={state.telefono1}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                    placeholder={state.telefono1}
+                                                    id="telefono1"
+                                                    name="telefono1"
                                                   />
                                                 </div>
                                               </div>
@@ -1702,10 +1770,13 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
+                                                  onChange={handleChange}
+
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                     placeholder={state.numeroSeguro1}
+                                                    id="numeroSeguro1"
+                                                    name="numeroSeguro1"
                                                   />
                                                 </div>
                                               </div>
@@ -1715,10 +1786,12 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="date"
-                                                    placeholder=""
-                                                    id="text"
+                                                    placeholder={state.vencimientoSeguro1}
+                                                    id="vencimientoSeguro1"
+                                                    name="vencimientoSeguro1"
                                                   />{" "}
                                                 </div>
                                               </div>
@@ -1729,25 +1802,45 @@ function App(props) {
                                                   </label>
                                                   <label className="radio">
                                                     <input
+                                                    onChange={handleChange}
                                                       type="radio"
                                                       name="i-radio1"
                                                       defaultChecked
+                                                      value="1"
+                                                      placeholder={state.TipoCoberturaSeguro1}
+                                                      id="TipoCoberturaSeguro1"
+                                                      name="TipoCoberturaSeguro1"
                                                     />
                                                     <i />
                                                     Amplia
                                                   </label>
                                                   <label className="radio">
                                                     <input
+                                                                                                        onChange={handleChange}
+                                                    onChange={handleChange}
+
                                                       type="radio"
                                                       name="i-radio1"
+                                                      value="2"
+
+                                                      placeholder={state.TipoCoberturaSeguro1}
+                                                      id="TipoCoberturaSeguro1"
+                                                      name="TipoCoberturaSeguro1"
                                                     />
                                                     <i />
                                                     Limitada
                                                   </label>
                                                   <label className="radio">
                                                     <input
+                                                                                                        onChange={handleChange}
+
                                                       type="radio"
                                                       name="i-radio1"
+                                                      value="3"
+
+                                                      placeholder={state.TipoCoberturaSeguro1}
+                                                      id="TipoCoberturaSeguro1"
+                                                      name="TipoCoberturaSeguro1"
                                                     />
                                                     <i />
                                                     S/Cobertura
@@ -1762,10 +1855,12 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                    placeholder={state.CompaniaSeguros}
+                                                      id="CompaniaSeguros"
+                                                      name="CompaniaSeguros"
                                                   />
                                                 </div>
                                               </div>
@@ -1775,11 +1870,14 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
-                                                  />
+                                                    placeholder={state.telefono}
+                                                    id="telefono"
+                                                    name="telefono"
+                                                />
+                                                  
                                                 </div>
                                               </div>
                                               <div className="col-sm-6 col-md-2 col-lg-2 unit">
@@ -1788,11 +1886,14 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                    placeholder={state.numeroSeguro}
+                                                      id="numeroSeguro"
+                                                      name="numeroSeguro"
                                                   />
+                                                  
                                                 </div>
                                               </div>
                                               <div className="col-sm-6 col-md-2  col-lg-2 unit">
@@ -1801,10 +1902,13 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="date"
-                                                    placeholder=""
-                                                    id="text"
+                                                    placeholder={state.vencimientoSeguro}
+                                                    id="vencimientoSeguro"
+                                                    name="vencimientoSeguro"
+                                                />
                                                   />
                                                 </div>
                                               </div>
@@ -1815,25 +1919,40 @@ function App(props) {
                                                   </label>
                                                   <label className="radio">
                                                     <input
+                                                    onChange={handleChange}
                                                       type="radio"
                                                       name="i-radio"
+                                                      value="1"
                                                       defaultChecked
+                                                      placeholder={state.tipoCobertura}
+                                                      id="tipoCobertura"
+                                                      name="tipoCobertura"
                                                     />
                                                     <i />
                                                     Amplia
                                                   </label>
                                                   <label className="radio">
                                                     <input
+                                                    onChange={handleChange}
                                                       type="radio"
                                                       name="i-radio"
+                                                      value="2"
+                                                      placeholder={state.tipoCobertura}
+                                                      id="tipoCobertura"
+                                                      name="tipoCobertura"
                                                     />
                                                     <i />
                                                     Limitada
                                                   </label>
                                                   <label className="radio">
                                                     <input
+                                                    onChange={handleChange}
                                                       type="radio"
                                                       name="i-radio"
+                                                      value="3"
+                                                      placeholder={state.tipoCobertura}
+                                                      id="tipoCobertura"
+                                                      name="tipoCobertura"
                                                     />
                                                     <i />
                                                     S/Cobertura
@@ -1915,7 +2034,12 @@ function App(props) {
                                             <div className="row">
                                               <div className="col-sm-6 col-md-2 unit">
                                                 <label className="checkbox-toggle">
-                                                  <input type="checkbox" />
+                                                  <input type="checkbox"
+                                                  onChange={handleChangeParoMotor}
+                                                   placeholder={state.paroMotor}
+                                                   id="paroMotor"
+                                                   name="paroMotor"
+                                                  />
                                                   <i />
                                                   Paro por Ralenti
                                                 </label>
@@ -1929,7 +2053,8 @@ function App(props) {
                                                     className="form-control"
                                                     type="text"
                                                     placeholder="Max. 30 min"
-                                                    id="text"
+                                                    id="tiempoParo"
+                                                    name="tiempoParo"
                                                   />
                                                 </div>
                                               </div>
