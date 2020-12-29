@@ -25,6 +25,8 @@ const [state, setState] = React.useState({
     usuarioCancela:"",
     fechaCancelado:"",
     idGuia: 0,
+    idEmbarque:0,
+    idEmbarque2:0,
     hora: "",
     idEstatusGuia:0,
     idMoneda:0,
@@ -77,7 +79,8 @@ const [state, setState] = React.useState({
 	  creadoEl:"",
 	  modificadoEl:"",
     idSucursal:2,
-    valorDeclardao:0
+    valorDeclardao:0,
+    CiudadDestino:""
 })
 
 
@@ -104,6 +107,18 @@ idEstatusGuia:0,
 Estatus:"",
 Color:""
 })
+const [dataEmbarque, setDataEmbarque] = React.useState([])
+const [stateEmbarque, setStateEmbarque] = React.useState({
+FolioEmbarque:"",
+idEmbarque:0
+})
+
+const [dataCiudad, setDataCiudad] = React.useState([])
+const [stateCiudad, setStateCiudad] = React.useState({
+IdCiudad:0,
+Ciudad:""
+})
+
 const [dataTipoServicio, setDataTipoServicio] = React.useState([])
 const [stateTipoServicio, setStateTipoServicio] = React.useState({
 idTipoServicio:0,
@@ -117,6 +132,8 @@ const handleAceptar = (e) => {
   "FolioGuía": state.folioGuia,
   "Fecha":state.fecha,
   "IdEstatusGuia": state.idEstatusGuia,
+  "idEmbarque":state.idEmbarque,
+  "idEmbarque2":state.idEmbarque2,
   "IdOrigen": state.origen,
   "destino":state.destino,
   "UsuarioCancela":state.usuarioCancela,
@@ -129,7 +146,7 @@ const handleAceptar = (e) => {
 	"RfcRemitente":state.rfcRemitente,
 	"DomicilioRemitente":state.domicilioRemitente,
 	"IdCodigoPostalRemitente":state.idCodigoPostalRemitente,
-	"CiudadRemitente":state.ciudadRemitente, 
+	"ciudadRemitente":state.ciudadRemitente, 
 	"CorreoRemitente":state.correoRemitente,
 	"TelefonoRemitente":state.telefonoRemitente,
   "ContactoRemitente":state.contactoRemitente,
@@ -148,7 +165,6 @@ const handleAceptar = (e) => {
 	"NoPaquetes":state.NoPaquetes,
   "NoSobres":state.NoSobres,	
   "IdOperador":state.idOperador, 
-	"IdCiudadRemitente":state.idCiudadRemitente,
 	"IdUnidad":state.idUnidad,
 	"FechaSalida":state.fechaSalida,
 	"HoraSalida":state.horaSalida,
@@ -170,10 +186,11 @@ const handleAceptar = (e) => {
 	"CreadoPor":1,
 	"ModificadoPor":1,
 	"CreadoEl":state.creadoEl,
-	"ModificadoEl":state.modificadoEl,
+  "ModificadoEl":state.modificadoEl,
+  "Idguia":state.IdGuia
   }
   if(state.idGuia != 0){
-    const url = "http://localhost/Guia/Modificar/" + state.idGuia;
+    const url = "http://localhost/Guia/Modificar/"+state.idGuia;
     axios.put(url, Object.assign({}, params), {headers}).then(respuesta => {
     alert(respuesta.data)
     window.location.reload();
@@ -183,6 +200,7 @@ const handleAceptar = (e) => {
   });
   } else {
   const url = "http://localhost/Guia/Agregar";
+  debugger;
   axios.post(url, Object.assign({}, params), {headers}).then(respuesta => {
     alert(respuesta.data)
     window.location.reload();
@@ -194,30 +212,60 @@ const handleAceptar = (e) => {
 
 }
 
-function handleEliminar(id){
-  const url = "http://localhost/Guia/Eliminar/" + id;
+function handleEliminar(row){
+  //alert(row.original.m_nIdGuia);
+  const url = "http://localhost/Guia/Eliminar/" + row.original.m_nIdGuia;
   axios.delete(url, {headers}).then(respuesta => {
-    console.log(respuesta)
-  }).catch(err => {
-    alert(err)
+    alert(respuesta.data)
+    //console.log(respuesta)
+    window.location.reload();
+  }).catch(function(err) {
+    console.log(err.data)     
   });
 }
-
-function handleShowModificar(row){
-  console.log(row.original.m_nIdGuia)
+function handleShowModificar (row) {
+  //console.log(row.original.m_nIdGuia)
   //TODO
+  //var valor2="";
   const url = "http://localhost/Guia/GetById/" + row.original.m_nIdGuia;
-    axios.get(url, {headers}).then(respuesta => {
-      console.log(respuesta.data)
-      setState({
+  axios.get(url, {headers}).then(respuesta => {
+      //console.log(respuesta.data)
+     // debugger;
+      cargaEmbarqueModificar(respuesta.data.IdSucursal,respuesta.data.m_nIdMoneda,row.original.m_nIdGuia)
+      handleEmbarqueModificar(respuesta)
+      //valor2=respuesta.data.m_nIdEmbarque;
+       //     debugger;
+      /*setState({
         ...state,
         agregar: "Modificar",
-        showPopUp: true,
-        idDepartamento: row.original.m_nIdDepartamento,
-        codigoDepartamento: respuesta.data.m_nCodigo,
-        descripcionDepartamento: respuesta.data.m_sDescripcion
-      })
-    });
+        showPopUp: true,       
+        IdEmbarque: respuesta.data.m_nIdEmbarque,        
+        folioGuía:respuesta.data.m_nFolioGuia,
+        folioRecoleccion:respuesta.data.m_nFolioRecoleccion,
+        folioInforme: respuesta.data.m_nFolioInforme,
+        idGuia: respuesta.data.m_nIdGuia,
+        fecha: respuesta.data.m_dFecha,
+        hora: respuesta.data.m_sHora,
+        idEstatusGuia: respuesta.data.m_nIdEstatusGuia,
+        valorDeclardao: respuesta.data.m_cValorDeclarado,
+        idMoneda: respuesta.data.m_nIdMoneda,
+        tipoCambio: respuesta.data.m_cTIpoCambio,
+        idTipoCobro: respuesta.data.m_nIdTIpoCobro,
+        arrClsDetalle: respuesta.data.m_arrClsDetalle,
+        tracking: respuesta.data.m_nTracking,
+        arClsGuiaConceptos:respuesta.data.m_arClsGuiaConceptos,
+        creadoEl:respuesta.data.m_dCreadoEl,
+        idSucursal:respuesta.data.IdSucursal      
+
+              });*/
+              //handleEmbarque (respuesta.data.m_nIdEmbarque)
+             // alert(state.idMoneda)
+            }).catch(function(err) {
+        console.log(err.data)     
+      });
+     // debugger;
+     // handleEmbarqueModificar (valor2)      
+ 
   }
 
 function handleShowAgregar() {
@@ -240,7 +288,7 @@ function handleShowAgregar() {
       fechaCancelado:"",
       idGuia: 0,
       hora: "",
-      idEstatusGuia:0,
+      idEstatusGuia:4,
       idMoneda:0,
       tipoCambio:0, 
       idTipoCobro:0,
@@ -286,16 +334,16 @@ function handleShowAgregar() {
       datosAdicionalesis:""  ,
       tracking:0,
       arClsGuiaConceptos:[],
-      creadoPor:0,
-      modificadoPor:0,
-      creadoEl:"",
-      modificadoEl:"",
-      idSucursal:0
+      creadoPor:1,
+      modificadoPor:1,
+      creadoEl:today.getDate() + "/" + (today.getMonth() + 1) +"/"+today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
+      modificadoEl:today.getDate() + "/" + (today.getMonth() + 1) +"/"+today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
+      idSucursal:1
       })
 }
 
 const handleChange = event => {
-  console.log(event.target.id + " : " + event.target.value)
+  //console.log(event.target.id + " : " + event.target.value)
   setState( {
     ...state,
     [event.target.id] : event.target.value
@@ -304,8 +352,8 @@ const handleChange = event => {
 
   const columns = useMemo(() => [{
     cell: (row) => <div>
-          <a data-toggle="tab" data-target="#Agregar" onClick={() => (handleShowModificar(row.m_nIdGuia))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
-          <a href="#" onClick={() => (handleEliminar(row.m_nIdGuia))} className="btn btn-default btn-sm m-user-delete"><i className="zmdi zmdi-close" /></a>
+          <a data-toggle="tab" data-target="#Agregar" onClick={() => (handleShowModificar(row.original.m_nIdGuia))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
+          <a href="#" onClick={() => (handleEliminar(row))} className="btn btn-default btn-sm m-user-delete"><i className="zmdi zmdi-close" /></a>
       </div>,
     ignoreRowClick: true,
     allowOverflow: true,
@@ -485,9 +533,148 @@ async function getAllDataEstatusGuia() {
     setDataEstatusGuia(respuesta.data)
   });
 };
+
+useEffect(value => {
+  getAllCiudades();
+}, []);
+
+async function getAllCiudades() {
+  const url = "http://localhost/Ciudades/GetListado";
+  await axios.get(url, {headers}).then(respuesta => {
+    setDataCiudad(respuesta.data)
+  });
+};
+
+async function cargaEmbarqueSucursal (valor) {
+  //alert(valor);
+  setState({
+    ...state,
+    idSucursal: valor
+  });
+  //alert (state.idSucursal +"-" +state.idMoneda);
+
+    if (valor =="" || valor=="0") return;
+  if (state.idMoneda =="" || state.idMoneda=="0") return;
+  
+  const url = "http://localhost/Embarques/GetBySucursalMoneda/"+valor+"/"+state.idMoneda+"/"+state.idGuia ;
+  await axios.get(url, {headers}).then(respuesta => {
+    setDataEmbarque(respuesta.data)
+  });
+};
+function cargaEmbarqueModificar (valorSucursal,valorMoneda,valorGuia) {    
+  //alert(valorSucursal + "-" + valorMoneda)
+  const url = "http://localhost/Embarques/GetBySucursalMoneda/"+valorSucursal+"/"+valorMoneda +"/"+valorGuia;
+  axios.get(url, {headers}).then(respuesta => {
+    console.log(respuesta);
+    setDataEmbarque(respuesta.data)
+  });
+};
+async function cargaEmbarqueMoneda (valor) {
+  //alert(valor);
+  setState({
+    ...state,
+    idMoneda: valor
+  });
+  //alert (state.idSucursal +"-" +state.idMoneda);
+
+  if (state.idSucursal =="" || state.idSucursal=="0") return;
+  if (valor =="" || valor=="0") return;
+  
+  const url = "http://localhost/Embarques/GetBySucursalMoneda/"+state.idSucursal+"/"+valor+"/"+state.idGuia ;
+  await axios.get(url, {headers}).then(respuesta => {
+    setDataEmbarque(respuesta.data)
+  });
+};
+
+function handleEmbarque (embarque) {
+  const url = "http://localhost/Embarques/GetById/"+embarque ;
+  //alert(embarque);
+  console.log(embarque)
+   axios.get(url, {headers}).then(respuesta => {
+    setState({
+      ...state,
+      idEmbarque: respuesta.data.m_nIdEmbarque,
+      idEmbarque2:respuesta.data.m_nIdEmbarque
+    });
+    //alert(respuesta.data.m_nIdEmbarque);
+    //setDataEmbarque(respuesta.data)
+    setState({
+      ...state,
+      idEmbarque:respuesta.data.m_nIdEmbarque,
+      idEmbarque2:respuesta.data.m_nIdEmbarque,
+      nombreRemitente: respuesta.data.m_sNOmbreRemitente,
+      RFCRemitente: respuesta.data.m_sRFCRemitente,
+      domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
+      codigoPostalRemitente: respuesta.data.m_nIdCodigoPostalRemitente,
+      ciudadRemitente: respuesta.data.m_sCiudadRemitente, 
+      correoRemitente:	respuesta.data.m_sCorreoRemitente,
+      telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
+      contactoRemitente: respuesta.data.m_sContactoRemitente,
+      origenRemitente: respuesta.data.m_sCiudadRemitente,
+		  sNombreDestinatario: respuesta.data.m_sNombreDestinatario, 
+		  sRFCDestinatario: respuesta.data.m_sRFCDestinatario,
+      sDomicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
+      idCodigoPostalDestinatario: respuesta.data.m_nIdCodigoPostalDestinatario,
+      ciudadDestinatario: respuesta.data.m_sCIudadDestinatario,
+      sCorreoDestinatario: respuesta.data.m_sCorreoDestinatario,
+      sTelefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
+      sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
+		  CiudadDestino:respuesta.data.m_sCIudadDestinatario
+    })
+
+  });
+};
+function handleEmbarqueModificar (embarque) {
+  const url = "http://localhost/Embarques/GetById/"+embarque.data.m_nIdEmbarque ;
+  axios.get(url, {headers}).then(respuesta => {
+    //setDataEmbarque(respuesta.data)
+    setState({
+      ...state,
+      nombreRemitente: respuesta.data.m_sNOmbreRemitente,
+      RFCRemitente: respuesta.data.m_sRFCRemitente,
+      domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
+      codigoPostalRemitente: respuesta.data.m_nIdCodigoPostalRemitente,
+      ciudadRemitente: respuesta.data.m_sCiudadRemitente, 
+      correoRemitente:	respuesta.data.m_sCorreoRemitente,
+      telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
+      contactoRemitente: respuesta.data.m_sContactoRemitente,
+      origenRemitente: respuesta.data.m_sCiudadRemitente,
+		  sNombreDestinatario: respuesta.data.m_sNombreDestinatario, 
+		  sRFCDestinatario: respuesta.data.m_sRFCDestinatario,
+      sDomicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
+      idCodigoPostalDestinatario: respuesta.data.m_nIdCodigoPostalDestinatario,
+      ciudadDestinatario: respuesta.data.m_sCIudadDestinatario,
+      sCorreoDestinatario: respuesta.data.m_sCorreoDestinatario,
+      sTelefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
+      sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
+      CiudadDestino:respuesta.data.m_sCIudadDestinatario,
+      agregar: "Modificar",
+        showPopUp: true,       
+        idEmbarque: embarque.data.m_nIdEmbarque,        
+        folioGuía:embarque.data.m_nFolioGuia,
+        folioRecoleccion:embarque.data.m_nFolioRecoleccion,
+        folioInforme: embarque.data.m_nFolioInforme,
+        idGuia: embarque.data.m_nIdGuia,
+        fecha: embarque.data.m_dFecha,
+        hora: embarque.data.m_sHora,
+        idEstatusGuia: embarque.data.m_nIdEstatusGuia,
+        valorDeclardao: embarque.data.m_cValorDeclarado,
+        idMoneda: embarque.data.m_nIdMoneda,
+        tipoCambio: embarque.data.m_cTIpoCambio,
+        idTipoCobro: embarque.data.m_nIdTIpoCobro,
+        arrClsDetalle: embarque.data.m_arrClsDetalle,
+        tracking: embarque.data.m_nTracking,
+        arClsGuiaConceptos:embarque.data.m_arClsGuiaConceptos,
+        creadoEl:embarque.data.m_dCreadoEl,
+        idSucursal:embarque.data.IdSucursal      
+
+    })
+    console.log( embarque.data.m_nIdEmbarque)
+  });
+};
+
 const headers = {
-  'Content-Type': 'application/json',
-//    'access-control-allow-origin': '*'
+  'Content-Type': 'application/json'
 }
 
 function GlobalFilter({
@@ -601,7 +788,7 @@ function Table({ columns, data}) {
                   <td>
                   <div>
                     <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
-                    <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdDepartamento))}><i className="zmdi zmdi-close" /></a>
+                    <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row))}><i className="zmdi zmdi-close" /></a>
                   </div>
                   </td>
                   {row.cells.map(cell => {
@@ -729,7 +916,6 @@ function Table({ columns, data}) {
               </div>
           </div>
         </div>
-
         <div id="Agregar" className="tab-pane fade">
           <div className="widget-wrap">
             <div className="widget-header">
@@ -749,16 +935,46 @@ function Table({ columns, data}) {
                           <select
                             className="form-control"
                             required
-                            onChange={handleChange}
+                            onChange={event => (cargaEmbarqueSucursal(event.target.value))}  
                             id="idSucursal"
                             read="true"
-                            disabled="disabled"
+                            value={state.idSucursal}
                           >                           
+                          <option value="0">
+                              Seleccionar
+                            </option>
                             {dataSucursal.map(
                               (sucursal) => (
                                 <option key={sucursal.m_nIdSucursal} value={sucursal.m_nIdSucursal}>
                                   {
                                     sucursal.m_sSucursal
+                                  }
+                                </option>
+                              )
+                            )}
+                          </select>
+                        </div>
+                        
+                        <div className="col-sm-4 col-md-2-5 unit">
+                          <label className="label">
+                            Moneda
+                          </label>
+                          <select
+                            className="form-control"
+                            required
+                            onChange={event => (cargaEmbarqueMoneda(event.target.value))}  
+                            id="idMoneda"
+                            read="true"
+                            value={state.idMoneda}
+                          >      
+                          <option value="0">
+                              Seleccionar
+                            </option>                     
+                            {dataMoneda.map(
+                              (moneda) => (
+                                <option key={moneda.m_nIdMoneda} value={moneda.m_nIdMoneda}>
+                                  {
+                                    moneda.m_sMoneda
                                   }
                                 </option>
                               )
@@ -775,7 +991,7 @@ function Table({ columns, data}) {
                               onChange={handleChange}
                               className="form-control"
                               type="text"
-                              placeholder={state.folioGuia}
+                              placeholder={state.folioGuía}
                               id="folioGuia"
                               disabled="disabled"
                             />
@@ -786,15 +1002,28 @@ function Table({ columns, data}) {
                           <label className="label">
                             Folio Embarque
                           </label>
-                          <div className="input">
-                            <input
-                              onChange={handleChange}
-                              className="form-control"
-                              type="text"
-                              placeholder={state.folioEmbarque}
-                              id="folioEmbarque"
-                            />
-                          </div>
+                          <select
+                            className="form-control"
+                            required
+                            onChange={event => (handleEmbarque(event.target.value))}                             
+                            id="idEmbarque"
+                            read="true"
+                            value={state.idEmbarque}
+                            
+                          >            
+                          <option value="0">
+                              Seleccionar
+                            </option>                 
+                            {dataEmbarque.map(
+                              (embarque) => (
+                                <option key={embarque.m_nIdEmbarque} value={embarque.m_nIdEmbarque} >
+                                  {
+                                    embarque.m_nFolioEmbarque
+                                  }
+                                </option>
+                              )
+                            )}
+                          </select>
                         </div>
                         
                         
@@ -840,7 +1069,11 @@ function Table({ columns, data}) {
                             onChange={handleChange}
                             id="idEstatusGuia"
                             read="true"
-                          >                           
+                            value={state.idEstatusGuia}
+                          >                                                
+                            <option value="0">
+                              Seleccionar
+                            </option>                 
                             {dataEstatusGuia.map(
                               (estatusGuia) => (
                                 <option key={estatusGuia.m_nIdEstatusGuia} value={estatusGuia.m_nIdEstatusGuia} >
@@ -854,29 +1087,6 @@ function Table({ columns, data}) {
                        
                         </div>
 
-                        <div className="col-sm-4 col-md-2-5 unit">
-                          <label className="label">
-                            Moneda
-                          </label>
-                          <select
-                            className="form-control"
-                            required
-                            onChange={handleChange}
-                            id="idMoneda"
-                            read="true"
-                          >                           
-                            {dataMoneda.map(
-                              (moneda) => (
-                                <option key={moneda.m_nIdMoneda} value={moneda.m_nIdMoneda}>
-                                  {
-                                    moneda.m_sMoneda
-                                  }
-                                </option>
-                              )
-                            )}
-                          </select>
-                        </div>
-                        
                         <div className="col-sm-4 col-md-2-5 unit">
                           <label className="label">
                             Tipo de Cambio
@@ -902,7 +1112,12 @@ function Table({ columns, data}) {
                             onChange={handleChange}
                             id="idTipoCobro"
                             read="true"
-                          >                           
+                            value={state.idTipoCobro}
+                          > 
+                                      
+                            <option value="0">
+                              Seleccionar
+                            </option>                          
                             {dataTipoCobro.map(
                               (tipoCobro) => (
                                 <option key={tipoCobro.m_nIdTipoCobro} value={tipoCobro.m_nIdTipoCobro}>
@@ -947,6 +1162,7 @@ function Table({ columns, data}) {
                               type="text"
                               placeholder={state.nombreRemitente}
                               id="nombreRemitente"
+                              disabled="disabled"
                             />
                           </div>
                         </div>
@@ -962,6 +1178,7 @@ function Table({ columns, data}) {
                               type="text"
                               placeholder={state.RFCRemitente}
                               id="RFCRemitente"
+                              disabled="disabled"
                             />
                           </div>
                         </div>
@@ -977,6 +1194,7 @@ function Table({ columns, data}) {
                               type="text"
                               placeholder={state.domicilioRemitente}
                               id="domicilioRemitente"
+                              disabled="disabled"
                             />
                           </div>
                         </div>
@@ -992,6 +1210,7 @@ function Table({ columns, data}) {
                               type="text"
                               placeholder={state.codigoPostalRemitente}
                               id="codigoPostalRemitente"
+                              disabled="disabled"
                             />
                           </div>
                         </div>
@@ -1001,13 +1220,15 @@ function Table({ columns, data}) {
                             Ciudad
                           </label>
                           <div className="input">
-                            <input
+                          <input
                               onChange={handleChange}
                               className="form-control"
                               type="text"
                               placeholder={state.ciudadRemitente}
                               id="ciudadRemitente"
+                              disabled="disabled"
                             />
+                          
                           </div>
                         </div>
                         
@@ -1022,6 +1243,7 @@ function Table({ columns, data}) {
                               type="text"
                               placeholder={state.correoRemitente}
                               id="correoRemitente"
+                              disabled="disabled"
                             />
                           </div>
                         </div>
@@ -1037,6 +1259,7 @@ function Table({ columns, data}) {
                               type="text"
                               placeholder={state.telefonoRemitente}
                               id="telefonoRemitente"
+                              disabled="disabled"
                             />
                           </div>
                         </div>
@@ -1052,6 +1275,7 @@ function Table({ columns, data}) {
                               type="text"
                               placeholder={state.contactoRemitente}
                               id="contactoRemitente"
+                              disabled="disabled"
                             />
                           </div>
                         </div>
@@ -1067,6 +1291,7 @@ function Table({ columns, data}) {
                               type="text"
                               placeholder={state.origenRemitente}
                               id="origenRemitente"
+                              disabled="disabled"
                             />
                           </div>
                         </div>  
@@ -1081,8 +1306,163 @@ function Table({ columns, data}) {
             
             <div className="widget-header">
               <h2>Destinatario</h2>
+            </div>       <div className="widget-container">
+              <div className="widget-content">
+                <div className="row">
+                  <div className="col-md-12">
+                    <form className="j-forms">
+                      <div className="form-content">
+                        
+                        <div className="col-md-8 unit">
+                          <label className="label">
+                            Nombre
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.sNombreDestinatario}
+                              id="sNombreDestinatario"
+                              disabled="disabled"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="col-md-4 unit">
+                          <label className="label">
+                            RFC
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.sRFCDestinatario}
+                              id="sRFCDestinatario"
+                              disabled="disabled"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="col-md-8 unit">
+                          <label className="label">
+                            Domicilio
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.sDomicilioDestinatario}
+                              id="sDomicilioDestinatario"
+                              disabled="disabled"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="col-md-4 unit">
+                          <label className="label">
+                            Código Postal
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.idCodigoPostalDestinatario}
+                              id="idCodigoPostalDestinatario"
+                              disabled="disabled"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="col-md-4 unit">
+                          <label className="label">
+                            Ciudad
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.ciudadDestinatario}
+                              id="ciudadDestinatario"
+                              disabled="disabled"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="col-md-4 unit">
+                          <label className="label">
+                            Correo Electrónico
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.sCorreoDestinatario}
+                              id="sCorreoDestinatario"
+                              disabled="disabled"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="col-md-4 unit">
+                          <label className="label">
+                            Teléfono
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.sTelefonoDestinatario}
+                              id="sTelefonoDestinatario"
+                              disabled="disabled"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="col-md-6 unit">
+                          <label className="label">
+                            Contacto
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.sContactoDestinatario}
+                              id="sContactoDestinatario"
+                              disabled="disabled"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="col-md-6 unit">
+                          <label className="label">
+                            Destino
+                          </label>
+                          <div className="input">
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.CiudadDestino}
+                              id="CiudadDestino"
+                              disabled="disabled"
+                            />
+                          </div>
+                        </div>  
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="widget-container">
+     
             <div className="widget-header">
               <h2>Conceptos de Facturacion</h2>
             </div>
@@ -1157,7 +1537,7 @@ function Table({ columns, data}) {
                 </div>
               </div>
             </div>
-            </div>
+            
             
             <div className="col-md-3">
             <div className="form-footer" className="col-md-12">
@@ -1168,7 +1548,8 @@ function Table({ columns, data}) {
             </div>
           </div>
         </div>
-      
+        </div>
+        
         <div id="Importar" className="tab-pane fade">
         <div className="widget-wrap">
               <div className="widget-content">
@@ -1212,7 +1593,7 @@ function Table({ columns, data}) {
       
       </div>
     </div>
-    </div>
+    
   </section>
   {/*Page Container End Here*/}
 
