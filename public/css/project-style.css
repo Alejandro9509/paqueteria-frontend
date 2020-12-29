@@ -30,7 +30,7 @@
   @media (min-width: 992px) {
     .boton-de-catalogos {
       height: 72px;
-      width: 8%;
+      width: 100%;
       margin: 1%;
       display:inline-block;
     
@@ -49,6 +49,10 @@
       box-shadow: 0px 3px 6px #0000004C;
       border-radius: 10px;
       opacity: 1;
+    }
+
+    .division-de-botones{
+      width: 10%;
     }
   }
 
@@ -79,3 +83,4 @@
     width:5px;
     display:inline-block;
 }
+

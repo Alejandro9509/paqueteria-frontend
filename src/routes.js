@@ -8,6 +8,7 @@ import RemitentesDestinatariosPage from './Views/RemitentesDestinatarios';
 import OperadoresPage from './Views/Operadores';
 import PlantillaPage from './Views/PlantillaSinPasos';
 import CatalogosPage from './Views/Catalogos';
+import ConfiguracionPage from './Views/Configuracion';
 
 const dashboardRoutes = [
   {
@@ -17,15 +18,15 @@ const dashboardRoutes = [
     component: DepartamentoPage,
   },
   {
-    path: "/Departamento",
+    path: "/Configuracion",
     name: "Configuraciones",
     icon: <i className="fa fa-cog" />,                   //<IconoConfiguraciones className="fa" />,
-    component: DepartamentoPage,
+    component: ConfiguracionPage,
   },
   {
     path: "/Catalogos",
     name: "Catálogos",
-    icon: <i className="fa fa-book" />,                   //<IconoCatalogo />,
+    icon: <i className="zmdi zmdi-collection-text" />,                   //<IconoCatalogo />,
     component: CatalogosPage,
   },
   {
@@ -37,7 +38,7 @@ const dashboardRoutes = [
   {
     path: "/Embarque",
     name: "Embarque",
-    icon: <i className="fa fa-dropbox" />,
+    icon: <i className="fa fa-archive" />,
     component: EmbarquePage,
   },
   {
