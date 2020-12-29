@@ -7534,7 +7534,7 @@ div.tagsinput span.tag {
   color: #444;
   margin-right: 5px;
   margin-bottom: 5px;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: helvetica;
   font-size: 13px;
 }
 div.tagsinput span.tag a {
@@ -7546,7 +7546,7 @@ div.tagsinput span.tag a {
 div.tagsinput input {
   width: 80px;
   margin: 0px;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: helvetica;
   font-size: 13px;
   border: 1px solid transparent;
   padding: 5px;
@@ -12644,7 +12644,7 @@ table.dataTable > tbody > tr.child span.dtr-title {
 #reatime-chart-legend .legendLabel,
 #pie-chart-legend .legendLabel {
   font-size: 12px;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   padding-left: 5px;
   padding-right: 10px;
 }
@@ -14479,7 +14479,7 @@ svg.nvd3-svg {
   border: 1px solid rgba(0, 0, 0, 0.2);
   z-index: 10000;
   display: block;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: Arial;
   font-size: 13px;
   text-align: left;
   pointer-events: none;
@@ -14606,7 +14606,7 @@ body.stop-scrolling {
 }
 .sweet-alert {
   background-color: white;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: 'Roboto', sans-serif;
   width: 478px;
   padding: 17px;
   border-radius: 4px;
@@ -15890,7 +15890,7 @@ body .fc {
   font-size: 1em;
   text-align: center;
   overflow: hidden;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: "Courier New", Courier, monospace;
   /* don't allow browser text-selection */
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -16907,7 +16907,7 @@ be a descendant of the grid when it is being dragged.
 6.0 Bootstrap Extended
 -----------------------*/
 body {
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 a {
   color: #F9A03E;
@@ -17397,10 +17397,10 @@ textarea.form-control {
 .btn-primary:active:hover,
 .btn-primary:focus {
   outline: none;
-  background-color: #108180;
+  background-color: #F9A03E;
 }
 .btn-primary:active {
-  background-color: #108180;
+  background-color: #F9A03E;
   background-image: -webkit-radial-gradient(circle, #108180 10%, #F9A03E 11%);
   background-image: radial-gradient(circle, #108180 10%, #F9A03E 11%);
   background-repeat: no-repeat;
@@ -18299,7 +18299,7 @@ a {
   -webkit-box-shadow: inset 0 -1px 0 #dddddd;
   -moz-box-shadow: inset 0 -1px 0 #dddddd;
   box-shadow: inset 0 -1px 0 #dddddd;
-  font-size: 12px;
+  font-size: 16px;
   line-height: 1.5;
 }
 .material-form select::-ms-expand,
@@ -18966,7 +18966,7 @@ body {
   background-color: #e4e9f0;
   color: #444444;
   padding-top: 60px;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

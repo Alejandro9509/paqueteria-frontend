@@ -59,7 +59,7 @@ function BarraLateralDerecha() {
         dashboardRoutes.map((r, index) => {
           return (
             <li key={index}>
-              <Link to={r.path}><i className={r.icon} /><span className="list-label">{r.name}</span></Link>
+              <Link to={r.path}>{r.icon}<span className="list-label">{r.name}</span></Link>
             </li>
           )
         })

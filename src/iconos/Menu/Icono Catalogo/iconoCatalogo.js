@@ -1,0 +1,20 @@
+import React from 'react';
+
+const iconoCatalogo = () => {
+    return (
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 30.094 30.742" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+  display= "inline-block"
+  font= "normal normal normal 14px/1 FontAwesome"
+  font-size= "inherit"
+  text-rendering= "auto"
+  webkit-font-smoothing= "antialiased"
+  moz-osx-font-smoothing= "grayscale"
+  font-weight= "normal"
+  font-style= "normal"
+>
+        <path class="a" d="M4.909,7.948H2V28.768a2.951,2.951,0,0,0,2.909,2.974H25.275V28.768H4.909ZM28.184,2H10.728A2.951,2.951,0,0,0,7.819,4.974V22.819a2.951,2.951,0,0,0,2.909,2.974H28.184a2.951,2.951,0,0,0,2.909-2.974V4.974A2.951,2.951,0,0,0,28.184,2ZM26.73,15.384H12.183V12.41H26.73Zm-5.819,5.948H12.183V18.358h8.728Zm5.819-11.9H12.183V6.461H26.73Z" transform="translate(-1.5 -1.5)"/>
+      </svg>
+    )
+  }
+  
+  export default iconoCatalogo;

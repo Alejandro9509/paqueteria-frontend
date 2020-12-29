@@ -13,7 +13,7 @@
     font-family: calibri;
   }
 
-  .firstButtonStyle {
+.firstButtonStyle {
     background-color: #F9A03E;
     padding-bottom: 3px;
     padding-top: 3px;
@@ -26,3 +26,61 @@
     border: 1px solid #F9A03E;
     font-family: calibri;
   }
+
+  @media (min-width: 992px) {
+    .boton-de-catalogos {
+      height: 72px;
+      width: 100%;
+      margin: 1%;
+      display:inline-block;
+    
+      color:#F9A03E;
+      font-size: 40px;
+      background: #FFFFFF 0% 0% no-repeat padding-box;
+      box-shadow: 0px 3px 6px #0000004C;
+      border-radius: 10px;
+      opacity: 1;
+    }
+    
+    .boton-de-catalogos:hover {
+    
+      color: #FFFFFF;
+      background: #F9A03E 0% 0% no-repeat padding-box;
+      box-shadow: 0px 3px 6px #0000004C;
+      border-radius: 10px;
+      opacity: 1;
+    }
+
+    .division-de-botones{
+      width: 10%;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .boton-de-catalogos-sm {
+      height: 72px;
+      display:inline-block;
+    
+      color:#F9A03E;
+      font-size: 40px;
+      background: #FFFFFF 0% 0% no-repeat padding-box;
+      box-shadow: 0px 3px 6px #0000004C;
+      border-radius: 10px;
+      opacity: 1;
+    }
+    
+    .boton-de-catalogos-sm:hover {
+    
+      color: #FFFFFF;
+      background: #F9A03E 0% 0% no-repeat padding-box;
+      box-shadow: 0px 3px 6px #0000004C;
+      border-radius: 10px;
+      opacity: 1;
+    }
+  }
+
+  .divider{
+    width:5px;
+    display:inline-block;
+}
+

@@ -338,7 +338,7 @@ function Table({ columns, data}) {
     <div className="container-fluid">
 
     <div className="page-header full-block light">
-        <h2>Embalajes</h2>
+        <h2>Grupo de Unidades</h2>
       </div>
 
       <ul className="nav nav-tabs">
