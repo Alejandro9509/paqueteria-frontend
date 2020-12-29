@@ -25,7 +25,13 @@ render(){
           <Switch>
             <Route path="/departamento" component={Departamento} />
             {dashboardRoutes.map((r, key) => {
+              if (r.single) {
                   return (<Route exact key={key} path={r.path} component={r.component} />)
+              }else {
+                return r.child.map(c=> (
+                  <Route exact key={c.name} path={c.path} component={c.component} />
+                ))
+              }
               })}
             <Redirect from="/" to="/departamento"/>
           </Switch>

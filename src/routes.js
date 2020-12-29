@@ -99,7 +99,6 @@ const dashboardRoutes = [
     single: true,
     child:[]
   },
-  
   {
     path: "/RemitentesDestinatarios",
     name: "RemitentesDestinatarios",
