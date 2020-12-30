@@ -11,6 +11,7 @@ import PlantillaPage from './Views/PlantillaSinPasos';
 import CatalogosPage from './Views/Catalogos';
 import ConfiguracionPage from './Views/Configuracion';
 
+
 const dashboardRoutes = [
   {
     path: "/Departamento",
@@ -51,7 +52,7 @@ const dashboardRoutes = [
   {
       path: "/Informes",
       name: "Informes",
-      icon: "fa fa-file-text",
+      icon: <i className="fa fa-file-text" />,
       component: InformesPage,
   },
   {
