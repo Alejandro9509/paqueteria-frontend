@@ -65,7 +65,7 @@ function TablaDepartamento() {
   }, []);
 
   async function getAllData() {
-    const url = "http://localhost/Departamento/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/Departamento/GetListado`;
     await axios.get(url, {headers}).then(respuesta => {
       setData(respuesta.data)
     });

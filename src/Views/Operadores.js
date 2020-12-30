@@ -87,7 +87,7 @@ function App(props) {
   }, []);
 
   function getAllOperadores() {
-    const url = "http://localhost/Operadores/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/Operadores/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta);
 
@@ -96,14 +96,14 @@ function App(props) {
   }
 
   function getAllSucursales() {
-    const url = "http://localhost/Sucursales/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setDataSucursales(respuesta.data);
     });
   }
 
   function getAllPaises() {
-    const url = "http://localhost/Pais/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/Pais/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta);
 
@@ -112,7 +112,7 @@ function App(props) {
   }
 
   function handleElimiar(id) {
-    const url = "http://localhost/Unidad/Eliminar/" + id;
+    const url = `${process.env.REACT_APP_API_URL}/Unidad/Eliminar/` + id;
     axios
       .get(url, { headers })
       .then((respuesta) => {
@@ -136,7 +136,7 @@ function App(props) {
   function handleShowModificar(id) {}
 
   const getModificar = (id) => {
-    const url = "http://localhost/Unidad/GetById/" + id;
+    const url = `${process.env.REACT_APP_API_URL}/Unidad/GetById/` + id;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
 

@@ -45,7 +45,7 @@ jQuery(document).ready(function($) {
 		                        "CreadoPor":1,
 		                        "m_nModificadoPor":1
 	                        }
-		                    xmlHttp.open('POST', "http://localhost/Departamento/Agregar", true);
+		                    xmlHttp.open('POST', `${process.env.REACT_APP_API_URL}/Departamento/Agregar`, true);
 		                    xmlHttp.setRequestHeader('Content-type', 'application/json');
 		                    xmlHttp.send(JSON.stringify(params));
 		                    xmlHttp.onreadystatechange = function() {//Call a function when the state changes.

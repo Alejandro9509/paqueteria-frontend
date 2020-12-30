@@ -1443,7 +1443,7 @@
   position: absolute;
   height: 100%;
   top: 0px;
-  z-index: 101;
+  z-index: 8;
 }
 .iconic-view .list-accordion {
   padding: 0px;
