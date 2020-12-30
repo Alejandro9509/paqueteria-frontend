@@ -31,7 +31,7 @@ const handleAceptar = (e) => {
   }
   console.log(params)
   if(state.IdEmbalaje != 0){
-    const url = "http://localhost/Embalaje/Modificar/" + state.IdEmbalaje;
+    const url = `${process.env.REACT_APP_API_URL}/Embalaje/Modificar/` + state.IdEmbalaje;
     axios.put(url, Object.assign({}, params), {headers}).then(respuesta => {
     alert(respuesta.data)
     window.location.reload();
@@ -40,7 +40,7 @@ const handleAceptar = (e) => {
     alert("err")
   });
   } else {
-  const url = "http://localhost/Embalaje/Agregar";
+  const url = `${process.env.REACT_APP_API_URL}/Embalaje/Agregar`;
   axios.post(url, Object.assign({}, params), {headers}).then(respuesta => {
     alert(respuesta.data)
     window.location.reload();
@@ -53,7 +53,7 @@ const handleAceptar = (e) => {
 }
 
 function handleEliminar(id){
-  const url = "http://localhost/Embalaje/Eliminar/" + id;
+  const url = `${process.env.REACT_APP_API_URL}/Embalaje/Eliminar/` + id;
   axios.delete(url, {headers}).then(respuesta => {
     console.log(respuesta)
   }).catch(err => {
@@ -63,7 +63,7 @@ function handleEliminar(id){
 
 function handleShowModificar(row){
   console.log(row.original.m_nIdEmbalaje)
-  const url = "http://localhost/Embalaje/GetById/" + row.original.m_nIdEmbalaje;
+  const url = `${process.env.REACT_APP_API_URL}/Embalaje/GetById/` + row.original.m_nIdEmbalaje;
     axios.get(url, {headers}).then(respuesta => {
       console.log(respuesta.data)
       setState({
@@ -183,7 +183,7 @@ const handleChange = event => {
   }, []);
 
   function getAllData() {
-    const url = "http://localhost/Embalajes/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/Embalajes/GetListado`;
     axios.get(url, {headers}).then(respuesta => {
       setData(respuesta.data)
     });

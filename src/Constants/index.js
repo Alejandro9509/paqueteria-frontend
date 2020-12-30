@@ -1,4 +1,4 @@
-export const API_BASE_URL = 'http://localhost:8091';
+export const API_BASE_URL = `${process.env.REACT_APP_API_URL}`;
 
 export const ACCESS_TOKEN = 'accessToken';
 export const USER_ROLES = 'roles';
