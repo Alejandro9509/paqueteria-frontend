@@ -438,7 +438,7 @@ function Table({ columns, data}) {
                               onChange={handleChange}
                               className="form-control"
                               type="text"
-                              placeholder={state.codigoDepartamento}
+                              value={state.codigoDepartamento}
                               id="codigoDepartamento"
                             />
                           </div>
@@ -459,7 +459,7 @@ function Table({ columns, data}) {
                               onChange={handleChange}
                               className="form-control"
                               type="text"
-                              placeholder={state.descripcionDepartamento}
+                              value={state.descripcionDepartamento}
                               id="descripcionDepartamento"
                             />
                           </div>
