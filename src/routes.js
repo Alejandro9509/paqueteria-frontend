@@ -8,15 +8,12 @@ import UnidadesPage from './Views/Unidades';
 import RemitentesDestinatariosPage from './Views/RemitentesDestinatarios';
 import OperadoresPage from './Views/Operadores';
 import PlantillaPage from './Views/PlantillaSinPasos';
-<<<<<<< HEAD
 import CatalogosPage from './Views/Catalogos';
 import ConfiguracionPage from './Views/Configuracion';
-=======
 import RutasPage from './Views/Rutas';
 
 
 
->>>>>>> feature/UnidadesIntegracion
 
 const dashboardRoutes = [
   {
