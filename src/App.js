@@ -4,7 +4,7 @@ import {
   Switch,
   Redirect
 } from 'react-router-dom';
-import Departamento from './Views/Departamento';
+import Configuracion from './Views/Configuracion';
 import Login from './Views/Login';
 import {AplicationConsumer, AplicationProvider} from "./Util/Contexts/AplicationContext";
 import {ACCESS_TOKEN} from './Constants';
@@ -23,11 +23,11 @@ render(){
       return(
         localStorage.getItem(ACCESS_TOKEN) ? (
           <Switch>
-            <Route path="/departamento" component={Departamento} />
+            <Route path="/configuracion" component={Configuracion} />
             {dashboardRoutes.map((r, key) => {
                   return (<Route exact key={key} path={r.path} component={r.component} />)
               })}
-            <Redirect from="/" to="/departamento"/>
+            <Redirect from="/" to="/configuracion"/>
           </Switch>
         ) : (
           <div className="app">

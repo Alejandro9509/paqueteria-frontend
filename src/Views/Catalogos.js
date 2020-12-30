@@ -91,9 +91,14 @@ function Recoleccion() {
             return (
 
               <Link to={r.path}>
-                <button type="button" key={index} className="boton-de-catalogos" >
-                  {r.icon}
-                </button>
+                <div className="col-md-2" style={{ textAlign: "center" }}>
+                  <div className="input">
+                    <button type="button" key={index} className="boton-de-catalogos" >
+                      {r.icon}
+                    </button>
+                  </div>
+                  <label>{r.name}</label>
+                </div>
               </Link>
             )
           })}

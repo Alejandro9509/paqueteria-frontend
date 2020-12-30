@@ -3,11 +3,13 @@ import RecoleccionPage from './Views/Recoleccion';
 import EmbarquePage from './Views/Embarque';
 import EmbalajesPage from './Views/Embalajes'
 import GrupoUnidadesPage from './Views/GrupoUnidades'
+import InformesPage from './Views/Informes'
 import UnidadesPage from './Views/Unidades';
 import RemitentesDestinatariosPage from './Views/RemitentesDestinatarios';
 import OperadoresPage from './Views/Operadores';
 import PlantillaPage from './Views/PlantillaSinPasos';
 import CatalogosPage from './Views/Catalogos';
+import ConfiguracionPage from './Views/Configuracion';
 
 const dashboardRoutes = [
   {
@@ -17,15 +19,15 @@ const dashboardRoutes = [
     component: DepartamentoPage,
   },
   {
-    path: "/Departamento",
+    path: "/Configuracion",
     name: "Configuraciones",
     icon: <i className="fa fa-cog" />,                   //<IconoConfiguraciones className="fa" />,
-    component: DepartamentoPage,
+    component: ConfiguracionPage,
   },
   {
     path: "/Catalogos",
     name: "Catálogos",
-    icon: <i className="fa fa-book" />,                   //<IconoCatalogo />,
+    icon: <i className="zmdi zmdi-collection-text" />,                   //<IconoCatalogo />,
     component: CatalogosPage,
   },
   {
@@ -37,7 +39,7 @@ const dashboardRoutes = [
   {
     path: "/Embarque",
     name: "Embarque",
-    icon: <i className="fa fa-dropbox" />,
+    icon: <i className="fa fa-archive" />,
     component: EmbarquePage,
   },
   {
@@ -47,10 +49,10 @@ const dashboardRoutes = [
     component: DepartamentoPage,
   },
   {
-    path: "/Departamento",
-    name: "Informes",
-    icon: <i className="fa fa-file-text" />,
-    component: DepartamentoPage,
+      path: "/Informes",
+      name: "Informes",
+      icon: "fa fa-file-text",
+      component: InformesPage,
   },
   {
     path: "/Departamento",
