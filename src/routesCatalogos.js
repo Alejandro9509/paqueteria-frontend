@@ -3,6 +3,7 @@ import RecoleccionPage from './Views/Recoleccion';
 import EmbalajesPage from './Views/Embalajes';
 import EmbarquePage from './Views/Embarque';
 import CatalogosPage from './Views/Catalogos';
+import TipoServicioPage from './Views/TiposServicio'
 
 const catalogRoutes = [
   {
@@ -64,12 +65,6 @@ const catalogRoutes = [
   {
     path: "/Embalajes",
     name: "Estatus Unidades",
-    icon: <i className="fa fa-users" />,
-    component: EmbalajesPage,
-  },
-  {
-    path: "/Embalajes",
-    name: "Tipos de Servicio",
     icon: <i className="fa fa-users" />,
     component: EmbalajesPage,
   },

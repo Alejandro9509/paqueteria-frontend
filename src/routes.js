@@ -15,6 +15,7 @@ import RutasPage from './Views/Rutas';
 
 
 
+
 const dashboardRoutes = [
   {
     path: "/Departamento",
@@ -55,7 +56,7 @@ const dashboardRoutes = [
   {
       path: "/Informes",
       name: "Informes",
-      icon: "fa fa-file-text",
+      icon: <i className="fa fa-file-text" />,
       component: InformesPage,
   },
   {
