@@ -1909,7 +1909,6 @@ function App(props) {
                                                     id="vencimientoSeguro"
                                                     name="vencimientoSeguro"
                                                 />
-                                                  />
                                                 </div>
                                               </div>
                                               <div className="col-sm-12 col-md-4 col-lg-4 unit">
