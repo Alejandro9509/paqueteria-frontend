@@ -93,7 +93,7 @@ function Recoleccion() {
     tipoUnidad: 0,
     unidad: 0,
     paquetes: [
-      {
+     {
         peso: "",
         largo: "",
         ancho: "",
@@ -105,7 +105,7 @@ function Recoleccion() {
         descripcionPaquete: "",
         ctd: "",
         observacionesPaquete: "",
-      },
+      } ,
     ],
   })
   const [fileUploaded, setFileUploaded] = React.useState([])
@@ -343,6 +343,16 @@ function Recoleccion() {
     setState({
       ...state,
       [event.target.id]: event.target.value
+    });
+  };
+
+  const handleChangePaquete = (event, index) => {
+
+    var {paquetes} = state
+    paquetes[index][event.target.name] = event.target.value
+    setState({
+      ...state,
+      paquetes: paquetes
     });
   };
 
