@@ -14,12 +14,12 @@ function Embarque() {
 
   const [data, setData] = React.useState([])
   const [dataSucursal, setDataSucursal] = React.useState([]);
-  const [dataEstatusRecoleccion, setEstatusRecoleccion] = React.useState([]);
+  const [dataEstatusEmbarque, setEstatusEmbarque] = React.useState([]);
   const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
   const [state, setState] = React.useState({
     showPopUp: false,
     agregar: "Agregar",
-    idRecoleccion: 0,
+    idEmbarque: 0,
     fechaInicial: "",
     fechaIcinial2: "",
     sucursalListado: 0,
@@ -30,7 +30,7 @@ function Embarque() {
     folioGuía: "",
     folioInforme: "",
     fechaHoraCreacion: "",
-    estatusRecoleccion: 0,
+    estatusEmbarque: 0,
     moneda: "",
     tipoCambio: "",
     tipoCobro: "",
@@ -54,16 +54,8 @@ function Embarque() {
     destinoDestinatario: "",
     ciudadRemitente: "",
     ciudadDestinatario: "",
-    fechaRecoleccion: "",
-    horaRecoleccion: "",
     fechaEntrega: "",
     horaEntrega: "",
-    codigoPostalRecoleccion: "",
-    ciudadRecoleccion: "",
-    zonaRecoleccion: "",
-    domicilioRecoleccion: "",
-    recogerEn: "",
-    datosAdicionalesRecoleccion: "",
     codigoPostalEntrega: "",
     ciudadEntrega: "",
     zonaEntrega: "",
@@ -85,16 +77,17 @@ function Embarque() {
 
     var params = {
 
-      "m_nIdSucursal": state.idSucursalAgregar,
+      "IdSucursal": state.idSucursalAgregar,
       "m_nIdEmbarque": state.folioEmbarque,
       "m_nIdGuia": state.folioGuía,
       "m_nIdInforme": state.folioInforme,
       "m_dFecha": fechaYHora[0],
       "m_tHora": fechaYHora[1],
+      "m_nIdEstatusEmbarque": state.estatusEmbarque,
       "m_nMoneda": state.moneda,
       "m_rTipoCambio": state.tipoCambio,
       "m_nIdTipoDeCobro": state.tipoCobro,
-      "m_sNombreRemitente": state.nombreRemitente,
+      "m_sNOmbreRemitente": state.nombreRemitente,
       "m_sNombreDestinatario": state.nombreDestinatario,
       "m_sRFCRemitente": state.RFCRemitente,
       "m_sRFCDestinatario": state.RFCDestinatario,
@@ -112,16 +105,8 @@ function Embarque() {
       "m_sContactoDestinatario": state.contactoDestinatario,
       "m_nIdCiudadOrigen": state.ciudadRemitente,
       "m_nIdCiudadDestino": state.ciudadDestinatario,
-      "m_dFechaDetalleRecoleccion": state.fechaRecoleccion,
-      "m_tHoraDetalleRecoleccion": state.horaRecoleccion,
       "m_tFechaDetalleEntrega": state.fechaEntrega,
       "m_tHoraDetalleEntrega": state.horaEntrega,
-      "m_nIdCPDetalleRecoleccion": state.codigoPostalRecoleccion,
-      "m_nIdCiudadDetalleRecoleccion": state.ciudadRecoleccion,
-      "m_nIdZonaDetalleRecoleccion": state.zonaRecoleccion,
-      "m_sDomicilioDetalleRecoleccion": state.domicilioRecoleccion,
-      "m_sRecogerEnDetalleRecoleccion": state.recogerEn,
-      "m_sDatosAdicionalesDetalleRecoleccion": state.datosAdicionalesRecoleccion,
       "m_nIdCPDetalleEntrega": state.codigoPostalEntrega,
       "m_nIdCiudadDetalleEntrega": state.ciudadEntrega,
       "m_nIdZonaDetalleEntrega": state.zonaEntrega,
@@ -132,7 +117,7 @@ function Embarque() {
     }
     console.log(params)
     alert(JSON.stringify(params))
-    if (state.idRecoleccion != 0) {
+    if (state.idEmbarque != 0) {
       const url = "http://localhost/Recoleccion/Modificar/" + state.idRecoleccion;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
@@ -142,7 +127,7 @@ function Embarque() {
         alert("err")
       });
     } else {
-      const url = "http://localhost/Recoleccion/Agregar";
+      const url = "http://localhost/Embarques/Agregar";
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
         //window.location.reload();
@@ -185,9 +170,46 @@ function Embarque() {
       ...state,
       agregar: "Agregar",
       showPopUp: true,
-      idDepartamento: 0,
-      codigoDepartamento: 0,
-      descripcionDepartamento: ""
+      idEntrega: 0,
+      idSucursalAgregar: 0,
+      folioRecoleccion: "",
+      folioEmbarque: "",
+      folioGuía: "",
+      folioInforme: "",
+      fechaHoraCreacion: "",
+      moneda: "",
+      tipoCambio: "",
+      tipoCobro: "",
+      nombreRemitente: "",
+      RFCRemitente: "",
+      domicilioRemitente: "",
+      codigoPostalRemitente: "",
+      ciudadRemitente: "",
+      correoRemitente: "",
+      telefonoRemitente: "",
+      contactoRemitente: "",
+      origenRemitente: "",
+      nombreDestinatario: "",
+      RFCDestinatario: "",
+      domicilioDestinatario: "",
+      codigoPostalDestinatario: "",
+      ciudadDestinatario: "",
+      correoDestinatario: "",
+      telefonoDestinatario: "",
+      contactoDestinatario: "",
+      destinoDestinatario: "",
+      ciudadRemitente: "",
+      ciudadDestinatario: "",
+      fechaEntrega: "",
+      horaEntrega: "",
+      codigoPostalEntrega: "",
+      ciudadEntrega: "",
+      zonaEntrega: "",
+      domicilioEntrega: "",
+      entregaEn: "",
+      datosAdicionalesEntrega: "",
+      cantidadDePaquetes: 0,
+      cantidadDeSobres: 0,
     })
   }
 
@@ -198,14 +220,6 @@ function Embarque() {
       [event.target.id]: event.target.value
     });
   };
-
-  const handleRecoleccionCheckboxChange = event => {
-    console.log("diferenteRecoleccion : " + state.diferenteRecoleccion)
-    setState({
-      ...state,
-      diferenteRecoleccion: !state.diferenteRecoleccion
-    });
-  }
 
   const handleEntregaCheckboxChange = event => {
     console.log("diferenteEntrega : " + state.diferenteEntrega)
@@ -218,22 +232,28 @@ function Embarque() {
   const columns = React.useMemo(() => [
     {
       Name: "Folio",
-      accessor: "m_nCodigo",
+      accessor: "m_nFolioEmbarque",
     }, {
-      Name: "Descripción",
-      accessor: "m_sDescripcion",
+      Name: "Fecha Elaboración",
+      accessor: "m_dFecha",
     }, {
-      Name: "Creado El",
-      accessor: "m_dtCreadoEl",
+      Name: "Sucursal",
+      accessor: "IdSucursal",
     }, {
-      Name: "Creado Por",
-      accessor: "m_nCreadoPor",
+      Name: "Estatus de la Orden",
+      accessor: "m_nIdEstatusEmbarque",
     }, {
-      Name: "Modificado El",
-      accessor: "m_dtModificadoEl",
+      Name: "Origen",
+      accessor: "m_nIdCiudadOrigen",
     }, {
-      Name: "Modificado Por",
-      accessor: "m_nModificadoPor",
+      Name: "Destino",
+      accessor: "m_nIdCiudadDestino",
+    }, {
+      Name: "Folio Guía",
+      accessor: "m_nFolioGuia",
+    }, {
+      Name: "Folio Informe",
+      accessor: "m_nFolioInforme",
     }
 
   ]);
@@ -241,12 +261,12 @@ function Embarque() {
   useEffect(value => {
     getAllData();
     getAllSucursales();
-    getAllEstatusRecoleccion();
+    getAllEstatusEmbarque();
     getAllTipoCobro();
   }, []);
 
   function getAllData() {
-    const url = "http://localhost/Recoleccion/GetListado";
+    const url = "http://localhost/Embarques/GetListado";
     axios.get(url, { headers }).then(respuesta => {
       setData(respuesta.data)
     });
@@ -259,10 +279,10 @@ function Embarque() {
     });
   }
 
-  function getAllEstatusRecoleccion() {
-    const url = "http://localhost/SisEstatus/getListadoRecoleccion";
+  function getAllEstatusEmbarque() {
+    const url = "http://localhost/SisEstatus/GetListadoEmbarque";
     axios.get(url, { headers }).then((respuesta) => {
-      setEstatusRecoleccion(respuesta.data);
+      setEstatusEmbarque(respuesta.data);
     });
   }
 
@@ -315,7 +335,7 @@ function Embarque() {
         onChange={e => {
           setFilter(e.target.value || undefined)
         }}
-        placeholder={`Buscar ${count} registros...`}
+        value={`Buscar ${count} registros...`}
       />
     )
   }
@@ -576,14 +596,14 @@ function Embarque() {
                               className="form-control"
                               required
                               onChange={handleChange}
-                              id="estatus"
+                              id="estatusListado"
                             >
                               <option value="0">
                                 Todos
                             </option>
-                              {dataEstatusRecoleccion.map(
+                              {dataEstatusEmbarque.map(
                                 (estatus) => (
-                                  <option key={estatus.m_nIdEstatusRecoleccion} value={estatus.m_nIdEstatusRecoleccion}>
+                                  <option key={estatus.m_nIdEstatusEmbarque} value={estatus.m_nIdEstatusEmbarque}>
                                     {
                                       estatus.m_sEstatus
                                     }
@@ -683,7 +703,7 @@ function Embarque() {
                                   className="form-control"
                                   required
                                   onChange={handleChange}
-                                  id="sucursalAgregar"
+                                  id="idSucursalAgregar"
                                 >
                                   {dataSucursal.map(
                                     (sucursal) => (
@@ -708,7 +728,7 @@ function Embarque() {
                                   onChange={handleChange}
                                   className="form-control"
                                   type="text"
-                                  placeholder={state.folioRecoleccion}
+                                  value={state.folioRecoleccion}
                                   id="folioRecoleccion"
                                   readOnly
                                 />
@@ -724,7 +744,7 @@ function Embarque() {
                                   onChange={handleChange}
                                   className="form-control"
                                   type="text"
-                                  placeholder={state.folioEmbarque}
+                                  value={state.folioEmbarque}
                                   id="folioEmbarque"
                                   readOnly
                                 />
@@ -740,7 +760,7 @@ function Embarque() {
                                   onChange={handleChange}
                                   className="form-control"
                                   type="text"
-                                  placeholder={state.folioGuía}
+                                  value={state.folioGuía}
                                   id="folioGuía"
                                   readOnly
                                 />
@@ -756,7 +776,7 @@ function Embarque() {
                                   onChange={handleChange}
                                   className="form-control"
                                   type="text"
-                                  placeholder={state.folioInforme}
+                                  value={state.folioInforme}
                                   id="folioInforme"
                                   readOnly
                                 />
@@ -779,18 +799,18 @@ function Embarque() {
 
                             <div className="col-sm-4 col-md-2-5 unit">
                               <label className="label">
-                                Estatus de la Recolección
+                                Estatus del Embarque
                           </label>
                               <label className="input select">
                                 <select
                                   className="form-control"
                                   required
                                   onChange={handleChange}
-                                  id="estatus"
+                                  id="estatusEmbarque"
                                 >
-                                  {dataEstatusRecoleccion.map(
+                                  {dataEstatusEmbarque.map(
                                     (estatus) => (
-                                      <option key={estatus.m_nIdEstatusRecoleccion} value={estatus.m_nIdEstatusRecoleccion}>
+                                      <option key={estatus.m_nIdEstatusEmbarque} value={estatus.m_nIdEstatusEmbarque}>
                                         {
                                           estatus.m_sEstatus
                                         }
@@ -811,7 +831,7 @@ function Embarque() {
                                   onChange={handleChange}
                                   className="form-control"
                                   type="text"
-                                  placeholder={state.moneda}
+                                  value={state.moneda}
                                   id="moneda"
                                 />
                               </div>
@@ -826,7 +846,7 @@ function Embarque() {
                                   onChange={handleChange}
                                   className="form-control"
                                   type="text"
-                                  placeholder={state.tipoCambio}
+                                  value={state.tipoCambio}
                                   id="tipoCambio"
                                 />
                               </div>
@@ -890,7 +910,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.nombreRemitente}
+                                    value={state.nombreRemitente}
                                     id="nombreRemitente"
                                   />
                                 </div>
@@ -905,7 +925,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.RFCRemitente}
+                                    value={state.RFCRemitente}
                                     id="RFCRemitente"
                                   />
                                 </div>
@@ -920,7 +940,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.domicilioRemitente}
+                                    value={state.domicilioRemitente}
                                     id="domicilioRemitente"
                                   />
                                 </div>
@@ -935,7 +955,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.codigoPostalRemitente}
+                                    value={state.codigoPostalRemitente}
                                     id="codigoPostalRemitente"
                                   />
                                 </div>
@@ -950,7 +970,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.ciudadRemitente}
+                                    value={state.ciudadRemitente}
                                     id="ciudadRemitente"
                                   />
                                 </div>
@@ -965,7 +985,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.correoRemitente}
+                                    value={state.correoRemitente}
                                     id="correoRemitente"
                                   />
                                 </div>
@@ -980,7 +1000,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.telefonoRemitente}
+                                    value={state.telefonoRemitente}
                                     id="telefonoRemitente"
                                   />
                                 </div>
@@ -995,7 +1015,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.contactoRemitente}
+                                    value={state.contactoRemitente}
                                     id="contactoRemitente"
                                   />
                                 </div>
@@ -1013,7 +1033,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.nombreDestinatario}
+                                    value={state.nombreDestinatario}
                                     id="nombreDestinatario"
                                   />
                                 </div>
@@ -1028,7 +1048,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.RFCDestinatario}
+                                    value={state.RFCDestinatario}
                                     id="RFCDestinatario"
                                   />
                                 </div>
@@ -1043,7 +1063,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.domicilioDestinatario}
+                                    value={state.domicilioDestinatario}
                                     id="domicilioDestinatario"
                                   />
                                 </div>
@@ -1058,7 +1078,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.codigoPostalDestinatario}
+                                    value={state.codigoPostalDestinatario}
                                     id="codigoPostalDestinatario"
                                   />
                                 </div>
@@ -1073,7 +1093,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.ciudadDestinatario}
+                                    value={state.ciudadDestinatario}
                                     id="ciudadDestinatario"
                                   />
                                 </div>
@@ -1088,7 +1108,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.correoDestinatario}
+                                    value={state.correoDestinatario}
                                     id="correoDestinatario"
                                   />
                                 </div>
@@ -1103,7 +1123,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.telefonoDestinatario}
+                                    value={state.telefonoDestinatario}
                                     id="telefonoDestinatario"
                                   />
                                 </div>
@@ -1118,7 +1138,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.contactoDestinatario}
+                                    value={state.contactoDestinatario}
                                     id="contactoDestinatario"
                                   />
                                 </div>
@@ -1167,7 +1187,7 @@ function Embarque() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="datetime-local"
-                                          placeholder={state.fechaEntrega}
+                                          value={state.fechaEntrega}
                                           id="fechaEntrega"
                                         />
                                       </div>
@@ -1182,7 +1202,7 @@ function Embarque() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
-                                          placeholder={state.codigoPostalEntrega}
+                                          value={state.codigoPostalEntrega}
                                           id="codigoPostalEntrega"
                                         />
                                       </div>
@@ -1197,7 +1217,7 @@ function Embarque() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
-                                          placeholder={state.ciudadEntrega}
+                                          value={state.ciudadEntrega}
                                           id="ciudadEntrega"
                                         />
                                       </div>
@@ -1212,7 +1232,7 @@ function Embarque() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
-                                          placeholder={state.zonaEntrega}
+                                          value={state.zonaEntrega}
                                           id="zonaEntrega"
                                         />
                                       </div>
@@ -1227,7 +1247,7 @@ function Embarque() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
-                                          placeholder={state.domicilioEntrega}
+                                          value={state.domicilioEntrega}
                                           id="domicilioEntrega"
                                         />
                                       </div>
@@ -1242,7 +1262,7 @@ function Embarque() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
-                                          placeholder={state.entregaEn}
+                                          value={state.entregaEn}
                                           id="entregaEn"
                                         />
                                       </div>
@@ -1257,7 +1277,7 @@ function Embarque() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
-                                          placeholder={state.datosAdicionalesEntrega}
+                                          value={state.datosAdicionalesEntrega}
                                           id="datosAdicionalesEntrega"
                                         />
                                       </div>
@@ -1295,7 +1315,7 @@ function Embarque() {
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
-                                      placeholder={state.peso}
+                                      value={state.peso}
                                       id="peso"
                                     />
                                   </div>
@@ -1310,7 +1330,7 @@ function Embarque() {
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
-                                      placeholder={state.peso}
+                                      value={state.peso}
                                       id="largo"
                                     />
                                   </div>
@@ -1325,7 +1345,7 @@ function Embarque() {
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
-                                      placeholder={state.peso}
+                                      value={state.peso}
                                       id="ancho"
                                     />
                                   </div>
@@ -1340,7 +1360,7 @@ function Embarque() {
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
-                                      placeholder={state.peso}
+                                      value={state.peso}
                                       id="alto"
                                     />
                                   </div>
@@ -1355,7 +1375,7 @@ function Embarque() {
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
-                                      placeholder={state.peso}
+                                      value={state.peso}
                                       id="volumen"
                                     />
                                   </div>
@@ -1370,7 +1390,7 @@ function Embarque() {
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
-                                      placeholder={state.peso}
+                                      value={state.peso}
                                       id="peso"
                                     />
                                   </div>
@@ -1385,7 +1405,7 @@ function Embarque() {
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
-                                      placeholder={state.peso}
+                                      value={state.peso}
                                       id="peso"
                                     />
                                   </div>
@@ -1400,7 +1420,7 @@ function Embarque() {
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
-                                      placeholder={state.peso}
+                                      value={state.peso}
                                       id="peso"
                                     />
                                   </div>
@@ -1415,7 +1435,7 @@ function Embarque() {
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
-                                      placeholder={state.peso}
+                                      value={state.peso}
                                       id="volumen"
                                     />
                                   </div>
@@ -1430,7 +1450,7 @@ function Embarque() {
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
-                                      placeholder={state.peso}
+                                      value={state.peso}
                                       id="volumen"
                                     />
                                   </div>
@@ -1475,7 +1495,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.nombreDestinatario}
+                                    value={state.nombreDestinatario}
                                     id="nombreDestinatario"
                                   />
                                 </div>
@@ -1490,7 +1510,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.RFCDestinatario}
+                                    value={state.RFCDestinatario}
                                     id="RFCDestinatario"
                                   />
                                 </div>
@@ -1505,7 +1525,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.domicilioDestinatario}
+                                    value={state.domicilioDestinatario}
                                     id="domicilioDestinatario"
                                   />
                                 </div>
@@ -1520,7 +1540,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.codigoPostalDestinatario}
+                                    value={state.codigoPostalDestinatario}
                                     id="codigoPostalDestinatario"
                                   />
                                 </div>
@@ -1535,7 +1555,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.ciudadDestinatario}
+                                    value={state.ciudadDestinatario}
                                     id="ciudadDestinatario"
                                   />
                                 </div>
@@ -1550,7 +1570,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.correoDestinatario}
+                                    value={state.correoDestinatario}
                                     id="correoDestinatario"
                                   />
                                 </div>
@@ -1565,7 +1585,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.telefonoDestinatario}
+                                    value={state.telefonoDestinatario}
                                     id="telefonoDestinatario"
                                   />
                                 </div>
@@ -1580,7 +1600,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.contactoDestinatario}
+                                    value={state.contactoDestinatario}
                                     id="contactoDestinatario"
                                   />
                                 </div>
@@ -1595,7 +1615,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.origenDestinatario}
+                                    value={state.origenDestinatario}
                                     id="origenDestinatario"
                                   />
                                 </div>
@@ -1625,7 +1645,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.nombreRemitente}
+                                    value={state.nombreRemitente}
                                     id="nombreRemitente"
                                   />
                                 </div>
@@ -1640,7 +1660,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.RFCRemitente}
+                                    value={state.RFCRemitente}
                                     id="RFCRemitente"
                                   />
                                 </div>
@@ -1655,7 +1675,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.domicilioRemitente}
+                                    value={state.domicilioRemitente}
                                     id="domicilioRemitente"
                                   />
                                 </div>
@@ -1670,7 +1690,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.codigoPostalRemitente}
+                                    value={state.codigoPostalRemitente}
                                     id="codigoPostalRemitente"
                                   />
                                 </div>
@@ -1685,7 +1705,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.ciudadRemitente}
+                                    value={state.ciudadRemitente}
                                     id="ciudadRemitente"
                                   />
                                 </div>
@@ -1700,7 +1720,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.correoRemitente}
+                                    value={state.correoRemitente}
                                     id="correoRemitente"
                                   />
                                 </div>
@@ -1715,7 +1735,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.telefonoRemitente}
+                                    value={state.telefonoRemitente}
                                     id="telefonoRemitente"
                                   />
                                 </div>
@@ -1730,7 +1750,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.contactoRemitente}
+                                    value={state.contactoRemitente}
                                     id="contactoRemitente"
                                   />
                                 </div>
@@ -1745,7 +1765,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.origenRemitente}
+                                    value={state.origenRemitente}
                                     id="origenRemitente"
                                   />
                                 </div>
@@ -1773,7 +1793,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.nombreDestinatario}
+                                    value={state.nombreDestinatario}
                                     id="nombreDestinatario"
                                   />
                                 </div>
@@ -1788,7 +1808,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.RFCDestinatario}
+                                    value={state.RFCDestinatario}
                                     id="RFCDestinatario"
                                   />
                                 </div>
@@ -1803,7 +1823,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.domicilioDestinatario}
+                                    value={state.domicilioDestinatario}
                                     id="domicilioDestinatario"
                                   />
                                 </div>
@@ -1818,7 +1838,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.codigoPostalDestinatario}
+                                    value={state.codigoPostalDestinatario}
                                     id="codigoPostalDestinatario"
                                   />
                                 </div>
@@ -1833,7 +1853,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.ciudadDestinatario}
+                                    value={state.ciudadDestinatario}
                                     id="ciudadDestinatario"
                                   />
                                 </div>
@@ -1848,7 +1868,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.correoDestinatario}
+                                    value={state.correoDestinatario}
                                     id="correoDestinatario"
                                   />
                                 </div>
@@ -1863,7 +1883,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.telefonoDestinatario}
+                                    value={state.telefonoDestinatario}
                                     id="telefonoDestinatario"
                                   />
                                 </div>
@@ -1878,7 +1898,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.contactoDestinatario}
+                                    value={state.contactoDestinatario}
                                     id="contactoDestinatario"
                                   />
                                 </div>
@@ -1893,7 +1913,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.origenDestinatario}
+                                    value={state.origenDestinatario}
                                     id="origenDestinatario"
                                   />
                                 </div>
@@ -1938,7 +1958,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.pesoPaquete}
+                                    value={state.pesoPaquete}
                                     id="pesoPaquete"
                                   />
                                 </div>
@@ -1953,7 +1973,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.largoPaquete}
+                                    value={state.largoPaquete}
                                     id="largoPaquete"
                                   />
                                 </div>
@@ -1968,7 +1988,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.anchoPaquete}
+                                    value={state.anchoPaquete}
                                     id="anchoPaquete"
                                   />
                                 </div>
@@ -1983,7 +2003,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.altoPaquete}
+                                    value={state.altoPaquete}
                                     id="altoPaquete"
                                   />
                                 </div>
@@ -1998,7 +2018,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.valorPaquete}
+                                    value={state.valorPaquete}
                                     id="valorPaquete"
                                   />
                                 </div>
@@ -2013,7 +2033,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.descripcionPaquete}
+                                    value={state.descripcionPaquete}
                                     id="descripcionPaquete"
                                   />
                                 </div>
@@ -2028,7 +2048,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.cantidadPaquete}
+                                    value={state.cantidadPaquete}
                                     id="cantidadPaquete"
                                   />
                                 </div>
@@ -2043,7 +2063,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.observacionesPaquete}
+                                    value={state.observacionesPaquete}
                                     id="observacionesPaquete"
                                   />
                                 </div>
@@ -2082,7 +2102,7 @@ function Embarque() {
                                   onChange={handleChange}
                                   className="form-control"
                                   type="text"
-                                  placeholder={state.descripcionSobre}
+                                  value={state.descripcionSobre}
                                   id="descripcionSobre"
                                 />
                               </div>
@@ -2101,47 +2121,6 @@ function Embarque() {
                   <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
                 </div>
               </form>
-            </div>
-
-            <div id="Importar" className="tab-pane fade">
-              <div className="widget-wrap">
-                <div className="widget-content">
-                  <div className="row">
-                    <div className="col-md-12">
-                      <form className="j-forms">
-                        <div className="form-content">
-                          <div className="col-sm-12 col-md-12 unit">
-                            <label className="label">
-                              Importar
-                          </label>
-                            <div className="input">
-                              <label
-                                className="icon-left"
-                                htmlFor="importar"
-                              >
-                                <i className="fa fa-edit" />
-                              </label>
-                              <input
-                                onChange={handleUpload}
-                                className="form-control"
-                                type="file"
-                                placeholder="some text"
-                                id="importar"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <br></br>
-                        <div className="form-footer" className="col-md-12">
-                          <button className="btn btn-default btn-block ex-noty" data-layout="topCenter" data-type="information">Notificación</button>
-                          <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
-                          <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
 
           </div>
