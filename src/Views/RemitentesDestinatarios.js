@@ -27,11 +27,11 @@ function App(props) {
   const [state, setState] = React.useState({
     showPopUp: false,
     idRemitenteDestinatario: 0,
-    idCliente: 0,
+    idCliente: {},
     numero: 0,
     nombre: "",
     rfc: "",
-    activo: "true",
+    activo: "false",
     calle: "",
     noExterior: 0,
     noInterior: 0,
@@ -41,7 +41,6 @@ function App(props) {
     idPais: 0,
     idEstado: 0,
     codigoPostal: 0,
-    sucursal: 0,
     creadoPor: 0,
     creadoEl: "",
     modificadoPor: "",
@@ -68,7 +67,7 @@ function App(props) {
   }
 
   function getAllCodigosPostales() {
-    const url = "http://localhost/CodigoPostal/GetListado";
+    const url = "http://192.168.2.211:9090/CodigoPostal/GetListado";
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta);
 
@@ -76,10 +75,20 @@ function App(props) {
     });
   }
 
+  
+  const handleChangeActivoCheckboxChange = (event) => {
+    console.log(event.target.name+" " + state.activo);
+    setState({
+      ...state,
+      activo: !state.activo,
+    });
+  };
+
+
   const handleAceptar = (e) => {
     e.preventDefault();
     var params = {
-      IdCliente: state.idCliente,
+      IdCliente: state.idCliente.m_nIdCliente,
       Numero: state.numero,
       Nombre: state.nombre,
       RFC: state.rfc,
@@ -91,8 +100,6 @@ function App(props) {
       Localidad: state.localidad,
       Municipio: state.municipio,
       IdEstado: state.idEstado,
-      CodigoPostal: state.codigoPostal,
-      IdSucursal: state.IdSucursal,
       CreadoPor: state.creadoPor,
       CreadoEl: state.creadoEl,
       ModificadoPor: state.modificadoPor,
@@ -119,7 +126,7 @@ function App(props) {
           alert("err");
         });
     } else {
-      const url = "http://localhost/RemitentesDestinatarios/Agregar";
+      const url = "http://localhost/RemitentesDestinatarios/Agregarr";
       axios
         .post(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
@@ -166,7 +173,6 @@ function App(props) {
         municipio: row.original.m_sMunicipio,
         idEstado: row.original.m_nIdEstado,
         codigoPostal: row.original.m_sCodigoPostal,
-        sucursal: row.original.m_nIdSucursal,
         creadoPor: row.original.m_nCreadoPor,
         creadoEl: row.original.m_dtCreadoEl,
         modificadoPor: row.original.m_nModificadoPor,
@@ -480,12 +486,14 @@ function App(props) {
                                     <label className="label">Estatus</label>
                                     <label className="checkbox">
                                       <input
-                                        onChange={handleChange}
-                                        required
+onChange={
+  handleChangeActivoCheckboxChange
+}                                        required
                                         native
                                         type="checkbox"
                                         placeholder={state.activo}
                                         id="activo"
+                                        name="activo"
                                       />
                                       <i />
                                       Activo
@@ -521,13 +529,12 @@ function App(props) {
                                   {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
                                   <Autocomplete
                                     freeSolo
-                                    onChange={handleChange}
+                                    onChange={(event, newValue) => setState({...state, idCliente: newValue})}
                                     placeholder={state.idCliente}
                                     id="idCliente"
                                     disableClearable
-                                    options={dataClientes.map(
-                                      (option) => option.m_sNombreFiscal
-                                    )}
+                                    getOptionLabel={(option) => option.m_sNombreFiscal}
+                                    options={dataClientes}
                                     renderInput={(params) => (
                                       <TextField
                                         {...params}
@@ -588,13 +595,12 @@ function App(props) {
                                 <div className="input">
                                   <Autocomplete
                                     freeSolo
-                                    onChange={handleChange}
+                                    onChange={(event, newValue) => setState({...state, codigoPostal: newValue})}
                                     placeholder={state.codigoPostal}
                                     id="codigoPostal"
                                     disableClearable
-                                    options={dataCP.map(
-                                      (option) => option.m_sCP
-                                    )}
+                                    options={dataCP}
+                                    getOptionLabel={(option) => option.m_sCP}
                                     renderInput={(params) => (
                                       <TextField
                                         {...params}
@@ -613,14 +619,17 @@ function App(props) {
                               <label className="label">Estado</label>
                               <label className="input select">
                                 <select
+                                onChange={handleChange}
                                   className="form-control"
                                   required
                                   native
-                                  name="estado"
+                                  name="idEstado"
+                                  placeholder={state.idEstado}
+                                    id="idEstado"
                                 >
 
                                   {dataEstado.map((estado) => (
-                                    <option value="{estado.m_nIdEstado}">
+                                    <option value={estado.m_nIdEstado}>
                                       {estado.m_sEstado}
                                     </option>
                                   ))}
