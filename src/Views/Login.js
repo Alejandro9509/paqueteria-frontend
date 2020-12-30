@@ -34,19 +34,6 @@ function login(){
                 <div className="login-form-content">
                   {/* start login */}
 
-                  <FormControl fullWidth required className="form-control login-frm-input">
-                          <InputLabel htmlFor="Codigo">Código</InputLabel>
-                          <Input
-                            required
-                            type={'number'}
-                            inputProps={{
-                              name: 'codigoDepartamento',
-                              id: 'codigoDepartamento',
-                            }}
-                          />
-                  </FormControl>
-
-
                   <div className="unit">
                     <div className="input login-input">
                       <label className="icon-left" htmlFor="login">
