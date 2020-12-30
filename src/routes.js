@@ -27,11 +27,7 @@ const dashboardRoutes = [
   {
     path: "/Departamento",
     name: "Indicadores",
-<<<<<<< HEAD
-    icon: <i className="fa fa-pie-chart" />,
-=======
     icon: IndicadoresIcon,
->>>>>>> feature/componentes
     component: DepartamentoPage,
     single: true,
     child:[]
@@ -39,170 +35,66 @@ const dashboardRoutes = [
   {
     path: "/Configuracion",
     name: "Configuraciones",
-<<<<<<< HEAD
-    icon: <i className="fa fa-cog" />,                   //<IconoConfiguraciones className="fa" />,
-    component: ConfiguracionPage,
-=======
     icon: ConfiguracionIcon,
-    component: DepartamentoPage,
+    component: ConfiguracionPage,
     single: true,
     child:[]
->>>>>>> feature/componentes
   },
   {
     path: "/Catalogos",
     name: "Catálogos",
-<<<<<<< HEAD
-    icon: <i className="zmdi zmdi-collection-text" />,                   //<IconoCatalogo />,
-    component: CatalogosPage,
-=======
     icon: CatalogoIcon,
-    component: DepartamentoPage,
-    single: false,
-    child: [
-      {
-        path: "/GrupoDeUnidades",
-        name: "Grupo de Unidades",
-        icon: ConfiguracionIcon,
-        component: GrupoUnidadesPage,
-      },  {
-        path: "/Unidades",
-        name: "Unidades",
-        icon: ConfiguracionIcon,
-        component: UnidadesPage,
-      },
-      {
-        path: "/Operadores",
-        name: "Operadores",
-        icon: ConfiguracionIcon,
-        component: OperadoresPage,
-      }
-    ]
->>>>>>> feature/componentes
-  },
+    component: CatalogosPage,
+    single: true,
+    child:  [] 
+    },
   {
     path: "/Recolección",
     name: "Recolección",
-<<<<<<< HEAD
-    icon: <i className="zmdi zmdi-local-shipping" />,
-=======
     icon: RecolecionIcon,
->>>>>>> feature/componentes
     component: RecoleccionPage,
     single: true,
     child:[]
   },
   {
-<<<<<<< HEAD
-    path: "/Embarque",
-    name: "Embarque",
-    icon: <i className="fa fa-archive" />,
-    component: EmbarquePage,
-=======
     path: "/Embalajes",
     name: "Embarque",
     icon: EmbarqueIcon,
-    component: EmbalajesPage,
+    component: EmbarquePage,
     single: true,
     child:[]
->>>>>>> feature/componentes
   },
   {
     path: "/Departamento",
     name: "Guías",
-<<<<<<< HEAD
-    icon: <i className="zmdi zmdi-assignment" />,
-=======
     icon: GuiasIcon,
->>>>>>> feature/componentes
     component: DepartamentoPage,
     single: true,
     child:[]
   },
   {
-<<<<<<< HEAD
-      path: "/Informes",
+    path: "/Informes",
       name: "Informes",
-      icon: <i className="fa fa-file-text" />,
-      component: InformesPage,
-=======
-    path: "/Departamento",
-    name: "Informes",
     icon: InformeIcon ,
-    component: DepartamentoPage,
+    component: InformesPage,
     single: true,
     child:[]
->>>>>>> feature/componentes
   },
   {
     path: "/Departamento",
     name: "Viajes",
-<<<<<<< HEAD
-    icon: <i className="fa fa-road" />,
-    component: DepartamentoPage,
-  },
-  {
-    path: "/Embalajes",
-    name: "Embalajes",
-    icon: <i className="fa fa-cube" />,
-    component: EmbalajesPage,
-  },
-  {
-    path: "/GrupoDeUnidades",
-    name: "Grupo de Unidades",
-    icon: <i className="fa fa-truck"/>,
-    component: GrupoUnidadesPage,
-  },  {
-    path: "/Unidades",
-    name: "Unidades",
-    icon: <i className="fa fa-cube"/>,
-    component: UnidadesPage,
-=======
     icon: viajeIcon,
     component: DepartamentoPage,
     single: true,
     child:[]
->>>>>>> feature/componentes
   },
   {
     path: "/RemitentesDestinatarios",
     name: "RemitentesDestinatarios",
-<<<<<<< HEAD
-    icon: <i className="fa fa-cube" />,
-=======
     icon: ConfiguracionIcon,
->>>>>>> feature/componentes
     component: RemitentesDestinatariosPage,
     single: true,
     child:[]
-  },
-  {
-<<<<<<< HEAD
-    path: "/Operadores",
-    name: "Operadores",
-    icon: <i className="fa fa-cube" />,
-    component: OperadoresPage,
-  }
-  ,
-  {
-    path: "/PlantillaSinPasos",
-    name: "Plantilla",
-    icon: <i className="fa fa-cube" />,
-    component: PlantillaPage,
-  },
-  {
-    path: "/Rutas",
-    name: "Rutas",
-    icon: "fa fa-cube",
-    component: RutasPage,
-=======
-    path: "/PlantillaSinPasos",
-    name: "Plantilla",
-    icon: ConfiguracionIcon,
-    component: PlantillaPage,
-    single: true,
-    child:[]
->>>>>>> feature/componentes
   }
 ];
 

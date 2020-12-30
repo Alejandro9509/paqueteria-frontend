@@ -306,7 +306,6 @@ function App(props) {
     });
   }
 
-<<<<<<< HEAD
   const handleChangeActivoCheckboxChange = (event) => {
     console.log(event.target.name+" " + state.activo);
     setState({
@@ -342,10 +341,6 @@ function App(props) {
 
   function handleEliminar(id) {
     const url = "http://localhost/Unidad/Eliminar/" + id;
-=======
-  function handleElimiar(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Unidad/Eliminar/` + id;
->>>>>>> feature/componentes
     axios
       .get(url, { headers })
       .then((respuesta) => {

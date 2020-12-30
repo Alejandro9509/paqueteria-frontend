@@ -49,125 +49,22 @@ function App(props) {
     correoElectronico: "",
     telefono: "",
     agregar: "Agregar",
-<<<<<<< HEAD
     importar: "",
-=======
-    importar: ""
-})
-
-
-
-function getAllClientes() {
-  const url = `${process.env.REACT_APP_API_URL}/Clientes/GetListado`;
-  axios.get(url, { headers }).then((respuesta) => {
-    console.log(respuesta);
-
-    setDataClientes(respuesta.data);
-  });
-}
-
-function getAllCodigosPostales() {
-  const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
-  axios.get(url, { headers }).then((respuesta) => {
-    console.log(respuesta);
-
-    setDataCP(respuesta.data);
->>>>>>> feature/componentes
   });
 
-<<<<<<< HEAD
   function handleShowAgregar() {
     setState({
       ...state,
     });
-=======
-
-
-const handleAceptar = (e) => {
-  e.preventDefault()
-	var params = { 
-    "IdCliente": state.idCliente,
-    Numero: 0,
-    Nombre: "",
-    RFC: "",
-    Activo: "true",
-    Calle: "",
-    NoExterior: 0,
-    NoInterior: 0,
-    Colonia: "",
-    Localidad:"",
-    Municipio: 0,
-    IdEstado: 0,
-    CodigoPostal: 0,
-    IdSucursal: 0,
-    CreadoPor:0,
-    CreadoEl:"",
-    ModificadoPor:"",
-    ModificadoEl:"",
-    Contacto:"",
-    CorreoElectronico:"",
-    Telefono:"",
-    agregar: "Agregar",
-    importar: ""
-	  
-  }
-  console.log(params)
-  if(state.idDepartamento != 0){
-    const url = `${process.env.REACT_APP_API_URL}/Departamento/Modificar/` + state.idDepartamento;
-    axios.put(url, Object.assign({}, params), {headers}).then(respuesta => {
-    alert(respuesta.data)
-    window.location.reload();
-  }).catch(err => {
-    console.log(err)
-    alert("err")
-  });
-  } else {
-  const url = `${process.env.REACT_APP_API_URL}/Departamento/Agregar`;
-  axios.post(url, Object.assign({}, params), {headers}).then(respuesta => {
-    alert(respuesta.data)
-    window.location.reload();
-  }).catch(err => {
-    console.log(err)
-    alert(err)
-  });
->>>>>>> feature/componentes
   }
   function getAllClientes() {
     const url = "http://localhost/Clientes/GetListado";
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta);
 
-<<<<<<< HEAD
       setDataClientes(respuesta.data);
     });
   }
-=======
-}
-
-
-  function handleEliminar(id){
-    const url = `${process.env.REACT_APP_API_URL}/Departamento/Eliminar/` + id;
-    axios.delete(url, {headers}).then(respuesta => {
-    }).catch(err => {
-      alert(err)
-    });
-  }
-  
-  function handleShowModificar(row){
-    console.log(row.original.m_nIdDepartamento)
-    const url = `${process.env.REACT_APP_API_URL}/Departamento/GetById/` + row.original.m_nIdDepartamento;
-      axios.get(url, {headers}).then(respuesta => {
-        setState({
-          ...state,
-          agregar: "Modificar",
-          showPopUp: true,
-          idDepartamento: row.original.m_nIdDepartamento,
-          codigoDepartamento: respuesta.data.m_nCodigo,
-          descripcionDepartamento: respuesta.data.m_sDescripcion
-        })
-      });
-    }
->>>>>>> feature/componentes
 
   function getAllCodigosPostales() {
     const url = "http://192.168.2.211:9090/CodigoPostal/GetListado";
@@ -446,15 +343,9 @@ const handleAceptar = (e) => {
   }, []);
 
   function getAllDataRemDes() {
-<<<<<<< HEAD
     const url = "http://localhost/RemitentesDestinatarios/GetListado";
     axios.get(url, { headers }).then((respuesta) => {
       setData(respuesta.data);
-=======
-    const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/GetListado`;
-    axios.get(url, {headers}).then(respuesta => {
-      setData(respuesta.data)
->>>>>>> feature/componentes
     });
   }
 
@@ -470,18 +361,9 @@ const handleAceptar = (e) => {
     getAllEstados(event.target.value);
   }
 
-<<<<<<< HEAD
   function getAllEstados(id) {
     console.log(id)
     const url = "http://localhost/Estados/ByPais/" + id;
-=======
-  const [idstate, setidState] = React.useState({
-    idPais: 0,
-  });
-
-  function getAllEstados(idPais) {
-    const url = `${process.env.REACT_APP_API_URL}/Estados/ByPais/` + idPais;
->>>>>>> feature/componentes
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data)
       setDataEstado(respuesta.data);

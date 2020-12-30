@@ -60,13 +60,6 @@ function BarraLateralDerecha() {
         </div>
       </div>
       <ul className="list-accordion">
-<<<<<<< HEAD
-      {
-        dashboardRoutes.map((r, index) => {
-          return (
-            <li key={index}>
-              <Link to={r.path}>{r.icon}<span className="list-label">{r.name}</span></Link>
-=======
         {dashboardRoutes.map((r, index) => {
           return r.single ? (
             <li>
@@ -110,7 +103,6 @@ function BarraLateralDerecha() {
                   </li>
                 ))}
               </ul>
->>>>>>> feature/componentes
             </li>
           )
         })}
