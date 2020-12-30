@@ -55,9 +55,6 @@ function Recoleccion() {
     ciudadRemitente: "",
     ciudadDestinatario: "",
     fechaRecoleccion: "",
-    horaRecoleccion: "",
-    fechaEntrega: "",
-    horaEntrega: "",
     codigoPostalRecoleccion: "",
     ciudadRecoleccion: "",
     zonaRecoleccion: "",
@@ -74,6 +71,10 @@ function Recoleccion() {
     cantidadDeSobres: 0,
     diferenteRecoleccion: false,
     diferenteEntrega: false,
+    operador: 0,
+    tipoUnidad: 0,
+    unidad: 0,
+    
   })
   const [fileUploaded, setFileUploaded] = React.useState([])
   const [stepActive, setStepActive] = React.useState(1);
@@ -113,10 +114,8 @@ function Recoleccion() {
       "m_sContactoDestinatario": state.contactoDestinatario,
       "m_nIdCiudadOrigen": state.ciudadRemitente,
       "m_nIdCiudadDestino": state.ciudadDestinatario,
-      "m_dFechaDetalleRecoleccion": state.fechaRecoleccion,
-      "m_tHoraDetalleRecoleccion": state.horaRecoleccion,
-      "m_tFechaDetalleEntrega": state.fechaEntrega,
-      "m_tHoraDetalleEntrega": state.horaEntrega,
+      "m_dFechaDetalleRecoleccion": state.fechaRecoleccion.split("T")[0],
+      "m_tHoraDetalleRecoleccion": state.fechaRecoleccion.split("T")[1],
       "m_nIdCPDetalleRecoleccion": state.codigoPostalRecoleccion,
       "m_nIdCiudadDetalleRecoleccion": state.ciudadRecoleccion,
       "m_nIdZonaDetalleRecoleccion": state.zonaRecoleccion,
@@ -144,6 +143,7 @@ function Recoleccion() {
     } else {
       const url = "http://localhost/Recoleccion/Agregar";
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+        console.log(respuesta.data)
         alert(respuesta.data)
         //window.location.reload();
       }).catch(err => {
@@ -165,17 +165,60 @@ function Recoleccion() {
   }
 
   function handleShowModificar(row) {
-    console.log(row.original.m_nIdDepartamento)
-    const url = "http://localhost/Departamento/GetById/" + row.original.m_nIdDepartamento;
+    console.log(row.original.m_nIdRecoleccion)
+    const url = "http://localhost/Recoleccion/GetById/" + row.original.m_nIdRecoleccion;
     axios.get(url, { headers }).then(respuesta => {
       console.log(respuesta.data)
       setState({
         ...state,
         agregar: "Modificar",
         showPopUp: true,
-        idDepartamento: row.original.m_nIdDepartamento,
-        codigoDepartamento: respuesta.data.m_nCodigo,
-        descripcionDepartamento: respuesta.data.m_sDescripcion
+        idRecoleccion: row.original.m_nIdRecoleccion,
+        idSucursalAgregar: respuesta.data.m_nIdSucursal,
+        folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
+        folioEmbarque: respuesta.data.m_nIdEmbarque,
+        folioGuía: respuesta.data.m_nIdGuia,
+        folioInforme: respuesta.data.m_nIdInforme,
+        fechaHoraCreacion: respuesta.data.m_dFecha + "T" + respuesta.data.m_tHora,
+        estatusRecoleccion: respuesta.data.m_nIdEstatusRecoleccion,
+        moneda: respuesta.data.m_nMoneda,
+        tipoCambio: respuesta.data.m_rTipoCambio,
+        tipoCobro: respuesta.data.m_nIdTipoDeCobro,
+        nombreRemitente: respuesta.data.m_sNombreRemitente,
+        RFCRemitente: respuesta.data.m_sRFCRemitente,
+        domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
+        codigoPostalRemitente: respuesta.data.m_sIdCodigoPostalRemitente,
+        ciudadRemitente: respuesta.data.m_nIdCiudadRemitente,
+        correoRemitente: respuesta.data.m_sCorreoRemitente,
+        telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
+        contactoRemitente: respuesta.data.m_sContactoRemitente,
+        origenRemitente: respuesta.data.m_nIdCiudadOrigen,
+        nombreDestinatario: respuesta.data.m_sNombreDestinatario,
+        RFCDestinatario: respuesta.data.m_sRFCDestinatario,
+        domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
+        codigoPostalDestinatario: respuesta.data.m_sIdCodigoPostalDestinatario,
+        ciudadDestinatario: respuesta.data.m_nIdCiudadDestinatario,
+        correoDestinatario: respuesta.data.m_sCorreoDestinatario,
+        telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
+        contactoDestinatario: respuesta.data.m_sContactoDestinatario,
+        destinoDestinatario: respuesta.data.m_nIdCiudadDestino,
+        ciudadRemitente: respuesta.data.m_nIdCiudadRemitente,
+        ciudadDestinatario: respuesta.data.m_nIdCiudadDestinatario,
+        fechaRecoleccion: respuesta.data.m_dFechaRecoleccionLlegadaRecoleccion,
+        codigoPostalRecoleccion: "",
+        ciudadRecoleccion: "",
+        zonaRecoleccion: "",
+        domicilioRecoleccion: "",
+        recogerEn: "",
+        datosAdicionalesRecoleccion: "",
+        codigoPostalEntrega: "",
+        ciudadEntrega: "",
+        zonaEntrega: "",
+        domicilioEntrega: "",
+        entregaEn: "",
+        datosAdicionalesEntrega: "",
+        cantidadDePaquetes: 0,
+        cantidadDeSobres: 0,
       })
     });
   }
@@ -185,9 +228,51 @@ function Recoleccion() {
       ...state,
       agregar: "Agregar",
       showPopUp: true,
-      idDepartamento: 0,
-      codigoDepartamento: 0,
-      descripcionDepartamento: ""
+      idSucursalAgregar: 0,
+      folioRecoleccion: "",
+      folioEmbarque: "",
+      folioGuía: "",
+      folioInforme: "",
+      fechaHoraCreacion: "",
+      estatusRecoleccion: 0,
+      moneda: "",
+      tipoCambio: "",
+      tipoCobro: "",
+      nombreRemitente: "",
+      RFCRemitente: "",
+      domicilioRemitente: "",
+      codigoPostalRemitente: "",
+      ciudadRemitente: "",
+      correoRemitente: "",
+      telefonoRemitente: "",
+      contactoRemitente: "",
+      origenRemitente: "",
+      nombreDestinatario: "",
+      RFCDestinatario: "",
+      domicilioDestinatario: "",
+      codigoPostalDestinatario: "",
+      ciudadDestinatario: "",
+      correoDestinatario: "",
+      telefonoDestinatario: "",
+      contactoDestinatario: "",
+      destinoDestinatario: "",
+      ciudadRemitente: "",
+      ciudadDestinatario: "",
+      fechaRecoleccion: "",
+      codigoPostalRecoleccion: "",
+      ciudadRecoleccion: "",
+      zonaRecoleccion: "",
+      domicilioRecoleccion: "",
+      recogerEn: "",
+      datosAdicionalesRecoleccion: "",
+      codigoPostalEntrega: "",
+      ciudadEntrega: "",
+      zonaEntrega: "",
+      domicilioEntrega: "",
+      entregaEn: "",
+      datosAdicionalesEntrega: "",
+      cantidadDePaquetes: 0,
+      cantidadDeSobres: 0,
     })
   }
 
@@ -218,22 +303,22 @@ function Recoleccion() {
   const columns = React.useMemo(() => [
     {
       Name: "Folio",
-      accessor: "m_nCodigo",
+      accessor: "m_nFolioRecoleccion",
     }, {
-      Name: "Descripción",
-      accessor: "m_sDescripcion",
+      Name: "Fecha Elaboración",
+      accessor: "m_dFechaElaboracionSalidaRecoleccion",
     }, {
-      Name: "Creado El",
-      accessor: "m_dtCreadoEl",
+      Name: "Fecha Recolección",
+      accessor: "m_dFechaRecoleccionSalidaRecoleccion",
     }, {
-      Name: "Creado Por",
-      accessor: "m_nCreadoPor",
+      Name: "Sucursal",
+      accessor: "m_nIdSucursal",
     }, {
-      Name: "Modificado El",
-      accessor: "m_dtModificadoEl",
+      Name: "Zona Recolección",
+      accessor: "m_nIdZonaDetalleRecoleccion",
     }, {
-      Name: "Modificado Por",
-      accessor: "m_nModificadoPor",
+      Name: "Recoger En",
+      accessor: "m_sRecogerEnDetalleRecoleccion",
     }
 
   ]);
@@ -385,7 +470,7 @@ function Recoleccion() {
                     <td>
                       <div>
                         <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdDepartamento))}><i className="zmdi zmdi-close" /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-close" /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -683,7 +768,7 @@ function Recoleccion() {
                                   className="form-control"
                                   required
                                   onChange={handleChange}
-                                  id="sucursalAgregar"
+                                  id="idSucursalAgregar"
                                 >
                                   {dataSucursal.map(
                                     (sucursal) => (
@@ -708,7 +793,7 @@ function Recoleccion() {
                                   onChange={handleChange}
                                   className="form-control"
                                   type="text"
-                                  placeholder={state.folioRecoleccion}
+                                  value={state.folioRecoleccion}
                                   id="folioRecoleccion"
                                   readOnly
                                 />
@@ -724,7 +809,7 @@ function Recoleccion() {
                                   onChange={handleChange}
                                   className="form-control"
                                   type="text"
-                                  placeholder={state.folioEmbarque}
+                                  value={state.folioEmbarque}
                                   id="folioEmbarque"
                                   readOnly
                                 />
@@ -740,7 +825,7 @@ function Recoleccion() {
                                   onChange={handleChange}
                                   className="form-control"
                                   type="text"
-                                  placeholder={state.folioGuía}
+                                  value={state.folioGuía}
                                   id="folioGuía"
                                   readOnly
                                 />
@@ -756,7 +841,7 @@ function Recoleccion() {
                                   onChange={handleChange}
                                   className="form-control"
                                   type="text"
-                                  placeholder={state.folioInforme}
+                                  value={state.folioInforme}
                                   id="folioInforme"
                                   readOnly
                                 />
@@ -811,7 +896,7 @@ function Recoleccion() {
                                   onChange={handleChange}
                                   className="form-control"
                                   type="text"
-                                  placeholder={state.moneda}
+                                  value={state.moneda}
                                   id="moneda"
                                 />
                               </div>
@@ -826,7 +911,7 @@ function Recoleccion() {
                                   onChange={handleChange}
                                   className="form-control"
                                   type="text"
-                                  placeholder={state.tipoCambio}
+                                  value={state.tipoCambio}
                                   id="tipoCambio"
                                 />
                               </div>
@@ -891,7 +976,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.nombreRemitente}
+                                    value={state.nombreRemitente}
                                     id="nombreRemitente"
                                   />
                                 </div>
@@ -906,7 +991,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.RFCRemitente}
+                                    value={state.RFCRemitente}
                                     id="RFCRemitente"
                                   />
                                 </div>
@@ -921,7 +1006,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.domicilioRemitente}
+                                    value={state.domicilioRemitente}
                                     id="domicilioRemitente"
                                   />
                                 </div>
@@ -936,7 +1021,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.codigoPostalRemitente}
+                                    value={state.codigoPostalRemitente}
                                     id="codigoPostalRemitente"
                                   />
                                 </div>
@@ -951,7 +1036,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.ciudadRemitente}
+                                    value={state.ciudadRemitente}
                                     id="ciudadRemitente"
                                   />
                                 </div>
@@ -966,7 +1051,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.correoRemitente}
+                                    value={state.correoRemitente}
                                     id="correoRemitente"
                                   />
                                 </div>
@@ -981,7 +1066,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.telefonoRemitente}
+                                    value={state.telefonoRemitente}
                                     id="telefonoRemitente"
                                   />
                                 </div>
@@ -996,7 +1081,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.contactoRemitente}
+                                    value={state.contactoRemitente}
                                     id="contactoRemitente"
                                   />
                                 </div>
@@ -1028,7 +1113,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.nombreDestinatario}
+                                    value={state.nombreDestinatario}
                                     id="nombreDestinatario"
                                   />
                                 </div>
@@ -1043,7 +1128,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.RFCDestinatario}
+                                    value={state.RFCDestinatario}
                                     id="RFCDestinatario"
                                   />
                                 </div>
@@ -1058,7 +1143,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.domicilioDestinatario}
+                                    value={state.domicilioDestinatario}
                                     id="domicilioDestinatario"
                                   />
                                 </div>
@@ -1073,7 +1158,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.codigoPostalDestinatario}
+                                    value={state.codigoPostalDestinatario}
                                     id="codigoPostalDestinatario"
                                   />
                                 </div>
@@ -1088,7 +1173,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.ciudadDestinatario}
+                                    value={state.ciudadDestinatario}
                                     id="ciudadDestinatario"
                                   />
                                 </div>
@@ -1103,7 +1188,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.correoDestinatario}
+                                    value={state.correoDestinatario}
                                     id="correoDestinatario"
                                   />
                                 </div>
@@ -1118,7 +1203,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.telefonoDestinatario}
+                                    value={state.telefonoDestinatario}
                                     id="telefonoDestinatario"
                                   />
                                 </div>
@@ -1133,7 +1218,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.contactoDestinatario}
+                                    value={state.contactoDestinatario}
                                     id="contactoDestinatario"
                                   />
                                 </div>
@@ -1181,7 +1266,7 @@ function Recoleccion() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="datetime-local"
-                                          placeholder={state.fechaRecoleccion}
+                                          value={state.fechaRecoleccion}
                                           id="fechaRecoleccion"
                                         />
                                       </div>
@@ -1196,7 +1281,7 @@ function Recoleccion() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
-                                          placeholder={state.codigoPostalRecoleccion}
+                                          value={state.codigoPostalRecoleccion}
                                           id="codigoPostalRecoleccion"
                                         />
                                       </div>
@@ -1211,7 +1296,7 @@ function Recoleccion() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
-                                          placeholder={state.ciudadRecoleccion}
+                                          value={state.ciudadRecoleccion}
                                           id="ciudadRecoleccion"
                                         />
                                       </div>
@@ -1226,7 +1311,7 @@ function Recoleccion() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
-                                          placeholder={state.zonaRecoleccion}
+                                          value={state.zonaRecoleccion}
                                           id="zonaRecoleccion"
                                         />
                                       </div>
@@ -1241,7 +1326,7 @@ function Recoleccion() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
-                                          placeholder={state.domicilioRecoleccion}
+                                          value={state.domicilioRecoleccion}
                                           id="domicilioRecoleccion"
                                         />
                                       </div>
@@ -1256,7 +1341,7 @@ function Recoleccion() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
-                                          placeholder={state.recogerEn}
+                                          value={state.recogerEn}
                                           id="recogerEn"
                                         />
                                       </div>
@@ -1271,7 +1356,7 @@ function Recoleccion() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
-                                          placeholder={state.datosAdicionalesRecoleccion}
+                                          value={state.datosAdicionalesRecoleccion}
                                           id="datosAdicionalesRecoleccion"
                                         />
                                       </div>
@@ -1297,21 +1382,6 @@ function Recoleccion() {
 
                                     <div className="col-sm-4 col-md-4 unit">
                                       <label className="label">
-                                        Fecha y Hora
-                                                                    </label>
-                                      <div className="input">
-                                        <input
-                                          onChange={handleChange}
-                                          className="form-control"
-                                          type="datetime-local"
-                                          placeholder={state.fechaEntrega}
-                                          id="fechaEntrega"
-                                        />
-                                      </div>
-                                    </div>
-
-                                    <div className="col-sm-4 col-md-4 unit">
-                                      <label className="label">
                                         Código Postal
                                                                     </label>
                                       <div className="input">
@@ -1319,7 +1389,7 @@ function Recoleccion() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
-                                          placeholder={state.codigoPostalEntrega}
+                                          value={state.codigoPostalEntrega}
                                           id="codigoPostalEntrega"
                                         />
                                       </div>
@@ -1334,7 +1404,7 @@ function Recoleccion() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
-                                          placeholder={state.ciudadEntrega}
+                                          value={state.ciudadEntrega}
                                           id="ciudadEntrega"
                                         />
                                       </div>
@@ -1349,13 +1419,13 @@ function Recoleccion() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
-                                          placeholder={state.zonaEntrega}
+                                          value={state.zonaEntrega}
                                           id="zonaEntrega"
                                         />
                                       </div>
                                     </div>
 
-                                    <div className="col-sm-4 col-md-8 unit">
+                                    <div className="col-sm-4 col-md-12 unit">
                                       <label className="label">
                                         Domicilio
                                                                     </label>
@@ -1364,7 +1434,7 @@ function Recoleccion() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
-                                          placeholder={state.domicilioEntrega}
+                                          value={state.domicilioEntrega}
                                           id="domicilioEntrega"
                                         />
                                       </div>
@@ -1379,7 +1449,7 @@ function Recoleccion() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
-                                          placeholder={state.entregaEn}
+                                          value={state.entregaEn}
                                           id="entregaEn"
                                         />
                                       </div>
@@ -1394,7 +1464,7 @@ function Recoleccion() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
-                                          placeholder={state.datosAdicionalesEntrega}
+                                          value={state.datosAdicionalesEntrega}
                                           id="datosAdicionalesEntrega"
                                         />
                                       </div>
@@ -1409,12 +1479,123 @@ function Recoleccion() {
                         }
 
                       </div>
-                    : <div></div>
+                      : <div></div>
                     }
 
                     <div className="widget-wrap" id="informacionAdicionalDePago">
                       <div className="widget-header">
-                        <h2>Paquetes</h2>
+                        <h2>Detalles de la Operación</h2>
+                      </div>
+                      <div className="widget-container">
+                        <div className="widget-content">
+                          <div className="row">
+
+                                <div className="col-sm-4 col-md-12 unit">
+                                  <label className="label" htmlFor="operador">
+                                    Operador
+                  </label>
+                                  <div className="input">
+                                    <input
+                                      onChange={handleChange}
+                                      className="form-control"
+                                      type="text"
+                                      value={state.operador}
+                                      id="operador"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="col-sm-4 col-md-12 unit">
+                                  <label className="label" htmlFor="tipoUnidad">
+                                    Tipo Unidad
+                  </label>
+                                  <div className="input">
+                                    <input
+                                      onChange={handleChange}
+                                      className="form-control"
+                                      type="text"
+                                      value={state.tipoUnidad}
+                                      id="tipoUnidad"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="col-sm-4 col-md-12 unit">
+                                  <label className="label" htmlFor="unidad">
+                                    Unidad
+                  </label>
+                                  <div className="input">
+                                    <input
+                                      onChange={handleChange}
+                                      className="form-control"
+                                      type="text"
+                                      value={state.unidad}
+                                      id="unidad"
+                                    />
+                                  </div>
+                                </div>
+
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="widget-header">
+                        <div className="col-md-6">
+                        <h2>Salida para la Recolección</h2>
+                        </div>
+                        <div className="col-md-6">
+                        <h2>Llegada de la Recolección</h2>
+                        </div>
+                      </div>
+                      <div className="widget-container">
+                        <div className="widget-content">
+                          <div className="row">
+                            <div className="col-md-6">
+
+                              <div className="col-sm-4 col-md-12 unit">
+                                <label className="label">
+                                  Fecha y Hora
+                        </label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="datetime-local"
+                                    value={state.nombreRemitente}
+                                    id="nombreRemitente"
+                                  />
+                                </div>
+                              </div>
+
+                            </div>
+
+                            <div className="col-md-6">
+
+                              <div className="col-sm-4 col-md-12 unit">
+                                <label className="label">
+                                  Fecha y Hora
+                          </label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="datetime-local"
+                                    value={state.nombreDestinatario}
+                                    id="nombreDestinatario"
+                                  />
+                                </div>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div className="widget-wrap" id="informacionAdicionalDePago">
+                      <div className="widget-header">
+                        <h2>Salida para la Recolección</h2>
                       </div>
                       <div className="widget-container">
                         <div className="widget-content">
@@ -1432,7 +1613,7 @@ function Recoleccion() {
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
-                                      placeholder={state.peso}
+                                      value={state.peso}
                                       id="peso"
                                     />
                                   </div>
@@ -1447,7 +1628,7 @@ function Recoleccion() {
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
-                                      placeholder={state.peso}
+                                      value={state.peso}
                                       id="largo"
                                     />
                                   </div>
@@ -1462,7 +1643,7 @@ function Recoleccion() {
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
-                                      placeholder={state.peso}
+                                      value={state.peso}
                                       id="ancho"
                                     />
                                   </div>
@@ -1477,7 +1658,7 @@ function Recoleccion() {
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
-                                      placeholder={state.peso}
+                                      value={state.peso}
                                       id="alto"
                                     />
                                   </div>
@@ -1492,7 +1673,7 @@ function Recoleccion() {
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
-                                      placeholder={state.peso}
+                                      value={state.peso}
                                       id="volumen"
                                     />
                                   </div>
@@ -1507,7 +1688,7 @@ function Recoleccion() {
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
-                                      placeholder={state.peso}
+                                      value={state.peso}
                                       id="peso"
                                     />
                                   </div>
@@ -1522,7 +1703,7 @@ function Recoleccion() {
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
-                                      placeholder={state.peso}
+                                      value={state.peso}
                                       id="peso"
                                     />
                                   </div>
@@ -1537,7 +1718,7 @@ function Recoleccion() {
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
-                                      placeholder={state.peso}
+                                      value={state.peso}
                                       id="peso"
                                     />
                                   </div>
@@ -1552,7 +1733,7 @@ function Recoleccion() {
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
-                                      placeholder={state.peso}
+                                      value={state.peso}
                                       id="volumen"
                                     />
                                   </div>
@@ -1567,7 +1748,173 @@ function Recoleccion() {
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
-                                      placeholder={state.peso}
+                                      value={state.peso}
+                                      id="volumen"
+                                    />
+                                  </div>
+                                </div>
+
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="widget-header">
+                        <h2>Salida para la Recolección</h2>
+                      </div>
+                      <div className="widget-container">
+                        <div className="widget-content">
+                          <div className="row">
+                            <div className="col-md-12">
+
+                              <div className="col-md-12">
+
+                                <div className="col-sm-4 col-md-1-5 unit">
+                                  <label className="label" htmlFor="peso">
+                                    Peso
+                  </label>
+                                  <div className="input">
+                                    <input
+                                      onChange={handleChange}
+                                      className="form-control"
+                                      type="text"
+                                      value={state.peso}
+                                      id="peso"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="col-sm-4 col-md-1-5 unit">
+                                  <label className="label" htmlFor="largo">
+                                    Largo
+                  </label>
+                                  <div className="input">
+                                    <input
+                                      onChange={handleChange}
+                                      className="form-control"
+                                      type="text"
+                                      value={state.peso}
+                                      id="largo"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="col-sm-4 col-md-1-5 unit">
+                                  <label className="label" htmlFor="ancho">
+                                    Ancho
+                  </label>
+                                  <div className="input">
+                                    <input
+                                      onChange={handleChange}
+                                      className="form-control"
+                                      type="text"
+                                      value={state.peso}
+                                      id="ancho"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="col-sm-4 col-md-1-5 unit">
+                                  <label className="label" htmlFor="alto">
+                                    Alto
+                  </label>
+                                  <div className="input">
+                                    <input
+                                      onChange={handleChange}
+                                      className="form-control"
+                                      type="text"
+                                      value={state.peso}
+                                      id="alto"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="col-sm-4 col-md-1-5 unit">
+                                  <label className="label" htmlFor="volumen">
+                                    Volumen
+                  </label>
+                                  <div className="input">
+                                    <input
+                                      onChange={handleChange}
+                                      className="form-control"
+                                      type="text"
+                                      value={state.peso}
+                                      id="volumen"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="col-sm-4 col-md-4-5 unit">
+                                  <label className="label">
+                                    Tipo de Embalaje
+                  </label>
+                                  <div className="input">
+                                    <input
+                                      onChange={handleChange}
+                                      className="form-control"
+                                      type="text"
+                                      value={state.peso}
+                                      id="peso"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="col-sm-4 col-md-3 unit">
+                                  <label className="label">
+                                    Valor Declarado
+                  </label>
+                                  <div className="input">
+                                    <input
+                                      onChange={handleChange}
+                                      className="form-control"
+                                      type="text"
+                                      value={state.peso}
+                                      id="peso"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="col-sm-4 col-md-7-5 unit">
+                                  <label className="label">
+                                    Descripción
+                  </label>
+                                  <div className="input">
+                                    <input
+                                      onChange={handleChange}
+                                      className="form-control"
+                                      type="text"
+                                      value={state.peso}
+                                      id="peso"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="col-sm-4 col-md-1-5 unit">
+                                  <label className="label" htmlFor="volumen">
+                                    Ctd
+                  </label>
+                                  <div className="input">
+                                    <input
+                                      onChange={handleChange}
+                                      className="form-control"
+                                      type="text"
+                                      value={state.peso}
+                                      id="volumen"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="col-sm-4 col-md-12 unit">
+                                  <label className="label" htmlFor="volumen">
+                                    Observaciones
+                  </label>
+                                  <div className="input">
+                                    <input
+                                      onChange={handleChange}
+                                      className="form-control"
+                                      type="text"
+                                      value={state.peso}
                                       id="volumen"
                                     />
                                   </div>
@@ -1582,464 +1929,6 @@ function Recoleccion() {
 
                     </div>
 
-                    <div className="widget-wrap" id="general">
-                      <div className="widget-header">
-                        <h2>General</h2>
-                      </div>
-                      <div className="widget-container">
-                        <div className="widget-content">
-                          <div className="row">
-                            <div className="col-md-12">
-
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="widget-header">
-                        <h2>Destinatario</h2>
-                      </div>
-                      <div className="widget-container">
-                        <div className="widget-content">
-                          <div className="row">
-                            <div className="col-md-12">
-
-                              <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">
-                                  Nombre
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.nombreDestinatario}
-                                    id="nombreDestinatario"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">
-                                  RFC
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.RFCDestinatario}
-                                    id="RFCDestinatario"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">
-                                  Domicilio
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.domicilioDestinatario}
-                                    id="domicilioDestinatario"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">
-                                  Código Postal
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.codigoPostalDestinatario}
-                                    id="codigoPostalDestinatario"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">
-                                  Ciudad
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.ciudadDestinatario}
-                                    id="ciudadDestinatario"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">
-                                  Correo Electrónico
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.correoDestinatario}
-                                    id="correoDestinatario"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">
-                                  Teléfono
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.telefonoDestinatario}
-                                    id="telefonoDestinatario"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">
-                                  Contacto
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.contactoDestinatario}
-                                    id="contactoDestinatario"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">
-                                  Origen
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.origenDestinatario}
-                                    id="origenDestinatario"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="widget-wrap" id="contacto">
-                      <div className="widget-header">
-                        <h2>Contacto</h2>
-                      </div>
-                      <div className="widget-container">
-                        <div className="widget-content">
-                          <div className="row">
-                            <div className="col-md-12">
-
-
-                              <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">
-                                  Nombre
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.nombreRemitente}
-                                    id="nombreRemitente"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">
-                                  RFC
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.RFCRemitente}
-                                    id="RFCRemitente"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">
-                                  Domicilio
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.domicilioRemitente}
-                                    id="domicilioRemitente"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">
-                                  Código Postal
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.codigoPostalRemitente}
-                                    id="codigoPostalRemitente"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">
-                                  Ciudad
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.ciudadRemitente}
-                                    id="ciudadRemitente"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">
-                                  Correo Electrónico
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.correoRemitente}
-                                    id="correoRemitente"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">
-                                  Teléfono
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.telefonoRemitente}
-                                    id="telefonoRemitente"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">
-                                  Contacto
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.contactoRemitente}
-                                    id="contactoRemitente"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">
-                                  Origen
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.origenRemitente}
-                                    id="origenRemitente"
-                                  />
-                                </div>
-                              </div>
-
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="widget-header">
-                        <h2>Destinatario</h2>
-                      </div>
-                      <div className="widget-container">
-                        <div className="widget-content">
-                          <div className="row">
-                            <div className="col-md-12">
-
-
-                              <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">
-                                  Nombre
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.nombreDestinatario}
-                                    id="nombreDestinatario"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">
-                                  RFC
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.RFCDestinatario}
-                                    id="RFCDestinatario"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">
-                                  Domicilio
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.domicilioDestinatario}
-                                    id="domicilioDestinatario"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">
-                                  Código Postal
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.codigoPostalDestinatario}
-                                    id="codigoPostalDestinatario"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">
-                                  Ciudad
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.ciudadDestinatario}
-                                    id="ciudadDestinatario"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">
-                                  Correo Electrónico
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.correoDestinatario}
-                                    id="correoDestinatario"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">
-                                  Teléfono
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.telefonoDestinatario}
-                                    id="telefonoDestinatario"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">
-                                  Contacto
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.contactoDestinatario}
-                                    id="contactoDestinatario"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">
-                                  Origen
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.origenDestinatario}
-                                    id="origenDestinatario"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
 
                   </div>
 
@@ -2075,7 +1964,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.pesoPaquete}
+                                    value={state.pesoPaquete}
                                     id="pesoPaquete"
                                   />
                                 </div>
@@ -2090,7 +1979,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.largoPaquete}
+                                    value={state.largoPaquete}
                                     id="largoPaquete"
                                   />
                                 </div>
@@ -2105,7 +1994,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.anchoPaquete}
+                                    value={state.anchoPaquete}
                                     id="anchoPaquete"
                                   />
                                 </div>
@@ -2120,7 +2009,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.altoPaquete}
+                                    value={state.altoPaquete}
                                     id="altoPaquete"
                                   />
                                 </div>
@@ -2135,7 +2024,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.valorPaquete}
+                                    value={state.valorPaquete}
                                     id="valorPaquete"
                                   />
                                 </div>
@@ -2150,7 +2039,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.descripcionPaquete}
+                                    value={state.descripcionPaquete}
                                     id="descripcionPaquete"
                                   />
                                 </div>
@@ -2165,7 +2054,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.cantidadPaquete}
+                                    value={state.cantidadPaquete}
                                     id="cantidadPaquete"
                                   />
                                 </div>
@@ -2180,7 +2069,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.observacionesPaquete}
+                                    value={state.observacionesPaquete}
                                     id="observacionesPaquete"
                                   />
                                 </div>
@@ -2219,7 +2108,7 @@ function Recoleccion() {
                                   onChange={handleChange}
                                   className="form-control"
                                   type="text"
-                                  placeholder={state.descripcionSobre}
+                                  value={state.descripcionSobre}
                                   id="descripcionSobre"
                                 />
                               </div>
@@ -2262,7 +2151,6 @@ function Recoleccion() {
                                 onChange={handleUpload}
                                 className="form-control"
                                 type="file"
-                                placeholder="some text"
                                 id="importar"
                               />
                             </div>
