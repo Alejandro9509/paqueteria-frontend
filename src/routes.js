@@ -95,6 +95,22 @@ const dashboardRoutes = [
     component: RemitentesDestinatariosPage,
     single: true,
     child:[]
+  },
+  {
+    path: "/Unidades",
+    name: "Unidades",
+    icon: ConfiguracionIcon,
+    component: UnidadesPage,
+    single: true,
+    child:[]
+  },
+  {
+    path: "/Operadores",
+    name: "Operadores",
+    icon: ConfiguracionIcon,
+    component: OperadoresPage,
+    single: true,
+    child:[]
   }
 ];
 
