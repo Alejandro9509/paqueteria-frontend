@@ -14,97 +14,87 @@ import RutasPage from './Views/Rutas';
 
 
 
+import {ReactComponent as ConfiguracionIcon} from './iconos/Menu/IconoConfiguraciones/iconoConfiguraciones.svg';
+import {ReactComponent as IndicadoresIcon} from './iconos/Menu/IconoIndicadores/iconoIndicadores.svg';
+import {ReactComponent as CatalogoIcon} from './iconos/Menu/IconoCatalogo/iconoCatalogo.svg';
+import {ReactComponent as InformeIcon} from './iconos/Menu/IconoInforme/iconoInforme.svg';
+import {ReactComponent as RecolecionIcon} from './iconos/Menu/IconoRecoleccion/iconoRecoleccion.svg';
+import {ReactComponent as EmbarqueIcon} from './iconos/Menu/IconoEmbarque/iconoEmbarque.svg';
+import {ReactComponent as GuiasIcon} from './iconos/Menu/IconoGuias/iconoGuia.svg';
+import {ReactComponent as viajeIcon} from './iconos/Menu/IconoViajes/iconoViajes.svg';
 
 const dashboardRoutes = [
   {
     path: "/Departamento",
     name: "Indicadores",
-    icon: <i className="fa fa-pie-chart" />,
+    icon: IndicadoresIcon,
     component: DepartamentoPage,
+    single: true,
+    child:[]
   },
   {
     path: "/Configuracion",
     name: "Configuraciones",
-    icon: <i className="fa fa-cog" />,                   //<IconoConfiguraciones className="fa" />,
+    icon: ConfiguracionIcon,
     component: ConfiguracionPage,
+    single: true,
+    child:[]
   },
   {
     path: "/Catalogos",
     name: "Catálogos",
-    icon: <i className="zmdi zmdi-collection-text" />,                   //<IconoCatalogo />,
+    icon: CatalogoIcon,
     component: CatalogosPage,
-  },
+    single: true,
+    child:  [] 
+    },
   {
     path: "/Recolección",
     name: "Recolección",
-    icon: <i className="zmdi zmdi-local-shipping" />,
+    icon: RecolecionIcon,
     component: RecoleccionPage,
+    single: true,
+    child:[]
   },
   {
-    path: "/Embarque",
+    path: "/Embalajes",
     name: "Embarque",
-    icon: <i className="fa fa-archive" />,
+    icon: EmbarqueIcon,
     component: EmbarquePage,
+    single: true,
+    child:[]
   },
   {
     path: "/Departamento",
     name: "Guías",
-    icon: <i className="zmdi zmdi-assignment" />,
+    icon: GuiasIcon,
     component: DepartamentoPage,
+    single: true,
+    child:[]
   },
   {
-      path: "/Informes",
+    path: "/Informes",
       name: "Informes",
-      icon: "fa fa-file-text",
-      component: InformesPage,
+    icon: InformeIcon ,
+    component: InformesPage,
+    single: true,
+    child:[]
   },
   {
     path: "/Departamento",
     name: "Viajes",
-    icon: <i className="fa fa-road" />,
+    icon: viajeIcon,
     component: DepartamentoPage,
-  },
-  {
-    path: "/Embalajes",
-    name: "Embalajes",
-    icon: <i className="fa fa-cube" />,
-    component: EmbalajesPage,
-  },
-  {
-    path: "/GrupoDeUnidades",
-    name: "Grupo de Unidades",
-    icon: <i className="fa fa-truck"/>,
-    component: GrupoUnidadesPage,
-  },  {
-    path: "/Unidades",
-    name: "Unidades",
-    icon: <i className="fa fa-cube"/>,
-    component: UnidadesPage,
+    single: true,
+    child:[]
   },
   {
     path: "/RemitentesDestinatarios",
     name: "RemitentesDestinatarios",
-    icon: <i className="fa fa-cube" />,
+    icon: ConfiguracionIcon,
     component: RemitentesDestinatariosPage,
-  },
-  {
-    path: "/Operadores",
-    name: "Operadores",
-    icon: <i className="fa fa-cube" />,
-    component: OperadoresPage,
-  }
-  ,
-  {
-    path: "/PlantillaSinPasos",
-    name: "Plantilla",
-    icon: <i className="fa fa-cube" />,
-    component: PlantillaPage,
-  },
-  {
-    path: "/Rutas",
-    name: "Rutas",
-    icon: "fa fa-cube",
-    component: RutasPage,
+    single: true,
+    child:[]
   }
 ];
 

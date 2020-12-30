@@ -350,7 +350,7 @@ function App(props) {
   }
 
   function getAllPaises() {
-    const url = "http://localhost/Pais/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/Pais/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setDataPais(respuesta.data);
     });

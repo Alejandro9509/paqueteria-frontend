@@ -36,7 +36,7 @@ const handleAceptar = (e) => {
   }
   console.log(params)
   if(state.idDepartamento != 0){
-    const url = "http://localhost/Departamento/Modificar/" + state.idDepartamento;
+    const url = `${process.env.REACT_APP_API_URL}/Departamento/Modificar/` + state.idDepartamento;
     axios.put(url, Object.assign({}, params), {headers}).then(respuesta => {
     alert(respuesta.data)
     window.location.reload();
@@ -45,7 +45,7 @@ const handleAceptar = (e) => {
     alert("err")
   });
   } else {
-  const url = "http://localhost/Departamento/Agregar";
+  const url = `${process.env.REACT_APP_API_URL}/Departamento/Agregar`;
   axios.post(url, Object.assign({}, params), {headers}).then(respuesta => {
     alert(respuesta.data)
     window.location.reload();
@@ -58,7 +58,7 @@ const handleAceptar = (e) => {
 }
 
 function handleEliminar(id){
-  const url = "http://localhost/Departamento/Eliminar/" + id;
+  const url = `${process.env.REACT_APP_API_URL}/Departamento/Eliminar/` + id;
   axios.delete(url, {headers}).then(respuesta => {
     console.log(respuesta)
   }).catch(err => {
@@ -68,7 +68,7 @@ function handleEliminar(id){
 
 function handleShowModificar(row){
   console.log(row.original.m_nIdDepartamento)
-  const url = "http://localhost/Departamento/GetById/" + row.original.m_nIdDepartamento;
+  const url = `${process.env.REACT_APP_API_URL}/Departamento/GetById/` + row.original.m_nIdDepartamento;
     axios.get(url, {headers}).then(respuesta => {
       console.log(respuesta.data)
       setState({
@@ -178,7 +178,7 @@ const handleChange = event => {
   }, []);
 
   function getAllData() {
-    const url = "http://localhost/Departamento/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/Departamento/GetListado`;
     axios.get(url, {headers}).then(respuesta => {
       setData(respuesta.data)
     });
@@ -438,7 +438,7 @@ function Table({ columns, data}) {
                               onChange={handleChange}
                               className="form-control"
                               type="text"
-                              placeholder={state.codigoDepartamento}
+                              value={state.codigoDepartamento}
                               id="codigoDepartamento"
                             />
                           </div>
@@ -459,7 +459,7 @@ function Table({ columns, data}) {
                               onChange={handleChange}
                               className="form-control"
                               type="text"
-                              placeholder={state.descripcionDepartamento}
+                              value={state.descripcionDepartamento}
                               id="descripcionDepartamento"
                             />
                           </div>

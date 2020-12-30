@@ -271,7 +271,7 @@ function App(props) {
   }, []);
 
   function getAllUnidades() {
-    const url = "http://localhost/Unidades/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/Unidades/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta);
 
@@ -280,27 +280,27 @@ function App(props) {
   }
 
   function getAllOperadores() {
-    const url = "http://localhost/Operadores/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/Operadores/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setData(respuesta.data);
     });
   }
 
   function getAllTipoUnidades() {
-    const url = "http://localhost/TiposUnidades/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/TiposUnidades/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setDataTiposUnidad(respuesta.data);
     });
   }
 
   function getAllSucursales() {
-    const url = "http://localhost/Sucursales/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setDataSucursales(respuesta.data);
     });
   }
   function getAllGruposUnidades() {
-    const url = "http://localhost/GrupoUnidad/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setDataGruposUnidades(respuesta.data);
     });
@@ -362,7 +362,7 @@ function App(props) {
   function handleShowModificar(id) {}
 
   const getModificar = (id) => {
-    const url = "http://localhost/Unidad/GetById/" + id;
+    const url = `${process.env.REACT_APP_API_URL}/Unidad/GetById/` + id;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
 

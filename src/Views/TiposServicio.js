@@ -6,17 +6,16 @@ import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import * as XLSX from 'xlsx';
 import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy } from 'react-table'
 
-function GrupoUnidades() {
+function TiposServicio() {
 
 const [data, setData] = React.useState([])
 const [state, setState] = React.useState({
     showPopUp: false,
-    IdGrupoUnidad: 0,
-    Codigo: 0,
-    GrupoUnidad: "",
-    DefinidoPorSistema: 0,
-    Color: "",
-    ColorLetra: 0,
+    IdTipoServicio: 0,
+    Descripcion: "",
+    DiasHabiles: 0,
+    Costo: 0,
+    Activo: 0,
     agregar: "Agregar"
 })
 const [fileUploaded, setFileUploaded] = React.useState([])
@@ -25,16 +24,16 @@ const [fileUploaded, setFileUploaded] = React.useState([])
 const handleAceptar = (e) => {
   e.preventDefault()
 	var params = {
-	  "Codigo": state.Codigo,
-      "GrupoUnidad": state.GrupoUnidad,
-      "Color": state.Color,
-      "ColorLetra": state.ColorLetra,
-	  "CreadoPor":1,
+      "Descripcion": state.Descripcion,
+      "DiasHabiles": state.DiasHabiles,
+      "Costo": state.Costo,
+      "activo": state.Activo,
+      "CreadoPor":1,
       "ModificadoPor":1
   }
   console.log(params)
-  if(state.IdGrupoUnidad != 0){
-    const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/Modificar/` + state.IdGrupoUnidad;
+  if(state.IdTipoServicio != 0){
+    const url = "http://localhost/TipoServicio/Modificar/" + state.IdTipoServicio;
     axios.put(url, Object.assign({}, params), {headers}).then(respuesta => {
     alert(respuesta.data)
     window.location.reload();
@@ -43,7 +42,7 @@ const handleAceptar = (e) => {
     alert("err")
   });
   } else {
-  const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/Agregar`;
+  const url = "http://localhost/TipoServicio/Agregar";
   axios.post(url, Object.assign({}, params), {headers}).then(respuesta => {
     alert(respuesta.data)
     window.location.reload();
@@ -56,7 +55,7 @@ const handleAceptar = (e) => {
 }
 
 function handleEliminar(id){
-  const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/Eliminar/` + id;
+  const url = "http://localhost/TipoServicio/Eliminar/" + id;
   axios.delete(url, {headers}).then(respuesta => {
     console.log(respuesta)
   }).catch(err => {
@@ -65,18 +64,19 @@ function handleEliminar(id){
 }
 
 function handleShowModificar(row){
-  console.log(row.original.m_nIdGrupoUnidad)
-  const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/GetById/` + row.original.m_nIdGrupoUnidad;
+  console.log(row.original.m_nIdTipoServicio)
+  const url = "http://localhost/TipoServicio/GetById/" + row.original.m_nIdTipoServicio;
     axios.get(url, {headers}).then(respuesta => {
       console.log(respuesta.data)
       setState({
         ...state,
         agregar: "Modificar",
         showPopUp: true,
-        IdEmbalaje: row.original.m_nIdGrupoUnidad,
-        Codigo: respuesta.data.m_nCodigo,
-        GrupoUnidad: respuesta.data.m_sGrupoUnidad,
-        Color: respuesta.data.m_sColor      })
+        IdTipoServicio: row.original.m_nIdTipoServicio,
+        Descripcion: respuesta.data.m_sDescripcion,
+        DiasHabiles: respuesta.data.m_nDiashabiles,
+        Activo: respuesta.data.m_bActivo,
+        Costo: respuesta.data.m_cCosto      })
     });
   }
 
@@ -85,10 +85,11 @@ function handleShowAgregar() {
       ...state,
       agregar: "Agregar",
       showPopUp: true,
-      IdGrupoUnidad: 0,
-      Codigo: 0,
-      GrupoUnidad: "",
-      Color: ""
+      IdTipoServicio: 0,
+      Costo: 0,
+      Descripcion: "",
+      DiasHabiles: 0,
+      Activo: 0
     })
 }
 
@@ -102,11 +103,14 @@ const handleChange = event => {
   
   const columns2 = React.useMemo(() => [
     {
-      Name:"Código",
-      accessor: "m_nCodigo",
+      Name:"Descripción",
+      accessor: "m_sDescripcion",
     },{
-      Name:"Grupo de unidades",
-      accessor: "m_sGrupoUnidad",
+      Name:"Costo",
+      accessor: "m_cCosto",
+    },{
+      Name:"Dias Habiles",
+      accessor: "m_nDiashabiles",
     },{
       Name:"Creado El",
       accessor: "m_dtCreadoEl",
@@ -128,7 +132,7 @@ const handleChange = event => {
   }, []);
 
   function getAllData() {
-    const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/GetListado`;
+    const url = "http://localhost/TipoServicio/GetListado";
     axios.get(url, {headers}).then(respuesta => {
       setData(respuesta.data)
     });
@@ -338,7 +342,7 @@ function Table({ columns, data}) {
     <div className="container-fluid">
 
     <div className="page-header full-block light">
-        <h2>Grupo de Unidades</h2>
+        <h2>Tipos de Servicio</h2>
       </div>
 
       <ul className="nav nav-tabs">
@@ -374,15 +378,15 @@ function Table({ columns, data}) {
                   <div className="col-md-12">
                     <form className="j-forms">
                       <div className="form-content">
-{/*****************************************Codigo************************************************************/}
+{/*****************************************Descripcion************************************************************/}
                         <div className="col-sm-12 col-md-6 unit">
                           <label className="label">
-                            Código
+                            Descripción
                           </label>
                           <div className="input">
                             <label
                               className="icon-left"
-                              htmlFor="Codigo"
+                              htmlFor="Descripcion"
                             >
                               <i className="fa fa-edit" />
                             </label>
@@ -390,20 +394,20 @@ function Table({ columns, data}) {
                               onChange={handleChange}
                               className="form-control"
                               type="text"
-                              placeholder={state.Codigo}
-                              id="Codigo"
+                              placeholder={state.Descripcion}
+                              id="Descripcion"
                             />
                           </div>
                         </div>
-{/*****************************************Color************************************************************/}
+{/*****************************************Dias Habiles************************************************************/}
                         <div className="col-sm-12 col-md-6 unit">
                           <label className="label">
-                            Color
+                            Dias Habiles
                           </label>
                           <div className="input">
                             <label
                               className="icon-left"
-                              htmlFor="Color"
+                              htmlFor="DiasHabiles"
                             >
                               <i className="fa fa-edit" />
                             </label>
@@ -411,20 +415,42 @@ function Table({ columns, data}) {
                               onChange={handleChange}
                               className="form-control"
                               type="text"
-                              placeholder={state.Color}
-                              id="Color"
+                              placeholder={state.DiasHabiles}
+                              id="DiasHabiles"
                             />
                           </div>
                         </div>
-{/*****************************************GrupoUnidad*******************************************************/}
+{/****************************************Activo*************************************************************/}
+<div className="col-sm-12 col-md-6 unit">
+                          <label className="label">
+                            Activo
+                          </label>
+                          <div className="input">
+                            <label
+                              className="icon-left"
+                              htmlFor="Activo"
+                            >
+                              <i className="fa fa-edit" />
+                            </label>
+                            <input
+                              onChange={handleChange}
+                              className="form-control"
+                              type="text"
+                              placeholder={state.Activo}
+                              id="Activo"
+                            />
+                          </div>
+                        </div>
+
+{/*****************************************Costo*******************************************************/}
                         <div className="col-sm-12 col-md-12 unit">
                           <label className="label">
-                            Grupo de Unidades
+                            Costo
                           </label>
                           <div className="input">
                             <label
                               className="icon-left"
-                              htmlFor="GrupoUnidad"
+                              htmlFor="Costo"
                             >
                               <i className="fa fa-edit" />
                             </label>
@@ -432,8 +458,8 @@ function Table({ columns, data}) {
                               onChange={handleChange}
                               className="form-control"
                               type="text"
-                              placeholder={state.GrupoUnidad}
-                              id="GrupoUnidad"
+                              placeholder={state.Costo}
+                              id="Costo"
                             />
                           </div>
                         </div>
@@ -494,4 +520,4 @@ function Table({ columns, data}) {
   );
 }
 
-export default GrupoUnidades;
+export default TiposServicio;
