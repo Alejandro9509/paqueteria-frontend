@@ -10,95 +10,257 @@ import DataTable from "react-data-table-component";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import $ from 'jquery';
+import { useTable, useFilters, useSortBy } from "react-table";
+
+import $ from "jquery";
+import { SettingsEthernet } from "@material-ui/icons";
 window.jQuery = window.$ = $;
 const headers = {
   "Content-Type": "application/json",
 };
 
 function App(props) {
-  const columns = useMemo(() => [
+  const columns = React.useMemo(() => [
     {
-      cell: (row) => (
-        <div>
-          <a
-            data-toggle="tab"
-            data-target="#Agregar"
-            onClick={() => handleShowModificar(row.m_nIdUnidad)}
-            className="btn btn-default btn-sm m-user-edit"
-          >
-            <i className="zmdi zmdi-edit" />
-          </a>
-          <a
-            href="#"
-            onClick={() => handleElimiar(row.m_nIdUnidad)}
-            className="btn btn-default btn-sm m-user-delete"
-          >
-            <i className="zmdi zmdi-close" />
-          </a>
-        </div>
-      ),
-      ignoreRowClick: true,
-      allowOverflow: true,
-      button: true,
+      Name: "Tipo de unidad",
+      accessor: "m_sTipoUnidad",
     },
     {
-      name: "IdUnidad",
-      selector: "m_nIdUnidad",
-      type: "int",
-      omit: "true",
+      Name: "Código",
+      accessor: "m_sCodigo",
     },
     {
-      visible: true,
-      name: "Tipo Unidad",
-      selector: "m_sTipoUnidad",
+      Name: "Descripción",
+      accessor: "m_sDescripcion",
     },
     {
-      visible: true,
-      name: "Código",
-      selector: "m_sCodigo",
+      Name: "ID Satelital",
+      accessor: "m_sIdentificadorSatelital",
     },
     {
-      visible: true,
-      name: "Descripción",
-      selector: "m_sDescripcion",
-
+      Name: "Núm. Operador",
+      accessor: "m_nNumeroOperador",
     },
     {
-      visible: true,
-      name: "Satelital",
-      selector: "m_sIdentificadorSatelital",
+      Name: "Operador",
+      accessor: "m_sNombreOperador",
     },
     {
-      visible: true,
-      name: "Nro. Operador",
-      selector: "m_nNumeroOperador",
+      Name: "Placas",
+      accessor: "m_sPlacas",
     },
     {
-      visible: true,
-      name: "Operador",
-      selector: "m_sNombreOperador",
-    },
-    {
-      visible: true,
-      name: "Placas",
-      selector: "m_sPlacas",
-    },
-    {
-      visible: true,
-      name: "Vencimiento",
-      selector: "m_dtPlacasVencimiento",
+      Name: "Vencimiento",
+      accessor: "m_dtPlacasVencimiento",
     },
   ]);
 
+  function DefaultColumnFilter({
+    column: { filterValue, preFilteredRows, setFilter },
+  }) {
+    const count = preFilteredRows.length;
+
+    return (
+      <input
+        className="form-control"
+        value={filterValue || ""}
+        onChange={(e) => {
+          setFilter(e.target.value || undefined);
+        }}
+        placeholder={`Buscar ${count} registros...`}
+      />
+    );
+  }
+
+  function Table({ columns, data }) {
+    const defaultColumn = React.useMemo(
+      () => ({
+        // Default Filter UI
+        Filter: DefaultColumnFilter,
+      }),
+      []
+    );
+
+    const {
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      rows,
+      prepareRow,
+    } = useTable(
+      {
+        columns,
+        data,
+        defaultColumn,
+      },
+      useFilters,
+      useSortBy
+    );
+
+    return (
+      <div className="col-md-12">
+        <table className="table" {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                <th></th>
+                {headerGroup.headers.map((column) => (
+                  // Add the sorting props to control sorting. For this example
+                  // we can add them into the header props
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render("Name")}
+                    {/* Add a sort direction indicator */}
+                    <span>
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <i className="fa fa-caret-up" />
+                        ) : (
+                          <i className="fa fa-caret-down" />
+                        )
+                      ) : (
+                        ""
+                      )}
+                    </span>
+                    <div>
+                      {column.canFilter ? column.render("Filter") : null}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map((row, i) => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()}>
+                  <td>
+                    <div>
+                      <a
+                        href="#Agregar"
+                        role="tab"
+                        data-toggle="tab"
+                        onClick={() =>
+                          handleShowModificar(row.original.m_nIdUnidad)
+                        }
+                        className="btn btn-default btn-sm m-user-edit"
+                      >
+                        <i className="zmdi zmdi-edit" />
+                      </a>
+                      <a
+                        href="#"
+                        className="btn btn-default btn-sm m-user-delete"
+                        onClick={() => handleEliminar(row.original.m_nIdUnidad)}
+                      >
+                        <i className="zmdi zmdi-close" />
+                      </a>
+                    </div>
+                  </td>
+                  {row.cells.map((cell) => {
+                    return (
+                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
   const [data, setData] = React.useState([]);
-  const [state, setState] = React.useState({
-    agregar: "Agregar",
-  });
+
   const [dataTiposUnidad, setDataTiposUnidad] = React.useState([]);
   const [dataSucursales, setDataSucursales] = React.useState([]);
   const [dataGruposUnidades, setDataGruposUnidades] = React.useState([]);
   const [dataListadoUnidades, setDataListadoUnidades] = React.useState([]);
+  const [state, setState] = React.useState({
+    agregar: "Agregar",
+    idUnidad: 0,
+    idTipoUnidad: 0,
+    codigo: "",
+    activo: false,
+    rentada: false,
+    esUnidadPermisionario: false,
+    idSucursal: 0,
+    idOperador: 0,
+    descripcion: "",
+    modelo: "",
+    serieUnidad: "",
+    colorUnidad: "",
+    idSatelital: "",
+    idConvoy: "",
+    idGrupoUnidad: 0,
+    creadoEl: "",
+    creadoPor: 0,
+    creadoEl: "",
+    modificadoPor: "",
+    modificadoEl: "",
+    largo: 0,
+    ancho: 0,
+    alto: 0,
+    capacidad: 0,
+    numeroEjes: 0,
+    numeroLlanta: 0,
+    llantaRefaccion: 0,
+    tipoLlanta: 0,
+    marcaLlanta: 0,
+    modeloLlanta: 0,
+    medidaLlanta: 0,
+    serieMotor: "",
+    tipoMotor: "",
+    tipoTransmision: "",
+    tipoCombustible: 0,
+    capacidadTanqueGal: 0,
+    rendimientoCargado: 0,
+    rendimientoVacio: 0,
+    tarjetaDiesel1: "",
+    tarjetaDiesel2: "",
+    tarjetaDiesel3: "",
+    companiaSeguros1: "",
+    telefono1: "",
+    numeroSeguro1: "",
+    vencimientoSeguro1: "",
+    tipoCobertura1: 0,
+    companiaSeguros: "",
+    telefono: "",
+    numeroSeguro: "",
+    vencimientoSeguro: "",
+    tipoCobertura: 0,
+    paroMotor: false,
+    tiempoParo: 0,
+    placas: "",
+    placasVencimiento: "",
+    placasExtranjeras: "",
+    placasExtranjerasVencimiento: "",
+    placasDefault: 0,
+    permisoSCT: "",
+    verificacionVehicular: "",
+    verificacionVehicularVencimiento: "",
+    velocidadPromedio: 0,
+    neutralizaciones: 0,
+    frenadoBrusco: 0,
+    cargaAceleracion: 0,
+    accionamientoPedal: 0,
+    velocidadMaximaMotor: 0,
+    porcUltimoCambio: 0,
+    velocidadPromedioUM: "",
+    neutralizacionesUM: "",
+    frenadoBruscoUM: "",
+    cargaAceleracionUM: "",
+    accionamientoPedalUM: "",
+    velocidadMaximaMotorUM: "",
+    porcUltimoCambioUM: "",
+    tarjetaIAVE: "",
+    horometro: 0,
+    tarjetaEPASS: "",
+    horasTrabajasMotor: 0,
+    odometro: 0,
+    odometroGPSKMS: "",
+    idPropietario: 0,
+  });
 
   useEffect((value) => {
     getAllOperadores();
@@ -109,7 +271,7 @@ function App(props) {
   }, []);
 
   function getAllUnidades() {
-    const url = "http://localhost/Unidades/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/Unidades/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta);
 
@@ -118,33 +280,66 @@ function App(props) {
   }
 
   function getAllOperadores() {
-    const url = "http://localhost/Operadores/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/Operadores/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setData(respuesta.data);
     });
   }
 
   function getAllTipoUnidades() {
-    const url = "http://localhost/TiposUnidades/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/TiposUnidades/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setDataTiposUnidad(respuesta.data);
     });
   }
 
   function getAllSucursales() {
-    const url = "http://localhost/Sucursales/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setDataSucursales(respuesta.data);
     });
   }
   function getAllGruposUnidades() {
-    const url = "http://localhost/GrupoUnidad/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setDataGruposUnidades(respuesta.data);
     });
   }
 
-  function handleElimiar(id) {
+  const handleChangeActivoCheckboxChange = (event) => {
+    console.log(event.target.name+" " + state.activo);
+    setState({
+      ...state,
+      activo: !state.activo,
+    });
+  };
+
+  const handleChangeParoMotor = (event) => {
+    console.log(event.target.name+" " + state.paroMotor);
+    setState({
+      ...state,
+      paroMotor: !state.paroMotor,
+    });
+  };
+
+  const handleChangeRentadaCheckboxChange = (event) => {
+    console.log(event.target.name+" " + state.rentada);
+    setState({
+      ...state,
+      rentada: !state.rentada,
+    });
+  };
+
+  const handleChangePermisionarioCheckboxChange = (event) => {
+    console.log(event.target.name+" " + state.esUnidadPermisionario);
+    setState({
+      ...state,
+      esUnidadPermisionario: !state.esUnidadPermisionario,
+    });
+  };
+
+
+  function handleEliminar(id) {
     const url = "http://localhost/Unidad/Eliminar/" + id;
     axios
       .get(url, { headers })
@@ -164,17 +359,10 @@ function App(props) {
     });
   };
 
+  function handleShowModificar(id) {}
 
-  function handleShowModificar(id) {
-  
-
-    
-  }
-
-
-  
   const getModificar = (id) => {
-    const url = "http://localhost/Unidad/GetById/" + id;
+    const url = `${process.env.REACT_APP_API_URL}/Unidad/GetById/` + id;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
 
@@ -188,73 +376,199 @@ function App(props) {
     });
   };
 
+  const handleAceptar = (e) => {
+    e.preventDefault();
+    var params = {
+      IdUnidad:state.idUnidad,
+      IdTipoUnidad: state.idTipoUnidad,
+      Codigo: state.codigo,
+      Activo: state.activo,
+      Rentada: state.rentada,
+      EsUnidadPermisionario: state.esUnidadPermisionario,
+      IdSucursal: state.idSucursal,
+      IdOperador: state.idOperador,
+      Descripcion: state.descripcion,
+      Modelo: state.modelo,
+      SerieUnidad: state.serieUnidad,
+      ColorUnidad: state.colorUnidad,
+      IdentificadorSatelital: state.idSatelital,
+      IdentificadorConvoy: state.idConvoy,
+      IdGrupoUnidad: state.idGrupoUnidad,
+      CreadoPor: state.creadoPor,
+      CreadoEl: state.creadoEl,
+      ModificadoPor: state.modificadoPor,
+      ModificadoEl: state.modificadoEl,
+      Largo: state.largo,
+      Ancho: state.ancho,
+      Alto: state.alto,
+      Capacidad: state.capacidad,
+      NumeroEjes: state.numeroEjes,
+      NumeroLlanta: state.numeroLlanda,
+      LlantaRefaccion: state.llantaRefaccion,
+      IdTipoLlanta: state.tipoLlanta,
+      IdMarcaLlanta: state.marcaLlanta,
+      IdModeloLLanta: state.modeloLlanta,
+      IdMedidaLlanta: state.medidaLlanta,
+      SerieMotor: state.serieMotor,
+      TipoMotor: state.tipoMotor,
+      TipoTransmision: state.tipoTransmision,
+      TipoCombustible: state.tipoCombustible,
+      CapacidadTanqueCombustibleGalones: state.capacidadTanqueGal,
+      RendimientoCargado: state.rendimientoCargado,
+      RendimientoVacio: state.rendimientoVacio,
+      TarjetaDiesel1: state.tarjetaDiesel1,
+      TarjetaDiesel2: state.tarjetaDiesel2,
+      TarjetaDiesel3: state.tarjetaDiesel3,
+      CompaniaSeguros1: state.companiaSeguros1,
+      TelefonosCompaniaSeguros1: state.telefono1,
+      NumeroSeguro1: state.numeroSeguro1,
+      VencimientoSeguro1: state.vencimientoSeguro1,
+      TipoCoberturaSeguro1: state.tipoCobertura1,
+      CompaniaSeguros: state.companiaSeguros,
+      TelefonosCompaniaSeguros: state.telefono,
+      NumeroSeguro: state.numeroSeguro,
+      VencimientoSeguro: state.vencimientoSeguro,
+      TipoCoberturaSeguro: state.tipoCobertura,
+      ParoDeMotorRelenti: state.paroMotor,
+      TiempoParo: state.tiempoParo,
+      Placas: state.placas,
+      PlacasVencimiento: state.placasVencimiento,
+      PlacasExtranjeras: state.placasExtranjeras,
+      PlacasExtranjerasVencimiento: state.placasExtranjerasVencimiento,
+      PlacasDefault: state.placasDefault,
+      PermisoSCT: state.permisoSCT,
+      VerificacionVehicular: state.verificacionVehicular,
+      VerificacionVehicularVencimiento: state.verificacionVehicularVencimiento,
+      VelocidadPromedio: state.velocidadPromedio,
+      Neutralizaciones: state.neutralizaciones,
+      FrenadosBrusco: state.frenadoBrusco,
+      CargaDeAceleracion: state.cargaAceleracion,
+      AccionamientoPedalFreno: state.accionamientoPedal,
+      VelocidadMaximaMotor: state.velocidadMaximaMotor,
+      PorcUltimoCambio: state.porcUltimoCambio,
+      VelocidadPromedioUM: state.velocidadPromedioUM,
+      NeutralizacionesUM: state.neutralizacionesUM,
+      FrenadosBruscoUM: state.frenadoBruscoUM,
+      CargaDeAceleracionUM: state.cargaAceleracionUM,
+      AccionamientoPedalFrenoUM: state.accionamientoPedalUM,
+      VelocidadMaximaMotorUM: state.velocidadMaximaMotorUM,
+      PorcUltimoCambioUM: state.porcUltimoCambioUM,
+      TarjetaIAVE: state.tarjetaIAVE,
+      Horometro: state.horometro,
+      TarjetaEPASS: state.tarjetaEPASS,
+      HorasTrabajadasMotorNoGPS: state.horasTrabajasMotor,
+      Odometro: state.odometro,
+      OdometroGPSKMS: state.odometroGPSKMS,
+      IdPropietarioEquipo: state.idPropietario,
+
+      agregar: "Agregar",
+      importar: "",
+    };
+
+    console.log(params);
+    if (state.idUnidad != 0) {
+      const url =
+        "http://localhost/Unidades/Modificar/" + state.idUnidad;
+      axios
+        .put(url, Object.assign({}, params), { headers })
+
+        .then((respuesta) => {
+          alert(respuesta.data);
+
+          window.location.reload();
+        })
+        .catch((err) => {
+          console.log(err);
+          alert("err");
+        });
+    } else {
+      const url = "http://localhost/Unidadd/Agregar";
+      axios
+        .post(url, Object.assign({}, params), { headers })
+        .then((respuesta) => {
+          alert(respuesta.data);
+          window.location.reload();
+        })
+        .catch((err) => {
+          console.log(err);
+          alert(err);
+        });
+    }
+  };
+
   const [stepActive, setStepActive] = React.useState(1);
 
   function openSection(index) {
-    closeSeccions()
-        var $section;
+    closeSeccions();
+    var $section;
     switch (index) {
       case 1:
         setStepActive(1);
-       $section= $("#infogral")
+        $section = $("#infogral");
         break;
       case 2:
         setStepActive(2);
-        $section= $("#caracteristicas")
-        
+        $section = $("#caracteristicas");
+
         break;
       case 3:
         setStepActive(3);
-        $section= $("#combustible")
-       
+        $section = $("#combustible");
+
         break;
       case 4:
         setStepActive(4);
-        $section= $("#seguros")
+        $section = $("#seguros");
         break;
       case 5:
         setStepActive(5);
-        $section= $("#paromotor")
+        $section = $("#paromotor");
         break;
       case 6:
         setStepActive(6);
-        $section= $("#detalles")
+        $section = $("#detalles");
         break;
       case 7:
         setStepActive(7);
-        $section= $("#otros")
+        $section = $("#otros");
         break;
       default:
     }
 
-    var $welem = $section.parentsUntil(".widget-action-bar").parentsUntil(".w-action").parents(".widget-header").next(".widget-container");
+    var $welem = $section
+      .parentsUntil(".widget-action-bar")
+      .parentsUntil(".w-action")
+      .parents(".widget-header")
+      .next(".widget-container");
 
     $welem.slideDown();
     $section.children("a").children("i").removeClass("zmdi-chevron-up");
     $section.children("a").children("i").addClass("zmdi-chevron-down");
-    $('html, body').animate({
-        scrollTop: parseInt($section.offset().top)
-    }, 200);
-
-
+    $("html, body").animate(
+      {
+        scrollTop: parseInt($section.offset().top),
+      },
+      200
+    );
   }
-
 
   function value(event) {
     console.log(event.target.value);
   }
 
-  
   function closeSeccions() {
-  //Cerrar todas las seciones
-  var $section = $(".widget-toggle")
-  $section.each(function () {
-      var $welem = $(this).parentsUntil(".widget-action-bar").parentsUntil(".w-action").parents(".widget-header").next(".widget-container");
+    //Cerrar todas las seciones
+    var $section = $(".widget-toggle");
+    $section.each(function () {
+      var $welem = $(this)
+        .parentsUntil(".widget-action-bar")
+        .parentsUntil(".w-action")
+        .parents(".widget-header")
+        .next(".widget-container");
       $welem.slideUp();
       $(this).children("a").children("i").removeClass("zmdi-chevron-down");
       $(this).children("a").children("i").addClass("zmdi-chevron-up");
-  });
-
+    });
   }
 
   useEffect((value) => {
@@ -323,11 +637,13 @@ function App(props) {
 
           <div className="tab-content">
             <div id="Listado" className="tab-pane fade in active">
-              <DataTable
-                title="Listado de Unidades"
-                columns={columns}
-                data={dataListadoUnidades}
-              />
+              <div className="widget-wrap">
+                <div className="widget-content">
+                  <div className="row">
+                    <Table columns={columns} data={dataListadoUnidades} />
+                  </div>
+                </div>
+              </div>
             </div>
             <div id="Importar" className="tab-pane fade "></div>
             <div id="Imprimir" className="tab-pane fade ">
@@ -344,7 +660,16 @@ function App(props) {
                           {/*Inicio de ejemplo*/}
 
                           {/* start steps */}
-                          <div className="wizard-breadcrumb number-style"style={{position: "sticky", top: "50px", padding: "5px", backgroundColor: "white", zIndex:100}}>
+                          <div
+                            className="wizard-breadcrumb number-style"
+                            style={{
+                              position: "sticky",
+                              top: "50px",
+                              padding: "5px",
+                              backgroundColor: "white",
+                              zIndex: 100,
+                            }}
+                          >
                             <div className="row">
                               <div
                                 className={
@@ -478,9 +803,6 @@ function App(props) {
                                         </ul>
                                       </li>
                                     </ul>
-
-
-                                    fdasd
                                   </div>
                                 </div>
                                 <div className="widget-container">
@@ -500,13 +822,13 @@ function App(props) {
                                                   Código
                                                 </label>
                                                 <div className="input">
-                                               
                                                   <input
-                                                    onChange={value}
+                                                    onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                    placeholder={state.codigo}
+                                                    id="codigo"
+                                                    name="codigo"
                                                   />
                                                 </div>
                                               </div>
@@ -517,30 +839,45 @@ function App(props) {
                                                   </label>
                                                   <label className="checkbox">
                                                     <input
+                                                      onChange={
+                                                        handleChangeActivoCheckboxChange
+                                                      }
                                                       required
                                                       native
                                                       name="activo"
                                                       type="checkbox"
+                                                      placeholder={state.activo}
+                                                      id="activo"
                                                     />
                                                     <i />
                                                     Activa
                                                   </label>
                                                   <label className="checkbox">
                                                     <input
+                                                      onChange={handleChangeRentadaCheckboxChange}
                                                       required
                                                       native
                                                       name="rentada"
                                                       type="checkbox"
+                                                      id="rentada"
+                                                      placeholder={
+                                                        state.rentada
+                                                      }
                                                     />
                                                     <i />
                                                     Rentada
                                                   </label>
                                                   <label className="checkbox">
                                                     <input
+                                                      onChange={handleChangePermisionarioCheckboxChange}
                                                       required
                                                       native
                                                       name="permisionario"
                                                       type="checkbox"
+                                                      placeholder={
+                                                        state.esUnidadPermisionario
+                                                      }
+                                                      id="esUnidadPermisionario"
                                                     />
                                                     <i />
                                                     Unidad Permisionario
@@ -556,13 +893,16 @@ function App(props) {
                                                   Descripción
                                                 </label>
                                                 <div className="input">
-                                                 
-                                                   
                                                   <input
+                                                    onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                    placeholder={
+                                                      state.descripcion
+                                                    }
+                                                    id="descripcion"
+                                                    name="descripcion"
+
                                                     required
                                                     native
                                                   />
@@ -572,18 +912,18 @@ function App(props) {
                                                 <label className="label">
                                                   Modelo
                                                 </label>
-                                           
-                                                  <div className="input">
-                                                   
-                                                    <input
-                                                      className="form-control"
-                                                      type="text"
-                                                      placeholder=""
-                                                      id="text"
-                                                      required
-                                                      native
-                                                    />
-                                                  </div>{" "}
+                                                <div className="input">
+                                                  <input
+                                                    onChange={handleChange}
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder={state.modelo}
+                                                    id="modelo"
+                                                    name="modelo"
+                                                    required
+                                                    native
+                                                  />
+                                                </div>{" "}
                                               </div>
                                             </div>
 
@@ -593,10 +933,16 @@ function App(props) {
                                               </label>
                                               <label className="input select">
                                                 <select
+                                                  onChange={handleChange}
                                                   className="form-control"
+                                                  placeholder={
+                                                    state.idTipoUnidad
+                                                  }
                                                   required
                                                   native
-                                                  name="tipoUnidad"
+                                                  name="idTipoUnidad"
+                                                  id="idTipoUnidad"
+
                                                 >
                                                   <option value="none">
                                                     Tipos de Unidad
@@ -604,7 +950,11 @@ function App(props) {
 
                                                   {dataTiposUnidad.map(
                                                     (tipoUnidad) => (
-                                                      <option value="{tipoUnidad.m_nIdTipoUnidad}">
+                                                      <option
+                                                        value={
+                                                          tipoUnidad.m_nIdTipoUnidad
+                                                        }
+                                                      >
                                                         {
                                                           tipoUnidad.m_sTipoUnidad
                                                         }
@@ -620,9 +970,12 @@ function App(props) {
                                             <div className="unit">
                                               <label className="input select">
                                                 <select
+                                                  onChange={handleChange}
+                                                  placeholder={state.idSucursal}
+                                                  id="idSucursal"
                                                   native
                                                   className="form-control"
-                                                  name="sucursal"
+                                                  name="idSucursal"
                                                 >
                                                   <option value="none">
                                                     Sucursal
@@ -630,7 +983,11 @@ function App(props) {
 
                                                   {dataSucursales.map(
                                                     (sucursal) => (
-                                                      <option value="{sucursal.m_nIdSucursal}">
+                                                      <option
+                                                        value={
+                                                          sucursal.m_nIdSucursal
+                                                        }
+                                                      >
                                                         {sucursal.m_sSucursal}
                                                       </option>
                                                     )
@@ -642,16 +999,24 @@ function App(props) {
                                             <div className="unit">
                                               <label className="input select">
                                                 <select
+                                                  onChange={handleChange}
+                                                  placeholder={state.idOperador}
+                                                  id="idOperador"
                                                   native
                                                   className="form-control"
-                                                  name="operador"
+                                                  name="idOperador"
+
                                                 >
                                                   <option value="none">
                                                     Operador
                                                   </option>
 
                                                   {data.map((operador) => (
-                                                    <option value="{operador.m_nIdOperador}">
+                                                    <option
+                                                      value={
+                                                        operador.m_nIdOperador
+                                                      }
+                                                    >
                                                       {
                                                         operador.m_nNumeroOperador
                                                       }{" "}
@@ -670,12 +1035,16 @@ function App(props) {
                                                   Número Serie
                                                 </label>
                                                 <div className="input">
-                                                
                                                   <input
+                                                    onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                    placeholder={
+                                                      state.serieUnidad
+                                                    }
+                                                    id="serieUnidad"
+                                                    name="serieUnidad"
+
                                                     required
                                                     native
                                                   />
@@ -686,14 +1055,17 @@ function App(props) {
                                                   Color
                                                 </label>
                                                 <div className="input">
-                                                
-
                                                   <input
+                                                    onChange={handleChange}
+                                                    placeholder={
+                                                      state.colorUnidad
+                                                    }
                                                     class="form-control"
                                                     type="text"
                                                     id="hex"
-                                                    native
                                                     name="colorUnidad"
+
+                                                    native
                                                   />
                                                 </div>{" "}
                                               </div>
@@ -705,13 +1077,15 @@ function App(props) {
                                                   Identificador Satelital
                                                 </label>
                                                 <div className="input">
-                                                  
-
                                                   <input
+                                                    onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                    placeholder={
+                                                      state.idSatelital
+                                                    }
+                                                    id="idSatelital"
+                                                    name="idSatelital"
                                                     native
                                                   />
                                                 </div>
@@ -721,41 +1095,53 @@ function App(props) {
                                                   Identificador Convoy
                                                 </label>
                                                 <div className="input">
-                                                 
                                                   <input
+                                                    onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                    placeholder={state.idConvoy}
+                                                    id="idConvoy"
+                                                    name="idConvoy"
+
                                                     native
                                                   />
                                                 </div>{" "}
                                               </div>
                                             </div>
-                                           < div className="unit">
-                              
-                                
-                                  <label className="input select">
-                                    <select
-                                      native
-                                      className="form-control"
-                                      name="idGrupoUnidad"
-                                      
-                                    >
-                                      <option value="none">
-                                        Grupo Unidades
-                                      </option>
+                                            <div className="unit">
+                                              <label className="input select">
+                                                <select
+                                                  onChange={handleChange}
+                                                  placeholder={
+                                                    state.idGrupoUnidad
+                                                  }
+                                                  id="idGrupoUnidad"
+                                                  native
+                                                  className="form-control"
+                                                  name="idGrupoUnidad"
+                                                >
+                                                  <option value="none">
+                                                    Grupo Unidades
+                                                  </option>
 
-                                      {dataGruposUnidades.map((grupoUnidad) => (
-                                        <option value="">
-                                          {grupoUnidad.m_nCodigo}{" "}
-                                          {grupoUnidad.m_sGrupoUnidad}
-                                        </option>
-                                      ))}
-                                    </select>
-                                    <i></i>
-                                  </label>
-                              </div>
+                                                  {dataGruposUnidades.map(
+                                                    (grupoUnidad) => (
+                                                      <option
+                                                        value={
+                                                          grupoUnidad.m_nIdGrupoUnidad
+                                                        }
+                                                      >
+                                                        {grupoUnidad.m_nCodigo}{" "}
+                                                        {
+                                                          grupoUnidad.m_sGrupoUnidad
+                                                        }
+                                                      </option>
+                                                    )
+                                                  )}
+                                                </select>
+                                                <i></i>
+                                              </label>
+                                            </div>
                                           </div>
                                           {/* end textarea */}
                                         </form>
@@ -834,13 +1220,13 @@ function App(props) {
                                                   Largo
                                                 </label>
                                                 <div className="input">
-                                                 
-
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder="mts"
-                                                    id="text"
+                                                    placeholder={state.largo}
+                                                    id="largo"
+                                                    name="largo"
                                                     native
                                                   />
                                                 </div>
@@ -850,13 +1236,13 @@ function App(props) {
                                                   Ancho
                                                 </label>
                                                 <div className="input">
-                                                  
-
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder="mts"
-                                                    id="text"
+                                                    placeholder={state.ancho}
+                                                    id="ancho"
+                                                    name="ancho"
                                                     native
                                                   />
                                                 </div>
@@ -866,13 +1252,13 @@ function App(props) {
                                                   Alto
                                                 </label>
                                                 <div className="input">
-                                                
-
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder="mts"
-                                                    id="text"
+                                                    placeholder={state.alto}
+                                                    id="alto"
+                                                    name="alto"
                                                     native
                                                   />
                                                 </div>
@@ -882,12 +1268,13 @@ function App(props) {
                                                   Capacidad
                                                 </label>
                                                 <div className="input">
-                                                 
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder="kgs"
-                                                    id="text"
+                                                    placeholder={state.capacidad}
+                                                    id="capacidad"
+                                                    name="capacidad"
                                                     native
                                                   />
                                                 </div>
@@ -897,13 +1284,13 @@ function App(props) {
                                                   Número de Ejes
                                                 </label>
                                                 <div className="input">
-                                               
-
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                    placeholder={state.numeroEjes}
+                                                    id="numeroEjes"
+                                                    name="numeroEjes"
                                                     native
                                                   />
                                                 </div>
@@ -919,12 +1306,13 @@ function App(props) {
                                                   Número de llantas
                                                 </label>
                                                 <div className="input">
-                                                
                                                   <input
+                                                 onChange={handleChange}
                                                     className="form-control"
-                                                    type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                    type="number"
+                                                    placeholder={state.numeroLlanta}
+                                                    id="numeroLlanta"
+                                                    name="numeroLlanta"
                                                     disabled
                                                   />
                                                 </div>
@@ -934,12 +1322,13 @@ function App(props) {
                                                   Llantas de refacción
                                                 </label>
                                                 <div className="input">
-                                                
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
-                                                    type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                    type="number"
+                                                    placeholder={state.llantaRefaccion}
+                                                    id="llantaRefaccion"
+                                                    name="llantaRefaccion"
                                                     disabled
                                                   />
                                                 </div>
@@ -949,7 +1338,14 @@ function App(props) {
                                                   Marca de la llanta
                                                 </label>
                                                 <label className="input select">
-                                                  <select className="form-control" disabled>
+                                                  <select
+                                                  onChange={handleChange}
+                                                    className="form-control"
+                                                    disabled
+                                                    placeholder={state.marcaLlanta}
+                                                    id="marcaLlanta"
+                                                    name="marcaLlanta"
+                                                  >
                                                     <option value="none">
                                                       Todos
                                                     </option>
@@ -962,7 +1358,14 @@ function App(props) {
                                                   Modelo de la llanta
                                                 </label>
                                                 <label className="input select">
-                                                  <select className="form-control" disabled>
+                                                  <select
+                                                  onChange={handleChange}
+                                                    className="form-control"
+                                                    disabled
+                                                    placeholder={state.modeloLlanta}
+                                                    id="modeloLlanta"
+                                                    name="modeloLlanta"
+                                                  >
                                                     <option value="none">
                                                       Todos
                                                     </option>
@@ -975,7 +1378,14 @@ function App(props) {
                                                   Medida de la llanta
                                                 </label>
                                                 <label className="input select">
-                                                  <select className="form-control" disabled>
+                                                  <select
+                                                  onChange={handleChange}
+                                                    className="form-control"
+                                                    disabled
+                                                    placeholder={state.medidaLlanta}
+                                                    id="medidaLlanta"
+                                                    name="medidaLlanta"
+                                                  >
                                                     <option value="none"></option>
                                                   </select>
                                                   <i></i>
@@ -986,7 +1396,14 @@ function App(props) {
                                                   Tipo de llanta
                                                 </label>
                                                 <label className="input select">
-                                                  <select className="form-control" disabled>
+                                                  <select
+                                                  onChange={handleChange}
+                                                    className="form-control"
+                                                    disabled
+                                                    placeholder={state.tipoLlanta}
+                                                    id="tipoLlanta"
+                                                    name="tipoLlanta"
+                                                  >
                                                     <option value="none"></option>
                                                   </select>
                                                   <i></i>
@@ -1004,13 +1421,13 @@ function App(props) {
                                                   Tipo Motor
                                                 </label>
                                                 <div className="input">
-                                                
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
-                                                    
+                                                    placeholder={state.tipoMotor}
+                                                    id="tipoMotor"
+                                                    name="tipoMotor"
                                                   />
                                                 </div>
                                               </div>
@@ -1019,13 +1436,13 @@ function App(props) {
                                                   Número de serie
                                                 </label>
                                                 <div className="input">
-                                                  
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
-                                                    
+                                                    placeholder={state.serieMotor}
+                                                    id="serieMotor"
+                                                    name="serieMotor"
                                                   />
                                                 </div>
                                               </div>
@@ -1034,12 +1451,13 @@ function App(props) {
                                                   Tipo de Transmisión
                                                 </label>
                                                 <div className="input">
-                                                
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                    placeholder={state.tipoTransmision}
+                                                    id="tipoTransmision"
+                                                    name="tipoTransmision"
                                                   />
                                                 </div>
                                               </div>
@@ -1048,8 +1466,8 @@ function App(props) {
                                                   Observaciones
                                                 </label>
                                                 <div className="input">
-                                                
                                                   <input
+                                                  disabled
                                                     className="form-control"
                                                     type="text"
                                                     placeholder=""
@@ -1131,9 +1549,26 @@ function App(props) {
                                                   Tipo de combustible
                                                 </label>
                                                 <label className="input select">
-                                                  <select className="form-control">
+                                                  <select className="form-control"
+                                                  onChange={handleChange}
+                                                              placeholder={state.tipoCombustible}
+                                                              id="tipoCombustible"
+                                                              name="tipoCombustible"
+                                                  >
                                                     <option value="none">
                                                       Todos
+                                                    </option>
+                                                    <option value="1">
+                                                      Por Materiales
+                                                    </option>
+                                                    <option value="2">
+                                                      Gasolina
+                                                    </option>
+                                                    <option value="3">
+                                                      Gas
+                                                    </option>
+                                                    <option value="4">
+                                                      Etanol
                                                     </option>
                                                   </select>
                                                   <i></i>
@@ -1145,12 +1580,13 @@ function App(props) {
                                                   Capacidad de tanque
                                                 </label>
                                                 <div className="input">
-                                              
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
-                                                    type="text"
-                                                    placeholder="Gal."
-                                                    id="text"
+                                                    type="number"
+                                                    placeholder={state.capacidadTanqueGal}
+                                                    id="capacidadTanqueGal"
+                                                    name="capacidadTanqueGal"
                                                   />
                                                 </div>
                                               </div>
@@ -1159,12 +1595,13 @@ function App(props) {
                                                   Rendimiento cargado
                                                 </label>
                                                 <div className="input">
-                                                
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
-                                                    type="text"
-                                                    placeholder="Kms/Lts"
-                                                    id="text"
+                                                    type="number"
+                                                    placeholder={state.rendimientoCargado}
+                                                    id="rendimientoCargado"
+                                                    name="rendimientoCargado"
                                                   />
                                                 </div>
                                               </div>
@@ -1173,12 +1610,13 @@ function App(props) {
                                                   Rendimiento Vacio
                                                 </label>
                                                 <div className="input">
-                                               
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
-                                                    type="text"
-                                                    placeholder="Kms/Lts"
-                                                    id="text"
+                                                    type="number"
+                                                    placeholder={state.rendimientoVacio}
+                                                    id="rendimientoVacio"
+                                                    name="rendimientoVacio"
                                                   />
                                                 </div>
                                               </div>
@@ -1187,12 +1625,13 @@ function App(props) {
                                                   Tarjeta combustible
                                                 </label>
                                                 <div className="input">
-                                                  
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                    placeholder={state.tarjetaDiesel1}
+                                                    id="tarjetaDiesel1"
+                                                    name="tarjetaDiesel1"
                                                   />
                                                 </div>
                                               </div>
@@ -1201,12 +1640,13 @@ function App(props) {
                                                   Tarjeta combustible 2
                                                 </label>
                                                 <div className="input">
-                                                
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                    placeholder={state.tarjetaDiesel2}
+                                                    id="tarjetaDiesel2"
+                                                    name="tarjetaDiesel2"
                                                   />
                                                 </div>
                                               </div>
@@ -1215,12 +1655,13 @@ function App(props) {
                                                   Tarjeta combustible 3
                                                 </label>
                                                 <div className="input">
-                                                
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                    placeholder={state.tarjetaDiesel3}
+                                                    id="tarjetaDiesel3"
+                                                    name="tarjetaDiesel3"
                                                   />
                                                 </div>
                                               </div>
@@ -1298,12 +1739,13 @@ function App(props) {
                                                   Aseguradora
                                                 </label>
                                                 <div className="input">
-                                              
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                    placeholder={state.companiaSeguros1}
+                                                    id="companiaSeguros1"
+                                                    name="companiaSeguros1"
                                                   />
                                                 </div>
                                               </div>
@@ -1312,12 +1754,13 @@ function App(props) {
                                                   Teléfonos
                                                 </label>
                                                 <div className="input">
-                                                
                                                   <input
+                                                  onChange={state.telefono1}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                    placeholder={state.telefono1}
+                                                    id="telefono1"
+                                                    name="telefono1"
                                                   />
                                                 </div>
                                               </div>
@@ -1326,12 +1769,14 @@ function App(props) {
                                                   Núm. Seguro
                                                 </label>
                                                 <div className="input">
-                                                 
                                                   <input
+                                                  onChange={handleChange}
+
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                     placeholder={state.numeroSeguro1}
+                                                    id="numeroSeguro1"
+                                                    name="numeroSeguro1"
                                                   />
                                                 </div>
                                               </div>
@@ -1340,14 +1785,15 @@ function App(props) {
                                                   Vencimiento
                                                 </label>
                                                 <div className="input">
-                                                
-
-                                                <input
+                                                  <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="date"
-                                                    placeholder=""
-                                                    id="text"
-                                                  />                                                </div>
+                                                    placeholder={state.vencimientoSeguro1}
+                                                    id="vencimientoSeguro1"
+                                                    name="vencimientoSeguro1"
+                                                  />{" "}
+                                                </div>
                                               </div>
                                               <div className="col-sm-12 col-md-4 col-lg-4 unit">
                                                 <div className="inline-group">
@@ -1356,32 +1802,51 @@ function App(props) {
                                                   </label>
                                                   <label className="radio">
                                                     <input
+                                                    onChange={handleChange}
                                                       type="radio"
                                                       name="i-radio1"
                                                       defaultChecked
+                                                      value="1"
+                                                      placeholder={state.TipoCoberturaSeguro1}
+                                                      id="TipoCoberturaSeguro1"
+                                                      name="TipoCoberturaSeguro1"
                                                     />
                                                     <i />
                                                     Amplia
                                                   </label>
                                                   <label className="radio">
                                                     <input
+                                                                                                        onChange={handleChange}
+                                                    onChange={handleChange}
+
                                                       type="radio"
                                                       name="i-radio1"
+                                                      value="2"
+
+                                                      placeholder={state.TipoCoberturaSeguro1}
+                                                      id="TipoCoberturaSeguro1"
+                                                      name="TipoCoberturaSeguro1"
                                                     />
                                                     <i />
                                                     Limitada
                                                   </label>
                                                   <label className="radio">
                                                     <input
+                                                                                                        onChange={handleChange}
+
                                                       type="radio"
                                                       name="i-radio1"
+                                                      value="3"
+
+                                                      placeholder={state.TipoCoberturaSeguro1}
+                                                      id="TipoCoberturaSeguro1"
+                                                      name="TipoCoberturaSeguro1"
                                                     />
                                                     <i />
                                                     S/Cobertura
                                                   </label>
                                                 </div>
                                               </div>
-                                              
                                             </div>
                                             <div className="row">
                                               <div className="col-sm-6 col-md-2 col-lg-2 unit">
@@ -1389,12 +1854,13 @@ function App(props) {
                                                   Aseguradora
                                                 </label>
                                                 <div className="input">
-                                                 
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                    placeholder={state.CompaniaSeguros}
+                                                      id="CompaniaSeguros"
+                                                      name="CompaniaSeguros"
                                                   />
                                                 </div>
                                               </div>
@@ -1403,13 +1869,15 @@ function App(props) {
                                                   Teléfonos
                                                 </label>
                                                 <div className="input">
-                                                 
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
-                                                  />
+                                                    placeholder={state.telefono}
+                                                    id="telefono"
+                                                    name="telefono"
+                                                />
+                                                  
                                                 </div>
                                               </div>
                                               <div className="col-sm-6 col-md-2 col-lg-2 unit">
@@ -1417,13 +1885,15 @@ function App(props) {
                                                   Núm. Seguro
                                                 </label>
                                                 <div className="input">
-                                               
                                                   <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
-                                                    id="text"
+                                                    placeholder={state.numeroSeguro}
+                                                      id="numeroSeguro"
+                                                      name="numeroSeguro"
                                                   />
+                                                  
                                                 </div>
                                               </div>
                                               <div className="col-sm-6 col-md-2  col-lg-2 unit">
@@ -1431,13 +1901,15 @@ function App(props) {
                                                   Vencimiento
                                                 </label>
                                                 <div className="input">
-                                                 
-                                                <input
+                                                  <input
+                                                  onChange={handleChange}
                                                     className="form-control"
                                                     type="date"
-                                                    placeholder=""
-                                                    id="text"
-                                                  />
+                                                    placeholder={state.vencimientoSeguro}
+                                                    id="vencimientoSeguro"
+                                                    name="vencimientoSeguro"
+                                                />
+                                                
                                                 </div>
                                               </div>
                                               <div className="col-sm-12 col-md-4 col-lg-4 unit">
@@ -1447,36 +1919,50 @@ function App(props) {
                                                   </label>
                                                   <label className="radio">
                                                     <input
+                                                    onChange={handleChange}
                                                       type="radio"
                                                       name="i-radio"
+                                                      value="1"
                                                       defaultChecked
+                                                      placeholder={state.tipoCobertura}
+                                                      id="tipoCobertura"
+                                                      name="tipoCobertura"
                                                     />
                                                     <i />
                                                     Amplia
                                                   </label>
                                                   <label className="radio">
                                                     <input
+                                                    onChange={handleChange}
                                                       type="radio"
                                                       name="i-radio"
+                                                      value="2"
+                                                      placeholder={state.tipoCobertura}
+                                                      id="tipoCobertura"
+                                                      name="tipoCobertura"
                                                     />
                                                     <i />
                                                     Limitada
                                                   </label>
                                                   <label className="radio">
                                                     <input
+                                                    onChange={handleChange}
                                                       type="radio"
                                                       name="i-radio"
+                                                      value="3"
+                                                      placeholder={state.tipoCobertura}
+                                                      id="tipoCobertura"
+                                                      name="tipoCobertura"
                                                     />
                                                     <i />
                                                     S/Cobertura
                                                   </label>
                                                 </div>
                                               </div>
-                                              
                                             </div>
                                             {/* end text password */}
                                             {/* start email url */}
-                                           
+
                                             {/* end textarea */}
                                           </div>
                                         </form>
@@ -1494,7 +1980,6 @@ function App(props) {
                                 <div className="widget-header block-header margin-bottom-0 clearfix">
                                   <div className="pull-left">
                                     <h3>Paro de Motor de Ralentí</h3>
-                                    
                                   </div>
                                   <div className="pull-right w-action">
                                     <ul className="widget-action-bar">
@@ -1547,29 +2032,33 @@ function App(props) {
                                           <div className="form-content">
                                             {/* start text password */}
                                             <div className="row">
-                                    <div className="col-sm-6 col-md-2 unit">
-                                      <label className="checkbox-toggle">
-                                        <input type="checkbox" />
-                                        <i />
-                                        Paro por Ralenti
-                                      </label>
-                                    </div>
-                                    <div className="col-sm-6 col-md-4 unit">
-                                      <label className="label">
-                                        Tiempo para paro
-                                      </label>
-                                      <div className="input">
-                                       
-                                        <input
-                                          className="form-control"
-                                          type="text"
-                                          placeholder="Max. 30 min"
-                                          id="text"
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                            
+                                              <div className="col-sm-6 col-md-2 unit">
+                                                <label className="checkbox-toggle">
+                                                  <input type="checkbox"
+                                                  onChange={handleChangeParoMotor}
+                                                   placeholder={state.paroMotor}
+                                                   id="paroMotor"
+                                                   name="paroMotor"
+                                                  />
+                                                  <i />
+                                                  Paro por Ralenti
+                                                </label>
+                                              </div>
+                                              <div className="col-sm-6 col-md-4 unit">
+                                                <label className="label">
+                                                  Tiempo para paro
+                                                </label>
+                                                <div className="input">
+                                                  <input
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder="Max. 30 min"
+                                                    id="tiempoParo"
+                                                    name="tiempoParo"
+                                                  />
+                                                </div>
+                                              </div>
+                                            </div>
                                           </div>
                                         </form>
                                       </div>
@@ -1586,7 +2075,6 @@ function App(props) {
                                 <div className="widget-header block-header margin-bottom-0 clearfix">
                                   <div className="pull-left">
                                     <h3>Detalles</h3>
-                                    
                                   </div>
                                   <div className="pull-right w-action">
                                     <ul className="widget-action-bar">
@@ -1631,28 +2119,34 @@ function App(props) {
                                   <div className="widget-content">
                                     <div className="row">
                                       <div className="col-md-12">
-                                      <ul className="nav nav-tabs">
-                                    <li className="active">
-                                      <a data-toggle="tab" href="#Placas">
-                                        Placas/Permisos
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a data-toggle="tab" href="#Adicionales">
-                                        Adicionales
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a data-toggle="tab" href="#PConduccion">
-                                        P. Conducción
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a data-toggle="tab" href="#Fotos">
-                                        Fotos/Doc
-                                      </a>
-                                    </li>
-                                  </ul>
+                                        <ul className="nav nav-tabs">
+                                          <li className="active">
+                                            <a data-toggle="tab" href="#Placas">
+                                              Placas/Permisos
+                                            </a>
+                                          </li>
+                                          <li>
+                                            <a
+                                              data-toggle="tab"
+                                              href="#Adicionales"
+                                            >
+                                              Adicionales
+                                            </a>
+                                          </li>
+                                          <li>
+                                            <a
+                                              data-toggle="tab"
+                                              href="#PConduccion"
+                                            >
+                                              P. Conducción
+                                            </a>
+                                          </li>
+                                          <li>
+                                            <a data-toggle="tab" href="#Fotos">
+                                              Fotos/Doc
+                                            </a>
+                                          </li>
+                                        </ul>
                                         <form
                                           action="#"
                                           className="j-forms"
@@ -1661,532 +2155,510 @@ function App(props) {
                                           <div className="form-content">
                                             {/* start text password */}
                                             <div className="widget-wrap">
-                                        <div className="widget-container margin-top-0">
-                                          <div className="widget-content">
-                                            <div className="tab-content">
-                                              <div
-                                                id="Placas"
-                                                className="tab-pane fade in active"
-                                              >
-                                                <div className="row">
-                                                  <div className="col-md-12 unit">
-                                                    <div className="row">
-                                                      <div className="col-sm-6 col-md-3 col-lg-3 unit">
-                                                        <label className="label">
-                                                          Placas Mex.
-                                                        </label>
-                                                        <div className="input">
-                                                      
-                                                          <input
-                                                            className="form-control"
-                                                            type="text"
-                                                            placeholder=""
-                                                            id="text"
-                                                          />
-                                                        </div>
-                                                      </div>
-                                                      <div className="col-sm-6 col-md-3  col-lg-3 unit">
-                                                        <label className="label">
-                                                          Vencimiento
-                                                        </label>
-                                                        <div className="input">
-                                                 
-                                                <input
-                                                    className="form-control"
-                                                    type="date"
-                                                    placeholder=""
-                                                    id="text"
-                                                  />
-                                                </div>
-                                                      </div>
-                                                      <div className="col-sm-6 col-md-3 col-lg-3  unit ">
-                                                        <label className="label">
-                                                          Placas E.U.A.
-                                                        </label>
-                                                        <div className="input">
-                                                          
-                                                          <input
-                                                            className="form-control"
-                                                            type="text"
-                                                            placeholder=""
-                                                            id="text"
-                                                          />
-                                                        </div>
-                                                      </div>
-                                                      <div className="col-sm-6 col-md-3  col-lg-3 unit">
-                                                        <label className="label">
-                                                          Vencimiento
-                                                        </label>
-                                                        <div className="input">
-                                                 
-                                                 <input
-                                                     className="form-control"
-                                                     type="date"
-                                                     placeholder=""
-                                                     id="text"
-                                                   />
-                                                 </div>
-                                                      </div>
-                                                    </div>
-                                                    <div className="row">
-                                                      <div className="col-sm-6  col-md-3 col-lg-3  unit">
-                                                        <label className="label">
-                                                          Placas Default
-                                                        </label>
-                                                        <label className="input select">
-                                                          <select className="form-control">
-                                                            <option value="1">
-                                                              México
-                                                            </option>
-                                                            <option value="2">
-                                                              E.U.A
-                                                            </option>
-                                                          </select>
-                                                          <i></i>
-                                                        </label>
-                                                      </div>
-                                                      <div className="col-sm-6 col-md-3  col-lg-3 unit">
-                                                        <label className="label">
-                                                          Permiso SCT
-                                                        </label>
-                                                        <div className="input">
-                                                          <div className="input">
-                                                            
-                                                            <input
-                                                              className="form-control"
-                                                              type="text"
-                                                              placeholder=""
-                                                              id="text"
-                                                            />
-                                                          </div>
-                                                        </div>
-                                                      </div>
-                                                      <div className="col-sm-6 col-md-3  col-lg-3 unit">
-                                                        <label className="label">
-                                                          Verificación
-                                                        </label>
-                                                        <div className="input">
-                                                        
-                                                          <input
-                                                            className="form-control"
-                                                            type="text"
-                                                            placeholder=""
-                                                            id="text"
-                                                          />
-                                                        </div>
-                                                      </div>
-                                                      <div className="col-sm-6 col-md-3  col-lg-3 unit">
-                                                        <label className="label">
-                                                          Vencimiento
-                                                        </label>
-                                                        <div className="input">
-                                                 
-                                                 <input
-                                                     className="form-control"
-                                                     type="date"
-                                                     placeholder=""
-                                                     id="text"
-                                                   />
-                                                 </div>
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                              <div
-                                                id="Adicionales"
-                                                className="tab-pane fade"
-                                              >
-                                                <div className="row">
-                                                  <div className="col-md-12 unit">
-                                                    {/* start cloned right side buttons element */}
-                                                    <div className="clone-rightside-btn-1">
-                                                      <label className="label">
-                                                        Documentos
-                                                      </label>
-                                                      <div className="j-row toclone-widget-right toclone">
-                                                        <div className="span5 unit">
-                                                          <div className="input">
-                                                            <input
-                                                              className="form-control"
-                                                              type="text"
-                                                              placeholder="Número de Documento"
-                                                            />
-                                                          </div>
-                                                        </div>
-                                                        <div className="span5 unit">
-                                                          <div className="input">
-                                                            <input
-                                                              className="form-control"
-                                                              type="text"
-                                                              placeholder="Documento"
-                                                            />
-                                                          </div>
-                                                        </div>
-                                                        <div className="span2 unit">
-                                                          <div className="input">
-                                                           
-                                                              <input
-                                                                className="form-control"
-                                                                type="text"
-                                                                placeholder="15/06/2020"
-                                                                id="date_to"
-                                                                name="date_to"
-                                                              />
-                                                          </div>
-                                                        </div>
-                                                        <button
-                                                          type="button"
-                                                          className="btn btn-primary clone-btn-right clone"
-                                                        >
-                                                          <i className="fa fa-plus" />
-                                                        </button>
-                                                        <button
-                                                          type="button"
-                                                          className="btn btn-secondary clone-btn-right delete"
-                                                        >
-                                                          <i className="fa fa-minus" />
-                                                        </button>
-                                                      </div>
-                                                    </div>
-                                                    {/* end cloned right
-                                                     */}
-                                                  </div>
-                                                </div>
-                                              </div>
-                                              <div
-                                                id="PConduccion"
-                                                className="tab-pane fade "
-                                              >
-                                                <div className="row">
-                                                  <div className="col-md-12 unit">
-                                                    <div className="row">
-                                                     
-                                                      <div className="col-sm-6 col-md-4 col-lg-4 unit">
-                                                        <label className="label"></label>
-                                                        <div className="input">
-                                                          
-                                                          <input
-                                                            className="form-control"
-                                                            type="text"
-                                                            placeholder="Velocidad Promedio"
-                                                            id="text"
-                                                          />
-                                                        </div>
-                                                      </div>
-                                                      <div className="col-sm-6  col-md-4 col-lg-4  unit">
-                                                        <label className="label"></label>
-                                                        <label className="input select">
-                                                          <select className="form-control">
-                                                            <option value="1">
-                                                              %
-                                                            </option>
-                                                            <option value="2">
-                                                              Veces
-                                                            </option>
-                                                            <option value="2">
-                                                              RPM
-                                                            </option>
-                                                            <option value="2">
-                                                              KM/HR
-                                                            </option>
-                                                          </select>
-                                                          <i></i>
-                                                        </label>
-                                                      </div>
-                                                      
-                                                    </div>
-                                                    <div className="row">
-                                                     
-                                                      <div className="col-sm-6 col-md-4 col-lg-4 unit">
-                                                        <label className="label"></label>
-                                                        <div className="input">
-                                                       
-                                                          <input
-                                                            className="form-control"
-                                                            type="text"
-                                                            placeholder="Neutralización"
-                                                            id="text"
-                                                          />
-                                                        </div>
-                                                      </div>
-                                                      <div className="col-sm-6  col-md-4 col-lg-4  unit">
-                                                        <label className="label"></label>
-                                                        <label className="input select">
-                                                          <select className="form-control">
-                                                            <option value="1">
-                                                              %
-                                                            </option>
-                                                            <option value="2">
-                                                              Veces
-                                                            </option>
-                                                            <option value="2">
-                                                              RPM
-                                                            </option>
-                                                            <option value="2">
-                                                              KM/HR
-                                                            </option>
-                                                          </select>
-                                                          <i></i>
-                                                        </label>
-                                                      </div>
-                                                      
-                                                    </div>
-                                                    <div className="row">
-                                                      
-                                                      <div className="col-sm-6 col-md-4 col-lg-4 unit">
-                                                        <label className="label"></label>
-                                                        <div className="input">
-                                                      
-                                                          <input
-                                                            className="form-control"
-                                                            type="text"
-                                                            placeholder="Frenado Brusco"
-                                                            id="text"
-                                                          />
-                                                        </div>
-                                                      </div>
-                                                      <div className="col-sm-6  col-md-4 col-lg-4  unit">
-                                                        <label className="label"></label>
-                                                        <label className="input select">
-                                                          <select className="form-control">
-                                                            <option value="1">
-                                                              %
-                                                            </option>
-                                                            <option value="2">
-                                                              Veces
-                                                            </option>
-                                                            <option value="2">
-                                                              RPM
-                                                            </option>
-                                                            <option value="2">
-                                                              KM/HR
-                                                            </option>
-                                                          </select>
-                                                          <i></i>
-                                                        </label>
-                                                      </div>
-                                                      
-                                                    </div>
-                                                    <div className="row">
-                                                      
-                                                      <div className="col-sm-6 col-md-4 col-lg-4 unit">
-                                                        <label className="label"></label>
-                                                        <div className="input">
-                                                          
-                                                          <input
-                                                            className="form-control"
-                                                            type="text"
-                                                            placeholder="Carga de Aceleración"
-                                                            id="text"
-                                                          />
-                                                        </div>
-                                                      </div>
-                                                      <div className="col-sm-6  col-md-4 col-lg-4  unit">
-                                                        <label className="label"></label>
-                                                        <label className="input select">
-                                                          <select className="form-control">
-                                                            <option value="1">
-                                                              %
-                                                            </option>
-                                                            <option value="2">
-                                                              Veces
-                                                            </option>
-                                                            <option value="2">
-                                                              RPM
-                                                            </option>
-                                                            <option value="2">
-                                                              KM/HR
-                                                            </option>
-                                                          </select>
-                                                          <i></i>
-                                                        </label>
-                                                      </div>
-                                                    </div>
-                                                    <div className="row">
-                                                      <div className="col-sm-6 col-md-4 col-lg-4 unit">
-                                                        <label className="label"></label>
-                                                        <div className="input">
-                                                         
-                                                          <input
-                                                            className="form-control"
-                                                            type="text"
-                                                            placeholder="Accionamiento Pedal de Freno"
-                                                            id="text"
-                                                          />
-                                                        </div>
-                                                      </div>
-                                                      <div className="col-sm-6  col-md-4 col-lg-4  unit">
-                                                        <label className="label"></label>
-                                                        <label className="input select">
-                                                          <select className="form-control">
-                                                            <option value="1">
-                                                              %
-                                                            </option>
-                                                            <option value="2">
-                                                              Veces
-                                                            </option>
-                                                            <option value="2">
-                                                              RPM
-                                                            </option>
-                                                            <option value="2">
-                                                              KM/HR
-                                                            </option>
-                                                          </select>
-                                                          <i></i>
-                                                        </label>
-                                                      </div>
-                                                    </div>
-                                                    <div className="row">
-                                                      <div className="col-sm-6 col-md-4 col-lg-4 unit">
-                                                        <label className="label"></label>
-                                                        <div className="input">
-                                                          
-                                                          <input
-                                                            className="form-control"
-                                                            type="text"
-                                                            placeholder="Velocidad Máxima Motor"
-                                                            id="text"
-                                                          />
-                                                        </div>
-                                                      </div>
-                                                      <div className="col-sm-6  col-md-4 col-lg-4  unit">
-                                                        <label className="label"></label>
-                                                        <label className="input select">
-                                                          <select className="form-control">
-                                                            <option value="1">
-                                                              %
-                                                            </option>
-                                                            <option value="2">
-                                                              Veces
-                                                            </option>
-                                                            <option value="2">
-                                                              RPM
-                                                            </option>
-                                                            <option value="2">
-                                                              KM/HR
-                                                            </option>
-                                                          </select>
-                                                          <i></i>
-                                                        </label>
-                                                      </div>
-                                                    </div>
-                                                    <div className="row">
-                                                      <div className="col-sm-6 col-md-4 col-lg-4 unit">
-                                                        <label className="label"></label>
-                                                        <div className="input">
-                                                         
-                                                          <input
-                                                            className="form-control"
-                                                            type="text"
-                                                            placeholder="% Ultimo Cambio"
-                                                            id="text"
-                                                          />
-                                                        </div>
-                                                      </div>
-                                                      <div className="col-sm-6  col-md-4 col-lg-4  unit">
-                                                        <label className="label"></label>
-                                                        <label className="input select">
-                                                          <select className="form-control">
-                                                            <option value="1">
-                                                              %
-                                                            </option>
-                                                            <option value="2">
-                                                              Veces
-                                                            </option>
-                                                            <option value="2">
-                                                              RPM
-                                                            </option>
-                                                            <option value="2">
-                                                              KM/HR
-                                                            </option>
-                                                          </select>
-                                                          <i></i>
-                                                        </label>
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                              <div
-                                                id="Fotos"
-                                                className="tab-pane fade "
-                                              >
-                                                <div className="row">
-                                                  <div className="col-md-12 unit">
-                                                    {/* start cloned right side buttons element */}
-                                                    <div className="clone-rightside-btn-1">
-                                                      <label className="label">
-                                                        Fotos/Documentos
-                                                      </label>
-                                                      <div className="j-row toclone-widget-right toclone">
-                                                        <div className="span12 unit">
-                                                          <div className="input">
-                                                            <input
-                                                              className="form-control"
-                                                              type="text"
-                                                              placeholder="Descripción"
-                                                            />
-                                                          </div>
-                                                        </div>
-                                                        <div className="span12 unit">
-                                                          <form
-                                                            action="#"
-                                                            className="j-forms"
-                                                            noValidate
-                                                          >
-                                                            <div className="form-content">
-                                                              <div className="row">
-                                                                {/* start prepend small file button */}
-                                                                <div className="col-md-12 unit">
-                                                                  <div className="input prepend-small-btn">
-                                                                    <div className="file-button">
-                                                                      Browse
-                                                                      <input
-                                                                        className="btn btn-success"
-                                                                        type="file"
-                                                                        onChange="document.getElementById('prepend-small-btn').value = this.value;"
-                                                                      />
-                                                                    </div>
-                                                                    <input
-                                                                      className="form-control"
-                                                                      type="text"
-                                                                      id="prepend-small-btn"
-                                                                      readOnly
-                                                                      placeholder="no file selected"
-                                                                    />
-                                                                  </div>
-                                                                </div>
-                                                                {/* end prepend small
-                                                                 */}
+                                              <div className="widget-container margin-top-0">
+                                                <div className="widget-content">
+                                                  <div className="tab-content">
+                                                    <div
+                                                      id="Placas"
+                                                      className="tab-pane fade in active"
+                                                    >
+                                                      <div className="row">
+                                                        <div className="col-md-12 unit">
+                                                          <div className="row">
+                                                            <div className="col-sm-6 col-md-3 col-lg-3 unit">
+                                                              <label className="label">
+                                                                Placas Mex.
+                                                              </label>
+                                                              <div className="input">
+                                                                <input
+                                                                  className="form-control"
+                                                                  type="text"
+                                                                  placeholder=""
+                                                                  id="text"
+                                                                />
                                                               </div>
                                                             </div>
-                                                          </form>
+                                                            <div className="col-sm-6 col-md-3  col-lg-3 unit">
+                                                              <label className="label">
+                                                                Vencimiento
+                                                              </label>
+                                                              <div className="input">
+                                                                <input
+                                                                  className="form-control"
+                                                                  type="date"
+                                                                  placeholder=""
+                                                                  id="text"
+                                                                />
+                                                              </div>
+                                                            </div>
+                                                            <div className="col-sm-6 col-md-3 col-lg-3  unit ">
+                                                              <label className="label">
+                                                                Placas E.U.A.
+                                                              </label>
+                                                              <div className="input">
+                                                                <input
+                                                                  className="form-control"
+                                                                  type="text"
+                                                                  placeholder=""
+                                                                  id="text"
+                                                                />
+                                                              </div>
+                                                            </div>
+                                                            <div className="col-sm-6 col-md-3  col-lg-3 unit">
+                                                              <label className="label">
+                                                                Vencimiento
+                                                              </label>
+                                                              <div className="input">
+                                                                <input
+                                                                  className="form-control"
+                                                                  type="date"
+                                                                  placeholder=""
+                                                                  id="text"
+                                                                />
+                                                              </div>
+                                                            </div>
+                                                          </div>
+                                                          <div className="row">
+                                                            <div className="col-sm-6  col-md-3 col-lg-3  unit">
+                                                              <label className="label">
+                                                                Placas Default
+                                                              </label>
+                                                              <label className="input select">
+                                                                <select className="form-control">
+                                                                  <option value="1">
+                                                                    México
+                                                                  </option>
+                                                                  <option value="2">
+                                                                    E.U.A
+                                                                  </option>
+                                                                </select>
+                                                                <i></i>
+                                                              </label>
+                                                            </div>
+                                                            <div className="col-sm-6 col-md-3  col-lg-3 unit">
+                                                              <label className="label">
+                                                                Permiso SCT
+                                                              </label>
+                                                              <div className="input">
+                                                                <div className="input">
+                                                                  <input
+                                                                    className="form-control"
+                                                                    type="text"
+                                                                    placeholder=""
+                                                                    id="text"
+                                                                  />
+                                                                </div>
+                                                              </div>
+                                                            </div>
+                                                            <div className="col-sm-6 col-md-3  col-lg-3 unit">
+                                                              <label className="label">
+                                                                Verificación
+                                                              </label>
+                                                              <div className="input">
+                                                                <input
+                                                                  className="form-control"
+                                                                  type="text"
+                                                                  placeholder=""
+                                                                  id="text"
+                                                                />
+                                                              </div>
+                                                            </div>
+                                                            <div className="col-sm-6 col-md-3  col-lg-3 unit">
+                                                              <label className="label">
+                                                                Vencimiento
+                                                              </label>
+                                                              <div className="input">
+                                                                <input
+                                                                  className="form-control"
+                                                                  type="date"
+                                                                  placeholder=""
+                                                                  id="text"
+                                                                />
+                                                              </div>
+                                                            </div>
+                                                          </div>
                                                         </div>
-
-                                                        <button
-                                                          type="button"
-                                                          className="btn btn-primary clone-btn-right clone"
-                                                        >
-                                                          <i className="fa fa-plus" />
-                                                        </button>
-                                                        <button
-                                                          type="button"
-                                                          className="btn btn-secondary clone-btn-right delete"
-                                                        >
-                                                          <i className="fa fa-minus" />
-                                                        </button>
                                                       </div>
                                                     </div>
-                                                    {/* end cloned right
-                                                     */}
+                                                    <div
+                                                      id="Adicionales"
+                                                      className="tab-pane fade"
+                                                    >
+                                                      <div className="row">
+                                                        <div className="col-md-12 unit">
+                                                          {/* start cloned right side buttons element */}
+                                                          <div className="clone-rightside-btn-1">
+                                                            <label className="label">
+                                                              Documentos
+                                                            </label>
+                                                            <div className="j-row toclone-widget-right toclone">
+                                                              <div className="span5 unit">
+                                                                <div className="input">
+                                                                  <input
+                                                                    className="form-control"
+                                                                    type="text"
+                                                                    placeholder="Número de Documento"
+                                                                  />
+                                                                </div>
+                                                              </div>
+                                                              <div className="span5 unit">
+                                                                <div className="input">
+                                                                  <input
+                                                                    className="form-control"
+                                                                    type="text"
+                                                                    placeholder="Documento"
+                                                                  />
+                                                                </div>
+                                                              </div>
+                                                              <div className="span2 unit">
+                                                                <div className="input">
+                                                                  <input
+                                                                    className="form-control"
+                                                                    type="text"
+                                                                    placeholder="15/06/2020"
+                                                                    id="date_to"
+                                                                    name="date_to"
+                                                                  />
+                                                                </div>
+                                                              </div>
+                                                              <button
+                                                                type="button"
+                                                                className="btn btn-primary clone-btn-right clone"
+                                                              >
+                                                                <i className="fa fa-plus" />
+                                                              </button>
+                                                              <button
+                                                                type="button"
+                                                                className="btn btn-secondary clone-btn-right delete"
+                                                              >
+                                                                <i className="fa fa-minus" />
+                                                              </button>
+                                                            </div>
+                                                          </div>
+                                                          {/* end cloned right
+                                                           */}
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      id="PConduccion"
+                                                      className="tab-pane fade "
+                                                    >
+                                                      <div className="row">
+                                                        <div className="col-md-12 unit">
+                                                          <div className="row">
+                                                            <div className="col-sm-6 col-md-4 col-lg-4 unit">
+                                                              <label className="label"></label>
+                                                              <div className="input">
+                                                                <input
+                                                                  className="form-control"
+                                                                  type="text"
+                                                                  placeholder="Velocidad Promedio"
+                                                                  id="text"
+                                                                />
+                                                              </div>
+                                                            </div>
+                                                            <div className="col-sm-6  col-md-4 col-lg-4  unit">
+                                                              <label className="label"></label>
+                                                              <label className="input select">
+                                                                <select className="form-control">
+                                                                  <option value="1">
+                                                                    %
+                                                                  </option>
+                                                                  <option value="2">
+                                                                    Veces
+                                                                  </option>
+                                                                  <option value="2">
+                                                                    RPM
+                                                                  </option>
+                                                                  <option value="2">
+                                                                    KM/HR
+                                                                  </option>
+                                                                </select>
+                                                                <i></i>
+                                                              </label>
+                                                            </div>
+                                                          </div>
+                                                          <div className="row">
+                                                            <div className="col-sm-6 col-md-4 col-lg-4 unit">
+                                                              <label className="label"></label>
+                                                              <div className="input">
+                                                                <input
+                                                                  className="form-control"
+                                                                  type="text"
+                                                                  placeholder="Neutralización"
+                                                                  id="text"
+                                                                />
+                                                              </div>
+                                                            </div>
+                                                            <div className="col-sm-6  col-md-4 col-lg-4  unit">
+                                                              <label className="label"></label>
+                                                              <label className="input select">
+                                                                <select className="form-control">
+                                                                  <option value="1">
+                                                                    %
+                                                                  </option>
+                                                                  <option value="2">
+                                                                    Veces
+                                                                  </option>
+                                                                  <option value="2">
+                                                                    RPM
+                                                                  </option>
+                                                                  <option value="2">
+                                                                    KM/HR
+                                                                  </option>
+                                                                </select>
+                                                                <i></i>
+                                                              </label>
+                                                            </div>
+                                                          </div>
+                                                          <div className="row">
+                                                            <div className="col-sm-6 col-md-4 col-lg-4 unit">
+                                                              <label className="label"></label>
+                                                              <div className="input">
+                                                                <input
+                                                                  className="form-control"
+                                                                  type="text"
+                                                                  placeholder="Frenado Brusco"
+                                                                  id="text"
+                                                                />
+                                                              </div>
+                                                            </div>
+                                                            <div className="col-sm-6  col-md-4 col-lg-4  unit">
+                                                              <label className="label"></label>
+                                                              <label className="input select">
+                                                                <select className="form-control">
+                                                                  <option value="1">
+                                                                    %
+                                                                  </option>
+                                                                  <option value="2">
+                                                                    Veces
+                                                                  </option>
+                                                                  <option value="2">
+                                                                    RPM
+                                                                  </option>
+                                                                  <option value="2">
+                                                                    KM/HR
+                                                                  </option>
+                                                                </select>
+                                                                <i></i>
+                                                              </label>
+                                                            </div>
+                                                          </div>
+                                                          <div className="row">
+                                                            <div className="col-sm-6 col-md-4 col-lg-4 unit">
+                                                              <label className="label"></label>
+                                                              <div className="input">
+                                                                <input
+                                                                  className="form-control"
+                                                                  type="text"
+                                                                  placeholder="Carga de Aceleración"
+                                                                  id="text"
+                                                                />
+                                                              </div>
+                                                            </div>
+                                                            <div className="col-sm-6  col-md-4 col-lg-4  unit">
+                                                              <label className="label"></label>
+                                                              <label className="input select">
+                                                                <select className="form-control">
+                                                                  <option value="1">
+                                                                    %
+                                                                  </option>
+                                                                  <option value="2">
+                                                                    Veces
+                                                                  </option>
+                                                                  <option value="2">
+                                                                    RPM
+                                                                  </option>
+                                                                  <option value="2">
+                                                                    KM/HR
+                                                                  </option>
+                                                                </select>
+                                                                <i></i>
+                                                              </label>
+                                                            </div>
+                                                          </div>
+                                                          <div className="row">
+                                                            <div className="col-sm-6 col-md-4 col-lg-4 unit">
+                                                              <label className="label"></label>
+                                                              <div className="input">
+                                                                <input
+                                                                  className="form-control"
+                                                                  type="text"
+                                                                  placeholder="Accionamiento Pedal de Freno"
+                                                                  id="text"
+                                                                />
+                                                              </div>
+                                                            </div>
+                                                            <div className="col-sm-6  col-md-4 col-lg-4  unit">
+                                                              <label className="label"></label>
+                                                              <label className="input select">
+                                                                <select className="form-control">
+                                                                  <option value="1">
+                                                                    %
+                                                                  </option>
+                                                                  <option value="2">
+                                                                    Veces
+                                                                  </option>
+                                                                  <option value="2">
+                                                                    RPM
+                                                                  </option>
+                                                                  <option value="2">
+                                                                    KM/HR
+                                                                  </option>
+                                                                </select>
+                                                                <i></i>
+                                                              </label>
+                                                            </div>
+                                                          </div>
+                                                          <div className="row">
+                                                            <div className="col-sm-6 col-md-4 col-lg-4 unit">
+                                                              <label className="label"></label>
+                                                              <div className="input">
+                                                                <input
+                                                                  className="form-control"
+                                                                  type="text"
+                                                                  placeholder="Velocidad Máxima Motor"
+                                                                  id="text"
+                                                                />
+                                                              </div>
+                                                            </div>
+                                                            <div className="col-sm-6  col-md-4 col-lg-4  unit">
+                                                              <label className="label"></label>
+                                                              <label className="input select">
+                                                                <select className="form-control">
+                                                                  <option value="1">
+                                                                    %
+                                                                  </option>
+                                                                  <option value="2">
+                                                                    Veces
+                                                                  </option>
+                                                                  <option value="2">
+                                                                    RPM
+                                                                  </option>
+                                                                  <option value="2">
+                                                                    KM/HR
+                                                                  </option>
+                                                                </select>
+                                                                <i></i>
+                                                              </label>
+                                                            </div>
+                                                          </div>
+                                                          <div className="row">
+                                                            <div className="col-sm-6 col-md-4 col-lg-4 unit">
+                                                              <label className="label"></label>
+                                                              <div className="input">
+                                                                <input
+                                                                  className="form-control"
+                                                                  type="text"
+                                                                  placeholder="% Ultimo Cambio"
+                                                                  id="text"
+                                                                />
+                                                              </div>
+                                                            </div>
+                                                            <div className="col-sm-6  col-md-4 col-lg-4  unit">
+                                                              <label className="label"></label>
+                                                              <label className="input select">
+                                                                <select className="form-control">
+                                                                  <option value="1">
+                                                                    %
+                                                                  </option>
+                                                                  <option value="2">
+                                                                    Veces
+                                                                  </option>
+                                                                  <option value="2">
+                                                                    RPM
+                                                                  </option>
+                                                                  <option value="2">
+                                                                    KM/HR
+                                                                  </option>
+                                                                </select>
+                                                                <i></i>
+                                                              </label>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      id="Fotos"
+                                                      className="tab-pane fade "
+                                                    >
+                                                      <div className="row">
+                                                        <div className="col-md-12 unit">
+                                                          {/* start cloned right side buttons element */}
+                                                          <div className="clone-rightside-btn-1">
+                                                            <label className="label">
+                                                              Fotos/Documentos
+                                                            </label>
+                                                            <div className="j-row toclone-widget-right toclone">
+                                                              <div className="span12 unit">
+                                                                <div className="input">
+                                                                  <input
+                                                                    className="form-control"
+                                                                    type="text"
+                                                                    placeholder="Descripción"
+                                                                  />
+                                                                </div>
+                                                              </div>
+                                                              <div className="span12 unit">
+                                                                <form
+                                                                  action="#"
+                                                                  className="j-forms"
+                                                                  noValidate
+                                                                >
+                                                                  <div className="form-content">
+                                                                    <div className="row">
+                                                                      {/* start prepend small file button */}
+                                                                      <div className="col-md-12 unit">
+                                                                        <div className="input prepend-small-btn">
+                                                                          <div className="file-button">
+                                                                            Browse
+                                                                            <input
+                                                                              className="btn btn-success"
+                                                                              type="file"
+                                                                              onChange="document.getElementById('prepend-small-btn').value = this.value;"
+                                                                            />
+                                                                          </div>
+                                                                          <input
+                                                                            className="form-control"
+                                                                            type="text"
+                                                                            id="prepend-small-btn"
+                                                                            readOnly
+                                                                            placeholder="no file selected"
+                                                                          />
+                                                                        </div>
+                                                                      </div>
+                                                                      {/* end prepend small
+                                                                       */}
+                                                                    </div>
+                                                                  </div>
+                                                                </form>
+                                                              </div>
+
+                                                              <button
+                                                                type="button"
+                                                                className="btn btn-primary clone-btn-right clone"
+                                                              >
+                                                                <i className="fa fa-plus" />
+                                                              </button>
+                                                              <button
+                                                                type="button"
+                                                                className="btn btn-secondary clone-btn-right delete"
+                                                              >
+                                                                <i className="fa fa-minus" />
+                                                              </button>
+                                                            </div>
+                                                          </div>
+                                                          {/* end cloned right
+                                                           */}
+                                                        </div>
+                                                      </div>
+                                                    </div>
                                                   </div>
                                                 </div>
                                               </div>
                                             </div>
-                                          </div>
-                                        </div>
-                                      </div>
                                             {/* end textarea */}
                                           </div>
                                         </form>
@@ -2256,159 +2728,160 @@ function App(props) {
                                           <div className="form-content">
                                             {/* start text password */}
                                             <div className="row">
-                                    <div className="col-sm-6 col-md-4 col-lg-4 unit">
-                                      <label className="label">
-                                        Tarjeta IAVE
-                                      </label>
-                                      <div className="input">
-                                      
-                                        <input
-                                          className="form-control"
-                                          type="text"
-                                          placeholder=""
-                                          id="text"
-                                        />
-                                      </div>
-                                    </div>
-                                    <div className="col-sm-6  col-md-2 col-lg-2  unit">
-                                      <label className="label">Horómetro</label>
-                                      <div className="input">
-                                        
-                                        <input
-                                          className="form-control"
-                                          type="text"
-                                          placeholder="00:00"
-                                          id="text"
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="row">
-                                    <div className="col-sm-6 col-md-4 col-lg-4 unit">
-                                      <label className="label">
-                                        Tarjeta EPASS
-                                      </label>
-                                      <div className="input">
-                                   
-                                        <input
-                                          className="form-control"
-                                          type="text"
-                                          placeholder=""
-                                          id="text"
-                                        />
-                                      </div>
-                                    </div>
-                                    <div className="col-sm-6  col-md-4 col-lg-4  unit">
-                                      <label className="label">
-                                        Horas trabajadas motor GPS
-                                      </label>
-                                      <div className="input">
-                                       
-                                        <input
-                                          className="form-control"
-                                          type="text"
-                                          placeholder=""
-                                          id="text"
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="row">
-                                    <div className="col-sm-6 col-md-4 col-lg-4 unit">
-                                      <label className="label">
-                                        Calculo Reporte de Ingresos (%)
-                                      </label>
-                                      <div className="input">
-                                       
-                                        <input
-                                          className="form-control"
-                                          type="text"
-                                          placeholder=""
-                                          id="text"
-                                        />
-                                      </div>
-                                    </div>
-                                    <div className="col-sm-6 col-md-4 col-lg-4 unit">
-                                      <label className="label">
-                                        Horas trabajadas Motor{" "}
-                                      </label>
-                                      <div className="input">
-                                       
-                                        <input
-                                          className="form-control"
-                                          type="text"
-                                          placeholder=""
-                                          id="text"
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="row">
-                                    <div className="col-sm-6 col-md-2 col-lg-2 unit">
-                                      <label className="label">
-                                        Odómetro (Kms)
-                                      </label>
-                                      <div className="input">
-                                     
-                                        <input
-                                          className="form-control"
-                                          type="text"
-                                          placeholder=""
-                                          id="text"
-                                        />
-                                      </div>
-                                    </div>
-                                    <div className="col-sm-6  col-md-2 col-lg-2  unit">
-                                      <label className="label">
-                                        Odómetro GPS (Kms)
-                                      </label>
-                                      <div className="input">
-                                      
-                                        <input
-                                          className="form-control"
-                                          type="text"
-                                          placeholder=""
-                                          id="text"
-                                        />
-                                      </div>
-                                    </div>
-                                    <div className="col-sm-6  col-md-2 col-lg-2  unit">
-                                      <label className="label">
-                                        Propietario
-                                      </label>
-                                      <label className="input select">
-                                        <select className="form-control" disabled>
-                                          <option value="0">
-                                            Sin Propietario
-                                          </option>
-                                          <option value="1">México</option>
-                                          <option value="2">E.U.A</option>
-                                        </select>
-                                        <i></i>
-                                      </label>
-                                    </div>
-                                    <div className="col-sm-0 col-md-1 col-lg-2 unit"></div>
-                                  </div>
+                                              <div className="col-sm-6 col-md-4 col-lg-4 unit">
+                                                <label className="label">
+                                                  Tarjeta IAVE
+                                                </label>
+                                                <div className="input">
+                                                  <input
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder=""
+                                                    id="text"
+                                                  />
+                                                </div>
+                                              </div>
+                                              <div className="col-sm-6  col-md-2 col-lg-2  unit">
+                                                <label className="label">
+                                                  Horómetro
+                                                </label>
+                                                <div className="input">
+                                                  <input
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder="00:00"
+                                                    id="text"
+                                                  />
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <div className="row">
+                                              <div className="col-sm-6 col-md-4 col-lg-4 unit">
+                                                <label className="label">
+                                                  Tarjeta EPASS
+                                                </label>
+                                                <div className="input">
+                                                  <input
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder=""
+                                                    id="text"
+                                                  />
+                                                </div>
+                                              </div>
+                                              <div className="col-sm-6  col-md-4 col-lg-4  unit">
+                                                <label className="label">
+                                                  Horas trabajadas motor GPS
+                                                </label>
+                                                <div className="input">
+                                                  <input
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder=""
+                                                    id="text"
+                                                  />
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <div className="row">
+                                              <div className="col-sm-6 col-md-4 col-lg-4 unit">
+                                                <label className="label">
+                                                  Calculo Reporte de Ingresos
+                                                  (%)
+                                                </label>
+                                                <div className="input">
+                                                  <input
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder=""
+                                                    id="text"
+                                                  />
+                                                </div>
+                                              </div>
+                                              <div className="col-sm-6 col-md-4 col-lg-4 unit">
+                                                <label className="label">
+                                                  Horas trabajadas Motor{" "}
+                                                </label>
+                                                <div className="input">
+                                                  <input
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder=""
+                                                    id="text"
+                                                  />
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <div className="row">
+                                              <div className="col-sm-6 col-md-2 col-lg-2 unit">
+                                                <label className="label">
+                                                  Odómetro (Kms)
+                                                </label>
+                                                <div className="input">
+                                                  <input
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder=""
+                                                    id="text"
+                                                  />
+                                                </div>
+                                              </div>
+                                              <div className="col-sm-6  col-md-2 col-lg-2  unit">
+                                                <label className="label">
+                                                  Odómetro GPS (Kms)
+                                                </label>
+                                                <div className="input">
+                                                  <input
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder=""
+                                                    id="text"
+                                                  />
+                                                </div>
+                                              </div>
+                                              <div className="col-sm-6  col-md-2 col-lg-2  unit">
+                                                <label className="label">
+                                                  Propietario
+                                                </label>
+                                                <label className="input select">
+                                                  <select
+                                                    className="form-control"
+                                                    disabled
+                                                  >
+                                                    <option value="0">
+                                                      Sin Propietario
+                                                    </option>
+                                                    <option value="1">
+                                                      México
+                                                    </option>
+                                                    <option value="2">
+                                                      E.U.A
+                                                    </option>
+                                                  </select>
+                                                  <i></i>
+                                                </label>
+                                              </div>
+                                              <div className="col-sm-0 col-md-1 col-lg-2 unit"></div>
+                                            </div>
                                           </div>
                                         </form>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
-                                
-
                               </div>
-                              
-           
+
                               {/*Fin de ejemplo*/}
                             </div>
                             <div class="btn-ex-container">
-                            <button  className="btn btn-primary primary-btn">Aceptar</button>
-          
-
-        </div>
+                              <button
+                                onClick={handleAceptar}
+                                className="btn btn-primary primary-btn"
+                              >
+                                Aceptar
+                              </button>
+                            </div>
                           </div>
-                          
                         </form>
                       </div>
                     </div>
@@ -2424,16 +2897,12 @@ function App(props) {
             <div className="row">
               <div className="col-md-6 col-sm-6">
                 <div className="footer-left">
-                  <span>
-                   
-                  </span>
+                  <span></span>
                 </div>
               </div>
               <div className="col-md-6 col-sm-6">
                 <div className="footer-right">
-                  <span className="footer-meta">
-                    
-                  </span>
+                  <span className="footer-meta"></span>
                 </div>
               </div>
             </div>
@@ -2444,18 +2913,16 @@ function App(props) {
       {/*Page Container End Here*/}
       {/*Rightbar Start Here*/}
 
-  {/*Rightbar Start Here*/}
-  <aside className="rightbar">
-    <BarraLateralDerecha />
-  </aside>
+      {/*Rightbar Start Here*/}
+      <aside className="rightbar">
+        <BarraLateralDerecha />
+      </aside>
       {/*Rightbar End Here*/}
       {/*iCheck*/}
       {/*CHARTS*/}
       {/*Forms*/}
-
-
     </div>
-  );
+    );
 }
 
 export default App;

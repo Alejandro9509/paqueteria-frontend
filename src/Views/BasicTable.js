@@ -218,7 +218,7 @@ function FilterTableComponent() {
   }, []);
 
   function getAllData() {
-    const url = "http://localhost/Departamento/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/Departamento/GetListado`;
     axios.get(url, {headers}).then(respuesta => {
       setData(respuesta.data)
     });

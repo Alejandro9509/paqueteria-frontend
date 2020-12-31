@@ -4,11 +4,7 @@ import {
   Switch,
   Redirect
 } from 'react-router-dom';
-import Departamento from './Views/Departamento';
-import GrupoCliente from './Views/GrupoCliente';
-import Puesto from './Views/Puesto';
-import Guia from './Views/Guia';
-
+import Configuracion from './Views/Configuracion';
 import Login from './Views/Login';
 import {AplicationConsumer, AplicationProvider} from "./Util/Contexts/AplicationContext";
 import {ACCESS_TOKEN} from './Constants';
@@ -27,13 +23,17 @@ render(){
       return(
         localStorage.getItem(ACCESS_TOKEN) ? (
           <Switch>
-            <Route path="/departamento" component={Departamento} />
+            <Route path="/configuracion" component={Configuracion} />
             {dashboardRoutes.map((r, key) => {
+              if (r.single) {
                   return (<Route exact key={key} path={r.path} component={r.component} />)
+              }else {
+                return r.child.map(c=> (
+                  <Route exact key={c.name} path={c.path} component={c.component} />
+                ))
+              }
               })}
-              <Route path="/grupoCliente" component={GrupoCliente} />
-              <Route path="/puesto" component={Puesto} />
-              <Route path="/guia" component={Guia} />
+            <Redirect from="/" to="/configuracion"/>
           </Switch>
         ) : (
           <div className="app">
