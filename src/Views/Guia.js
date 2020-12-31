@@ -6,11 +6,24 @@ import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import ExportCSV from '../Components/Template/Export';
 import ExportPDF from "../Components/Template/ExportPDF";
 import * as XLSX from 'xlsx';
+import Carousel from "re-carousel";
+import IndicatorDots from "../Util/Dots";
+import Buttons from "../Util/CarruselButtons";
+import { makeStyles } from "@material-ui/core/styles";
 import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy } from 'react-table'
 import $ from 'jquery';
+import { remove_array_element } from "../Util/Util";
+
 window.jQuery = window.$ = $;
+const styles = {
+  paqueteCarrusel: {
+    height: "300px !important",
+  },
+};
+const useStyles = makeStyles(styles);
 
 function Guia() {
+  const classes = useStyles();
 const [data, setData] = React.useState([])
 const [state, setState] = React.useState({
     showPopUp: false,
@@ -83,7 +96,24 @@ const [state, setState] = React.useState({
 	  modificadoEl:"",
     idSucursal:2,
     valorDeclardao:0,
-    CiudadDestino:""
+    CiudadDestino:"",
+    paquetes: [
+      {
+         peso: "",
+         largo: "",
+         ancho: "",
+         alto: "",
+         volumen: "",
+         peso: "",
+         tipoEmbalaje: "",
+         valorDeclarado: "",
+         descripcionPaquete: "",
+         ctd: "",
+         observacionesPaquete: "",
+         id:""
+       } ,
+    ]
+
 })
 
 
@@ -194,7 +224,7 @@ const handleAceptar = (e) => {
   "Idguia":state.IdGuia
   }
   if(state.idGuia != 0){
-    const url = "http://localhost/Guia/Modificar/"+state.idGuia;
+    const url = `${process.env.REACT_APP_API_URL}/Guia/Modificar/`+state.idGuia;
     axios.put(url, Object.assign({}, params), {headers}).then(respuesta => {
     alert(respuesta.data)
     window.location.reload();
@@ -203,7 +233,7 @@ const handleAceptar = (e) => {
     alert("err")
   });
   } else {
-  const url = "http://localhost/Guia/Agregar";
+  const url = `${process.env.REACT_APP_API_URL}/Guia/Agregar`;
   debugger;
   axios.post(url, Object.assign({}, params), {headers}).then(respuesta => {
     alert(respuesta.data)
@@ -216,9 +246,34 @@ const handleAceptar = (e) => {
 
 }
 
+function addPaquete() {
+  const { paquetes } = state;
+  paquetes.push({
+    peso: "",
+    largo: "",
+    ancho: "",
+    alto: "",
+    volumen: "",
+    peso: "",
+    tipoEmbalaje: "",
+    valorDeclarado: "",
+    descripcionPaquete: "",
+    ctd: "",
+    observacionesPaquete: "",
+  });
+  console.log(paquetes);
+  setState({ ...state, paquetes: paquetes });
+}
+function removePaquete(index) {
+  var { paquetes } = state;
+  paquetes = remove_array_element(paquetes, index)
+  console.log(paquetes)
+  setState({ ...state, paquetes: paquetes });
+}
+
 function handleEliminar(row){
   //alert(row.original.m_nIdGuia);
-  const url = "http://localhost/Guia/Eliminar/" + row.original.m_nIdGuia;
+  const url = `${process.env.REACT_APP_API_URL}/Guia/Eliminar/` + row.original.m_nIdGuia;
   axios.delete(url, {headers}).then(respuesta => {
     alert(respuesta.data)
     //console.log(respuesta)
@@ -231,7 +286,7 @@ function handleShowModificar (row) {
   //console.log(row.original.m_nIdGuia)
   //TODO
   //var valor2="";
-  const url = "http://localhost/Guia/GetById/" + row.original.m_nIdGuia;
+  const url = `${process.env.REACT_APP_API_URL}/Guia/GetById/` + row.original.m_nIdGuia;
   axios.get(url, {headers}).then(respuesta => {
       //console.log(respuesta.data)
      // debugger;
@@ -353,6 +408,15 @@ const handleChange = event => {
     [event.target.id] : event.target.value
   });
 };
+const handleChangePaquete = (event, index) => {
+
+  var {paquetes} = state
+  paquetes[index][event.target.name] = event.target.value
+  setState({
+    ...state,
+    paquetes: paquetes
+  });
+};
 
   const columns = useMemo(() => [{
     cell: (row) => <div>
@@ -459,7 +523,7 @@ const handleChange = event => {
   }, []);
 
   async function getAllData() {
-    const url = "http://localhost/Guia/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/Guia/GetListado`;
     await axios.get(url, {headers}).then(respuesta => {
       setData(respuesta.data)
     });
@@ -490,7 +554,7 @@ useEffect(value => {
 }, []);
 
 async function getAllDataSucursal() {
-  const url = "http://localhost/Sucursales/GetListado";
+  const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
   await axios.get(url, {headers}).then(respuesta => {
     setDataSucursal(respuesta.data)
   });
@@ -501,7 +565,7 @@ useEffect(value => {
 }, []);
 
 async function getAllDataMoneda() {
-  const url = "http://localhost/Moneda/GetListado";
+  const url = `${process.env.REACT_APP_API_URL}/Moneda/GetListado`;
   await axios.get(url, {headers}).then(respuesta => {
     setDataMoneda(respuesta.data)
   });
@@ -511,7 +575,7 @@ useEffect(value => {
 }, []);
 
 async function getAllDataTipoCobro() {
-  const url = "http://localhost/TipoCobro/GetListado";
+  const url = `${process.env.REACT_APP_API_URL}/TipoCobro/GetListado`;
   await axios.get(url, {headers}).then(respuesta => {
     setDataTipoCobro(respuesta.data)
   });
@@ -522,7 +586,7 @@ useEffect(value => {
 }, []);
 
 async function getAllDataTipoServicio() {
-  const url = "http://localhost/TipoServicio/GetListado";
+  const url = `${process.env.REACT_APP_API_URL}/TipoServicio/GetListado`;
   await axios.get(url, {headers}).then(respuesta => {
     setDataTipoServicio(respuesta.data)
   });
@@ -532,7 +596,7 @@ useEffect(value => {
 }, []);
 
 async function getAllDataEstatusGuia() {
-  const url = "http://localhost/EstatusGuia/GetListado";
+  const url = `${process.env.REACT_APP_API_URL}/EstatusGuia/GetListado`;
   await axios.get(url, {headers}).then(respuesta => {
     setDataEstatusGuia(respuesta.data)
   });
@@ -543,7 +607,7 @@ useEffect(value => {
 }, []);
 
 async function getAllCiudades() {
-  const url = "http://localhost/Ciudades/GetListado";
+  const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
   await axios.get(url, {headers}).then(respuesta => {
     setDataCiudad(respuesta.data)
   });
@@ -560,14 +624,14 @@ async function cargaEmbarqueSucursal (valor) {
     if (valor =="" || valor=="0") return;
   if (state.idMoneda =="" || state.idMoneda=="0") return;
   
-  const url = "http://localhost/Embarques/GetBySucursalMoneda/"+valor+"/"+state.idMoneda+"/"+state.idGuia ;
+  const url = `${process.env.REACT_APP_API_URL}/Embarques/GetBySucursalMoneda/`+valor+"/"+state.idMoneda+"/"+state.idGuia ;
   await axios.get(url, {headers}).then(respuesta => {
     setDataEmbarque(respuesta.data)
   });
 };
 function cargaEmbarqueModificar (valorSucursal,valorMoneda,valorGuia) {    
   //alert(valorSucursal + "-" + valorMoneda)
-  const url = "http://localhost/Embarques/GetBySucursalMoneda/"+valorSucursal+"/"+valorMoneda +"/"+valorGuia;
+  const url = `${process.env.REACT_APP_API_URL}//Embarques/GetBySucursalMoneda/`+valorSucursal+"/"+valorMoneda +"/"+valorGuia;
   axios.get(url, {headers}).then(respuesta => {
     console.log(respuesta);
     setDataEmbarque(respuesta.data)
@@ -584,22 +648,48 @@ async function cargaEmbarqueMoneda (valor) {
   if (state.idSucursal =="" || state.idSucursal=="0") return;
   if (valor =="" || valor=="0") return;
   
-  const url = "http://localhost/Embarques/GetBySucursalMoneda/"+state.idSucursal+"/"+valor+"/"+state.idGuia ;
+  const url = `${process.env.REACT_APP_API_URL}/Embarques/GetBySucursalMoneda/`+state.idSucursal+"/"+valor+"/"+state.idGuia ;
   await axios.get(url, {headers}).then(respuesta => {
     setDataEmbarque(respuesta.data)
   });
 };
 
 function handleEmbarque (embarque) {
-  const url = "http://localhost/Embarques/GetById/"+embarque ;
+  const url = `${process.env.REACT_APP_API_URL}/Embarques/GetById/`+embarque ;
   //alert(embarque);
-  console.log(embarque)
    axios.get(url, {headers}).then(respuesta => {
     setState({
       ...state,
       idEmbarque: respuesta.data.m_nIdEmbarque,
-      idEmbarque2:respuesta.data.m_nIdEmbarque
+      idEmbarque2:respuesta.data.m_nIdEmbarque,
+      paquetes:[]
     });
+    const paquetesTemp = state.paquetes;
+    console.log(paquetesTemp);
+
+    for(var i=0; i<respuesta.data.m_arrPaquetes.length;i++){
+
+      if (respuesta.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle == "" || respuesta.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle=="0" )       
+      continue;
+     
+      paquetesTemp.push({
+
+        "peso": respuesta.data.m_arrPaquetes[i].m_xPeso,
+        "largo": respuesta.data.m_arrPaquetes[i].m_xLargo,
+        "ancho": respuesta.data.m_arrPaquetes[i].m_xAncho,
+        "alto": respuesta.data.m_arrPaquetes[i].m_xAlto,
+        "volumen": respuesta.data.m_arrPaquetes[i].m_xVolumen,
+        "peso": respuesta.data.m_arrPaquetes[i].m_xPeso,
+        "tipoEmbalaje": respuesta.data.m_arrPaquetes[i].m_nTipo,
+        "valorDeclarado": respuesta.data.m_arrPaquetes[i].m_cValorDeclarado,
+        "descripcionPaquete": respuesta.data.m_arrPaquetes[i].m_sDescripcion,        
+        "observacionesPaquete": respuesta.data.m_arrPaquetes[i].m_sObservaciones,
+        "id": respuesta.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle       
+      });
+   }
+   paquetesTemp.splice(0,1);
+    
+   console.log(paquetesTemp);
     //alert(respuesta.data.m_nIdEmbarque);
     //setDataEmbarque(respuesta.data)
     setState({
@@ -623,15 +713,33 @@ function handleEmbarque (embarque) {
       sCorreoDestinatario: respuesta.data.m_sCorreoDestinatario,
       sTelefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
       sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
-		  CiudadDestino:respuesta.data.m_sCIudadDestinatario
+      CiudadDestino:respuesta.data.m_sCIudadDestinatario,
+      paquetes:paquetesTemp
     })
 
   });
 };
 function handleEmbarqueModificar (embarque) {
-  const url = "http://localhost/Embarques/GetById/"+embarque.data.m_nIdEmbarque ;
+  const url = `${process.env.REACT_APP_API_URL}/Embarques/GetById/`+embarque.data.m_nIdEmbarque ;
   axios.get(url, {headers}).then(respuesta => {
     //setDataEmbarque(respuesta.data)
+    const paquetesTemp = this.state.paquetes;
+    for(var i=0; i<embarque.data.m_arrPaquetes.length;i++){
+      paquetesTemp.push({
+        "peso": embarque.data.m_arrPaquetes[i].m_xPeso,
+        "largo": embarque.data.m_arrPaquetes[i].m_xLargo,
+        "ancho": embarque.data.m_arrPaquetes[i].m_xAncho,
+        "alto": embarque.data.m_arrPaquetes[i].m_xAlto,
+        "volumen": embarque.data.m_arrPaquetes[i].m_xVolumen,
+        "peso": embarque.data.m_arrPaquetes[i].m_xPeso,
+        "tipoEmbalaje": embarque.data.m_arrPaquetes[i].m_nTipo,
+        "valorDeclarado": embarque.data.m_arrPaquetes[i].m_cValorDeclarado,
+        "descripcionPaquete": embarque.data.m_arrPaquetes[i].m_sDescripcion,        
+        "observacionesPaquete": embarque.data.m_arrPaquetes[i].m_sObservaciones,
+        "id": embarque.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle       
+      });
+   }
+   console.log(paquetesTemp);
     setState({
       ...state,
       nombreRemitente: respuesta.data.m_sNOmbreRemitente,
@@ -670,9 +778,9 @@ function handleEmbarqueModificar (embarque) {
         tracking: embarque.data.m_nTracking,
         arClsGuiaConceptos:embarque.data.m_arClsGuiaConceptos,
         creadoEl:embarque.data.m_dCreadoEl,
-        idSucursal:embarque.data.IdSucursal      
-
-    })
+        idSucursal:embarque.data.IdSucursal,              
+        paquetes: paquetesTemp            
+ });
     console.log( embarque.data.m_nIdEmbarque)
   });
 };
@@ -858,6 +966,158 @@ function openSection(index) {
 
 
 }
+const framesPaquete = state.paquetes.map((p, index) => {
+  return (
+    <div key={`paquete${index}`}>
+      <div className="col-sm-4 col-md-1-5 unit">
+        <label className="label">Peso</label>
+        <div className="input">
+          <input
+            onChange={(event) => handleChangePaquete(event, index)}
+            className="form-control"
+            type="text"
+            value={state.paquetes[index].peso}
+            placeholder="Peso"
+            name="peso"
+          />
+        </div>
+      </div>
+
+      <div className="col-sm-4 col-md-1-5 unit">
+        <label className="label">Largo</label>
+        <div className="input">
+          <input
+            onChange={(event) => handleChangePaquete(event, index)}
+            className="form-control"
+            type="text"
+            value={state.paquetes[index].largo}
+            placeholder="Largo"
+            name="largo"
+          />
+        </div>
+      </div>
+
+      <div className="col-sm-4 col-md-1-5 unit">
+        <label className="label">Ancho</label>
+        <div className="input">
+          <input
+            onChange={(event) => handleChangePaquete(event, index)}
+            className="form-control"
+            type="text"
+            value={state.paquetes[index].ancho}
+            placeholder="Ancho"
+            name="ancho"
+          />
+        </div>
+      </div>
+
+      <div className="col-sm-4 col-md-1-5 unit">
+        <label className="label">Alto</label>
+        <div className="input">
+          <input
+            onChange={(event) => handleChangePaquete(event, index)}
+            className="form-control"
+            type="text"
+            value={state.paquetes[index].alto}
+            placeholder="Alto"
+            name="alto"
+          />
+        </div>
+      </div>
+
+      <div className="col-sm-4 col-md-1-5 unit">
+        <label className="label">Volumen</label>
+        <div className="input">
+          <input
+            onChange={(event) => handleChangePaquete(event, index)}
+            className="form-control"
+            type="text"
+            value={state.paquetes[index].volumen}
+            placeholder="Volumen"
+            name="volumen"
+          />
+        </div>
+      </div>
+
+      <div className="col-sm-4 col-md-4-5 unit">
+        <label className="label">Tipo de Embalaje</label>
+        <div className="input">
+          <input
+            onChange={(event) => handleChangePaquete(event, index)}
+            className="form-control"
+            type="text"
+            value={state.paquetes[index].tipoEmbalaje}
+            placeholder="Tipo de Embarje"
+            name="tipoEmbalaje"
+          />
+        </div>
+      </div>
+
+      <div className="col-sm-4 col-md-3 unit">
+        <label className="label">Valor Declarado</label>
+        <div className="input">
+          <input
+            onChange={(event) => handleChangePaquete(event, index)}
+            className="form-control"
+            type="text"
+            value={state.paquetes[index].valorDeclarado}
+            placeholder="Valor Declarado"
+            name="valorDeclarado"
+          />
+        </div>
+      </div>
+
+      <div className="col-sm-4 col-md-7-5 unit">
+        <label className="label">Descripción</label>
+        <div className="input">
+          <input
+            onChange={(event) => handleChangePaquete(event, index)}
+            className="form-control"
+            type="text"
+            value={state.paquetes[index].descripcionPaquete}
+            placeholder="Descripción"
+            name="descripcionPaquete"
+          />
+        </div>
+      </div>
+
+      <div className="col-sm-4 col-md-1-5 unit">
+        <label className="label">Ctd</label>
+        <div className="input">
+          <input
+            onChange={(event) => handleChangePaquete(event, index)}
+            className="form-control"
+            type="text"
+            value={state.paquetes[index].Ctd}
+            placeholder="Ctd"
+            name="ctd"
+          />
+        </div>
+      </div>
+
+      <div className="col-sm-4 col-md-12 unit">
+        <label className="label">Observaciones</label>
+        <div className="input">
+          <input
+            onChange={(event) => handleChangePaquete(event, index)}
+            className="form-control"
+            type="text"
+            value={state.paquetes[index].observacionesPaquete}
+            placeholder="Observaciones"
+            name="observacionesPaquete"
+          />
+        </div>
+      </div>
+      {
+        state.paquetes.length !== 1 &&
+        <a className="btn delete" onClick={() => removePaquete(index)}>
+        <i className="zmdi zmdi-delete"></i> Eliminar Paquete
+      </a>
+      }
+      
+    </div>
+  );
+});
 
 
 function closeSeccions() {
@@ -1528,189 +1788,82 @@ function closeSeccions() {
                 </div>
               </div>
             </div>
-            <div className="widget-wrap" id="informacionAdicionalDePago">
-            <div className="widget-header">
-              <h2>Paquetes</h2>
-            </div>
-            <div className="widget-container">
-            <div className="widget-content">
-                <div className="row">
-                  <div className="col-md-12">
-                    <form className="j-forms">
-                      <div className="form-content">
-                      <div className="clone-widget">
-                      
-                      <div className="toclone clone-link">
-                  <a href="#" className="link clone"><i className="zmdi zmdi-plus"></i> Agregar Paquete</a>
-                  <a href="#" className="link delete"><i className="zmdi zmdi-delete"></i>  Eliminar Paquete</a>
-                <div className="col-md-12">
-                  
-                <div className="col-sm-4 col-md-1-5 unit">
-                  <label className="label" htmlFor="peso">
-                    Peso
-                  </label>
-                  <div className="input">
-                    <input
-                      onChange={handleChange}
-                      className="form-control"
-                      type="text"
-                      placeholder={state.peso}
-                      id="peso"
-                    />
-                  </div>
-                </div>
-                
-                <div className="col-sm-4 col-md-1-5 unit">
-                  <label className="label" htmlFor="largo">
-                    Largo
-                  </label>
-                  <div className="input">
-                    <input
-                      onChange={handleChange}
-                      className="form-control"
-                      type="text"
-                      placeholder={state.peso}
-                      id="largo"
-                    />
-                  </div>
-                </div>
+            <div className="widget-wrap col-md-5">
+                    <div className="widget-header">
+                      <h2>Número de Paquetes</h2>
+                    </div>
+                    <div className="widget-container">
+                      <div className="widget-content">
+                      <div className="row">
+                      <div className="col-md-12">
+                        <form className="j-forms">
+                          <div className="form-content">
+                            <a
+                              className="btn"
+                              style={{ margin: "10px" }}
+                              onClick={() => addPaquete()}
+                            >
+                              <i className="zmdi zmdi-plus"></i> Agregar Paquete
+                            </a>
 
-                <div className="col-sm-4 col-md-1-5 unit">
-                  <label className="label" htmlFor="ancho">
-                    Ancho
-                  </label>
-                  <div className="input">
-                    <input
-                      onChange={handleChange}
-                      className="form-control"
-                      type="text"
-                      placeholder={state.peso}
-                      id="ancho"
-                    />
-                  </div>
-                </div>
-
-                <div className="col-sm-4 col-md-1-5 unit">
-                  <label className="label" htmlFor="alto">
-                    Alto
-                  </label>
-                  <div className="input">
-                    <input
-                      onChange={handleChange}
-                      className="form-control"
-                      type="text"
-                      placeholder={state.peso}
-                      id="alto"
-                    />
-                  </div>
-                </div>
-
-                <div className="col-sm-4 col-md-1-5 unit">
-                  <label className="label" htmlFor="volumen">
-                    Volumen
-                  </label>
-                  <div className="input">
-                    <input
-                      onChange={handleChange}
-                      className="form-control"
-                      type="text"
-                      placeholder={state.peso}
-                      id="volumen"
-                    />
-                  </div>
-                </div>
-
-                <div className="col-sm-4 col-md-4-5 unit">
-                  <label className="label">
-                    Tipo de Embalaje
-                  </label>
-                  <div className="input">
-                    <input
-                      onChange={handleChange}
-                      className="form-control"
-                      type="text"
-                      placeholder={state.peso}
-                      id="peso"
-                    />
-                  </div>
-                </div>
-
-                <div className="col-sm-4 col-md-3 unit">
-                  <label className="label">
-                    Valor Declarado
-                  </label>
-                  <div className="input">
-                    <input
-                      onChange={handleChange}
-                      className="form-control"
-                      type="text"
-                      placeholder={state.peso}
-                      id="peso"
-                    />
-                  </div>
-                </div>
-
-                <div className="col-sm-4 col-md-7-5 unit">
-                  <label className="label">
-                    Descripción
-                  </label>
-                  <div className="input">
-                    <input
-                      onChange={handleChange}
-                      className="form-control"
-                      type="text"
-                      placeholder={state.peso}
-                      id="peso"
-                    />
-                  </div>
-                </div>
-
-                <div className="col-sm-4 col-md-1-5 unit">
-                  <label className="label" htmlFor="volumen">
-                    Ctd
-                  </label>
-                  <div className="input">
-                    <input
-                      onChange={handleChange}
-                      className="form-control"
-                      type="text"
-                      placeholder={state.peso}
-                      id="volumen"
-                    />
-                  </div>
-                </div>
-
-                <div className="col-sm-4 col-md-12 unit">
-                  <label className="label" htmlFor="volumen">
-                    Observaciones
-                  </label>
-                  <div className="input">
-                    <input
-                      onChange={handleChange}
-                      className="form-control"
-                      type="text"
-                      placeholder={state.peso}
-                      id="volumen"
-                    />
-                  </div>
-                </div>
-
-
-                </div>
-
-              </div>
-            
+                            <div style={{ padding: "20px" }}>
+                              <Carousel
+                                className={classes.paqueteCarrusel}
+                                widgets={[IndicatorDots, Buttons]}
+                                frames={framesPaquete}
+                              ></Carousel>
+                            </div>
+                          </div>
+                        </form>
                       </div>
-
+                    </div>
                       </div>
-                    </form>
+                    </div>
+
+                    <div className="widget-header">
+                      <h2>Número de Sobres</h2>
+                    </div>
+                    <div className="widget-container">
+                      <div className="widget-content">
+                        <div className="clone-widget">
+                          <form>
+                          <div className="unit widget toclone">
+                            <button type="button" className="btn btn-secondary delete" >
+                              <i className="fa fa-minus" />
+                            </button>
+                            <input className="unit" style={{ width: "10%" }} value={state.cantidadDeSobres} readOnly />
+                            <button type="button" className="btn btn-primary clone">
+                              <i className="fa fa-plus" />
+                            </button>
+
+                            <br></br>
+                            <br></br>
+
+                            <div className="col-sm-12 col-md-12 unit">
+                              <label className="label">
+                                Descripción
+                          </label>
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  value={state.descripcionSobre}
+                                  id="descripcionSobre"
+                                />
+                              </div>
+                            </div>
+                            </div>
+                <div className="form-footer" className="col-md-12">
+                  <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
+                  <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
+                </div>
+              </form>
+            </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-
-        </div>
-
+              
             <div className="widget-header">
               <h2>Conceptos de Facturacion</h2>
             </div>
