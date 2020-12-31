@@ -7,6 +7,9 @@ import ExportCSV from '../Components/Template/Export';
 import ExportPDF from "../Components/Template/ExportPDF";
 import * as XLSX from 'xlsx';
 import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy } from 'react-table'
+import $ from 'jquery';
+window.jQuery = window.$ = $;
+
 function Guia() {
 const [data, setData] = React.useState([])
 const [state, setState] = React.useState({
@@ -85,6 +88,7 @@ const [state, setState] = React.useState({
 
 
 const [fileUploaded, setFileUploaded] = React.useState([])
+const [stepActive, setStepActive] = React.useState(1);
 const [dataSucursal, setDataSucursal] = React.useState([])
 const [stateSucursal, setStateSucursal] = React.useState({
 idSucursal:0,
@@ -688,6 +692,7 @@ function GlobalFilter({
       setGlobalFilter(value || undefined)
   }, 200)
 
+  
   return (
       <span>
           Buscar:{' '}
@@ -805,6 +810,67 @@ function Table({ columns, data}) {
     </div>
   )
 }
+function openSection(index) {
+  closeSeccions()
+      var $section;
+  switch (index) {
+    case 1:
+      setStepActive(1);
+     $section= $("#informacionGeneral")
+      break;
+    case 2:
+      setStepActive(2);
+      $section= $("#remitenteDestinatario")
+      
+      break;
+    case 3:
+      setStepActive(3);
+      $section= $("#detallesDeLaRecoleccion")
+     
+      break;
+    case 4:
+      setStepActive(4);
+      $section= $("#informacionAdicional")
+      break;
+    case 5:
+      setStepActive(5);
+      $section= $("#general")
+      break;
+    case 6:
+      setStepActive(6);
+      $section= $("#contacto")
+      break;
+    case 7:
+      setStepActive(7);
+      $section= $("#otros")
+      break;
+    default:
+  }
+
+  var $welem = $section.parentsUntil(".widget-action-bar").parentsUntil(".w-action").parents(".widget-header").next(".widget-container");
+
+  $welem.slideDown();
+  $section.children("a").children("i").removeClass("zmdi-chevron-up");
+  $section.children("a").children("i").addClass("zmdi-chevron-down");
+  $('html, body').animate({
+      scrollTop: parseInt($section.offset().top)
+  }, 200);
+
+
+}
+
+
+function closeSeccions() {
+  //Cerrar todas las seciones
+  var $section = $(".widget-toggle")
+  $section.each(function () {
+      var $welem = $(this).parentsUntil(".widget-action-bar").parentsUntil(".w-action").parents(".widget-header").next(".widget-container");
+      $welem.slideUp();
+      $(this).children("a").children("i").removeClass("zmdi-chevron-down");
+      $(this).children("a").children("i").addClass("zmdi-chevron-up");
+  });
+}
+
 
   return (
     <div>
@@ -1462,7 +1528,189 @@ function Table({ columns, data}) {
                 </div>
               </div>
             </div>
-     
+            <div className="widget-wrap" id="informacionAdicionalDePago">
+            <div className="widget-header">
+              <h2>Paquetes</h2>
+            </div>
+            <div className="widget-container">
+            <div className="widget-content">
+                <div className="row">
+                  <div className="col-md-12">
+                    <form className="j-forms">
+                      <div className="form-content">
+                      <div className="clone-widget">
+                      
+                      <div className="toclone clone-link">
+                  <a href="#" className="link clone"><i className="zmdi zmdi-plus"></i> Agregar Paquete</a>
+                  <a href="#" className="link delete"><i className="zmdi zmdi-delete"></i>  Eliminar Paquete</a>
+                <div className="col-md-12">
+                  
+                <div className="col-sm-4 col-md-1-5 unit">
+                  <label className="label" htmlFor="peso">
+                    Peso
+                  </label>
+                  <div className="input">
+                    <input
+                      onChange={handleChange}
+                      className="form-control"
+                      type="text"
+                      placeholder={state.peso}
+                      id="peso"
+                    />
+                  </div>
+                </div>
+                
+                <div className="col-sm-4 col-md-1-5 unit">
+                  <label className="label" htmlFor="largo">
+                    Largo
+                  </label>
+                  <div className="input">
+                    <input
+                      onChange={handleChange}
+                      className="form-control"
+                      type="text"
+                      placeholder={state.peso}
+                      id="largo"
+                    />
+                  </div>
+                </div>
+
+                <div className="col-sm-4 col-md-1-5 unit">
+                  <label className="label" htmlFor="ancho">
+                    Ancho
+                  </label>
+                  <div className="input">
+                    <input
+                      onChange={handleChange}
+                      className="form-control"
+                      type="text"
+                      placeholder={state.peso}
+                      id="ancho"
+                    />
+                  </div>
+                </div>
+
+                <div className="col-sm-4 col-md-1-5 unit">
+                  <label className="label" htmlFor="alto">
+                    Alto
+                  </label>
+                  <div className="input">
+                    <input
+                      onChange={handleChange}
+                      className="form-control"
+                      type="text"
+                      placeholder={state.peso}
+                      id="alto"
+                    />
+                  </div>
+                </div>
+
+                <div className="col-sm-4 col-md-1-5 unit">
+                  <label className="label" htmlFor="volumen">
+                    Volumen
+                  </label>
+                  <div className="input">
+                    <input
+                      onChange={handleChange}
+                      className="form-control"
+                      type="text"
+                      placeholder={state.peso}
+                      id="volumen"
+                    />
+                  </div>
+                </div>
+
+                <div className="col-sm-4 col-md-4-5 unit">
+                  <label className="label">
+                    Tipo de Embalaje
+                  </label>
+                  <div className="input">
+                    <input
+                      onChange={handleChange}
+                      className="form-control"
+                      type="text"
+                      placeholder={state.peso}
+                      id="peso"
+                    />
+                  </div>
+                </div>
+
+                <div className="col-sm-4 col-md-3 unit">
+                  <label className="label">
+                    Valor Declarado
+                  </label>
+                  <div className="input">
+                    <input
+                      onChange={handleChange}
+                      className="form-control"
+                      type="text"
+                      placeholder={state.peso}
+                      id="peso"
+                    />
+                  </div>
+                </div>
+
+                <div className="col-sm-4 col-md-7-5 unit">
+                  <label className="label">
+                    Descripción
+                  </label>
+                  <div className="input">
+                    <input
+                      onChange={handleChange}
+                      className="form-control"
+                      type="text"
+                      placeholder={state.peso}
+                      id="peso"
+                    />
+                  </div>
+                </div>
+
+                <div className="col-sm-4 col-md-1-5 unit">
+                  <label className="label" htmlFor="volumen">
+                    Ctd
+                  </label>
+                  <div className="input">
+                    <input
+                      onChange={handleChange}
+                      className="form-control"
+                      type="text"
+                      placeholder={state.peso}
+                      id="volumen"
+                    />
+                  </div>
+                </div>
+
+                <div className="col-sm-4 col-md-12 unit">
+                  <label className="label" htmlFor="volumen">
+                    Observaciones
+                  </label>
+                  <div className="input">
+                    <input
+                      onChange={handleChange}
+                      className="form-control"
+                      type="text"
+                      placeholder={state.peso}
+                      id="volumen"
+                    />
+                  </div>
+                </div>
+
+
+                </div>
+
+              </div>
+            
+                      </div>
+
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+        </div>
+
             <div className="widget-header">
               <h2>Conceptos de Facturacion</h2>
             </div>
