@@ -180,7 +180,8 @@ function Recoleccion() {
       "m_tHoraLlegada": state.fechaHoraLlegada.split("T")[1],
       "m_parrPaquetes": state.paquetes,
       "m_nNoPaquetes": state.paquetes.length,
-      "m_nNoSobres": 1,
+      "m_parrSobres": state.sobres,
+      "m_nNoSobres": state.sobres.length,
       "m_nIdOperador": 1,
       "m_nIdUnidad": 13,
 

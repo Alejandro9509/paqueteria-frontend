@@ -154,6 +154,12 @@ function Embarque() {
       "m_sDomicilioDetalleEntrega": state.domicilioEntrega,
       "m_sEntregarEnDetalleEntrega": state.entregaEn,
       "m_sDatosAdicionalesDetalleEntrega": state.datosAdicionalesEntrega,
+      "m_parrPaquetes": state.paquetes,
+      "m_nNoPaquetes": state.paquetes.length,
+      "m_parrSobres": state.sobres,
+      "m_nNoSobres": state.sobres.length,
+      "m_nIdOperador": 1,
+      "m_nIdUnidad": 13,
 
     }
     console.log(params)
@@ -757,7 +763,7 @@ function Embarque() {
               type="text"
               value={state.sobres[index].descripcion}
               placeholder="Descripción"
-              name="descripcionSobre"
+              name="descripcion"
             />
           </div>
         </div>
