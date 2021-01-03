@@ -18,13 +18,13 @@ function login(){
 }
   
   return (
-    <div class="loginBg">
+    <div className="loginBg">
       {/*Page Container Start Here*/}
       <section className="login-container">
         <div className="container">
           <div className="col-md-4 col-md-offset-4 col-sm-4 col-sm-offset-4">
             <div className="login-form-container">
-                <div class="row">
+                <div className="row">
 
                 <div className="login-form-header">
                   <div className="logo">
