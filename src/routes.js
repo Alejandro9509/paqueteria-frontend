@@ -57,7 +57,7 @@ const dashboardRoutes = [
     child:[]
   },
   {
-    path: "/Embalajes",
+    path: "/Embarque",
     name: "Embarque",
     icon: EmbarqueIcon,
     component: EmbarquePage,
