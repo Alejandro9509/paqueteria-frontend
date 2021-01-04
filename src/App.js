@@ -9,6 +9,7 @@ import Login from './Views/Login';
 import {AplicationConsumer, AplicationProvider} from "./Util/Contexts/AplicationContext";
 import {ACCESS_TOKEN} from './Constants';
 import dashboardRoutes from './routes'
+import catalogdRoutes from './routesCatalogos'
 
 class App extends Component {
   constructor(props) {
@@ -25,6 +26,9 @@ render(){
           <Switch>
             <Route path="/configuracion" component={Configuracion} />
             {dashboardRoutes.map((r, key) => {
+                  return (<Route exact key={key} path={r.path} component={r.component} />)
+              })}
+              {catalogdRoutes.map((r, key) => {
                   return (<Route exact key={key} path={r.path} component={r.component} />)
               })}
             <Redirect from="/" to="/configuracion"/>

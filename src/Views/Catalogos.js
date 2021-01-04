@@ -97,7 +97,7 @@ function Recoleccion() {
                       <SvgIcon
                         component={r.icon}
                         className="imagen-de-catalogos"
-                        viewBox="4.5 1.5 51 49"
+                        viewBox="0 0 50 60"
                       />
                     </button>
                   </div>
