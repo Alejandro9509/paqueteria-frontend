@@ -259,18 +259,25 @@ function App(props) {
     horometro: 0,
     tarjetaEPASS: "",
     horasTrabajasMotor: 0,
+    horasTrabajadasMotorNoGPS:0,
+    porcentajeRepIngresos:0,
     odometro: 0,
     odometroGPSKMS: "",
     idPropietario: 0,
     tiempoParoStatus: "disabled",
     documentos: [
       {
-         numDocumento: "",
-         documento: "",
-         fechaDocumento: "",
-        
-       } ,
-     ]
+        numDocumento: "",
+        documento: "",
+        fechaDocumento: "",
+      },
+    ],
+    fotosDocs: [
+      {
+        descripcion: "",
+        file: "",
+      },
+    ],
   });
 
   useEffect((value) => {
@@ -371,14 +378,21 @@ function App(props) {
     });
   };
 
-  
   const handleChangeDocumento = (event, index) => {
-
-    var {documentos} = state
-    documentos[index][event.target.name] = event.target.value
+    var { documentos } = state;
+    documentos[index][event.target.name] = event.target.value;
     setState({
       ...state,
-      documentos: documentos
+      documentos: documentos,
+    });
+  };
+
+  const handleChangeFotosDocs = (event, index) => {
+    var { fotosDocs } = state;
+    fotosDocs[index][event.target.name] = event.target.value;
+    setState({
+      ...state,
+      fotosDocs: fotosDocs,
     });
   };
 
@@ -479,7 +493,9 @@ function App(props) {
       TarjetaIAVE: state.tarjetaIAVE,
       Horometro: state.horometro,
       TarjetaEPASS: state.tarjetaEPASS,
-      HorasTrabajadasMotorNoGPS: state.horasTrabajasMotor,
+      HorasTrabajadasMotorNoGPS: state.horasTrabajadasMotorNoGPS,
+      HorasTrabajadasMotor:state.horasTrabajasMotor,
+      PorcentajeRepIngresos:state.porcentajeRepIngresos,
       Odometro: state.odometro,
       OdometroGPSKMS: state.odometroGPSKMS,
       IdPropietarioEquipo: state.idPropietario,
@@ -528,12 +544,27 @@ function App(props) {
     console.log(documentos);
     setState({ ...state, documentos: documentos });
   }
+  function addFotosDoc() {
+    const { fotosDocs } = state;
+    fotosDocs.push({
+      descripcion: "",
+      file: "",
+    });
+    console.log(fotosDocs);
+    setState({ ...state, fotosDocs: fotosDocs });
+  }
 
   function removeDocumento(index) {
     var { documentos } = state;
-    documentos = remove_array_element(documentos, index)
-    console.log(documentos)
+    documentos = remove_array_element(documentos, index);
+    console.log(documentos);
     setState({ ...state, documentos: documentos });
+  }
+  function removeFotosDoc(index) {
+    var { fotosDocs } = state;
+    fotosDocs = remove_array_element(fotosDocs, index);
+    console.log(fotosDocs);
+    setState({ ...state, fotosDocs: fotosDocs });
   }
 
   const [stepActive, setStepActive] = React.useState(1);
@@ -592,6 +623,114 @@ function App(props) {
     );
   }
 
+  const framesDocumentos = state.documentos.map((p, index) => {
+    return (
+      <div className="j-row toclone-widget-right toclone">
+        <div className="span4 unit">
+          <div className="input">
+            <input
+              onChange={(event) => handleChangeDocumento(event, index)}
+              name="numDocumento"
+              className="form-control"
+              type="text"
+              placeholder="Número de Documento"
+            />
+          </div>
+        </div>
+        <div className="span4 unit">
+          <div className="input">
+            <input
+              onChange={(event) => handleChangeDocumento(event, index)}
+              name="documento"
+              className="form-control"
+              type="text"
+              placeholder="Documento"
+            />
+          </div>
+        </div>
+        <div className="span2 unit">
+          <div className="input">
+            <input
+              onChange={(event) => handleChangeDocumento(event, index)}
+              name="fechaDocumento"
+              className="form-control"
+              type="date"
+              placeholder="15/06/2020"
+            />
+          </div>
+        </div>
+        <div className="span2 unit">
+          {state.documentos.length !== 1 && (
+            <a className="btn delete" onClick={() => removeDocumento(index)}>
+              <i className="zmdi zmdi-delete"></i> Eliminar Documento
+            </a>
+          )}
+        </div>
+      </div>
+    );
+  });
+
+  const framesFotosDocs = state.documentos.map((p, index) => {
+    return (
+       
+            <div className="j-row toclone-widget-right toclone">
+              <div className="span6 unit">
+                <div className="input">
+                  <input
+                    onChange={(event) => handleChangeFotosDocs(event, index)}
+                    name="descripcion"
+                    className="form-control"
+                    type="text"
+                    placeholder="Descripción"
+                  />
+                </div>
+              </div>
+              <div className="span4 unit">
+                <div className="form-content">
+                  <div className="row">
+                    {/* start prepend small file button */}
+                    <div className="col-md-12 unit">
+                      <div className="input prepend-small-btn">
+                        <div className="file-button">
+                          Browse
+                          <input
+                            type="file"
+                            id="file"
+                            name="file"
+                            onChange={(event) =>
+                              handleChangeFotosDocs(event, index)
+                            }
+                          />
+                        </div>
+                        <input
+                          className="form-control"
+                          type="text"
+                          id="prepend-small-btn"
+                          readOnly
+                          placeholder="no file selected"
+                        />
+                      </div>
+                    </div>
+                    {/* end prepend small
+                     */}
+                  </div>
+                </div>
+              </div>
+              <div className="span2 unit">
+                {state.fotosDocs.length !== 1 && (
+                  <a
+                    className="btn delete"
+                    onClick={() => removeFotosDoc(index)}
+                  >
+                    <i className="zmdi zmdi-delete"></i> Eliminar Documento
+                  </a>
+                )}
+              </div>
+            </div>
+          
+    );
+  });
+
   function value(event) {
     console.log(event.target.value);
   }
@@ -614,7 +753,6 @@ function App(props) {
   useEffect((value) => {
     closeSeccions();
   }, []);
-  
 
   return (
     <div>
@@ -2409,54 +2547,20 @@ function App(props) {
                                                             <label className="label">
                                                               Documentos
                                                             </label>
-
-                                                            <div className="j-row toclone-widget-right toclone">
-                                                              <div className="span5 unit">
-                                                                <div className="input">
-                                                                  <input
-                                                                    onChange={(event) => handleChangeDocumento(event)}
-
-                                                                    className="form-control"
-                                                                    type="text"
-                                                                    placeholder="Número de Documento"
-                                                                  />
-                                                                </div>
-                                                              </div>
-                                                              <div className="span5 unit">
-                                                                <div className="input">
-                                                                  <input
-                                                                    className="form-control"
-                                                                    type="text"
-                                                                    placeholder="Documento"
-                                                                  />
-                                                                </div>
-                                                              </div>
-                                                              <div className="span2 unit">
-                                                                <div className="input">
-                                                                  <input
-                                                                    className="form-control"
-                                                                    type="text"
-                                                                    placeholder="15/06/2020"
-                                                                    id="date_to"
-                                                                    name="date_to"
-                                                                  />
-                                                                </div>
-                                                              </div>
-                                                              <button
-                                                                type="button"
-                                                                className="btn btn-primary clone-btn-right clone"
-                                                              >
-                                                                <i className="fa fa-plus" />
-                                                              </button>
-                                                              <button
-                                                                type="button"
-                                                                className="btn btn-secondary clone-btn-right delete"
-                                                              >
-                                                                <i className="fa fa-minus" />
-                                                              </button>
-                                                                </div>
+                                                            {framesDocumentos}
+                                                            <a
+                                                              className="btn"
+                                                              style={{
+                                                                margin: "10px",
+                                                              }}
+                                                              onClick={() =>
+                                                                addDocumento()
+                                                              }
+                                                            >
+                                                              <i className="zmdi zmdi-plus"></i>{" "}
+                                                              Agregar Documento
+                                                            </a>
                                                           </div>
-                                                       
                                                         </div>
                                                       </div>
                                                     </div>
@@ -2468,30 +2572,50 @@ function App(props) {
                                                         <div className="col-md-12 unit">
                                                           <div className="row">
                                                             <div className="col-sm-6 col-md-4 col-lg-4 unit">
-                                                              <label className="label"></label>
+                                                              <label className="label">
+                                                                Velocidad
+                                                                Promedio
+                                                              </label>
                                                               <div className="input">
                                                                 <input
                                                                   className="form-control"
-                                                                  type="text"
+                                                                  type="number"
                                                                   placeholder="Velocidad Promedio"
-                                                                  id="text"
+                                                                  onChange={
+                                                                    handleChange
+                                                                  }
+                                                                  value={
+                                                                    state.velocidadPromedio
+                                                                  }
+                                                                  name="velocidadPromedio"
                                                                 />
                                                               </div>
                                                             </div>
                                                             <div className="col-sm-6  col-md-4 col-lg-4  unit">
-                                                              <label className="label"></label>
+                                                              <label className="label">
+                                                                &nbsp;
+                                                              </label>
                                                               <label className="input select">
-                                                                <select className="form-control">
-                                                                  <option value="1">
+                                                                <select
+                                                                  className="form-control"
+                                                                  onChange={
+                                                                    handleChange
+                                                                  }
+                                                                  value={
+                                                                    state.velocidadPromedioUM
+                                                                  }
+                                                                  name="velocidadPromedioUM"
+                                                                >
+                                                                  <option value="%">
                                                                     %
                                                                   </option>
-                                                                  <option value="2">
+                                                                  <option value="veces">
                                                                     Veces
                                                                   </option>
-                                                                  <option value="2">
+                                                                  <option value="RPM">
                                                                     RPM
                                                                   </option>
-                                                                  <option value="2">
+                                                                  <option value="KM/HR">
                                                                     KM/HR
                                                                   </option>
                                                                 </select>
@@ -2501,30 +2625,52 @@ function App(props) {
                                                           </div>
                                                           <div className="row">
                                                             <div className="col-sm-6 col-md-4 col-lg-4 unit">
-                                                              <label className="label"></label>
+                                                              <label className="label">
+                                                                Neutralizaciones
+                                                              </label>
                                                               <div className="input">
                                                                 <input
                                                                   className="form-control"
                                                                   type="text"
                                                                   placeholder="Neutralización"
-                                                                  id="text"
+                                                                  onChange={
+                                                                    handleChange
+                                                                  }
+                                                                  value={
+                                                                    state.neutralizaciones
+                                                                  }
+                                                                  name="neutralizaciones"
+                                                                  onChange={
+                                                                    handleChange
+                                                                  }
                                                                 />
                                                               </div>
                                                             </div>
                                                             <div className="col-sm-6  col-md-4 col-lg-4  unit">
-                                                              <label className="label"></label>
+                                                              <label className="label">
+                                                                &nbsp;
+                                                              </label>
                                                               <label className="input select">
-                                                                <select className="form-control">
-                                                                  <option value="1">
+                                                                <select
+                                                                  className="form-control"
+                                                                  onChange={
+                                                                    handleChange
+                                                                  }
+                                                                  value={
+                                                                    state.neutralizacionesUM
+                                                                  }
+                                                                  name="neutralizacionesUM"
+                                                                >
+                                                                  <option value="%">
                                                                     %
                                                                   </option>
-                                                                  <option value="2">
+                                                                  <option value="veces">
                                                                     Veces
                                                                   </option>
-                                                                  <option value="2">
+                                                                  <option value="RPM">
                                                                     RPM
                                                                   </option>
-                                                                  <option value="2">
+                                                                  <option value="KM/HR">
                                                                     KM/HR
                                                                   </option>
                                                                 </select>
@@ -2534,30 +2680,49 @@ function App(props) {
                                                           </div>
                                                           <div className="row">
                                                             <div className="col-sm-6 col-md-4 col-lg-4 unit">
-                                                              <label className="label"></label>
+                                                              <label className="label">
+                                                                Frenado Brusco
+                                                              </label>
                                                               <div className="input">
                                                                 <input
                                                                   className="form-control"
                                                                   type="text"
                                                                   placeholder="Frenado Brusco"
-                                                                  id="text"
+                                                                  onChange={
+                                                                    handleChange
+                                                                  }
+                                                                  value={
+                                                                    state.frenadoBrusco
+                                                                  }
+                                                                  name="frenadoBrusco"
                                                                 />
                                                               </div>
                                                             </div>
                                                             <div className="col-sm-6  col-md-4 col-lg-4  unit">
-                                                              <label className="label"></label>
+                                                              <label className="label">
+                                                                &nbsp;
+                                                              </label>
                                                               <label className="input select">
-                                                                <select className="form-control">
-                                                                  <option value="1">
+                                                                <select
+                                                                  className="form-control"
+                                                                  onChange={
+                                                                    handleChange
+                                                                  }
+                                                                  value={
+                                                                    state.frenadoBruscoUM
+                                                                  }
+                                                                  name="frenadoBruscoUM"
+                                                                >
+                                                                  <option value="%">
                                                                     %
                                                                   </option>
-                                                                  <option value="2">
+                                                                  <option value="veces">
                                                                     Veces
                                                                   </option>
-                                                                  <option value="2">
+                                                                  <option value="RPM">
                                                                     RPM
                                                                   </option>
-                                                                  <option value="2">
+                                                                  <option value="KM/HR">
                                                                     KM/HR
                                                                   </option>
                                                                 </select>
@@ -2567,9 +2732,19 @@ function App(props) {
                                                           </div>
                                                           <div className="row">
                                                             <div className="col-sm-6 col-md-4 col-lg-4 unit">
-                                                              <label className="label"></label>
+                                                              <label className="label">
+                                                                Carga de
+                                                                Aceleración
+                                                              </label>
                                                               <div className="input">
                                                                 <input
+                                                                  onChange={
+                                                                    handleChange
+                                                                  }
+                                                                  value={
+                                                                    state.cargaAceleracion
+                                                                  }
+                                                                  name="cargaAceleracion"
                                                                   className="form-control"
                                                                   type="text"
                                                                   placeholder="Carga de Aceleración"
@@ -2578,19 +2753,30 @@ function App(props) {
                                                               </div>
                                                             </div>
                                                             <div className="col-sm-6  col-md-4 col-lg-4  unit">
-                                                              <label className="label"></label>
+                                                              <label className="label">
+                                                                &nbsp;
+                                                              </label>
                                                               <label className="input select">
-                                                                <select className="form-control">
-                                                                  <option value="1">
+                                                                <select
+                                                                  className="form-control"
+                                                                  onChange={
+                                                                    handleChange
+                                                                  }
+                                                                  value={
+                                                                    state.cargaAceleracionUM
+                                                                  }
+                                                                  name="cargaAceleracionUM"
+                                                                >
+                                                                  <option value="%">
                                                                     %
                                                                   </option>
-                                                                  <option value="2">
+                                                                  <option value="veces">
                                                                     Veces
                                                                   </option>
-                                                                  <option value="2">
+                                                                  <option value="RPM">
                                                                     RPM
                                                                   </option>
-                                                                  <option value="2">
+                                                                  <option value="KM/HR">
                                                                     KM/HR
                                                                   </option>
                                                                 </select>
@@ -2600,30 +2786,50 @@ function App(props) {
                                                           </div>
                                                           <div className="row">
                                                             <div className="col-sm-6 col-md-4 col-lg-4 unit">
-                                                              <label className="label"></label>
+                                                              <label className="label">
+                                                                Accionamiento
+                                                                Pedal Freno
+                                                              </label>
                                                               <div className="input">
                                                                 <input
                                                                   className="form-control"
                                                                   type="text"
                                                                   placeholder="Accionamiento Pedal de Freno"
-                                                                  id="text"
+                                                                  onChange={
+                                                                    handleChange
+                                                                  }
+                                                                  value={
+                                                                    state.accionamientoPedal
+                                                                  }
+                                                                  name="accionamientoPedal"
                                                                 />
                                                               </div>
                                                             </div>
                                                             <div className="col-sm-6  col-md-4 col-lg-4  unit">
-                                                              <label className="label"></label>
+                                                              <label className="label">
+                                                                &nbsp;
+                                                              </label>
                                                               <label className="input select">
-                                                                <select className="form-control">
-                                                                  <option value="1">
+                                                                <select
+                                                                  className="form-control"
+                                                                  onChange={
+                                                                    handleChange
+                                                                  }
+                                                                  value={
+                                                                    state.accionamientoPedalUM
+                                                                  }
+                                                                  name="accionamientoPefalUM"
+                                                                >
+                                                                  <option value="%">
                                                                     %
                                                                   </option>
-                                                                  <option value="2">
+                                                                  <option value="veces">
                                                                     Veces
                                                                   </option>
-                                                                  <option value="2">
+                                                                  <option value="RPM">
                                                                     RPM
                                                                   </option>
-                                                                  <option value="2">
+                                                                  <option value="KM/HR">
                                                                     KM/HR
                                                                   </option>
                                                                 </select>
@@ -2633,30 +2839,50 @@ function App(props) {
                                                           </div>
                                                           <div className="row">
                                                             <div className="col-sm-6 col-md-4 col-lg-4 unit">
-                                                              <label className="label"></label>
+                                                              <label className="label">
+                                                                Velocidad Máxima
+                                                                Motor
+                                                              </label>
                                                               <div className="input">
                                                                 <input
                                                                   className="form-control"
                                                                   type="text"
                                                                   placeholder="Velocidad Máxima Motor"
-                                                                  id="text"
+                                                                  onChange={
+                                                                    handleChange
+                                                                  }
+                                                                  value={
+                                                                    state.velocidadMaximaMotor
+                                                                  }
+                                                                  name="velocidadMaximaMotor"
                                                                 />
                                                               </div>
                                                             </div>
                                                             <div className="col-sm-6  col-md-4 col-lg-4  unit">
-                                                              <label className="label"></label>
+                                                              <label className="label">
+                                                                &nbsp;
+                                                              </label>
                                                               <label className="input select">
-                                                                <select className="form-control">
-                                                                  <option value="1">
+                                                                <select
+                                                                  className="form-control"
+                                                                  onChange={
+                                                                    handleChange
+                                                                  }
+                                                                  value={
+                                                                    state.velocidadMaximaMotorUM
+                                                                  }
+                                                                  name="velocidadMaximaMotorUM"
+                                                                >
+                                                                  <option value="%">
                                                                     %
                                                                   </option>
-                                                                  <option value="2">
+                                                                  <option value="veces">
                                                                     Veces
                                                                   </option>
-                                                                  <option value="2">
+                                                                  <option value="RPM">
                                                                     RPM
                                                                   </option>
-                                                                  <option value="2">
+                                                                  <option value="KM/HR">
                                                                     KM/HR
                                                                   </option>
                                                                 </select>
@@ -2666,30 +2892,49 @@ function App(props) {
                                                           </div>
                                                           <div className="row">
                                                             <div className="col-sm-6 col-md-4 col-lg-4 unit">
-                                                              <label className="label"></label>
+                                                              <label className="label">
+                                                                % Ultimo Cambio
+                                                              </label>
                                                               <div className="input">
                                                                 <input
                                                                   className="form-control"
                                                                   type="text"
                                                                   placeholder="% Ultimo Cambio"
-                                                                  id="text"
+                                                                  onChange={
+                                                                    handleChange
+                                                                  }
+                                                                  value={
+                                                                    state.porcUltimoCambio
+                                                                  }
+                                                                  name="porcUltimoCambio"
                                                                 />
                                                               </div>
                                                             </div>
                                                             <div className="col-sm-6  col-md-4 col-lg-4  unit">
-                                                              <label className="label"></label>
+                                                              <label className="label">
+                                                                &nbsp;
+                                                              </label>
                                                               <label className="input select">
-                                                                <select className="form-control">
-                                                                  <option value="1">
+                                                                <select
+                                                                  className="form-control"
+                                                                  onChange={
+                                                                    handleChange
+                                                                  }
+                                                                  value={
+                                                                    state.porcUltimoCambioUM
+                                                                  }
+                                                                  name="porcUltimoCambioUM"
+                                                                >
+                                                                  <option value="%">
                                                                     %
                                                                   </option>
-                                                                  <option value="2">
+                                                                  <option value="veces">
                                                                     Veces
                                                                   </option>
-                                                                  <option value="2">
+                                                                  <option value="RPM">
                                                                     RPM
                                                                   </option>
-                                                                  <option value="2">
+                                                                  <option value="KM/HR">
                                                                     KM/HR
                                                                   </option>
                                                                 </select>
@@ -2704,76 +2949,25 @@ function App(props) {
                                                       id="Fotos"
                                                       className="tab-pane fade "
                                                     >
-                                                      <div className="row">
-                                                        <div className="col-md-12 unit">
-                                                          {/* start cloned right side buttons element */}
-                                                          <div className="clone-rightside-btn-1">
-                                                            <label className="label">
-                                                              Fotos/Documentos
-                                                            </label>
-                                                            <div className="j-row toclone-widget-right toclone">
-                                                              <div className="span12 unit">
-                                                                <div className="input">
-                                                                  <input
-                                                                    className="form-control"
-                                                                    type="text"
-                                                                    placeholder="Descripción"
-                                                                  />
-                                                                </div>
-                                                              </div>
-                                                              <div className="span12 unit">
-                                                                <form
-                                                                  action="#"
-                                                                  className="j-forms"
-                                                                  noValidate
-                                                                >
-                                                                  <div className="form-content">
-                                                                    <div className="row">
-                                                                      {/* start prepend small file button */}
-                                                                      <div className="col-md-12 unit">
-                                                                        <div className="input prepend-small-btn">
-                                                                          <div className="file-button">
-                                                                            Browse
-                                                                            <input
-                                                                              className="btn btn-success"
-                                                                              type="file"
-                                                                              onChange="document.getElementById('prepend-small-btn').value = this.value;"
-                                                                            />
-                                                                          </div>
-                                                                          <input
-                                                                            className="form-control"
-                                                                            type="text"
-                                                                            id="prepend-small-btn"
-                                                                            readOnly
-                                                                            placeholder="no file selected"
-                                                                          />
-                                                                        </div>
-                                                                      </div>
-                                                                      {/* end prepend small
-                                                                       */}
-                                                                    </div>
-                                                                  </div>
-                                                                </form>
-                                                              </div>
-
-                                                              <button
-                                                                type="button"
-                                                                className="btn btn-primary clone-btn-right clone"
-                                                              >
-                                                                <i className="fa fa-plus" />
-                                                              </button>
-                                                              <button
-                                                                type="button"
-                                                                className="btn btn-secondary clone-btn-right delete"
-                                                              >
-                                                                <i className="fa fa-minus" />
-                                                              </button>
-                                                            </div>
-                                                          </div>
-                                                          {/* end cloned right
-                                                           */}
-                                                        </div>
-                                                      </div>
+                                                       <div className="col-md-12 unit">
+          {/* start cloned right side buttons element */}
+          <div className="clone-rightside-btn-1">
+            <label className="label">Fotos/Documentos</label>
+                                                      {framesFotosDocs}
+                                                      <a
+                                                        className="btn"
+                                                        style={{
+                                                          margin: "10px",
+                                                        }}
+                                                        onClick={() =>
+                                                          addFotosDoc()
+                                                        }
+                                                      >
+                                                        <i className="zmdi zmdi-plus"></i>{" "}
+                                                        Agregar Archivo
+                                                      </a>
+                                                    </div>
+                                                    </div>
                                                     </div>
                                                   </div>
                                                 </div>
@@ -2854,10 +3048,15 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
+                                                  onChange={handleChange}
+                                                  value={state.tarjetaIAVE}
+                                                  name="tarjetaIAVE"
                                                     className="form-control"
                                                     type="text"
                                                     placeholder=""
                                                     id="text"
+                                                 
+                                                    
                                                   />
                                                 </div>
                                               </div>
@@ -2867,6 +3066,9 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
+                                                  onChange={handleChange}
+                                                  value={state.horometro}
+                                                  name="horometro"
                                                     className="form-control"
                                                     type="text"
                                                     placeholder="00:00"
@@ -2882,6 +3084,9 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
+                                                  onChange={handleChange}
+                                                  value={state.tarjetaEPASS}
+                                                  name="tarjetaEPASS"
                                                     className="form-control"
                                                     type="text"
                                                     placeholder=""
@@ -2895,6 +3100,9 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
+                                                  onChange={handleChange}
+                                                  value={state.horasTrabajadasMotorNoGPS}
+                                                  name="horasTrabajadasMotorNoGPS"
                                                     className="form-control"
                                                     type="text"
                                                     placeholder=""
@@ -2911,6 +3119,9 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
+                                                   onChange={handleChange}
+                                                   value={state.porcentajeRepIngresos}
+                                                   name="porcentajeRepIngresos"
                                                     className="form-control"
                                                     type="text"
                                                     placeholder=""
@@ -2924,6 +3135,9 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
+                                                   onChange={handleChange}
+                                                   value={state.horasTrabajasMotor}
+                                                   name="horasTrabajasMotor"
                                                     className="form-control"
                                                     type="text"
                                                     placeholder=""
@@ -2939,6 +3153,9 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
+                                                  onChange={handleChange}
+                                                  value={state.odometro}
+                                                  name="odometro"
                                                     className="form-control"
                                                     type="text"
                                                     placeholder=""
@@ -2952,6 +3169,9 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
+                                                   onChange={handleChange}
+                                                   value={state.odometroGPSKMS}
+                                                   name="odometroGPSKMS"
                                                     className="form-control"
                                                     type="text"
                                                     placeholder=""
@@ -2965,18 +3185,16 @@ function App(props) {
                                                 </label>
                                                 <label className="input select">
                                                   <select
+                                                   onChange={handleChange}
+                                                   value={state.idPropietario}
+                                                   name="idPropietario"
                                                     className="form-control"
                                                     disabled
                                                   >
                                                     <option value="0">
                                                       Sin Propietario
                                                     </option>
-                                                    <option value="1">
-                                                      México
-                                                    </option>
-                                                    <option value="2">
-                                                      E.U.A
-                                                    </option>
+                                                   
                                                   </select>
                                                   <i></i>
                                                 </label>

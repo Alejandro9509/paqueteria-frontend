@@ -126,7 +126,7 @@ function App(props) {
           alert("err");
         });
     } else {
-      const url = "http://localhost/RemitentesDestinatarios/Agregarr";
+      const url = "http://localhost/RemitentesDestinatarios/Agregar";
       axios
         .post(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
