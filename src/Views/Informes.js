@@ -21,6 +21,10 @@ function Informes(props) {
   const [data, setData] = React.useState([])
   const [dataSucursal, setDataSucursal] = React.useState([]);
   const [dataEstatusInformes, setEstatusInformes] = React.useState([]);
+  const [dataOperadores, setDataOperadores] = React.useState([]);
+  const [dataUnidades, setDataUnidades] = React.useState([]);
+  const [dataOrigenes, setDataOrigenes] = React.useState([]);
+
 
 
 const [state, setState] = React.useState({
@@ -33,6 +37,33 @@ const [state, setState] = React.useState({
     ColorLetra: 0,
     agregar: "Agregar"
 })
+
+function getAllCiudades() {
+  const url = "http://localhost/Ciudades/GetListado";
+  axios.get(url, { headers }).then((respuesta) => {
+    console.log(respuesta);
+
+    setDataOrigenes(respuesta.data);
+  });
+}
+
+function getAllUnidades() {
+  const url = "http://localhost/Unidades/GetListado";
+  axios.get(url, { headers }).then((respuesta) => {
+    console.log(respuesta);
+
+    setDataUnidades(respuesta.data);
+  });
+}
+
+function getAllOperadores() {
+  const url = "http://localhost/Operadores/GetListado";
+  axios.get(url, { headers }).then((respuesta) => {
+    console.log(respuesta);
+
+    setDataOperadores(respuesta.data);
+  });
+}
 
 function getAllEstatusInformes() {
   const url = "http://localhost/SisEstatus/getListadoInformes";
@@ -110,6 +141,9 @@ useEffect(value => {
   getAllData();
   getAllEstatusInformes();
   getAllSucursales();
+  getAllOperadores();
+  getAllUnidades();
+  getAllCiudades();
 }, []);
 
 function getAllData() {
@@ -474,7 +508,7 @@ function getAllData() {
                                                     />
                                                   </div>
                                                 </div>
-                                                {/*****************************************Fecha*******************************************************/}
+{/*****************************************Fecha*******************************************************/}
                                                 <div className="col-sm-12 col-md-2 unit">
                                                   <label className="label">
                                                     Fecha
@@ -495,7 +529,7 @@ function getAllData() {
                                                     />
                                                   </div>
                                                 </div>
-                                                {/*****************************************Hora*******************************************************/}
+{/*****************************************Hora*******************************************************/}
                                                 <div className="col-sm-12 col-md-2 unit">
                                                   <label className="label">
                                                     Hora
@@ -596,58 +630,63 @@ function getAllData() {
                               )
                             )}
                           </select>
-                        <i></i>
                       </label>
                     </div>
 
 </div>
 
  {/*****************************************Operador*************************************************/}
- <div className="row">
-                                                <div className="col-sm-12 col-md-6 unit">
-                                                  <label className="label">
-                                                    Operador
-                          </label>
-                                                  <div className="input">
-                                                    <label
-                                                      className="icon-left"
-                                                      htmlFor="Operador"
-                                                    >
-                                                      <i className="fa fa-edit" />
-                                                    </label>
-                                                    <input
 
-                                                      className="form-control"
-                                                      type="text"
-
-                                                      id="Operador"
-                                                    />
-                                                  </div>
-                                                </div>
-</div>
+<div className="row">
+<div className="col-sm-12 col-md-6 unit">
+                                  <label className="label">Operador</label>
+{/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
+                                  <Autocomplete
+                                    freeSolo
+                                    onChange={(event, newValue) => setState({...state, idOperador: newValue})}
+                                    placeholder={state.idOperador}
+                                    id="idOperador"
+                                    disableClearable
+                                    getOptionLabel={(option) => option.m_sNombreCompleto}
+                                    options={dataOperadores}
+                                    renderInput={(params) => (
+                                      <TextField
+                                        {...params}
+                                        InputProps={{
+                                          ...params.InputProps,
+                                          type: "search",
+                                        }}
+                                      />
+                                    )}
+                                  />{" "}
+                                </div>
+                                </div>
 
 {/*****************************************Unidad*************************************************/}
-                                                <div className="row">
-                                                <div className="col-sm-12 col-md-6 unit">
-                                                  <label className="label">
-                                                    Unidad
-                          </label>
-                                                  <div className="input">
-                                                    <label
-                                                      className="icon-left"
-                                                      htmlFor="Estatus de Entrega"
-                                                    >
-                                                      <i className="fa fa-edit" />
-                                                    </label>
-                                                    <input
-
-                                                      className="form-control"
-                                                      type="text"
-
-                                                      id="Unidad"
-                                                    />
-                                                  </div>
-                                                </div>
+<div className="row">
+<div className="col-sm-12 col-md-6 unit">
+                        <label className="label">Unidad</label>
+{/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
+                                  <Autocomplete
+                                    freeSolo
+                                    onChange={(event, newValue) => setState({...state, idUnidad: newValue})}
+                                    placeholder={state.idUnidad}
+                                    id="idUnidad"
+                                    disableClearable
+                                    getOptionLabel={(option) => option.m_sCodigo + " " + option.m_sDescripcion}
+                                    options={dataUnidades}
+                                    renderInput={(params) => (
+                                      <TextField
+                                        {...params}
+                                        InputProps={{
+                                          ...params.InputProps,
+                                          type: "search",
+                                        }}
+                                      />
+                                    )}
+                                  />{" "}
+                                </div>
+                                
 
 {/*****************************************Placa Int*************************************************/}
                                                 <div className="col-sm-12 col-md-2 unit">
@@ -671,12 +710,7 @@ function getAllData() {
                                                   </div>
                                                 </div>
 
-
-
-</div>
-
-
-
+                                                </div>
 
 
 {/*****************************************Remolque*************************************************/}
@@ -737,44 +771,51 @@ function getAllData() {
                                                   <label className="label">
                                                     Origen
                           </label>
-                                                  <div className="input">
-                                                    <label
-                                                      className="icon-left"
-                                                      htmlFor="Origen"
-                                                    >
-                                                      <i className="fa fa-edit" />
-                                                    </label>
-                                                    <input
-
-                                                      className="form-control"
-                                                      type="text"
-
-                                                      id="Origen"
-                                                    />
-                                                  </div>
-                                                </div>
-
+{/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
+                                  <Autocomplete
+                                    freeSolo
+                                    onChange={(event, newValue) => setState({...state, idOrigen: newValue})}
+                                    placeholder={state.idOrigen}
+                                    id="idOrigen"
+                                    disableClearable
+                                    getOptionLabel={(option) => option.m_sCiudad}
+                                    options={dataOrigenes}
+                                    renderInput={(params) => (
+                                      <TextField
+                                        {...params}
+                                        InputProps={{
+                                          ...params.InputProps,
+                                          type: "search",
+                                        }}
+                                      />
+                                    )}
+                                  />{" "}
+                                </div>
 {/*****************************************Destino*************************************************/}
                                                 <div className="col-sm-12 col-md-6 unit">
                                                   <label className="label">
                                                   Destino
                           </label>
-                                                  <div className="input">
-                                                    <label
-                                                      className="icon-left"
-                                                      htmlFor="Destino"
-                                                    >
-                                                      <i className="fa fa-edit" />
-                                                    </label>
-                                                    <input
-
-                                                      className="form-control"
-                                                      type="text"
-
-                                                      id="Destino"
-                                                    />
-                                                  </div>
-                                                </div>
+                                                  {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
+                                  <Autocomplete
+                                    freeSolo
+                                    onChange={(event, newValue) => setState({...state, idDestino: newValue})}
+                                    placeholder={state.idDestino}
+                                    id="idDestino"
+                                    disableClearable
+                                    getOptionLabel={(option) => option.m_sCiudad}
+                                    options={dataOrigenes}
+                                    renderInput={(params) => (
+                                      <TextField
+                                        {...params}
+                                        InputProps={{
+                                          ...params.InputProps,
+                                          type: "search",
+                                        }}
+                                      />
+                                    )}
+                                  />{" "}
+                                </div>
 
 
 
@@ -788,22 +829,26 @@ function getAllData() {
                                                   <label className="label">
                                                     Ruta
                           </label>
-                                                  <div className="input">
-                                                    <label
-                                                      className="icon-left"
-                                                      htmlFor="Ruta"
-                                                    >
-                                                      <i className="fa fa-edit" />
-                                                    </label>
-                                                    <input
-
-                                                      className="form-control"
-                                                      type="text"
-
-                                                      id="Ruta"
-                                                    />
-                                                  </div>
-                                                </div>
+{/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
+<Autocomplete
+                                    freeSolo
+                                    onChange={(event, newValue) => setState({...state, idRuta: newValue})}
+                                    placeholder={state.idRuta}
+                                    id="idRuta"
+                                    disableClearable
+                                    getOptionLabel={(option) => option.m_sCiudad}
+                                    options={dataOrigenes}
+                                    renderInput={(params) => (
+                                      <TextField
+                                        {...params}
+                                        InputProps={{
+                                          ...params.InputProps,
+                                          type: "search",
+                                        }}
+                                      />
+                                    )}
+                                  />{" "}
+                                </div>
 </div>
 
 

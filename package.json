@@ -1,5 +1,6 @@
 {
   "name": "prueba-de-cambio-de-webdev",
+  "homepage": "http://192.168.2.232:8080/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
