@@ -111,6 +111,14 @@ const dashboardRoutes = [
     component: OperadoresPage,
     single: true,
     child:[]
+  },
+  {
+    path: "/Rutas",
+    name: "Rutas",
+    icon: ConfiguracionIcon,
+    component: RutasPage,
+    single: true,
+    child:[]
   }
 ];
 
