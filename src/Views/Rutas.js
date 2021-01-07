@@ -13,6 +13,8 @@ import $ from "jquery";
 import { useTable, useFilters, useSortBy } from "react-table";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import {DisplayMapClass} from "./mapa";
+
 
 window.jQuery = window.$ = $;
 const headers = {
@@ -321,10 +323,8 @@ const headers = {
                           <div className="widget-content">
                             <div className="row">
                               
-                              <div className="col-md-4">
-                              <div className="row">
                               
-                              <div className="col-md-12">
+                              <div className="col-md-4 unit">
                                 
                               <div className="inline-group">
                                                   <label className="label">
@@ -350,18 +350,24 @@ const headers = {
                                                     <i />
                                                     Modo recorrido
                                                   </label>
-                                               
                                                  
                                                 </div>
+
+
                                 
                                 </div>
-                                </div>
+                                <div className="col-md-8 unit">
 
 
                                 </div>
                                 </div>
+                               
+
+
                                 </div>
                                 </div>
+                                <DisplayMapClass/>
+
                                 </form>
                                 </div>
                                 </div>

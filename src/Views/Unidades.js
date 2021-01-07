@@ -11,6 +11,8 @@ import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import { useTable, useFilters, useSortBy } from "react-table";
+import ExportCSV from '../Components/Template/Export';
+import ExportPDF from "../Components/Template/ExportPDF";
 
 import $ from "jquery";
 import { remove_array_element } from "../Util/Util";
@@ -280,6 +282,207 @@ function App(props) {
     ],
   });
 
+
+
+  function handleShowAgregar() {
+    setState({
+      ...state,
+      agregar: "Agregar",
+    idUnidad: 0,
+    idTipoUnidad: 0,
+    codigo: "",
+    activo: false,
+    rentada: false,
+    esUnidadPermisionario: false,
+    idSucursal: 0,
+    idOperador: 0,
+    descripcion: "",
+    modelo: "",
+    serieUnidad: "",
+    colorUnidad: "",
+    idSatelital: "",
+    idConvoy: "",
+    idGrupoUnidad: 0,
+    creadoEl: "",
+    creadoPor: 0,
+    creadoEl: "",
+    modificadoPor: "",
+    modificadoEl: "",
+    largo: 0,
+    ancho: 0,
+    alto: 0,
+    capacidad: 0,
+    numeroEjes: 0,
+    numeroLlanta: 0,
+    llantaRefaccion: 0,
+    tipoLlanta: 0,
+    marcaLlanta: 0,
+    modeloLlanta: 0,
+    medidaLlanta: 0,
+    serieMotor: "",
+    tipoMotor: "",
+    tipoTransmision: "",
+    tipoCombustible: 0,
+    capacidadTanqueGal: 0,
+    rendimientoCargado: 0,
+    rendimientoVacio: 0,
+    tarjetaDiesel1: "",
+    tarjetaDiesel2: "",
+    tarjetaDiesel3: "",
+    companiaSeguros1: "",
+    telefono1: "",
+    numeroSeguro1: "",
+    vencimientoSeguro1: "",
+    tipoCobertura1: 0,
+    companiaSeguros: "",
+    telefono: "",
+    numeroSeguro: "",
+    vencimientoSeguro: "",
+    tipoCobertura: 0,
+    paroMotor: false,
+    tiempoParo: 0,
+    placas: "",
+    placasVencimiento: "",
+    placasExtranjeras: "",
+    placasExtranjerasVencimiento: "",
+    placasDefault: 0,
+    permisoSCT: "",
+    verificacionVehicular: "",
+    verificacionVehicularVencimiento: "",
+    velocidadPromedio: 0,
+    neutralizaciones: 0,
+    frenadoBrusco: 0,
+    cargaAceleracion: 0,
+    accionamientoPedal: 0,
+    velocidadMaximaMotor: 0,
+    porcUltimoCambio: 0,
+    velocidadPromedioUM: "",
+    neutralizacionesUM: "",
+    frenadoBruscoUM: "",
+    cargaAceleracionUM: "",
+    accionamientoPedalUM: "",
+    velocidadMaximaMotorUM: "",
+    porcUltimoCambioUM: "",
+    tarjetaIAVE: "",
+    horometro: 0,
+    tarjetaEPASS: "",
+    horasTrabajasMotor: 0,
+    horasTrabajadasMotorNoGPS:0,
+    porcentajeRepIngresos:0,
+    odometro: 0,
+    odometroGPSKMS: "",
+    idPropietario: 0,
+    tiempoParoStatus: "disabled",
+    documentos: [
+      {
+        numDocumento: "",
+        documento: "",
+        fechaDocumento: "",
+      },
+    ],
+    fotosDocs: [
+      {
+        descripcion: "",
+        file: "",
+      },
+    ],
+    });
+  }
+
+  
+  function handleShowModificar(row) {
+    console.log(row.original.m_nIdUnidad);
+    const url =
+      "http://localhost/Unidad/GetById/" + row.original.m_nIdUnidad;
+    axios.get(url, { headers }).then((respuesta) => {
+      console.log(respuesta.data);
+      setState({
+        ...state,
+        idUnidad:row.original.m_nIdUnidad,
+        idTipoUnidad:respuesta.data.m_nIdTipoUnidad ,
+        codigo:respuesta.data.m_sCodigo ,
+        activo:respuesta.data.m_bActivo ,
+        rentada:respuesta.data.m_bRentada  ,
+        esUnidadPermisionario:respuesta.data.m_bEsUnidadPermisionario  ,
+        idSucursal:respuesta.data.m_nIdSucursal ,
+        idOperador:respuesta.data.m_nIdOperador ,
+        descripcion:respuesta.data.m_sDescripcion  ,
+        modelo:respuesta.data.m_nModelo  ,
+        serieUnidad:respuesta.data.m_sSerieUnidad  ,
+        colorUnidad:respuesta.data.m_sColorUnidad  ,
+        idSatelital:respuesta.data.m_sIdentificadorSatelital   ,
+        idConvoy:respuesta.data.m_sIdentificadorConvoy  ,
+        idGrupoUnidad:respuesta.data.m_nIdGrupoUnidad   ,
+        largo:respuesta.data.Largo ,
+        ancho:respuesta.data.Ancho ,
+        alto:respuesta.data.Alto  ,
+        capacidad:respuesta.data.m_nCapacidad  ,
+        numeroEjes:respuesta.data.m_nNumeroEjes  ,
+        numeroLlanta:respuesta.data.m_nNumeroLlanta  ,
+        llantaRefaccion:respuesta.data.m_nLlantaRefaccion   ,
+        tipoLlanta:respuesta.data.m_nIdTipoLlanta   ,
+        marcaLlanta:respuesta.data.m_nIdMarcaLlanta   ,
+        modeloLlanta:respuesta.data.m_nIdModeloLLanta   ,
+        medidaLlanta:respuesta.data.m_nIdMedidaLlanta   ,
+        serieMotor:respuesta.data.m_sSerieMotor ,
+        tipoMotor:respuesta.data.m_sTipoMotor ,
+        tipoTransmision:respuesta.data.m_sTipoTransmision ,
+        tipoCombustible:respuesta.data.m_nTipoCombustible  ,
+        capacidadTanqueGal:respuesta.data.m_nCapacidadTanqueCombustibleGalones   ,
+        rendimientoCargado:respuesta.data.RendimientoCargado  ,
+        rendimientoVacio:respuesta.data.RendimientoVacio  ,
+        tarjetaDiesel1:respuesta.data.m_sTarjetaDiesel1 ,
+        tarjetaDiesel2:respuesta.data.m_sTarjetaDiesel2  ,
+        tarjetaDiesel3:respuesta.data.m_sTarjetaDiesel3  ,
+        companiaSeguros1:respuesta.data.m_sCompaniaSeguros1  ,
+        telefono1:respuesta.data.m_sTelefonosCompaniaSeguros1  ,
+        numeroSeguro1:respuesta.data.m_sNumeroSeguro1 ,
+        vencimientoSeguro1:respuesta.data.m_dtVencimientoSeguro1  ,
+        tipoCobertura1:respuesta.data.m_nTipoCoberturaSeguro1 ,
+        companiaSeguros:respuesta.data.m_sCompaniaSeguros  ,
+        telefono:respuesta.data.m_sTelefonosCompaniaSeguros  ,
+        numeroSeguro:respuesta.data.m_sNumeroSeguro ,
+        vencimientoSeguro:respuesta.data.m_dtVencimientoSeguro   ,
+        tipoCobertura:respuesta.data.m_nTipoCoberturaSeguro  ,
+        paroMotor:respuesta.data.m_bParoDeMotorRelenti ,
+        tiempoParo:respuesta.data.m_nTiempoParo  ,
+        placas:respuesta.data.m_sPlacas ,
+        placasVencimiento:respuesta.data.m_dtPlacasVencimiento   ,
+        placasExtranjeras:respuesta.data.m_sPlacasExtranjeras ,
+        placasExtranjerasVencimiento:respuesta.data.m_dtPlacasExtranjerasVencimiento   ,
+        placasDefault:respuesta.data.m_nPlacasDefault ,
+        permisoSCT:respuesta.data.m_sPermisoSCT  ,
+        verificacionVehicular:respuesta.data.m_sVerificacionVehicular  ,
+        verificacionVehicularVencimiento:respuesta.data.m_dtVerificacionVehicularVencimiento  ,
+        velocidadPromedio:respuesta.data.VelocidadPromedio ,
+        neutralizaciones:respuesta.data.Neutralizaciones  ,
+        frenadoBrusco:respuesta.data.FrenadosBrusco  ,
+        cargaAceleracion:respuesta.data.CargaDeAceleracion  ,
+        accionamientoPedal:respuesta.data.AccionamientoPedalFreno  ,
+        velocidadMaximaMotor:respuesta.data.VelocidadMaximaMotor ,
+        porcUltimoCambio:respuesta.data.PorcUltimoCambio  ,
+        velocidadPromedioUM:respuesta.data.m_sVelocidadPromedioUM ,
+        neutralizacionesUM:respuesta.data.m_sNeutralizacionesUM  ,
+        frenadoBruscoUM:respuesta.data.m_sFrenadosBruscoUM  ,
+        cargaAceleracionUM:respuesta.data.m_sCargaDeAceleracionUM  ,
+        accionamientoPedalUM:respuesta.data.m_sAccionamientoPedalFrenoUM ,
+        velocidadMaximaMotorUM:respuesta.data.m_sVelocidadMaximaMotorUM  ,
+        porcUltimoCambioUM:respuesta.data.m_sPorcUltimoCambioUM ,
+        tarjetaIAVE:respuesta.data.m_sTarjetaIAVE ,
+        horometro:respuesta.data.m_nHorometro  ,
+        tarjetaEPASS:respuesta.data.m_sTarjetaEPASS   ,
+        horasTrabajasMotor:respuesta.data.m_nHorasTrabajadasMotor   ,
+        horasTrabajadasMotorNoGPS:respuesta.data.m_nHorasTrabajadasMotorNoGPS   ,
+        porcentajeRepIngresos:respuesta.data.PorcentajeRepIngresos   ,
+        odometro:respuesta.data.m_nOdometro  ,
+        odometroGPSKMS:respuesta.data.OdometroGPSKMS   ,
+        idPropietario:respuesta.data.m_nIdPropietarioEquipo  ,
+    
+
+      });
+    });
+  }
+
   useEffect((value) => {
     getAllOperadores();
     getAllTipoUnidades();
@@ -325,12 +528,14 @@ function App(props) {
   }
 
   const handleChangeActivoCheckboxChange = (event) => {
-    console.log(event.target.name + " " + state.activo);
     setState({
       ...state,
       activo: !state.activo,
     });
+    console.log(event.target.name + " " + state.activo);
+
   };
+  
 
   const handleChangeParoMotor = (event) => {
     console.log(event.target.name + " " + state.paroMotor);
@@ -339,6 +544,8 @@ function App(props) {
       paroMotor: !state.paroMotor,
 
       tiempoParoStatus: !state.tiempoParoStatus,
+      tiempoParoStatus:0
+      
     });
   };
 
@@ -378,13 +585,35 @@ function App(props) {
     });
   };
 
+  const handleChangeCodigo = (event) => {
+    console.log(event.target.name + " : " + event.target.value);
+    const url = "http://localhost/Unidades/ValidaCodigoUnidad/" + state.codigo +"/"+state.idUnidad;
+    axios
+      .get(url, { headers })
+      .then((respuesta) => {
+        console.log(respuesta);
+      })
+      .catch((err) => {
+        alert(err);
+      });
+
+    setState({
+      ...state,
+
+      [event.target.name]: event.target.value,
+    });
+  };
+
   const handleChangeDocumento = (event, index) => {
     var { documentos } = state;
     documentos[index][event.target.name] = event.target.value;
+
     setState({
       ...state,
       documentos: documentos,
     });
+
+   
   };
 
   const handleChangeFotosDocs = (event, index) => {
@@ -396,7 +625,6 @@ function App(props) {
     });
   };
 
-  function handleShowModificar(id) {}
 
   const getModificar = (id) => {
     const url = `${process.env.REACT_APP_API_URL}/Unidad/GetById/` + id;
@@ -416,89 +644,91 @@ function App(props) {
   const handleAceptar = (e) => {
     e.preventDefault();
     var params = {
-      IdUnidad: state.idUnidad,
-      IdTipoUnidad: state.idTipoUnidad,
-      Codigo: state.codigo,
-      Activo: state.activo,
-      Rentada: state.rentada,
-      EsUnidadPermisionario: state.esUnidadPermisionario,
-      IdSucursal: state.idSucursal,
-      IdOperador: state.idOperador,
-      Descripcion: state.descripcion,
-      Modelo: state.modelo,
-      SerieUnidad: state.serieUnidad,
-      ColorUnidad: state.colorUnidad,
-      IdentificadorSatelital: state.idSatelital,
-      IdentificadorConvoy: state.idConvoy,
-      IdGrupoUnidad: state.idGrupoUnidad,
-      CreadoPor: state.creadoPor,
-      CreadoEl: state.creadoEl,
-      ModificadoPor: state.modificadoPor,
-      ModificadoEl: state.modificadoEl,
-      Largo: state.largo,
-      Ancho: state.ancho,
-      Alto: state.alto,
-      Capacidad: state.capacidad,
-      NumeroEjes: state.numeroEjes,
-      NumeroLlanta: state.numeroLlanda,
-      LlantaRefaccion: state.llantaRefaccion,
-      IdTipoLlanta: state.tipoLlanta,
-      IdMarcaLlanta: state.marcaLlanta,
-      IdModeloLLanta: state.modeloLlanta,
-      IdMedidaLlanta: state.medidaLlanta,
-      SerieMotor: state.serieMotor,
-      TipoMotor: state.tipoMotor,
-      TipoTransmision: state.tipoTransmision,
-      TipoCombustible: state.tipoCombustible,
-      CapacidadTanqueCombustibleGalones: state.capacidadTanqueGal,
-      RendimientoCargado: state.rendimientoCargado,
-      RendimientoVacio: state.rendimientoVacio,
-      TarjetaDiesel1: state.tarjetaDiesel1,
-      TarjetaDiesel2: state.tarjetaDiesel2,
-      TarjetaDiesel3: state.tarjetaDiesel3,
-      CompaniaSeguros1: state.companiaSeguros1,
-      TelefonosCompaniaSeguros1: state.telefono1,
-      NumeroSeguro1: state.numeroSeguro1,
-      VencimientoSeguro1: state.vencimientoSeguro1,
-      TipoCoberturaSeguro1: state.tipoCobertura1,
-      CompaniaSeguros: state.companiaSeguros,
-      TelefonosCompaniaSeguros: state.telefono,
-      NumeroSeguro: state.numeroSeguro,
-      VencimientoSeguro: state.vencimientoSeguro,
-      TipoCoberturaSeguro: state.tipoCobertura,
-      ParoDeMotorRelenti: state.paroMotor,
-      TiempoParo: state.tiempoParo,
-      Placas: state.placas,
-      PlacasVencimiento: state.placasVencimiento,
-      PlacasExtranjeras: state.placasExtranjeras,
-      PlacasExtranjerasVencimiento: state.placasExtranjerasVencimiento,
-      PlacasDefault: state.placasDefault,
-      PermisoSCT: state.permisoSCT,
-      VerificacionVehicular: state.verificacionVehicular,
-      VerificacionVehicularVencimiento: state.verificacionVehicularVencimiento,
-      VelocidadPromedio: state.velocidadPromedio,
-      Neutralizaciones: state.neutralizaciones,
-      FrenadosBrusco: state.frenadoBrusco,
-      CargaDeAceleracion: state.cargaAceleracion,
-      AccionamientoPedalFreno: state.accionamientoPedal,
-      VelocidadMaximaMotor: state.velocidadMaximaMotor,
-      PorcUltimoCambio: state.porcUltimoCambio,
-      VelocidadPromedioUM: state.velocidadPromedioUM,
-      NeutralizacionesUM: state.neutralizacionesUM,
-      FrenadosBruscoUM: state.frenadoBruscoUM,
-      CargaDeAceleracionUM: state.cargaAceleracionUM,
-      AccionamientoPedalFrenoUM: state.accionamientoPedalUM,
-      VelocidadMaximaMotorUM: state.velocidadMaximaMotorUM,
-      PorcUltimoCambioUM: state.porcUltimoCambioUM,
-      TarjetaIAVE: state.tarjetaIAVE,
-      Horometro: state.horometro,
-      TarjetaEPASS: state.tarjetaEPASS,
-      HorasTrabajadasMotorNoGPS: state.horasTrabajadasMotorNoGPS,
-      HorasTrabajadasMotor:state.horasTrabajasMotor,
-      PorcentajeRepIngresos:state.porcentajeRepIngresos,
-      Odometro: state.odometro,
-      OdometroGPSKMS: state.odometroGPSKMS,
-      IdPropietarioEquipo: state.idPropietario,
+     
+      "IdTipoUnidad": state.idTipoUnidad,
+      "Codigo": state.codigo,
+      "Activo": state.activo,
+      "Rentada": state.rentada,
+      "EsUnidadPermisionario": state.esUnidadPermisionario,
+      "IdSucursal": state.idSucursal,
+      "IdOperador": state.idOperador,
+      "Descripcion": state.descripcion,
+      "Modelo": state.modelo,
+      "SerieUnidad": state.serieUnidad,
+      "ColorUnidad": state.colorUnidad,
+      "IdentificadorSatelital": state.idSatelital,
+      "IdentificadorConvoy": state.idConvoy,
+      "IdGrupoUnidad": state.idGrupoUnidad,
+      "CreadoPor": state.creadoPor,
+      "CreadoEl": state.creadoEl,
+      "ModificadoPor": state.modificadoPor,
+      "ModificadoEl": state.modificadoEl,
+      "Largo": state.largo,
+      "Ancho": state.ancho,
+      "Alto": state.alto,
+      "Capacidad": state.capacidad,
+      "NumeroEjes": state.numeroEjes,
+      "NumeroLlanta": state.numeroLlanda,
+      "LlantaRefaccion": state.llantaRefaccion,
+      "IdTipoLlanta": state.tipoLlanta,
+      "IdMarcaLlanta": state.marcaLlanta,
+      "IdModeloLLanta": state.modeloLlanta,
+      "IdMedidaLlanta": state.medidaLlanta,
+      "SerieMotor": state.serieMotor,
+      "TipoMotor": state.tipoMotor,
+      "TipoTransmision": state.tipoTransmision,
+      "TipoCombustible": state.tipoCombustible,
+      "CapacidadTanqueCombustibleGalones": state.capacidadTanqueGal,
+      "RendimientoCargado": state.rendimientoCargado,
+      "RendimientoVacio": state.rendimientoVacio,
+      "TarjetaDiesel1": state.tarjetaDiesel1,
+      "TarjetaDiesel2": state.tarjetaDiesel2,
+      "TarjetaDiesel3": state.tarjetaDiesel3,
+      "CompaniaSeguros1": state.companiaSeguros1,
+      "TelefonosCompaniaSeguros1": state.telefono1,
+      "NumeroSeguro1": state.numeroSeguro1,
+      "VencimientoSeguro1": state.vencimientoSeguro1,
+      "TipoCoberturaSeguro1": state.tipoCobertura1,
+      "CompaniaSeguros": state.companiaSeguros,
+      "TelefonosCompaniaSeguros": state.telefono,
+      "NumeroSeguro": state.numeroSeguro,
+      "VencimientoSeguro": state.vencimientoSeguro,
+      "TipoCoberturaSeguro": state.tipoCobertura,
+      "ParoDeMotorRelenti": state.paroMotor,
+      "TiempoParo": state.tiempoParo,
+      "Placas": state.placas,
+      "PlacasVencimiento": state.placasVencimiento,
+      "PlacasExtranjeras": state.placasExtranjeras,
+      "PlacasExtranjerasVencimiento": state.placasExtranjerasVencimiento,
+      "PlacasDefault": state.placasDefault,
+      "PermisoSCT": state.permisoSCT,
+      "VerificacionVehicular": state.verificacionVehicular,
+      "VerificacionVehicularVencimiento": state.verificacionVehicularVencimiento,
+      "VelocidadPromedio": state.velocidadPromedio,
+      "Neutralizaciones": state.neutralizaciones,
+      "FrenadosBrusco": state.frenadoBrusco,
+      "CargaDeAceleracion": state.cargaAceleracion,
+      "AccionamientoPedalFreno": state.accionamientoPedal,
+      "VelocidadMaximaMotor": state.velocidadMaximaMotor,
+      "PorcUltimoCambio": state.porcUltimoCambio,
+      "VelocidadPromedioUM": state.velocidadPromedioUM,
+      "NeutralizacionesUM": state.neutralizacionesUM,
+      "FrenadosBruscoUM": state.frenadoBruscoUM,
+      "CargaDeAceleracionUM": state.cargaAceleracionUM,
+      "AccionamientoPedalFrenoUM": state.accionamientoPedalUM,
+      "VelocidadMaximaMotorUM": state.velocidadMaximaMotorUM,
+      "PorcUltimoCambioUM": state.porcUltimoCambioUM,
+      "TarjetaIAVE": state.tarjetaIAVE,
+      "Horometro": state.horometro,
+      "TarjetaEPASS": state.tarjetaEPASS,
+      "HorasTrabajadasMotorNoGPS": state.horasTrabajadasMotorNoGPS,
+      "HorasTrabajadasMotor":state.horasTrabajasMotor,
+      "PorcentajeRepIngresos":state.porcentajeRepIngresos,
+      "Odometro": state.odometro,
+      "OdometroGPSKMS": state.odometroGPSKMS,
+      "IdPropietarioEquipo": state.idPropietario,
+
+      "arrAdicionales": state.documentos,
 
       agregar: "Agregar",
       importar: "",
@@ -520,12 +750,12 @@ function App(props) {
           alert("err");
         });
     } else {
-      const url = "http://localhost/Unidadd/Agregar";
+      const url = "http://localhost/Unidad/Agregar";
       axios
         .post(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
           alert(respuesta.data);
-          window.location.reload();
+          //window.location.reload();
         })
         .catch((err) => {
           console.log(err);
@@ -794,23 +1024,19 @@ function App(props) {
           <ul className="nav nav-tabs">
             <li className="active">
               <a data-toggle="tab" href="#Listado">
-                Listado
+              <i className="fa fa-list" /> Listado
               </a>
             </li>
             <li>
-              <a data-toggle="tab" href="#Agregar">
-                {state.agregar}
+              <a data-toggle="tab" href="#Agregar"  onClick={handleShowAgregar}>
+              <i className="fa fa-plus-circle" /> {state.agregar}
               </a>
             </li>
             <li>
-              <a data-toggle="tab" href="#Importar">
-                Importar
-              </a>
+              <ExportCSV csvData={data} fileName="Unidades_Listado" />
             </li>
             <li>
-              <a data-toggle="tab" href="#Imprimir">
-                Imprimir
-              </a>
+              <ExportPDF data={data} column={columns} fileName="Unidades" />
             </li>
           </ul>
 
@@ -1002,7 +1228,7 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
-                                                    onChange={handleChange}
+                                                    onChange={handleChangeCodigo}
                                                     className="form-control"
                                                     type="text"
                                                     value={state.codigo}
@@ -1094,7 +1320,7 @@ function App(props) {
                                                   <input
                                                     onChange={handleChange}
                                                     className="form-control"
-                                                    type="text"
+                                                    type="number"
                                                     value={state.modelo}
                                                     id="modelo"
                                                     name="modelo"

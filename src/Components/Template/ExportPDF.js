@@ -34,7 +34,7 @@ function ExportPDF({data, column, fileName}){
   }
 
     return (
-      <a data-toggle="tab" onClick={(e) => exportPDF(data, column, fileName)} href="#ExportarPDF"><i className="zmdi zmdi-print"/>    Expoortar PDF</a>
+      <a data-toggle="tab" onClick={(e) => exportPDF(data, column, fileName)} href="#ExportarPDF"><i className="zmdi zmdi-print"/>    Exportar PDF</a>
     );
 }
 
