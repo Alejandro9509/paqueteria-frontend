@@ -102,22 +102,21 @@ function Recoleccion() {
     unidad: 0,
     paquetes: [
       {
-        peso: "",
-        largo: "",
-        ancho: "",
-        alto: "",
-        volumen: "",
-        peso: "",
-        tipoEmbalaje: "",
-        valorDeclarado: "",
-        descripcionPaquete: "",
-        ctd: "",
-        observacionesPaquete: "",
+        m_rPeso: "",
+        m_rLargo: "",
+        m_rAncho: "",
+        m_rAlto: "",
+        m_rVolumen: "",
+        m_nIdTipoEmbalaje: "",
+        m_cyValorDeclarado: "",
+        m_sDescripcion: "",
+        m_nCantidad: "",
+        m_sObservaciones: "",
       },
     ],
     sobres: [
       {
-        descripcionSobre: ""
+        m_sDescripcion: ""
       }
     ],
     fechaHoraSalida: "",
@@ -213,17 +212,16 @@ function Recoleccion() {
   function addPaquete() {
     const { paquetes } = state;
     paquetes.push({
-      peso: "",
-      largo: "",
-      ancho: "",
-      alto: "",
-      volumen: "",
-      peso: "",
-      tipoEmbalaje: "",
-      valorDeclarado: "",
-      descripcionPaquete: "",
-      ctd: "",
-      observacionesPaquete: "",
+      m_rPeso: "",
+      m_rLargo: "",
+      m_rAncho: "",
+      m_rAlto: "",
+      m_rVolumen: "",
+      m_nIdTipoEmbalaje: "",
+      m_cyValorDeclarado: "",
+      m_sDescripcion: "",
+      m_nCantidad: "",
+      m_sObservaciones: "",
     });
     console.log(paquetes);
     setState({ ...state, paquetes: paquetes });
@@ -276,11 +274,11 @@ function Recoleccion() {
         showPopUp: true,
         idRecoleccion: id,
         idSucursalAgregar: respuesta.data.m_nIdSucursal,
-        folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
+        folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
         folioEmbarque: respuesta.data.m_nIdEmbarque,
         folioGuía: respuesta.data.m_nIdGuia,
         folioInforme: respuesta.data.m_nIdInforme,
-        fechaHoraCreacion: respuesta.data.m_dFecha + "T" + respuesta.data.m_tHora,
+        fechaHoraCreacion: respuesta.data.m_dFecha + "T" + respuesta.data.m_tHora.slice(0,5),
         estatusRecoleccion: respuesta.data.m_nIdEstatusRecoleccion,
         moneda: respuesta.data.m_nMoneda,
         tipoCambio: respuesta.data.m_rTipoCambio,
@@ -318,8 +316,10 @@ function Recoleccion() {
         domicilioEntrega: "",
         entregaEn: "",
         datosAdicionalesEntrega: "",
-        cantidadDePaquetes: 0,
-        cantidadDeSobres: 0,
+        paquetes: respuesta.data.m_parrPaquetes,
+        sobres: respuesta.data.m_parrSobres,
+        cantidadDePaquetes: respuesta.data.m_parrPaquetes.length,
+        cantidadDeSobres: respuesta.data.m_parrSobres.length,
       })
     });
   }
@@ -430,7 +430,7 @@ function Recoleccion() {
   const columns = React.useMemo(() => [
     {
       Name: "Folio",
-      accessor: "m_nFolioRecoleccion",
+      accessor: "m_sFolioRecoleccion",
     }, {
       Name: "Fecha Elaboración",
       accessor: "m_dFecha",
@@ -744,9 +744,9 @@ function Recoleccion() {
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
-              value={state.paquetes[index].peso}
+              value={state.paquetes[index].m_rPeso}
               placeholder="Peso"
-              name="peso"
+              name="m_rPeso"
             />
           </div>
         </div>
@@ -758,9 +758,9 @@ function Recoleccion() {
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
-              value={state.paquetes[index].largo}
+              value={state.paquetes[index].m_rLargo}
               placeholder="Largo"
-              name="largo"
+              name="m_rLargo"
             />
           </div>
         </div>
@@ -772,9 +772,9 @@ function Recoleccion() {
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
-              value={state.paquetes[index].ancho}
+              value={state.paquetes[index].m_rAncho}
               placeholder="Ancho"
-              name="ancho"
+              name="m_rAncho"
             />
           </div>
         </div>
@@ -786,9 +786,9 @@ function Recoleccion() {
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
-              value={state.paquetes[index].alto}
+              value={state.paquetes[index].m_rAlto}
               placeholder="Alto"
-              name="alto"
+              name="m_rAlto"
             />
           </div>
         </div>
@@ -800,9 +800,9 @@ function Recoleccion() {
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
-              value={state.paquetes[index].volumen}
+              value={state.paquetes[index].m_rVolumen}
               placeholder="Volumen"
-              name="volumen"
+              name="m_rVolumen"
             />
           </div>
         </div>
@@ -814,9 +814,9 @@ function Recoleccion() {
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
-              value={state.paquetes[index].tipoEmbalaje}
+              value={state.paquetes[index].m_nIdTipoEmbalaje}
               placeholder="Tipo de Embarje"
-              name="tipoEmbalaje"
+              name="m_nIdTipoEmbalaje"
             />
           </div>
         </div>
@@ -828,9 +828,9 @@ function Recoleccion() {
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
-              value={state.paquetes[index].valorDeclarado}
+              value={state.paquetes[index].m_cyValorDeclarado}
               placeholder="Valor Declarado"
-              name="valorDeclarado"
+              name="m_cyValorDeclarado"
             />
           </div>
         </div>
@@ -842,9 +842,9 @@ function Recoleccion() {
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
-              value={state.paquetes[index].descripcionPaquete}
+              value={state.paquetes[index].m_sDescripcion}
               placeholder="Descripción"
-              name="descripcionPaquete"
+              name="m_sDescripcion"
             />
           </div>
         </div>
@@ -856,9 +856,9 @@ function Recoleccion() {
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
-              value={state.paquetes[index].Ctd}
+              value={state.paquetes[index].m_nCantidad}
               placeholder="Ctd"
-              name="ctd"
+              name="m_nCantidad"
             />
           </div>
         </div>
@@ -870,9 +870,9 @@ function Recoleccion() {
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
-              value={state.paquetes[index].observacionesPaquete}
+              value={state.paquetes[index].m_sObservaciones}
               placeholder="Observaciones"
-              name="observacionesPaquete"
+              name="m_sObservaciones"
             />
           </div>
         </div>
@@ -898,9 +898,9 @@ function Recoleccion() {
               onChange={(event) => handleChangeSobre(event, index)}
               className="form-control"
               type="text"
-              value={state.sobres[index].descripcion}
+              value={state.sobres[index].m_sDescripcion}
               placeholder="Descripción"
-              name="descripcionSobre"
+              name="m_sDescripcion"
             />
           </div>
         </div>
@@ -1135,6 +1135,7 @@ function Recoleccion() {
                                 <select
                                   className="form-control"
                                   required
+                                  value={state.idSucursalAgregar}
                                   onChange={handleChange}
                                   id="idSucursalAgregar"
                                 >
@@ -1224,6 +1225,8 @@ function Recoleccion() {
                                 <input
                                   onChange={handleChange}
                                   type="datetime-local"
+                                  required
+                                  value={state.fechaHoraCreacion}
                                   className="form-control"
                                   id="fechaHoraCreacion"
                                 />
@@ -1238,6 +1241,7 @@ function Recoleccion() {
                                 <select
                                   className="form-control"
                                   required
+                                  value={state.estatus}
                                   onChange={handleChange}
                                   id="estatus"
                                 >
@@ -1263,6 +1267,7 @@ function Recoleccion() {
                                 <select
                                   className="form-control"
                                   required
+                                  value={state.moneda}
                                   onChange={handleChange}
                                   id="moneda"
                                 >
@@ -1303,6 +1308,7 @@ function Recoleccion() {
                                 <select
                                   className="form-control"
                                   required
+                                  value={state.tipoCobro}
                                   onChange={handleChange}
                                   id="tipoCobro"
                                 >
@@ -1344,12 +1350,13 @@ function Recoleccion() {
                                 <div className="col-sm-4 col-md-12 unit">
                                   <label className="label">
                                     Nombre
-                        </label>
+                                  </label>
                                   <div className="input">
                                     <input
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
+                                      required
                                       value={state.nombreRemitente}
                                       id="nombreRemitente"
                                     />
@@ -1360,12 +1367,13 @@ function Recoleccion() {
                                 <div className="col-sm-4 col-md-12 unit">
                                   <label className="label">
                                     RFC
-                        </label>
+                                  </label>
                                   <div className="input">
                                     <input
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
+                                      required
                                       value={state.RFCRemitente}
                                       id="RFCRemitente"
                                     />
@@ -1375,12 +1383,13 @@ function Recoleccion() {
                                 <div className="col-sm-4 col-md-12 unit">
                                   <label className="label">
                                     Domicilio
-                        </label>
+                                  </label>
                                   <div className="input">
                                     <input
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
+                                      required
                                       value={state.domicilioRemitente}
                                       id="domicilioRemitente"
                                     />
@@ -1395,6 +1404,7 @@ function Recoleccion() {
                                     <select
                                       className="form-control"
                                       required
+                                      value={state.codigoPostalRemitente}
                                       onChange={handleChange}
                                       id="codigoPostalRemitente"
                                     >
@@ -1420,6 +1430,7 @@ function Recoleccion() {
                                     <select
                                       className="form-control"
                                       required
+                                      value={state.ciudadRemitente}
                                       onChange={handleChange}
                                       id="ciudadRemitente"
                                     >
@@ -1441,12 +1452,13 @@ function Recoleccion() {
                                 <div className="col-sm-4 col-md-6 unit">
                                   <label className="label">
                                     Correo Electrónico
-                        </label>
+                                  </label>
                                   <div className="input">
                                     <input
                                       onChange={handleChange}
                                       className="form-control"
-                                      type="text"
+                                      type="email"
+                                      required
                                       value={state.correoRemitente}
                                       id="correoRemitente"
                                     />
@@ -1456,12 +1468,13 @@ function Recoleccion() {
                                 <div className="col-sm-4 col-md-6 unit">
                                   <label className="label">
                                     Teléfono
-                        </label>
+                                  </label>
                                   <div className="input">
                                     <input
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
+                                      required
                                       value={state.telefonoRemitente}
                                       id="telefonoRemitente"
                                     />
@@ -1471,12 +1484,13 @@ function Recoleccion() {
                                 <div className="col-sm-4 col-md-12 unit">
                                   <label className="label">
                                     Contacto
-                        </label>
+                                  </label>
                                   <div className="input">
                                     <input
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
+                                      required
                                       value={state.contactoRemitente}
                                       id="contactoRemitente"
                                     />
@@ -1491,6 +1505,7 @@ function Recoleccion() {
                                     <select
                                       className="form-control"
                                       required
+                                      value={state.origenRemitente}
                                       onChange={handleChange}
                                       id="origenRemitente"
                                     >
@@ -1511,7 +1526,7 @@ function Recoleccion() {
                                 <div className="col-sm-12 col-md-12 unit">
                                   <label className="label">
                                     Recolección en Diferente Domicilio
-                                </label>
+                                  </label>
                                   <div className="form">
                                     <input
                                       onChange={handleRecoleccionCheckboxChange}
@@ -1543,6 +1558,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
+                                    required
                                     value={state.nombreDestinatario}
                                     id="nombreDestinatario"
                                   />
@@ -1558,6 +1574,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
+                                    required
                                     value={state.RFCDestinatario}
                                     id="RFCDestinatario"
                                   />
@@ -1573,6 +1590,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
+                                    required
                                     value={state.domicilioDestinatario}
                                     id="domicilioDestinatario"
                                   />
@@ -1587,6 +1605,7 @@ function Recoleccion() {
                                   <select
                                     className="form-control"
                                     required
+                                    value={state.codigoPostalDestinatario}
                                     onChange={handleChange}
                                     id="codigoPostalDestinatario"
                                   >
@@ -1613,6 +1632,7 @@ function Recoleccion() {
                                   <select
                                     className="form-control"
                                     required
+                                    value={state.ciudadDestinatario}
                                     onChange={handleChange}
                                     id="ciudadDestinatario"
                                   >
@@ -1633,12 +1653,13 @@ function Recoleccion() {
                               <div className="col-sm-4 col-md-6 unit">
                                 <label className="label">
                                   Correo Electrónico
-</label>
+                                </label>
                                 <div className="input">
                                   <input
                                     onChange={handleChange}
                                     className="form-control"
-                                    type="text"
+                                    type="email"
+                                    required
                                     value={state.correoDestinatario}
                                     id="correoDestinatario"
                                   />
@@ -1648,12 +1669,13 @@ function Recoleccion() {
                               <div className="col-sm-4 col-md-6 unit">
                                 <label className="label">
                                   Teléfono
-</label>
+                                </label>
                                 <div className="input">
                                   <input
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
+                                    required
                                     value={state.telefonoDestinatario}
                                     id="telefonoDestinatario"
                                   />
@@ -1663,12 +1685,13 @@ function Recoleccion() {
                               <div className="col-sm-4 col-md-12 unit">
                                 <label className="label">
                                   Contacto
-</label>
+                                </label>
                                 <div className="input">
                                   <input
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
+                                    required
                                     value={state.contactoDestinatario}
                                     id="contactoDestinatario"
                                   />
@@ -1683,6 +1706,7 @@ function Recoleccion() {
                                   <select
                                     className="form-control"
                                     required
+                                    value={state.destinoDestinatario}
                                     onChange={handleChange}
                                     id="destinoDestinatario"
                                   >
@@ -1742,6 +1766,7 @@ function Recoleccion() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="datetime-local"
+                                          required
                                           value={state.fechaRecoleccion}
                                           id="fechaRecoleccion"
                                         />
@@ -1751,11 +1776,12 @@ function Recoleccion() {
                                     <div className="col-sm-4 col-md-4 unit">
                                       <label className="label">
                                         Código Postal
-                                            </label>
+                                      </label>
                                       <label className="input select">
                                         <select
                                           className="form-control"
                                           required
+                                          value={state.codigoPostalRecoleccion}
                                           onChange={handleChange}
                                           id="codigoPostalRecoleccion"
                                         >
@@ -1781,6 +1807,7 @@ function Recoleccion() {
                                         <select
                                           className="form-control"
                                           required
+                                          value={state.ciudadRecoleccion}
                                           onChange={handleChange}
                                           id="ciudadRecoleccion"
                                         >
@@ -1801,12 +1828,13 @@ function Recoleccion() {
                                     <div className="col-sm-4 col-md-4 unit">
                                       <label className="label">
                                         Zona
-                                            </label>
+                                      </label>
                                       <div className="input">
                                         <input
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
+                                          required
                                           value={state.zonaRecoleccion}
                                           id="zonaRecoleccion"
                                         />
@@ -1816,12 +1844,13 @@ function Recoleccion() {
                                     <div className="col-sm-4 col-md-8 unit">
                                       <label className="label">
                                         Domicilio
-                                            </label>
+                                      </label>
                                       <div className="input">
                                         <input
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
+                                          required
                                           value={state.domicilioRecoleccion}
                                           id="domicilioRecoleccion"
                                         />
@@ -1831,12 +1860,13 @@ function Recoleccion() {
                                     <div className="col-sm-4 col-md-12 unit">
                                       <label className="label">
                                         Recoger En
-                                            </label>
+                                      </label>
                                       <div className="input">
                                         <input
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
+                                          required
                                           value={state.recogerEn}
                                           id="recogerEn"
                                         />
@@ -1846,12 +1876,13 @@ function Recoleccion() {
                                     <div className="col-sm-4 col-md-12 unit">
                                       <label className="label">
                                         Datos Adicionales para la Recolección
-                                            </label>
+                                      </label>
                                       <div className="input">
                                         <input
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
+                                          required
                                           value={state.datosAdicionalesRecoleccion}
                                           id="datosAdicionalesRecoleccion"
                                         />
@@ -1884,6 +1915,7 @@ function Recoleccion() {
                                         <select
                                           className="form-control"
                                           required
+                                          value={state.codigoPostalEntrega}
                                           onChange={handleChange}
                                           id="codigoPostalEntrega"
                                         >
@@ -1909,6 +1941,7 @@ function Recoleccion() {
                                         <select
                                           className="form-control"
                                           required
+                                          value={state.ciudadEntrega}
                                           onChange={handleChange}
                                           id="ciudadEntrega"
                                         >
@@ -1929,7 +1962,7 @@ function Recoleccion() {
                                     <div className="col-sm-4 col-md-4 unit">
                                       <label className="label">
                                         Zona
-                                                                    </label>
+                                      </label>
                                       <div className="input">
                                         <input
                                           onChange={handleChange}
@@ -1944,7 +1977,7 @@ function Recoleccion() {
                                     <div className="col-sm-4 col-md-12 unit">
                                       <label className="label">
                                         Domicilio
-                                                                    </label>
+                                      </label>
                                       <div className="input">
                                         <input
                                           onChange={handleChange}
@@ -1959,7 +1992,7 @@ function Recoleccion() {
                                     <div className="col-sm-4 col-md-12 unit">
                                       <label className="label">
                                         Entrega En
-                                                                    </label>
+                                      </label>
                                       <div className="input">
                                         <input
                                           onChange={handleChange}
@@ -1974,7 +2007,7 @@ function Recoleccion() {
                                     <div className="col-sm-4 col-md-12 unit">
                                       <label className="label">
                                         Datos Adicionales para la Entrega
-                                                                    </label>
+                                      </label>
                                       <div className="input">
                                         <input
                                           onChange={handleChange}
@@ -2017,6 +2050,7 @@ function Recoleccion() {
                                     <select
                                       className="form-control"
                                       required
+                                      value={state.operador}
                                       onChange={handleChange}
                                       id="operador"
                                     >
@@ -2042,6 +2076,7 @@ function Recoleccion() {
                                     <select
                                       className="form-control"
                                       required
+                                      value={state.tipoUnidad}
                                       onChange={handleSelectChange}
                                       id="tipoUnidad"
                                     >
@@ -2067,6 +2102,7 @@ function Recoleccion() {
                                     <select
                                       className="form-control"
                                       required
+                                      value={state.idUnidad}
                                       onChange={handleChange}
                                       id="idUnidad"
                                     >
@@ -2098,12 +2134,13 @@ function Recoleccion() {
                               <div className="col-md-12">
                                 <label className="label">
                                   Fecha y Hora
-                        </label>
+                                </label>
                                 <div className="input">
                                   <input
                                     onChange={handleChange}
                                     className="form-control"
                                     type="datetime-local"
+                                    required
                                     value={state.fechaHoraSalida}
                                     id="fechaHoraSalida"
                                   />
@@ -2123,12 +2160,13 @@ function Recoleccion() {
                               <div className="col-md-12">
                                 <label className="label">
                                   Fecha y Hora
-                        </label>
+                                </label>
                                 <div className="input">
                                   <input
                                     onChange={handleChange}
                                     className="form-control"
                                     type="datetime-local"
+                                    required
                                     value={state.fechaHoraLlegada}
                                     id="fechaHoraLlegada"
                                   />
