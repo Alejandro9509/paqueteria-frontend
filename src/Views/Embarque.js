@@ -9,9 +9,6 @@ import Carousel from "re-carousel";
 import IndicatorDots from "../Util/Dots";
 import Buttons from "../Util/CarruselButtons";
 import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import * as XLSX from 'xlsx';
 import { useTable, useFilters, useGlobalFilter, useSortBy } from 'react-table'
 import $ from 'jquery';
 import { remove_array_element } from "../Util/Util";
@@ -37,6 +34,9 @@ function Embarque() {
   const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
   const [dataCiudad, setDataCiudad] = React.useState([]);
   const [dataCodigoPostal, setDataCodigoPostal] = React.useState([]);
+  const [dataOperador, setDataOperador] = React.useState([]);
+  const [dataTipoUnidad, setDataTipoUnidad] = React.useState([]);
+  const [dataUnidad, setDataUnidad] = React.useState([]);
   const [state, setState] = React.useState({
     showPopUp: false,
     agregar: "Agregar",
@@ -54,30 +54,30 @@ function Embarque() {
     estatusEmbarque: 0,
     moneda: 0,
     tipoCambio: "",
-    tipoCobro: "",
+    tipoCobro: 0,
     nombreRemitente: "",
     RFCRemitente: "",
     domicilioRemitente: "",
-    codigoPostalRemitente: "",
-    ciudadRemitente: "",
+    codigoPostalRemitente: 0,
+    ciudadRemitente: 0,
     correoRemitente: "",
     telefonoRemitente: "",
     contactoRemitente: "",
-    origenRemitente: "",
+    origenRemitente: 0,
     nombreDestinatario: "",
     RFCDestinatario: "",
     domicilioDestinatario: "",
-    codigoPostalDestinatario: "",
-    ciudadDestinatario: "",
+    codigoPostalDestinatario: 0,
+    ciudadDestinatario: 0,
     correoDestinatario: "",
     telefonoDestinatario: "",
     contactoDestinatario: "",
-    destinoDestinatario: "",
-    ciudadRemitente: "",
-    ciudadDestinatario: "",
+    destinoDestinatario: 0,
+    ciudadRemitente: 0,
+    ciudadOrigen: 0,
     fechaEntrega: "",
     horaEntrega: "",
-    codigoPostalEntrega: "",
+    codigoPostalEntrega: 0,
     ciudadEntrega: "",
     zonaEntrega: "",
     domicilioEntrega: "",
@@ -85,25 +85,31 @@ function Embarque() {
     datosAdicionalesEntrega: "",
     cantidadDePaquetes: 0,
     cantidadDeSobres: 0,
-    diferenteEntrega: false,
+    fechaHoraSalida: "",
+    fechaHoraLlegada: "",
+    diferenteEntrega: true,
+    idOperador: 0,
+    idTipoUnidad: 0,
+    idUnidad: 0,
     paquetes: [
       {
-        peso: "",
-        largo: "",
-        ancho: "",
-        alto: "",
-        volumen: "",
-        peso: "",
-        tipoEmbalaje: "",
-        valorDeclarado: "",
-        descripcionPaquete: "",
+        m_xPeso: "",
+        m_xLargo: "",
+        m_xAncho: "",
+        m_xAlto: "",
+        m_xVolumen: "",
+        m_nIdTIpoEmpaque: "",
+        m_cValorDeclarado: "",
+        m_sDescripcion: "",
         ctd: "",
-        observacionesPaquete: "",
+        m_nTipo: 2,
+        m_sObservaciones: "",
       },
     ],
     sobres: [
       {
-        descripcion: ""
+        m_nTipo: 1,
+        m_sDescripcion: ""
       }
     ],
   })
@@ -114,61 +120,66 @@ function Embarque() {
   const handleAceptar = (e) => {
     e.preventDefault()
 
-    var fechaYHora = state.fechaHoraCreacion.split("T")
-
     var params = {
 
-      "IdSucursal": state.idSucursalAgregar,
-      "m_nIdEmbarque": state.folioEmbarque,
-      "m_nIdGuia": state.folioGuía,
-      "m_nIdInforme": state.folioInforme,
-      "m_dFecha": fechaYHora[0],
-      "m_tHora": fechaYHora[1],
+      "m_nIdEmbarque": state.idEmbarque,
+      "m_nFolioEmbarque": state.folioEmbarque,
+      "m_nFolioGuia": state.folioGuía,
+      "m_nFolioInforme": state.folioInforme,
+      "m_dFecha": state.fechaHoraCreacion.split("T")[0],
+      "m_tHora": state.fechaHoraCreacion.split("T")[1],
       "m_nIdEstatusEmbarque": state.estatusEmbarque,
-      "m_nMoneda": state.moneda,
-      "m_rTipoCambio": state.tipoCambio,
-      "m_nIdTipoDeCobro": state.tipoCobro,
+      "m_nIdMoneda": state.moneda,
+      "m_cTIpoCambio": state.tipoCambio,
+      "m_nIdTIpoCobro": state.tipoCobro,
       "m_sNOmbreRemitente": state.nombreRemitente,
-      "m_sNombreDestinatario": state.nombreDestinatario,
       "m_sRFCRemitente": state.RFCRemitente,
-      "m_sRFCDestinatario": state.RFCDestinatario,
       "m_sDomicilioRemitente": state.domicilioRemitente,
-      "m_sDomicilioDestinatario": state.domicilioDestinatario,
-      "m_sIdCodigoPostalRemitente": state.codigoPostalRemitente,
-      "m_sIdCodigoPostalDestinatario": state.codigoPostalDestinatario,
-      "m_nIdCiudadRemitente": state.ciudadRemitente,
-      "m_nIdCiudadDestinatario": state.ciudadDestinatario,
+      "m_nIdCodigoPostalRemitente": state.codigoPostalRemitente,
+      "m_nCiudadRemitente": state.ciudadRemitente,
       "m_sCorreoRemitente": state.correoRemitente,
-      "m_sCorreoDestinatario": state.correoDestinatario,
       "m_sTelefonoRemitente": state.telefonoRemitente,
-      "m_sTelefonoDestinatario": state.telefonoDestinatario,
       "m_sContactoRemitente": state.contactoRemitente,
+      "m_nIdCiudadOrigen": state.ciudadOrigen,
+      "m_sNombreDestinatario": state.nombreDestinatario,
+      "m_sRFCDestinatario": state.RFCDestinatario,
+      "m_sDomicilioDestinatario": state.domicilioDestinatario,
+      "m_nIdCodigoPostalDestinatario": state.codigoPostalDestinatario,
+      "m_nIdCIudadDestinatario": state.ciudadDestinatario,
+      "m_sCorreoDestinatario": state.correoDestinatario,
+      "m_sTelefonoDestinatario": state.telefonoDestinatario,
       "m_sContactoDestinatario": state.contactoDestinatario,
-      "m_nIdCiudadOrigen": state.ciudadRemitente,
-      "m_nIdCiudadDestino": state.ciudadDestinatario,
-      "m_tFechaDetalleEntrega": state.fechaEntrega,
-      "m_tHoraDetalleEntrega": state.horaEntrega,
-      "m_nIdCPDetalleEntrega": state.codigoPostalEntrega,
-      "m_nIdCiudadDetalleEntrega": state.ciudadEntrega,
-      "m_nIdZonaDetalleEntrega": state.zonaEntrega,
-      "m_sDomicilioDetalleEntrega": state.domicilioEntrega,
-      "m_sEntregarEnDetalleEntrega": state.entregaEn,
-      "m_sDatosAdicionalesDetalleEntrega": state.datosAdicionalesEntrega,
-      "m_parrPaquetes": state.paquetes,
+      "m_nIdCiudadDestino": state.ciudadDestino,
+      "m_dFechaEntrega": "",
+      "m_tHoraEntrega": "",
       "m_nNoPaquetes": state.paquetes.length,
-      "m_parrSobres": state.sobres,
       "m_nNoSobres": state.sobres.length,
-      "m_nIdOperador": 1,
-      "m_nIdUnidad": 13,
+      "m_nIdOperador": state.idOperador,
+      "m_nIdUnidad": state.idUnidad,
+      "m_dFechaSalida": state.fechaHoraSalida.split("T")[0],
+      "m_tHoraSalida": state.fechaHoraSalida.split("T")[1],
+      "FechaLlegada": state.fechaHoraLlegada.split("T")[0],
+      "HoraLlegada": state.fechaHoraLlegada.split("T")[1],
+      "CodigoPostalEntrega": state.codigoPostalEntrega,
+      "IdCiudadEntrega": state.ciudadEntrega,
+      "IdZonaEntrega": state.zonaEntrega,
+      "DomicilioEntrega": state.domicilioEntrega,
+      "EntregarEn": state.entregaEn,
+      "DatosAdicionales": state.datosAdicionalesEntrega,
+      "IdSucursal": state.idSucursalAgregar,
+      "m_arrClsDetalle": state.paquetes,
+
+      "m_tFechaDetalleEntrega": state.fechaEntrega.split("T")[0],
+      "m_tHoraDetalleEntrega": state.fechaEntrega.split("T")[1],
+      "m_parrSobres": state.sobres,
 
     }
     console.log(params)
-    alert(JSON.stringify(params))
     if (state.idEmbarque != 0) {
       const url = `${process.env.REACT_APP_API_URL}/Embarques/Modificar/${state.idEmbarque}`;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        //window.location.reload();
+        window.location.reload();
       }).catch(err => {
         console.log(err)
         alert("err")
@@ -178,7 +189,7 @@ function Embarque() {
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
         console.log(respuesta.data)
-        //window.location.reload();
+        window.location.reload();
       }).catch(err => {
         console.log(err)
         alert(err)
@@ -259,18 +270,60 @@ function Embarque() {
     });
   }
 
-  function handleShowModificar(row) {
-    console.log(row.original.m_nIdDepartamento)
-    const url = `${process.env.REACT_APP_API_URL}/Embarques/GetById/${row.original.m_nIdEmbarque}`;
+  function handleShowModificar(id) {
+    console.log(id)
+    const url = `${process.env.REACT_APP_API_URL}/Embarques/GetById/${id}`;
     axios.get(url, { headers }).then(respuesta => {
-      console.log(respuesta.data)
+      console.log(respuesta.data.m_dFecha + "T" + respuesta.data.m_tHora.split(":")[0] + ":" + respuesta.data.m_tHora.split(":")[1])
       setState({
         ...state,
         agregar: "Modificar",
+        idEmbarque: id,
         showPopUp: true,
-        idDepartamento: row.original.m_nIdDepartamento,
-        codigoDepartamento: respuesta.data.m_nCodigo,
-        descripcionDepartamento: respuesta.data.m_sDescripcion
+        idEntrega: 0,
+        idSucursalAgregar: respuesta.data.IdSucursal,
+        folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
+        folioEmbarque: respuesta.data.m_nFolioEmbarque,
+        folioGuía: respuesta.data.m_nFolioGuia,
+        folioInforme: respuesta.data.m_nFolioInforme,
+        fechaHoraCreacion: respuesta.data.m_dFecha + "T" + respuesta.data.m_tHora.split(":")[0] + ":" + respuesta.data.m_tHora.split(":")[1],
+        moneda: dataTipoMoneda[0].m_nIdMoneda,
+        tipoCambio: respuesta.data.m_cTIpoCambio,
+        tipoCobro: dataTipoCobro[0].m_nIdTipoCobro,
+        estatusEmbarque: dataEstatusEmbarque[0].m_nIdEstatusEmbarque,
+        nombreRemitente: respuesta.data.m_sNOmbreRemitente,
+        RFCRemitente: respuesta.data.m_sRFCRemitente,
+        domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
+        codigoPostalRemitente: dataCodigoPostal[0].m_nIdCP,
+        ciudadRemitente: dataCiudad[0].m_nIdCiudad, //respuesta.data.m_nCiudadRemitente,
+        correoRemitente: respuesta.data.m_sCorreoRemitente,
+        telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
+        contactoRemitente: respuesta.data.m_sContactoRemitente,
+        origenRemitente: dataCiudad[0].m_nIdCiudad,
+        ciudadOrigen: dataCiudad[0].m_nIdCiudad,
+        nombreDestinatario: respuesta.data.m_sNombreDestinatario,
+        RFCDestinatario: respuesta.data.m_sRFCDestinatario,
+        domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
+        codigoPostalDestinatario: dataCodigoPostal[0].m_nIdCP,
+        ciudadDestinatario: dataCiudad[0].m_nIdCiudad,
+        correoDestinatario: respuesta.data.m_sCorreoDestinatario,
+        telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
+        contactoDestinatario: respuesta.data.m_sContactoDestinatario,
+        destinoDestinatario: dataCiudad[0].m_nIdCiudad,
+        ciudadRemitente: dataCiudad[0].m_nIdCiudad,
+        ciudadDestinatario: dataCiudad[0].m_nIdCiudad,
+        fechaEntrega: respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
+        codigoPostalEntrega: dataCodigoPostal[0].m_nIdCP,
+        ciudadEntrega: dataCiudad[0].m_nIdCiudad,
+        fechaHoraSalida: respuesta.data.m_dFechaSalida + "T" + respuesta.data.m_tHoraSalida,
+        fechaHoraLlegada: respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,
+        idOperador: dataOperador[0].m_nIdOperador,
+        idTipoUnidad: dataTipoUnidad[0].m_nIdTipoUnidad,
+        zonaEntrega: respuesta.data.IdZonaEntrega,
+        domicilioEntrega: respuesta.data.DomicilioEntrega,
+        entregaEn: respuesta.data.EntregarEn,
+        datosAdicionalesEntrega: respuesta.data.DatosAdicionalesis,
+        paquetes: respuesta.data.m_arrPaquetes
       })
     });
   }
@@ -294,27 +347,31 @@ function Embarque() {
       nombreRemitente: "",
       RFCRemitente: "",
       domicilioRemitente: "",
-      codigoPostalRemitente: "",
+      codigoPostalRemitente: dataCodigoPostal[0].m_nIdCP,
       ciudadRemitente: "",
       correoRemitente: "",
       telefonoRemitente: "",
       contactoRemitente: "",
-      origenRemitente: "",
+      origenRemitente: dataCiudad[0].m_nIdCiudad,
+      ciudadOrigen: dataCiudad[0].m_nIdCiudad,
       nombreDestinatario: "",
       RFCDestinatario: "",
       domicilioDestinatario: "",
-      codigoPostalDestinatario: "",
-      ciudadDestinatario: "",
+      codigoPostalDestinatario: dataCodigoPostal[0].m_nIdCP,
+      ciudadDestinatario: dataCiudad[0].m_nIdCiudad,
       correoDestinatario: "",
       telefonoDestinatario: "",
       contactoDestinatario: "",
-      destinoDestinatario: "",
-      ciudadRemitente: "",
-      ciudadDestinatario: "",
+      destinoDestinatario: dataCiudad[0].m_nIdCiudad,
+      ciudadRemitente: dataCiudad[0].m_nIdCiudad,
+      ciudadDestinatario: dataCiudad[0].m_nIdCiudad,
       fechaEntrega: "",
       horaEntrega: "",
-      codigoPostalEntrega: "",
-      ciudadEntrega: "",
+      codigoPostalEntrega: dataCodigoPostal[0].m_nIdCP,
+      ciudadEntrega: dataCiudad[0].m_nIdCiudad,
+      idOperador: dataOperador[0].m_nIdOperador,
+      idTipoUnidad: dataTipoUnidad[0].m_nIdTipoUnidad,
+      idUnidad: dataUnidad[0].m_nIdUnidad,
       zonaEntrega: "",
       domicilioEntrega: "",
       entregaEn: "",
@@ -338,6 +395,10 @@ function Embarque() {
       ...state,
       diferenteEntrega: !state.diferenteEntrega
     });
+  }
+
+  const handleSelectChange = (event) => {
+    getAllUnidades(event.target.value);
   }
 
   const columns = React.useMemo(() => [
@@ -377,6 +438,8 @@ function Embarque() {
     getAllTipoMoneda();
     getAllCiudades();
     getAllCodigosPostales();
+    getAllOperadores();
+    getAllTipoUnidad();
   }, []);
 
   function getAllData() {
@@ -426,6 +489,31 @@ function Embarque() {
     axios.get(url, { headers }).then((respuesta) => {
       setDataCodigoPostal(respuesta.data);
     });
+  }
+
+  function getAllOperadores() {
+    const url = `${process.env.REACT_APP_API_URL}/Operadores/GetListado`;
+    axios.get(url, { headers }).then((respuesta) => {
+      setDataOperador(respuesta.data);
+    });
+  }
+
+  function getAllTipoUnidad() {
+    const url = `${process.env.REACT_APP_API_URL}/TiposUnidades/GetListado`;
+    axios.get(url, { headers }).then((respuesta) => {
+      setDataTipoUnidad(respuesta.data);
+      getAllUnidades(respuesta.data[0].m_nIdTipoUnidad)
+    });
+  }
+
+  function getAllUnidades(id) {
+    console.log(id)
+    const url = `${process.env.REACT_APP_API_URL}/Unidades/ByTipoUnidad/${id}`;
+    axios.get(url, { headers }).then((respuesta) => {
+      console.log(respuesta.data)
+      setDataUnidad(respuesta.data);
+    });
+    console.log(dataUnidad)
   }
 
   const headers = {
@@ -518,8 +606,8 @@ function Embarque() {
                   <tr {...row.getRowProps()}>
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdDepartamento))}><i className="zmdi zmdi-close" /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdEmbarque))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdEmbarque))}><i className="zmdi zmdi-close" /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -607,9 +695,9 @@ function Embarque() {
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
-              value={state.paquetes[index].peso}
+              value={state.paquetes[index].m_xPeso}
               placeholder="Peso"
-              name="peso"
+              name="m_xPeso"
             />
           </div>
         </div>
@@ -621,9 +709,9 @@ function Embarque() {
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
-              value={state.paquetes[index].largo}
+              value={state.paquetes[index].m_xLargo}
               placeholder="Largo"
-              name="largo"
+              name="m_xLargo"
             />
           </div>
         </div>
@@ -635,9 +723,9 @@ function Embarque() {
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
-              value={state.paquetes[index].ancho}
+              value={state.paquetes[index].m_xAncho}
               placeholder="Ancho"
-              name="ancho"
+              name="m_xAncho"
             />
           </div>
         </div>
@@ -649,9 +737,9 @@ function Embarque() {
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
-              value={state.paquetes[index].alto}
+              value={state.paquetes[index].m_xAlto}
               placeholder="Alto"
-              name="alto"
+              name="m_xAlto"
             />
           </div>
         </div>
@@ -663,9 +751,9 @@ function Embarque() {
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
-              value={state.paquetes[index].volumen}
+              value={state.paquetes[index].m_xVolumen}
               placeholder="Volumen"
-              name="volumen"
+              name="m_xVolumen"
             />
           </div>
         </div>
@@ -677,9 +765,9 @@ function Embarque() {
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
-              value={state.paquetes[index].tipoEmbalaje}
+              value={state.paquetes[index].m_nIdTIpoEmpaque}
               placeholder="Tipo de Embarje"
-              name="tipoEmbalaje"
+              name="m_nIdTIpoEmpaque"
             />
           </div>
         </div>
@@ -691,9 +779,9 @@ function Embarque() {
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
-              value={state.paquetes[index].valorDeclarado}
+              value={state.paquetes[index].m_cValorDeclarado}
               placeholder="Valor Declarado"
-              name="valorDeclarado"
+              name="m_cValorDeclarado"
             />
           </div>
         </div>
@@ -705,9 +793,9 @@ function Embarque() {
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
-              value={state.paquetes[index].descripcionPaquete}
+              value={state.paquetes[index].m_sDescripcion}
               placeholder="Descripción"
-              name="descripcionPaquete"
+              name="m_sDescripcion"
             />
           </div>
         </div>
@@ -733,9 +821,9 @@ function Embarque() {
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
-              value={state.paquetes[index].observacionesPaquete}
+              value={state.paquetes[index].m_sObservaciones}
               placeholder="Observaciones"
-              name="observacionesPaquete"
+              name="m_sObservaciones"
             />
           </div>
         </div>
@@ -754,7 +842,7 @@ function Embarque() {
     return (
       <div key={`sobre${index}`}>
 
-        <div className="col-sm-4 col-md-12 unit">
+        <div className="col-md-12 unit">
           <label className="label">Descripcion</label>
           <div className="input">
             <input
@@ -923,7 +1011,7 @@ function Embarque() {
 
             <div id="Agregar" className="tab-pane fade">
 
-              <form className="j-forms">
+              <form className="j-forms" onSubmit={handleAceptar}>
                 <div className="form-content">
 
                   <div className="widget-wrap">
@@ -999,6 +1087,7 @@ function Embarque() {
                                   className="form-control"
                                   required
                                   onChange={handleChange}
+                                  value={state.idSucursalAgregar}
                                   id="idSucursalAgregar"
                                 >
                                   {dataSucursal.map(
@@ -1082,12 +1171,14 @@ function Embarque() {
                             <div className="col-sm-4 col-md-2-5 unit">
                               <label className="label">
                                 Fecha / Hora
-                          </label>
+                              </label>
                               <div className="input">
                                 <input
                                   onChange={handleChange}
                                   type="datetime-local"
                                   className="form-control"
+                                  required
+                                  value={state.fechaHoraCreacion}
                                   id="fechaHoraCreacion"
                                 />
                               </div>
@@ -1102,6 +1193,7 @@ function Embarque() {
                                   className="form-control"
                                   required
                                   onChange={handleChange}
+                                  value={state.estatusEmbarque}
                                   id="estatusEmbarque"
                                 >
                                   {dataEstatusEmbarque.map(
@@ -1126,6 +1218,7 @@ function Embarque() {
                                 <select
                                   className="form-control"
                                   required
+                                  value={state.moneda}
                                   onChange={handleChange}
                                   id="moneda"
                                 >
@@ -1153,6 +1246,7 @@ function Embarque() {
                                   onChange={handleChange}
                                   className="form-control"
                                   type="text"
+                                  required
                                   value={state.tipoCambio}
                                   id="tipoCambio"
                                 />
@@ -1167,6 +1261,7 @@ function Embarque() {
                                 <select
                                   className="form-control"
                                   required
+                                  value={state.tipoCobro}
                                   onChange={handleChange}
                                   id="tipoCobro"
                                 >
@@ -1204,15 +1299,16 @@ function Embarque() {
                             <div className="widget-content">
                               <div className="row">
 
-                                <div className="col-sm-4 col-md-6 unit">
+                                <div className="col-sm-4 col-md-12 unit">
                                   <label className="label">
                                     Nombre
-                        </label>
+                                  </label>
                                   <div className="input">
                                     <input
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
+                                      required
                                       value={state.nombreRemitente}
                                       id="nombreRemitente"
                                     />
@@ -1220,30 +1316,32 @@ function Embarque() {
 
                                 </div>
 
-                                <div className="col-sm-4 col-md-6 unit">
+                                <div className="col-sm-4 col-md-12 unit">
                                   <label className="label">
                                     RFC
-                        </label>
+                                  </label>
                                   <div className="input">
                                     <input
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
+                                      required
                                       value={state.RFCRemitente}
                                       id="RFCRemitente"
                                     />
                                   </div>
                                 </div>
 
-                                <div className="col-sm-4 col-md-6 unit">
+                                <div className="col-sm-4 col-md-12 unit">
                                   <label className="label">
                                     Domicilio
-                        </label>
+                                  </label>
                                   <div className="input">
                                     <input
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
+                                      required
                                       value={state.domicilioRemitente}
                                       id="domicilioRemitente"
                                     />
@@ -1258,6 +1356,7 @@ function Embarque() {
                                     <select
                                       className="form-control"
                                       required
+                                      value={state.codigoPostalRemitente}
                                       onChange={handleChange}
                                       id="codigoPostalRemitente"
                                     >
@@ -1283,6 +1382,7 @@ function Embarque() {
                                     <select
                                       className="form-control"
                                       required
+                                      value={state.ciudadRemitente}
                                       onChange={handleChange}
                                       id="ciudadRemitente"
                                     >
@@ -1304,12 +1404,13 @@ function Embarque() {
                                 <div className="col-sm-4 col-md-6 unit">
                                   <label className="label">
                                     Correo Electrónico
-                        </label>
+                                  </label>
                                   <div className="input">
                                     <input
                                       onChange={handleChange}
                                       className="form-control"
-                                      type="text"
+                                      type="email"
+                                      required
                                       value={state.correoRemitente}
                                       id="correoRemitente"
                                     />
@@ -1319,32 +1420,61 @@ function Embarque() {
                                 <div className="col-sm-4 col-md-6 unit">
                                   <label className="label">
                                     Teléfono
-                        </label>
+                                  </label>
                                   <div className="input">
                                     <input
                                       onChange={handleChange}
                                       className="form-control"
-                                      type="text"
+                                      type="tel"
+                                      required
                                       value={state.telefonoRemitente}
                                       id="telefonoRemitente"
                                     />
                                   </div>
                                 </div>
 
-                                <div className="col-sm-4 col-md-6 unit">
+                                <div className="col-sm-4 col-md-12 unit">
                                   <label className="label">
                                     Contacto
-                        </label>
+                                  </label>
                                   <div className="input">
                                     <input
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
+                                      required
                                       value={state.contactoRemitente}
                                       id="contactoRemitente"
                                     />
                                   </div>
                                 </div>
+
+                                <div className="col-sm-12 col-md-12 unit">
+                                  <label className="label">
+                                    Destino
+                                </label>
+                                  <label className="input select">
+                                    <select
+                                      className="form-control"
+                                      required
+                                      value={state.ciudadOrigen}
+                                      onChange={handleChange}
+                                      id="ciudadOrigen"
+                                    >
+                                      {dataCiudad.map(
+                                        (ciudad) => (
+                                          <option key={ciudad.m_nIdCiudad} value={ciudad.m_nIdCiudad}>
+                                            {
+                                              ciudad.m_sCiudad
+                                            }
+                                          </option>
+                                        )
+                                      )}
+                                    </select>
+                                    <i className="fa fa-arrow-down" />
+                                  </label>
+                                </div>
+
                               </div>
                             </div>
                           </div>
@@ -1356,7 +1486,7 @@ function Embarque() {
                           <div className="widget-container">
                             <div className="widget-content">
 
-                              <div className="col-sm-4 col-md-6 unit">
+                              <div className="col-sm-4 col-md-12 unit">
                                 <label className="label">
                                   Nombre
                               </label>
@@ -1365,13 +1495,14 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
+                                    required
                                     value={state.nombreDestinatario}
                                     id="nombreDestinatario"
                                   />
                                 </div>
                               </div>
 
-                              <div className="col-sm-4 col-md-6 unit">
+                              <div className="col-sm-4 col-md-12 unit">
                                 <label className="label">
                                   RFC
                                 </label>
@@ -1380,13 +1511,14 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
+                                    required
                                     value={state.RFCDestinatario}
                                     id="RFCDestinatario"
                                   />
                                 </div>
                               </div>
 
-                              <div className="col-sm-4 col-md-6 unit">
+                              <div className="col-sm-4 col-md-12 unit">
                                 <label className="label">
                                   Domicilio
                                 </label>
@@ -1395,6 +1527,7 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
+                                    required
                                     value={state.domicilioDestinatario}
                                     id="domicilioDestinatario"
                                   />
@@ -1409,6 +1542,7 @@ function Embarque() {
                                   <select
                                     className="form-control"
                                     required
+                                    value={state.codigoPostalDestinatario}
                                     onChange={handleChange}
                                     id="codigoPostalDestinatario"
                                   >
@@ -1435,6 +1569,7 @@ function Embarque() {
                                   <select
                                     className="form-control"
                                     required
+                                    value={state.ciudadDestino}
                                     onChange={handleChange}
                                     id="ciudadDestinatario"
                                   >
@@ -1455,12 +1590,13 @@ function Embarque() {
                               <div className="col-sm-4 col-md-6 unit">
                                 <label className="label">
                                   Correo Electrónico
-</label>
+                                </label>
                                 <div className="input">
                                   <input
                                     onChange={handleChange}
                                     className="form-control"
-                                    type="text"
+                                    type="email"
+                                    required
                                     value={state.correoDestinatario}
                                     id="correoDestinatario"
                                   />
@@ -1470,42 +1606,72 @@ function Embarque() {
                               <div className="col-sm-4 col-md-6 unit">
                                 <label className="label">
                                   Teléfono
-</label>
+                                </label>
                                 <div className="input">
                                   <input
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
+                                    required
                                     value={state.telefonoDestinatario}
                                     id="telefonoDestinatario"
                                   />
                                 </div>
                               </div>
 
-                              <div className="col-sm-4 col-md-6 unit">
+                              <div className="col-sm-4 col-md-12 unit">
                                 <label className="label">
                                   Contacto
-</label>
+                                </label>
                                 <div className="input">
                                   <input
+                                  required={true}
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
+                                    required
                                     value={state.contactoDestinatario}
                                     id="contactoDestinatario"
                                   />
                                 </div>
                               </div>
 
-                              <div className="col-sm-12 col-md-6 unit">
+                              <div className="col-sm-12 col-md-12 unit">
+                                <label className="label">
+                                  Origen
+                                </label>
+                                <label className="input select">
+                                  <select
+                                    className="form-control"
+                                    required
+                                    value={state.origenRemitente}
+                                    onChange={handleChange}
+                                    id="origenRemitente"
+                                  >
+                                    {dataCiudad.map(
+                                      (ciudad) => (
+                                        <option key={ciudad.m_nIdCiudad} value={ciudad.m_nIdCiudad}>
+                                          {
+                                            ciudad.m_sCiudad
+                                          }
+                                        </option>
+                                      )
+                                    )}
+                                  </select>
+                                  <i className="fa fa-arrow-down" />
+                                </label>
+                              </div>
+
+                              <div className="col-sm-12 col-md-12 unit">
                                 <label className="label">
                                   Entrega en Diferente Domicilio
-  </label>
+                                </label>
                                 <div className="input">
                                   <input
                                     onChange={handleEntregaCheckboxChange}
                                     className="form-control"
                                     type="checkbox"
+                                    value={state.diferenteEntrega}
                                     id="diferenteEntrega"
                                   />
                                 </div>
@@ -1538,6 +1704,7 @@ function Embarque() {
                                         <select
                                           className="form-control"
                                           required
+                                          value={state.codigoPostalEntrega}
                                           onChange={handleChange}
                                           id="codigoPostalEntrega"
                                         >
@@ -1563,6 +1730,7 @@ function Embarque() {
                                         <select
                                           className="form-control"
                                           required
+                                          value={state.ciudadEntrega}
                                           onChange={handleChange}
                                           id="ciudadEntrega"
                                         >
@@ -1583,12 +1751,13 @@ function Embarque() {
                                     <div className="col-sm-4 col-md-4 unit">
                                       <label className="label">
                                         Zona
-                                                                  </label>
+                                      </label>
                                       <div className="input">
                                         <input
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
+                                          required
                                           value={state.zonaEntrega}
                                           id="zonaEntrega"
                                         />
@@ -1598,12 +1767,13 @@ function Embarque() {
                                     <div className="col-sm-4 col-md-12 unit">
                                       <label className="label">
                                         Domicilio
-                                                                  </label>
+                                      </label>
                                       <div className="input">
                                         <input
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
+                                          required
                                           value={state.domicilioEntrega}
                                           id="domicilioEntrega"
                                         />
@@ -1613,12 +1783,13 @@ function Embarque() {
                                     <div className="col-sm-4 col-md-12 unit">
                                       <label className="label">
                                         Entrega En
-                                                                  </label>
+                                      </label>
                                       <div className="input">
                                         <input
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
+                                          required
                                           value={state.entregaEn}
                                           id="entregaEn"
                                         />
@@ -1628,12 +1799,13 @@ function Embarque() {
                                     <div className="col-sm-4 col-md-12 unit">
                                       <label className="label">
                                         Datos Adicionales para la Entrega
-                                                                  </label>
+                                      </label>
                                       <div className="input">
                                         <input
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
+                                          required
                                           value={state.datosAdicionalesEntrega}
                                           id="datosAdicionalesEntrega"
                                         />
@@ -1664,48 +1836,81 @@ function Embarque() {
                               <div className="row">
 
                                 <div className="col-sm-4 col-md-12 unit">
-                                  <label className="label" htmlFor="operador">
+                                  <label className="label">
                                     Operador
-</label>
-                                  <div className="input">
-                                    <input
-                                      onChange={handleChange}
+                                  </label>
+                                  <label className="input select">
+                                    <select
                                       className="form-control"
-                                      type="text"
+                                      required
                                       value={state.operador}
+                                      onChange={handleChange}
                                       id="operador"
-                                    />
-                                  </div>
+                                    >
+                                      {dataOperador.map(
+                                        (operador) => (
+                                          <option key={operador.m_nIdOperador} value={operador.m_nIdOperador}>
+                                            {
+                                              operador.m_sNombreCompleto
+                                            }
+                                          </option>
+                                        )
+                                      )}
+                                    </select>
+                                    <i className="fa fa-arrow-down" />
+                                  </label>
                                 </div>
 
                                 <div className="col-sm-4 col-md-12 unit">
-                                  <label className="label" htmlFor="tipoUnidad">
+                                  <label className="label">
                                     Tipo Unidad
-</label>
-                                  <div className="input">
-                                    <input
-                                      onChange={handleChange}
+                                  </label>
+                                  <label className="input select">
+                                    <select
                                       className="form-control"
-                                      type="text"
+                                      required
                                       value={state.tipoUnidad}
+                                      onChange={handleSelectChange}
                                       id="tipoUnidad"
-                                    />
-                                  </div>
+                                    >
+                                      {dataTipoUnidad.map(
+                                        (tipoUnidad) => (
+                                          <option key={tipoUnidad.m_nIdTipoUnidad} value={tipoUnidad.m_nIdTipoUnidad}>
+                                            {
+                                              tipoUnidad.m_sTipoUnidad
+                                            }
+                                          </option>
+                                        )
+                                      )}
+                                    </select>
+                                    <i className="fa fa-arrow-down" />
+                                  </label>
                                 </div>
 
                                 <div className="col-sm-4 col-md-12 unit">
-                                  <label className="label" htmlFor="unidad">
+                                  <label className="label">
                                     Unidad
-</label>
-                                  <div className="input">
-                                    <input
-                                      onChange={handleChange}
+                                  </label>
+                                  <label className="input select">
+                                    <select
                                       className="form-control"
-                                      type="text"
-                                      value={state.unidad}
-                                      id="unidad"
-                                    />
-                                  </div>
+                                      required
+                                      value={state.idUnidad}
+                                      onChange={handleChange}
+                                      id="idUnidad"
+                                    >
+                                      {dataUnidad.map(
+                                        (unidad) => (
+                                          <option key={unidad.m_nIdUnidad} value={unidad.m_nIdUnidad}>
+                                            {
+                                              unidad.m_sDescripcion
+                                            }
+                                          </option>
+                                        )
+                                      )}
+                                    </select>
+                                    <i className="fa fa-arrow-down" />
+                                  </label>
                                 </div>
 
                               </div>
@@ -1714,7 +1919,7 @@ function Embarque() {
                         </div>
                         <div className="col-md-6">
                           <div className="widget-header">
-                            <h2>Salida para la Recolección</h2>
+                            <h2>Salida para la Entrega</h2>
                           </div>
                           <div className="widget-container">
                             <div className="widget-content">
@@ -1722,12 +1927,13 @@ function Embarque() {
                               <div className="col-md-12">
                                 <label className="label">
                                   Fecha y Hora
-</label>
+                                </label>
                                 <div className="input">
                                   <input
                                     onChange={handleChange}
                                     className="form-control"
                                     type="datetime-local"
+                                    required
                                     value={state.fechaHoraSalida}
                                     id="fechaHoraSalida"
                                   />
@@ -1739,7 +1945,7 @@ function Embarque() {
                         </div>
                         <div className="col-md-6">
                           <div className="widget-header">
-                            <h2>Llegada de la Recolección</h2>
+                            <h2>Llegada de la Entrega</h2>
                           </div>
                           <div className="widget-container">
                             <div className="widget-content">
@@ -1747,12 +1953,13 @@ function Embarque() {
                               <div className="col-md-12">
                                 <label className="label">
                                   Fecha y Hora
-</label>
+                                </label>
                                 <div className="input">
                                   <input
                                     onChange={handleChange}
                                     className="form-control"
                                     type="datetime-local"
+                                    required
                                     value={state.fechaHoraLlegada}
                                     id="fechaHoraLlegada"
                                   />
@@ -1831,8 +2038,8 @@ function Embarque() {
 
                 </div>
                 <div className="form-footer" className="col-md-12">
-                  <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
-                  <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
+                  <button href="#Listado" role="tab" data-toggle="tab"  className="btn btn-primary secondary-btn">Cancelar</button>
+                  <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                 </div>
               </form>
             </div>
