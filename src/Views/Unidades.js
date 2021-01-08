@@ -591,17 +591,23 @@ function App(props) {
     axios
       .get(url, { headers })
       .then((respuesta) => {
+        
         console.log(respuesta);
+        alert(respuesta.data.m_sMensaje)
+
+        setState({
+          ...state,
+          
+          codigo:respuesta.data.m_nNumero,
+          [event.target.name]: event.target.value,
+        });
+
       })
       .catch((err) => {
         alert(err);
       });
 
-    setState({
-      ...state,
-
-      [event.target.name]: event.target.value,
-    });
+    
   };
 
   const handleChangeDocumento = (event, index) => {
@@ -625,21 +631,6 @@ function App(props) {
     });
   };
 
-
-  const getModificar = (id) => {
-    const url = `${process.env.REACT_APP_API_URL}/Unidad/GetById/` + id;
-    axios.get(url, { headers }).then((respuesta) => {
-      console.log(respuesta.data);
-
-      setState({
-        ...state,
-
-        idUnidad: id,
-        codigoUnidad: respuesta.data.m_sCodigo,
-        descripcionUnidad: respuesta.data.m_sDescripcion,
-      });
-    });
-  };
 
   const handleAceptar = (e) => {
     e.preventDefault();
@@ -884,7 +875,7 @@ function App(props) {
               onChange={(event) => handleChangeDocumento(event, index)}
               name="fechaDocumento"
               className="form-control"
-              type="date"
+              type="datetime-local"
               placeholder="15/06/2020"
             />
           </div>
@@ -1228,7 +1219,8 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
-                                                    onChange={handleChangeCodigo}
+                                                    onChange={handleChange}
+                                                    onBlur={handleChangeCodigo}
                                                     className="form-control"
                                                     type="text"
                                                     value={state.codigo}
@@ -2191,7 +2183,7 @@ function App(props) {
                                                   <input
                                                     onChange={handleChange}
                                                     className="form-control"
-                                                    type="date"
+                                                    type="datetime-local"
                                                     value={
                                                       state.vencimientoSeguro1
                                                     }
@@ -2311,7 +2303,7 @@ function App(props) {
                                                   <input
                                                     onChange={handleChange}
                                                     className="form-control"
-                                                    type="date"
+                                                    type="datetime-local"
                                                     placeholder=""
                                                     value={
                                                       state.vencimientoSeguro
@@ -2618,7 +2610,7 @@ function App(props) {
                                                                     handleChange
                                                                   }
                                                                   className="form-control"
-                                                                  type="date"
+                                                                  type="datetime-local"
                                                                   placeholder=""
                                                                   value={
                                                                     state.placasVencimiento
@@ -2658,7 +2650,7 @@ function App(props) {
                                                                     handleChange
                                                                   }
                                                                   className="form-control"
-                                                                  type="date"
+                                                                  type="datetime-local"
                                                                   placeholder=""
                                                                   value={
                                                                     state.placasExtranjerasVencimiento
@@ -2748,7 +2740,7 @@ function App(props) {
                                                                     handleChange
                                                                   }
                                                                   className="form-control"
-                                                                  type="date"
+                                                                  type="datetime-local"
                                                                   placeholder=""
                                                                   value={
                                                                     state.verificacionVehicularVencimiento

@@ -75,7 +75,7 @@ const catalogRoutes = [
     component: EmbarquePage,
   },
   {
-    path: "/Departamento",
+    path: "/Operador",
     name: "Operadores",
     icon: OperadorIcon,
     component: OperadoresPage,

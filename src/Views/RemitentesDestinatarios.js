@@ -523,7 +523,6 @@ function App(props) {
                                         onChange={
                                           handleChangeActivoCheckboxChange
                                         }
-                                        required
                                         native
                                         type="checkbox"
                                         value={state.activo}
