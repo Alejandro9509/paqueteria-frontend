@@ -125,7 +125,7 @@ function App(props) {
                         role="tab"
                         data-toggle="tab"
                         onClick={() =>
-                          handleShowModificar(row.original.m_nIdOperador)
+                          handleShowModificar(row)
                         }
                         className="btn btn-default btn-sm m-user-edit"
                       >
@@ -362,7 +362,7 @@ function App(props) {
 
     console.log(params);
     if (state.idUnidad != 0) {
-      const url = "http://localhost/Operador/Modificar/" + state.IdOperador;
+      const url = `${process.env.REACT_APP_API_URL}/Operador/Modificar/` + state.IdOperador;
       axios
         .put(url, Object.assign({}, params), { headers })
 
@@ -376,7 +376,7 @@ function App(props) {
           alert("err");
         });
     } else {
-      const url = "http://localhost/Operador/Agregar";
+      const url = `${process.env.REACT_APP_API_URL}/Operador/Agregar`;
       axios
         .post(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
@@ -414,7 +414,7 @@ function App(props) {
   function handleShowModificar(row) {
     console.log(row.original.m_nIdOperador);
     const url =
-      "http://localhost/Operador/GetById/" + row.original.m_nIdOperador;
+    `${process.env.REACT_APP_API_URL}/Operador/GetById/}` + row.original.m_nIdOperador;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
       setState({
@@ -524,7 +524,7 @@ function App(props) {
       });
   }
   function handleEliminar(id) {
-    const url = "http://localhost/Operador/Eliminar/" + id;
+    const url = `${process.env.REACT_APP_API_URL}/Operador/Eliminar/` + id;
     axios
       .get(url, { headers })
       .then((respuesta) => {

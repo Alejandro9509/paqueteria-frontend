@@ -83,7 +83,7 @@ function App(props) {
     });
   }
   function getAllClientes() {
-    const url = "http://localhost/Clientes/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/Clientes/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta);
 
@@ -92,7 +92,7 @@ function App(props) {
   }
 
   function getAllCodigosPostales() {
-    const url = "http://192.168.2.211:9090/CodigoPostal/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta);
 
@@ -136,7 +136,7 @@ function App(props) {
     console.log(params);
     if (state.idRemitenteDestinatario != 0) {
       const url =
-        "http://localhost/RemitentesDestinatarios/Modificar/" +
+        `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/Modificar/` +
         state.idRemitenteDestinatario;
       axios
         .put(url, Object.assign({}, params), { headers })
@@ -149,7 +149,7 @@ function App(props) {
           alert("err");
         });
     } else {
-      const url = "http://localhost/RemitentesDestinatarios/Agregar";
+      const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/Agregar`;
       axios
         .post(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
@@ -164,7 +164,7 @@ function App(props) {
   };
 
   function handleEliminar(id) {
-    const url = "http://localhost/RemitentesDestinatarios/Eliminar/" + id;
+    const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/Eliminar/` + id;
     axios
       .delete(url, { headers })
       .then((respuesta) => {
@@ -179,7 +179,7 @@ function App(props) {
   function handleShowModificar(row) {
     console.log(row.original.m_nIdRemitenteDestinatario);
     const url =
-      "http://localhost/RemitentesDestinatarios/GetById/" +
+    `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/GetById/` +
       row.original.m_nIdRemitenteDestinatario;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
@@ -375,7 +375,7 @@ function App(props) {
   }, []);
 
   function getAllDataRemDes() {
-    const url = "http://localhost/RemitentesDestinatarios/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setData(respuesta.data);
     });
@@ -395,7 +395,7 @@ function App(props) {
 
   function getAllEstados(id) {
     console.log(id);
-    const url = "http://localhost/Estados/ByPais/" + id;
+    const url = `${process.env.REACT_APP_API_URL}/Estados/ByPais/` + id;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
       setDataEstado(respuesta.data);

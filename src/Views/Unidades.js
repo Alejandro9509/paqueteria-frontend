@@ -390,15 +390,15 @@ function App(props) {
   }
 
   
-  function handleShowModificar(row) {
-    console.log(row.original.m_nIdUnidad);
+  function handleShowModificar(id) {
+    console.log(id);
     const url =
-      "http://localhost/Unidad/GetById/" + row.original.m_nIdUnidad;
+    `${process.env.REACT_APP_API_URL}/Unidad/GetById/` + id;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
       setState({
         ...state,
-        idUnidad:row.original.m_nIdUnidad,
+        idUnidad:id,
         idTipoUnidad:respuesta.data.m_nIdTipoUnidad ,
         codigo:respuesta.data.m_sCodigo ,
         activo:respuesta.data.m_bActivo ,
@@ -566,7 +566,7 @@ function App(props) {
   };
 
   function handleEliminar(id) {
-    const url = "http://localhost/Unidad/Eliminar/" + id;
+    const url = `${process.env.REACT_APP_API_URL}Unidad/Eliminar/` + id;
     axios
       .get(url, { headers })
       .then((respuesta) => {
@@ -587,7 +587,7 @@ function App(props) {
 
   const handleChangeCodigo = (event) => {
     console.log(event.target.name + " : " + event.target.value);
-    const url = "http://localhost/Unidades/ValidaCodigoUnidad/" + state.codigo +"/"+state.idUnidad;
+    const url = `${process.env.REACT_APP_API_URL}/Unidades/ValidaCodigoUnidad/`+ state.codigo +"/"+state.idUnidad;
     axios
       .get(url, { headers })
       .then((respuesta) => {
@@ -736,7 +736,7 @@ function App(props) {
 
     console.log(params);
     if (state.idUnidad != 0) {
-      const url = "http://localhost/Unidades/Modificar/" + state.idUnidad;
+      const url = `${process.env.REACT_APP_API_URL}/Unidades/Modificar/` + state.idUnidad;
       axios
         .put(url, Object.assign({}, params), { headers })
 
@@ -750,7 +750,7 @@ function App(props) {
           alert("err");
         });
     } else {
-      const url = "http://localhost/Unidad/Agregar";
+      const url = `${process.env.REACT_APP_API_URL}/Unidad/Agregar`;
       axios
         .post(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
@@ -2159,7 +2159,7 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
-                                                    onChange={state.telefono1}
+                                                    onChange={handleChange}
                                                     className="form-control"
                                                     type="text"
                                                     value={state.telefono1}
