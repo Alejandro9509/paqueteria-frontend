@@ -1,6 +1,6 @@
 {
   "homepage": "http://192.168.2.232:8080/",
-  "name": "prueba-de-cambio-de-webdev",
+  "name": "proyecto-paqueteria",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
