@@ -3,6 +3,13 @@ import RecoleccionPage from './Views/Recoleccion';
 import EmbalajesPage from './Views/Embalajes';
 import EmbarquePage from './Views/Embarque';
 import CatalogosPage from './Views/Catalogos';
+import RemDesPage from './Views/RemitentesDestinatarios';
+import UnidadesPage from './Views/Unidades';
+import OperadoresPage from './Views/Operadores';
+import RutasPage from './Views/Rutas';
+
+
+
 import TipoServicioPage from './Views/TiposServicio'
 
 import {ReactComponent as GClienteIcon} from './iconos/Catalogos/Icono Grupo Clientes/icono_grupo_cliente.svg';
@@ -50,10 +57,10 @@ const catalogRoutes = [
     component: DepartamentoPage,
   },
   {
-    path: "/Catalogos",
+    path: "/RemitenteDestinatarios",
     name: "Rem / Des",
     icon: RemDesIcon,
-    component: CatalogosPage,
+    component: RemDesPage,
   },
   {
     path: "/Recolección",
@@ -71,7 +78,7 @@ const catalogRoutes = [
     path: "/Departamento",
     name: "Operadores",
     icon: OperadorIcon,
-    component: DepartamentoPage,
+    component: OperadoresPage,
   },
   {
     path: "/Departamento",
@@ -89,7 +96,7 @@ const catalogRoutes = [
     path: "/Embalajes",
     name: "Unidades",
     icon: UnidadesIcon,
-    component: EmbalajesPage,
+    component: UnidadesPage,
   },
 
 
@@ -176,7 +183,7 @@ const catalogRoutes = [
     path: "/Embalajes",
     name: "Rutas",
     icon: ViajesIcon,
-    component: EmbalajesPage,
+    component: RutasPage,
   },
   {
     path: "/Embalajes",
