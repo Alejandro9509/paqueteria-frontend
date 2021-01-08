@@ -5,11 +5,11 @@ import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda"
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import ExportCSV from '../Components/Template/Export';
 import ExportPDF from "../Components/Template/ExportPDF";
-import * as XLSX from 'xlsx';
 import Carousel from "re-carousel";
 import IndicatorDots from "../Util/Dots";
 import Buttons from "../Util/CarruselButtons";
 import { makeStyles } from "@material-ui/core/styles";
+import * as XLSX from 'xlsx';
 import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy } from 'react-table'
 import $ from 'jquery';
 import { remove_array_element } from "../Util/Util";
@@ -23,7 +23,7 @@ const styles = {
 };
 const styles2 = {
   conceptoCarrusel: {
-    height: "300px !important",
+    height: "220px !important",
   },
 };
 const useStyles = makeStyles(styles);
@@ -125,7 +125,7 @@ function Guia() {
     ],
     sobres: [
       {
-        descripcionesPaquete: "",
+        descripcionSobre: "",
         id: ""
       },
     ],
@@ -276,7 +276,7 @@ function Guia() {
         window.location.reload();
       }).catch(err => {
         console.log(err)
-        alert("err")
+        alert(err)
       });
     } else {
       const url = `${process.env.REACT_APP_API_URL}/Guia/Agregar`;
@@ -327,7 +327,9 @@ function Guia() {
       ImporteIva: 0,
       ImporteRetiene: 0,
       Total: 0,
-      idConceptoFacturacion: 0
+      idConceptoFacturacion: 0,
+      PorcentajeIva:0,
+      PorcentajeRetiene:0      
     });
     //console.log(conceptos);
     setState({ ...state, conceptos: conceptos });
@@ -358,6 +360,7 @@ function Guia() {
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
       //console.log(respuesta)
+      if (respuesta.data.indexOf("fracaso:") <=0)
       window.location.reload();
     }).catch(function (err) {
       console.log(err.data)
@@ -502,8 +505,8 @@ function Guia() {
 
     var { conceptos } = state
     conceptos[index][event.target.name] = event.target.value
-    alert(event.target.name);
-    alert(conceptos[index][event.target.name])
+    //alert(event.target.name);
+    //alert(conceptos[index][event.target.name])
     setState({
       ...state,
       conceptos: conceptos
@@ -530,73 +533,7 @@ function Guia() {
     });
   };
 
-  const columns = useMemo(() => [{
-    cell: (row) => <div>
-      <a data-toggle="tab" data-target="#Agregar" onClick={() => (handleShowModificar(row.original.m_nIdGuia))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
-      <a href="#" onClick={() => (handleEliminar(row))} className="btn btn-default btn-sm m-user-delete"><i className="zmdi zmdi-close" /></a>
-    </div>,
-    ignoreRowClick: true,
-    allowOverflow: true,
-    button: true,
-  },
-  {
-    name: "IdGuia",
-    selector: "m_nIdGuia",
-    omit: "true",
-    type: "int"
-  },
-  {
-    visible: true,
-    name: "fecha",
-    selector: "m_dFecha",
-    sortable: true
-  }, {
-    visible: true,
-    name: "Sucursal",
-    selector: "m_sSucursal",
-    sortable: true
-  }, {
-    visible: true,
-    name: "EstatusGuia",
-    selector: "m_sEstatusGuia",
-    sortable: true
-  }, {
-    visible: true,
-    name: "Origen",
-    selector: "m_sCiudadOrigen",
-    sortable: true,
-  }, {
-    visible: true,
-    name: "Destino",
-    selector: "m_sCiudadDestino",
-    sortable: true
-  }, {
-    visible: true,
-    name: "Folio Informe",
-    selector: "m_nFolioInforme",
-    sortable: true
-  }, {
-    visible: true,
-    name: "Folio Embarque",
-    selector: "m_nFolioEmbarque",
-    sortable: true
-  }
-    , {
-    visible: true,
-    name: "Fecha Cancelación",
-    selector: "m_dtFechaCancelacion",
-    sortable: true
-  }
-
-    , {
-    visible: true,
-    name: "Usuario Cancelación",
-    selector: "m_nUsuarioCancelacion",
-    sortable: true
-  }
-  ]);
-
-  const columns2 = React.useMemo(() => [
+  const columns = React.useMemo(() => [
     {
       Name: "Fecha",
       accessor: "m_dFecha",
@@ -933,7 +870,7 @@ function Guia() {
   };
   function calculaIva(conceptos, index, tipo) {
     if (tipo === 1)
-      conceptos[index].ImporteIva = Number(conceptos[index].Importe) * (Number(conceptos[index].PorcentajeIva))
+    conceptos[index].ImporteIva = Number(conceptos[index].Importe) * (Number(conceptos[index].PorcentajeIva))
     else if (tipo === 2) {
       conceptos[index].ImporteRetiene = Number(conceptos[index].Importe) * (Number(conceptos[index].PorcentajeRetiene))
     }
@@ -950,17 +887,25 @@ function Guia() {
   }
 
   function handleChangeConceptoImpuesto(event, index, tipo) {
+    var valor =event.target.value;
+     
     const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetById/` + event.target.value;
     axios.get(url, { headers }).then(respuesta => {
+
       var { conceptos } = state
+           
+      conceptos[index][event.target.name] = valor
+    
       if (tipo == 1) {
         conceptos[index].PorcentajeIva = respuesta.data.m_nPorcentaje / 100
-        conceptos[index].IdImpuestoTraslada = event.target.value
+        conceptos[index].IdImpuestoTraslada = valor
+        
       }
       else if (tipo == 2) {
         conceptos[index].PorcentajeRetiene = respuesta.data.m_nPorcentaje / 100
-        conceptos[index].IdImpuestoRetiene = event.target.value
+        conceptos[index].IdImpuestoRetiene = valor
       }
+      console.log(conceptos[index].IdImpuestoRetiene + "-" + conceptos[index].IdImpuestoTraslada)
       calculaIva(conceptos, index, tipo);
 
     });
@@ -1223,24 +1168,19 @@ function Guia() {
         break;
       case 3:
         setStepActive(3);
-        $section = $("#detallesDeLaRecoleccion")
+        $section = $("#paquetesSobres")
 
         break;
+     
       case 4:
         setStepActive(4);
-        $section = $("#informacionAdicional")
+        $section = $("#conceptosFacturacion")
+
         break;
+     
       case 5:
         setStepActive(5);
         $section = $("#general")
-        break;
-      case 6:
-        setStepActive(6);
-        $section = $("#contacto")
-        break;
-      case 7:
-        setStepActive(7);
-        $section = $("#otros")
         break;
       default:
     }
@@ -1253,7 +1193,11 @@ function Guia() {
     $('html, body').animate({
       scrollTop: parseInt($section.offset().top)
     }, 200);
-
+    var $welem = $section
+      .parentsUntil(".widget-action-bar")
+      .parentsUntil(".w-action")
+      .parents(".widget-header")
+      .next(".widget-container");
 
   }
   //objeto de paquetes
@@ -1270,6 +1214,7 @@ function Guia() {
               value={state.paquetes[index].peso}
               placeholder="Peso"
               name="peso"
+              disabled="true"
             />
           </div>
         </div>
@@ -1284,6 +1229,7 @@ function Guia() {
               value={state.paquetes[index].largo}
               placeholder="Largo"
               name="largo"
+              disabled="true"
             />
           </div>
         </div>
@@ -1298,6 +1244,7 @@ function Guia() {
               value={state.paquetes[index].ancho}
               placeholder="Ancho"
               name="ancho"
+              disabled="true"
             />
           </div>
         </div>
@@ -1312,6 +1259,7 @@ function Guia() {
               value={state.paquetes[index].alto}
               placeholder="Alto"
               name="alto"
+              disabled="true"
             />
           </div>
         </div>
@@ -1326,6 +1274,7 @@ function Guia() {
               value={state.paquetes[index].volumen}
               placeholder="Volumen"
               name="volumen"
+              disabled="true"
             />
           </div>
         </div>
@@ -1340,6 +1289,7 @@ function Guia() {
               value={state.paquetes[index].tipoEmbalaje}
               placeholder="Tipo de Embarje"
               name="tipoEmbalaje"
+              disabled="true"
             />
           </div>
         </div>
@@ -1354,6 +1304,7 @@ function Guia() {
               value={state.paquetes[index].valorDeclarado}
               placeholder="Valor Declarado"
               name="valorDeclarado"
+              disabled="true"
             />
           </div>
         </div>
@@ -1368,6 +1319,7 @@ function Guia() {
               value={state.paquetes[index].descripcionPaquete}
               placeholder="Descripción"
               name="descripcionPaquete"
+              disabled="true"
             />
           </div>
         </div>
@@ -1382,6 +1334,7 @@ function Guia() {
               value={state.paquetes[index].Ctd}
               placeholder="Ctd"
               name="ctd"
+              disabled="true"
             />
           </div>
         </div>
@@ -1396,15 +1349,11 @@ function Guia() {
               value={state.paquetes[index].observacionesPaquete}
               placeholder="Observaciones"
               name="observacionesPaquete"
+              disabled="true"
             />
           </div>
         </div>
-        {
-          state.paquetes.length !== 1 &&
-          <a className="btn delete" onClick={() => removePaquete(index)}>
-            <i className="zmdi zmdi-delete"></i> Eliminar Paquete
-      </a>
-        }
+       
 
       </div>
     );
@@ -1412,7 +1361,7 @@ function Guia() {
   const framesConcepto = state.conceptos.map((p, index) => {
     return (
       <div key={`concepto${index}`}>
-        <div className="col-sm-4 col-md-1-5 unit">
+        <div className="col-sm-4 col-md-3 unit">
           <label className="label">Concepto</label>
           <div className="input">
             <select
@@ -1441,7 +1390,7 @@ function Guia() {
         </div>
 
 
-        <div className="col-sm-4 col-md-1-5 unit">
+        <div className="col-sm-4 col-md-3 unit">
           <label className="label">Importe</label>
           <div className="input">
             <input
@@ -1455,16 +1404,15 @@ function Guia() {
           </div>
         </div>
 
-        <div className="col-sm-4 col-md-1-5 unit">
+        <div className="col-sm-4 col-md-3 unit">
           <label className="label">Impuesto Trasladado</label>
           <div className="input">
             <select
               className="form-control"
               required
               onChange={event => (handleChangeConceptoImpuesto(event, index, 1))}
-              id="IdImpuestoTraslada"
-              read="true"
-              value={state.conceptos[index].IdImpuestoTraslada}
+              id="IdImpuestoTraslada"              
+              value={state.conceptos[index].IdImpuestoTraslada}             
             >
               <option value="0">
                 Seleccionar
@@ -1482,23 +1430,7 @@ function Guia() {
 
           </div>
         </div>
-        <div className="col-sm-4 col-md-4-5 unit">
-          <label className="label">IVA</label>
-          <div className="input">
-            <input
-              onChange={(event) => handleChangeConcepto(event, index)}
-              className="form-control"
-              type="text"
-              value={state.conceptos[index].ImporteIva}
-              placeholder="IVA"
-              name="ImporteIva"
-              read="true"
-              disabled="disabled"
-            />
-          </div>
-        </div>
-
-        <div className="col-sm-4 col-md-1-5 unit">
+        <div className="col-sm-4 col-md-3 unit">
           <label className="label">Impuesto Retiene</label>
           <div className="input">
             <select
@@ -1525,7 +1457,24 @@ function Guia() {
 
           </div>
         </div>
-        <div className="col-sm-4 col-md-4-5 unit">
+     
+        <div className="col-sm-4 col-md-4 unit">
+          <label className="label">IVA</label>
+          <div className="input">
+            <input
+              onChange={(event) => handleChangeConcepto(event, index)}
+              className="form-control"
+              type="text"
+              value={state.conceptos[index].ImporteIva}
+              placeholder="IVA"
+              name="ImporteIva"
+              read="true"
+              disabled="disabled"
+            />
+          </div>
+        </div>
+
+        <div className="col-sm-4 col-md-4 unit">
           <label className="label">Importe Retencion</label>
           <div className="input">
             <input
@@ -1542,7 +1491,7 @@ function Guia() {
         </div>
 
 
-        <div className="col-sm-4 col-md-3 unit">
+        <div className="col-sm-4 col-md-4 unit">
           <label className="label">Total</label>
           <div className="input">
             <input
@@ -1564,6 +1513,28 @@ function Guia() {
             <i className="zmdi zmdi-delete"></i> Eliminar Concepto
       </a>
         }
+
+      </div>
+    );
+  });
+  const framesSobres = state.sobres.map((p, index) => {
+    return (
+      <div key={`sobre${index}`}>
+        <div className="col-sm-12 col-md-12 unit">
+          <label className="label">Descripcion</label>
+          <div className="input">
+            <input
+              className="form-control"
+              onChange={event => (handleChangeSobre(event, index))}
+              id="descripcionSobre"
+              name="descripcionSobre"
+              read="true"
+              disabled="true"
+              value={state.sobres[index].descripcionSobre}
+            />             
+          </div>
+        </div>
+       
 
       </div>
     );
@@ -1686,13 +1657,54 @@ function Guia() {
                     </form>
                   </div>
                   <div className="row">
-                    <Table columns={columns2} data={data} />
+                    <Table columns={columns} data={data} />
                   </div>
                 </div>
               </div>
             </div>
             <div id="Agregar" className="tab-pane fade">
-              <div className="widget-wrap">
+            <form className="j-forms">
+                <div className="form-content">
+            <div className="widget-wrap">
+                    <div className="wizard-breadcrumb number-style" style={{ position: "sticky", top: "50px", padding: "5px", backgroundColor: "white", zIndex: 100 }}>
+                      <div className="row">
+                        <div className={"col-md-3 col-sm-2 step" + (stepActive == 1 && "active-step")}
+                          onClick={() => openSection(1)}
+                        >
+                          <div className={"steps"}>
+                            <span className={"step-number"}>1</span>
+                            <p>Información General</p>
+                          </div>
+                        </div>
+                        <div className={"col-md-3 col-sm-2 step" + (stepActive == 2 && "active-step")}
+                          onClick={() => openSection(2)}
+                        >
+                          <div className="steps">
+                            <span className="step-number">2</span>
+                            <p>Remitentes / Destinatario</p>
+                          </div>
+                        </div>
+                        <div className={"col-md-3 col-sm-2 step" + (stepActive == 3 && "active-step")}
+                          onClick={() => openSection(3)}
+                        >
+                          <div className="steps">
+                            <span className="step-number">3</span>
+                            <p>Detalles de la Recolección</p>
+                          </div>
+                        </div>
+                        <div className={"col-md-3 col-sm-2 step" + (stepActive == 4 && "active-step")}
+                          onClick={() => openSection(4)}
+                        >
+                          <div className="steps">
+                            <span className="step-number">4</span>
+                            <p>Conceptos de Facturación</p>
+                          </div>
+                        </div>
+                                             </div>
+                    </div>
+                  </div>
+
+              <div className="widget-wrap" id="informacionGeneral">
                 <div className="widget-header">
                   <h2>Información General</h2>
                 </div>
@@ -1904,474 +1916,10 @@ function Guia() {
                                 )}
                               </select>
                             </div>
-
-                          </div>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/*remitente*/}
-              <div className="widget-wrap ">
-                <div >
-                  <div className="widget-header">
-                    <h2>Remitente</h2>
-                  </div>
-                  <div className="widget-container">
-                    <div className="widget-content">
-                      <div className="row">
-                        <div className="col-md-12">
-                          <form className="j-forms">
-                            <div className="form-content">
-
-                              <div className="col-md-8 unit">
-                                <label className="label">
-                                  Nombre
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.nombreRemitente}
-                                    id="nombreRemitente"
-                                    disabled="disabled"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-md-4 unit">
-                                <label className="label">
-                                  RFC
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.RFCRemitente}
-                                    id="RFCRemitente"
-                                    disabled="disabled"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-md-8 unit">
-                                <label className="label">
-                                  Domicilio
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.domicilioRemitente}
-                                    id="domicilioRemitente"
-                                    disabled="disabled"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-md-4 unit">
-                                <label className="label">
-                                  Código Postal
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.codigoPostalRemitente}
-                                    id="codigoPostalRemitente"
-                                    disabled="disabled"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-md-4 unit">
-                                <label className="label">
-                                  Ciudad
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.ciudadRemitente}
-                                    id="ciudadRemitente"
-                                    disabled="disabled"
-                                  />
-
-                                </div>
-                              </div>
-
-                              <div className="col-md-4 unit">
-                                <label className="label">
-                                  Correo Electrónico
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.correoRemitente}
-                                    id="correoRemitente"
-                                    disabled="disabled"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-md-4 unit">
-                                <label className="label">
-                                  Teléfono
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.telefonoRemitente}
-                                    id="telefonoRemitente"
-                                    disabled="disabled"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-md-6 unit">
-                                <label className="label">
-                                  Contacto
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.contactoRemitente}
-                                    id="contactoRemitente"
-                                    disabled="disabled"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-md-6 unit">
-                                <label className="label">
-                                  Origen
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.origenRemitente}
-                                    id="origenRemitente"
-                                    disabled="disabled"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/*destinatario*/}
-
-                  <div className="widget-header">
-                    <h2>Destinatario</h2>
-                  </div>       <div className="widget-container">
-                    <div className="widget-content">
-                      <div className="row">
-                        <div className="col-md-12">
-                          <form className="j-forms">
-                            <div className="form-content">
-
-                              <div className="col-md-8 unit">
-                                <label className="label">
-                                  Nombre
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.sNombreDestinatario}
-                                    id="sNombreDestinatario"
-                                    disabled="disabled"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-md-4 unit">
-                                <label className="label">
-                                  RFC
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.sRFCDestinatario}
-                                    id="sRFCDestinatario"
-                                    disabled="disabled"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-md-8 unit">
-                                <label className="label">
-                                  Domicilio
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.sDomicilioDestinatario}
-                                    id="sDomicilioDestinatario"
-                                    disabled="disabled"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-md-4 unit">
-                                <label className="label">
-                                  Código Postal
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.idCodigoPostalDestinatario}
-                                    id="idCodigoPostalDestinatario"
-                                    disabled="disabled"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-md-4 unit">
-                                <label className="label">
-                                  Ciudad
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.ciudadDestinatario}
-                                    id="ciudadDestinatario"
-                                    disabled="disabled"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-md-4 unit">
-                                <label className="label">
-                                  Correo Electrónico
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.sCorreoDestinatario}
-                                    id="sCorreoDestinatario"
-                                    disabled="disabled"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-md-4 unit">
-                                <label className="label">
-                                  Teléfono
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.sTelefonoDestinatario}
-                                    id="sTelefonoDestinatario"
-                                    disabled="disabled"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-md-6 unit">
-                                <label className="label">
-                                  Contacto
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.sContactoDestinatario}
-                                    id="sContactoDestinatario"
-                                    disabled="disabled"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-md-6 unit">
-                                <label className="label">
-                                  Destino
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.CiudadDestino}
-                                    id="CiudadDestino"
-                                    disabled="disabled"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="widget-wrap col-md-5">
-                    <div className="widget-header">
-                      <h2>Número de Paquetes</h2>
-                    </div>
-                    <div className="widget-container">
-                      <div className="widget-content">
-                        <div className="row">
-                          <div className="col-md-12">
-                            <form className="j-forms">
-                              <div className="form-content">
-                                <a
-                                  className="btn"
-                                  style={{ margin: "10px" }}
-                                  onClick={() => addPaquete()}
-                                >
-                                  <i className="zmdi zmdi-plus"></i> Agregar Paquete
-                            </a>
-
-                                <div style={{ padding: "20px" }}>
-                                  <Carousel
-                                    className={classes.paqueteCarrusel}
-                                    widgets={[IndicatorDots, Buttons]}
-                                    frames={framesPaquete}
-                                  ></Carousel>
-                                </div>
-                              </div>
-                            </form>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="widget-header">
-                      <h2>Número de Sobres</h2>
-                    </div>
-                    <div className="widget-container">
-                      <div className="widget-content">
-                        <div className="clone-widget">
-                          <form>
-                            <div className="unit widget toclone">
-                              <button type="button" className="btn btn-secondary delete" >
-                                <i className="fa fa-minus" />
-                              </button>
-                              <input className="unit" style={{ width: "10%" }} value={state.cantidadDeSobres} readOnly />
-                              <button type="button" className="btn btn-primary clone">
-                                <i className="fa fa-plus" />
-                              </button>
-
-                              <br></br>
-                              <br></br>
-
-                              <div className="col-sm-12 col-md-12 unit">
-                                <label className="label">
-                                  Descripción
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    value={state.descripcionSobre}
-                                    id="descripcionSobre"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                            <div className="form-footer" className="col-md-12">
-                              <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
-                              <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
-                            </div>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="widget-container">
-                    <div className="widget-content">
-                      <div className="row">
-                        <div className="col-md-12">
-                          <form className="j-forms">
-                            <div className="form-content">
-                              <a
-                                className="btn"
-                                style={{ margin: "10px" }}
-                                onClick={() => addConcepto()}
-                              >
-                                <i className="zmdi zmdi-plus"></i> Agregar Concepto
-                            </a>
-
-                              <div style={{ padding: "20px" }}>
-                                <Carousel
-                                  className={classes2.conceptoCarrusel}
-                                  widgets={[IndicatorDots, Buttons]}
-                                  frames={framesConcepto}
-                                ></Carousel>
-                              </div>
-                            </div>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="widget-container">
-                    <div className="widget-content">
-                      <div className="row">
-                        <div className="col-md-12">
-                          <form className="j-forms">
-                            <div className="form-content">
-                              <div className="col-sm-4">
-                                <label className="label">
-                                  Tipo Cobro
-                          </label>
-                                <select
-                                  className="form-control"
-                                  required
-                                  onChange={handleChange}
-                                  id="idTipoCobro"
-                                  read="true"
-                                >
-                                  {dataTipoCobro.map(
-                                    (tipoCobro) => (
-                                      <option key={tipoCobro.m_nIdTipoCobro} value={tipoCobro.m_nIdTipoCobro}>
-                                        {
-                                          tipoCobro.m_sDescripcion
-                                        }
-                                      </option>
-                                    )
-                                  )}
-                                </select>
-                              </div>
-                              <div className="col-sm-4">
+                            <div className="col-sm-4">
                                 <label className="label">
                                   Tipo Servicio
-                          </label>
+                                </label>
                                 <select
                                   className="form-control"
                                   required
@@ -2389,10 +1937,9 @@ function Guia() {
                                     )
                                   )}
                                 </select>
-                              </div>
+                              </div>                              
                               <div className="col-sm-4">
-
-                                <label className="label">
+                              <label className="label">
                                   Valor Declarado
                           </label>
                                 <div className="input">
@@ -2404,15 +1951,442 @@ function Guia() {
                                     id="valorDeclarado"
                                   />
                                 </div>
-                              </div>
-                            </div>
-                          </form>
-                        </div>
+                              </div>                                
+                          </div>
+                        </form>
                       </div>
                     </div>
                   </div>
+                </div>
+              </div>
 
+              {/*remitente*/}
+              <div className="widget-wrap" id="remitenteDestinatario">
+                
+              <div className="widget-header">
+                <div className="col-md-6">
+                  <h2>Remitente</h2>
+                </div>
+                <div className="col-md-6">
+                  <h2>Destinatario</h2>
+                </div>
+              </div>
+              
+              <div className="row">  
+              <div className="col-md-6">
+              <div className="widget-container">
+                  <div className="widget-content">
+                    <div className="row">
+                      <div className="col-md-12">
+                        <form className="j-forms">
+                          <div className="form-content">
 
+                            <div className="col-md-8 unit">
+                              <label className="label">
+                                Nombre
+                        </label>
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  placeholder={state.nombreRemitente}
+                                  id="nombreRemitente"
+                                  disabled="disabled"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="col-md-4 unit">
+                              <label className="label">
+                                RFC
+                        </label>
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  placeholder={state.RFCRemitente}
+                                  id="RFCRemitente"
+                                  disabled="disabled"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="col-md-8 unit">
+                              <label className="label">
+                                Domicilio
+                        </label>
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  placeholder={state.domicilioRemitente}
+                                  id="domicilioRemitente"
+                                  disabled="disabled"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="col-md-4 unit">
+                              <label className="label">
+                                Código Postal
+                        </label>
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  placeholder={state.codigoPostalRemitente}
+                                  id="codigoPostalRemitente"
+                                  disabled="disabled"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="col-md-4 unit">
+                              <label className="label">
+                                Ciudad
+                        </label>
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  placeholder={state.ciudadRemitente}
+                                  id="ciudadRemitente"
+                                  disabled="disabled"
+                                />
+
+                              </div>
+                            </div>
+
+                            <div className="col-md-4 unit">
+                              <label className="label">
+                                Correo Electrónico
+                        </label>
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  placeholder={state.correoRemitente}
+                                  id="correoRemitente"
+                                  disabled="disabled"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="col-md-4 unit">
+                              <label className="label">
+                                Teléfono
+                        </label>
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  placeholder={state.telefonoRemitente}
+                                  id="telefonoRemitente"
+                                  disabled="disabled"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="col-md-6 unit">
+                              <label className="label">
+                                Contacto
+                        </label>
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  placeholder={state.contactoRemitente}
+                                  id="contactoRemitente"
+                                  disabled="disabled"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="col-md-6 unit">
+                              <label className="label">
+                                Origen
+                        </label>
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  placeholder={state.origenRemitente}
+                                  id="origenRemitente"
+                                  disabled="disabled"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+              </div>      
+                {/*destinatario*/}
+              <div className="col-md-6">      
+              <div className="widget-container">
+                <div className="widget-content">
+                  <div className="row">
+                    <div className="col-md-12">
+                      <form className="j-forms">
+                        <div className="form-content">
+
+                          <div className="col-md-8 unit">
+                            <label className="label">
+                              Nombre
+                      </label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                placeholder={state.sNombreDestinatario}
+                                id="sNombreDestinatario"
+                                disabled="disabled"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-md-4 unit">
+                            <label className="label">
+                              RFC
+                      </label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                placeholder={state.sRFCDestinatario}
+                                id="sRFCDestinatario"
+                                disabled="disabled"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-md-8 unit">
+                            <label className="label">
+                              Domicilio
+                      </label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                placeholder={state.sDomicilioDestinatario}
+                                id="sDomicilioDestinatario"
+                                disabled="disabled"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-md-4 unit">
+                            <label className="label">
+                              Código Postal
+                      </label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                placeholder={state.idCodigoPostalDestinatario}
+                                id="idCodigoPostalDestinatario"
+                                disabled="disabled"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-md-4 unit">
+                            <label className="label">
+                              Ciudad
+                      </label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                placeholder={state.ciudadDestinatario}
+                                id="ciudadDestinatario"
+                                disabled="disabled"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-md-4 unit">
+                            <label className="label">
+                              Correo Electrónico
+                      </label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                placeholder={state.sCorreoDestinatario}
+                                id="sCorreoDestinatario"
+                                disabled="disabled"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-md-4 unit">
+                            <label className="label">
+                              Teléfono
+                      </label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                placeholder={state.sTelefonoDestinatario}
+                                id="sTelefonoDestinatario"
+                                disabled="disabled"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-md-6 unit">
+                            <label className="label">
+                              Contacto
+                      </label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                placeholder={state.sContactoDestinatario}
+                                id="sContactoDestinatario"
+                                disabled="disabled"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-md-6 unit">
+                            <label className="label">
+                              Destino
+                      </label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                placeholder={state.CiudadDestino}
+                                id="CiudadDestino"
+                                disabled="disabled"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>                  
+              </div>
+              </div>
+              
+              </div>
+              <div className="widget-wrap" id="paquetesSobres">
+                <div className="widget-header">
+                <div className="col-md-6">
+                  <h2>Número de Paquetes</h2>
+                </div>
+                <div className="col-md-6">
+                  <h2>Número de Sobres</h2>
+                </div>
+                  
+                </div>
+                <div className="row">
+                <div className="col-md-6"  >                      
+                <div className="widget-container">
+                  <div className="widget-content">
+                    <div className="row">
+                      <div className="col-md-12">
+                        <form className="j-forms">
+                          <div className="form-content">
+                           
+
+                            <div style={{ padding: "20px" }}>
+                              <Carousel
+                                className={classes.paqueteCarrusel}
+                                widgets={[IndicatorDots, Buttons]}
+                                frames={framesPaquete}
+                              ></Carousel>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>      
+                </div> 
+                <div className="col-md-6"  >      
+                <div className="widget-container">
+                  <div className="widget-content">
+                    <div className="clone-widget">
+                    <form className="j-forms">
+                          <div className="form-content">
+                            
+
+                            <div style={{ padding: "20px" }}>
+                              <Carousel
+                                className={classes.paqueteCarrusel}
+                                widgets={[IndicatorDots, Buttons]}
+                                frames={framesSobres}
+                              ></Carousel>
+                            </div>
+                          </div>
+                        </form>
+                    </div>
+                  </div>
+                </div>
+                </div>
+              </div>
+              
+     
+                </div>
+              <div className="widget-wrap" id="conceptosFacturacion">
+              <div className="widget-header">
+                <div className="col-md-12">
+                  <h2>Conceptos de Facturación</h2>
+                </div>                                  
+                </div>
+              
+              <div className="widget-container">
+                <div className="widget-content">
+                  <div className="row">
+                    <div className="col-md-12">
+                      <form className="j-forms">
+                        <div className="form-content">
+                          <a
+                            className="btn"
+                            style={{ margin: "10px" }}
+                            onClick={() => addConcepto()}
+                          >
+                            <i className="zmdi zmdi-plus"></i> Agregar Concepto
+                        </a>
+
+                          <div style={{ padding: "20px" }}>
+                            <Carousel
+                              className={classes2.conceptoCarrusel}
+                              widgets={[IndicatorDots, Buttons]}
+                              frames={framesConcepto}
+                            ></Carousel>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                
+                      <div className="row">
                   <div className="col-md-3">
                     <div className="form-footer" className="col-md-12">
 
@@ -2420,10 +2394,15 @@ function Guia() {
                       <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
                     </div>
                   </div>
-                </div>
-              </div>
+               </div></div></div>
+                                        
+                                        </div>
+              
+           </div>
+           </form>
             </div>
-
+            
+            
             <div id="Importar" className="tab-pane fade">
               <div className="widget-wrap">
                 <div className="widget-content">

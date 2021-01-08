@@ -7,6 +7,8 @@
  * @license MIT
  */
 /*jslint bitwise: true */
+/* eslint no-undef: "off"*/
+/* eslint-disable-line no-restricted-globals */
 (function () {
     'use strict';
   
@@ -17,6 +19,7 @@
     if (root.JS_SHA512_NO_WINDOW) {
       WINDOW = false;
     }
+    var self = this
     var WEB_WORKER = !WINDOW && typeof self === 'object';
     var NODE_JS = !root.JS_SHA512_NO_NODE_JS && typeof process === 'object' && process.versions && process.versions.node;
     if (NODE_JS) {
