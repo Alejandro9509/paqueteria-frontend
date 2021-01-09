@@ -3,7 +3,9 @@ import RecoleccionPage from './Views/Recoleccion';
 import EmbalajesPage from './Views/Embalajes';
 import EmbarquePage from './Views/Embarque';
 import CatalogosPage from './Views/Catalogos';
-import TipoServicioPage from './Views/TiposServicio'
+import TipoServicioPage from './Views/TiposServicio';
+import EstatusUnidadPage from './Views/EstatusUnidad';
+import TipoCobroPage from './Views/TipoCobro';
 
 import {ReactComponent as GClienteIcon} from './iconos/Catalogos/Icono Grupo Clientes/icono_grupo_cliente.svg';
 import {ReactComponent as BancoIcon} from './iconos/Catalogos/Icono Banco/icono_banco.svg';
@@ -94,10 +96,10 @@ const catalogRoutes = [
 
 
   {
-    path: "/Embalajes",
+    path: "/EstatusUnidad",
     name: "Estatus Unidades",
     icon: EUnidadIcon,
-    component: EmbalajesPage,
+    component: EstatusUnidadPage,
   },
   {
     path: "/Embalajes",
@@ -185,10 +187,10 @@ const catalogRoutes = [
     component: EmbalajesPage,
   },
   {
-    path: "/Embalajes",
+    path: "/TipoCobro",
     name: "Tipos de Cobro",
     icon: TCobreIcon,
-    component: EmbalajesPage,
+    component: TipoCobroPage,
   },
   {
     path: "/Embalajes",
