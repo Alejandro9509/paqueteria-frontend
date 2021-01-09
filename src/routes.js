@@ -1,6 +1,7 @@
 import DepartamentoPage from './Views/Departamento';
 import RecoleccionPage from './Views/Recoleccion';
 import EmbarquePage from './Views/Embarque';
+import GuiaPage from './Views/Guia';
 import EmbalajesPage from './Views/Embalajes'
 import GrupoUnidadesPage from './Views/GrupoUnidades'
 import InformesPage from './Views/Informes'
@@ -65,10 +66,10 @@ const dashboardRoutes = [
     child:[]
   },
   {
-    path: "/Departamento",
+    path: "/Guia",
     name: "Guías",
     icon: GuiasIcon,
-    component: DepartamentoPage,
+    component: GuiaPage,
     single: true,
     child:[]
   },

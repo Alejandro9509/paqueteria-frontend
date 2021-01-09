@@ -1,9 +1,15 @@
 import React from "react";
+import axios from "axios";
+
 import {
   FormControl,
   Input, InputLabel
 } from "@material-ui/core";
-
+import $ from 'jquery';
+import { sha512 } from "../Util/Sha";
+const headers = {
+  'Content-Type': 'application/json'
+}
 function Login() {
 
   const [state, setState] = React.useState({
@@ -13,8 +19,25 @@ function Login() {
 })
   
 function login(){
-  localStorage.setItem("accessToken", true);
-  window.location.reload();
+  const user = $("#usuario").val();
+  const rfc = $("#rfc").val();
+  const pass = sha512($("#password").val());
+
+  const url = `${process.env.REACT_APP_API_URL}/Usuarios/ValidarLogin/` +  user + "/" + pass + "/"+rfc;
+    axios.get(url, { headers }).then(respuesta => {
+      try{
+        debugger;
+      if (respuesta.data.m_sUsuario != "")
+      {
+        console.log(respuesta.data)
+        localStorage.setItem("accessToken", true);
+        window.location.replace("configuracion");  
+      }
+      }catch{
+        alert(respuesta.data);
+      }
+    });
+  
 }
   
   return (
@@ -39,7 +62,7 @@ function login(){
                       <label className="icon-left" htmlFor="login">
                         <i className="zmdi zmdi-account" />
                       </label>
-                      <input className="form-control login-frm-input" type="text" id="login" name="login" placeholder="RFC" />
+                      <input className="form-control login-frm-input" type="text" id="rfc" name="rfc" placeholder="RFC" />
                     </div>
                   </div>
                   <div className="unit">
@@ -47,7 +70,7 @@ function login(){
                       <label className="icon-left" htmlFor="login">
                         <i className="zmdi zmdi-account" />
                       </label>
-                      <input className="form-control login-frm-input" type="text" id="login" name="login" placeholder="Usuario" />
+                      <input className="form-control login-frm-input" type="text" id="usuario" name="usuario" placeholder="Usuario" />
                     </div>
                   </div>
                   {/* end login */}
