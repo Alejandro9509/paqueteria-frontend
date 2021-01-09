@@ -9,6 +9,8 @@ import Login from './Views/Login';
 import {AplicationConsumer, AplicationProvider} from "./Util/Contexts/AplicationContext";
 import {ACCESS_TOKEN} from './Constants';
 import dashboardRoutes from './routes'
+import catalogdRoutes from './routesCatalogos'
+import configuracionRoutes from './routesConfiguraciones'
 
 class App extends Component {
   constructor(props) {
@@ -25,13 +27,13 @@ render(){
           <Switch>
             <Route path="/configuracion" component={Configuracion} />
             {dashboardRoutes.map((r, key) => {
-              if (r.single) {
                   return (<Route exact key={key} path={r.path} component={r.component} />)
-              }else {
-                return r.child.map(c=> (
-                  <Route exact key={c.name} path={c.path} component={c.component} />
-                ))
-              }
+              })}
+              {catalogdRoutes.map((r, key) => {
+                  return (<Route exact key={key} path={r.path} component={r.component} />)
+              })}
+              {configuracionRoutes.map((r, key) => {
+                  return (<Route exact key={key} path={r.path} component={r.component} />)
               })}
             <Redirect from="/" to="/configuracion"/>
           </Switch>

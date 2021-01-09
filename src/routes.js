@@ -58,7 +58,7 @@ const dashboardRoutes = [
     child:[]
   },
   {
-    path: "/Embalajes",
+    path: "/Embarque",
     name: "Embarque",
     icon: EmbarqueIcon,
     component: EmbarquePage,
@@ -86,30 +86,6 @@ const dashboardRoutes = [
     name: "Viajes",
     icon: viajeIcon,
     component: DepartamentoPage,
-    single: true,
-    child:[]
-  },
-  {
-    path: "/RemitentesDestinatarios",
-    name: "RemitentesDestinatarios",
-    icon: ConfiguracionIcon,
-    component: RemitentesDestinatariosPage,
-    single: true,
-    child:[]
-  },
-  {
-    path: "/Unidades",
-    name: "Unidades",
-    icon: ConfiguracionIcon,
-    component: UnidadesPage,
-    single: true,
-    child:[]
-  },
-  {
-    path: "/Operadores",
-    name: "Operadores",
-    icon: ConfiguracionIcon,
-    component: OperadoresPage,
     single: true,
     child:[]
   }

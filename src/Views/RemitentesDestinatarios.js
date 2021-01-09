@@ -12,6 +12,8 @@ import $ from "jquery";
 import { useTable, useFilters, useSortBy } from "react-table";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import ExportCSV from "../Components/Template/Export";
+import ExportPDF from "../Components/Template/ExportPDF";
 
 window.jQuery = window.$ = $;
 const headers = {
@@ -25,19 +27,18 @@ function App(props) {
   const [dataCP, setDataCP] = React.useState([]);
 
   const [state, setState] = React.useState({
-    showPopUp: false,
     idRemitenteDestinatario: 0,
     idCliente: {},
     numero: 0,
     nombre: "",
     rfc: "",
-    activo: "false",
+    activo: false,
     calle: "",
     noExterior: 0,
     noInterior: 0,
     colonia: "",
     localidad: "",
-    municipio: 0,
+    municipio: "",
     idPais: 0,
     idEstado: 0,
     codigoPostal: 0,
@@ -55,10 +56,34 @@ function App(props) {
   function handleShowAgregar() {
     setState({
       ...state,
+      idRemitenteDestinatario: 0,
+      idCliente: {},
+      numero: 0,
+      nombre: "",
+      rfc: "",
+      activo: false,
+      calle: "",
+      noExterior: 0,
+      noInterior: 0,
+      colonia: "",
+      localidad: "",
+      municipio: 0,
+      idPais: 0,
+      idEstado: 0,
+      codigoPostal: 0,
+      creadoPor: 0,
+      creadoEl: "",
+      modificadoPor: "",
+      modificadoEl: "",
+      contacto: "",
+      correoElectronico: "",
+      telefono: "",
+      agregar: "Agregar",
+      importar: "",
     });
   }
   function getAllClientes() {
-    const url = "http://localhost/Clientes/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/Clientes/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta);
 
@@ -67,7 +92,7 @@ function App(props) {
   }
 
   function getAllCodigosPostales() {
-    const url = "http://192.168.2.211:9090/CodigoPostal/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta);
 
@@ -75,15 +100,13 @@ function App(props) {
     });
   }
 
-  
   const handleChangeActivoCheckboxChange = (event) => {
-    console.log(event.target.name+" " + state.activo);
+    console.log(event.target.name + " " + state.activo);
     setState({
       ...state,
       activo: !state.activo,
     });
   };
-
 
   const handleAceptar = (e) => {
     e.preventDefault();
@@ -113,25 +136,25 @@ function App(props) {
     console.log(params);
     if (state.idRemitenteDestinatario != 0) {
       const url =
-        "http://localhost/RemitentesDestinatarios/Modificar/" +
+        `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/Modificar/` +
         state.idRemitenteDestinatario;
       axios
         .put(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
           alert(respuesta.data);
-          window.location.reload();
+          //window.location.reload();
         })
         .catch((err) => {
           console.log(err);
           alert("err");
         });
     } else {
-      const url = "http://localhost/RemitentesDestinatarios/Agregarr";
+      const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/Agregar`;
       axios
         .post(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
           alert(respuesta.data);
-          window.location.reload();
+          //window.location.reload();
         })
         .catch((err) => {
           console.log(err);
@@ -141,10 +164,13 @@ function App(props) {
   };
 
   function handleEliminar(id) {
-    const url = "http://localhost/RemitentesDestinatarios/Eliminar/" + id;
+    const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/Eliminar/` + id;
     axios
       .delete(url, { headers })
-      .then((respuesta) => {})
+      .then((respuesta) => {
+        alert(respuesta.data);
+        window.location.reload();
+      })
       .catch((err) => {
         alert(err);
       });
@@ -153,33 +179,36 @@ function App(props) {
   function handleShowModificar(row) {
     console.log(row.original.m_nIdRemitenteDestinatario);
     const url =
-      "http://localhost/RemitentesDestinatarios/GetById/" +
+    `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/GetById/` +
       row.original.m_nIdRemitenteDestinatario;
     axios.get(url, { headers }).then((respuesta) => {
+      console.log(respuesta.data);
+      getAllEstados(respuesta.data.m_nIdPais);
       setState({
         ...state,
         agregar: "Modificar",
         idRemitenteDestinatario: row.original.m_nIdRemitenteDestinatario,
-        idCliente: row.original.m_nIdCliente,
-        numero: row.original.m_nNumero,
-        nombre: row.original.m_sNombre,
-        rfc: row.origial.m_sRFC,
-        activo: row.original.m_bActivo,
-        calle: row.original.m_sCalle,
-        noExterior: row.original.m_sNoExterior,
-        noInterior: row.original.m_sNoInterior,
-        colonia: row.original.m_sColonia,
-        localidad: row.original.m_sLocalidad,
-        municipio: row.original.m_sMunicipio,
-        idEstado: row.original.m_nIdEstado,
-        codigoPostal: row.original.m_sCodigoPostal,
-        creadoPor: row.original.m_nCreadoPor,
-        creadoEl: row.original.m_dtCreadoEl,
-        modificadoPor: row.original.m_nModificadoPor,
-        modificadoEl: row.original.m_dtModificadoEl,
-        contacto: row.original.m_sContacto,
-        correoElectronico: row.original.m_sCorreoElectronico,
-        telefono: row.original.m_sTelefono,
+        idCliente: respuesta.data.m_nIdCliente,
+        numero: respuesta.data.m_nNumero,
+        nombre: respuesta.data.m_sNombre,
+        rfc: respuesta.data.m_sRFC,
+        activo: respuesta.data.m_bActivo,
+        calle: respuesta.data.m_sCalle,
+        noExterior: respuesta.data.m_sNoExterior,
+        noInterior: respuesta.data.m_sNoInterior,
+        colonia: respuesta.data.m_sColonia,
+        localidad: respuesta.data.m_sLocalidad,
+        municipio: respuesta.data.m_sMunicipio,
+        idPais: respuesta.data.m_nIdPais,
+        idEstado: respuesta.data.m_nIdEstado,
+        codigoPostal: respuesta.data.m_sCodigoPostal,
+        creadoPor: respuesta.data.m_nCreadoPor,
+        creadoEl: respuesta.data.m_dtCreadoEl,
+        modificadoPor: respuesta.data.m_nModificadoPor,
+        modificadoEl: respuesta.data.m_dtModificadoEl,
+        contacto: respuesta.data.m_sContacto,
+        correoElectronico: respuesta.data.m_sCorreoElectronico,
+        telefono: respuesta.data.m_sTelefono,
       });
     });
   }
@@ -310,11 +339,14 @@ function App(props) {
                       >
                         <i className="zmdi zmdi-edit" />
                       </a>
+
                       <a
                         href="#"
                         className="btn btn-default btn-sm m-user-delete"
                         onClick={() =>
-                          handleEliminar(row.original.m_nIdDepartamento)
+                          handleEliminar(
+                            row.original.m_nIdRemitenteDestinatario
+                          )
                         }
                       >
                         <i className="zmdi zmdi-close" />
@@ -343,7 +375,7 @@ function App(props) {
   }, []);
 
   function getAllDataRemDes() {
-    const url = "http://localhost/RemitentesDestinatarios/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setData(respuesta.data);
     });
@@ -357,18 +389,18 @@ function App(props) {
   }
 
   const handleSelectChange = (event) => {
-    console.log("onChangeSelect")
+    console.log("onChangeSelect");
     getAllEstados(event.target.value);
-  }
+  };
 
   function getAllEstados(id) {
-    console.log(id)
-    const url = "http://localhost/Estados/ByPais/" + id;
+    console.log(id);
+    const url = `${process.env.REACT_APP_API_URL}/Estados/ByPais/` + id;
     axios.get(url, { headers }).then((respuesta) => {
-      console.log(respuesta.data)
+      console.log(respuesta.data);
       setDataEstado(respuesta.data);
     });
-    console.log(dataEstado)
+    console.log(dataEstado);
   }
 
   return (
@@ -411,23 +443,27 @@ function App(props) {
         <ul className="nav nav-tabs">
           <li className="active">
             <a data-toggle="tab" href="#Listado">
+              <i className="fa fa-list" />
               Listado
             </a>
           </li>
           <li>
             <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
-              Agregar
+              <i className="fa fa-plus-circle" /> {state.agregar}
             </a>
           </li>
           <li>
-            <a data-toggle="tab" href="#Importar">
-              Importar
-            </a>
+            <ExportCSV
+              csvData={data}
+              fileName="RemitentesDestinatarios_Listado"
+            />
           </li>
           <li>
-            <a data-toggle="tab" href="#Imprimir">
-              Imprimir
-            </a>
+            <ExportPDF
+              data={data}
+              column={columns2}
+              fileName="Remitentes-Destinatarios"
+            />
           </li>
         </ul>
 
@@ -445,20 +481,17 @@ function App(props) {
               </div>
             </div>
           </div>
-          <div id="Importar" className="tab-pane fade "></div>
           <div id="Imprimir" className="tab-pane fade ">
             Imprimir
           </div>
-          <div id="Importar" className="tab-pane fade ">
-            Importar
-          </div>
+
           <div id="Agregar" className="tab-pane fade ">
+          <form className="j-forms" onSubmit={handleAceptar}>
             <div className="row">
               <div className="col-md-6">
                 <div className="widget-wrap">
                   <div className="widget-container margin-top-0">
                     <div className="widget-content">
-                      <form className="j-forms j-multistep" id="j-forms">
                         {/*Inicio de ejemplo*/}
                         <div className="widget-container">
                           <div className="widget-content">
@@ -473,12 +506,13 @@ function App(props) {
                                     <div className="input">
                                       <input
                                         onChange={handleChange}
-                                        type="text"
+                                        type="number"
                                         pattern="[0-9]*"
                                         className="form-control"
-                                        placeholder={state.numero}
+                                        value={state.numero}
                                         id="numero"
                                         maxlength="4"
+                                        required
                                       />
                                     </div>
                                   </div>
@@ -486,12 +520,12 @@ function App(props) {
                                     <label className="label">Estatus</label>
                                     <label className="checkbox">
                                       <input
-onChange={
-  handleChangeActivoCheckboxChange
-}                                        required
+                                        onChange={
+                                          handleChangeActivoCheckboxChange
+                                        }
                                         native
                                         type="checkbox"
-                                        placeholder={state.activo}
+                                        value={state.activo}
                                         id="activo"
                                         name="activo"
                                       />
@@ -507,8 +541,9 @@ onChange={
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
-                                      placeholder={state.rfc}
+                                      value={state.rfc}
                                       id="rfc"
+                                      required
                                     />
                                   </div>
                                 </div>
@@ -519,8 +554,9 @@ onChange={
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
-                                      placeholder={state.nombre}
+                                      value={state.nombre}
                                       id="nombre"
+                                      required
                                     />
                                   </div>
                                 </div>
@@ -529,11 +565,18 @@ onChange={
                                   {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
                                   <Autocomplete
                                     freeSolo
-                                    onChange={(event, newValue) => setState({...state, idCliente: newValue})}
-                                    placeholder={state.idCliente}
+                                    onChange={(event, newValue) =>
+                                      setState({
+                                        ...state,
+                                        idCliente: newValue,
+                                      })
+                                    }
+                                    value={state.idCliente}
                                     id="idCliente"
                                     disableClearable
-                                    getOptionLabel={(option) => option.m_sNombreFiscal}
+                                    getOptionLabel={(option) =>
+                                      option.m_sNombreFiscal
+                                    }
                                     options={dataClientes}
                                     renderInput={(params) => (
                                       <TextField
@@ -541,6 +584,7 @@ onChange={
                                         InputProps={{
                                           ...params.InputProps,
                                           type: "search",
+                                          value: state.idCliente,
                                         }}
                                       />
                                     )}
@@ -550,16 +594,13 @@ onChange={
                             </div>
                           </div>
                         </div>
-                      </form>
-                    </div>
-                  </div>
+                  </div></div>
                 </div>
               </div>
               <div className="col-md-6">
                 <div className="widget-wrap">
                   <div className="widget-container margin-top-0">
                     <div className="widget-content">
-                      <form className="j-forms j-multistep" id="j-forms">
                         {/*Inicio de ejemplo*/}
                         <div className="widget-container">
                           <div className="widget-content">
@@ -571,16 +612,13 @@ onChange={
                                 <label className="label">País</label>
                                 <label className="input select">
                                   <select
-                                    //onChange={handleChange}
                                     onChange={handleSelectChange}
-                                    //onSelect={getAllEstados(state.idPais)}
                                     className="form-control"
                                     required
                                     native
-                                    placeholder={state.idPais}
+                                    value={state.idPais}
                                     id="idPais"
                                   >
-
                                     {dataPais.map((pais) => (
                                       <option value={pais.m_nIdPais}>
                                         {pais.m_sPais}
@@ -595,8 +633,13 @@ onChange={
                                 <div className="input">
                                   <Autocomplete
                                     freeSolo
-                                    onChange={(event, newValue) => setState({...state, codigoPostal: newValue})}
-                                    placeholder={state.codigoPostal}
+                                    onChange={(event, newValue) =>
+                                      setState({
+                                        ...state,
+                                        codigoPostal: newValue,
+                                      })
+                                    }
+                                    value={state.codigoPostal}
                                     id="codigoPostal"
                                     disableClearable
                                     options={dataCP}
@@ -619,15 +662,14 @@ onChange={
                               <label className="label">Estado</label>
                               <label className="input select">
                                 <select
-                                onChange={handleChange}
+                                  onChange={handleChange}
                                   className="form-control"
                                   required
                                   native
                                   name="idEstado"
-                                  placeholder={state.idEstado}
-                                    id="idEstado"
+                                  value={state.idEstado}
+                                  id="idEstado"
                                 >
-
                                   {dataEstado.map((estado) => (
                                     <option value={estado.m_nIdEstado}>
                                       {estado.m_sEstado}
@@ -648,7 +690,7 @@ onChange={
                                     type="text"
                                     placeholder="Municipio"
                                     id="text"
-                                    placeholder={state.municipio}
+                                    value={state.municipio}
                                     id="municipio"
                                   />
                                 </div>{" "}
@@ -660,7 +702,7 @@ onChange={
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.localidad}
+                                    value={state.localidad}
                                     id="localidad"
                                   />
                                 </div>
@@ -673,7 +715,7 @@ onChange={
                                   onChange={handleChange}
                                   className="form-control"
                                   type="text"
-                                  placeholder={state.colonia}
+                                  value={state.colonia}
                                   id="colonia"
                                 />
                               </div>
@@ -685,7 +727,7 @@ onChange={
                                   onChange={handleChange}
                                   className="form-control"
                                   type="text"
-                                  placeholder={state.calle}
+                                  value={state.calle}
                                   id="calle"
                                 />
                               </div>
@@ -699,7 +741,7 @@ onChange={
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.noExterior}
+                                    value={state.noExterior}
                                     id="noExterior"
                                   />
                                 </div>{" "}
@@ -711,7 +753,7 @@ onChange={
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.noInterior}
+                                    value={state.noInterior}
                                     id="noInterior"
                                   />
                                 </div>
@@ -726,7 +768,7 @@ onChange={
                                   onChange={handleChange}
                                   className="form-control"
                                   type="text"
-                                  placeholder={state.contacto}
+                                  value={state.contacto}
                                   id="contacto"
                                 />
                               </div>
@@ -740,7 +782,7 @@ onChange={
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.telefono}
+                                    value={state.telefono}
                                     id="telefono"
                                   />
                                 </div>{" "}
@@ -752,26 +794,26 @@ onChange={
                                     onChange={handleChange}
                                     className="form-control"
                                     type="email"
-                                    placeholder={state.correoElectronico}
+                                    value={state.correoElectronico}
                                     id="correoElectronico"
                                   />
                                 </div>
                               </div>
-                              <button
-                                onClick={handleAceptar}
-                                className="btn btn-primary primary-btn"
-                              >
-                                Aceptar
-                              </button>
+                              <div className="form-footer" className="col-md-12">
+                  <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
+                  <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
+                </div>
                             </div>
                           </div>
                         </div>
-                      </form>
                     </div>
                   </div>
                 </div>
               </div>
+
             </div>
+            </form>
+
           </div>
         </div>
       </section>

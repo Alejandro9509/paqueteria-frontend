@@ -296,9 +296,9 @@ function Guia() {
     const { paquetes } = state;
     paquetes.push({
       peso: "",
-      largo: "",
+      largo: "", 
       ancho: "",
-      alto: "",
+      alto: "", 
       volumen: "",
       tipoEmbalaje: "",
       valorDeclarado: "",

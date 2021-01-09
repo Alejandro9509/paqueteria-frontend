@@ -75,7 +75,7 @@ function BarraLateralDerecha() {
                     viewBox="0 0 40 40"
                   />
                 </i>
-                <span class="list-label">{r.name}</span>
+                <span className="list-label">{r.name}</span>
               </Link>
             </li>
           ) : (
@@ -92,7 +92,7 @@ function BarraLateralDerecha() {
                     viewBox="0 0 40 40"
                   />
                 </i>
-                <span class="list-label">{r.name}</span>
+                <span className="list-label">{r.name}</span>
               </a>
               <ul>
                 {r.child.map((c) => (

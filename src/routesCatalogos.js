@@ -3,166 +3,203 @@ import RecoleccionPage from './Views/Recoleccion';
 import EmbalajesPage from './Views/Embalajes';
 import EmbarquePage from './Views/Embarque';
 import CatalogosPage from './Views/Catalogos';
-import TipoServicioPage from './Views/TiposServicio'
+import RemDesPage from './Views/RemitentesDestinatarios';
+import UnidadesPage from './Views/Unidades';
+import OperadoresPage from './Views/Operadores';
+import RutasPage from './Views/Rutas';
+import TipoServicioPage from './Views/TiposServicio';
+import EstatusUnidadPage from './Views/EstatusUnidad';
+import TipoCobroPage from './Views/TipoCobro';
+
+import {ReactComponent as GClienteIcon} from './iconos/Catalogos/Icono Grupo Clientes/icono_grupo_cliente.svg';
+import {ReactComponent as BancoIcon} from './iconos/Catalogos/Icono Banco/icono_banco.svg';
+import {ReactComponent as CasetaIcon} from './iconos/Catalogos/Icono Caseta/icono_caseta.svg';
+import {ReactComponent as ClasificacionIcon} from './iconos/Catalogos/Icono Clasificacion Viaje/icono_clasificacion_viaje.svg';
+import {ReactComponent as ClienteIcon} from './iconos/Catalogos/Icono Cliente/icono_cliente.svg';
+import {ReactComponent as CFacturaIcon} from './iconos/Catalogos/Icono Conceptos Factura/icono_conceptos_factura.svg';
+import {ReactComponent as ConfiguracionIcon} from './iconos/Catalogos/Icono Configuracion/icono_configuracion.svg';
+import {ReactComponent as DepartamentoIcon} from './iconos/Catalogos/Icono Departament/icono_departamento.svg';
+import {ReactComponent as EmbalajeIcon} from './iconos/Catalogos/Icono Embalaje/icono_embalaje.svg';
+import {ReactComponent as EEmbarqueIcon} from './iconos/Catalogos/Icono Estatus Embarque/icono_estatus_embarque.svg';
+import {ReactComponent as EGuiaIcon} from './iconos/Catalogos/Icono Estatus Guia/icono_estatus_guia.svg';
+import {ReactComponent as EInformeIcon} from './iconos/Catalogos/Icono Estatus Informe/icono_estatus_informe.svg';
+import {ReactComponent as ERecoleccionIcon} from './iconos/Catalogos/Icono Estatus Recoleccion/icono_estatus_recoleccion.svg';
+import {ReactComponent as EUnidadIcon} from './iconos/Catalogos/Icono Estatus Unidad/icono_estatus_unidad.svg';
+import {ReactComponent as EViajeIcon} from './iconos/Catalogos/Icono Estatus Viaje/icono_estatus_viaje.svg';
+import {ReactComponent as GeocercaIcon} from './iconos/Catalogos/Icono Geocercas/icono_geocercas.svg';
+import {ReactComponent as GUnidadesIcon} from './iconos/Catalogos/Icono Grupo Unidades/icono_grupo_unidades.svg';
+import {ReactComponent as ImpuestosIcon} from './iconos/Catalogos/Icono Impuestos/icono_impuestos.svg';
+import {ReactComponent as OperadorIcon} from './iconos/Catalogos/Icono Operador/icono_operador.svg';
+import {ReactComponent as PConfiguracionIcon} from './iconos/Catalogos/Icono Parametros Configuracion/icono_parametros_configuracion.svg';
+import {ReactComponent as ProveedoresIcon} from './iconos/Catalogos/Icono Proveedores/icono_proveedores.svg';
+import {ReactComponent as PuestoIcon} from './iconos/Catalogos/Icono Puesto/icono_puesto.svg';
+import {ReactComponent as RemDesIcon} from './iconos/Catalogos/Icono Rem Des/icono_rem_des.svg';
+import {ReactComponent as TUnidadIcon} from './iconos/Catalogos/Icono Tipo Unidad/icono_tipo_unidad.svg';
+import {ReactComponent as TCobreIcon} from './iconos/Catalogos/Icono Tipos de Cobro/icono_tipo_cobro.svg';
+import {ReactComponent as TViajeIcon} from './iconos/Catalogos/Icono Tipos Viaje/icono_tipo_viaje.svg';
+import {ReactComponent as UnidadesIcon} from './iconos/Catalogos/Icono Unidades/icono_unidades.svg';
+import {ReactComponent as ViajesIcon} from './iconos/Catalogos/Icono Viajes/icono_viajes.svg';
+import {ReactComponent as AddendasIcon} from './iconos/Catalogos/Icono Addendas/icono_addendas.svg';
+
 
 const catalogRoutes = [
   {
     path: "/Departamento",
     name: "Grupo Clientes",
-    icon: <i className="fa fa-users" />,
+    icon:  GClienteIcon,
     component: DepartamentoPage,
   },
   {
     path: "/Departamento",
     name: "Clientes",
-    icon: <i className="fa fa-user" />,
+    icon: ClienteIcon,
     component: DepartamentoPage,
   },
   {
-    path: "/Catalogos",
+    path: "/RemitenteDestinatarios",
     name: "Rem / Des",
-    icon: <i className="fa fa-male" />,
-    component: CatalogosPage,
+    icon: RemDesIcon,
+    component: RemDesPage,
   },
   {
     path: "/Recolección",
     name: "Puesto",
-    icon: <i className="zmdi zmdi-account-o" />,
+    icon: PuestoIcon,
     component: RecoleccionPage,
   },
   {
     path: "/Embarque",
     name: "Departamento",
-    icon: <i className="fa fa-sitemap" />,
+    icon: DepartamentoIcon,
     component: EmbarquePage,
   },
   {
-    path: "/Departamento",
+    path: "/Operador",
     name: "Operadores",
-    icon: <i className="fa fa-users" />,
-    component: DepartamentoPage,
+    icon: OperadorIcon,
+    component: OperadoresPage,
   },
   {
     path: "/Departamento",
     name: "Tipo Unidad",
-    icon: <i className="fa fa-users" />,
+    icon: TUnidadIcon,
     component: DepartamentoPage,
   },
   {
     path: "/Departamento",
     name: "Grupo Unidades",
-    icon: <i className="fa fa-users" />,
+    icon: GUnidadesIcon,
     component: DepartamentoPage,
   },
   {
     path: "/Embalajes",
     name: "Unidades",
-    icon: <i className="fa fa-users" />,
-    component: EmbalajesPage,
+    icon: UnidadesIcon,
+    component: UnidadesPage,
   },
 
 
   {
-    path: "/Embalajes",
+    path: "/EstatusUnidad",
     name: "Estatus Unidades",
-    icon: <i className="fa fa-users" />,
-    component: EmbalajesPage,
+    icon: EUnidadIcon,
+    component: EstatusUnidadPage,
   },
   {
     path: "/Embalajes",
     name: "Embalajes",
-    icon: <i className="fa fa-users" />,
+    icon: EmbalajeIcon,
     component: EmbalajesPage,
   },
   {
     path: "/Embalajes",
     name: "Tipos Viaje",
-    icon: <i className="fa fa-users" />,
+    icon: TViajeIcon,
     component: EmbalajesPage,
   },
   {
     path: "/Embalajes",
     name: "Estatus Viaje",
-    icon: <i className="fa fa-users" />,
+    icon: EViajeIcon,
     component: EmbalajesPage,
   },
   {
     path: "/Embalajes",
     name: "Estatus Embarque",
-    icon: <i className="fa fa-users" />,
+    icon: EEmbarqueIcon,
     component: EmbalajesPage,
   },
   {
     path: "/Embalajes",
     name: "Estatus Recolección",
-    icon: <i className="fa fa-users" />,
+    icon: ERecoleccionIcon,
     component: EmbalajesPage,
   },
   {
     path: "/Embalajes",
     name: "Estatus Guías",
-    icon: <i className="fa fa-users" />,
+    icon: EGuiaIcon,
     component: EmbalajesPage,
   },
   {
     path: "/Embalajes",
     name: "Estatus Informe",
-    icon: <i className="fa fa-users" />,
+    icon: EInformeIcon,
     component: EmbalajesPage,
   },
   {
     path: "/Embalajes",
     name: "Estatus Documentos",
-    icon: <i className="fa fa-users" />,
+    icon: GClienteIcon,
     component: EmbalajesPage,
   },
 
   {
     path: "/Embalajes",
     name: "Clasificación Viaje",
-    icon: <i className="fa fa-users" />,
+    icon: ClasificacionIcon,
     component: EmbalajesPage,
   },
   {
     path: "/Embalajes",
     name: "Casetas",
-    icon: <i className="fa fa-users" />,
+    icon: CasetaIcon,
     component: EmbalajesPage,
   },
   {
     path: "/Embalajes",
     name: "Impuestos",
-    icon: <i className="fa fa-users" />,
+    icon: ImpuestosIcon,
     component: EmbalajesPage,
   },
   {
     path: "/Embalajes",
     name: "Conceptos Fact.",
-    icon: <i className="fa fa-users" />,
+    icon: CFacturaIcon,
     component: EmbalajesPage,
   },
   {
     path: "/Embalajes",
     name: "Rutas",
-    icon: <i className="fa fa-users" />,
-    component: EmbalajesPage,
+    icon: ViajesIcon,
+    component: RutasPage,
   },
   {
     path: "/Embalajes",
     name: "Tarifas",
-    icon: <i className="fa fa-users" />,
+    icon: GClienteIcon,
     component: EmbalajesPage,
   },
   {
-    path: "/Embalajes",
+    path: "/TipoCobro",
     name: "Tipos de Cobro",
-    icon: <i className="fa fa-users" />,
-    component: EmbalajesPage,
+    icon: TCobreIcon,
+    component: TipoCobroPage,
   },
   {
     path: "/Embalajes",
     name: "Parámetros Configuración",
-    icon: <i className="fa fa-users" />,
+    icon: PConfiguracionIcon,
     component: EmbalajesPage,
   },
 ];

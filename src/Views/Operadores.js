@@ -9,6 +9,10 @@ import { FormControl, Input, InputLabel } from "@material-ui/core";
 import DataTable from "react-data-table-component";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
+import { useTable, useFilters, useSortBy } from "react-table";
+import ExportCSV from "../Components/Template/Export";
+import ExportPDF from "../Components/Template/ExportPDF";
+
 import $ from "jquery";
 window.jQuery = window.$ = $;
 const headers = {
@@ -16,67 +20,381 @@ const headers = {
 };
 
 function App(props) {
-  const columns = useMemo(() => [
+  const columns = React.useMemo(() => [
     {
-      cell: (row) => (
-        <div>
-          <a
-            data-toggle="tab"
-            data-target="#Agregar"
-            onClick={() => handleShowModificar(row.m_nIdUnidad)}
-            className="btn btn-default btn-sm m-user-edit"
-          >
-            <i className="zmdi zmdi-edit" />
-          </a>
-          <a
-            href="#"
-            onClick={() => handleElimiar(row.m_nIdUnidad)}
-            className="btn btn-default btn-sm m-user-delete"
-          >
-            <i className="zmdi zmdi-close" />
-          </a>
-        </div>
-      ),
-      ignoreRowClick: true,
-      allowOverflow: true,
-      button: true,
+      Name: "Código",
+      accessor: "m_nNumeroOperador",
     },
     {
-      name: "IdOperador",
-      selector: "m_nIdOperador",
-      type: "int",
-      omit: "true",
+      Name: "Nombre",
+      accessor: "m_sNombreCompleto",
     },
     {
-      visible: true,
-      name: "Código",
-      selector: "m_nNumeroOperador",
+      Name: "Sucursal",
+      accessor: "m_sSucursal",
     },
     {
-      visible: true,
-      name: "Nombre",
-      selector: "m_sNombreCompleto",
-    },
-    {
-      visible: true,
-      name: "Sucursal",
-      selector: "m_sSucursal",
-    },
-    {
-      visible: true,
-      name: "Activo",
-      selector: "m_bActivo",
+      Name: "Activo",
+      accessor: "m_bActivo",
     },
   ]);
+
+  function DefaultColumnFilter({
+    column: { filterValue, preFilteredRows, setFilter },
+  }) {
+    const count = preFilteredRows.length;
+
+    return (
+      <input
+        className="form-control"
+        value={filterValue || ""}
+        onChange={(e) => {
+          setFilter(e.target.value || undefined);
+        }}
+        placeholder={`Buscar ${count} registros...`}
+      />
+    );
+  }
+
+  function Table({ columns, data }) {
+    const defaultColumn = React.useMemo(
+      () => ({
+        // Default Filter UI
+        Filter: DefaultColumnFilter,
+      }),
+      []
+    );
+
+    const {
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      rows,
+      prepareRow,
+    } = useTable(
+      {
+        columns,
+        data,
+        defaultColumn,
+      },
+      useFilters,
+      useSortBy
+    );
+
+    return (
+      <div className="col-md-12">
+        <table className="table" {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                <th></th>
+                {headerGroup.headers.map((column) => (
+                  // Add the sorting props to control sorting. For this example
+                  // we can add them into the header props
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render("Name")}
+                    {/* Add a sort direction indicator */}
+                    <span>
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <i className="fa fa-caret-up" />
+                        ) : (
+                          <i className="fa fa-caret-down" />
+                        )
+                      ) : (
+                        ""
+                      )}
+                    </span>
+                    <div>
+                      {column.canFilter ? column.render("Filter") : null}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map((row, i) => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()}>
+                  <td>
+                    <div>
+                      <a
+                        href="#Agregar"
+                        role="tab"
+                        data-toggle="tab"
+                        onClick={() => handleShowModificar(row)}
+                        className="btn btn-default btn-sm m-user-edit"
+                      >
+                        <i className="zmdi zmdi-edit" />
+                      </a>
+                      <a
+                        href="#"
+                        className="btn btn-default btn-sm m-user-delete"
+                        onClick={() =>
+                          handleEliminar(row.original.m_nIdOperador)
+                        }
+                      >
+                        <i className="zmdi zmdi-close" />
+                      </a>
+                    </div>
+                  </td>
+                  {row.cells.map((cell) => {
+                    return (
+                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
 
   const [data, setData] = React.useState([]);
   const [state, setState] = React.useState({
     agregar: "Agregar",
+    IdOperador: 0,
+    NumeroOperador: 0,
+    Activo: true,
+    Nombre: "",
+    ApellidoMaterno: "",
+    ApellidoPaterno: "",
+    NombreCompleto: "",
+    RFC: "",
+    CURP: "",
+    FechaContratacion: "",
+    IdSucursal: 0,
+    Telefono: "",
+    TelefonoCelular: "",
+    Domicilio: "",
+    IdEstado: 0,
+    IdPais: 0,
+    HashGPS: "",
+    FotoOperador: "",
+    TipoRegimen: "",
+    IdDepartamento: 0,
+    TipoContrato: "",
+    TipoJornada: "",
+    PeriodicidadDePago: "",
+    RiesgoPuesto: "",
+    CorreoOperador: "",
+    Licencia: "",
+    LicenciaVencimiento: "",
+    LicenciaA: false,
+    LicenciaB: false,
+    LicenciaC: false,
+    Pasaporte: "",
+    PasaporteVencimiento: "",
+    NSS: "",
+    GrupoSanguineo: "",
+    Alergias: false,
+    Diabetico: false,
+    Hipertenso: false,
+    CreadoEl: "",
+    CreadoPor: 0,
+    ModificadoEl: "",
+    ModificadoPor: 0,
+    IdBanco: 0,
+    NumeroCuentaBancaria: "",
+    NoTarjeta: "",
+    Observaciones: "",
+    TipoOperacion: 0,
+    EstadoCivil: "",
+    BeneficiarioFallecimiento: "",
+    CasoAccidenteAvisarA: "",
+    IdPuesto: 0,
+    FechaNacimiento: "",
+    FactorVSMinInvonavit: 0,
+    FactorPorcentajeInfonavit: 0,
+    RetencionDiariaInfonavit: 0,
+    retencionDiariaFonacot: 0,
+    AppMisViajes: false,
+    UsuarioViajes: "",
+    ContraseñaViajes: "",
+    AppPaqueteria: false,
+    UsuarioPaqueteria: "",
+    ContraseñaPaqueteria: "",
   });
+
+  function handleShowAgregar() {
+    setState({
+      ...state,
+      agregar: "Agregar",
+      IdOperador: 0,
+      NumeroOperador: 0,
+      Activo: true,
+      Nombre: "",
+      ApellidoMaterno: "",
+      ApellidoPaterno: "",
+      NombreCompleto: "",
+      RFC: "",
+      CURP: "",
+      FechaContratacion: "",
+      IdSucursal: 0,
+      Telefono: "",
+      TelefonoCelular: "",
+      Domicilio: "",
+      IdEstado: 0,
+      IdPais: 0,
+      HashGPS: "",
+      FotoOperador: "",
+      TipoRegimen: "",
+      IdDepartamento: 0,
+      TipoContrato: "",
+      TipoJornada: "",
+      PeriodicidadDePago: "",
+      RiesgoPuesto: "",
+      CorreoOperador: "",
+      Licencia: "",
+      LicenciaVencimiento: "",
+      LicenciaA: false,
+      LicenciaB: false,
+      LicenciaC: false,
+      Pasaporte: "",
+      PasaporteVencimiento: "",
+      NSS: "",
+      GrupoSanguineo: "",
+      Alergias: false,
+      Diabetico: false,
+      Hipertenso: false,
+      CreadoEl: "",
+      CreadoPor: 0,
+      ModificadoEl: "",
+      ModificadoPor: 0,
+      IdBanco: 0,
+      NumeroCuentaBancaria: "",
+      NoTarjeta: "",
+      Observaciones: "",
+      TipoOperacion: 0,
+      EstadoCivil: "",
+      BeneficiarioFallecimiento: "",
+      CasoAccidenteAvisarA: "",
+      IdPuesto: 0,
+      FechaNacimiento: "",
+      FactorVSMinInvonavit: 0,
+      FactorPorcentajeInfonavit: 0,
+      RetencionDiariaInfonavit: 0,
+      retencionDiariaFonacot: 0,
+      AppMisViajes: false,
+      UsuarioViajes: "",
+      ContraseñaViajes: "",
+      AppPaqueteria: false,
+      UsuarioPaqueteria: "",
+      ContraseñaPaqueteria: "",
+    });
+  }
+
+  const handleAceptar = (e) => {
+    e.preventDefault();
+    var params = {
+      IdOperador: state.IdOperador,
+      NumeroOperador: state.NumeroOperador,
+      Activo: state.Activo,
+      Nombre: state.Nombre,
+      ApellidoMaterno: state.ApellidoMaterno,
+      ApellidoPaterno: state.ApellidoPaterno,
+      NombreCompleto: state.NombreCompleto,
+      RFC: state.RFC,
+      CURP: state.CURP,
+      FechaContratacion: state.FechaContratacion,
+      IdSucursal: state.IdSucursal,
+      Telefono: state.Telefono,
+      TelefonoCelular: state.TelefonoCelular,
+      Domicilio: state.Domicilio,
+      IdEstado: state.IdEstado,
+      IdPais: state.IdPais,
+      HashGPS: state.HashGPS,
+      FotoOperador: state.FotoOperador,
+      TipoRegimen: state.TipoRegimen,
+      IdDepartamento: state.IdDepartamento,
+      TipoContrato: state.TipoContrato,
+      TipoJornada: state.TipoJornada,
+      PeriodicidadDePago: state.PeriodicidadDePago,
+      RiesgoPuesto: state.RiesgoPuesto,
+      CorreoOperador: state.CorreoOperador,
+      Licencia: state.Licencia,
+      LicenciaVencimiento: state.LicenciaVencimiento,
+      LicenciaA: state.LicenciaA,
+      LicenciaB: state.LicenciaB,
+      LicenciaC: state.LicenciaC,
+      Pasaporte: state.Pasaporte,
+      PasaporteVencimiento: state.PasaporteVencimiento,
+      NSS: state.NSS,
+      GrupoSanguineo: state.GrupoSanguineo,
+      Alergias: state.Alergias,
+      Diabetico: state.Diabetico,
+      Hipertenso: state.Hipertenso,
+      CreadoEl: state.CreadoEl,
+      CreadoPor: state.CreadoPor,
+      ModificadoEl: state.ModificadoEl,
+      ModificadoPor: state.ModificadoPor,
+      IdBanco: state.IdBanco,
+      NumeroCuentaBancaria: state.NumeroCuentaBancaria,
+      NoTarjeta: state.NoTarjeta,
+      Observaciones: state.Observaciones,
+      TipoOperacion: state.TipoOperacion,
+      EstadoCivil: state.EstadoCivil,
+      BeneficiarioFallecimiento : state.BeneficiarioFallecimiento,
+      CasoAccidenteAvisarA: state.CasoAccidenteAvisarA,
+      IdPuesto: state.IdPuesto,
+      FechaNacimiento: state.FechaNacimiento,
+      FactorVSMinInvonavit: state.FactorVSMinInvonavit,
+      FactorPorcentajeInfonavit: state.FactorPorcentajeInfonavit,
+      RetencionDiariaInfonavit: state.RetencionDiariaInfonavit,
+      RetencionDiariaFonacot: state.retencionDiariaFonacot,
+      AppMisViajes: state.AppMisViajes,
+      UsuarioViajes: state.UsuarioViajes,
+      ContrasenaViajes: state.ContraseñaViajes,
+      AppPaqueteria: state.AppPaqueteria,
+      UsuarioPaqueteria: state.UsuarioPaqueteria,
+      ContrasenaPaqueteria: state.ContraseñaPaqueteria,
+
+      agregar: "Agregar",
+      importar: "",
+    };
+
+    console.log(params);
+    if (state.idUnidad != 0) {
+      const url =
+        `${process.env.REACT_APP_API_URL}/Operador/Modificar/` +
+        state.IdOperador;
+      axios
+        .put(url, Object.assign({}, params), { headers })
+
+        .then((respuesta) => {
+          alert(respuesta.data);
+
+          window.location.reload();
+        })
+        .catch((err) => {
+          console.log(err);
+          alert("err");
+        });
+    } else {
+      const url = `${process.env.REACT_APP_API_URL}/Operador/Agregar`;
+      axios
+        .post(url, Object.assign({}, params), { headers })
+        .then((respuesta) => {
+          alert(respuesta.data);
+          //window.location.reload();
+        })
+        .catch((err) => {
+          console.log(err);
+          alert(err);
+        });
+    }
+  };
+
   const [dataSucursales, setDataSucursales] = React.useState([]);
   const [dataOperadores, setDataOperador] = React.useState([]);
 
   const [dataPais, setDataPais] = React.useState([]);
+  const [dataDepartamento, setDataDepartamento] = React.useState([]);
+  const [dataPuesto, setDataPuesto] = React.useState([]);
 
   const [dataEstado, setDataEstado] = React.useState([]);
 
@@ -84,7 +402,133 @@ function App(props) {
     getAllSucursales();
     getAllPaises();
     getAllOperadores();
+    getAllPuestos();
+    getAllDepartamentos();
   }, []);
+
+  const handleChangeActivoCheckboxChange = (event) => {
+    setState({
+      ...state,
+      activo: !state.activo,
+    });
+    console.log(event.target.name + " " + state.activo);
+  };
+
+  const handleChangeAppViajes = (event) => {
+    setState({
+      ...state,
+      AppMisViajes: !state.AppMisViajes,
+    });
+    console.log(event.target.name + " " + state.AppMisViajes);
+  };
+  const handleChangeAppPaqueteria = (event) => {
+    setState({
+      ...state,
+      AppPaqueteria: !state.AppPaqueteria,
+    });
+    console.log(event.target.name + " " + state.AppPaqueteria);
+  };
+
+
+  
+
+  const handleChangeLicenciaA = (event) => {
+    setState({
+      ...state,
+      LicenciaA: !state.LicenciaA,
+    });
+    console.log(event.target.name + " " + state.activo);
+  };
+  const handleChangeLicenciaB = (event) => {
+    setState({
+      ...state,
+      LicenciaB: !state.LicenciaB,
+    });
+    console.log(event.target.name + " " + state.activo);
+  };
+
+  const handleChangeLicenciaC = (event) => {
+    setState({
+      ...state,
+      LicenciaC: !state.LicenciaC,
+    });
+    console.log(event.target.name + " " + state.activo);
+  };
+
+  function handleShowModificar(row) {
+    console.log(row.original.m_nIdOperador);
+    const url =
+      `${process.env.REACT_APP_API_URL}/Operador/GetById/` +
+      row.original.m_nIdOperador;
+    axios.get(url, { headers }).then((respuesta) => {
+      console.log(respuesta.data);
+      setState({
+        ...state,
+        agregar: "Modificar",
+        IdOperador: row.original.m_nIdOperador,
+        NumeroOperador: respuesta.data.m_nNumeroOperador,
+        Activo: respuesta.data.m_bActivo,
+        Nombre: respuesta.data.m_sNombre,
+        ApellidoMaterno: respuesta.data.m_sApellidoMaterno,
+        ApellidoPaterno: respuesta.data.m_sApellidoPaterno,
+        NombreCompleto: respuesta.data.m_sNombreCompleto,
+        RFC: respuesta.data.m_sRFC,
+        CURP: respuesta.data.m_sCURP,
+        FechaContratacion: respuesta.data.m_dtFechaContratacion,
+        IdSucursal: respuesta.data.m_nIdSucursal,
+        Telefono: respuesta.data.m_sTelefono,
+        TelefonoCelular: respuesta.data.m_sTelefonoCelular,
+        Domicilio: respuesta.data.m_sDomicilio,
+        IdEstado: respuesta.data.m_nIdEstado,
+        IdPais: respuesta.data.m_nIdPais,
+        HashGPS: respuesta.data.m_sHashGPS,
+        FotoOperador: respuesta.data.m_sFotoOperador,
+        TipoRegimen: respuesta.data.m_sTipoRegimen,
+        IdDepartamento: respuesta.data.m_nIdDepartamento,
+        TipoContrato: respuesta.data.m_sTipoContrato,
+        TipoJornada: respuesta.data.m_sTipoJornada,
+        PeriodicidadDePago: respuesta.data.m_sPeriodicidadDePago,
+        RiesgoPuesto: respuesta.data.m_sRiesgoPuesto,
+        CorreoOperador: respuesta.data.m_sCorreoOperador,
+        Licencia: respuesta.data.m_sLicencia,
+        LicenciaVencimiento: respuesta.data.m_dtLicenciaVencimiento,
+        LicenciaA: respuesta.data.m_bLicenciaA,
+        LicenciaB: respuesta.data.m_bLicenciaB,
+        LicenciaC: respuesta.data.m_bLicenciaC,
+        Pasaporte: respuesta.data.m_sPasaporte,
+        PasaporteVencimiento: respuesta.data.m_dtPasaporteVencimiento,
+        NSS: respuesta.data.m_sNSS,
+        GrupoSanguineo: respuesta.data.m_sGrupoSanguineo,
+        Alergias: respuesta.data.m_sAlergias,
+        Diabetico: respuesta.data.m_bDiabetico,
+        Hipertenso: respuesta.data.m_bHipertenso,
+        CreadoEl: respuesta.data.m_dtCreadoEl,
+        CreadoPor: respuesta.data.m_nCreadoPor,
+        ModificadoEl: respuesta.data.m_dtModificadoEl,
+        ModificadoPor: respuesta.data.m_nModificadoPor,
+        IdBanco: respuesta.data.m_nIdBanco,
+        NumeroCuentaBancaria: respuesta.data.m_sNumeroCuentaBancaria,
+        NoTarjeta: respuesta.data.m_sNoTarjeta,
+        Observaciones: respuesta.data.m_sObservaciones,
+        TipoOperacion: respuesta.data.m_nTipoOperacion,
+        EstadoCivil: respuesta.data.m_sEstadoCivil,
+        BeneficiarioFallecimiento: respuesta.data.m_sBeneficiarioFallecimiento,
+        CasoAccidenteAvisarA: respuesta.data.m_sCasoAccidenteAvisarA,
+        IdPuesto: respuesta.data.m_nIdPuesto,
+        FechaNacimiento: respuesta.data.m_dtFechaNacimiento,
+        FactorVSMinInvonavit: respuesta.data.m_cyFactorVSMinInvonavit,
+        FactorPorcentajeInfonavit: respuesta.data.m_cyFactorPorcentajeInfonavit,
+        RetencionDiariaInfonavit: respuesta.data.m_cyRetencionDiariaInfonavit,
+        retencionDiariaFonacot: respuesta.data.m_cyRetencionDiariaFonacot,
+        AppMisViajes: respuesta.data.m_bAppMisViajes,
+        UsuarioViajes: respuesta.data.m_sUsuarioViajes,
+        ContraseñaViajes: respuesta.data.m_sContrasenaViajes,
+        AppPaqueteria: respuesta.data.m_bAppPaqueteria,
+        UsuarioPaqueteria: respuesta.data.m_sUsuarioPaqueteria,
+        ContraseñaPaqueteria: respuesta.data.m_sContrasenaPaqueteria,
+      });
+    });
+  }
 
   function getAllOperadores() {
     const url = `${process.env.REACT_APP_API_URL}/Operadores/GetListado`;
@@ -92,6 +536,23 @@ function App(props) {
       console.log(respuesta);
 
       setDataOperador(respuesta.data);
+    });
+  }
+
+  function getAllDepartamentos() {
+    const url = `${process.env.REACT_APP_API_URL}/Departamento/GetListado`;
+    axios.get(url, { headers }).then((respuesta) => {
+      console.log(respuesta);
+
+      setDataDepartamento(respuesta.data);
+    });
+  }
+  function getAllPuestos() {
+    const url = `${process.env.REACT_APP_API_URL}/Puesto/GetListado`;
+    axios.get(url, { headers }).then((respuesta) => {
+      console.log(respuesta);
+
+      setDataPuesto(respuesta.data);
     });
   }
 
@@ -112,7 +573,18 @@ function App(props) {
   }
 
   function handleElimiar(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Unidad/Eliminar/` + id;
+    const url = `${process.env.REACT_APP_API_URL}/Operador/Eliminar/` + id;
+    axios
+      .get(url, { headers })
+      .then((respuesta) => {
+        console.log(respuesta);
+      })
+      .catch((err) => {
+        alert(err);
+      });
+  }
+  function handleEliminar(id) {
+    const url = `${process.env.REACT_APP_API_URL}/Operador/Eliminar/` + id;
     axios
       .get(url, { headers })
       .then((respuesta) => {
@@ -131,9 +603,19 @@ function App(props) {
     });
   };
 
-  function handleShowModificar(id) {}
-
-  function handleShowModificar(id) {}
+  const handleChangeNombreCompleto = (event) => {
+    console.log(event.target.name + " : " + event.target.value);
+    setState({
+      ...state,
+      NombreCompleto:
+        state.ApellidoPaterno +
+        " " +
+        state.ApellidoMaterno +
+        " " +
+        state.Nombre,
+      [event.target.name]: event.target.value,
+    });
+  };
 
   const getModificar = (id) => {
     const url = `${process.env.REACT_APP_API_URL}/Unidad/GetById/` + id;
@@ -269,33 +751,31 @@ function App(props) {
           <ul className="nav nav-tabs">
             <li className="active">
               <a data-toggle="tab" href="#Listado">
-                Listado
+                <i className="fa fa-list" /> Listado
               </a>
             </li>
             <li>
-              <a data-toggle="tab" href="#Agregar">
-                {state.agregar}
+              <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
+                <i className="fa fa-plus-circle" /> {state.agregar}{" "}
               </a>
             </li>
             <li>
-              <a data-toggle="tab" href="#Importar">
-                Importar
-              </a>
+              <ExportCSV csvData={data} fileName="Operadores_Listado" />
             </li>
             <li>
-              <a data-toggle="tab" href="#Imprimir">
-                Imprimir
-              </a>
+              <ExportPDF data={data} column={columns} fileName="Operadores" />
             </li>
           </ul>
 
           <div className="tab-content">
             <div id="Listado" className="tab-pane fade in active">
-              <DataTable
-                title="Listado de Operadores"
-                columns={columns}
-                data={dataOperadores}
-              />
+              <div className="widget-wrap">
+                <div className="widget-content">
+                  <div className="row">
+                    <Table columns={columns} data={dataOperadores} />
+                  </div>
+                </div>
+              </div>
             </div>
             <div id="Importar" className="tab-pane fade "></div>
             <div id="Imprimir" className="tab-pane fade ">
@@ -474,13 +954,13 @@ function App(props) {
                                                   Número
                                                 </label>
                                                 <div className="input">
-                                                 
                                                   <input
-                                                    onChange={value}
+                                                    onChange={handleChange}
+                                                    value={state.NumeroOperador}
+                                                    name="NumeroOperador"
                                                     className="form-control"
-                                                    type="text"
+                                                    type="number"
                                                     placeholder="Número"
-                                                    id="text"
                                                   />
                                                 </div>
                                               </div>
@@ -491,9 +971,13 @@ function App(props) {
                                                   </label>
                                                   <label className="checkbox">
                                                     <input
+                                                      onChange={
+                                                        handleChangeActivoCheckboxChange
+                                                      }
+                                                      value={state.Activo}
+                                                      name="Activo"
                                                       required
                                                       native
-                                                      name="activo"
                                                       type="checkbox"
                                                     />
                                                     <i />
@@ -517,11 +1001,15 @@ function App(props) {
                                                   Apellido Paterno
                                                 </label>
                                                 <div className="input">
-                                                 
                                                   <input
                                                     className="form-control"
+                                                    onChange={handleChange}
+                                                    value={
+                                                      state.ApellidoPaterno
+                                                    }
+                                                    name="ApellidoPaterno"
                                                     type="text"
-                                                    placeholder=""
+                                                    placeholder="Apellido Paterno"
                                                     id="text"
                                                     required
                                                     native
@@ -532,37 +1020,39 @@ function App(props) {
                                                 <label className="label">
                                                   Apellido Materno
                                                 </label>
-                                                
-                                                  <div className="input">
-                                                  
-
-                                                    <input
-                                                      className="form-control"
-                                                      type="text"
-                                                      placeholder=""
-                                                      id="text"
-                                                      required
-                                                      native
-                                                    />
-                                                  </div>{" "}
+                                                <div className="input">
+                                                  <input
+                                                    onChange={handleChange}
+                                                    value={
+                                                      state.ApellidoMaterno
+                                                    }
+                                                    name="ApellidoMaterno"
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder="Apellido Materno"
+                                                    id="text"
+                                                    required
+                                                    native
+                                                  />
+                                                </div>{" "}
                                               </div>
                                               <div className="col-md-3 unit">
                                                 <label className="label">
                                                   Nombre
                                                 </label>
                                                 <div className="input">
-                                              
-                                                    
-
-                                                    <input
-                                                      className="form-control"
-                                                      type="text"
-                                                      placeholder=""
-                                                      id="text"
-                                                      required
-                                                      native
-                                                    />
-                                                  </div>{" "}
+                                                  <input
+                                                    onChange={handleChange}
+                                                    value={state.Nombre}
+                                                    name="Nombre"
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder=""
+                                                    id="text"
+                                                    required
+                                                    native
+                                                  />
+                                                </div>{" "}
                                               </div>
                                               <div className="col-md-3 unit">
                                                 <label className="label">
@@ -578,6 +1068,9 @@ function App(props) {
                                                     />
                                                   </div>
                                                   <input
+                                                    onChange={handleChange}
+                                                    value={state.FotoOperador}
+                                                    name="FotoOperador"
                                                     className="form-control"
                                                     type="text"
                                                     id="prepend-small-btn"
@@ -592,17 +1085,18 @@ function App(props) {
                                                 Nombre Completo
                                               </label>
                                               <div className="input">
-                                              
-
-                                                  <input
-                                                    className="form-control"
-                                                    type="text"
-                                                    placeholder=""
-                                                    id="text"
-                                                    required
-                                                    native
-                                                  />
-                                                </div>{" "}
+                                                <input
+                                                  onChange={handleChange}
+                                                  value={state.NombreCompleto}
+                                                  name="NombreCompleto"
+                                                  className="form-control"
+                                                  type="text"
+                                                  placeholder="Nombre Completo"
+                                                  id="text"
+                                                  required
+                                                  native
+                                                />
+                                              </div>{" "}
                                             </div>
 
                                             {/* end search */}
@@ -614,11 +1108,13 @@ function App(props) {
                                                   RFC
                                                 </label>
                                                 <div className="input">
-                                                  
                                                   <input
+                                                    onChange={handleChange}
+                                                    value={state.RFC}
+                                                    name="RFC"
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
+                                                    placeholder="RFC"
                                                     id="text"
                                                     required
                                                     native
@@ -630,14 +1126,15 @@ function App(props) {
                                                   CURP
                                                 </label>
                                                 <div className="input">
-                                               
-
                                                   <input
+                                                    onChange={handleChange}
+                                                    value={state.CURP}
+                                                    name="CURP"
+                                                    placeholder="CURP"
                                                     class="form-control"
                                                     type="text"
                                                     id="hex"
                                                     native
-                                                    name="colorUnidad"
                                                   />
                                                 </div>{" "}
                                               </div>
@@ -646,10 +1143,14 @@ function App(props) {
                                                   Fecha de Contratación
                                                 </label>
                                                 <div className="input">
-                                                
                                                   <input
+                                                    onChange={handleChange}
+                                                    value={
+                                                      state.FechaContratacion
+                                                    }
+                                                    name="FechaContratacion"
                                                     className="form-control"
-                                                    type="text"
+                                                    type="date"
                                                     placeholder=""
                                                   />
                                                 </div>
@@ -663,6 +1164,9 @@ function App(props) {
                                                 </label>
                                                 <label className="input select">
                                                   <select
+                                                    onChange={handleChange}
+                                                    value={state.IdSucursal}
+                                                    name="IdSucursal"
                                                     native
                                                     className="form-control"
                                                     name="sucursal"
@@ -673,7 +1177,11 @@ function App(props) {
 
                                                     {dataSucursales.map(
                                                       (sucursal) => (
-                                                        <option value="{sucursal.m_nIdSucursal}">
+                                                        <option
+                                                          value={
+                                                            sucursal.m_nIdSucursal
+                                                          }
+                                                        >
                                                           {sucursal.m_sSucursal}
                                                         </option>
                                                       )
@@ -687,12 +1195,13 @@ function App(props) {
                                                   Teléfono
                                                 </label>
                                                 <div className="input">
-                                              
-
                                                   <input
+                                                    onChange={handleChange}
+                                                    value={state.Telefono}
+                                                    name="Telefono"
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
+                                                    placeholder="Teléfono"
                                                     id="text"
                                                     native
                                                   />
@@ -703,11 +1212,15 @@ function App(props) {
                                                   Tel. Celular
                                                 </label>
                                                 <div className="input">
-                                                
                                                   <input
+                                                    onChange={handleChange}
+                                                    value={
+                                                      state.TelefonoCelular
+                                                    }
+                                                    name="TelefonoCelular"
                                                     className="form-control"
                                                     type="text"
-                                                    placeholder=""
+                                                    placeholder="Teléfono Celular"
                                                     id="text"
                                                     native
                                                   />
@@ -719,11 +1232,13 @@ function App(props) {
                                                 Domicilio
                                               </label>
                                               <div className="input">
-                                               
                                                 <input
+                                                  onChange={handleChange}
+                                                  value={state.Domicilio}
+                                                  name="Domicilio"
                                                   className="form-control"
                                                   type="text"
-                                                  placeholder=""
+                                                  placeholder="Domicilio"
                                                   id="text"
                                                   native
                                                 />
@@ -736,22 +1251,21 @@ function App(props) {
                                                 </label>
                                                 <label className="input select">
                                                   <select
-                                                    onChange={(value) =>
-                                                      props.input.onChange(
-                                                        value
-                                                      )
-                                                    }
+                                                    onChange={handleChange}
+                                                    value={state.IdPais}
+                                                    name="IdPais"
                                                     className="form-control"
                                                     required
                                                     native
-                                                    name="pais"
                                                   >
                                                     <option value="none">
                                                       País
                                                     </option>
 
                                                     {dataPais.map((pais) => (
-                                                      <option value="{pais.m_nIdPais}">
+                                                      <option
+                                                        value={pais.m_nIdPais}
+                                                      >
                                                         {pais.m_sPais}
                                                       </option>
                                                     ))}
@@ -765,10 +1279,14 @@ function App(props) {
                                                 </label>
                                                 <label className="input select">
                                                   <select
+                                                    onFocusCapture={
+                                                      handleChange
+                                                    }
+                                                    value={state.IdEstado}
+                                                    name="IdEstado"
                                                     className="form-control"
                                                     required
                                                     native
-                                                    name="estado"
                                                   >
                                                     <option value="none">
                                                       Estado
@@ -791,11 +1309,13 @@ function App(props) {
                                                 Hash GMT GPS
                                               </label>
                                               <div className="input">
-                                                
                                                 <input
+                                                  onFocusCapture={handleChange}
+                                                  value={state.HashGPS}
+                                                  name="HashGPS"
                                                   className="form-control"
                                                   type="text"
-                                                  placeholder=""
+                                                  placeholder="Hash GMT GPS"
                                                   id="text"
                                                   native
                                                 />
@@ -881,8 +1401,10 @@ function App(props) {
                                                       Licencia
                                                     </label>
                                                     <div className="input">
-                                                     
                                                       <input
+                                                        onChange={handleChange}
+                                                        value={state.Licencia}
+                                                        name="Licencia"
                                                         className="form-control"
                                                         type="text"
                                                         placeholder=""
@@ -896,9 +1418,16 @@ function App(props) {
                                                       Vencimiento
                                                     </label>
                                                     <div className="input">
-                                                    
-                                                    <input  class="form-control" type="text" id="date-icon" placeholder="12/20/2020" readonly=""/>
-
+                                                      <input
+                                                        onChange={handleChange}
+                                                        value={
+                                                          state.LicenciaVencimiento
+                                                        }
+                                                        name="LicenciaVencimiento"
+                                                        class="form-control"
+                                                        type="datetime-local"
+                                                        id="date-icon"
+                                                      />
                                                     </div>
                                                   </div>
                                                 </div>
@@ -909,23 +1438,35 @@ function App(props) {
                                                     </label>
                                                     <label className="checkbox">
                                                       <input
+                                                        onChange={
+                                                          handleChangeLicenciaA
+                                                        }
+                                                        value={state.LicenciaA}
+                                                        name="LicenciaA"
                                                         type="checkbox"
-                                                        name="A"
                                                         defaultChecked
                                                       />
                                                       <i />A
                                                     </label>
                                                     <label className="checkbox">
                                                       <input
+                                                        onChange={
+                                                          handleChangeLicenciaB
+                                                        }
+                                                        value={state.LicenciaB}
+                                                        name="LicenciaB"
                                                         type="checkbox"
-                                                        name="B"
                                                       />
                                                       <i />B
                                                     </label>
                                                     <label className="checkbox">
                                                       <input
+                                                        onChange={
+                                                          handleChangeLicenciaC
+                                                        }
+                                                        value={state.LicenciaC}
+                                                        name="LicenciaC"
                                                         type="checkbox"
-                                                        name="C"
                                                       />
                                                       <i />C
                                                     </label>
@@ -937,8 +1478,12 @@ function App(props) {
                                                       Pasaporte
                                                     </label>
                                                     <div className="input">
-                                                     
                                                       <input
+                                                        onChange={
+                                                          handleChangeLicenciaA
+                                                        }
+                                                        value={state.Pasaporte}
+                                                        name="Pasaporte"
                                                         className="form-control"
                                                         type="text"
                                                         placeholder=""
@@ -952,9 +1497,16 @@ function App(props) {
                                                       Vencimiento
                                                     </label>
                                                     <div className="input">
-                                                      
-                                                    <input  class="form-control" type="text" id="date-icon" placeholder="12/20/2020" readonly=""/>
-
+                                                      <input
+                                                        onChange={handleChange}
+                                                        value={
+                                                          state.PasaporteVencimiento
+                                                        }
+                                                        name="PasaporteVencimiento"
+                                                        class="form-control"
+                                                        type="datetime-local"
+                                                        id="date-icon"
+                                                      />
                                                     </div>
                                                   </div>
                                                 </div>
@@ -967,8 +1519,10 @@ function App(props) {
                                                       Núm. IMSS
                                                     </label>
                                                     <div className="input">
-                                                    
                                                       <input
+                                                        onChange={handleChange}
+                                                        value={state.NSS}
+                                                        name="NSS"
                                                         className="form-control"
                                                         type="text"
                                                         placeholder=""
@@ -984,6 +1538,11 @@ function App(props) {
 
                                                     <label className="input select">
                                                       <select
+                                                        onChange={handleChange}
+                                                        value={
+                                                          state.GrupoSanguineo
+                                                        }
+                                                        name="GrupoSanguineo"
                                                         native
                                                         className="form-control"
                                                         name="operador"
@@ -1019,15 +1578,18 @@ function App(props) {
                                                   </div>
                                                   <div className="unit">
                                                     <label className="label">
-                                                      Núm. IMSS
+                                                      Banco
                                                     </label>
                                                     <div className="input">
-                                                    
                                                       <input
+                                                        onChange={handleChange}
+                                                        value={state.IdBanco}
+                                                        name="IdBanco"
                                                         className="form-control"
                                                         type="text"
                                                         placeholder=""
                                                         id="text"
+                                                        disabled
                                                         native
                                                       />
                                                     </div>{" "}
@@ -1037,13 +1599,18 @@ function App(props) {
                                                       Cuenta CLABE
                                                     </label>
                                                     <div className="input">
-                                                     
                                                       <input
+                                                        onChange={handleChange}
+                                                        value={
+                                                          state.NumeroCuentaBancaria
+                                                        }
+                                                        name="NumeroCuentaBancaria"
                                                         className="form-control"
                                                         type="text"
                                                         placeholder=""
                                                         id="text"
                                                         native
+                                                        disabled
                                                       />
                                                     </div>{" "}
                                                   </div>
@@ -1052,13 +1619,16 @@ function App(props) {
                                                       Núm. Tarjeta
                                                     </label>
                                                     <div className="input">
-                                                  
                                                       <input
+                                                        onChange={handleChange}
+                                                        value={state.NoTarjeta}
+                                                        name="NoTarjeta"
                                                         className="form-control"
                                                         type="text"
                                                         placeholder=""
                                                         id="text"
                                                         native
+                                                        disabled
                                                       />
                                                     </div>{" "}
                                                   </div>
@@ -1067,13 +1637,18 @@ function App(props) {
                                                       <h3>Observaciones</h3>
                                                     </div>
                                                     <div className="input">
-                                                    
                                                       <input
+                                                        onChange={handleChange}
+                                                        value={
+                                                          state.Observaciones
+                                                        }
+                                                        name="Observaciones"
                                                         className="form-control"
                                                         type="text"
                                                         placeholder=""
                                                         id="text"
                                                         native
+                                                        disabled
                                                       />
                                                     </div>{" "}
                                                   </div>
@@ -1092,6 +1667,7 @@ function App(props) {
                                                       <div className="span4 unit">
                                                         <div className="input">
                                                           <input
+                                                            disabled
                                                             className="form-control"
                                                             type="text"
                                                             placeholder="Documento"
@@ -1101,6 +1677,7 @@ function App(props) {
                                                       <div className="span3 unit">
                                                         <div className="input">
                                                           <input
+                                                            disabled
                                                             className="form-control"
                                                             type="text"
                                                             placeholder="Nombre"
@@ -1113,8 +1690,9 @@ function App(props) {
                                                             <input
                                                               required
                                                               native
-                                                              name="activo"
+                                                              name="Activo"
                                                               type="checkbox"
+                                                              disabled
                                                             />
                                                             <i />
                                                           </label>
@@ -1123,9 +1701,12 @@ function App(props) {
                                                       <div className="span3 unit">
                                                         <div className="input">
                                                           <div className="input">
-                                                            
-                                                          <input  class="form-control" type="text" id="date-icon" placeholder="12/20/2020" readonly=""/>
-
+                                                            <input
+                                                              class="form-control"
+                                                              type="datetime-local"
+                                                              id="date-icon"
+                                                              readonly=""
+                                                            />
                                                           </div>
                                                         </div>
                                                       </div>
@@ -1219,9 +1800,23 @@ function App(props) {
                                                   Tipo de Regimen
                                                 </label>
                                                 <label className="input select">
-                                                  <select className="form-control">
-                                                    <option value="none">
+                                                  <select
+                                                    className="form-control"
+                                                    onChange={handleChange}
+                                                    value={state.TipoRegimen}
+                                                    name="TipoRegimen"
+                                                  >
+                                                    <option value="Sueldos">
                                                       Sueldos
+                                                    </option>
+                                                    <option value="Jubilados">
+                                                      Jubilados
+                                                    </option>
+                                                    <option value="Pensionados">
+                                                      Pensionados
+                                                    </option>
+                                                    <option value="Asimilados Acciones">
+                                                      Asimilados Acciones
                                                     </option>
                                                   </select>
                                                   <i></i>
@@ -1232,10 +1827,31 @@ function App(props) {
                                                   Departamento
                                                 </label>
                                                 <label className="input select">
-                                                  <select className="form-control">
+                                                  <select
+                                                    onChange={handleChange}
+                                                    value={state.IdDepartamento}
+                                                    name="IdDepartamento"
+                                                    className="form-control"
+                                                    required
+                                                    native
+                                                  >
                                                     <option value="none">
-                                                      Informática
+                                                      Departamento
                                                     </option>
+
+                                                    {dataDepartamento.map(
+                                                      (departamento) => (
+                                                        <option
+                                                          value={
+                                                            departamento.m_nIdDepartamento
+                                                          }
+                                                        >
+                                                          {
+                                                            departamento.m_sDescripcion
+                                                          }
+                                                        </option>
+                                                      )
+                                                    )}
                                                   </select>
                                                   <i></i>
                                                 </label>
@@ -1245,10 +1861,32 @@ function App(props) {
                                                   Tipo de Contrato
                                                 </label>
                                                 <label className="input select">
-                                                  <select className="form-control">
-                                                    <option value="none">
+                                                  <select
+                                                    className="form-control"
+                                                    onChange={handleChange}
+                                                    value={state.TipoContrato}
+                                                    name="TipoContrato"
+                                                  >
+                                                    <option
+                                                      value="Contrato de trabajo por
+                                                      tiempo indeterminado"
+                                                    >
                                                       Contrato de trabajo por
                                                       tiempo indeterminado
+                                                    </option>
+                                                    <option
+                                                      value="Contrato de trabajo por
+                                                      tiempo determinado"
+                                                    >
+                                                      Contrato de trabajo por
+                                                      tiempo determinado
+                                                    </option>
+                                                    <option value="Jubilación, Pensión, Retiro">
+                                                      Jubilación, Pensión,
+                                                      Retiro
+                                                    </option>
+                                                    <option value="Otro contrato">
+                                                      Otro contrato
                                                     </option>
                                                   </select>
                                                   <i></i>
@@ -1262,9 +1900,23 @@ function App(props) {
                                                   Tipo de Jornada
                                                 </label>
                                                 <label className="input select">
-                                                  <select className="form-control">
-                                                    <option value="none">
+                                                  <select
+                                                    className="form-control"
+                                                    onChange={handleChange}
+                                                    value={state.TipoJornada}
+                                                    name="TipoJornada"
+                                                  >
+                                                    <option value="Nocturno">
                                                       Nocturno
+                                                    </option>
+                                                    <option value="Mixto">
+                                                      Mixto
+                                                    </option>
+                                                    <option value="Matutino">
+                                                      Matutino
+                                                    </option>
+                                                    <option value="Vespertino">
+                                                      Vespertino
                                                     </option>
                                                   </select>
                                                   <i></i>
@@ -1276,9 +1928,25 @@ function App(props) {
                                                   Periodicidad de pago
                                                 </label>
                                                 <label className="input select">
-                                                  <select className="form-control">
-                                                    <option value="none">
+                                                  <select
+                                                    className="form-control"
+                                                    onChange={handleChange}
+                                                    value={
+                                                      state.PeriodicidadDePago
+                                                    }
+                                                    name="PeriodicidadDePago"
+                                                  >
+                                                    <option value="Catorcena">
                                                       Catorcena
+                                                    </option>
+                                                    <option value="Semanal">
+                                                      Semanal
+                                                    </option>
+                                                    <option value="Mensual">
+                                                      Mensual
+                                                    </option>
+                                                    <option value="Mensual B">
+                                                      Mensual B
                                                     </option>
                                                   </select>
                                                   <i></i>
@@ -1289,9 +1957,23 @@ function App(props) {
                                                   Riesgo del Puesto
                                                 </label>
                                                 <label className="input select">
-                                                  <select className="form-control">
-                                                    <option value="none">
+                                                  <select
+                                                    className="form-control"
+                                                    onChange={handleChange}
+                                                    value={state.RiesgoPuesto}
+                                                    name="RiesgoPuesto"
+                                                  >
+                                                    <option value="Clase 1">
                                                       Clase 1
+                                                    </option>
+                                                    <option value="Clase 2">
+                                                      Clase 2
+                                                    </option>
+                                                    <option value="Clase 3">
+                                                      Clase 3
+                                                    </option>
+                                                    <option value="Clase 4">
+                                                      Clase 4
                                                     </option>
                                                   </select>
                                                   <i></i>
@@ -1305,10 +1987,12 @@ function App(props) {
                                                   Correo
                                                 </label>
                                                 <div className="input">
-                                                 
                                                   <input
+                                                    onChange={handleChange}
+                                                    value={state.CorreoOperador}
+                                                    name="CorreoOperador"
                                                     className="form-control"
-                                                    type="text"
+                                                    type="email"
                                                     placeholder=""
                                                     id="text"
                                                     native
@@ -1389,9 +2073,23 @@ function App(props) {
                                                   Tipo de operación
                                                 </label>
                                                 <label className="input select">
-                                                  <select className="form-control">
-                                                    <option value="none">
+                                                  <select
+                                                    className="form-control"
+                                                    onChange={handleChange}
+                                                    value={state.TipoContrato}
+                                                    name="TipoContrato"
+                                                  >
+                                                    <option value=" 1) Carretero">
                                                       1) Carretero
+                                                    </option>
+                                                    <option value="2) Cruce">
+                                                      2) Cruce
+                                                    </option>
+                                                    <option value=" 3) Cruce">
+                                                      3) Local - Patios
+                                                    </option>
+                                                    <option value="4) Eventual">
+                                                      4) Eventual
                                                     </option>
                                                   </select>
                                                   <i></i>
@@ -1399,12 +2097,19 @@ function App(props) {
                                               </div>
                                               <div className="col-sm-6 col-md-2 col-lg-3 unit">
                                                 <label className="label">
-                                                  Fecha de vencimiento
+                                                  Fecha de Nacimiento
                                                 </label>
                                                 <div className="input">
-                                                  
-                                                <input  class="form-control" type="text" id="date-icon" placeholder="12/20/2020" readonly=""/>
-
+                                                  <input
+                                                    onChange={handleChange}
+                                                    value={
+                                                      state.FechaNacimiento
+                                                    }
+                                                    name="FechaNacimiento"
+                                                    class="form-control"
+                                                    type="datetime-local"
+                                                    id="date-icon"
+                                                  />
                                                 </div>
                                               </div>
                                               <div className="col-sm-12 col-md-3 unit">
@@ -1412,11 +2117,16 @@ function App(props) {
                                                   Estado Civil
                                                 </label>
                                                 <label className="input select">
-                                                  <select className="form-control">
-                                                    <option value="none">
+                                                  <select
+                                                    className="form-control"
+                                                    onChange={handleChange}
+                                                    value={state.EstadoCivil}
+                                                    name="EstadoCivil"
+                                                  >
+                                                    <option value="Soltero">
                                                       Soltero
                                                     </option>
-                                                    <option value="none">
+                                                    <option value="Casado">
                                                       Casado
                                                     </option>
                                                   </select>
@@ -1428,8 +2138,12 @@ function App(props) {
                                                   Factor VSM Infonavit
                                                 </label>
                                                 <div className="input">
-                                                
                                                   <input
+                                                    onChange={handleChange}
+                                                    value={
+                                                      state.FactorVSMinInvonavit
+                                                    }
+                                                    name="FactorVSMinInfonavit"
                                                     className="form-control"
                                                     type="text"
                                                     placeholder=""
@@ -1443,8 +2157,12 @@ function App(props) {
                                                   Beneficiario de Fallecimiento
                                                 </label>
                                                 <div className="input">
-                                                  
                                                   <input
+                                                    onChange={handleChange}
+                                                    value={
+                                                      state.BeneficiarioFallecimiento
+                                                    }
+                                                    name="BeneficiarioFallecimiento"
                                                     className="form-control"
                                                     type="text"
                                                     placeholder=""
@@ -1457,8 +2175,10 @@ function App(props) {
                                                   Factor % Infonavit
                                                 </label>
                                                 <div className="input">
-                                                  
                                                   <input
+                                                  onChange={handleChange}
+                                                  value={state.FactorPorcentajeInfonavit}
+                                                  name="FactorPorcentajeInfonavit"
                                                     className="form-control"
                                                     type="text"
                                                     placeholder=""
@@ -1471,8 +2191,10 @@ function App(props) {
                                                   En caso de accidente avisar a
                                                 </label>
                                                 <div className="input">
-                                                  
                                                   <input
+                                                   onChange={handleChange}
+                                                   value={state.CasoAccidenteAvisarA}
+                                                   name="CasoAccidenteAvisarA"
                                                     className="form-control"
                                                     type="text"
                                                     placeholder=""
@@ -1485,8 +2207,10 @@ function App(props) {
                                                   Retención Diaria Infonavit
                                                 </label>
                                                 <div className="input">
-                                                  
                                                   <input
+                                                  onChange={handleChange}
+                                                  value={state.RetencionDiariaInfonavit}
+                                                  name="RetencionDiariaInfonavit"
                                                     className="form-control"
                                                     type="text"
                                                     placeholder=""
@@ -1501,17 +2225,31 @@ function App(props) {
                                                   Puesto
                                                 </label>
                                                 <label className="input select">
-                                                  <select className="form-control">
+                                                  <select
+                                                    onChange={handleChange}
+                                                    value={state.IdPuesto}
+                                                    name="IdPuesto"
+                                                    className="form-control"
+                                                    required
+                                                    native
+                                                  >
                                                     <option value="none">
-                                                      Asesor
-                                                    </option>
-                                                    <option value="none">
-                                                      Administrador
+                                                      Puesto
                                                     </option>
 
-                                                    <option value="none">
-                                                      Operador
-                                                    </option>
+                                                    {dataPuesto.map(
+                                                      (puesto) => (
+                                                        <option
+                                                          value={
+                                                            puesto.m_nIdPuesto
+                                                          }
+                                                        >
+                                                          {
+                                                            puesto.m_sPuesto
+                                                          }
+                                                        </option>
+                                                      )
+                                                    )}
                                                   </select>
                                                   <i></i>
                                                 </label>
@@ -1521,8 +2259,10 @@ function App(props) {
                                                   Retención Diaria Fonacot
                                                 </label>
                                                 <div className="input">
-                                                  
                                                   <input
+                                                   onChange={handleChange}
+                                                   value={state.retencionDiariaFonacot}
+                                                   name="retencionDiariaFonacot"
                                                     className="form-control"
                                                     type="text"
                                                     placeholder=""
@@ -1609,7 +2349,7 @@ function App(props) {
                                                     Incidencia
                                                   </label>
                                                   <label className="input select">
-                                                    <select className="form-control">
+                                                    <select className="form-control disabled">
                                                       <option value="none">
                                                         Incidencia
                                                       </option>
@@ -1634,9 +2374,13 @@ function App(props) {
                                                       Fecha
                                                     </label>
                                                     <div className="input">
-                                                     
-                                                    <input  class="form-control" type="text" id="date-icon" placeholder="12/20/2020" readonly=""/>
-
+                                                      <input
+                                                        class="form-control"
+                                                        type="text"
+                                                        id="date-icon"
+                                                        placeholder="12/20/2020"
+                                                        disabled
+                                                      />
                                                     </div>
                                                   </div>
                                                 </div>
@@ -1646,12 +2390,12 @@ function App(props) {
                                                       Observaciones
                                                     </label>
                                                     <div className="input">
-                                                    
                                                       <input
                                                         className="form-control"
                                                         type="text"
                                                         placeholder=""
                                                         id="text"
+                                                        disabled
                                                       />
                                                     </div>
                                                   </div>
@@ -1742,9 +2486,10 @@ function App(props) {
                                                 <label className="label"></label>
                                                 <label className="checkbox">
                                                   <input
-                                                    required
+                                                     onChange={handleChangeAppViajes}
+                                                     value={state.AppMisViajes}
+                                                     name="AppMisViajes"
                                                     native
-                                                    name="activo"
                                                     type="checkbox"
                                                   />
                                                   <i />
@@ -1757,8 +2502,10 @@ function App(props) {
                                                   Usuario
                                                 </label>
                                                 <div className="input">
-                                                  
                                                   <input
+                                                   onChange={handleChange}
+                                                   value={state.UsuarioViajes}
+                                                   name="UsuarioViajes"
                                                     className="form-control"
                                                     type="text"
                                                     placeholder=""
@@ -1772,8 +2519,10 @@ function App(props) {
                                                   Contraseña
                                                 </label>
                                                 <div className="input">
-                                                  
                                                   <input
+                                                   onChange={handleChange}
+                                                   value={state.ContraseñaViajes}
+                                                   name="ContraseñaViajes"
                                                     className="form-control"
                                                     type="password"
                                                     placeholder=""
@@ -1787,9 +2536,10 @@ function App(props) {
                                                 <label className="label"></label>
                                                 <label className="checkbox">
                                                   <input
-                                                    required
+                                                   onChange={handleChangeAppPaqueteria}
+                                                   value={state.AppPaqueteria}
+                                                   name="AppPaqueteria"
                                                     native
-                                                    name="activo"
                                                     type="checkbox"
                                                   />
                                                   <i />
@@ -1802,8 +2552,10 @@ function App(props) {
                                                   Usuario
                                                 </label>
                                                 <div className="input">
-                                                  
                                                   <input
+                                                   onChange={handleChange}
+                                                   value={state.UsuarioPaqueteria}
+                                                   name="UsuarioPaqueteria"
                                                     className="form-control"
                                                     type="text"
                                                     placeholder=""
@@ -1817,8 +2569,10 @@ function App(props) {
                                                   Contraseña
                                                 </label>
                                                 <div className="input">
-                                                  
                                                   <input
+                                                   onChange={handleChange}
+                                                   value={state.ContrasenaPaqueteria}
+                                                   name="ContraseñaPaqueteria"
                                                     className="form-control"
                                                     type="password"
                                                     placeholder=""
@@ -1895,63 +2649,65 @@ function App(props) {
                                           <div className="form-content">
                                             {/* start text password */}
                                             <div className="j-row toclone-widget-right toclone">
-                                                        <div className="span12 unit">
-                                                          <div className="input">
+                                              <div className="span12 unit">
+                                                <div className="input">
+                                                  <input
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder="Descripción"
+                                                    disabled
+                                                  />
+                                                </div>
+                                              </div>
+                                              <div className="span12 unit">
+                                                <form
+                                                  action="#"
+                                                  className="j-forms"
+                                                  noValidate
+                                                >
+                                                  <div className="form-content">
+                                                    <div className="row">
+                                                      {/* start prepend small file button */}
+                                                      <div className="col-md-12 unit">
+                                                        <div className="input prepend-small-btn">
+                                                          <div className="file-button">
+                                                            Browse
                                                             <input
-                                                              className="form-control"
-                                                              type="text"
-                                                              placeholder="Descripción"
+                                                            disabled
+                                                              className="btn btn-success"
+                                                              type="file"
+                                                              onChange="document.getElementById('prepend-small-btn').value = this.value;"
                                                             />
                                                           </div>
+                                                          <input
+                                                            className="form-control"
+                                                            type="text"
+                                                            id="prepend-small-btn"
+                                                            readOnly
+                                                            placeholder="no file selected"
+                                                          />
                                                         </div>
-                                                        <div className="span12 unit">
-                                                          <form
-                                                            action="#"
-                                                            className="j-forms"
-                                                            noValidate
-                                                          >
-                                                            <div className="form-content">
-                                                              <div className="row">
-                                                                {/* start prepend small file button */}
-                                                                <div className="col-md-12 unit">
-                                                                  <div className="input prepend-small-btn">
-                                                                    <div className="file-button">
-                                                                      Browse
-                                                                      <input
-                                                                        className="btn btn-success"
-                                                                        type="file"
-                                                                        onChange="document.getElementById('prepend-small-btn').value = this.value;"
-                                                                      />
-                                                                    </div>
-                                                                    <input
-                                                                      className="form-control"
-                                                                      type="text"
-                                                                      id="prepend-small-btn"
-                                                                      readOnly
-                                                                      placeholder="no file selected"
-                                                                    />
-                                                                  </div>
-                                                                </div>
-                                                                {/* end prepend small
-                                                                 */}
-                                                              </div>
-                                                            </div>
-                                                          </form>
-                                                        </div>
-
-                                                        <button
-                                                          type="button"
-                                                          className="btn btn-primary clone-btn-right clone"
-                                                        >
-                                                          <i className="fa fa-plus" />
-                                                        </button>
-                                                        <button
-                                                          type="button"
-                                                          className="btn btn-secondary clone-btn-right delete"
-                                                        >
-                                                          <i className="fa fa-minus" />
-                                                        </button>
                                                       </div>
+                                                      {/* end prepend small
+                                                       */}
+                                                    </div>
+                                                  </div>
+                                                </form>
+                                              </div>
+
+                                              <button
+                                                type="button"
+                                                className="btn btn-primary clone-btn-right clone"
+                                              >
+                                                <i className="fa fa-plus" />
+                                              </button>
+                                              <button
+                                                type="button"
+                                                className="btn btn-secondary clone-btn-right delete"
+                                              >
+                                                <i className="fa fa-minus" />
+                                              </button>
+                                            </div>
                                           </div>
                                         </form>
                                       </div>
@@ -1963,8 +2719,9 @@ function App(props) {
                               {/*Fin de ejemplo*/}
                             </div>
                             <div class="btn-ex-container">
-                            <button className="btn btn-primary primary-btn">Aceptar</button>
-
+                              <button className="btn btn-primary primary-btn">
+                                Aceptar
+                              </button>
                             </div>
                           </div>
                         </form>

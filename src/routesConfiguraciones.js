@@ -1,83 +1,94 @@
 import DepartamentoPage from './Views/Departamento';
-import RecoleccionPage from './Views/Recoleccion';
-import EmbalajesPage from './Views/Embalajes';
-import EmbarquePage from './Views/Embarque';
-import CatalogosPage from './Views/Catalogos';
+import MonedaPage from './Views/Moneda';
+import TipoCambio from './Views/TipoCambio';
+
+import {ReactComponent as GParametroIcon} from './iconos/Configuracion/Icono Parametros/icono_parametro.svg';
+import {ReactComponent as GUsuarioIcon} from './iconos/Configuracion/Icono Usuarios/icono_usuarios.svg';
+//import {ReactComponent as GPaisIcon} from './iconos/Configuracion/Icono Paises/icono_paises.svg';
+import {ReactComponent as GCiudadIcon} from './iconos/Configuracion/Icono Ciudades/icono_ciudades.svg';
+import {ReactComponent as GSucursalIcon} from './iconos/Configuracion/Icono Sucursales/icono_sucursal.svg';
+import {ReactComponent as GZonasIcon} from './iconos/Configuracion/Icono Zonas/icono_zonas_color.svg';
+import {ReactComponent as GFormatosIcon} from './iconos/Configuracion/Icono Formatos/icono_formatos.svg';
+import {ReactComponent as GFoliosIcon} from './iconos/Configuracion/Icono Folios/icono_folios.svg';
+import {ReactComponent as GTipoCambioIcon} from './iconos/Configuracion/Icono Tipo Cambio/icono_tipo_cambio.svg';
+import {ReactComponent as GMonedaIcon} from './iconos/Configuracion/Icono Moneda/icono_moneda.svg';
+import {ReactComponent as GCuentaCorreoIcon} from './iconos/Configuracion/Icono Correo/icono_correo.svg';
+import {ReactComponent as GBitacoraIcon} from './iconos/Configuracion/Icono Bitacora/icono_bitacora.svg';
 
 const configurationRoutes = [
+
   {
     path: "/Departamento",
     name: "Parámetros",
-    icon: <i className="zmdi zmdi-input-composite" />,
+    icon:  GParametroIcon,
     component: DepartamentoPage,
   },
   {
-    path: "/Departamento",
+    path: "/Usuarios",
     name: "Usuarios",
-    icon: <i className="zmdi zmdi-account-circle" />,
+    icon:  GUsuarioIcon,
     component: DepartamentoPage,
   },
   {
-    path: "/Catalogos",
+    path: "/Paises",
     name: "Países",
-    icon: <i className="fa fa-globe" />,
-    component: CatalogosPage,
+    icon: GUsuarioIcon,
+    component: DepartamentoPage,
   },
   {
-    path: "/Recolección",
+    path: "/Ciudades",
     name: "Ciudades",
-    icon: <i className="zmdi zmdi-city" />,
-    component: RecoleccionPage,
+    icon:  GCiudadIcon,
+    component: DepartamentoPage,
   },
   {
-    path: "/Embarque",
+    path: "/Sucursales",
     name: "Sucursales",
-    icon: <i className="zmdi zmdi-home" />,
-    component: EmbarquePage,
+    icon:  GSucursalIcon,
+    component: DepartamentoPage,
   },
   {
-    path: "/Departamento",
+    path: "/Zonas",
     name: "Zonas",
-    icon: <i className="zmdi zmdi-pin-drop" />,
+    icon:  GZonasIcon,
     component: DepartamentoPage,
   },
   {
-    path: "/Departamento",
+    path: "/FormatosImpresion",
     name: "Formatos Impresión",
-    icon: <i className="zmdi zmdi-file-text" />,
+    icon:  GFormatosIcon,
     component: DepartamentoPage,
   },
   {
-    path: "/Departamento",
+    path: "/Folios",
     name: "Folios",
-    icon: <i className="fa fa-list-ol" />,
+    icon:  GFoliosIcon,
     component: DepartamentoPage,
   },
   {
-    path: "/Embalajes",
+    path: "/TipoDeCambio",
     name: "Tipo de Cambio",
-    icon: <i className="zmdi zmdi-money-box" />,
-    component: EmbalajesPage,
+    icon:  GTipoCambioIcon,
+    component: TipoCambio,
   },
   {
-    path: "/Embalajes",
+    path: "/Moneda",
     name: "Moneda",
-    icon: <i className="zmdi zmdi-money" />,
-    component: EmbalajesPage,
+    icon:  GMonedaIcon,
+    component: MonedaPage,
   },
   {
-    path: "/Embalajes",
+    path: "/CuentasCorreo",
     name: "Cuentas Correo",
-    icon: <i className="fa fa-envelope" />,
-    component: EmbalajesPage,
+    icon:  GCuentaCorreoIcon,
+    component: DepartamentoPage,
   },
   {
-    path: "/Embalajes",
+    path: "/BitacoraProcesos",
     name: "Bitácora Procesos",
-    icon: <i className="fa fa-pencil-square-o" />,
-    component: EmbalajesPage,
+    icon:  GBitacoraIcon,
+    component: DepartamentoPage,
   },
-  
 ]
 
 export default configurationRoutes;
