@@ -274,7 +274,6 @@ function Embarque() {
     console.log(id)
     const url = `${process.env.REACT_APP_API_URL}/Embarques/GetById/${id}`;
     axios.get(url, { headers }).then(respuesta => {
-      console.log(respuesta.data.m_dFecha + "T" + respuesta.data.m_tHora.split(":")[0] + ":" + respuesta.data.m_tHora.split(":")[1])
       setState({
         ...state,
         agregar: "Modificar",
@@ -1671,6 +1670,7 @@ function Embarque() {
                                     onChange={handleEntregaCheckboxChange}
                                     className="form-control"
                                     type="checkbox"
+                                    checked={state.diferenteEntrega}
                                     value={state.diferenteEntrega}
                                     id="diferenteEntrega"
                                   />
