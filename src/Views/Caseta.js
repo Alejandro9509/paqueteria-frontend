@@ -1,0 +1,487 @@
+import React, { useEffect, useState, useMemo } from "react";
+import axios from "axios";
+import Cabecera from "../Components/Template/Cabecera";
+import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
+import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
+import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy } from 'react-table'
+
+function Caseta() {
+
+  const [data, setData] = React.useState([])
+  const [state, setState] = React.useState({
+    idCaseta: 0,
+    descripcion: "",
+
+    tarifaEje2: "",
+    tarifaEje3: "",
+    tarifaEje4: "",
+    tarifaEje5: "",
+    tarifaEje6: "",
+    tarifaEje7: "",
+    tarifaEje8: "",
+    tarifaEje9: "",
+
+    agregar: "Agregar",
+  })
+
+  const handleAceptar = (e) => {
+    e.preventDefault()
+    var params = {
+
+      "m_nIdCaseta": state.idCaseta,
+      "m_sDescripcion": state.descripcion,
+      "m_cTarifaEje2": state.tarifaEje2,
+      "m_cTarifaEje3": state.tarifaEje3,
+      "m_cTarifaEje4": state.tarifaEje4,
+      "m_cTarifaEje5": state.tarifaEje5,
+      "m_cTarifaEje6": state.tarifaEje6,
+      "m_cTarifaEje7": state.tarifaEje7,
+      "m_cTarifaEje8": state.tarifaEje8,
+      "m_cTarifaEje9": state.tarifaEje9,
+      "CreadoPor": 1,
+      "ModificadoPor": 1
+    }
+    console.log(params)
+    if (state.idCaseta != 0) {
+      const url = `${process.env.REACT_APP_API_URL}/Casetas/Modificar/` + state.idCaseta;
+      axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+        alert(respuesta.data)
+        window.location.reload();
+      }).catch(err => {
+        console.log(err)
+        alert("err")
+      });
+    } else {
+      const url = `${process.env.REACT_APP_API_URL}/Casetas/Agregar`;
+      axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+        alert(respuesta.data)
+        window.location.reload();
+      }).catch(err => {
+        console.log(err)
+        alert(err)
+      });
+    }
+
+  }
+
+  function handleEliminar(id) {
+    const url = `${process.env.REACT_APP_API_URL}/Casetas/Eliminar/` + id;
+    axios.delete(url, { headers }).then(respuesta => {
+      alert(respuesta.data)
+      window.location.reload();
+    }).catch(err => {
+      alert(err)
+    });
+  }
+
+  function handleShowModificar(id) {
+    const url = `${process.env.REACT_APP_API_URL}/Casetas/GetById/${id}`;
+    axios.get(url, { headers }).then(respuesta => {
+      console.log(respuesta.data)
+      setState({
+        ...state,
+        agregar: "Modificar",
+        idCaseta: id,
+        descripcion: respuesta.data.m_sDescripcion,
+        tarifaEje2: respuesta.data.m_cTarifaEje2,
+        tarifaEje3: respuesta.data.m_cTarifaEje3,
+        tarifaEje4: respuesta.data.m_cTarifaEje4,
+        tarifaEje5: respuesta.data.m_cTarifaEje5,
+        tarifaEje6: respuesta.data.m_cTarifaEje6,
+        tarifaEje7: respuesta.data.m_cTarifaEje7,
+        tarifaEje8: respuesta.data.m_cTarifaEje8,
+        tarifaEje9: respuesta.data.m_cTarifaEje9,
+
+      })
+    });
+  }
+
+  function handleShowAgregar() {
+    setState({
+      ...state,
+      agregar: "Agregar",
+      idCaseta: 0,
+      descripcion: "",
+      tarifaEje2: "",
+      tarifaEje3: "",
+      tarifaEje4: "",
+      tarifaEje5: "",
+      tarifaEje6: "",
+      tarifaEje7: "",
+      tarifaEje8: "",
+      tarifaEje9: "",
+    })
+  }
+
+  const handleChange = event => {
+    console.log(event.target.value)
+    setState({
+      ...state,
+      [event.target.id]: event.target.value
+    });
+  };
+
+  const columns = React.useMemo(() => [
+    {
+      Name: "Casetas",
+      accessor: "m_sDescripcion",
+    }, {
+      Name: "2 Ejes",
+      accessor: "m_cTarifaEje2",
+    }, {
+      Name: "3 Ejes",
+      accessor: "m_cTarifaEje3",
+    }, {
+      Name: "4 Ejes",
+      accessor: "m_cTarifaEje4",
+    }, {
+      Name: "5 Ejes",
+      accessor: "m_cTarifaEje5",
+    }, {
+      Name: "6 Ejes",
+      accessor: "m_cTarifaEje6",
+    }, {
+      Name: "7 Ejes",
+      accessor: "m_cTarifaEje7",
+    }, {
+      Name: "8 Ejes",
+      accessor: "m_cTarifaEje8",
+    },
+    {
+      Name: "9 Ejes",
+      accessor: "m_cTarifaEje9",
+    }
+
+  ]);
+
+  useEffect(value => {
+    getAllData();
+  }, []);
+
+  function getAllData() {
+    const url = `${process.env.REACT_APP_API_URL}/Casetas/GetListado`;
+    axios.get(url, { headers }).then(respuesta => {
+      setData(respuesta.data)
+    });
+  };
+
+  const headers = {
+    'Content-Type': 'application/json',
+    //    'access-control-allow-origin': '*'
+  }
+
+  function DefaultColumnFilter({
+    column: { filterValue, preFilteredRows, setFilter },
+  }) {
+    const count = preFilteredRows.length
+
+    return (
+      <input
+        className="form-control"
+        value={filterValue || ''}
+        onChange={e => {
+          setFilter(e.target.value || undefined)
+        }}
+        placeholder={`Buscar ${count} registros...`}
+      />
+    )
+  }
+
+  function Table({ columns, data }) {
+
+    const defaultColumn = React.useMemo(
+      () => ({
+        // Default Filter UI
+        Filter: DefaultColumnFilter,
+      }),
+      []
+    )
+
+    const {
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      rows,
+      prepareRow,
+    } = useTable(
+      {
+        columns,
+        data,
+        defaultColumn
+      },
+      useFilters,
+      useGlobalFilter,
+      useSortBy
+    )
+
+    return (
+      <div className="col-md-12">
+        <table className="table" {...getTableProps()}>
+          <thead>
+            {headerGroups.map(headerGroup => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                <th></th>
+                {headerGroup.headers.map(column => (
+                  // Add the sorting props to control sorting. For this example
+                  // we can add them into the header props
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render('Name')}
+                    {/* Add a sort direction indicator */}
+                    <span>
+                      {column.isSorted
+                        ? column.isSortedDesc
+                          ? <i className="fa fa-caret-up" />
+                          : <i className="fa fa-caret-down" />
+                        : ''}
+                    </span>
+                    <div>{column.canFilter ? column.render('Filter') : null}</div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr {...row.getRowProps()}>
+                    <td>
+                      <div>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdCaseta))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdCaseta))}><i className="zmdi zmdi-close" /></a>
+                      </div>
+                    </td>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
+          </tbody>
+        </table>
+      </div>
+    )
+  }
+
+  return (
+    <div>
+
+      <header className="topbar clearfix">
+        <Cabecera />
+      </header>
+
+      {/*Leftbar Start Here*/}
+      <aside className="iconic-leftbar">
+        <BarraLateralIzquierda />
+      </aside>
+      {/*Leftbar End Here*/}
+
+      {/*Page Container Start Here*/}
+      <section className="main-container">
+        <div className="container-fluid">
+
+          <div className="page-header full-block light">
+            <h2>Caseta</h2>
+          </div>
+
+          <ul className="nav nav-tabs">
+            <li className="active">
+              <a data-toggle="tab" href="#Listado">
+                <i className="fa fa-list" /> Listado
+            </a>
+            </li>
+            <li>
+              <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
+                <i className="fa fa-plus-circle" /> {state.agregar}
+              </a>
+            </li>
+          </ul>
+
+          <div className="row" className="tab-content">
+            <div className="widget-wrap" id="Listado" className="tab-pane fade in active">
+              <div className="widget-wrap">
+                <div className="widget-content">
+                  <div className="row">
+                    <Table columns={columns} data={data} />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="widget-wrap" id="Agregar" className="tab-pane fade">
+              <div className="widget-wrap">
+                <div className="widget-content">
+                  <div className="row">
+                    <div className="col-md-12">
+                      <form className="j-forms" onSubmit={handleAceptar}>
+                        <div className="form-content">
+
+                          <div className="col-md-12 unit">
+                            <label className="label">
+                              Caseta
+                            </label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                required={true}
+                                value={state.descripcion}
+                                id="descripcion"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-md-12 unit">
+                            <label className="label col-md-1">
+                              Tarifas
+                            </label>
+                            
+                            <div className="col-md-1">
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  placeholder="2 Ejes"
+                                  type="number"
+                                  required={true}
+                                  value={state.tarifaEje2}
+                                  id="tarifaEje2"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="col-md-1">
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  placeholder="3 Ejes"
+                                  type="number"
+                                  required={true}
+                                  value={state.tarifaEje3}
+                                  id="tarifaEje3"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="col-md-1">
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  placeholder="4 Ejes"
+                                  type="number"
+                                  required={true}
+                                  value={state.tarifaEje4}
+                                  id="tarifaEje4"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="col-md-1">
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  placeholder="5 Ejes"
+                                  type="number"
+                                  required={true}
+                                  value={state.tarifaEje5}
+                                  id="tarifaEje5"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="col-md-1">
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  placeholder="6 Ejes"
+                                  type="number"
+                                  required={true}
+                                  value={state.tarifaEje6}
+                                  id="tarifaEje6"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="col-md-1">
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  placeholder="7 Ejes"
+                                  type="number"
+                                  required={true}
+                                  value={state.tarifaEje7}
+                                  id="tarifaEje7"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="col-md-1">
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  placeholder="8 Ejes"
+                                  type="number"
+                                  required={true}
+                                  value={state.tarifaEje8}
+                                  id="tarifaEje8"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="col-md-1">
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  placeholder="9 Ejes"
+                                  type="number"
+                                  required={true}
+                                  value={state.tarifaEje9}
+                                  id="tarifaEje9"
+                                />
+                              </div>
+                            </div>
+
+                          </div>
+
+                        </div>
+                        <br></br>
+                        <div className="form-footer" className="col-md-12">
+                          <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-primary secondary-btn">Cancelar</button>
+                          <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+      {/*Page Container End Here*/}
+
+      {/*Rightbar Start Here*/}
+      <aside className="rightbar">
+        <BarraLateralDerecha />
+      </aside>
+
+    </div>
+
+  );
+}
+
+export default Caseta;
