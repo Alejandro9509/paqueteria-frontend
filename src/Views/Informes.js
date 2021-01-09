@@ -341,7 +341,7 @@ function Informes(props) {
           <div className="page-header filled full-block light">
             <div className="row">
               <div className="col-md-6 col-sm-6">
-                <h2>Plantilla sin pasos</h2>
+                <h2>Informes</h2>
               </div>
               <div className="col-md-6 col-sm-6">
                 <ul className="list-page-breadcrumb">
@@ -1301,7 +1301,7 @@ function Informes(props) {
                         <div className="col-md-12">
                           <form action="#" className="j-forms" noValidate>
                             <div className="form-content">
-                              {dataGuias.map((value, index) => {
+                              {guias.map((value, index) => {
                                 return (
                                   <div>
                                     <br />
@@ -1462,7 +1462,7 @@ function Informes(props) {
                                   }}
                                 >
                                   Total de guías :{" "}
-                                  {dataGuias.filter((g) => g.select).length}
+                                  {guias.filter((g) => g.select).length}
                                 </Grid>
                                 <Grid
                                   item
