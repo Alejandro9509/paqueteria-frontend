@@ -93,7 +93,7 @@ const catalogRoutes = [
     component: DepartamentoPage,
   },
   {
-    path: "/Embalajes",
+    path: "/Unidades",
     name: "Unidades",
     icon: UnidadesIcon,
     component: UnidadesPage,

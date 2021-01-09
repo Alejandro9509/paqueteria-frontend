@@ -572,17 +572,6 @@ function App(props) {
     });
   }
 
-  function handleElimiar(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Operador/Eliminar/` + id;
-    axios
-      .get(url, { headers })
-      .then((respuesta) => {
-        console.log(respuesta);
-      })
-      .catch((err) => {
-        alert(err);
-      });
-  }
   function handleEliminar(id) {
     const url = `${process.env.REACT_APP_API_URL}/Operador/Eliminar/` + id;
     axios

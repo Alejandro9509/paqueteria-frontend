@@ -566,7 +566,7 @@ function App(props) {
   };
 
   function handleEliminar(id) {
-    const url = `${process.env.REACT_APP_API_URL}Unidad/Eliminar/` + id;
+    const url = `${process.env.REACT_APP_API_URL}/Unidad/Eliminar/` + id;
     axios
       .get(url, { headers })
       .then((respuesta) => {
