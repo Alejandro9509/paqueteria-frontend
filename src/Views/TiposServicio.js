@@ -33,7 +33,7 @@ const handleAceptar = (e) => {
   }
   console.log(params)
   if(state.IdTipoServicio != 0){
-    const url = "http://localhost/TipoServicio/Modificar/" + state.IdTipoServicio;
+    const url = `${process.env.REACT_APP_API_URL}/TipoServicio/Modificar/` + state.IdTipoServicio;
     axios.put(url, Object.assign({}, params), {headers}).then(respuesta => {
     alert(respuesta.data)
     window.location.reload();
@@ -42,7 +42,7 @@ const handleAceptar = (e) => {
     alert("err")
   });
   } else {
-  const url = "http://localhost/TipoServicio/Agregar";
+  const url = `${process.env.REACT_APP_API_URL}/TipoServicio/Agregar`;
   axios.post(url, Object.assign({}, params), {headers}).then(respuesta => {
     alert(respuesta.data)
     window.location.reload();
@@ -55,7 +55,7 @@ const handleAceptar = (e) => {
 }
 
 function handleEliminar(id){
-  const url = "http://localhost/TipoServicio/Eliminar/" + id;
+  const url = `${process.env.REACT_APP_API_URL}/TipoServicio/Eliminar/` + id;
   axios.delete(url, {headers}).then(respuesta => {
     console.log(respuesta)
   }).catch(err => {
@@ -65,7 +65,7 @@ function handleEliminar(id){
 
 function handleShowModificar(row){
   console.log(row.original.m_nIdTipoServicio)
-  const url = "http://localhost/TipoServicio/GetById/" + row.original.m_nIdTipoServicio;
+  const url = `${process.env.REACT_APP_API_URL}/TipoServicio/GetById/` + row.original.m_nIdTipoServicio;
     axios.get(url, {headers}).then(respuesta => {
       console.log(respuesta.data)
       setState({
@@ -132,7 +132,7 @@ const handleChange = event => {
   }, []);
 
   function getAllData() {
-    const url = "http://localhost/TipoServicio/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/TipoServicio/GetListado`;
     axios.get(url, {headers}).then(respuesta => {
       setData(respuesta.data)
     });

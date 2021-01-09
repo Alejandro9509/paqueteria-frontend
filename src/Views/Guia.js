@@ -194,7 +194,7 @@ const handleAceptar = (e) => {
   "Idguia":state.IdGuia
   }
   if(state.idGuia != 0){
-    const url = "http://localhost/Guia/Modificar/"+state.idGuia;
+    const url = `${process.env.REACT_APP_API_URL}/Guia/Modificar/`+state.idGuia;
     axios.put(url, Object.assign({}, params), {headers}).then(respuesta => {
     alert(respuesta.data)
     window.location.reload();
@@ -203,7 +203,7 @@ const handleAceptar = (e) => {
     alert("err")
   });
   } else {
-  const url = "http://localhost/Guia/Agregar";
+  const url = `${process.env.REACT_APP_API_URL}/Guia/Agregar`;
   debugger;
   axios.post(url, Object.assign({}, params), {headers}).then(respuesta => {
     alert(respuesta.data)
@@ -218,7 +218,7 @@ const handleAceptar = (e) => {
 
 function handleEliminar(row){
   //alert(row.original.m_nIdGuia);
-  const url = "http://localhost/Guia/Eliminar/" + row.original.m_nIdGuia;
+  const url = `${process.env.REACT_APP_API_URL}/Guia/Eliminar/` + row.original.m_nIdGuia;
   axios.delete(url, {headers}).then(respuesta => {
     alert(respuesta.data)
     //console.log(respuesta)
@@ -231,7 +231,7 @@ function handleShowModificar (row) {
   //console.log(row.original.m_nIdGuia)
   //TODO
   //var valor2="";
-  const url = "http://localhost/Guia/GetById/" + row.original.m_nIdGuia;
+  const url = `${process.env.REACT_APP_API_URL}/Guia/GetById/` + row.original.m_nIdGuia;
   axios.get(url, {headers}).then(respuesta => {
       //console.log(respuesta.data)
      // debugger;
@@ -459,7 +459,7 @@ const handleChange = event => {
   }, []);
 
   async function getAllData() {
-    const url = "http://localhost/Guia/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/Guia/GetListado`;
     await axios.get(url, {headers}).then(respuesta => {
       setData(respuesta.data)
     });
@@ -490,7 +490,7 @@ useEffect(value => {
 }, []);
 
 async function getAllDataSucursal() {
-  const url = "http://localhost/Sucursales/GetListado";
+  const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
   await axios.get(url, {headers}).then(respuesta => {
     setDataSucursal(respuesta.data)
   });
@@ -501,7 +501,7 @@ useEffect(value => {
 }, []);
 
 async function getAllDataMoneda() {
-  const url = "http://localhost/Moneda/GetListado";
+  const url = `${process.env.REACT_APP_API_URL}/Moneda/GetListado`;
   await axios.get(url, {headers}).then(respuesta => {
     setDataMoneda(respuesta.data)
   });
@@ -511,7 +511,7 @@ useEffect(value => {
 }, []);
 
 async function getAllDataTipoCobro() {
-  const url = "http://localhost/TipoCobro/GetListado";
+  const url = `${process.env.REACT_APP_API_URL}/TipoCobro/GetListado`;
   await axios.get(url, {headers}).then(respuesta => {
     setDataTipoCobro(respuesta.data)
   });
@@ -522,7 +522,7 @@ useEffect(value => {
 }, []);
 
 async function getAllDataTipoServicio() {
-  const url = "http://localhost/TipoServicio/GetListado";
+  const url = `${process.env.REACT_APP_API_URL}/TipoServicio/GetListado`;
   await axios.get(url, {headers}).then(respuesta => {
     setDataTipoServicio(respuesta.data)
   });
@@ -532,7 +532,7 @@ useEffect(value => {
 }, []);
 
 async function getAllDataEstatusGuia() {
-  const url = "http://localhost/EstatusGuia/GetListado";
+  const url = `${process.env.REACT_APP_API_URL}/EstatusGuia/GetListado`;
   await axios.get(url, {headers}).then(respuesta => {
     setDataEstatusGuia(respuesta.data)
   });
@@ -543,7 +543,7 @@ useEffect(value => {
 }, []);
 
 async function getAllCiudades() {
-  const url = "http://localhost/Ciudades/GetListado";
+  const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
   await axios.get(url, {headers}).then(respuesta => {
     setDataCiudad(respuesta.data)
   });
@@ -560,14 +560,14 @@ async function cargaEmbarqueSucursal (valor) {
     if (valor =="" || valor=="0") return;
   if (state.idMoneda =="" || state.idMoneda=="0") return;
   
-  const url = "http://localhost/Embarques/GetBySucursalMoneda/"+valor+"/"+state.idMoneda+"/"+state.idGuia ;
+  const url = `${process.env.REACT_APP_API_URL}/Embarques/GetBySucursalMoneda/`+valor+"/"+state.idMoneda+"/"+state.idGuia ;
   await axios.get(url, {headers}).then(respuesta => {
     setDataEmbarque(respuesta.data)
   });
 };
 function cargaEmbarqueModificar (valorSucursal,valorMoneda,valorGuia) {    
   //alert(valorSucursal + "-" + valorMoneda)
-  const url = "http://localhost/Embarques/GetBySucursalMoneda/"+valorSucursal+"/"+valorMoneda +"/"+valorGuia;
+  const url = `${process.env.REACT_APP_API_URL}/Embarques/GetBySucursalMoneda/`+valorSucursal+"/"+valorMoneda +"/"+valorGuia;
   axios.get(url, {headers}).then(respuesta => {
     console.log(respuesta);
     setDataEmbarque(respuesta.data)
@@ -584,14 +584,14 @@ async function cargaEmbarqueMoneda (valor) {
   if (state.idSucursal =="" || state.idSucursal=="0") return;
   if (valor =="" || valor=="0") return;
   
-  const url = "http://localhost/Embarques/GetBySucursalMoneda/"+state.idSucursal+"/"+valor+"/"+state.idGuia ;
+  const url = `${process.env.REACT_APP_API_URL}/Embarques/GetBySucursalMoneda/`+state.idSucursal+"/"+valor+"/"+state.idGuia ;
   await axios.get(url, {headers}).then(respuesta => {
     setDataEmbarque(respuesta.data)
   });
 };
 
 function handleEmbarque (embarque) {
-  const url = "http://localhost/Embarques/GetById/"+embarque ;
+  const url = `${process.env.REACT_APP_API_URL}/Embarques/GetById/`+embarque ;
   //alert(embarque);
   console.log(embarque)
    axios.get(url, {headers}).then(respuesta => {
@@ -629,7 +629,7 @@ function handleEmbarque (embarque) {
   });
 };
 function handleEmbarqueModificar (embarque) {
-  const url = "http://localhost/Embarques/GetById/"+embarque.data.m_nIdEmbarque ;
+  const url = `${process.env.REACT_APP_API_URL}/Embarques/GetById/`+embarque.data.m_nIdEmbarque ;
   axios.get(url, {headers}).then(respuesta => {
     //setDataEmbarque(respuesta.data)
     setState({

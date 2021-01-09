@@ -102,7 +102,7 @@ function Informes(props) {
   };
 
   function getAllGuiasFrom(origen,destino) {
-    const url = "http://localhost/Guia/GetListadoPendientes/" + origen + "/" + destino;
+    const url = `${process.env.REACT_APP_API_URL}/Guia/GetListadoPendientes/` + origen + "/" + destino;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta);
 
@@ -111,7 +111,7 @@ function Informes(props) {
   }
 
   function getAllCiudades() {
-    const url = "http://localhost/Ciudades/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta);
 
@@ -120,7 +120,7 @@ function Informes(props) {
   }
 
   function getAllUnidades() {
-    const url = "http://localhost/Unidades/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/Unidades/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta);
 
@@ -129,7 +129,7 @@ function Informes(props) {
   }
 
   function getAllOperadores() {
-    const url = "http://localhost/Operadores/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/Operadores/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta);
 
@@ -138,14 +138,14 @@ function Informes(props) {
   }
 
   function getAllEstatusInformes() {
-    const url = "http://localhost/SisEstatus/getListadoInformes";
+    const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoInformes`;
     axios.get(url, { headers }).then((respuesta) => {
       setEstatusInformes(respuesta.data);
     });
   }
 
   function getAllSucursales() {
-    const url = "http://localhost/Sucursales/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setDataSucursal(respuesta.data);
     });
@@ -253,7 +253,7 @@ function Informes(props) {
   }, []);
 
   function getAllData() {
-    const url = "http://localhost/Informes/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/Informes/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setData(respuesta.data);
     });

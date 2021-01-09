@@ -35,7 +35,7 @@ const handleAceptar = (e) => {
   }
   console.log(params)
   if(state.idPuesto != 0){
-    const url = "http://localhost/Puesto/Modificar/" + state.idPuesto;
+    const url = `${process.env.REACT_APP_API_URL}/Puesto/Modificar/` + state.idPuesto;
     axios.put(url, Object.assign({}, params), {headers}).then(respuesta => {
     alert(respuesta.data)
     window.location.reload();
@@ -44,7 +44,7 @@ const handleAceptar = (e) => {
     alert("err")
   });
   } else {
-  const url = "http://localhost/Puesto/Agregar";
+  const url = `${process.env.REACT_APP_API_URL}/Puesto/Agregar`;
   axios.post(url, Object.assign({}, params), {headers}).then(respuesta => {
     alert(respuesta.data)
     window.location.reload();
@@ -57,7 +57,7 @@ const handleAceptar = (e) => {
 }
 
 function handleEliminar(id){
-  const url = "http://localhost/Puesto/Eliminar/" + id;
+  const url = `${process.env.REACT_APP_API_URL}/Puesto/Eliminar/` + id;
   axios.delete(url, {headers}).then(respuesta => {
     console.log(respuesta)
   }).catch(err => {
@@ -67,7 +67,7 @@ function handleEliminar(id){
 
 function handleShowModificar(row){
   console.log(row.original.m_nIdPuesto)
-  const url = "http://localhost/Puesto/GetById/" + row.original.m_nIdPuesto;
+  const url = `${process.env.REACT_APP_API_URL}/Puesto/GetById/` + row.original.m_nIdPuesto;
     axios.get(url, {headers}).then(respuesta => {
       console.log(respuesta.data)
       setState({
@@ -177,7 +177,7 @@ const handleChange = event => {
   }, []);
 
   function getAllData() {
-    const url = "http://localhost/Puesto/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/Puesto/GetListado`;
     axios.get(url, {headers}).then(respuesta => {
       setData(respuesta.data)
     });
