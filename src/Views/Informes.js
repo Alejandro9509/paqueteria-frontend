@@ -34,8 +34,9 @@ function Informes(props) {
   const [dataSucursal, setDataSucursal] = React.useState([]);
   const [dataEstatusInformes, setEstatusInformes] = React.useState([]);
   const [dataOperadores, setDataOperadores] = React.useState([]);
-  const [dataUnidades, setDataUnidades] = React.useState([]);
   const [dataOrigenes, setDataOrigenes] = React.useState([]);
+  const [dataUnidades, setDataUnidades] = React.useState([]);
+  const [dataGuias, setDataGuias] = React.useState([]);
   const [guias, setGuias] = React.useState([
     {
       folio: "FE-100",
@@ -73,12 +74,22 @@ function Informes(props) {
 
   const [state, setState] = React.useState({
     showPopUp: false,
-    IdGrupoUnidad: 0,
-    Codigo: 0,
-    GrupoUnidad: "",
-    DefinidoPorSistema: 0,
-    Color: "",
-    ColorLetra: 0,
+    IdInforme: 0,
+    FolioInforme: 0,
+    Fecha: "",
+    Hora: "",
+    IdEstatusInforme: 0,
+    IdViaje: 0,
+    IdSucursalEmisora: 0,
+    IdSucursalReceptora: 0,
+    IdOperador: 0,
+    IdUnidad: 0,
+    IdRemolque: 0,
+    IdCiudadDestino: 0,
+    IdCiudadOrigen: 0,
+    IdRuta: 0,
+    FechaCancelacion: "",
+    IdIdUsuarioCancelacion: 0,
     agregar: "Agregar",
   });
 
@@ -89,6 +100,15 @@ function Informes(props) {
     console.log(newGuia);
     setGuias(newGuia);
   };
+
+  function getAllGuiasFrom(origen,destino) {
+    const url = "http://localhost/Guia/GetListadoPendientes/" + origen + "/" + destino;
+    axios.get(url, { headers }).then((respuesta) => {
+      console.log(respuesta);
+
+      setDataGuias(respuesta.data);
+    });
+  }
 
   function getAllCiudades() {
     const url = "http://localhost/Ciudades/GetListado";
@@ -142,6 +162,27 @@ function Informes(props) {
       Color: "",
     });
   }
+
+  const handleChangeOrigenChange = event => {
+    console.log(event.target.value)
+
+    setState({
+      ...state,
+      idOrigen: event.target.value
+    });
+    //Aqui hacer la peticion
+    //No se que peticion tienes que hacer, aqui lo haces
+  };
+
+  const handleChangeDestinoChange = event => {
+
+    console.log(state.IdCiudadDestino)
+    setState({
+      ...state,
+      idDestino: event.target.value
+    });
+    getAllGuiasFrom(state.IdCiudadOrigen, state.IdCiudadDestino)
+  };
 
   const columns2 = React.useMemo(() => [
     {
@@ -870,15 +911,7 @@ function Informes(props) {
                                                     {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
                                                     <Autocomplete
                                                       freeSolo
-                                                      onChange={(
-                                                        event,
-                                                        newValue
-                                                      ) =>
-                                                        setState({
-                                                          ...state,
-                                                          idOrigen: newValue,
-                                                        })
-                                                      }
+                                                      onChange={(event, newValue) => setState({...state, IdCiudadOrigen: newValue})}
                                                       placeholder={
                                                         state.idOrigen
                                                       }
@@ -907,15 +940,7 @@ function Informes(props) {
                                                     {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
                                                     <Autocomplete
                                                       freeSolo
-                                                      onChange={(
-                                                        event,
-                                                        newValue
-                                                      ) =>
-                                                        setState({
-                                                          ...state,
-                                                          idDestino: newValue,
-                                                        })
-                                                      }
+                                                      onChange={(event, newValue) => setState({...state, IdCiudadDestino: newValue}),handleChangeDestinoChange}
                                                       placeholder={
                                                         state.idDestino
                                                       }
@@ -1276,7 +1301,7 @@ function Informes(props) {
                         <div className="col-md-12">
                           <form action="#" className="j-forms" noValidate>
                             <div className="form-content">
-                              {guias.map((value, index) => {
+                              {dataGuias.map((value, index) => {
                                 return (
                                   <div>
                                     <br />
@@ -1437,7 +1462,7 @@ function Informes(props) {
                                   }}
                                 >
                                   Total de guías :{" "}
-                                  {guias.filter((g) => g.select).length}
+                                  {dataGuias.filter((g) => g.select).length}
                                 </Grid>
                                 <Grid
                                   item
