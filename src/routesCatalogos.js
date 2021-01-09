@@ -10,6 +10,7 @@ import RutasPage from './Views/Rutas';
 import TipoServicioPage from './Views/TiposServicio';
 import EstatusUnidadPage from './Views/EstatusUnidad';
 import TipoCobroPage from './Views/TipoCobro';
+import CasetaPage from './Views/Caseta'
 
 import {ReactComponent as GClienteIcon} from './iconos/Catalogos/Icono Grupo Clientes/icono_grupo_cliente.svg';
 import {ReactComponent as BancoIcon} from './iconos/Catalogos/Icono Banco/icono_banco.svg';
@@ -161,10 +162,10 @@ const catalogRoutes = [
     component: EmbalajesPage,
   },
   {
-    path: "/Embalajes",
+    path: "/Caseta",
     name: "Casetas",
     icon: CasetaIcon,
-    component: EmbalajesPage,
+    component: CasetaPage,
   },
   {
     path: "/Embalajes",
