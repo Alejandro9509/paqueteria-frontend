@@ -1,8 +1,20 @@
-
 import React, { useEffect, useState, setData, useMemo, Component } from "react";
 
 import axios from "axios";
-import { FormControl, Input, InputLabel } from "@material-ui/core";
+import {
+  ButtonBase,
+  Checkbox,
+  FormControl,
+  Grid,
+  IconButton,
+  Input,
+  InputLabel,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemSecondaryAction,
+  ListItemText,
+} from "@material-ui/core";
 
 import DataTable from "react-data-table-component";
 import Cabecera from "../Components/Template/Cabecera";
@@ -18,107 +30,234 @@ const headers = {
 };
 function Informes(props) {
   const [stepActive, setStepActive] = React.useState(1);
-  const [data, setData] = React.useState([])
+  const [data, setData] = React.useState([]);
   const [dataSucursal, setDataSucursal] = React.useState([]);
   const [dataEstatusInformes, setEstatusInformes] = React.useState([]);
-
-
-const [state, setState] = React.useState({
-    showPopUp: false,
-    IdGrupoUnidad: 0,
-    Codigo: 0,
-    GrupoUnidad: "",
-    DefinidoPorSistema: 0,
-    Color: "",
-    ColorLetra: 0,
-    agregar: "Agregar"
-})
-
-function getAllEstatusInformes() {
-  const url = "http://localhost/SisEstatus/getListadoInformes";
-  axios.get(url, { headers }).then((respuesta) => {
-    setEstatusInformes(respuesta.data);
-  });
-}
-
-function getAllSucursales() {
-  const url = "http://localhost/Sucursales/GetListado";
-  axios.get(url, { headers }).then((respuesta) => {
-    setDataSucursal(respuesta.data);
-  });
-}
-
-function handleShowAgregar() {
-  setState({
-    ...state,
-    agregar: "Agregar",
-    showPopUp: true,
-    IdGrupoUnidad: 0,
-    Codigo: 0,
-    GrupoUnidad: "",
-    Color: ""
-  })
-}
-
-const columns2 = React.useMemo(() => [
-  {
-    Name:"Folio/Serie",
-    accessor: "m_nFolioInforme",
-  },{
-    Name:"Fecha",
-    accessor: "m_dFecha",
-  },{
-    Name:"Hora Elaboración",
-    accessor: "m_tHora",
-  },{
-    Name:"Viaje",
-    accessor: "m_nIdViaje",
-  },{
-    Name:"Oficina Emisora",
-    accessor: "m_nIdSucursalEmisora",
-  },{
-    Name:"Oficina Receptora",
-    accessor: "m_nIdSucursalReceptora",
-  },{
-    Name:"Operador",
-    accessor: "m_nIdOperador",
-  },{
-    Name:"Unidad",
-    accessor: "m_nIdUnidad",
-  },{
-    Name:"Remolque",
-    accessor: "m_nIdRemolque",
-  },{
-    Name:"Origen",
-    accessor: "m_nIdCiudadOrigen",
-  },{
-    Name:"Destino",
-    accessor: "m_nIdCiudadDestino",
-  },{
-    Name:"Ruta",
-    accessor: "m_nIdRuta",
-  },{
-    Name:"Cancelado",
-    accessor: "m_nIdEstatusInforme",
-  },{
-    Name:"Usuario que cancela",
-    accessor: "m_nModificadoPor",
-  }
+  const [dataOperadores, setDataOperadores] = React.useState([]);
+  const [dataOrigenes, setDataOrigenes] = React.useState([]);
+  const [dataUnidades, setDataUnidades] = React.useState([]);
+  const [dataGuias, setDataGuias] = React.useState([]);
+  const [guias, setGuias] = React.useState([
+    {
+      folio: "FE-100",
+      estatus: "Documentada",
+      total: "$30",
+      destino: "Tijuana",
+      servicio: "Unidad Completa",
+      observaciones: "Los productos vienen sellados correctamente",
+    },
+    {
+      folio: "FE-100",
+      estatus: "Documentada",
+      total: "$30",
+      destino: "Tijuana",
+      servicio: "Unidad Completa",
+      observaciones: "Los productos vienen sellados correctamente",
+    },
+    {
+      folio: "FE-100",
+      estatus: "Documentada",
+      total: "$30",
+      destino: "Tijuana",
+      servicio: "Unidad Completa",
+      observaciones: "Los productos vienen sellados correctamente",
+    },
+    {
+      folio: "FE-100",
+      estatus: "Documentada",
+      total: "$30",
+      destino: "Tijuana",
+      servicio: "Unidad Completa",
+      observaciones: "Los productos vienen sellados correctamente",
+    },
   ]);
 
-useEffect(value => {
-  getAllData();
-  getAllEstatusInformes();
-  getAllSucursales();
-}, []);
-
-function getAllData() {
-  const url = "http://localhost/Informes/GetListado";
-  axios.get(url, {headers}).then(respuesta => {
-    setData(respuesta.data)
+  const [state, setState] = React.useState({
+    showPopUp: false,
+    IdInforme: 0,
+    FolioInforme: 0,
+    Fecha: "",
+    Hora: "",
+    IdEstatusInforme: 0,
+    IdViaje: 0,
+    IdSucursalEmisora: 0,
+    IdSucursalReceptora: 0,
+    IdOperador: 0,
+    IdUnidad: 0,
+    IdRemolque: 0,
+    IdCiudadDestino: 0,
+    IdCiudadOrigen: 0,
+    IdRuta: 0,
+    FechaCancelacion: "",
+    IdIdUsuarioCancelacion: 0,
+    agregar: "Agregar",
   });
-};
 
+  const selectGuia = (index) => {
+    const newGuia = [...guias];
+
+    newGuia[index]["select"] = newGuia[index].select ? false : true;
+    console.log(newGuia);
+    setGuias(newGuia);
+  };
+
+  function getAllGuiasFrom(origen,destino) {
+    const url = `${process.env.REACT_APP_API_URL}/Guia/GetListadoPendientes/` + origen + "/" + destino;
+    axios.get(url, { headers }).then((respuesta) => {
+      console.log(respuesta);
+
+      setDataGuias(respuesta.data);
+    });
+  }
+
+  function getAllCiudades() {
+    const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
+    axios.get(url, { headers }).then((respuesta) => {
+      console.log(respuesta);
+
+      setDataOrigenes(respuesta.data);
+    });
+  }
+
+  function getAllUnidades() {
+    const url = `${process.env.REACT_APP_API_URL}/Unidades/GetListado`;
+    axios.get(url, { headers }).then((respuesta) => {
+      console.log(respuesta);
+
+      setDataUnidades(respuesta.data);
+    });
+  }
+
+  function getAllOperadores() {
+    const url = `${process.env.REACT_APP_API_URL}/Operadores/GetListado`;
+    axios.get(url, { headers }).then((respuesta) => {
+      console.log(respuesta);
+
+      setDataOperadores(respuesta.data);
+    });
+  }
+
+  function getAllEstatusInformes() {
+    const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoInformes`;
+    axios.get(url, { headers }).then((respuesta) => {
+      setEstatusInformes(respuesta.data);
+    });
+  }
+
+  function getAllSucursales() {
+    const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
+    axios.get(url, { headers }).then((respuesta) => {
+      setDataSucursal(respuesta.data);
+    });
+  }
+
+  function handleShowAgregar() {
+    setState({
+      ...state,
+      agregar: "Agregar",
+      showPopUp: true,
+      IdGrupoUnidad: 0,
+      Codigo: 0,
+      GrupoUnidad: "",
+      Color: "",
+    });
+  }
+
+  const handleChangeOrigenChange = event => {
+    console.log(event.target.value)
+
+    setState({
+      ...state,
+      idOrigen: event.target.value
+    });
+    //Aqui hacer la peticion
+    //No se que peticion tienes que hacer, aqui lo haces
+  };
+
+  const handleChangeDestinoChange = event => {
+
+    console.log(state.IdCiudadDestino)
+    setState({
+      ...state,
+      idDestino: event.target.value
+    });
+    getAllGuiasFrom(state.IdCiudadOrigen, state.IdCiudadDestino)
+  };
+
+  const columns2 = React.useMemo(() => [
+    {
+      Name: "Folio/Serie",
+      accessor: "m_nFolioInforme",
+    },
+    {
+      Name: "Fecha",
+      accessor: "m_dFecha",
+    },
+    {
+      Name: "Hora Elaboración",
+      accessor: "m_tHora",
+    },
+    {
+      Name: "Viaje",
+      accessor: "m_nIdViaje",
+    },
+    {
+      Name: "Oficina Emisora",
+      accessor: "m_nIdSucursalEmisora",
+    },
+    {
+      Name: "Oficina Receptora",
+      accessor: "m_nIdSucursalReceptora",
+    },
+    {
+      Name: "Operador",
+      accessor: "m_nIdOperador",
+    },
+    {
+      Name: "Unidad",
+      accessor: "m_nIdUnidad",
+    },
+    {
+      Name: "Remolque",
+      accessor: "m_nIdRemolque",
+    },
+    {
+      Name: "Origen",
+      accessor: "m_nIdCiudadOrigen",
+    },
+    {
+      Name: "Destino",
+      accessor: "m_nIdCiudadDestino",
+    },
+    {
+      Name: "Ruta",
+      accessor: "m_nIdRuta",
+    },
+    {
+      Name: "Cancelado",
+      accessor: "m_nIdEstatusInforme",
+    },
+    {
+      Name: "Usuario que cancela",
+      accessor: "m_nModificadoPor",
+    },
+  ]);
+
+  useEffect((value) => {
+    getAllData();
+    getAllEstatusInformes();
+    getAllSucursales();
+    getAllOperadores();
+    getAllUnidades();
+    getAllCiudades();
+  }, []);
+
+  function getAllData() {
+    const url = `${process.env.REACT_APP_API_URL}/Informes/GetListado`;
+    axios.get(url, { headers }).then((respuesta) => {
+      setData(respuesta.data);
+    });
+  }
 
   function openSection(index) {
     closeSeccions();
@@ -202,7 +341,7 @@ function getAllData() {
           <div className="page-header filled full-block light">
             <div className="row">
               <div className="col-md-6 col-sm-6">
-                <h2>Plantilla sin pasos</h2>
+                <h2>Informes</h2>
               </div>
               <div className="col-md-6 col-sm-6">
                 <ul className="list-page-breadcrumb">
@@ -226,30 +365,30 @@ function getAllData() {
         <ul className="nav nav-tabs">
           <li className="active">
             <a data-toggle="tab" href="#Listado">
-            <i className="fa fa-list"/> Listado
+              <i className="fa fa-list" /> Listado
             </a>
           </li>
           <li>
             <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
-            <i className="fa fa-plus-circle"/> {state.agregar}
+              <i className="fa fa-plus-circle" /> {state.agregar}
             </a>
           </li>
-          
+
           <li>
             <a data-toggle="tab" href="#Imprimir">
-              <i className="fa fa-print"/> Imprimir
+              <i className="fa fa-print" /> Imprimir
             </a>
           </li>
-         
+
           <li>
             <a data-toggle="tab" href="#Cancelar">
-              <i className="fa fa-ban"/> Cancelar
+              <i className="fa fa-ban" /> Cancelar
             </a>
           </li>
 
           <li>
             <a data-toggle="tab" href="#Cubicar">
-              <i className="fa fa-adjust"/> Cubicar / Optimizar Rutas
+              <i className="fa fa-adjust" /> Cubicar / Optimizar Rutas
             </a>
           </li>
         </ul>
@@ -365,8 +504,6 @@ function getAllData() {
                             <div className="col-md-12">
                               <div className="row">
                                 <div className="col-md-12">
-
-
                                   <div className="widget-wrap">
                                     <div className="widget-header block-header margin-bottom-0 clearfix">
                                       <div className="pull-left">
@@ -409,11 +546,8 @@ function getAllData() {
                                             </ul>
                                           </li>
                                         </ul>
-
-
                                       </div>
                                     </div>
-
 
                                     <div className="widget-container">
                                       <div className="widget-content">
@@ -425,389 +559,447 @@ function getAllData() {
                                               noValidate
                                             >
                                               <div className="form-content">
-                                              <div className="row">
-{/*****************************************Sucursal**********************************************************/}
-<div className="col-sm-6 col-md-2 unit">
-                        <label className="label">
-                          Sucursal
-                        </label>
-                        <label className="input select">
-                          <select
-                            className="form-control"
-                            required
-
-                            id="sucursal"
-                          >
-                            <option value="0">
-                              Todas
-                            </option>
-                            {dataSucursal.map(
-                              (sucursal) => (
-                                <option key={sucursal.m_nIdSucursal} value={sucursal.m_nIdSucursal}>
-                                  {
-                                    sucursal.m_sSucursal
-                                  }
-                                </option>
-                              )
-                            )}
-                          </select>
-                      </label>
-                    </div>
-{/*****************************************Folio************************************************************/}
-                                                <div className="col-sm-12 col-md-2 unit">
-                                                  <label className="label">
-                                                    Folio
-                          </label>
-                                                  <div className="input">
-                                                    <label
-                                                      className="icon-left"
-                                                      htmlFor="Folio"
-                                                    >
-                                                      <i className="fa fa-edit" />
-                                                    </label>
-                                                    <input
-
-                                                      className="form-control"
-                                                      type="text"
-
-                                                      id="Folio"
-                                                    />
-                                                  </div>
-                                                </div>
-                                                {/*****************************************Fecha*******************************************************/}
-                                                <div className="col-sm-12 col-md-2 unit">
-                                                  <label className="label">
-                                                    Fecha
-                          </label>
-                                                  <div className="input">
-                                                    <label
-                                                      className="icon-left"
-                                                      htmlFor="Fecha"
-                                                    >
-                                                      <i className="fa fa-edit" />
-                                                    </label>
-                                                    <input
-
-                                                      className="form-control"
-                                                      type="text"
-
-                                                      id="Fecha"
-                                                    />
-                                                  </div>
-                                                </div>
-                                                {/*****************************************Hora*******************************************************/}
-                                                <div className="col-sm-12 col-md-2 unit">
-                                                  <label className="label">
-                                                    Hora
-                          </label>
-                                                  <div className="input">
-                                                    <label
-                                                      className="icon-left"
-                                                      htmlFor="Hora"
-                                                    >
-                                                      <i className="fa fa-edit" />
-                                                    </label>
-                                                    <input
-
-                                                      className="form-control"
-                                                      type="text"
-
-                                                      id="Hora"
-                                                    />
-                                                  </div>
-                                                </div>
-{/*****************************************Oficina Emisora***************************************************/}
-<div className="col-sm-6 col-md-2 unit">
-                        <label className="label">
-                          Oficina Emisora
-                        </label>
-                        <label className="input select">
-                          <select
-                            className="form-control"
-                            required
-
-                            id="Oficina Emisora"
-                          >
-                            <option value="0">
-                              Todas
-                            </option>
-                            {dataSucursal.map(
-                              (sucursal) => (
-                                <option key={sucursal.m_nIdSucursal} value={sucursal.m_nIdSucursal}>
-                                  {
-                                    sucursal.m_sSucursal
-                                  }
-                                </option>
-                              )
-                            )}
-                          </select>
-                      </label>
-                    </div>
-{/*****************************************Oficina Receptora*************************************************/}
-<div className="col-sm-6 col-md-2 unit">
-                        <label className="label">
-                          Oficina Receptora
-                        </label>
-                        <label className="input select">
-                          <select
-                            className="form-control"
-                            required
-
-                            id="Oficina Receptora"
-                          >
-                            <option value="0">
-                              Todas
-                            </option>
-                            {dataSucursal.map(
-                              (sucursal) => (
-                                <option key={sucursal.m_nIdSucursal} value={sucursal.m_nIdSucursal}>
-                                  {
-                                    sucursal.m_sSucursal
-                                  }
-                                </option>
-                              )
-                            )}
-                          </select>
-                      </label>
-                    </div>
-</div>
-{/*****************************************Estatus de Entrega*************************************************/}
                                                 <div className="row">
-                                                <div className="col-sm-6 col-md-3 unit">
-                        <label className="label">
-                          Estatus
-                        </label>
-                        <label className="input select">
-                          <select
-                            className="form-control"
-                            required
-                            id="estatus"
-                          >
-                            <option value="0">
-                              Todos
-                            </option>
-                            {dataEstatusInformes.map(
-                              (estatus) => (
-                                <option key={estatus.m_nIdEstatusRecoleccion} value={estatus.m_nIdEstatusRecoleccion}>
-                                  {
-                                    estatus.m_sEstatus
-                                  }
-                                </option>
-                              )
-                            )}
-                          </select>
-                        <i></i>
-                      </label>
-                    </div>
-
-</div>
-
- {/*****************************************Operador*************************************************/}
- <div className="row">
-                                                <div className="col-sm-12 col-md-6 unit">
-                                                  <label className="label">
-                                                    Operador
-                          </label>
-                                                  <div className="input">
-                                                    <label
-                                                      className="icon-left"
-                                                      htmlFor="Operador"
-                                                    >
-                                                      <i className="fa fa-edit" />
+                                                  {/*****************************************Sucursal**********************************************************/}
+                                                  <div className="col-sm-6 col-md-2 unit">
+                                                    <label className="label">
+                                                      Sucursal
                                                     </label>
-                                                    <input
-
-                                                      className="form-control"
-                                                      type="text"
-
-                                                      id="Operador"
-                                                    />
+                                                    <label className="input select">
+                                                      <select
+                                                        className="form-control"
+                                                        required
+                                                        id="sucursal"
+                                                      >
+                                                        <option value="0">
+                                                          Todas
+                                                        </option>
+                                                        {dataSucursal.map(
+                                                          (sucursal) => (
+                                                            <option
+                                                              key={
+                                                                sucursal.m_nIdSucursal
+                                                              }
+                                                              value={
+                                                                sucursal.m_nIdSucursal
+                                                              }
+                                                            >
+                                                              {
+                                                                sucursal.m_sSucursal
+                                                              }
+                                                            </option>
+                                                          )
+                                                        )}
+                                                      </select>
+                                                    </label>
+                                                  </div>
+                                                  {/*****************************************Folio************************************************************/}
+                                                  <div className="col-sm-12 col-md-2 unit">
+                                                    <label className="label">
+                                                      Folio
+                                                    </label>
+                                                    <div className="input">
+                                                      <label
+                                                        className="icon-left"
+                                                        htmlFor="Folio"
+                                                      >
+                                                        <i className="fa fa-edit" />
+                                                      </label>
+                                                      <input
+                                                        className="form-control"
+                                                        type="text"
+                                                        id="Folio"
+                                                      />
+                                                    </div>
+                                                  </div>
+                                                  {/*****************************************Fecha*******************************************************/}
+                                                  <div className="col-sm-12 col-md-2 unit">
+                                                    <label className="label">
+                                                      Fecha
+                                                    </label>
+                                                    <div className="input">
+                                                      <label
+                                                        className="icon-left"
+                                                        htmlFor="Fecha"
+                                                      >
+                                                        <i className="fa fa-edit" />
+                                                      </label>
+                                                      <input
+                                                        className="form-control"
+                                                        type="text"
+                                                        id="Fecha"
+                                                      />
+                                                    </div>
+                                                  </div>
+                                                  {/*****************************************Hora*******************************************************/}
+                                                  <div className="col-sm-12 col-md-2 unit">
+                                                    <label className="label">
+                                                      Hora
+                                                    </label>
+                                                    <div className="input">
+                                                      <label
+                                                        className="icon-left"
+                                                        htmlFor="Hora"
+                                                      >
+                                                        <i className="fa fa-edit" />
+                                                      </label>
+                                                      <input
+                                                        className="form-control"
+                                                        type="text"
+                                                        id="Hora"
+                                                      />
+                                                    </div>
+                                                  </div>
+                                                  {/*****************************************Oficina Emisora***************************************************/}
+                                                  <div className="col-sm-6 col-md-2 unit">
+                                                    <label className="label">
+                                                      Oficina Emisora
+                                                    </label>
+                                                    <label className="input select">
+                                                      <select
+                                                        className="form-control"
+                                                        required
+                                                        id="Oficina Emisora"
+                                                      >
+                                                        <option value="0">
+                                                          Todas
+                                                        </option>
+                                                        {dataSucursal.map(
+                                                          (sucursal) => (
+                                                            <option
+                                                              key={
+                                                                sucursal.m_nIdSucursal
+                                                              }
+                                                              value={
+                                                                sucursal.m_nIdSucursal
+                                                              }
+                                                            >
+                                                              {
+                                                                sucursal.m_sSucursal
+                                                              }
+                                                            </option>
+                                                          )
+                                                        )}
+                                                      </select>
+                                                    </label>
+                                                  </div>
+                                                  {/*****************************************Oficina Receptora*************************************************/}
+                                                  <div className="col-sm-6 col-md-2 unit">
+                                                    <label className="label">
+                                                      Oficina Receptora
+                                                    </label>
+                                                    <label className="input select">
+                                                      <select
+                                                        className="form-control"
+                                                        required
+                                                        id="Oficina Receptora"
+                                                      >
+                                                        <option value="0">
+                                                          Todas
+                                                        </option>
+                                                        {dataSucursal.map(
+                                                          (sucursal) => (
+                                                            <option
+                                                              key={
+                                                                sucursal.m_nIdSucursal
+                                                              }
+                                                              value={
+                                                                sucursal.m_nIdSucursal
+                                                              }
+                                                            >
+                                                              {
+                                                                sucursal.m_sSucursal
+                                                              }
+                                                            </option>
+                                                          )
+                                                        )}
+                                                      </select>
+                                                    </label>
                                                   </div>
                                                 </div>
-</div>
-
-{/*****************************************Unidad*************************************************/}
+                                                {/*****************************************Estatus de Entrega*************************************************/}
                                                 <div className="row">
-                                                <div className="col-sm-12 col-md-6 unit">
-                                                  <label className="label">
-                                                    Unidad
-                          </label>
-                                                  <div className="input">
-                                                    <label
-                                                      className="icon-left"
-                                                      htmlFor="Estatus de Entrega"
-                                                    >
-                                                      <i className="fa fa-edit" />
+                                                  <div className="col-sm-6 col-md-3 unit">
+                                                    <label className="label">
+                                                      Estatus
                                                     </label>
-                                                    <input
-
-                                                      className="form-control"
-                                                      type="text"
-
-                                                      id="Unidad"
-                                                    />
+                                                    <label className="input select">
+                                                      <select
+                                                        className="form-control"
+                                                        required
+                                                        id="estatus"
+                                                      >
+                                                        <option value="0">
+                                                          Todos
+                                                        </option>
+                                                        {dataEstatusInformes.map(
+                                                          (estatus) => (
+                                                            <option
+                                                              key={
+                                                                estatus.m_nIdEstatusRecoleccion
+                                                              }
+                                                              value={
+                                                                estatus.m_nIdEstatusRecoleccion
+                                                              }
+                                                            >
+                                                              {
+                                                                estatus.m_sEstatus
+                                                              }
+                                                            </option>
+                                                          )
+                                                        )}
+                                                      </select>
+                                                    </label>
                                                   </div>
                                                 </div>
 
-{/*****************************************Placa Int*************************************************/}
-                                                <div className="col-sm-12 col-md-2 unit">
-                                                  <label className="label">
-                                                    Placa Int
-                          </label>
-                                                  <div className="input">
-                                                    <label
-                                                      className="icon-left"
-                                                      htmlFor="Placa Int"
-                                                    >
-                                                      <i className="fa fa-edit" />
+                                                {/*****************************************Operador*************************************************/}
+
+                                                <div className="row">
+                                                  <div className="col-sm-12 col-md-6 unit">
+                                                    <label className="label">
+                                                      Operador
                                                     </label>
-                                                    <input
-
-                                                      className="form-control"
-                                                      type="text"
-
-                                                      id="Placa Int"
-                                                    />
+                                                    {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
+                                                    <Autocomplete
+                                                      freeSolo
+                                                      onChange={(
+                                                        event,
+                                                        newValue
+                                                      ) =>
+                                                        setState({
+                                                          ...state,
+                                                          idOperador: newValue,
+                                                        })
+                                                      }
+                                                      placeholder={
+                                                        state.idOperador
+                                                      }
+                                                      id="idOperador"
+                                                      disableClearable
+                                                      getOptionLabel={(
+                                                        option
+                                                      ) =>
+                                                        option.m_sNombreCompleto
+                                                      }
+                                                      options={dataOperadores}
+                                                      renderInput={(params) => (
+                                                        <TextField
+                                                          {...params}
+                                                          InputProps={{
+                                                            ...params.InputProps,
+                                                            type: "search",
+                                                          }}
+                                                        />
+                                                      )}
+                                                    />{" "}
                                                   </div>
                                                 </div>
 
-
-
-</div>
-
-
-
-
-
-{/*****************************************Remolque*************************************************/}
-<div className="row">
-                                                <div className="col-sm-12 col-md-6 unit">
-                                                  <label className="label">
-                                                    Remolque
-                          </label>
-                                                  <div className="input">
-                                                    <label
-                                                      className="icon-left"
-                                                      htmlFor="Remolque"
-                                                    >
-                                                      <i className="fa fa-edit" />
+                                                {/*****************************************Unidad*************************************************/}
+                                                <div className="row">
+                                                  <div className="col-sm-12 col-md-6 unit">
+                                                    <label className="label">
+                                                      Unidad
                                                     </label>
-                                                    <input
+                                                    {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
+                                                    <Autocomplete
+                                                      freeSolo
+                                                      onChange={(
+                                                        event,
+                                                        newValue
+                                                      ) =>
+                                                        setState({
+                                                          ...state,
+                                                          idUnidad: newValue,
+                                                        })
+                                                      }
+                                                      placeholder={
+                                                        state.idUnidad
+                                                      }
+                                                      id="idUnidad"
+                                                      disableClearable
+                                                      getOptionLabel={(
+                                                        option
+                                                      ) =>
+                                                        option.m_sCodigo +
+                                                        " " +
+                                                        option.m_sDescripcion
+                                                      }
+                                                      options={dataUnidades}
+                                                      renderInput={(params) => (
+                                                        <TextField
+                                                          {...params}
+                                                          InputProps={{
+                                                            ...params.InputProps,
+                                                            type: "search",
+                                                          }}
+                                                        />
+                                                      )}
+                                                    />{" "}
+                                                  </div>
 
-                                                      className="form-control"
-                                                      type="text"
-
-                                                      id="Remolque"
-                                                    />
+                                                  {/*****************************************Placa Int*************************************************/}
+                                                  <div className="col-sm-12 col-md-2 unit">
+                                                    <label className="label">
+                                                      Placa Int
+                                                    </label>
+                                                    <div className="input">
+                                                      <label
+                                                        className="icon-left"
+                                                        htmlFor="Placa Int"
+                                                      >
+                                                        <i className="fa fa-edit" />
+                                                      </label>
+                                                      <input
+                                                        className="form-control"
+                                                        type="text"
+                                                        id="Placa Int"
+                                                      />
+                                                    </div>
                                                   </div>
                                                 </div>
 
-{/*****************************************Placa Int*************************************************/}
-                                                <div className="col-sm-12 col-md-2 unit">
-                                                  <label className="label">
-                                                    Placa Int
-                          </label>
-                                                  <div className="input">
-                                                    <label
-                                                      className="icon-left"
-                                                      htmlFor="Placa Int"
-                                                    >
-                                                      <i className="fa fa-edit" />
+                                                {/*****************************************Remolque*************************************************/}
+                                                <div className="row">
+                                                  <div className="col-sm-12 col-md-6 unit">
+                                                    <label className="label">
+                                                      Remolque
                                                     </label>
-                                                    <input
+                                                    <div className="input">
+                                                      <label
+                                                        className="icon-left"
+                                                        htmlFor="Remolque"
+                                                      >
+                                                        <i className="fa fa-edit" />
+                                                      </label>
+                                                      <input
+                                                        className="form-control"
+                                                        type="text"
+                                                        id="Remolque"
+                                                      />
+                                                    </div>
+                                                  </div>
 
-                                                      className="form-control"
-                                                      type="text"
-
-                                                      id="Placa Int"
-                                                    />
+                                                  {/*****************************************Placa Int*************************************************/}
+                                                  <div className="col-sm-12 col-md-2 unit">
+                                                    <label className="label">
+                                                      Placa Int
+                                                    </label>
+                                                    <div className="input">
+                                                      <label
+                                                        className="icon-left"
+                                                        htmlFor="Placa Int"
+                                                      >
+                                                        <i className="fa fa-edit" />
+                                                      </label>
+                                                      <input
+                                                        className="form-control"
+                                                        type="text"
+                                                        id="Placa Int"
+                                                      />
+                                                    </div>
                                                   </div>
                                                 </div>
 
-
-
-</div>
-
-
-
-
-{/*****************************************Origen*************************************************/}
-<div className="row">
-                                                <div className="col-sm-12 col-md-6 unit">
-                                                  <label className="label">
-                                                    Origen
-                          </label>
-                                                  <div className="input">
-                                                    <label
-                                                      className="icon-left"
-                                                      htmlFor="Origen"
-                                                    >
-                                                      <i className="fa fa-edit" />
+                                                {/*****************************************Origen*************************************************/}
+                                                <div className="row">
+                                                  <div className="col-sm-12 col-md-6 unit">
+                                                    <label className="label">
+                                                      Origen
                                                     </label>
-                                                    <input
-
-                                                      className="form-control"
-                                                      type="text"
-
-                                                      id="Origen"
-                                                    />
+                                                    {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
+                                                    <Autocomplete
+                                                      freeSolo
+                                                      onChange={(event, newValue) => setState({...state, IdCiudadOrigen: newValue})}
+                                                      placeholder={
+                                                        state.idOrigen
+                                                      }
+                                                      id="idOrigen"
+                                                      disableClearable
+                                                      getOptionLabel={(
+                                                        option
+                                                      ) => option.m_sCiudad}
+                                                      options={dataOrigenes}
+                                                      renderInput={(params) => (
+                                                        <TextField
+                                                          {...params}
+                                                          InputProps={{
+                                                            ...params.InputProps,
+                                                            type: "search",
+                                                          }}
+                                                        />
+                                                      )}
+                                                    />{" "}
+                                                  </div>
+                                                  {/*****************************************Destino*************************************************/}
+                                                  <div className="col-sm-12 col-md-6 unit">
+                                                    <label className="label">
+                                                      Destino
+                                                    </label>
+                                                    {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
+                                                    <Autocomplete
+                                                      freeSolo
+                                                      onChange={(event, newValue) => setState({...state, IdCiudadDestino: newValue}),handleChangeDestinoChange}
+                                                      placeholder={
+                                                        state.idDestino
+                                                      }
+                                                      id="idDestino"
+                                                      disableClearable
+                                                      getOptionLabel={(
+                                                        option
+                                                      ) => option.m_sCiudad}
+                                                      options={dataOrigenes}
+                                                      renderInput={(params) => (
+                                                        <TextField
+                                                          {...params}
+                                                          InputProps={{
+                                                            ...params.InputProps,
+                                                            type: "search",
+                                                          }}
+                                                        />
+                                                      )}
+                                                    />{" "}
                                                   </div>
                                                 </div>
 
-{/*****************************************Destino*************************************************/}
-                                                <div className="col-sm-12 col-md-6 unit">
-                                                  <label className="label">
-                                                  Destino
-                          </label>
-                                                  <div className="input">
-                                                    <label
-                                                      className="icon-left"
-                                                      htmlFor="Destino"
-                                                    >
-                                                      <i className="fa fa-edit" />
+                                                {/*****************************************Ruta*************************************************/}
+                                                <div className="row">
+                                                  <div className="col-sm-12 col-md-6 unit">
+                                                    <label className="label">
+                                                      Ruta
                                                     </label>
-                                                    <input
-
-                                                      className="form-control"
-                                                      type="text"
-
-                                                      id="Destino"
-                                                    />
+                                                    {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
+                                                    <Autocomplete
+                                                      freeSolo
+                                                      onChange={(
+                                                        event,
+                                                        newValue
+                                                      ) =>
+                                                        setState({
+                                                          ...state,
+                                                          idRuta: newValue,
+                                                        })
+                                                      }
+                                                      placeholder={state.idRuta}
+                                                      id="idRuta"
+                                                      disableClearable
+                                                      getOptionLabel={(
+                                                        option
+                                                      ) => option.m_sCiudad}
+                                                      options={dataOrigenes}
+                                                      renderInput={(params) => (
+                                                        <TextField
+                                                          {...params}
+                                                          InputProps={{
+                                                            ...params.InputProps,
+                                                            type: "search",
+                                                          }}
+                                                        />
+                                                      )}
+                                                    />{" "}
                                                   </div>
                                                 </div>
-
-
-
-</div>
-
-
-
-{/*****************************************Ruta*************************************************/}
-<div className="row">
-                                                <div className="col-sm-12 col-md-6 unit">
-                                                  <label className="label">
-                                                    Ruta
-                          </label>
-                                                  <div className="input">
-                                                    <label
-                                                      className="icon-left"
-                                                      htmlFor="Ruta"
-                                                    >
-                                                      <i className="fa fa-edit" />
-                                                    </label>
-                                                    <input
-
-                                                      className="form-control"
-                                                      type="text"
-
-                                                      id="Ruta"
-                                                    />
-                                                  </div>
-                                                </div>
-</div>
-
-
-
                                               </div>
                                             </form>
                                           </div>
@@ -815,11 +1007,6 @@ function getAllData() {
                                       </div>
                                     </div>
                                   </div>
-
-
-
-
-
                                 </div>
                               </div>
                               <div className="row">
@@ -878,138 +1065,112 @@ function getAllData() {
                                               noValidate
                                             >
                                               <div className="form-content">
-{/*****************************************Viaje*************************************************/}
-<div className="row">
-                                                <div className="col-sm-12 col-md-6 unit">
-                                                  <label className="label">
-                                                  Viaje
-                          </label>
-                                                  <div className="input">
-                                                    <label
-                                                      className="icon-left"
-                                                      htmlFor="Viaje"
-                                                    >
-                                                      <i className="fa fa-edit" />
+                                                {/*****************************************Viaje*************************************************/}
+                                                <div className="row">
+                                                  <div className="col-sm-12 col-md-6 unit">
+                                                    <label className="label">
+                                                      Viaje
                                                     </label>
-                                                    <input
+                                                    <div className="input">
+                                                      <label
+                                                        className="icon-left"
+                                                        htmlFor="Viaje"
+                                                      >
+                                                        <i className="fa fa-edit" />
+                                                      </label>
+                                                      <input
+                                                        className="form-control"
+                                                        type="text"
+                                                        id="Viaje"
+                                                      />
+                                                    </div>
+                                                  </div>
 
-                                                      className="form-control"
-                                                      type="text"
-
-                                                      id="Viaje"
-                                                    />
+                                                  {/*****************************************Ruta2*************************************************/}
+                                                  <div className="col-sm-12 col-md-6 unit">
+                                                    <label className="label">
+                                                      Ruta
+                                                    </label>
+                                                    <div className="input">
+                                                      <label
+                                                        className="icon-left"
+                                                        htmlFor="Ruta2"
+                                                      >
+                                                        <i className="fa fa-edit" />
+                                                      </label>
+                                                      <input
+                                                        className="form-control"
+                                                        type="text"
+                                                        id="Ruta2"
+                                                      />
+                                                    </div>
                                                   </div>
                                                 </div>
 
-{/*****************************************Ruta2*************************************************/}
-                                                <div className="col-sm-12 col-md-6 unit">
-                                                  <label className="label">
-                                                  Ruta
-                          </label>
-                                                  <div className="input">
-                                                    <label
-                                                      className="icon-left"
-                                                      htmlFor="Ruta2"
-                                                    >
-                                                      <i className="fa fa-edit" />
+                                                {/*****************************************Operador2*************************************************/}
+                                                <div className="row">
+                                                  <div className="col-sm-12 col-md-6 unit">
+                                                    <label className="label">
+                                                      Operador
                                                     </label>
-                                                    <input
+                                                    <div className="input">
+                                                      <label
+                                                        className="icon-left"
+                                                        htmlFor="Operador2"
+                                                      >
+                                                        <i className="fa fa-edit" />
+                                                      </label>
+                                                      <input
+                                                        className="form-control"
+                                                        type="text"
+                                                        id="Operador2"
+                                                      />
+                                                    </div>
+                                                  </div>
 
-                                                      className="form-control"
-                                                      type="text"
-
-                                                      id="Ruta2"
-                                                    />
+                                                  {/*****************************************Unidad2*************************************************/}
+                                                  <div className="col-sm-12 col-md-6 unit">
+                                                    <label className="label">
+                                                      Unidad
+                                                    </label>
+                                                    <div className="input">
+                                                      <label
+                                                        className="icon-left"
+                                                        htmlFor="Unidad2"
+                                                      >
+                                                        <i className="fa fa-edit" />
+                                                      </label>
+                                                      <input
+                                                        className="form-control"
+                                                        type="text"
+                                                        id="Unidad2"
+                                                      />
+                                                    </div>
                                                   </div>
                                                 </div>
 
-
-
-</div>
-
-
-{/*****************************************Operador2*************************************************/}
-<div className="row">
-                                                <div className="col-sm-12 col-md-6 unit">
-                                                  <label className="label">
-                                                  Operador
-                          </label>
-                                                  <div className="input">
-                                                    <label
-                                                      className="icon-left"
-                                                      htmlFor="Operador2"
-                                                    >
-                                                      <i className="fa fa-edit" />
+                                                {/*****************************************Remolque2*************************************************/}
+                                                <div className="row">
+                                                  <div className="col-sm-12 col-md-6 unit">
+                                                    <label className="label">
+                                                      Remolque
                                                     </label>
-                                                    <input
-
-                                                      className="form-control"
-                                                      type="text"
-
-                                                      id="Operador2"
-                                                    />
+                                                    <div className="input">
+                                                      <label
+                                                        className="icon-left"
+                                                        htmlFor="Remolque2"
+                                                      >
+                                                        <i className="fa fa-edit" />
+                                                      </label>
+                                                      <input
+                                                        className="form-control"
+                                                        type="text"
+                                                        id="Remolque2"
+                                                      />
+                                                    </div>
                                                   </div>
                                                 </div>
-
-{/*****************************************Unidad2*************************************************/}
-                                                <div className="col-sm-12 col-md-6 unit">
-                                                  <label className="label">
-                                                  Unidad
-                          </label>
-                                                  <div className="input">
-                                                    <label
-                                                      className="icon-left"
-                                                      htmlFor="Unidad2"
-                                                    >
-                                                      <i className="fa fa-edit" />
-                                                    </label>
-                                                    <input
-
-                                                      className="form-control"
-                                                      type="text"
-
-                                                      id="Unidad2"
-                                                    />
-                                                  </div>
-                                                </div>
-
-
-
-</div>
-
-
-
-
-{/*****************************************Remolque2*************************************************/}
-<div className="row">
-                                                <div className="col-sm-12 col-md-6 unit">
-                                                  <label className="label">
-                                                    Remolque
-                          </label>
-                                                  <div className="input">
-                                                    <label
-                                                      className="icon-left"
-                                                      htmlFor="Remolque2"
-                                                    >
-                                                      <i className="fa fa-edit" />
-                                                    </label>
-                                                    <input
-
-                                                      className="form-control"
-                                                      type="text"
-
-                                                      id="Remolque2"
-                                                    />
-                                                  </div>
-                                                </div>
-
-
-
-
-</div>
-
-
-                                            </div>
+                                              </div>
                                             </form>
                                           </div>
                                         </div>
@@ -1075,7 +1236,7 @@ function getAllData() {
                                             >
                                               <div className="form-content">
                                                 FORM 3
-                                            </div>
+                                              </div>
                                             </form>
                                           </div>
                                         </div>
@@ -1138,14 +1299,318 @@ function getAllData() {
                     <div className="widget-content">
                       <div className="row">
                         <div className="col-md-12">
-                          <form
-                            action="#"
-                            className="j-forms"
-                            noValidate
-                          >
+                          <form action="#" className="j-forms" noValidate>
                             <div className="form-content">
-                              FORM CLONAR
-                                            </div>
+                              {guias.map((value, index) => {
+                                return (
+                                  <div>
+                                    <br />
+                                    <ButtonBase
+                                      style={{
+                                        width: "100%",
+                                        borderRadius: "10px",
+                                      }}
+                                      onClick={() => selectGuia(index)}
+                                    >
+                                      <Grid container spacing={2}>
+                                        <Grid
+                                          item
+                                          sm={1}
+                                          justify="center"
+                                          alignItems="center"
+                                          style={{
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            textAlign: "center",
+                                            backgroundColor: value.select
+                                              ? "#F9A03E"
+                                              : "gray",
+                                          }}
+                                        >
+                                          {index + 1}
+                                        </Grid>
+                                        <Grid
+                                          item
+                                          sm={11}
+                                          style={{
+                                            width: "100%",
+                                            borderRadius: "10px",
+                                          }}
+                                        >
+                                          <Grid container spacing={2}>
+                                            <Grid item sm={12} md={4}>
+                                              <div className="input">
+                                                <label
+                                                  htmlFor={"folio-" + index}
+                                                >
+                                                  Folio Guía
+                                                </label>
+                                                <input
+                                                  value={value.folio}
+                                                  className="form-control"
+                                                  type="text"
+                                                  disabled="true"
+                                                  id={"folio-" + index}
+                                                />
+                                              </div>
+                                            </Grid>
+                                            <Grid item sm={12} md={4}>
+                                              <div className="input">
+                                                <label
+                                                  htmlFor={"estatus-" + index}
+                                                >
+                                                  Estatus Guía
+                                                </label>
+                                                <input
+                                                  className="form-control"
+                                                  type="text"
+                                                  disabled="true"
+                                                  value={value.estatus}
+                                                  id={"estatus-" + index}
+                                                />
+                                              </div>
+                                            </Grid>
+                                            <Grid item sm={12} md={4}>
+                                              <div className="input">
+                                                <label
+                                                  htmlFor={"total-" + index}
+                                                >
+                                                  Total
+                                                </label>
+                                                <input
+                                                  value={value.total}
+                                                  disabled="true"
+                                                  className="form-control"
+                                                  type="text"
+                                                  id={"total-" + index}
+                                                />
+                                              </div>
+                                            </Grid>
+                                            <Grid item sm={12} md={6}>
+                                              <div className="input">
+                                                <label
+                                                  htmlFor={"destino-" + index}
+                                                >
+                                                  Destino
+                                                </label>
+                                                <input
+                                                  value={value.destino}
+                                                  className="form-control"
+                                                  type="text"
+                                                  disabled="true"
+                                                  id={"destino-" + index}
+                                                />
+                                              </div>
+                                            </Grid>
+                                            <Grid item sm={12} md={6}>
+                                              <div className="input">
+                                                <label
+                                                  htmlFor={"servicio-" + index}
+                                                >
+                                                  Tipo de Servicio
+                                                </label>
+                                                <input
+                                                  disabled="true"
+                                                  value={value.servicio}
+                                                  className="form-control"
+                                                  type="text"
+                                                  id={"servicio-" + index}
+                                                />
+                                              </div>
+                                            </Grid>
+                                            <Grid item sm={12} md={12}>
+                                              <div className="input">
+                                                <label
+                                                  htmlFor={
+                                                    "observacion-" + index
+                                                  }
+                                                >
+                                                  Observaciones
+                                                </label>
+                                                <input
+                                                  disabled="true"
+                                                  value={value.observaciones}
+                                                  className="form-control"
+                                                  type="text"
+                                                  id={"observacion-" + index}
+                                                />
+                                              </div>
+                                            </Grid>
+                                          </Grid>
+                                        </Grid>
+                                      </Grid>
+                                    </ButtonBase>
+                                    <br />
+                                  </div>
+                                );
+                              })}
+                              <br/>
+                              <Grid container style={{borderStyle: "solid",
+                                    borderRadius: "10px"}} spacing={1}>
+                                <Grid
+                                  item
+                                  sm={4}
+                                  justify="center"
+                                  alignItems="center"
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    textAlign: "center",
+                                    
+                                  }}
+                                >
+                                  Total de guías :{" "}
+                                  {guias.filter((g) => g.select).length}
+                                </Grid>
+                                <Grid
+                                  item
+                                  sm={8}
+                                  style={{
+                                    justifyContent: "left",
+                                    alignItems: "left",
+                                    textAlign: "left",
+                                  }}
+                                >
+                                  <Grid container >
+                                    <Grid
+                                      item
+                                      sm={6}
+                                      style={{
+                                        justifyContent: "left",
+                                        alignItems: "left",
+                                        textAlign: "left",
+                                      }}
+                                    >
+                                      Total Por Cobrar Destinatario 
+                                    </Grid>
+                                    <Grid
+                                      item
+                                      sm={6}
+                                      style={{
+                                        justifyContent: "right",
+                                        alignItems: "right",
+                                        textAlign: "right",
+                                      }}
+                                    >
+                                       {"$350"}
+                                    </Grid>
+                                    <Grid
+                                      item
+                                      sm={6}
+                                      style={{
+                                        justifyContent: "left",
+                                        alignItems: "left",
+                                        textAlign: "left",
+                                      }}
+                                    >
+                                      Total Por Cobrar Remitente
+                                    </Grid>
+                                    <Grid
+                                      item
+                                      sm={6}
+                                      style={{
+                                        justifyContent: "right",
+                                        alignItems: "right",
+                                        textAlign: "right",
+                                      }}
+                                    >
+                                       {"$350"}
+                                    </Grid>
+                                    <Grid
+                                      item
+                                      sm={6}
+                                      style={{
+                                        justifyContent: "left",
+                                        alignItems: "left",
+                                        textAlign: "left",
+                                      }}
+                                    >
+                                      Total Pagado en Mostrador
+                                    </Grid>
+                                    <Grid
+                                      item
+                                      sm={6}
+                                      style={{
+                                        justifyContent: "right",
+                                        alignItems: "right",
+                                        textAlign: "right",
+                                      }}
+                                    >
+                                       {"$350"}
+                                    </Grid>
+                                    <Grid
+                                      item
+                                      sm={6}
+                                      style={{
+                                        justifyContent: "left",
+                                        alignItems: "left",
+                                        textAlign: "left",
+                                      }}
+                                    >
+                                      Total Unidad Completa 
+                                    </Grid>
+                                    <Grid
+                                      item
+                                      sm={6}
+                                      style={{
+                                        justifyContent: "right",
+                                        alignItems: "right",
+                                        textAlign: "right",
+                                      }}
+                                    >
+                                       {"$350"}
+                                    </Grid>
+                                    <Grid
+                                      item
+                                      sm={6}
+                                      style={{
+                                        justifyContent: "left",
+                                        alignItems: "left",
+                                        textAlign: "left",
+                                      }}
+                                    >
+                                      Total Unidad Completa
+                                    </Grid>
+                                    <Grid
+                                      item
+                                      sm={6}
+                                      style={{
+                                        justifyContent: "right",
+                                        alignItems: "right",
+                                        textAlign: "right",
+                                      }}
+                                    >
+                                       {"$350"}
+                                    </Grid>
+                                    <Grid
+                                      item
+                                      sm={6}
+                                      style={{
+                                        justifyContent: "left",
+                                        alignItems: "left",
+                                        textAlign: "left",
+                                        
+                                      }}
+                                    >
+                                      <b style={{fontWeight: "bold"}}>Total General</b>
+                                    </Grid>
+                                    <Grid
+                                      item
+                                      sm={6}
+                                      style={{
+                                        justifyContent: "right",
+                                        alignItems: "right",
+                                        textAlign: "right",
+                                      }}
+                                    >
+                                       {"$350"}
+                                    </Grid>
+                                  </Grid>
+                                </Grid>
+                              </Grid>
+                            </div>
                           </form>
                         </div>
                       </div>

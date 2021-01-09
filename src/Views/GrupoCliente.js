@@ -35,7 +35,7 @@ const handleAceptar = (e) => {
   }
   console.log(params)
   if(state.idGrupoCliente != 0){
-    const url = "http://localhost/GruposClientes/Modificar/" + state.idGrupoCliente;
+    const url = `${process.env.REACT_APP_API_URL}/GruposClientes/Modificar/` + state.idGrupoCliente;
     axios.put(url, Object.assign({}, params), {headers}).then(respuesta => {
     alert(respuesta.data)
     window.location.reload();
@@ -44,7 +44,7 @@ const handleAceptar = (e) => {
     alert("err")
   });
   } else {
-  const url = "http://localhost/GruposClientes/Agregar";
+  const url = `${process.env.REACT_APP_API_URL}/GruposClientes/Agregar`;
   axios.post(url, Object.assign({}, params), {headers}).then(respuesta => {
     alert(respuesta.data)
     window.location.reload();
@@ -57,7 +57,7 @@ const handleAceptar = (e) => {
 }
 
 function handleEliminar(id){
-  const url = "http://localhost/GruposClientes/Eliminar/" + id;
+  const url = `${process.env.REACT_APP_API_URL}/GruposClientes/Eliminar/` + id;
   axios.delete(url, {headers}).then(respuesta => {
     console.log(respuesta)
   }).catch(err => {
@@ -67,7 +67,7 @@ function handleEliminar(id){
 
 function handleShowModificar(row){
   console.log(row.original.m_nIdGrupoCliente)
-  const url = "http://localhost/GruposClientes/GetById/" + row.original.m_nIdGrupoCliente;
+  const url = `${process.env.REACT_APP_API_URL}/GruposClientes/GetById/` + row.original.m_nIdGrupoCliente;
     axios.get(url, {headers}).then(respuesta => {
       console.log(respuesta.data)
       setState({
@@ -177,7 +177,7 @@ const handleChange = event => {
   }, []);
 
   function getAllData() {
-    const url = "http://localhost/GruposClientes/GetListado";
+    const url = `${process.env.REACT_APP_API_URL}/GruposClientes/GetListado`;
     axios.get(url, {headers}).then(respuesta => {
       setData(respuesta.data)
     });

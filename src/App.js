@@ -10,6 +10,7 @@ import {AplicationConsumer, AplicationProvider} from "./Util/Contexts/Aplication
 import {ACCESS_TOKEN} from './Constants';
 import dashboardRoutes from './routes'
 import catalogdRoutes from './routesCatalogos'
+import configuracionRoutes from './routesConfiguraciones'
 
 class App extends Component {
   constructor(props) {
@@ -29,6 +30,9 @@ render(){
                   return (<Route exact key={key} path={r.path} component={r.component} />)
               })}
               {catalogdRoutes.map((r, key) => {
+                  return (<Route exact key={key} path={r.path} component={r.component} />)
+              })}
+              {configuracionRoutes.map((r, key) => {
                   return (<Route exact key={key} path={r.path} component={r.component} />)
               })}
             <Redirect from="/" to="/configuracion"/>
