@@ -95,8 +95,8 @@ function Recoleccion() {
     datosAdicionalesEntrega: "",
     cantidadDePaquetes: 0,
     cantidadDeSobres: 0,
-    diferenteRecoleccion: false,
-    diferenteEntrega: false,
+    diferenteRecoleccion: true,
+    diferenteEntrega: true,
     operador: 0,
     tipoUnidad: 0,
     unidad: 0,
@@ -133,6 +133,7 @@ function Recoleccion() {
 
     var params = {
 
+      "m_nIdRecoleccion" : state.idRecoleccion,
       "m_nIdSucursal": state.idSucursalAgregar,
       "m_nIdEmbarque": state.folioEmbarque,
       "m_nIdGuia": state.folioGuía,
@@ -191,7 +192,7 @@ function Recoleccion() {
       const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Modificar/${state.idRecoleccion}`;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        //window.location.reload();
+        window.location.reload();
       }).catch(err => {
         console.log(err)
         alert("err")
@@ -201,7 +202,7 @@ function Recoleccion() {
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         console.log(respuesta.data)
         alert(respuesta.data)
-        //window.location.reload();
+        window.location.reload();
       }).catch(err => {
         console.log(err)
         alert(err)
@@ -303,19 +304,21 @@ function Recoleccion() {
         destinoDestinatario: respuesta.data.m_nIdCiudadDestino,
         ciudadRemitente: respuesta.data.m_nIdCiudadRemitente,
         ciudadDestinatario: respuesta.data.m_nIdCiudadDestinatario,
-        fechaRecoleccion: respuesta.data.m_dFechaRecoleccionLlegadaRecoleccion,
-        codigoPostalRecoleccion: 0,
-        ciudadRecoleccion: "",
-        zonaRecoleccion: "",
-        domicilioRecoleccion: "",
-        recogerEn: "",
-        datosAdicionalesRecoleccion: "",
-        codigoPostalEntrega: 0,
-        ciudadEntrega: "",
-        zonaEntrega: "",
-        domicilioEntrega: "",
-        entregaEn: "",
-        datosAdicionalesEntrega: "",
+        codigoPostalRecoleccion: respuesta.data.m_sIdCodigoPostalRemitente,
+        ciudadRecoleccion: respuesta.data.m_nIdCiudadDetalleRecoleccion,
+        zonaRecoleccion: respuesta.data.m_nIdZonaDetalleRecoleccion,
+        domicilioRecoleccion: respuesta.data.m_sDomicilioDetalleRecoleccion,
+        recogerEn: respuesta.data.m_sRecogerEnDetalleRecoleccion,
+        datosAdicionalesRecoleccion: respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
+        codigoPostalEntrega: respuesta.data.m_sIdCodigoPostalRemitente,
+        ciudadEntrega: respuesta.data.m_nIdCiudadDetalleEntrega,
+        zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
+        domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
+        entregaEn: respuesta.data.m_sEntregarEnDetalleEntrega,
+        datosAdicionalesEntrega: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
+        fechaHoraSalida: respuesta.data.m_dFechaElaboracionSalidaRecoleccion +"T" + respuesta.data.m_tHoraElaboracionSalidaRecoleccion.slice(0,5),
+        fechaHoraLlegada: respuesta.data.m_dFechaElaboracionLlegadaRecoleccion +"T" + respuesta.data.m_tHoraElaboracionLlegadaRecoleccion.slice(0,5),
+        fechaRecoleccion: respuesta.data.m_dFechaDetalleRecoleccion +"T" + respuesta.data.m_tHoraDetalleRecoleccion.slice(0,5),
         paquetes: respuesta.data.m_parrPaquetes,
         sobres: respuesta.data.m_parrSobres,
         cantidadDePaquetes: respuesta.data.m_parrPaquetes.length,
@@ -408,7 +411,6 @@ function Recoleccion() {
   };
 
   const handleRecoleccionCheckboxChange = event => {
-    console.log("diferenteRecoleccion : " + state.diferenteRecoleccion)
     setState({
       ...state,
       diferenteRecoleccion: !state.diferenteRecoleccion
@@ -416,7 +418,6 @@ function Recoleccion() {
   }
 
   const handleEntregaCheckboxChange = event => {
-    console.log("diferenteEntrega : " + state.diferenteEntrega)
     setState({
       ...state,
       diferenteEntrega: !state.diferenteEntrega
@@ -891,7 +892,7 @@ function Recoleccion() {
     return (
       <div key={`sobre${index}`}>
 
-        <div className="col-sm-4 col-md-12 unit">
+        <div className="col-md-12 unit">
           <label className="label">Descripcion</label>
           <div className="input">
             <input
@@ -1532,6 +1533,7 @@ function Recoleccion() {
                                       onChange={handleRecoleccionCheckboxChange}
                                       className="form-control"
                                       value={state.diferenteRecoleccion}
+                                      checked={state.diferenteRecoleccion}
                                       type="checkbox"
                                       id="diferenteRecoleccion"
                                     />
@@ -1733,6 +1735,7 @@ function Recoleccion() {
                                     onChange={handleEntregaCheckboxChange}
                                     className="form-control"
                                     value={state.diferenteEntrega}
+                                    checked={state.diferenteEntrega}
                                     type="checkbox"
                                     id="diferenteEntrega"
                                   />
@@ -1829,16 +1832,27 @@ function Recoleccion() {
                                       <label className="label">
                                         Zona
                                       </label>
-                                      <div className="input">
-                                        <input
-                                          onChange={handleChange}
+                                      <label className="input select">
+                                        <select
                                           className="form-control"
-                                          type="text"
                                           required
                                           value={state.zonaRecoleccion}
+                                          onChange={handleChange}
                                           id="zonaRecoleccion"
-                                        />
-                                      </div>
+                                        >
+                                          {dataCiudad.map(
+                                            (ciudad) => (
+                                              <option key={ciudad.m_nIdCiudad} value={ciudad.m_nIdCiudad}>
+                                                {
+                                                  ciudad.m_sCiudad
+                                                }
+                                              </option>
+                                            )
+                                          )}
+                                        </select>
+                                        <i className="fa fa-arrow-down" />
+                                      </label>
+
                                     </div>
 
                                     <div className="col-sm-4 col-md-8 unit">
@@ -1963,15 +1977,26 @@ function Recoleccion() {
                                       <label className="label">
                                         Zona
                                       </label>
-                                      <div className="input">
-                                        <input
-                                          onChange={handleChange}
+                                      <label className="input select">
+                                        <select
                                           className="form-control"
-                                          type="text"
+                                          required
                                           value={state.zonaEntrega}
+                                          onChange={handleChange}
                                           id="zonaEntrega"
-                                        />
-                                      </div>
+                                        >
+                                          {dataCiudad.map(
+                                            (ciudad) => (
+                                              <option key={ciudad.m_nIdCiudad} value={ciudad.m_nIdCiudad}>
+                                                {
+                                                  ciudad.m_sCiudad
+                                                }
+                                              </option>
+                                            )
+                                          )}
+                                        </select>
+                                        <i className="fa fa-arrow-down" />
+                                      </label>
                                     </div>
 
                                     <div className="col-sm-4 col-md-12 unit">
