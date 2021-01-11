@@ -30,7 +30,7 @@ function Moneda() {
       "ModificadoPor": 1
     }
     console.log(params)
-    if (state.idEstatusUnidad != 0) {
+    if (state.idMoneda != 0) {
       const url = `${process.env.REACT_APP_API_URL}/Moneda/Modificar/` + state.idMoneda;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
@@ -53,7 +53,7 @@ function Moneda() {
   }
 
   function handleEliminar(id) {
-    const url = `${process.env.REACT_APP_API_URL}/EstatusUnidades/Eliminar/` + id;
+    const url = `${process.env.REACT_APP_API_URL}/Moneda/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta)
       window.location.reload();
@@ -63,18 +63,17 @@ function Moneda() {
   }
 
   function handleShowModificar(id) {
-    const url = `${process.env.REACT_APP_API_URL}/EstatusUnidades/GetById/${id}`;
+    const url = `${process.env.REACT_APP_API_URL}/Moneda/GetById/${id}`;
     axios.get(url, { headers }).then(respuesta => {
       console.log(respuesta.data)
       setState({
         ...state,
         agregar: "Modificar",
-        showPopUp: true,
-        idEstatusUnidad: id,
-        estatusUnidad: respuesta.data.m_sEstatus,
-        abreviacionUnidad: respuesta.data.m_sAbreviacion,
-        tipoEstatusUnidad: respuesta.data.m_nTipoEstatus,
-        colorUnidad: "#" +respuesta.data.m_sColor,
+        idMoneda: id,
+        codigo: respuesta.data.m_sCodigo,
+        moneda: respuesta.data.m_sMoneda,
+        simbolo: respuesta.data.m_sSimbolo,
+        abreviacion: respuesta.data.m_sAbreviacion,
       })
     });
   }
@@ -83,11 +82,11 @@ function Moneda() {
     setState({
       ...state,
       agregar: "Agregar",
-      idEstatusUnidad: 0,
-      estatusUnidad: "",
-      abreviacionUnidad: "",
-      tipoEstatusUnidad: 1,
-      colorUnidad: "#000000",
+      idMoneda: 0,
+      codigo: "",
+      moneda: "",
+      simbolo: "",
+      abreviacion: "",
     })
   }
 
