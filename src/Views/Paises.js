@@ -3,10 +3,22 @@ import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import { useTable, useFilters, useGlobalFilter, useRowSelect, useSortBy } from 'react-table'
+import { useTable, useFilters, useGlobalFilter, useSortBy } from 'react-table';
+import { makeStyles } from "@material-ui/core/styles";
+
+const styles = {
+  seleccionado: {
+    backgroundColor: "#688ad9",
+  },
+  noSeleccionado: {
+    backgroundColor: "#FFFFFF",
+  }
+};
+const useStyles = makeStyles(styles);
 
 function PaisesEstado() {
 
+  const classes = useStyles();
   const [data, setData] = React.useState([])
   const [dataEstado, setDataEstado] = React.useState([])
   const [dataMoneda, setDataMoneda] = React.useState([])
@@ -61,6 +73,7 @@ function PaisesEstado() {
 
   const handleAceptarEstado = (e) => {
     e.preventDefault()
+    let fecha = new Date();
     var params = {
 
       "IdEstado": state.idEstado,
@@ -69,7 +82,10 @@ function PaisesEstado() {
       "Codigo": state.codigoEstado,
       "Estado": state.estado,
       "CreadoPor": 1,
-      "ModificadoPor": 1
+      "CreadoEl": fecha.getFullYear() +"-" +fecha.getMonth()+1 +"-" +fecha.getDate(),
+      "ModificadoEl": fecha.getFullYear() +"-" +fecha.getMonth()+1 +"-" +fecha.getDate(),
+      "ModificadoPor": 1,
+      "Identificador": 0
     }
     console.log(params)
     if (state.idEstado != 0) {
@@ -85,6 +101,7 @@ function PaisesEstado() {
       const url = `${process.env.REACT_APP_API_URL}/Estado/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
+        console.log(respuesta.data)
       }).catch(err => {
         console.log(err)
         alert(err)
@@ -147,6 +164,7 @@ function PaisesEstado() {
     setState({
       ...state,
       agregar: "Agregar",
+      idPais: 0,
       idMoneda: 0,
       codigo: "",
       pais: "",
@@ -172,7 +190,8 @@ function PaisesEstado() {
     });
   };
 
-  function handleSelectPais(id, user) {
+  function handleSelectPais(id, event) {
+    console.log(event.target)
     setState({
       ...state,
       idPais: id
@@ -319,7 +338,9 @@ function PaisesEstado() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr {...row.getRowProps()} onClick={handleSelectPais.bind(this, row.original.m_nIdPais)}>
+                  <tr {...row.getRowProps()}
+                   onClick={handleSelectPais.bind(this, row.original.m_nIdPais)}
+                   className={state.idPais === row.original.m_nIdPais ? classes.seleccionado : classes.noSeleccionado}>
                     <td>
                       <div>
                         <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarPais(row.original.m_nIdPais))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
