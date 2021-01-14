@@ -2,6 +2,7 @@ import DepartamentoPage from './Views/Departamento';
 import MonedaPage from './Views/Moneda';
 import TipoCambio from './Views/TipoCambio';
 import PaisesPage from './Views/Paises';
+import CiudadesCodigoPostalPage from './Views/Ciudades'
 
 import {ReactComponent as GParametroIcon} from './iconos/Configuracion/Icono Parametros/icono_parametro.svg';
 import {ReactComponent as GUsuarioIcon} from './iconos/Configuracion/Icono Usuarios/icono_usuarios.svg';
@@ -40,7 +41,7 @@ const configurationRoutes = [
     path: "/Ciudades",
     name: "Ciudades",
     icon:  GCiudadIcon,
-    component: DepartamentoPage,
+    component: CiudadesCodigoPostalPage,
   },
   {
     path: "/Sucursales",
