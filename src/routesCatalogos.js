@@ -180,7 +180,7 @@ const catalogRoutes = [
     component: EmbalajesPage,
   },
   {
-    path: "/Embalajes",
+    path: "/Rutas",
     name: "Rutas",
     icon: ViajesIcon,
     component: RutasPage,
