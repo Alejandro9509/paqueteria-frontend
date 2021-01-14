@@ -3,54 +3,44 @@ import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import { useTable, useFilters, useGlobalFilter, useSortBy } from 'react-table';
-import { makeStyles } from "@material-ui/core/styles";
+import { useTable, useFilters, useGlobalFilter, useRowSelect, useSortBy } from 'react-table'
 
-const styles = {
-  seleccionado: {
-    backgroundColor: "#688ad9",
-  },
-  noSeleccionado: {
-    backgroundColor: "#FFFFFF",
-  }
-};
-const useStyles = makeStyles(styles);
+function CiudadesCodigoPostal() {
 
-function PaisesEstado() {
-
-  const classes = useStyles();
   const [data, setData] = React.useState([])
+  const [dataCodigoPostal, setDataCodigoPostal] = React.useState([])
+  const [dataPais, setDataPais] = React.useState([])
   const [dataEstado, setDataEstado] = React.useState([])
-  const [dataMoneda, setDataMoneda] = React.useState([])
   const [state, setState] = React.useState({
-    idPais: 0,
-    idMoneda: 0,
-    codigo: "",
-    pais: "",
-
+    idCiudad: 0,
+    codigoCiudad: "",
+    ciudad: "",
+    abreviacionCiudad: "",
     idEstado: 0,
-    estado: "",
-    codigoEstado: "",
-    abreviacionEstado: "",
+    idPais: 0,
 
-    agregarPais: "Agregar",
-    agregarEstado: "Agregar",
+    codigoPostal: "",
+    zona: "",
+
+    agregarCiudad: "Agregar",
+    agregarCodigoPostal: "Agregar",
   })
 
-  const handleAceptarPais = (e) => {
+  const handleAceptarCiudad = (e) => {
     e.preventDefault()
     var params = {
 
-      "m_nIdPais": state.idPais,
-      "m_nIdMoneda": state.idMoneda,
-      "m_sCodigo": state.codigo,
-      "m_sPais": state.pais,
+      "m_nCodigo": state.codigoCiudad,
+      "m_sCiudad": state.ciudad,
+      "m_sAbreviacion": state.abreviacionCiudad,
+      "m_nIdEstado": state.idEstado,
       "CreadoPor": 1,
-      "ModificadoPor": 1
+      "ModificadoPor": 1,
+
     }
     console.log(params)
-    if (state.idPais != 0) {
-      const url = `${process.env.REACT_APP_API_URL}/Pais/Modificar/` + state.idPais;
+    if (state.idCiudad != 0) {
+      const url = `${process.env.REACT_APP_API_URL}/Ciudades/Modificar/` + state.idCiudad;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
         window.location.reload();
@@ -59,7 +49,7 @@ function PaisesEstado() {
         alert("err")
       });
     } else {
-      const url = `${process.env.REACT_APP_API_URL}/Pais/Agregar`;
+      const url = `${process.env.REACT_APP_API_URL}/Ciudades/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
         window.location.reload();
@@ -71,21 +61,17 @@ function PaisesEstado() {
 
   }
 
-  const handleAceptarEstado = (e) => {
+  const handleAceptarCodigoPostal = (e) => {
     e.preventDefault()
-    let fecha = new Date();
     var params = {
 
       "IdEstado": state.idEstado,
-      "IdPais": state.idPais,
+      "idCiudad": state.idCiudad,
       "Abreviacion": state.abreviacionEstado,
       "Codigo": state.codigoEstado,
       "Estado": state.estado,
       "CreadoPor": 1,
-      "CreadoEl": fecha.getFullYear() +"-" +fecha.getMonth()+1 +"-" +fecha.getDate(),
-      "ModificadoEl": fecha.getFullYear() +"-" +fecha.getMonth()+1 +"-" +fecha.getDate(),
-      "ModificadoPor": 1,
-      "Identificador": 0
+      "ModificadoPor": 1
     }
     console.log(params)
     if (state.idEstado != 0) {
@@ -101,7 +87,6 @@ function PaisesEstado() {
       const url = `${process.env.REACT_APP_API_URL}/Estado/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        console.log(respuesta.data)
       }).catch(err => {
         console.log(err)
         alert(err)
@@ -110,7 +95,7 @@ function PaisesEstado() {
 
   }
 
-  function handleEliminarPais(id) {
+  function handleEliminarCiudad(id) {
     const url = `${process.env.REACT_APP_API_URL}/Pais/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
@@ -120,7 +105,7 @@ function PaisesEstado() {
     });
   }
 
-  function handleEliminarEstado(id) {
+  function handleEliminarCodigoPostal(id) {
     const url = `${process.env.REACT_APP_API_URL}/Estado/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
@@ -130,48 +115,54 @@ function PaisesEstado() {
     });
   }
 
-  function handleShowModificarPais(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Pais/ById/${id}`;
+  function handleShowModificarCiudad(id) {
+    const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetById/${id}`;
     axios.get(url, { headers }).then(respuesta => {
       console.log(respuesta.data)
       setState({
         ...state,
         agregar: "Modificar",
-        idPais: id,
-        idMoneda: respuesta.data.m_nIdMoneda,
-        codigo: respuesta.data.m_sCodigo,
-        pais: respuesta.data.m_sPais,
+        idCiudad: id,
+        codigoCiudad: respuesta.data.m_nCodigo,
+        ciudad: respuesta.data.m_sCiudad,
+        abreviacionCiudad: respuesta.data.m_sAbreviacion,
+        idEstado: respuesta.data.m_nIdEstado
+
       })
     });
   }
 
-  function handleShowModificarEstado(id) {
+  function handleShowModificarCodigoPostal(id) {
     const url = `${process.env.REACT_APP_API_URL}/Estado/GetById/${id}`;
     axios.get(url, { headers }).then(respuesta => {
       console.log(respuesta.data)
       setState({
         ...state,
         agregar: "Modificar",
-        idEstado: id,
-        estado: respuesta.data.m_sEstado,
-        codigoEstado: respuesta.data.m_sCodigo,
-        abreviacionEstado: respuesta.data.m_sAbreviacion,
+        idCiudad: id,
+        codigoCiudad: respuesta.data.m_nCodigo,
+        ciudad: respuesta.data.m_sCiudad,
+        abreviacionCiudad: respuesta.data.m_sAbreviacion,
+        idEstado: respuesta.data.m_nIdEstado,
+        idPais: dataPais[0].m_nIdPais,
       })
     });
   }
 
-  function handleShowAgregarPais() {
+  function handleShowAgregarCiudad() {
     setState({
       ...state,
       agregar: "Agregar",
-      idPais: 0,
-      idMoneda: 0,
-      codigo: "",
-      pais: "",
+      idCiudad: 0,
+      codigoCiudad: "",
+      ciudad: "",
+      abreviacionCiudad: "",
+      idEstado: dataEstado[0].m_nIdEstado,
+      idPais: dataPais[0].m_nIdPais,
     })
   }
 
-  function handleShowAgregarEstado() {
+  function handleShowAgregarCodigoPostal() {
     setState({
       ...state,
       agregarEstado: "Agregar",
@@ -190,71 +181,76 @@ function PaisesEstado() {
     });
   };
 
-  function handleSelectPais(id, event) {
-    console.log(event.target)
+  const handleSelectPais = event => {
     setState({
       ...state,
-      idPais: id
+      idPais: event.target.value
     });
-    getAllEstado(id)
+    getAllEstado(event.target.value)
   }
 
   const columns = React.useMemo(() => [
     {
       Name: "Código",
-      accessor: "m_sCodigo",
+      accessor: "m_nCodigo",
     }, {
-      Name: "País",
-      accessor: "m_sPais",
+      Name: "Ciudad",
+      accessor: "m_sCiudad",
     }, {
-      Name: "Moneda",
-      accessor: "m_nIdMoneda",
+      Name: "Abreviación",
+      accessor: "m_sAbreviacion",
+    }, {
+      Name: "Estado",
+      accessor: "m_nIdEstado",
     }
 
   ]);
 
-  const columnsEstado = React.useMemo(() => [
+  const columnsCodigoPostal = React.useMemo(() => [
     {
       Name: "Código",
-      accessor: "m_sCodigo",
-    }, {
-      Name: "Estado",
-      accessor: "m_sEstado",
-    }, {
-      Name: "Abreviación",
-      accessor: "m_sAbreviacion",
+      accessor: "m_sCP",
     }
 
   ]);
 
   useEffect(value => {
     getAllData();
-    getAllMoneda();
+    getAllCodigoPostal();
+    getAllPais();
   }, []);
 
   function getAllData() {
-    const url = `${process.env.REACT_APP_API_URL}/Pais/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
     axios.get(url, { headers }).then(respuesta => {
       setData(respuesta.data)
-      getAllEstado(respuesta.data[0].m_nIdPais)
+      getAllCodigoPostal(respuesta.data[0].m_nIdPais)
       setState({
         ...state,
-        idPais: respuesta.data[0].m_nIdPais
+        idCiudad: respuesta.data[0].m_nIdPais
       });
     });
   };
 
-  function getAllEstado(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Estados/ByPais/${id}`;
+  function getAllCodigoPostal() {
+    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
     axios.get(url, { headers }).then(respuesta => {
-      setDataEstado(respuesta.data)
+      setDataCodigoPostal(respuesta.data)
     });
   }
 
-  function getAllMoneda() {
-    const url = `${process.env.REACT_APP_API_URL}/Moneda/GetListado`;
+  function getAllPais() {
+    const url = `${process.env.REACT_APP_API_URL}/Pais/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
-      setDataMoneda(respuesta.data);
+      setDataPais(respuesta.data);
+      getAllEstado(respuesta.data[0].m_nIdPais)
+    });
+  }
+
+  function getAllEstado(id) {
+    const url = `${process.env.REACT_APP_API_URL}/Estados/ByPais/${id}`;
+    axios.get(url, { headers }).then((respuesta) => {
+      setDataEstado(respuesta.data);
     });
   }
 
@@ -338,13 +334,11 @@ function PaisesEstado() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr {...row.getRowProps()}
-                   onClick={handleSelectPais.bind(this, row.original.m_nIdPais)}
-                   className={state.idPais === row.original.m_nIdPais ? classes.seleccionado : classes.noSeleccionado}>
+                  <tr {...row.getRowProps()}>
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarPais(row.original.m_nIdPais))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminarPais(row.original.m_nIdPais))}><i className="zmdi zmdi-close" /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarCiudad(row.original.m_nIdCiudad))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminarCiudad(row.original.m_nIdCiudad))}><i className="zmdi zmdi-close" /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -362,7 +356,7 @@ function PaisesEstado() {
     )
   }
 
-  function TableEstados({ columns, data }) {
+  function TableCodigoPostal({ columns, data }) {
 
     const defaultColumn = React.useMemo(
       () => ({
@@ -423,8 +417,8 @@ function PaisesEstado() {
                   <tr {...row.getRowProps()}>
                     <td>
                       <div>
-                        <a href="#AgregarEstado" role="tab" data-toggle="tab" onClick={() => (handleShowModificarEstado(row.original.m_nIdEstado))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminarEstado(row.original.m_nIdEstado))}><i className="zmdi zmdi-close" /></a>
+                        <a href="#AgregarEstado" role="tab" data-toggle="tab" onClick={() => (handleShowModificarCodigoPostal(row.original.m_nIdEstado))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminarCodigoPostal(row.original.m_nIdEstado))}><i className="zmdi zmdi-close" /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -460,7 +454,7 @@ function PaisesEstado() {
         <div className="container-fluid">
 
           <div className="page-header full-block light">
-            <h2>Paises Estados</h2>
+            <h2>Ciudades Código Postal</h2>
           </div>
 
           <div className="row">
@@ -472,8 +466,8 @@ function PaisesEstado() {
             </a>
                 </li>
                 <li>
-                  <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregarPais}>
-                    <i className="fa fa-plus-circle" /> {state.agregarPais}
+                  <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregarCiudad}>
+                    <i className="fa fa-plus-circle" /> {state.agregarCiudad}
                   </a>
                 </li>
               </ul>
@@ -494,7 +488,7 @@ function PaisesEstado() {
                     <div className="widget-content">
                       <div className="row">
                         <div className="col-md-12">
-                          <form className="j-forms" onSubmit={handleAceptarPais}>
+                          <form className="j-forms" onSubmit={handleAceptarCiudad}>
                             <div className="form-content">
 
                               <div className="col-sm-12 col-md-6 unit">
@@ -505,32 +499,64 @@ function PaisesEstado() {
                                   <input
                                     onChange={handleChange}
                                     className="form-control"
-                                    type="text"
+                                    type="number"
                                     required={true}
-                                    value={state.codigo}
-                                    id="codigo"
+                                    value={state.codigoCiudad}
+                                    id="codigoCiudad"
                                   />
                                 </div>
                               </div>
 
                               <div className="col-sm-12 col-md-6 unit">
                                 <label className="label">
-                                  Moneda
+                                  Abreviación
+                              </label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="text"
+                                    required={true}
+                                    value={state.abreviacionCiudad}
+                                    id="abreviacionCiudad"
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="col-sm-12 col-md-12 unit">
+                                <label className="label">
+                                  Ciudad
+                              </label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="text"
+                                    required={true}
+                                    value={state.ciudad}
+                                    id="ciudad"
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="col-sm-12 col-md-12 unit">
+                                <label className="label">
+                                  País
                               </label>
                                 <div className="input">
                                   <label className="input select">
                                     <select
                                       className="form-control"
                                       required
-                                      onChange={handleChange}
-                                      value={state.idMoneda}
-                                      id="idMoneda"
+                                      onChange={handleSelectPais}
+                                      value={state.idPais}
+                                      id="idPais"
                                     >
-                                      {dataMoneda.map(
-                                        (moneda) => (
-                                          <option key={moneda.m_nIdMoneda} value={moneda.m_nIdMoneda}>
+                                      {dataPais.map(
+                                        (pais) => (
+                                          <option key={pais.m_nIdPais} value={pais.m_nIdPais}>
                                             {
-                                              moneda.m_sMoneda
+                                              pais.m_sPais
                                             }
                                           </option>
                                         )
@@ -543,19 +569,32 @@ function PaisesEstado() {
 
                               <div className="col-sm-12 col-md-12 unit">
                                 <label className="label">
-                                  País
+                                  Estado
                               </label>
                                 <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    required={true}
-                                    value={state.pais}
-                                    id="pais"
-                                  />
+                                  <label className="input select">
+                                    <select
+                                      className="form-control"
+                                      required
+                                      onChange={handleChange}
+                                      value={state.idEstado}
+                                      id="idEstado"
+                                    >
+                                      {dataEstado.map(
+                                        (estado) => (
+                                          <option key={estado.m_nIdEstado} value={estado.m_nIdEstado}>
+                                            {
+                                              estado.m_sEstado
+                                            }
+                                          </option>
+                                        )
+                                      )}
+                                    </select>
+                                    <i></i>
+                                  </label>
                                 </div>
                               </div>
+
 
                             </div>
                             <br></br>
@@ -580,11 +619,13 @@ function PaisesEstado() {
                     <i className="fa fa-list" /> Listado
                 </a>
                 </li>
+                {/**
                 <li>
-                  <a data-toggle="tab" href="#AgregarEstado" onClick={handleShowAgregarEstado}>
+                  <a data-toggle="tab" href="#AgregarEstado" onClick={handleShowAgregarCodigoPostal}>
                     <i className="fa fa-plus-circle" /> {state.agregarEstado}
                   </a>
                 </li>
+                 */}
               </ul>
 
               <div className="tab-content">
@@ -592,18 +633,19 @@ function PaisesEstado() {
                   <div className="widget-wrap">
                     <div className="widget-content">
                       <div className="row">
-                        <TableEstados columns={columnsEstado} data={dataEstado} />
+                        <TableCodigoPostal columns={columnsCodigoPostal} data={dataCodigoPostal} />
                       </div>
                     </div>
                   </div>
                 </div>
 
+                {/**
                 <div className="widget-wrap" id="AgregarEstado" className="tab-pane fade">
                   <div className="widget-wrap">
                     <div className="widget-content">
                       <div className="row">
                         <div className="col-md-12">
-                          <form className="j-forms" onSubmit={handleAceptarEstado}>
+                          <form className="j-forms" onSubmit={handleAceptarCodigoPostal}>
                             <div className="form-content">
 
                               <div className="col-sm-12 col-md-6 unit">
@@ -666,7 +708,7 @@ function PaisesEstado() {
                     </div>
                   </div>
                 </div>
-
+                */}
               </div>
             </div>
           </div>
@@ -685,4 +727,4 @@ function PaisesEstado() {
   );
 }
 
-export default PaisesEstado;
+export default CiudadesCodigoPostal;
