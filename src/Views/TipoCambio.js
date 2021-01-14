@@ -294,6 +294,7 @@ function TipoCambio() {
                                 onChange={handleChange}
                                 className="form-control"
                                 type="number"
+                                min="0"
                                 required={true}
                                 value={state.tipoCambio}
                                 id="tipoCambio"

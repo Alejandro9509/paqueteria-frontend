@@ -500,6 +500,7 @@ function CiudadesCodigoPostal() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="number"
+                                    min="0"
                                     required={true}
                                     value={state.codigoCiudad}
                                     id="codigoCiudad"
