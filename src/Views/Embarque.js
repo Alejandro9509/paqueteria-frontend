@@ -1244,7 +1244,9 @@ function Embarque() {
                                 <input
                                   onChange={handleChange}
                                   className="form-control"
-                                  type="text"
+                                  type="number"
+                                  min="0"
+                                  step="0.01"
                                   required
                                   value={state.tipoCambio}
                                   id="tipoCambio"

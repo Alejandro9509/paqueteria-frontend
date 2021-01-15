@@ -349,6 +349,7 @@ function Caseta() {
                                   placeholder="2 Ejes"
                                   type="number"
                                   min="0"
+                                  step="0.01"
                                   required={true}
                                   value={state.tarifaEje2}
                                   id="tarifaEje2"
@@ -364,6 +365,7 @@ function Caseta() {
                                   placeholder="3 Ejes"
                                   type="number"
                                   min="0"
+                                  step="0.01"
                                   required={true}
                                   value={state.tarifaEje3}
                                   id="tarifaEje3"
@@ -379,6 +381,7 @@ function Caseta() {
                                   placeholder="4 Ejes"
                                   type="number"
                                   min="0"
+                                  step="0.01"
                                   required={true}
                                   value={state.tarifaEje4}
                                   id="tarifaEje4"
@@ -394,6 +397,7 @@ function Caseta() {
                                   placeholder="5 Ejes"
                                   type="number"
                                   min="0"
+                                  step="0.01"
                                   required={true}
                                   value={state.tarifaEje5}
                                   id="tarifaEje5"
@@ -409,6 +413,7 @@ function Caseta() {
                                   placeholder="6 Ejes"
                                   type="number"
                                   min="0"
+                                  step="0.01"
                                   required={true}
                                   value={state.tarifaEje6}
                                   id="tarifaEje6"
@@ -424,6 +429,7 @@ function Caseta() {
                                   placeholder="7 Ejes"
                                   type="number"
                                   min="0"
+                                  step="0.01"
                                   required={true}
                                   value={state.tarifaEje7}
                                   id="tarifaEje7"
@@ -439,6 +445,7 @@ function Caseta() {
                                   placeholder="8 Ejes"
                                   type="number"
                                   min="0"
+                                  step="0.01"
                                   required={true}
                                   value={state.tarifaEje8}
                                   id="tarifaEje8"
@@ -454,6 +461,7 @@ function Caseta() {
                                   placeholder="9 Ejes"
                                   type="number"
                                   min="0"
+                                  step="0.01"
                                   required={true}
                                   value={state.tarifaEje9}
                                   id="tarifaEje9"

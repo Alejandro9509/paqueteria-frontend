@@ -1294,7 +1294,10 @@ function Recoleccion() {
                                 <input
                                   onChange={handleChange}
                                   className="form-control"
-                                  type="text"
+                                  type="number"
+                                  min="0"
+                                  step="0.01"
+                                  required
                                   value={state.tipoCambio}
                                   id="tipoCambio"
                                 />
@@ -1477,6 +1480,8 @@ function Recoleccion() {
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
+                                      pattern="[0-9]{10}"
+                                      maxLength="10"
                                       required
                                       value={state.telefonoRemitente}
                                       id="telefonoRemitente"
