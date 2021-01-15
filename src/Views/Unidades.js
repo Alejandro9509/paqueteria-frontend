@@ -579,23 +579,21 @@ function App(props) {
   };
 
   const handleChangeCodigo = (event) => {
-    console.log(event.target.name + " : " + event.target.value);
     const url =
-      `${process.env.REACT_APP_API_URL}/Unidades/ValidaCodigoUnidad/` +
-      state.codigo
-    axios
-      .get(url, { headers })
-      .then((respuesta) => {
-        console.log(respuesta);
-        alert(respuesta.data.m_sMensaje);
+      `${process.env.REACT_APP_API_URL}/Unidades/ValidaCodigoUnidad/` + state.codigo
+      axios.get(url, { headers }).then((respuesta) => {
+        
+        if(respuesta.data!=""){
 
+        alert(respuesta.data.m_sMensaje);
+        console.log(respuesta.data);
         setState({
           ...state,
-
-          codigo: respuesta.data.m_nNumero,
-          [event.target.name]: event.target.value,
-        });
+          
+           codigo: respuesta.data.m_nNumero,
+        });}
       })
+    
       .catch((err) => {
         alert(err);
       });

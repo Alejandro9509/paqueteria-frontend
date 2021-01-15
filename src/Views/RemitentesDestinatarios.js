@@ -100,6 +100,22 @@ function App(props) {
     });
   }
 
+  const handleChangeNumero = (event) => {
+    const url =
+      `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/ValidaNumeroRemDes/` + state.numero
+      axios.get(url, { headers }).then((respuesta) => {
+        
+        if(respuesta.data!=""){
+
+        alert(respuesta.data.m_sMensaje);
+        console.log(respuesta.data);
+        setState({
+          ...state,
+          
+           numero: respuesta.data.m_nNumero,
+        });}
+      })
+    }
   const handleChangeActivoCheckboxChange = (event) => {
     console.log(event.target.name + " " + state.activo);
     setState({
@@ -506,6 +522,7 @@ function App(props) {
                                     <div className="input">
                                       <input
                                         onChange={handleChange}
+                                        onBlur={handleChangeNumero}
                                         type="number"
                                         pattern="[0-9]*"
                                         className="form-control"
@@ -614,11 +631,13 @@ function App(props) {
                                   <select
                                     onChange={handleSelectChange}
                                     className="form-control"
-                                    required
+                                    
                                     native
                                     value={state.idPais}
                                     id="idPais"
+                                    name="idPais"
                                   >
+                                    <option value="">Pais</option>
                                     {dataPais.map((pais) => (
                                       <option value={pais.m_nIdPais}>
                                         {pais.m_sPais}
@@ -670,6 +689,8 @@ function App(props) {
                                   value={state.idEstado}
                                   id="idEstado"
                                 >
+                                                                      <option value="">Estado</option>
+
                                   {dataEstado.map((estado) => (
                                     <option value={estado.m_nIdEstado}>
                                       {estado.m_sEstado}
