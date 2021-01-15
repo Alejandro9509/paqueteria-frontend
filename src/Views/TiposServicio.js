@@ -376,7 +376,7 @@ function Table({ columns, data}) {
               <div className="widget-content">
                 <div className="row">
                   <div className="col-md-12">
-                    <form className="j-forms">
+                    <form className="j-forms" onSubmit={handleAceptar}>
                       <div className="form-content">
 {/*****************************************Descripcion************************************************************/}
                         <div className="col-sm-12 col-md-6 unit">
@@ -394,6 +394,8 @@ function Table({ columns, data}) {
                               onChange={handleChange}
                               className="form-control"
                               type="text"
+                              maxLength="50"
+                              required
                               placeholder={state.Descripcion}
                               id="Descripcion"
                             />
@@ -414,7 +416,9 @@ function Table({ columns, data}) {
                             <input
                               onChange={handleChange}
                               className="form-control"
-                              type="text"
+                              type="number"
+                              min="0"
+                              step="1"
                               placeholder={state.DiasHabiles}
                               id="DiasHabiles"
                             />
@@ -435,7 +439,7 @@ function Table({ columns, data}) {
                             <input
                               onChange={handleChange}
                               className="form-control"
-                              type="text"
+                              type="checkbox"
                               placeholder={state.Activo}
                               id="Activo"
                             />
@@ -457,7 +461,10 @@ function Table({ columns, data}) {
                             <input
                               onChange={handleChange}
                               className="form-control"
-                              type="text"
+                              type="number"
+                              min="0"
+                              step="0.01"
+                              required
                               placeholder={state.Costo}
                               id="Costo"
                             />

@@ -18,6 +18,7 @@ function Moneda() {
   })
 
   const handleAceptar = (e) => {
+    /**
     e.preventDefault()
     var params = {
 
@@ -49,6 +50,8 @@ function Moneda() {
         alert(err)
       });
     }
+     */
+    alert("No existe servicio todavia")
 
   }
 
@@ -302,6 +305,7 @@ function Moneda() {
                                 onChange={handleChange}
                                 className="form-control"
                                 type="text"
+                                maxLength="10"
                                 required={true}
                                 value={state.codigo}
                                 id="codigo"
@@ -334,6 +338,7 @@ function Moneda() {
                                 onChange={handleChange}
                                 className="form-control"
                                 type="text"
+                                maxLength="3"
                                 required={true}
                                 value={state.simbolo}
                                 id="simbolo"
@@ -351,6 +356,7 @@ function Moneda() {
                                 className="form-control"
                                 required={true}
                                 type="text"
+                                maxLength="3"
                                 value={state.abreviacion}
                                 id="abreviacion"
                               />

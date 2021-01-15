@@ -1297,6 +1297,7 @@ function Recoleccion() {
                                   type="number"
                                   min="0"
                                   step="0.01"
+                                  required
                                   value={state.tipoCambio}
                                   id="tipoCambio"
                                 />
@@ -1463,7 +1464,6 @@ function Recoleccion() {
                                       onChange={handleChange}
                                       className="form-control"
                                       type="email"
-                                      title="Favor de introducir un correo electrónico válido"
                                       required
                                       value={state.correoRemitente}
                                       id="correoRemitente"
@@ -1481,7 +1481,7 @@ function Recoleccion() {
                                       className="form-control"
                                       type="text"
                                       pattern="[0-9]{10}"
-                                      title="Favor de ingresar un número de teléfono válido"
+                                      maxLength="10"
                                       required
                                       value={state.telefonoRemitente}
                                       id="telefonoRemitente"

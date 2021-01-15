@@ -615,6 +615,7 @@ function PaisesEstado() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
+                                    maxLength="3"
                                     required={true}
                                     value={state.codigoEstado}
                                     id="codigoEstado"
@@ -631,6 +632,7 @@ function PaisesEstado() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
+                                    maxLength="5"
                                     required={true}
                                     value={state.abreviacionEstado}
                                     id="abreviacionEstado"
@@ -648,6 +650,7 @@ function PaisesEstado() {
                                     className="form-control"
                                     required={true}
                                     type="text"
+                                    maxLength="50"
                                     value={state.estado}
                                     id="estado"
                                   />

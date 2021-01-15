@@ -288,7 +288,7 @@ function TipoCobro() {
                               <input
                                 onChange={handleChange}
                                 className="form-control"
-                                type="text"
+                                type="number"
                                 required={true}
                                 value={state.codigo}
                                 id="codigo"
@@ -305,6 +305,7 @@ function TipoCobro() {
                                 onChange={handleChange}
                                 className="form-control"
                                 type="text"
+                                maxLenght="125"
                                 required={true}
                                 value={state.descripcion}
                                 id="descripcion"

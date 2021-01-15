@@ -10,7 +10,10 @@ import RutasPage from './Views/Rutas';
 import TipoServicioPage from './Views/TiposServicio';
 import EstatusUnidadPage from './Views/EstatusUnidad';
 import TipoCobroPage from './Views/TipoCobro';
-import CasetaPage from './Views/Caseta'
+import CasetaPage from './Views/Caseta';
+import GrupoClientePage from './Views/GrupoCliente';
+import GrupoUnidadPage from './Views/GrupoUnidades';
+import PuestoPage from './Views/Puesto';
 
 import {ReactComponent as GClienteIcon} from './iconos/Catalogos/Icono Grupo Clientes/icono_grupo_cliente.svg';
 import {ReactComponent as BancoIcon} from './iconos/Catalogos/Icono Banco/icono_banco.svg';
@@ -45,10 +48,10 @@ import {ReactComponent as AddendasIcon} from './iconos/Catalogos/Icono Addendas/
 
 const catalogRoutes = [
   {
-    path: "/Departamento",
+    path: "/GrupoCliente",
     name: "Grupo Clientes",
     icon:  GClienteIcon,
-    component: DepartamentoPage,
+    component: GrupoClientePage,
   },
   {
     path: "/Departamento",
@@ -63,16 +66,16 @@ const catalogRoutes = [
     component: RemDesPage,
   },
   {
-    path: "/Recolección",
+    path: "/Puesto",
     name: "Puesto",
     icon: PuestoIcon,
-    component: RecoleccionPage,
+    component: PuestoPage,
   },
   {
-    path: "/Embarque",
+    path: "/Departamento",
     name: "Departamento",
     icon: DepartamentoIcon,
-    component: EmbarquePage,
+    component: DepartamentoPage,
   },
   {
     path: "/Operador",
@@ -87,10 +90,10 @@ const catalogRoutes = [
     component: DepartamentoPage,
   },
   {
-    path: "/Departamento",
+    path: "/GrupoUnidades",
     name: "Grupo Unidades",
     icon: GUnidadesIcon,
-    component: DepartamentoPage,
+    component: GrupoUnidadPage,
   },
   {
     path: "/Unidades",
