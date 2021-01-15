@@ -277,7 +277,7 @@ function TipoCambio() {
                               <input
                                 onChange={handleChange}
                                 className="form-control"
-                                type="datetime-local"
+                                type="date"
                                 required={true}
                                 value={state.fecha}
                                 id="fecha"
@@ -294,6 +294,8 @@ function TipoCambio() {
                                 onChange={handleChange}
                                 className="form-control"
                                 type="number"
+                                min="0"
+                                step="0.01"
                                 required={true}
                                 value={state.tipoCambio}
                                 id="tipoCambio"

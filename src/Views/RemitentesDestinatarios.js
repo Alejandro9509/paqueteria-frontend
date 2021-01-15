@@ -524,6 +524,7 @@ function App(props) {
                                         onChange={handleChange}
                                         onBlur={handleChangeNumero}
                                         type="number"
+                                        min="0"
                                         pattern="[0-9]*"
                                         className="form-control"
                                         value={state.numero}
@@ -558,6 +559,8 @@ function App(props) {
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
+                                      pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
+                                      title="Favor de introducir un RFC válido."
                                       value={state.rfc}
                                       id="rfc"
                                       required

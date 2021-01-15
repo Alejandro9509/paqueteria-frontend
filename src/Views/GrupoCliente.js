@@ -415,7 +415,7 @@ function Table({ columns, data}) {
               <div className="widget-content">
                 <div className="row">
                   <div className="col-md-12">
-                    <form className="j-forms">
+                    <form className="j-forms" onSubmit={handleAceptar}>
                       <div className="form-content">
                         
                         <div className="col-sm-12 col-md-6 unit">
@@ -432,10 +432,13 @@ function Table({ columns, data}) {
                             <input
                               onChange={handleChange}
                               className="form-control"
-                              type="text"
+                              type="number"
+                              min="0"
+                              max="999"
+                              step="1"
+                              required
                               placeholder={state.codigoGrupo}
                               id="codigoGrupo"
-                              maxLength="3"
                             />
                           </div>
                         </div>
@@ -455,9 +458,10 @@ function Table({ columns, data}) {
                               onChange={handleChange}
                               className="form-control"
                               type="text"
+                              required
+                              maxLength="50"
                               placeholder={state.grupoCliente}
                               id="grupoCliente"
-                              maxLength="50"
                             />
                           </div>
                         </div>
@@ -466,7 +470,7 @@ function Table({ columns, data}) {
                       <br></br>
                       <div className="form-footer" className="col-md-12">
                         <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
-                        <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
+                        <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                       </div>
                     </form>
                   </div>

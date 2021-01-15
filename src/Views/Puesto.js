@@ -390,13 +390,6 @@ function Table({ columns, data}) {
             <i className="fa fa-plus-circle"/> {state.agregar}
             </a>
           </li>
-          
-          <li>
-            <ExportCSV csvData={data} fileName="Puesto_Listado" />
-          </li>
-          <li>
-            <ExportPDF data={data} column={columns} fileName="Puesto"/>
-          </li>
         </ul>
       
       <div className="row" className="tab-content">
@@ -415,7 +408,7 @@ function Table({ columns, data}) {
               <div className="widget-content">
                 <div className="row">
                   <div className="col-md-12">
-                    <form className="j-forms">
+                    <form className="j-forms" onSubmit={handleAceptar}>
                       <div className="form-content">
                         
                         <div className="col-sm-12 col-md-6 unit">
@@ -432,7 +425,11 @@ function Table({ columns, data}) {
                             <input
                               onChange={handleChange}
                               className="form-control"
-                              type="text"
+                              type="number"
+                              min="0"
+                              max="999"
+                              step="1"
+                              required
                               placeholder={state.codigoPuesto}
                               id="codigoPuesto"
                               maxLength="3"
@@ -455,6 +452,8 @@ function Table({ columns, data}) {
                               onChange={handleChange}
                               className="form-control"
                               type="text"
+                              maxLength="50"
+                              required
                               placeholder={state.puesto}
                               id="puesto"
                               maxLength="50"
@@ -466,7 +465,7 @@ function Table({ columns, data}) {
                       <br></br>
                       <div className="form-footer" className="col-md-12">
                         <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
-                        <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
+                        <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                       </div>
                     </form>
                   </div>

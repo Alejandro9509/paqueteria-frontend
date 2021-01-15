@@ -15,7 +15,7 @@ const [state, setState] = React.useState({
     Codigo: 0,
     GrupoUnidad: "",
     DefinidoPorSistema: 0,
-    Color: "",
+    Color: "#000000",
     ColorLetra: 0,
     agregar: "Agregar"
 })
@@ -26,7 +26,7 @@ const handleAceptar = (e) => {
   e.preventDefault()
 	var params = {
 	  "Codigo": state.Codigo,
-      "GrupoUnidad": state.GrupoUnidad,
+      "GrupoUnidad": state.GrupoUnidad.slice(-6),
       "Color": state.Color,
       "ColorLetra": state.ColorLetra,
 	  "CreadoPor":1,
@@ -76,7 +76,8 @@ function handleShowModificar(row){
         IdEmbalaje: row.original.m_nIdGrupoUnidad,
         Codigo: respuesta.data.m_nCodigo,
         GrupoUnidad: respuesta.data.m_sGrupoUnidad,
-        Color: respuesta.data.m_sColor      })
+        Color: respuesta.data.m_sColor.slice(-6)
+      })
     });
   }
 
@@ -372,7 +373,7 @@ function Table({ columns, data}) {
               <div className="widget-content">
                 <div className="row">
                   <div className="col-md-12">
-                    <form className="j-forms">
+                    <form className="j-forms" onSubmit={handleAceptar}>
                       <div className="form-content">
 {/*****************************************Codigo************************************************************/}
                         <div className="col-sm-12 col-md-6 unit">
@@ -389,7 +390,11 @@ function Table({ columns, data}) {
                             <input
                               onChange={handleChange}
                               className="form-control"
-                              type="text"
+                              type="number"
+                              required
+                              step="1"
+                              min="0"
+                              max="999"
                               placeholder={state.Codigo}
                               id="Codigo"
                             />
@@ -410,7 +415,8 @@ function Table({ columns, data}) {
                             <input
                               onChange={handleChange}
                               className="form-control"
-                              type="text"
+                              type="color"
+                              required
                               placeholder={state.Color}
                               id="Color"
                             />
@@ -432,6 +438,7 @@ function Table({ columns, data}) {
                               onChange={handleChange}
                               className="form-control"
                               type="text"
+                              required
                               placeholder={state.GrupoUnidad}
                               id="GrupoUnidad"
                             />
