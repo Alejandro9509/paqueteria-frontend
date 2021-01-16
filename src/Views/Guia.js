@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
+import Impresion from "../Components/ImpresionGuia";
+
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import ExportCSV from '../Components/Template/Export';
@@ -13,6 +15,9 @@ import * as XLSX from 'xlsx';
 import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy } from 'react-table'
 import $ from 'jquery';
 import { remove_array_element } from "../Util/Util";
+import Barra from "../Util/jquery-barcode"
+import jspdf from "../Util/jspdf.min.js"
+import html2canvas from "../Util/html2canvas.js"
 
 window.jQuery = window.$ = $;
 const styles = {
@@ -31,6 +36,8 @@ const useStyles = makeStyles(styles);
 const useStyles2 = makeStyles(styles2);
 
 function Guia() {
+  var React = require('react');
+	var QRCode = require('qrcode.react');
   const classes = useStyles();
   const classes2 = useStyles2();
   
@@ -46,6 +53,27 @@ function Guia() {
     folioInforme: "",
     fecha: "",
     estatus: "",
+    muestraPaquetes:false,
+		paquetesI:[{
+		CiudadOrigen: "",
+				Remitente: "",
+				CiudadRemitente:"",
+				RFC: "",
+				Direccion: "",
+				Zona: "",
+				CP: 0,
+				Telefono: "",
+				CiudadDestino: "",
+				RFCDestinatario: "",
+				DireccionDestinatario: "",
+				ZonaDestinatario: "",
+				CPDestinatario:0,
+				CiudadDestinatario: "",
+				TelefonoDestinatario: "",
+				FolioPaquete:"",
+				Cantidad:0,
+				Descripcion:""
+		}],
     origen: "",
     destino: "",
     usuarioCancela: "",
@@ -145,6 +173,11 @@ function Guia() {
     ]
   })
 
+  function cargaDiv(indice,valor)
+	{
+	//	alert(indice);
+		$("#idBarra" + indice).barcode(valor,"code128");
+	}
 
   const [fileUploaded, setFileUploaded] = React.useState([])
   const [stepActive, setStepActive] = React.useState(1);
@@ -283,7 +316,8 @@ function Guia() {
       debugger;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        //window.location.reload();
+        //getImpresion(respuesta.data)
       }).catch(err => {
         console.log(err)
         alert(err)
@@ -292,13 +326,66 @@ function Guia() {
 
   }
 
+  function getImpresion(id) {
+    //alert (state.nGuiaId);		
+   if (state.muestraPaquetes === true) return;		
+   const url = `${process.env.REACT_APP_API_URL}/Guia/GetImpresion/` + id;
+      axios.get(url, { headers }).then(respuesta => {
+   setState({
+     ...state,		 	
+     paquetesI:[],
+     muestraPaquetes:true 
+     });
+     const paquetesTemp = state.paquetesI;
+     for (var i = 0; i < respuesta.data.length; i++) {
+
+ 
+     paquetesTemp.push({
+ 
+       CiudadOrigen: respuesta.data[i].m_sCiudadOrigen,
+       Remitente: respuesta.data[i].m_sNOmbreRemitente,
+       CiudadRemitente:respuesta.data[i].m_sCiudadRemitente,
+       RFC: respuesta.data[i].m_sRFCRemitente,
+       Direccion: respuesta.data[i].m_sDomicilioRemitente,
+       Zona: respuesta.data[i].m_sZonaRemitente,
+       CP: respuesta.data[i].m_nIdCodigoPostalRemitente,
+       Telefono: respuesta.data[i].m_sTelefonoRemitente,
+       CiudadDestino: respuesta.data[i].m_sCiudadDestino,
+       RFCDestinatario: respuesta.data[i].m_sRFCDestinatario,
+       DireccionDestinatario: respuesta.data[i].m_sDomicilioDestinatario,
+       ZonaDestinatario: respuesta.data[i].m_sZonaDestino,
+       CPDestinatario:respuesta.data[i].m_nIdCodigoPostalDestinatario,
+       CiudadDestinatario: respuesta.data[i].m_sCiudadDestinatario,
+       TelefonoDestinatario: respuesta.data[i].m_sTelefonoDestinatario,
+       FolioPaquete:respuesta.data[i].m_sFolioPaquete,
+       Cantidad:respuesta.data[i].m_nCantidadPaquete,
+       Descripcion:respuesta.data[i].m_sDescripcionPaquete,
+       Destinatario: respuesta.data[i].m_sNombreDestinatario,
+       FolioPaquete:respuesta.data[i].m_sFolioPaquete,
+       PaqueteCant:respuesta.data[i].m_nCantidadPaquete,
+       DescripcionPaquete:respuesta.data[i].m_sDescripcionPaquete,
+       RfcFiscal:respuesta.data[i].m_sRfcFiscal,
+       NombreFiscal:respuesta.data[i].m_sNombreFiscal,
+       Telefonos:respuesta.data[i].m_sTelefonos,
+       Colonia:respuesta.data[i].m_sColonia,
+       Calle:respuesta.data[i].m_sCalle
+     });
+     }
+     paquetesTemp.splice(0,1);
+     setState({
+     ...state,
+     paquetesI:paquetesTemp,
+     muestraPaquetes:true
+     });
+   });
+ };
   function addPaquete() {
     const { paquetes } = state;
     paquetes.push({
       peso: "",
-      largo: "", 
+      largo: "",
       ancho: "",
-      alto: "", 
+      alto: "",
       volumen: "",
       tipoEmbalaje: "",
       valorDeclarado: "",
@@ -355,7 +442,6 @@ function Guia() {
   }
 
   function handleEliminar(row) {
-    //alert(row.original.m_nIdGuia);
     const url = `${process.env.REACT_APP_API_URL}/Guia/Eliminar/` + row.original.m_nIdGuia;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
@@ -410,7 +496,61 @@ function Guia() {
     // handleEmbarqueModificar (valor2)      
 
   }
+  function handleImprmir()
+  {
+    
+  var printWindow = window.open('', '', 'height=700,width=900');
 
+  printWindow.document.write('<html><head><title></title>');
+  printWindow.document.write('<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" >');//external styles
+  printWindow.document.write('</head><body>');
+  printWindow.document.write($('#impresionDiv').html());
+  printWindow.document.write('</body></html>');
+  printWindow.document.close();
+
+  printWindow.onload=function(){
+  printWindow.focus();                                         
+  printWindow.print();
+  printWindow.close();
+  }
+}
+function handleImprmir2()
+{
+  var pdf = new jspdf('p', 'pt', 'letter');
+        var source = $('#impresionDiv')[0];
+
+        var specialElementHandlers = {
+            '#bypassme': function (element, renderer) {
+                return true
+            }
+        };
+        var margins = {
+            top: 80,
+            bottom: 60,
+            left: 40,
+            width: 522
+        };
+
+        pdf.fromHTML(
+            source, 
+            margins.left, // x coord
+            margins.top, { // y coord
+                'width': margins.width, 
+                'elementHandlers': specialElementHandlers
+            },
+
+            function (dispose) {
+                pdf.save('Prueba.pdf');
+            }, margins
+        );
+  }
+
+
+
+  function handleShowImprimir()
+  {
+    getImpresion(28);
+  }
   function handleShowAgregar() {
     var today = new Date();
     setState({
@@ -1517,6 +1657,297 @@ function Guia() {
       </div>
     );
   });
+  const framesPaqueteImp = state.paquetesI.map((p, index) => {
+		return (
+			<div key={`paqueteI${index}`}>
+   
+		<div className="widget-wrap" id="conceptosFacturacion">
+			
+			<div className="widget-header">
+				<div className="col-md-12">
+					<div className="col-md-6">				
+						<h2>{state.paquetesI[index].NombreFiscal}</h2>
+					<h3>{state.paquetesI[index].Colonia} {state.paquetesI[index].Calle}</h3>					
+					<h3>Tel:{state.paquetesI[index].Telefonos}</h3>
+					<h3>RFC:{state.paquetesI[index].RfcFiscal}</h3>
+					</div>
+					<div className="col-md-6">
+						<div className="col-md-6">
+						<div id={"idBarra"+index}>
+							<label>{cargaDiv(index,state.paquetesI[index].FolioPaquete)}</label>
+						</div>
+						</div>
+						<div className="col-md-6">
+						<QRCode value={state.paquetesI[index].FolioPaquete} size={48}></QRCode>
+						</div>
+						<h3>{state.paquetesI[index].FolioPaquete}</h3>
+					</div>
+				</div>                       
+			</div>	<div className="widget-container">
+				<div className="widget-content">
+					<div className="row">
+						<div className="col-md-12">
+							<form className="j-forms">
+								<div className="form-content">
+									<div className="col-md-6">
+										<div class="col-md-12 unit">
+											<label className="label">
+												Remitente
+											</label>
+											<div className="input">                  
+												<input
+												className="form-control"
+												type="text"
+												placeholder={state.paquetesI[index].Remitente}
+												id={"Remitente"+index}
+												disabled="disabled"
+												/>
+											</div>
+										</div>
+										<div class="col-md-12 unit">
+											<label className="label">
+												RFC
+											</label>
+											<div className="input">                  
+												<input                    
+												className="form-control"
+												type="text"
+												placeholder={state.paquetesI[index].RFC}
+												id={"RFC"+index}
+												disabled="disabled"
+												/>
+											</div>
+										</div>
+										<div class="col-md-12 unit">
+											<label className="label">
+												Dirección
+											</label>
+											<div className="input">                  
+												<input
+												className="form-control"
+												type="text"
+												placeholder={state.paquetesI[index].Direccion}
+												id={"Direccion"+index}
+												disabled="disabled"
+												/>
+											</div>
+										</div>
+										<div class="col-md-12 unit">
+											<label className="label">
+												Zona
+											</label>
+											<div className="input">                  
+												<input
+												className="form-control"
+												type="text"
+												placeholder={state.paquetesI[index].Zona}
+												id={"Zona"+index}
+												disabled="disabled"
+												/>
+											</div>
+										</div>
+										<div class="col-md-12 unit">
+											<label className="label">
+												CP
+											</label>
+											<div className="input">                  
+												<input
+												className="form-control"
+												type="text"
+												placeholder={state.paquetesI[index].CP}
+												id={"CP"+index}
+												disabled="disabled"
+												/>
+											</div>
+										</div>
+										<div class="col-md-12 unit">
+											<label className="label">
+												Ciudad
+											</label>
+											<div className="input">                  
+												<input
+												className="form-control"
+												type="text"
+												placeholder={state.paquetesI[index].CiudadRemitente}
+												id={"CiudadRemitente"+index}
+												disabled="disabled"
+												/>
+											</div>
+										</div>
+										<div class="col-md-12 unit">
+											<label className="label">
+												Teléfono
+											</label>
+											<div className="input">                  
+												<input
+												className="form-control"
+												type="text"
+												placeholder={state.paquetesI[index].Telefono}
+												id={"Telefono"+index}
+												disabled="disabled"
+												/>
+											</div>
+										</div>
+										
+										
+									</div>							
+									<div className="col-md-6">
+										<div class="col-md-12 unit">
+											<label className="label">
+												Destinatario
+											</label>
+											<div className="input">                  
+												<input
+												className="form-control"
+												type="text"
+												placeholder={state.paquetesI[index].Destinatario}
+												id={"CiudadDestino"+index}
+												disabled="disabled"
+												/>
+											</div>
+										</div>
+										<div class="col-md-12 unit">
+											<label className="label">
+												RFC
+											</label>
+											<div className="input">                  
+												<input                    
+												className="form-control"
+												type="text"
+												placeholder={state.paquetesI[index].RFCDestinatario}
+												id={"RFC"+index}
+												disabled="disabled"
+												/>
+											</div>
+										</div>
+										<div class="col-md-12 unit">
+											<label className="label">
+												Dirección
+											</label>
+											<div className="input">                  
+												<input
+												className="form-control"
+												type="text"
+												placeholder={state.paquetesI[index].DireccionDestinatario}
+												id={"Direccion"+index}
+												disabled="disabled"
+												/>
+											</div>
+										</div>
+										<div class="col-md-12 unit">
+											<label className="label">
+												Zona
+											</label>
+											<div className="input">                  
+												<input
+												className="form-control"
+												type="text"
+												placeholder={state.paquetesI[index].ZonaDestinatario}
+												id={"Zona"+index}
+												disabled="disabled"
+												/>
+											</div>
+										</div>
+										<div class="col-md-12 unit">
+											<label className="label">
+												CP
+											</label>
+											<div className="input">                  
+												<input
+												className="form-control"
+												type="text"
+												placeholder={state.paquetesI[index].CPDestinatario}
+												id={"CP"+index}
+												disabled="disabled"
+												/>
+											</div>
+										</div>
+										<div class="col-md-12 unit">
+											<label className="label">
+												Ciudad
+											</label>
+											<div className="input">                  
+												<input
+												className="form-control"
+												type="text"
+												placeholder={state.paquetesI[index].CiudadDestinatario}
+												id={"Ciudad"+index}
+												disabled="disabled"
+												/>
+											</div>
+										</div>
+										<div class="col-md-12 unit">
+											<label className="label">
+												Teléfono
+											</label>
+											<div className="input">                  
+												<input
+												className="form-control"
+												type="text"
+												placeholder={state.paquetesI[index].TelefonoDestinatario}
+												id={"Telefono"+index}
+												disabled="disabled"
+												/>
+											</div>
+										</div>
+										<div class="col-md-12 unit">
+											<label className="label">
+												Cantidad
+											</label>
+											<div className="input">                  
+												<input
+												className="form-control"
+												type="text"
+												placeholder={state.paquetesI[index].PaqueteCant}
+												id={"Cantidad"+index}
+												disabled="disabled"
+												/>
+											</div>
+										</div>
+										<div class="col-md-12 unit">
+											<label className="label">
+												Descripcion
+											</label>
+											<div className="input">                  
+												<input
+												className="form-control"
+												type="text"
+												placeholder={state.paquetesI[index].DescripcionPaquete}
+												id="Cantidad"
+												disabled="disabled"
+												/>
+											</div>
+										</div>
+										
+									</div>	
+									<div className="col-md-12">						
+									<div className="col-md-6">
+										<div className="widget-header">
+											<div className="col-md-12">
+												<h2>{state.paquetesI[index].CiudadOrigen}</h2>
+											</div>                                  
+										</div>
+									</div>
+									<div className="col-md-6">
+										<div className="widget-header">
+											<div className="col-md-12">
+												<h2>{state.paquetesI[index].CiudadDestino}</h2>
+											</div>                                  
+										</div>
+									</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+	
+			</div>								
+	   </div>
+	   ); 
+		});
+	
   const framesSobres = state.sobres.map((p, index) => {
     return (
       <div key={`sobre${index}`}>
@@ -1582,6 +2013,11 @@ function Guia() {
             <li>
               <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
                 <i className="fa fa-plus-circle" /> {state.agregar}
+              </a>
+            </li>
+            <li>
+              <a data-toggle="tab" href="#Imprimir" onClick={handleShowImprimir}>
+                <i className="fa fa-print" /> Imprimir
               </a>
             </li>
             <li className="hide">
@@ -1656,9 +2092,12 @@ function Guia() {
                       </div>
                     </form>
                   </div>
+                  
                   <div className="row">
                     <Table columns={columns} data={data} />
+                   
                   </div>
+                  
                 </div>
               </div>
             </div>
@@ -2400,10 +2839,9 @@ function Guia() {
               
            </div>
            </form>
-            </div>
-            
-            
+            </div>  
             <div id="Importar" className="tab-pane fade">
+              
               <div className="widget-wrap">
                 <div className="widget-content">
                   <div className="row">
@@ -2443,7 +2881,19 @@ function Guia() {
                 </div>
               </div>
             </div>
+            <div id="Imprimir" className="tab-pane fade">             
+            <div style={{ padding: "20px" }}  className="widget-wrap">
+              <div id="impresionDiv">
+              
+                {framesPaqueteImp}
+              </div>
+              
+              <button onClick={handleImprmir} className="btn btn-primary primary-btn">Imprimir</button>
+              <button onClick={handleImprmir2} className="btn btn-primary primary-btn">Imprimir2</button>
 
+              </div>
+          
+              </div>
           </div>
         </div>
 
