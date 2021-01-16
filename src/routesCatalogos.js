@@ -1,4 +1,5 @@
 import DepartamentoPage from './Views/Departamento';
+import ClientePage from './Views/Clientes';
 import RecoleccionPage from './Views/Recoleccion';
 import EmbalajesPage from './Views/Embalajes';
 import EmbarquePage from './Views/Embarque';
@@ -54,10 +55,10 @@ const catalogRoutes = [
     component: GrupoClientePage,
   },
   {
-    path: "/Departamento",
+    path: "/Clientes",
     name: "Clientes",
     icon: ClienteIcon,
-    component: DepartamentoPage,
+    component: ClientePage,
   },
   {
     path: "/RemitenteDestinatarios",
