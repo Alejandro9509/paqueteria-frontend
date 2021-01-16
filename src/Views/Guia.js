@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
-import Impresion from "../Components/ImpresionGuia";
 
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
@@ -53,7 +52,6 @@ function Guia() {
     folioInforme: "",
     fecha: "",
     estatus: "",
-    muestraPaquetes:false,
 		paquetesI:[{
 		CiudadOrigen: "",
 				Remitente: "",
@@ -317,7 +315,10 @@ function Guia() {
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
         //window.location.reload();
-        //getImpresion(respuesta.data)
+        var resp = respuesta.data;
+        debugger;
+        var vGuia = resp.substring(resp.indexOf(":")+2);
+        getImpresion(vGuia);
       }).catch(err => {
         console.log(err)
         alert(err)
@@ -326,15 +327,15 @@ function Guia() {
 
   }
 
-  function getImpresion(id) {
+  async function getImpresion(id) {
     //alert (state.nGuiaId);		
-   if (state.muestraPaquetes === true) return;		
+   //if (state.muestraPaquetes === true) return;		
    const url = `${process.env.REACT_APP_API_URL}/Guia/GetImpresion/` + id;
-      axios.get(url, { headers }).then(respuesta => {
+      await axios.get(url, { headers }).then(respuesta => {
    setState({
      ...state,		 	
      paquetesI:[],
-     muestraPaquetes:true 
+    // muestraPaquetes:true 
      });
      const paquetesTemp = state.paquetesI;
      for (var i = 0; i < respuesta.data.length; i++) {
@@ -375,9 +376,10 @@ function Guia() {
      setState({
      ...state,
      paquetesI:paquetesTemp,
-     muestraPaquetes:true
+    // muestraPaquetes:true
      });
-   });
+     $("#Imprimir").click();
+   });   
  };
   function addPaquete() {
     const { paquetes } = state;
@@ -496,6 +498,7 @@ function Guia() {
     // handleEmbarqueModificar (valor2)      
 
   }
+  
   function handleImprmir()
   {
     
@@ -549,7 +552,7 @@ function handleImprmir2()
 
   function handleShowImprimir()
   {
-    getImpresion(28);
+    //getImpresion(38);
   }
   function handleShowAgregar() {
     var today = new Date();
@@ -622,7 +625,8 @@ function handleImprmir2()
       creadoEl: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
       modificadoEl: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
       idSucursal: 1
-    })
+    });
+    //getImpresion(38);
   }
 
   const handleChange = event => {
