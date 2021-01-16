@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import axios from "axios"; 
+import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
 
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
@@ -7,15 +7,16 @@ import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import ExportCSV from '../Components/Template/Export';
 import ExportPDF from "../Components/Template/ExportPDF";
 import Carousel from "re-carousel";
-import IndicatorDots from "../Util/Dots"; 
+import IndicatorDots from "../Util/Dots";
 import Buttons from "../Util/CarruselButtons";
 import { makeStyles } from "@material-ui/core/styles";
-import * as XLSX from 'xlsx'; 
+import * as XLSX from 'xlsx';
 import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy } from 'react-table'
 import $ from 'jquery';
 import { remove_array_element } from "../Util/Util";
 import Barra from "../Util/jquery-barcode"
-
+import jspdf from "../Util/jspdf.min.js"
+import html2canvas from "../Util/html2canvas.js"
 
 window.jQuery = window.$ = $;
 const styles = {
@@ -223,6 +224,7 @@ function Guia() {
     Porcentaje: 0
   })
 
+  
   const [dataCiudad, setDataCiudad] = React.useState([])
   const [stateCiudad, setStateCiudad] = React.useState({
     IdCiudad: 0,
@@ -490,7 +492,7 @@ function Guia() {
               });*/
       //handleEmbarque (respuesta.data.m_nIdEmbarque)
       // alert(state.idMoneda)
-    }).catch(function (err) { 
+    }).catch(function (err) {
       console.log(err.data)
     });
     // debugger;
@@ -498,7 +500,7 @@ function Guia() {
 
   }
   
-  /*function handleImprmir()
+  function handleImprmir()
   {
     
   var printWindow = window.open('', '', 'height=700,width=900');
@@ -545,7 +547,7 @@ function handleImprmir2()
                 pdf.save('Prueba.pdf');
             }, margins
         );
-  }*/
+  }
 
 
 
@@ -2891,6 +2893,8 @@ function handleImprmir2()
                 {framesPaqueteImp}
               </div>
               
+              <button onClick={handleImprmir} className="btn btn-primary primary-btn">Imprimir</button>
+              <button onClick={handleImprmir2} className="btn btn-primary primary-btn">Imprimir2</button>
 
               </div>
           
