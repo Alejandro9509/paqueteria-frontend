@@ -319,6 +319,7 @@ function EstatusUnidad() {
                                 onChange={handleChange}
                                 className="form-control"
                                 type="text"
+                                maxLength="30"
                                 required={true}
                                 value={state.estatusUnidad}
                                 id="estatusUnidad"
@@ -335,6 +336,7 @@ function EstatusUnidad() {
                                 onChange={handleChange}
                                 className="form-control"
                                 type="text"
+                                maxLength="5"
                                 required={true}
                                 value={state.abreviacionUnidad}
                                 id="abreviacionUnidad"
