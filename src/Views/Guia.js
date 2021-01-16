@@ -130,7 +130,7 @@ function Guia() {
     creadoEl: "",
     modificadoEl: "",
     idSucursal: 2,
-    valorDeclardao: 0,
+    valorDeclarado: 0,
     CiudadDestino: "",
     paquetes: [
       {
@@ -138,7 +138,7 @@ function Guia() {
         largo: "",
         ancho: "",
         alto: "",
-        volumen: "",
+        volumen: "", 
         peso: "",
         tipoEmbalaje: "",
         valorDeclarado: "",
@@ -252,7 +252,7 @@ function Guia() {
       "IdMoneda": state.idMoneda,
       "TipoCambio": state.tipoCambio,
       "IdTipoCobro": state.idTipoCobro,
-      "NombreRemitente": state.nombreRemitente,
+       "NombreRemitente": state.nombreRemitente,
       "RfcRemitente": state.rfcRemitente,
       "DomicilioRemitente": state.domicilioRemitente,
       "IdCodigoPostalRemitente": state.idCodigoPostalRemitente,
@@ -297,7 +297,11 @@ function Guia() {
       "ModificadoPor": 1,
       "CreadoEl": state.creadoEl,
       "ModificadoEl": state.modificadoEl,
-      "Idguia": state.IdGuia
+      "Idguia": state.IdGuia,
+      "ValorDeclarado":state.ValorDeclarado,
+      "idTipoServicio":state.idTipoServicio,
+      
+
     }
     if (state.idGuia != 0) {
       const url = `${process.env.REACT_APP_API_URL}/Guia/Modificar/` + state.idGuia;
@@ -693,6 +697,9 @@ function handleImprmir2()
       Name: "Destino",
       accessor: "m_sCiudadDestino",
     }, {
+      Name: "Folio Guia",
+      accessor: "m_nFolioGuia",
+    }, {
       Name: "Folio Informe",
       accessor: "m_nFolioInforme",
     }, {
@@ -902,12 +909,15 @@ function handleImprmir2()
         });
       }
       sobresTemp.splice(0, 1);
+      console.log(respuesta.data);
       //alert(respuesta.data.m_nIdEmbarque);
       //setDataEmbarque(respuesta.data)
       setState({
         ...state,
         idEmbarque: respuesta.data.m_nIdEmbarque,
         idEmbarque2: respuesta.data.m_nIdEmbarque,
+        tipoCambio: respuesta.data.m_cTIpoCambio,
+        idTipoCobro:respuesta.data.m_nIdTIpoCobro,
         nombreRemitente: respuesta.data.m_sNOmbreRemitente,
         RFCRemitente: respuesta.data.m_sRFCRemitente,
         domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
@@ -993,6 +1003,8 @@ function handleImprmir2()
         codigoPostalRemitente: respuesta.data.m_nIdCodigoPostalRemitente,
         ciudadRemitente: respuesta.data.m_sCiudadRemitente,
         correoRemitente: respuesta.data.m_sCorreoRemitente,
+        tipoCambio:respuesta.data.m_cTIpoCambio,
+        idTipoCobro:respuesta.data.m_nIdTIpoCobro,
         telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
         contactoRemitente: respuesta.data.m_sContactoRemitente,
         origenRemitente: respuesta.data.m_sCiudadRemitente,
@@ -1146,7 +1158,7 @@ function handleImprmir2()
         fecha: embarque.data.m_dFecha,
         hora: embarque.data.m_sHora,
         idEstatusGuia: embarque.data.m_nIdEstatusGuia,
-        valorDeclardao: embarque.data.m_cValorDeclarado,
+        ValorDeclarado: embarque.data.m_cValorDeclarado,
         idMoneda: embarque.data.m_nIdMoneda,
         tipoCambio: embarque.data.m_cTIpoCambio,
         idTipoCobro: embarque.data.m_nIdTIpoCobro,
@@ -2327,6 +2339,7 @@ function handleImprmir2()
                                   type="text"
                                   placeholder={state.tipoCambio}
                                   id="tipoCambio"
+                                 disabled="disabled"
                                 />
                               </div>
                             </div>
@@ -2341,7 +2354,8 @@ function handleImprmir2()
                                 onChange={handleChange}
                                 id="idTipoCobro"
                                 read="true"
-                                value={state.idTipoCobro}
+                                value={state.idTipoCobro}    
+                                disabled="disabled"                            
                               >
 
                                 <option value="0">
@@ -2389,8 +2403,8 @@ function handleImprmir2()
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder={state.valorDeclardao}
-                                    id="valorDeclarado"
+                                    placeholder={state.ValorDeclarado}
+                                    id="ValorDeclarado"
                                   />
                                 </div>
                               </div>                                
