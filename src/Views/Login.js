@@ -27,11 +27,15 @@ function login(){
     axios.get(url, { headers }).then(respuesta => {
       try{
         debugger;
-      if (respuesta.data.m_sUsuario != "")
+      if (respuesta.data != undefined && respuesta.data.m_sUsuario != undefined && respuesta.data.m_sUsuario != ""  )
       {
         console.log(respuesta.data)
         localStorage.setItem("accessToken", true);
         window.location.replace("configuracion");  
+      }
+      else
+      {
+        alert(respuesta.data);
       }
       }catch{
         alert(respuesta.data);
