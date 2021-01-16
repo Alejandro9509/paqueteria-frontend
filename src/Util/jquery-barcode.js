@@ -1,3 +1,6 @@
+/*jslint bitwise: true */
+/* eslint no-undef: "off"*/
+/* eslint-disable-line no-restricted-globals */
 /*!
  *  BarCode Coder Library (BCC Library)
  *  BCCL Version 2.0
