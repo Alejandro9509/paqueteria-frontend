@@ -4,9 +4,21 @@ import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import { useTable, useFilters, useGlobalFilter, useRowSelect, useSortBy } from 'react-table'
+import { makeStyles } from "@material-ui/core/styles";
+
+const styles = {
+  seleccionado: {
+    backgroundColor: "#688ad9",
+  },
+  noSeleccionado: {
+    backgroundColor: "#FFFFFF",
+  }
+};
+const useStyles = makeStyles(styles);
 
 function CiudadesCodigoPostal() {
 
+  const classes = useStyles();
   const [data, setData] = React.useState([])
   const [dataCodigoPostal, setDataCodigoPostal] = React.useState([])
   const [dataPais, setDataPais] = React.useState([])
@@ -19,6 +31,7 @@ function CiudadesCodigoPostal() {
     idEstado: 0,
     idPais: 0,
 
+    idCodigoPostal: 0,
     codigoPostal: "",
     zona: "",
 
@@ -65,17 +78,15 @@ function CiudadesCodigoPostal() {
     e.preventDefault()
     var params = {
 
-      "IdEstado": state.idEstado,
-      "idCiudad": state.idCiudad,
-      "Abreviacion": state.abreviacionEstado,
-      "Codigo": state.codigoEstado,
-      "Estado": state.estado,
+      "m_nIdEstado": state.idEstado,
+      "m_nIdCiudad": state.idCiudad,
+      "m_sCP": state.codigoPostal,
       "CreadoPor": 1,
       "ModificadoPor": 1
     }
     console.log(params)
-    if (state.idEstado != 0) {
-      const url = `${process.env.REACT_APP_API_URL}/Estado/Modificar/` + state.idEstado;
+    if (state.idCodigoPostal != 0) {
+      const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/Modificar/` + state.idCodigoPostal;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
         window.location.reload();
@@ -84,7 +95,7 @@ function CiudadesCodigoPostal() {
         alert("err")
       });
     } else {
-      const url = `${process.env.REACT_APP_API_URL}/Estado/Agregar`;
+      const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
       }).catch(err => {
@@ -133,18 +144,15 @@ function CiudadesCodigoPostal() {
   }
 
   function handleShowModificarCodigoPostal(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Estado/GetById/${id}`;
+    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetById/${id}`;
     axios.get(url, { headers }).then(respuesta => {
       console.log(respuesta.data)
       setState({
         ...state,
         agregar: "Modificar",
-        idCiudad: id,
-        codigoCiudad: respuesta.data.m_nCodigo,
-        ciudad: respuesta.data.m_sCiudad,
-        abreviacionCiudad: respuesta.data.m_sAbreviacion,
-        idEstado: respuesta.data.m_nIdEstado,
-        idPais: dataPais[0].m_nIdPais,
+        idCodigoPostal: id,
+        codigoPostal: respuesta.data.m_sCP,
+        zona: respuesta.data.m_sCiudad,
       })
     });
   }
@@ -165,11 +173,10 @@ function CiudadesCodigoPostal() {
   function handleShowAgregarCodigoPostal() {
     setState({
       ...state,
-      agregarEstado: "Agregar",
-      idEstado: 0,
-      estado: "",
-      codigoEstado: "",
-      abreviacionEstado: "",
+      agregarCodigoPostal: "Agregar",
+      idCodigoPostal: 0,
+      codigoPostal: "",
+      zona: "",
     })
   }
 
@@ -187,6 +194,15 @@ function CiudadesCodigoPostal() {
       idPais: event.target.value
     });
     getAllEstado(event.target.value)
+  }
+
+  function handleSelectCiudad(row, event) {
+    setState({
+      ...state,
+      idCiudad: row.m_nIdCiudad,
+      idEstado: row.m_nIdEstado
+    });
+    getAllCodigoPostal(row.m_nIdCiudad)
   }
 
   const columns = React.useMemo(() => [
@@ -216,7 +232,6 @@ function CiudadesCodigoPostal() {
 
   useEffect(value => {
     getAllData();
-    getAllCodigoPostal();
     getAllPais();
   }, []);
 
@@ -224,10 +239,11 @@ function CiudadesCodigoPostal() {
     const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
     axios.get(url, { headers }).then(respuesta => {
       setData(respuesta.data)
-      getAllCodigoPostal(respuesta.data[0].m_nIdPais)
+      getAllCodigoPostal(respuesta.data[0].m_nIdCiudad)
       setState({
         ...state,
-        idCiudad: respuesta.data[0].m_nIdPais
+        idCiudad: respuesta.data[0].m_nIdCiudad,
+        idEstado: respuesta.data[0].m_nIdEstado
       });
     });
   };
@@ -334,7 +350,9 @@ function CiudadesCodigoPostal() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr {...row.getRowProps()}>
+                  <tr {...row.getRowProps()}
+                    onClick={handleSelectCiudad.bind(this, row.original)}
+                    className={state.idCiudad === row.original.m_nIdCiudad ? classes.seleccionado : classes.noSeleccionado}>
                     <td>
                       <div>
                         <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarCiudad(row.original.m_nIdCiudad))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
@@ -417,8 +435,8 @@ function CiudadesCodigoPostal() {
                   <tr {...row.getRowProps()}>
                     <td>
                       <div>
-                        <a href="#AgregarEstado" role="tab" data-toggle="tab" onClick={() => (handleShowModificarCodigoPostal(row.original.m_nIdEstado))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminarCodigoPostal(row.original.m_nIdEstado))}><i className="zmdi zmdi-close" /></a>
+                        <a href="#AgregarCP" role="tab" data-toggle="tab" onClick={() => (handleShowModificarCodigoPostal(row.original.m_nIdCP))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminarCodigoPostal(row.original.m_nIdCP))}><i className="zmdi zmdi-close" /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -458,7 +476,7 @@ function CiudadesCodigoPostal() {
           </div>
 
           <div className="row">
-            <div className="col-md-6" >
+            <div className="col-md-7" >
               <ul className="nav nav-tabs">
                 <li className="active">
                   <a data-toggle="tab" href="#Listado">
@@ -613,20 +631,18 @@ function CiudadesCodigoPostal() {
               </div>
             </div>
 
-            <div className="col-md-6" >
+            <div className="col-md-5" >
               <ul className="nav nav-tabs">
                 <li className="active">
                   <a data-toggle="tab" href="#ListadoEstado">
                     <i className="fa fa-list" /> Listado
                 </a>
                 </li>
-                {/**
                 <li>
-                  <a data-toggle="tab" href="#AgregarEstado" onClick={handleShowAgregarCodigoPostal}>
-                    <i className="fa fa-plus-circle" /> {state.agregarEstado}
+                  <a data-toggle="tab" href="#AgregarCP" onClick={handleShowAgregarCodigoPostal}>
+                    <i className="fa fa-plus-circle" /> {state.agregarCodigoPostal}
                   </a>
                 </li>
-                 */}
               </ul>
 
               <div className="tab-content">
@@ -640,8 +656,7 @@ function CiudadesCodigoPostal() {
                   </div>
                 </div>
 
-                {/**
-                <div className="widget-wrap" id="AgregarEstado" className="tab-pane fade">
+                <div className="widget-wrap" id="AgregarCP" className="tab-pane fade">
                   <div className="widget-wrap">
                     <div className="widget-content">
                       <div className="row">
@@ -649,9 +664,9 @@ function CiudadesCodigoPostal() {
                           <form className="j-forms" onSubmit={handleAceptarCodigoPostal}>
                             <div className="form-content">
 
-                              <div className="col-sm-12 col-md-6 unit">
+                              <div className="col-sm-12 col-md-12 unit">
                                 <label className="label">
-                                  Código
+                                  Código Postal
                                 </label>
                                 <div className="input">
                                   <input
@@ -659,40 +674,24 @@ function CiudadesCodigoPostal() {
                                     className="form-control"
                                     type="text"
                                     required={true}
-                                    value={state.codigoEstado}
-                                    id="codigoEstado"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-12 col-md-6 unit">
-                                <label className="label">
-                                  Abreviación
-                                </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    required={true}
-                                    value={state.abreviacionEstado}
-                                    id="abreviacionEstado"
+                                    value={state.codigoPostal}
+                                    id="codigoPostal"
                                   />
                                 </div>
                               </div>
 
                               <div className="col-sm-12 col-md-12 unit">
                                 <label className="label">
-                                  Estado
+                                  Zona
                                 </label>
                                 <div className="input">
                                   <input
                                     onChange={handleChange}
                                     className="form-control"
-                                    required={true}
                                     type="text"
-                                    value={state.estado}
-                                    id="estado"
+                                    required={true}
+                                    value={state.zona}
+                                    id="zona"
                                   />
                                 </div>
                               </div>
@@ -709,7 +708,6 @@ function CiudadesCodigoPostal() {
                     </div>
                   </div>
                 </div>
-                */}
               </div>
             </div>
           </div>
