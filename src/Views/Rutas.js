@@ -13,7 +13,8 @@ import $ from "jquery";
 import { useTable, useFilters, useSortBy } from "react-table";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import {DisplayMapClass} from "./mapa";
+import {DisplayMapClass} from "./DisplayMapClass";
+
 
 
 window.jQuery = window.$ = $;
