@@ -6,7 +6,7 @@ import axios from "axios";
 import $ from 'jquery';
 window.jQuery = window.$ = $;
 
-function Recoleccion() {
+function Parametros() {
 
   const [dataPais, setDataPais] = React.useState([])
   const [dataEstado, setDataEstado] = React.useState([])
@@ -45,28 +45,28 @@ function Recoleccion() {
     e.preventDefault()
     var params = {
 
-      "": state.RFC,
-      "": state.registroFiscal,
-      "": state.nombreFiscal,
-      "": state.nombreComercial,
-      "": state.regimenFiscal,
-      "": state.retencionFiscal,
-      "": state.curp,
-      "": state.usuario,
-      "": state.password,
-      "": state.timbrar,
-      "": state.apiKey,
-      "": state.hash,
-      "": state.idPais,
-      "": state.codigoPostal,
-      "": state.idEstado,
-      "": state.munipio,
-      "": state.localidad,
-      "": state.colonia,
-      "": state.calle,
-      "": state.RFCFiscal,
+      "m_sRFC": state.RFC,
+      "m_sRegistroFiscal": state.registroFiscal,
+      "m_sNombreFiscal": state.nombreFiscal,
+      "m_sNombreComercial": state.nombreComercial,
+      "m_sIdRegimenFiscal": state.regimenFiscal,
+      "m_nIdRetencionIva": state.retencionFiscal,
+      "m_sCURP": state.curp,
+      "m_sUsuario": state.usuario,
+      "m_sContrasenia": state.password,
+      "m_bTimbrarPruebas": state.timbrar,
+      "m_sApiKey": state.apiKey,
+      "m_sHashGMTGPS": state.hash,
+      "m_nIdPais": state.idPais,
+      "m_nIdCodigoPostal": state.codigoPostal,
+      "m_nIsEstado": state.idEstado,
+      "m_nIdMunicipio": state.munipio,
+      "m_nIdLocalidad": state.localidad,
+      "m_nIdColonia": state.colonia,
+      "m_sCalle": state.calle,
+      "m_sRFCFiscal": state.RFCFiscal,
       "": state.blanco,
-      "": state.telefono,
+      "m_sTelefonos": state.telefono,
       "CreadoPor": 1,
       "ModificadoPor": 1
     }
@@ -215,32 +215,44 @@ function Recoleccion() {
                   <div className="col-md-12 unit">
                     <label className="label">
                       Regimen Fiscal
-                    </label>
+                      </label>
                     <div className="input">
-                      <input
-                        onChange={handleChange}
-                        className="form-control"
-                        type="text"
-                        required
-                        value={state.regimenFiscal}
-                        id="regimenFiscal"
-                      />
+                      <label className="input select">
+                        <select
+                          className="form-control"
+                          required
+                          onChange={handleChange}
+                          value={state.regimenFiscal}
+                          id="regimenFiscal"
+                        >
+                          <option value="0">
+                            Por Definir
+                          </option>
+                        </select>
+                        <i></i>
+                      </label>
                     </div>
                   </div>
 
                   <div className="col-md-6 unit">
                     <label className="label">
-                      Retención Fiscal
-                    </label>
+                      Retención IVA
+                      </label>
                     <div className="input">
-                      <input
-                        onChange={handleChange}
-                        className="form-control"
-                        type="text"
-                        required
-                        value={state.retencionFiscal}
-                        id="retencionFiscal"
-                      />
+                      <label className="input select">
+                        <select
+                          className="form-control"
+                          required
+                          onChange={handleChange}
+                          value={state.retencionIVA}
+                          id="retencionIVA"
+                        >
+                          <option value="0">
+                            Por Definir
+                          </option>
+                        </select>
+                        <i></i>
+                      </label>
                     </div>
                   </div>
 
@@ -504,7 +516,6 @@ function Recoleccion() {
                       </div>
                     </div>
 
-
                   </div>
 
                   <div className="col-md-6">
@@ -597,6 +608,7 @@ function Recoleccion() {
               </div>
 
             </div>
+
             <div className="form-footer" className="col-md-12">
               <button className="btn btn-primary secondary-btn">Cancelar</button>
               <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
@@ -617,4 +629,4 @@ function Recoleccion() {
   );
 }
 
-export default Recoleccion;
+export default Parametros;
