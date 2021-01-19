@@ -81,6 +81,7 @@ function CiudadesCodigoPostal() {
       "m_nIdEstado": state.idEstado,
       "m_nIdCiudad": state.idCiudad,
       "m_sCP": state.codigoPostal,
+      "m_nIdCP": state.idCodigoPostal,
       "CreadoPor": 1,
       "ModificadoPor": 1
     }
@@ -117,7 +118,7 @@ function CiudadesCodigoPostal() {
   }
 
   function handleEliminarCodigoPostal(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Estado/Eliminar/` + id;
+    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
       window.location.reload();
