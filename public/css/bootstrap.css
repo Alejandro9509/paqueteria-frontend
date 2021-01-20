@@ -43,6 +43,15 @@ template {
   padding-right: 10px;
   padding-left: 10px;
 }
+.marcoNaranja{
+  border-left: 4px solid #F9A03E;
+  border-right: 4px solid #F9A03E;
+  border-top: 4px solid #F9A03E;
+  border-bottom: 4px solid #F9A03E;
+
+  padding-right: 10px;
+  padding-left: 10px;
+}
 a {
   background-color: transparent;
 }
