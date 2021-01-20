@@ -192,7 +192,7 @@ function Recoleccion() {
       const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Modificar/${state.idRecoleccion}`;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData();
       }).catch(err => {
         console.log(err)
         alert("err")
@@ -202,7 +202,7 @@ function Recoleccion() {
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         console.log(respuesta.data)
         alert(respuesta.data)
-        window.location.reload();
+        getAllData();
       }).catch(err => {
         console.log(err)
         alert(err)
@@ -257,7 +257,7 @@ function Recoleccion() {
       .delete(url, { headers })
       .then((respuesta) => {
         alert(respuesta.data);
-        window.location.reload();
+        getAllData();
       })
       .catch((err) => {
         alert(err);

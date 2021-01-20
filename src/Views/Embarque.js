@@ -179,7 +179,7 @@ function Embarque() {
       const url = `${process.env.REACT_APP_API_URL}/Embarques/Modificar/${state.idEmbarque}`;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData()
       }).catch(err => {
         console.log(err)
         alert("err")
@@ -189,7 +189,7 @@ function Embarque() {
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
         console.log(respuesta.data)
-        window.location.reload();
+        getAllData()
       }).catch(err => {
         console.log(err)
         alert(err)
@@ -264,7 +264,7 @@ function Embarque() {
     const url = `${process.env.REACT_APP_API_URL}/Embarques/Eliminar/${id}`;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
-      window.location.reload();
+      getAllData()
     }).catch(err => {
       alert(err)
     });

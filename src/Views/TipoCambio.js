@@ -31,7 +31,7 @@ function TipoCambio() {
       const url = `${process.env.REACT_APP_API_URL}/TipoCambio/Modificar/` + state.idTipoCambio;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData();
       }).catch(err => {
         console.log(err)
         alert("err")
@@ -40,7 +40,7 @@ function TipoCambio() {
       const url = `${process.env.REACT_APP_API_URL}/TipoCambio/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData();
       }).catch(err => {
         console.log(err)
         alert(err)
@@ -53,7 +53,7 @@ function TipoCambio() {
     const url = `${process.env.REACT_APP_API_URL}/TipoCambio/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta)
-      window.location.reload();
+      getAllData();
     }).catch(err => {
       alert(err)
     });

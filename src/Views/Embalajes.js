@@ -34,7 +34,7 @@ const handleAceptar = (e) => {
     const url = `${process.env.REACT_APP_API_URL}/Embalaje/Modificar/` + state.IdEmbalaje;
     axios.put(url, Object.assign({}, params), {headers}).then(respuesta => {
     alert(respuesta.data)
-    window.location.reload();
+    getAllData()
   }).catch(err => {
     console.log(err)
     alert("err")
@@ -43,7 +43,7 @@ const handleAceptar = (e) => {
   const url = `${process.env.REACT_APP_API_URL}/Embalaje/Agregar`;
   axios.post(url, Object.assign({}, params), {headers}).then(respuesta => {
     alert(respuesta.data)
-    window.location.reload();
+    getAllData()
   }).catch(err => {
     console.log(err)
     alert(err)
@@ -56,6 +56,7 @@ function handleEliminar(id){
   const url = `${process.env.REACT_APP_API_URL}/Embalaje/Eliminar/` + id;
   axios.delete(url, {headers}).then(respuesta => {
     console.log(respuesta)
+    getAllData()
   }).catch(err => {
     alert(err)
   });

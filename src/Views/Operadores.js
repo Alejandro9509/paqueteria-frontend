@@ -368,7 +368,7 @@ function App(props) {
         .then((respuesta) => {
           alert(respuesta.data);
 
-          window.location.reload();
+          getAllOperadores();
         })
         .catch((err) => {
           console.log(err);
@@ -380,6 +380,7 @@ function App(props) {
         .post(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
           alert(respuesta.data);
+          getAllOperadores();
           //window.location.reload();
         })
         .catch((err) => {
@@ -578,6 +579,7 @@ function App(props) {
       .get(url, { headers })
       .then((respuesta) => {
         console.log(respuesta);
+        getAllOperadores();
       })
       .catch((err) => {
         alert(err);

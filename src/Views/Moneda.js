@@ -59,7 +59,7 @@ function Moneda() {
     const url = `${process.env.REACT_APP_API_URL}/Moneda/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta)
-      window.location.reload();
+      getAllData();
     }).catch(err => {
       alert(err)
     });
@@ -108,10 +108,10 @@ function Moneda() {
     }, {
       Name: "Moneda",
       accessor: "m_sMoneda",
-    },{
+    }, {
       Name: "Símbolo",
       accessor: "m_sSimbolo",
-    },{
+    }, {
       Name: "Abreviación",
       accessor: "m_sAbreviacion",
     }, {
@@ -261,7 +261,10 @@ function Moneda() {
         <div className="container-fluid">
 
           <div className="page-header full-block light">
-            <h2>Moneda</h2>
+            <ul class="breadcrumb">
+              <li><a href="#">Configuración</a></li>
+              <li>Moneda</li>
+            </ul>
           </div>
 
           <ul className="nav nav-tabs">

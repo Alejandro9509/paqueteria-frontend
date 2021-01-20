@@ -53,7 +53,7 @@ function PaisesEstado() {
       const url = `${process.env.REACT_APP_API_URL}/Pais/Modificar/` + state.idPais;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData();
       }).catch(err => {
         console.log(err)
         alert("err")
@@ -62,7 +62,7 @@ function PaisesEstado() {
       const url = `${process.env.REACT_APP_API_URL}/Pais/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData();
       }).catch(err => {
         console.log(err)
         alert(err)
@@ -92,7 +92,7 @@ function PaisesEstado() {
       const url = `${process.env.REACT_APP_API_URL}/Estado/Modificar/` + state.idEstado;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData();
       }).catch(err => {
         console.log(err)
         alert("err")
@@ -102,6 +102,7 @@ function PaisesEstado() {
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
         console.log(respuesta.data)
+        getAllData();
       }).catch(err => {
         console.log(err)
         alert(err)
@@ -114,7 +115,7 @@ function PaisesEstado() {
     const url = `${process.env.REACT_APP_API_URL}/Pais/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
-      window.location.reload();
+      getAllData();
     }).catch(err => {
       alert(err)
     });
@@ -124,7 +125,7 @@ function PaisesEstado() {
     const url = `${process.env.REACT_APP_API_URL}/Estado/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
-      window.location.reload();
+      getAllEstado(state.idPais)
     }).catch(err => {
       alert(err)
     });

@@ -564,6 +564,7 @@ function App(props) {
       .get(url, { headers })
       .then((respuesta) => {
         console.log(respuesta);
+        getAllUnidades();
       })
       .catch((err) => {
         alert(err);
@@ -721,8 +722,7 @@ function App(props) {
 
         .then((respuesta) => {
           alert(respuesta.data);
-
-          window.location.reload();
+          getAllUnidades();
         })
         .catch((err) => {
           console.log(err);
@@ -734,6 +734,7 @@ function App(props) {
         .post(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
           alert(respuesta.data);
+          getAllUnidades();
           //window.location.reload();
         })
         .catch((err) => {

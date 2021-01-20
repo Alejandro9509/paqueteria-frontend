@@ -56,7 +56,7 @@ function CiudadesCodigoPostal() {
       const url = `${process.env.REACT_APP_API_URL}/Ciudades/Modificar/` + state.idCiudad;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData()
       }).catch(err => {
         console.log(err)
         alert("err")
@@ -65,7 +65,7 @@ function CiudadesCodigoPostal() {
       const url = `${process.env.REACT_APP_API_URL}/Ciudades/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData()
       }).catch(err => {
         console.log(err)
         alert(err)
@@ -90,7 +90,7 @@ function CiudadesCodigoPostal() {
       const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/Modificar/` + state.idCodigoPostal;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData()
       }).catch(err => {
         console.log(err)
         alert("err")
@@ -108,10 +108,10 @@ function CiudadesCodigoPostal() {
   }
 
   function handleEliminarCiudad(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Pais/Eliminar/` + id;
+    const url = `${process.env.REACT_APP_API_URL}/Ciudades/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
-      window.location.reload();
+      getAllData();
     }).catch(err => {
       alert(err)
     });
@@ -121,7 +121,7 @@ function CiudadesCodigoPostal() {
     const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
-      window.location.reload();
+      getAllCodigoPostal();
     }).catch(err => {
       alert(err)
     });

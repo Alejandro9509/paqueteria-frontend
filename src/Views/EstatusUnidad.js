@@ -45,7 +45,7 @@ function EstatusUnidad() {
       const url = `${process.env.REACT_APP_API_URL}/EstatusUnidades/Modificar/` + state.idEstatusUnidad;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData();
       }).catch(err => {
         console.log(err)
         alert("err")
@@ -54,7 +54,7 @@ function EstatusUnidad() {
       const url = `${process.env.REACT_APP_API_URL}/EstatusUnidades/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData()
       }).catch(err => {
         console.log(err)
         alert(err)
@@ -67,7 +67,7 @@ function EstatusUnidad() {
     const url = `${process.env.REACT_APP_API_URL}/EstatusUnidades/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta)
-      window.location.reload();
+      getAllData()
     }).catch(err => {
       alert(err)
     });

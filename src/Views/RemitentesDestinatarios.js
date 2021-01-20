@@ -142,6 +142,7 @@ function App(props) {
         .put(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
           alert(respuesta.data);
+          getAllDataRemDes();
           //window.location.reload();
         })
         .catch((err) => {
@@ -154,6 +155,7 @@ function App(props) {
         .post(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
           alert(respuesta.data);
+          getAllDataRemDes();
           //window.location.reload();
         })
         .catch((err) => {
@@ -169,7 +171,7 @@ function App(props) {
       .delete(url, { headers })
       .then((respuesta) => {
         alert(respuesta.data);
-        window.location.reload();
+        getAllDataRemDes();
       })
       .catch((err) => {
         alert(err);

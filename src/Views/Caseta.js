@@ -46,7 +46,7 @@ function Caseta() {
       const url = `${process.env.REACT_APP_API_URL}/Casetas/Modificar/` + state.idCaseta;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData()
       }).catch(err => {
         console.log(err)
         alert("err")
@@ -55,7 +55,7 @@ function Caseta() {
       const url = `${process.env.REACT_APP_API_URL}/Casetas/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData()
       }).catch(err => {
         console.log(err)
         alert(err)
@@ -68,7 +68,7 @@ function Caseta() {
     const url = `${process.env.REACT_APP_API_URL}/Casetas/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
-      window.location.reload();
+      getAllData()
     }).catch(err => {
       alert(err)
     });

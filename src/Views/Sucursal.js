@@ -57,6 +57,7 @@ function Sucursal() {
       const url = `${process.env.REACT_APP_API_URL}/Sucursales/Modificar/` + state.idSucursal;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
+        getAllData();
         //window.location.reload();
       }).catch(err => {
         console.log(err)
@@ -66,6 +67,7 @@ function Sucursal() {
       const url = `${process.env.REACT_APP_API_URL}/Sucursales/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
+        getAllData();
         //window.location.reload();
       }).catch(err => {
         console.log(err)
@@ -80,7 +82,7 @@ function Sucursal() {
     const url = `${process.env.REACT_APP_API_URL}/Sucursales/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
-      window.location.reload();
+      getAllData();
     }).catch(err => {
       alert(err)
     });
