@@ -181,7 +181,7 @@ function App(props) {
   function handleShowModificar(row) {
     console.log(row.original.m_nIdRemitenteDestinatario);
     const url =
-    `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/GetById/` +
+      `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/GetById/` +
       row.original.m_nIdRemitenteDestinatario;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
@@ -311,11 +311,11 @@ function App(props) {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                          <i className="fa fa-caret-down" />
-                        )
+                            <i className="fa fa-caret-down" />
+                          )
                       ) : (
-                        ""
-                      )}
+                          ""
+                        )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -492,12 +492,12 @@ function App(props) {
           </div>
 
           <div id="Agregar" className="tab-pane fade ">
-          <form className="j-forms" onSubmit={handleAceptar}>
-            <div className="row">
-              <div className="col-md-6">
-                <div className="widget-wrap">
-                  <div className="widget-container margin-top-0">
-                    <div className="widget-content">
+            <form className="j-forms" onSubmit={handleAceptar}>
+              <div className="row">
+                <div className="col-md-6">
+                  <div className="widget-wrap">
+                    <div className="widget-container margin-top-0">
+                      <div className="widget-content">
                         {/*Inicio de ejemplo*/}
                         <div className="widget-container">
                           <div className="widget-content">
@@ -603,13 +603,13 @@ function App(props) {
                             </div>
                           </div>
                         </div>
-                  </div></div>
+                      </div></div>
+                  </div>
                 </div>
-              </div>
-              <div className="col-md-6">
-                <div className="widget-wrap">
-                  <div className="widget-container margin-top-0">
-                    <div className="widget-content">
+                <div className="col-md-6">
+                  <div className="widget-wrap">
+                    <div className="widget-container margin-top-0">
+                      <div className="widget-content">
                         {/*Inicio de ejemplo*/}
                         <div className="widget-container">
                           <div className="widget-content">
@@ -628,11 +628,19 @@ function App(props) {
                                     value={state.idPais}
                                     id="idPais"
                                   >
-                                    {dataPais.map((pais) => (
-                                      <option value={pais.m_nIdPais}>
-                                        {pais.m_sPais}
-                                      </option>
-                                    ))}
+                                    {
+                                      dataPais.length < 1 ?
+
+                                        <option value="none">
+                                          País
+                                          </option>
+                                        :
+                                        dataPais.map((pais) => (
+                                          <option key={pais.m_nIdPais} value={pais.m_nIdPais}>
+                                            {pais.m_sPais}
+                                          </option>
+                                        ))
+                                    }
                                   </select>
                                   <i></i>
                                 </label>
@@ -680,17 +688,17 @@ function App(props) {
                                   id="idEstado"
                                 >
                                   {
-                                    dataEstado.length < 1 ? 
-                                    
-                                    <option value="0">
-                                      Estados
-                                    </option> 
-                                    :
-                                    dataEstado.map((estado) => (
-                                    <option value={estado.m_nIdEstado}>
-                                      {estado.m_sEstado}
+                                    dataEstado.length < 1 ?
+
+                                      <option value="none">
+                                        Estados
                                     </option>
-                                  ))
+                                      :
+                                      dataEstado.map((estado) => (
+                                        <option value={estado.m_nIdEstado}>
+                                          {estado.m_sEstado}
+                                        </option>
+                                      ))
                                   }
                                 </select>
                                 <i></i>
@@ -816,18 +824,18 @@ function App(props) {
                                 </div>
                               </div>
                               <div className="form-footer" className="col-md-12">
-                  <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
-                  <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
-                </div>
+                                <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
+                                <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
+                              </div>
                             </div>
                           </div>
                         </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-            </div>
+              </div>
             </form>
 
           </div>

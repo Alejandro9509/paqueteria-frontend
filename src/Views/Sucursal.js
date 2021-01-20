@@ -107,7 +107,7 @@ function Sucursal() {
         colonia: respuesta.data.m_sColonia,
         calle: respuesta.data.m_sCalle,
         numInterior: respuesta.data.m_sNoInterior,
-        numExterior:respuesta.data. m_sNoExterior,
+        numExterior: respuesta.data.m_sNoExterior,
         iva: respuesta.data.m_sIdImpuestoTraslado,
         zonaHoraria: respuesta.data.m_xZonaHoraria,
         activo: respuesta.data.m_bActiva
@@ -464,15 +464,19 @@ function Sucursal() {
                                   value={state.idPais}
                                   id="idPais"
                                 >
-                                  {dataPais.map(
-                                    (pais) => (
-                                      <option key={pais.m_nIdPais} value={pais.m_nIdPais}>
-                                        {
-                                          pais.m_sPais
-                                        }
-                                      </option>
-                                    )
-                                  )}
+                                  {
+                                    dataPais.length < 1 ?
+
+                                      <option value="none">
+                                        País
+                                          </option>
+                                      :
+                                      dataPais.map((pais) => (
+                                        <option key={pais.m_nIdPais} value={pais.m_nIdPais}>
+                                          {pais.m_sPais}
+                                        </option>
+                                      ))
+                                  }
                                 </select>
                                 <i></i>
                               </label>
@@ -492,15 +496,19 @@ function Sucursal() {
                                   value={state.idEstado}
                                   id="idEstado"
                                 >
-                                  {dataEstado.map(
-                                    (estado) => (
-                                      <option key={estado.m_nIdEstado} value={estado.m_nIdEstado}>
-                                        {
-                                          estado.m_sEstado
-                                        }
-                                      </option>
-                                    )
-                                  )}
+                                  {
+                                    dataEstado.length < 1 ?
+
+                                      <option value="none">
+                                        Estados
+                                    </option>
+                                      :
+                                      dataEstado.map((estado) => (
+                                        <option value={estado.m_nIdEstado}>
+                                          {estado.m_sEstado}
+                                        </option>
+                                      ))
+                                  }
                                 </select>
                                 <i></i>
                               </label>
