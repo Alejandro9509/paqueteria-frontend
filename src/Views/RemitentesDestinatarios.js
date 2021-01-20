@@ -409,10 +409,23 @@ function App(props) {
     console.log(dataEstado);
   }
 
+  const ruta = [
+    {
+      actual : false,
+      nombre: "Catálogos",
+      ruta: "/Catalogos"
+    },
+    {
+      actual : true,
+      nombre: "Remitente Destinatario",
+      ruta: "/RemitenteDestinatarios"
+    },
+  ];
+
   return (
     <div>
       <header className="topbar clearfix">
-        <Cabecera />
+        <Cabecera rutas={ruta}/>
       </header>
       {/*Topbar End Here*/}
       {/*Leftbar Start Here*/}

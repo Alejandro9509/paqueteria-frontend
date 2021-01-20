@@ -59,7 +59,7 @@ function Moneda() {
     const url = `${process.env.REACT_APP_API_URL}/Moneda/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta)
-      getAllData();
+      window.location.reload();
     }).catch(err => {
       alert(err)
     });
@@ -243,11 +243,24 @@ function Moneda() {
     )
   }
 
+  const ruta = [
+    {
+      actual : false,
+      nombre: "Configuración",
+      ruta: "/Configuracion"
+    },
+    {
+      actual : true,
+      nombre: "Moneda",
+      ruta: "/Moneda"
+    },
+  ];
+
   return (
     <div>
 
       <header className="topbar clearfix">
-        <Cabecera />
+        <Cabecera rutas={ruta}/>
       </header>
 
       {/*Leftbar Start Here*/}
@@ -259,13 +272,6 @@ function Moneda() {
       {/*Page Container Start Here*/}
       <section className="main-container">
         <div className="container-fluid">
-
-          <div className="page-header full-block light">
-            <ul class="breadcrumb">
-              <li><a href="#">Configuración</a></li>
-              <li>Moneda</li>
-            </ul>
-          </div>
 
           <ul className="nav nav-tabs">
             <li className="active">

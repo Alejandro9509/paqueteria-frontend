@@ -443,11 +443,24 @@ function PaisesEstado() {
     )
   }
 
+  const ruta = [
+    {
+      actual : false,
+      nombre: "Configuración",
+      ruta: "/Configuracion"
+    },
+    {
+      actual : true,
+      nombre: "Paises",
+      ruta: "/Paises"
+    },
+  ];
+
   return (
     <div>
 
       <header className="topbar clearfix">
-        <Cabecera />
+        <Cabecera rutas={ruta}/>
       </header>
 
       {/*Leftbar Start Here*/}
@@ -459,10 +472,6 @@ function PaisesEstado() {
       {/*Page Container Start Here*/}
       <section className="main-container">
         <div className="container-fluid">
-
-          <div className="page-header full-block light">
-            <h2>Paises Estados</h2>
-          </div>
 
           <div className="row">
             <div className="col-md-6" >

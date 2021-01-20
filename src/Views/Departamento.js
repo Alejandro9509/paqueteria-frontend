@@ -360,11 +360,24 @@ function Table({ columns, data}) {
   )
 }
 
+const ruta = [
+  {
+    actual : false,
+    nombre: "Catálogo",
+    ruta: "/Catalogo"
+  },
+  {
+    actual : true,
+    nombre: "Departamento",
+    ruta: "/Departamento"
+  },
+];
+
   return (
     <div>
 
   <header className="topbar clearfix">
-    <Cabecera />
+    <Cabecera rutas={ruta}/>
   </header>
 
   {/*Leftbar Start Here*/}
@@ -376,10 +389,6 @@ function Table({ columns, data}) {
   {/*Page Container Start Here*/}
   <section className="main-container">
     <div className="container-fluid">
-
-    <div className="page-header full-block light">
-        <h2>Departamento</h2>
-      </div>
 
       <ul className="nav nav-tabs">
           <li className="active">

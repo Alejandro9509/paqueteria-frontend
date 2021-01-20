@@ -9,10 +9,18 @@ window.jQuery = window.$ = $;
 
 function Catalogo() {
 
+  const ruta = [
+    {
+      actual : true,
+      nombre: "Catálogos",
+      ruta: "/Catalogos"
+    },
+  ];
+
   return (
     <div>
       <header className="topbar clearfix">
-        <Cabecera />
+        <Cabecera rutas={ruta}/>
       </header>
 
       {/*Leftbar Start Here*/}

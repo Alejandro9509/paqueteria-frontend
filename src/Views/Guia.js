@@ -1997,12 +1997,19 @@ function handleImprmir2()
     });
   }
 
+  const ruta = [
+    {
+      actual : true,
+      nombre: "Guía",
+      ruta: "/Guia"
+    },
+  ];
 
   return (
     <div>
 
       <header className="topbar clearfix">
-        <Cabecera />
+        <Cabecera rutas={ruta}/>
       </header>
 
       {/*Leftbar Start Here*/}
@@ -2014,10 +2021,6 @@ function handleImprmir2()
       {/*Page Container Start Here*/}
       <section className="main-container">
         <div className="container-fluid">
-
-          <div className="page-header full-block light">
-            <h2>Guias</h2>
-          </div>
 
           <ul className="nav nav-tabs">
             <li className="active">

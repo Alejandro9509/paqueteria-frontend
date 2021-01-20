@@ -455,11 +455,24 @@ function CiudadesCodigoPostal() {
     )
   }
 
+  const ruta = [
+    {
+      actual : false,
+      nombre: "Configuración",
+      ruta: "/Configuracion"
+    },
+    {
+      actual : true,
+      nombre: "Ciudades",
+      ruta: "/Ciudades"
+    },
+  ];
+
   return (
     <div>
 
       <header className="topbar clearfix">
-        <Cabecera />
+        <Cabecera rutas={ruta}/>
       </header>
 
       {/*Leftbar Start Here*/}
@@ -471,10 +484,6 @@ function CiudadesCodigoPostal() {
       {/*Page Container Start Here*/}
       <section className="main-container">
         <div className="container-fluid">
-
-          <div className="page-header full-block light">
-            <h2>Ciudades Código Postal</h2>
-          </div>
 
           <div className="row">
             <div className="col-md-7" >

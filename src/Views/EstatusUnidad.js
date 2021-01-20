@@ -246,11 +246,24 @@ function EstatusUnidad() {
     )
   }
 
+  const ruta = [
+    {
+      actual : false,
+      nombre: "Catálogos",
+      ruta: "/Catalogos"
+    },
+    {
+      actual : true,
+      nombre: "Estatus de Unidad",
+      ruta: "/EstatusUnidad"
+    },
+  ];
+
   return (
     <div>
 
       <header className="topbar clearfix">
-        <Cabecera />
+        <Cabecera rutas={ruta}/>
       </header>
 
       {/*Leftbar Start Here*/}
@@ -262,10 +275,6 @@ function EstatusUnidad() {
       {/*Page Container Start Here*/}
       <section className="main-container">
         <div className="container-fluid">
-
-          <div className="page-header full-block light">
-            <h2>Estatus Unidad</h2>
-          </div>
 
           <ul className="nav nav-tabs">
             <li className="active">

@@ -865,12 +865,19 @@ function Embarque() {
     );
   });
 
+  const ruta = [
+    {
+      actual : true,
+      nombre: "Embarque",
+      ruta: "/Embarque"
+    },
+  ];
 
   return (
     <div>
 
       <header className="topbar clearfix">
-        <Cabecera />
+        <Cabecera rutas={ruta}/>
       </header>
 
       {/*Leftbar Start Here*/}
@@ -882,10 +889,6 @@ function Embarque() {
       {/*Page Container Start Here*/}
       <section className="main-container">
         <div className="container-fluid">
-
-          <div className="page-header full-block light">
-            <h2>Embarque</h2>
-          </div>
 
           <ul className="nav nav-tabs">
             <li className="active">

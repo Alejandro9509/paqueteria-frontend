@@ -22,15 +22,24 @@ const headers = {
 };
 
   function App(props) {
-
-
     
-
+    const ruta = [
+      {
+        actual : false,
+        nombre: "Catálogos",
+        ruta: "/Catalogos"
+      },
+      {
+        actual : true,
+        nombre: "Rutas",
+        ruta: "/Rutas"
+      },
+    ];
 
   return (
     <div>
       <header className="topbar clearfix">
-        <Cabecera />
+        <Cabecera rutas={ruta}/>
       </header>
       {/*Topbar End Here*/}
       {/*Leftbar Start Here*/}
