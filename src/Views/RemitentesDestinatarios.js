@@ -390,7 +390,10 @@ function App(props) {
   }
 
   const handleSelectChange = (event) => {
-    console.log("onChangeSelect");
+    setState({
+      ...state,
+      idPais: event.target.value,
+    })
     getAllEstados(event.target.value);
   };
 
