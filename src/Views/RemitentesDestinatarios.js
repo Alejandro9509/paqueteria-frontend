@@ -67,7 +67,7 @@ function App(props) {
       noInterior: 0,
       colonia: "",
       localidad: "",
-      municipio: 0,
+      municipio: "",
       idPais: 0,
       idEstado: 0,
       codigoPostal: 0,
@@ -385,6 +385,7 @@ function App(props) {
     const url = `${process.env.REACT_APP_API_URL}/Pais/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setDataPais(respuesta.data);
+      getAllEstados(respuesta.data[0].m_nIdPais)
     });
   }
 
@@ -673,11 +674,19 @@ function App(props) {
                                   value={state.idEstado}
                                   id="idEstado"
                                 >
-                                  {dataEstado.map((estado) => (
+                                  {
+                                    dataEstado.length < 1 ? 
+                                    
+                                    <option value="0">
+                                      Estados
+                                    </option> 
+                                    :
+                                    dataEstado.map((estado) => (
                                     <option value={estado.m_nIdEstado}>
                                       {estado.m_sEstado}
                                     </option>
-                                  ))}
+                                  ))
+                                  }
                                 </select>
                                 <i></i>
                               </label>
@@ -691,7 +700,6 @@ function App(props) {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder="Municipio"
                                     id="text"
                                     value={state.municipio}
                                     id="municipio"
