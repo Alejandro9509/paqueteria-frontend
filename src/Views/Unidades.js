@@ -3212,7 +3212,7 @@ function App(props) {
                                                   value={state.horometro}
                                                   name="horometro"
                                                   className="form-control"
-                                                  type="text"
+                                                  type="number"
                                                   placeholder="00:00"
                                                   id="text"
                                                 />
@@ -3248,7 +3248,7 @@ function App(props) {
                                                   }
                                                   name="horasTrabajadasMotorNoGPS"
                                                   className="form-control"
-                                                  type="text"
+                                                  type="number"
                                                   placeholder=""
                                                   id="text"
                                                 />
@@ -3268,7 +3268,7 @@ function App(props) {
                                                   }
                                                   name="porcentajeRepIngresos"
                                                   className="form-control"
-                                                  type="text"
+                                                  type="number"
                                                   placeholder=""
                                                   id="text"
                                                 />
@@ -3286,7 +3286,7 @@ function App(props) {
                                                   }
                                                   name="horasTrabajasMotor"
                                                   className="form-control"
-                                                  type="text"
+                                                  type="number"
                                                   placeholder=""
                                                   id="text"
                                                 />
@@ -3304,7 +3304,7 @@ function App(props) {
                                                   value={state.odometro}
                                                   name="odometro"
                                                   className="form-control"
-                                                  type="text"
+                                                  type="number"
                                                   placeholder=""
                                                   id="text"
                                                 />
