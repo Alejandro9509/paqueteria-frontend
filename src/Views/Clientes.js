@@ -795,107 +795,8 @@ function App(props) {
     );
   }
 
-  const framesDocumentos = state.documentos.map((p, index) => {
-    return (
-      <div className="j-row toclone-widget-right toclone">
-        <div className="span4 unit">
-          <div className="input">
-            <input
-              onChange={(event) => handleChangeDocumento(event, index)}
-              name="numDocumento"
-              className="form-control"
-              type="text"
-              placeholder="Número de Documento"
-            />
-          </div>
-        </div>
-        <div className="span4 unit">
-          <div className="input">
-            <input
-              onChange={(event) => handleChangeDocumento(event, index)}
-              name="documento"
-              className="form-control"
-              type="text"
-              placeholder="Documento"
-            />
-          </div>
-        </div>
-        <div className="span2 unit">
-          <div className="input">
-            <input
-              onChange={(event) => handleChangeDocumento(event, index)}
-              name="fechaDocumento"
-              className="form-control"
-              type="datetime-local"
-              placeholder="15/06/2020"
-            />
-          </div>
-        </div>
-        <div className="span2 unit">
-          {state.documentos.length !== 1 && (
-            <a className="btn delete" onClick={() => removeDocumento(index)}>
-              <i className="zmdi zmdi-delete"></i> Eliminar Documento
-            </a>
-          )}
-        </div>
-      </div>
-    );
-  });
-
-  const framesFotosDocs = state.documentos.map((p, index) => {
-    return (
-      <div className="j-row toclone-widget-right toclone">
-        <div className="span6 unit">
-          <div className="input">
-            <input
-              onChange={(event) => handleChangeFotosDocs(event, index)}
-              name="descripcion"
-              className="form-control"
-              type="text"
-              placeholder="Descripción"
-            />
-          </div>
-        </div>
-        <div className="span4 unit">
-          <div className="form-content">
-            <div className="row">
-              {/* start prepend small file button */}
-              <div className="col-md-12 unit">
-                <div className="input prepend-small-btn">
-                  <div className="file-button">
-                    Browse
-                    <input
-                      type="file"
-                      id="file"
-                      name="file"
-                      onChange={(event) => handleChangeFotosDocs(event, index)}
-                    />
-                  </div>
-                  <input
-                    className="form-control"
-                    type="text"
-                    id="prepend-small-btn"
-                    readOnly
-                    placeholder="no file selected"
-                  />
-                </div>
-              </div>
-              {/* end prepend small
-               */}
-            </div>
-          </div>
-        </div>
-        <div className="span2 unit">
-          {state.fotosDocs.length !== 1 && (
-            <a className="btn delete" onClick={() => removeFotosDoc(index)}>
-              <i className="zmdi zmdi-delete"></i> Eliminar Documento
-            </a>
-          )}
-        </div>
-      </div>
-    );
-  });
-
+ 
+ 
   function value(event) {
     console.log(event.target.value);
   }
@@ -2197,7 +2098,6 @@ function App(props) {
                                                           <label className="label">
                                                             Documentos
                                                           </label>
-                                                          {framesDocumentos}
                                                           <a
                                                             className="btn"
                                                             style={{
@@ -2523,7 +2423,7 @@ function App(props) {
                                         <div className="form-content">
                                           {/* start text password */}
                                           <div className="row">
-                                            <div className="col-sm-6 col-md-4 col-lg-4 unit">
+                                            <div className="col-sm-6 col-md-6 col-lg-4 unit">
                                               <label className="label">
                                                 Contacto
                                               </label>
@@ -2539,7 +2439,7 @@ function App(props) {
                                                 />
                                               </div>
                                             </div>
-                                            <div className="col-sm-6  col-md-2 col-lg-2  unit">
+                                            <div className="col-sm-6  col-md-6 col-lg-2  unit">
                                             <div className="inline-group">
                                                             <label className="label">
                                                               &nbsp;{" "}
