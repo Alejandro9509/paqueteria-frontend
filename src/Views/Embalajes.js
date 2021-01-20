@@ -34,7 +34,7 @@ const handleAceptar = (e) => {
     const url = `${process.env.REACT_APP_API_URL}/Embalaje/Modificar/` + state.IdEmbalaje;
     axios.put(url, Object.assign({}, params), {headers}).then(respuesta => {
     alert(respuesta.data)
-    window.location.reload();
+    getAllData()
   }).catch(err => {
     console.log(err)
     alert("err")
@@ -43,7 +43,7 @@ const handleAceptar = (e) => {
   const url = `${process.env.REACT_APP_API_URL}/Embalaje/Agregar`;
   axios.post(url, Object.assign({}, params), {headers}).then(respuesta => {
     alert(respuesta.data)
-    window.location.reload();
+    getAllData()
   }).catch(err => {
     console.log(err)
     alert(err)
@@ -56,6 +56,7 @@ function handleEliminar(id){
   const url = `${process.env.REACT_APP_API_URL}/Embalaje/Eliminar/` + id;
   axios.delete(url, {headers}).then(respuesta => {
     console.log(respuesta)
+    getAllData()
   }).catch(err => {
     alert(err)
   });
@@ -375,11 +376,24 @@ function Table({ columns, data}) {
   )
 }
 
+const ruta = [
+  {
+    actual : false,
+    nombre: "Catálogos",
+    ruta: "/Catalogos"
+  },
+  {
+    actual : true,
+    nombre: "Embalajes",
+    ruta: "/Embalajes"
+  },
+];
+
   return (
     <div>
 
   <header className="topbar clearfix">
-    <Cabecera />
+    <Cabecera rutas={ruta}/>
   </header>
 
   {/*Leftbar Start Here*/}
@@ -391,10 +405,6 @@ function Table({ columns, data}) {
   {/*Page Container Start Here*/}
   <section className="main-container">
     <div className="container-fluid">
-
-    <div className="page-header full-block light">
-        <h2>Embalajes</h2>
-      </div>
 
       <ul className="nav nav-tabs">
           <li className="active">

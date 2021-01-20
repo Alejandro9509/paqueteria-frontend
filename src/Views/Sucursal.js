@@ -57,6 +57,7 @@ function Sucursal() {
       const url = `${process.env.REACT_APP_API_URL}/Sucursales/Modificar/` + state.idSucursal;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
+        getAllData();
         //window.location.reload();
       }).catch(err => {
         console.log(err)
@@ -66,6 +67,7 @@ function Sucursal() {
       const url = `${process.env.REACT_APP_API_URL}/Sucursales/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
+        getAllData();
         //window.location.reload();
       }).catch(err => {
         console.log(err)
@@ -80,7 +82,7 @@ function Sucursal() {
     const url = `${process.env.REACT_APP_API_URL}/Sucursales/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
-      window.location.reload();
+      getAllData();
     }).catch(err => {
       alert(err)
     });
@@ -105,7 +107,7 @@ function Sucursal() {
         colonia: respuesta.data.m_sColonia,
         calle: respuesta.data.m_sCalle,
         numInterior: respuesta.data.m_sNoInterior,
-        numExterior:respuesta.data. m_sNoExterior,
+        numExterior: respuesta.data.m_sNoExterior,
         iva: respuesta.data.m_sIdImpuestoTraslado,
         zonaHoraria: respuesta.data.m_xZonaHoraria,
         activo: respuesta.data.m_bActiva
@@ -348,11 +350,24 @@ function Sucursal() {
     )
   }
 
+  const ruta = [
+    {
+      actual : false,
+      nombre: "Configuración",
+      ruta: "/Configuracion"
+    },
+    {
+      actual : true,
+      nombre: "Rutas",
+      ruta: "/Rutas"
+    },
+  ];
+
   return (
     <div>
 
       <header className="topbar clearfix">
-        <Cabecera />
+        <Cabecera rutas={ruta}/>
       </header>
 
       {/*Leftbar Start Here*/}
@@ -364,10 +379,6 @@ function Sucursal() {
       {/*Page Container Start Here*/}
       <section className="main-container">
         <div className="container-fluid">
-
-          <div className="page-header full-block light">
-            <h2>Sucursal</h2>
-          </div>
 
           <ul className="nav nav-tabs">
             <li className="active">
@@ -462,15 +473,19 @@ function Sucursal() {
                                   value={state.idPais}
                                   id="idPais"
                                 >
-                                  {dataPais.map(
-                                    (pais) => (
-                                      <option key={pais.m_nIdPais} value={pais.m_nIdPais}>
-                                        {
-                                          pais.m_sPais
-                                        }
-                                      </option>
-                                    )
-                                  )}
+                                  {
+                                    dataPais.length < 1 ?
+
+                                      <option value="none">
+                                        País
+                                          </option>
+                                      :
+                                      dataPais.map((pais) => (
+                                        <option key={pais.m_nIdPais} value={pais.m_nIdPais}>
+                                          {pais.m_sPais}
+                                        </option>
+                                      ))
+                                  }
                                 </select>
                                 <i></i>
                               </label>
@@ -490,15 +505,19 @@ function Sucursal() {
                                   value={state.idEstado}
                                   id="idEstado"
                                 >
-                                  {dataEstado.map(
-                                    (estado) => (
-                                      <option key={estado.m_nIdEstado} value={estado.m_nIdEstado}>
-                                        {
-                                          estado.m_sEstado
-                                        }
-                                      </option>
-                                    )
-                                  )}
+                                  {
+                                    dataEstado.length < 1 ?
+
+                                      <option value="none">
+                                        Estados
+                                    </option>
+                                      :
+                                      dataEstado.map((estado) => (
+                                        <option value={estado.m_nIdEstado}>
+                                          {estado.m_sEstado}
+                                        </option>
+                                      ))
+                                  }
                                 </select>
                                 <i></i>
                               </label>

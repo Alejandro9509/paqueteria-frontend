@@ -307,7 +307,7 @@ function Guia() {
       const url = `${process.env.REACT_APP_API_URL}/Guia/Modificar/` + state.idGuia;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData()
       }).catch(err => {
         console.log(err)
         alert(err)
@@ -452,7 +452,7 @@ function Guia() {
       alert(respuesta.data)
       //console.log(respuesta)
       if (respuesta.data.indexOf("fracaso:") <=0)
-      window.location.reload();
+      getAllData()
     }).catch(function (err) {
       console.log(err.data)
     });
@@ -1997,12 +1997,19 @@ function handleImprmir2()
     });
   }
 
+  const ruta = [
+    {
+      actual : true,
+      nombre: "Guía",
+      ruta: "/Guia"
+    },
+  ];
 
   return (
     <div>
 
       <header className="topbar clearfix">
-        <Cabecera />
+        <Cabecera rutas={ruta}/>
       </header>
 
       {/*Leftbar Start Here*/}
@@ -2014,10 +2021,6 @@ function handleImprmir2()
       {/*Page Container Start Here*/}
       <section className="main-container">
         <div className="container-fluid">
-
-          <div className="page-header full-block light">
-            <h2>Guias</h2>
-          </div>
 
           <ul className="nav nav-tabs">
             <li className="active">

@@ -56,7 +56,7 @@ function CiudadesCodigoPostal() {
       const url = `${process.env.REACT_APP_API_URL}/Ciudades/Modificar/` + state.idCiudad;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData()
       }).catch(err => {
         console.log(err)
         alert("err")
@@ -65,7 +65,7 @@ function CiudadesCodigoPostal() {
       const url = `${process.env.REACT_APP_API_URL}/Ciudades/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData()
       }).catch(err => {
         console.log(err)
         alert(err)
@@ -90,7 +90,7 @@ function CiudadesCodigoPostal() {
       const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/Modificar/` + state.idCodigoPostal;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData()
       }).catch(err => {
         console.log(err)
         alert("err")
@@ -108,10 +108,10 @@ function CiudadesCodigoPostal() {
   }
 
   function handleEliminarCiudad(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Pais/Eliminar/` + id;
+    const url = `${process.env.REACT_APP_API_URL}/Ciudades/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
-      window.location.reload();
+      getAllData();
     }).catch(err => {
       alert(err)
     });
@@ -121,7 +121,7 @@ function CiudadesCodigoPostal() {
     const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
-      window.location.reload();
+      getAllCodigoPostal();
     }).catch(err => {
       alert(err)
     });
@@ -455,11 +455,24 @@ function CiudadesCodigoPostal() {
     )
   }
 
+  const ruta = [
+    {
+      actual : false,
+      nombre: "Configuración",
+      ruta: "/Configuracion"
+    },
+    {
+      actual : true,
+      nombre: "Ciudades",
+      ruta: "/Ciudades"
+    },
+  ];
+
   return (
     <div>
 
       <header className="topbar clearfix">
-        <Cabecera />
+        <Cabecera rutas={ruta}/>
       </header>
 
       {/*Leftbar Start Here*/}
@@ -471,10 +484,6 @@ function CiudadesCodigoPostal() {
       {/*Page Container Start Here*/}
       <section className="main-container">
         <div className="container-fluid">
-
-          <div className="page-header full-block light">
-            <h2>Ciudades Código Postal</h2>
-          </div>
 
           <div className="row">
             <div className="col-md-7" >
@@ -572,15 +581,20 @@ function CiudadesCodigoPostal() {
                                       value={state.idPais}
                                       id="idPais"
                                     >
-                                      {dataPais.map(
-                                        (pais) => (
-                                          <option key={pais.m_nIdPais} value={pais.m_nIdPais}>
-                                            {
-                                              pais.m_sPais
-                                            }
+                                      {
+                                        dataPais.length < 1 ?
+
+                                          <option value="none">
+                                            País
                                           </option>
-                                        )
-                                      )}
+                                          :
+                                          dataPais.map((pais) => (
+                                            <option key={pais.m_nIdPais} value={pais.m_nIdPais}>
+                                              {pais.m_sPais}
+                                            </option>
+                                          ))
+                                      }
+
                                     </select>
                                     <i></i>
                                   </label>
@@ -600,15 +614,19 @@ function CiudadesCodigoPostal() {
                                       value={state.idEstado}
                                       id="idEstado"
                                     >
-                                      {dataEstado.map(
-                                        (estado) => (
-                                          <option key={estado.m_nIdEstado} value={estado.m_nIdEstado}>
-                                            {
-                                              estado.m_sEstado
-                                            }
-                                          </option>
-                                        )
-                                      )}
+                                      {
+                                        dataEstado.length < 1 ?
+
+                                          <option value="none">
+                                            Estados
+                                    </option>
+                                          :
+                                          dataEstado.map((estado) => (
+                                            <option value={estado.m_nIdEstado}>
+                                              {estado.m_sEstado}
+                                            </option>
+                                          ))
+                                      }
                                     </select>
                                     <i></i>
                                   </label>

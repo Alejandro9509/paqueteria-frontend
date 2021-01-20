@@ -67,7 +67,7 @@ function App(props) {
       noInterior: 0,
       colonia: "",
       localidad: "",
-      municipio: 0,
+      municipio: "",
       idPais: 0,
       idEstado: 0,
       codigoPostal: 0,
@@ -142,6 +142,7 @@ function App(props) {
         .put(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
           alert(respuesta.data);
+          getAllDataRemDes();
           //window.location.reload();
         })
         .catch((err) => {
@@ -154,6 +155,7 @@ function App(props) {
         .post(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
           alert(respuesta.data);
+          getAllDataRemDes();
           //window.location.reload();
         })
         .catch((err) => {
@@ -169,7 +171,7 @@ function App(props) {
       .delete(url, { headers })
       .then((respuesta) => {
         alert(respuesta.data);
-        window.location.reload();
+        getAllDataRemDes();
       })
       .catch((err) => {
         alert(err);
@@ -179,7 +181,7 @@ function App(props) {
   function handleShowModificar(row) {
     console.log(row.original.m_nIdRemitenteDestinatario);
     const url =
-    `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/GetById/` +
+      `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/GetById/` +
       row.original.m_nIdRemitenteDestinatario;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
@@ -309,11 +311,11 @@ function App(props) {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                          <i className="fa fa-caret-down" />
-                        )
+                            <i className="fa fa-caret-down" />
+                          )
                       ) : (
-                        ""
-                      )}
+                          ""
+                        )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -385,11 +387,15 @@ function App(props) {
     const url = `${process.env.REACT_APP_API_URL}/Pais/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setDataPais(respuesta.data);
+      getAllEstados(respuesta.data[0].m_nIdPais)
     });
   }
 
   const handleSelectChange = (event) => {
-    console.log("onChangeSelect");
+    setState({
+      ...state,
+      idPais: event.target.value,
+    })
     getAllEstados(event.target.value);
   };
 
@@ -403,10 +409,23 @@ function App(props) {
     console.log(dataEstado);
   }
 
+  const ruta = [
+    {
+      actual : false,
+      nombre: "Catálogos",
+      ruta: "/Catalogos"
+    },
+    {
+      actual : true,
+      nombre: "Remitente Destinatario",
+      ruta: "/RemitenteDestinatarios"
+    },
+  ];
+
   return (
     <div>
       <header className="topbar clearfix">
-        <Cabecera />
+        <Cabecera rutas={ruta}/>
       </header>
       {/*Topbar End Here*/}
       {/*Leftbar Start Here*/}
@@ -486,12 +505,12 @@ function App(props) {
           </div>
 
           <div id="Agregar" className="tab-pane fade ">
-          <form className="j-forms" onSubmit={handleAceptar}>
-            <div className="row">
-              <div className="col-md-6">
-                <div className="widget-wrap">
-                  <div className="widget-container margin-top-0">
-                    <div className="widget-content">
+            <form className="j-forms" onSubmit={handleAceptar}>
+              <div className="row">
+                <div className="col-md-6">
+                  <div className="widget-wrap">
+                    <div className="widget-container margin-top-0">
+                      <div className="widget-content">
                         {/*Inicio de ejemplo*/}
                         <div className="widget-container">
                           <div className="widget-content">
@@ -597,13 +616,13 @@ function App(props) {
                             </div>
                           </div>
                         </div>
-                  </div></div>
+                      </div></div>
+                  </div>
                 </div>
-              </div>
-              <div className="col-md-6">
-                <div className="widget-wrap">
-                  <div className="widget-container margin-top-0">
-                    <div className="widget-content">
+                <div className="col-md-6">
+                  <div className="widget-wrap">
+                    <div className="widget-container margin-top-0">
+                      <div className="widget-content">
                         {/*Inicio de ejemplo*/}
                         <div className="widget-container">
                           <div className="widget-content">
@@ -622,11 +641,19 @@ function App(props) {
                                     value={state.idPais}
                                     id="idPais"
                                   >
-                                    {dataPais.map((pais) => (
-                                      <option value={pais.m_nIdPais}>
-                                        {pais.m_sPais}
-                                      </option>
-                                    ))}
+                                    {
+                                      dataPais.length < 1 ?
+
+                                        <option value="none">
+                                          País
+                                          </option>
+                                        :
+                                        dataPais.map((pais) => (
+                                          <option key={pais.m_nIdPais} value={pais.m_nIdPais}>
+                                            {pais.m_sPais}
+                                          </option>
+                                        ))
+                                    }
                                   </select>
                                   <i></i>
                                 </label>
@@ -673,11 +700,19 @@ function App(props) {
                                   value={state.idEstado}
                                   id="idEstado"
                                 >
-                                  {dataEstado.map((estado) => (
-                                    <option value={estado.m_nIdEstado}>
-                                      {estado.m_sEstado}
+                                  {
+                                    dataEstado.length < 1 ?
+
+                                      <option value="none">
+                                        Estados
                                     </option>
-                                  ))}
+                                      :
+                                      dataEstado.map((estado) => (
+                                        <option value={estado.m_nIdEstado}>
+                                          {estado.m_sEstado}
+                                        </option>
+                                      ))
+                                  }
                                 </select>
                                 <i></i>
                               </label>
@@ -691,7 +726,6 @@ function App(props) {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    placeholder="Municipio"
                                     id="text"
                                     value={state.municipio}
                                     id="municipio"
@@ -803,18 +837,18 @@ function App(props) {
                                 </div>
                               </div>
                               <div className="form-footer" className="col-md-12">
-                  <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
-                  <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
-                </div>
+                                <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
+                                <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
+                              </div>
                             </div>
                           </div>
                         </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-            </div>
+              </div>
             </form>
 
           </div>

@@ -564,6 +564,7 @@ function App(props) {
       .get(url, { headers })
       .then((respuesta) => {
         console.log(respuesta);
+        getAllUnidades();
       })
       .catch((err) => {
         alert(err);
@@ -721,8 +722,7 @@ function App(props) {
 
         .then((respuesta) => {
           alert(respuesta.data);
-
-          window.location.reload();
+          getAllUnidades();
         })
         .catch((err) => {
           console.log(err);
@@ -734,6 +734,7 @@ function App(props) {
         .post(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
           alert(respuesta.data);
+          getAllUnidades();
           //window.location.reload();
         })
         .catch((err) => {
@@ -956,10 +957,23 @@ function App(props) {
     closeSeccions();
   }, []);
 
+  const ruta = [
+    {
+      actual : false,
+      nombre: "Catálogos",
+      ruta: "/Catalogos"
+    },
+    {
+      actual : true,
+      nombre: "Unidades",
+      ruta: "/Unidades"
+    },
+  ];
+
   return (
     <div>
       <header className="topbar clearfix">
-        <Cabecera />
+        <Cabecera rutas={ruta}/>
       </header>
       {/*Topbar End Here*/}
       {/*Leftbar Start Here*/}

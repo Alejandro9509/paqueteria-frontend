@@ -123,11 +123,24 @@ function Parametros() {
     });
   }
 
+  const ruta = [
+    {
+      actual : false,
+      nombre: "Configuración",
+      ruta: "/Configuracion"
+    },
+    {
+      actual : true,
+      nombre: "Parámetros",
+      ruta: "/Parametros"
+    },
+  ];
+
   return (
     <div>
 
       <header className="topbar clearfix">
-        <Cabecera />
+        <Cabecera rutas={ruta}/>
       </header>
 
       {/*Leftbar Start Here*/}
@@ -391,15 +404,19 @@ function Parametros() {
                             value={state.idPais}
                             id="idPais"
                           >
-                            {dataPais.map(
-                              (pais) => (
-                                <option key={pais.m_nIdPais} value={pais.m_nIdPais}>
-                                  {
-                                    pais.m_sPais
-                                  }
+                            {
+                              dataPais.length < 1 ?
+
+                                <option value="none">
+                                  País
                                 </option>
-                              )
-                            )}
+                                :
+                                dataPais.map((pais) => (
+                                  <option key={pais.m_nIdPais} value={pais.m_nIdPais}>
+                                    {pais.m_sPais}
+                                  </option>
+                                ))
+                            }
                           </select>
                           <i></i>
                         </label>
@@ -445,15 +462,19 @@ function Parametros() {
                             value={state.idEstado}
                             id="idEstado"
                           >
-                            {dataEstado.map(
-                              (estado) => (
-                                <option key={estado.m_nIdEstado} value={estado.m_nIdEstado}>
-                                  {
-                                    estado.m_sEstado
-                                  }
-                                </option>
-                              )
-                            )}
+                            {
+                              dataEstado.length < 1 ?
+
+                                <option value="none">
+                                  Estados
+                                    </option>
+                                :
+                                dataEstado.map((estado) => (
+                                  <option value={estado.m_nIdEstado}>
+                                    {estado.m_sEstado}
+                                  </option>
+                                ))
+                            }
                           </select>
                           <i></i>
                         </label>

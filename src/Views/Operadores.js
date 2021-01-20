@@ -99,11 +99,11 @@ function App(props) {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                          <i className="fa fa-caret-down" />
-                        )
+                            <i className="fa fa-caret-down" />
+                          )
                       ) : (
-                        ""
-                      )}
+                          ""
+                        )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -338,7 +338,7 @@ function App(props) {
       Observaciones: state.Observaciones,
       TipoOperacion: state.TipoOperacion,
       EstadoCivil: state.EstadoCivil,
-      BeneficiarioFallecimiento : state.BeneficiarioFallecimiento,
+      BeneficiarioFallecimiento: state.BeneficiarioFallecimiento,
       CasoAccidenteAvisarA: state.CasoAccidenteAvisarA,
       IdPuesto: state.IdPuesto,
       FechaNacimiento: state.FechaNacimiento,
@@ -368,7 +368,7 @@ function App(props) {
         .then((respuesta) => {
           alert(respuesta.data);
 
-          window.location.reload();
+          getAllOperadores();
         })
         .catch((err) => {
           console.log(err);
@@ -380,6 +380,7 @@ function App(props) {
         .post(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
           alert(respuesta.data);
+          getAllOperadores();
           //window.location.reload();
         })
         .catch((err) => {
@@ -430,7 +431,7 @@ function App(props) {
   };
 
 
-  
+
 
   const handleChangeLicenciaA = (event) => {
     setState({
@@ -578,6 +579,7 @@ function App(props) {
       .get(url, { headers })
       .then((respuesta) => {
         console.log(respuesta);
+        getAllOperadores();
       })
       .catch((err) => {
         alert(err);
@@ -700,10 +702,23 @@ function App(props) {
     closeSeccions();
   }, []);
 
+  const ruta = [
+    {
+      actual : false,
+      nombre: "Catálogos",
+      ruta: "/Catalogos"
+    },
+    {
+      actual : true,
+      nombre: "Operadores",
+      ruta: "/Operadores"
+    }
+  ];
+
   return (
     <div>
       <header className="topbar clearfix">
-        <Cabecera />
+        <Cabecera rutas={ruta}/>
       </header>
       {/*Topbar End Here*/}
       {/*Leftbar Start Here*/}
@@ -1253,17 +1268,19 @@ function App(props) {
                                                     required
                                                     native
                                                   >
-                                                    <option value="none">
-                                                      País
-                                                    </option>
+                                                    {
+                                                      dataPais.length < 1 ?
 
-                                                    {dataPais.map((pais) => (
-                                                      <option
-                                                        value={pais.m_nIdPais}
-                                                      >
-                                                        {pais.m_sPais}
-                                                      </option>
-                                                    ))}
+                                                        <option value="none">
+                                                          País
+                                                        </option>
+                                                        :
+                                                        dataPais.map((pais) => (
+                                                          <option key={pais.m_nIdPais} value={pais.m_nIdPais}>
+                                                            {pais.m_sPais}
+                                                          </option>
+                                                        ))
+                                                    }
                                                   </select>
                                                   <i></i>
                                                 </label>
@@ -1283,17 +1300,19 @@ function App(props) {
                                                     required
                                                     native
                                                   >
-                                                    <option value="none">
-                                                      Estado
-                                                    </option>
+                                                    {
+                                                      dataEstado.length < 1 ?
 
-                                                    {dataEstado.map(
-                                                      (estado) => (
-                                                        <option value="{estado.m_nIdEstado}">
-                                                          {estado.m_sEstado}
-                                                        </option>
-                                                      )
-                                                    )}
+                                                        <option value="none">
+                                                          Estados
+                                    </option>
+                                                        :
+                                                        dataEstado.map((estado) => (
+                                                          <option value={estado.m_nIdEstado}>
+                                                            {estado.m_sEstado}
+                                                          </option>
+                                                        ))
+                                                    }
                                                   </select>
                                                   <i></i>
                                                 </label>
@@ -2171,9 +2190,9 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
-                                                  onChange={handleChange}
-                                                  value={state.FactorPorcentajeInfonavit}
-                                                  name="FactorPorcentajeInfonavit"
+                                                    onChange={handleChange}
+                                                    value={state.FactorPorcentajeInfonavit}
+                                                    name="FactorPorcentajeInfonavit"
                                                     className="form-control"
                                                     type="text"
                                                     placeholder=""
@@ -2187,9 +2206,9 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
-                                                   onChange={handleChange}
-                                                   value={state.CasoAccidenteAvisarA}
-                                                   name="CasoAccidenteAvisarA"
+                                                    onChange={handleChange}
+                                                    value={state.CasoAccidenteAvisarA}
+                                                    name="CasoAccidenteAvisarA"
                                                     className="form-control"
                                                     type="text"
                                                     placeholder=""
@@ -2203,9 +2222,9 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
-                                                  onChange={handleChange}
-                                                  value={state.RetencionDiariaInfonavit}
-                                                  name="RetencionDiariaInfonavit"
+                                                    onChange={handleChange}
+                                                    value={state.RetencionDiariaInfonavit}
+                                                    name="RetencionDiariaInfonavit"
                                                     className="form-control"
                                                     type="text"
                                                     placeholder=""
@@ -2255,9 +2274,9 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
-                                                   onChange={handleChange}
-                                                   value={state.retencionDiariaFonacot}
-                                                   name="retencionDiariaFonacot"
+                                                    onChange={handleChange}
+                                                    value={state.retencionDiariaFonacot}
+                                                    name="retencionDiariaFonacot"
                                                     className="form-control"
                                                     type="text"
                                                     placeholder=""
@@ -2481,9 +2500,9 @@ function App(props) {
                                                 <label className="label"></label>
                                                 <label className="checkbox">
                                                   <input
-                                                     onChange={handleChangeAppViajes}
-                                                     value={state.AppMisViajes}
-                                                     name="AppMisViajes"
+                                                    onChange={handleChangeAppViajes}
+                                                    value={state.AppMisViajes}
+                                                    name="AppMisViajes"
                                                     native
                                                     type="checkbox"
                                                   />
@@ -2498,9 +2517,9 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
-                                                   onChange={handleChange}
-                                                   value={state.UsuarioViajes}
-                                                   name="UsuarioViajes"
+                                                    onChange={handleChange}
+                                                    value={state.UsuarioViajes}
+                                                    name="UsuarioViajes"
                                                     className="form-control"
                                                     type="text"
                                                     placeholder=""
@@ -2515,9 +2534,9 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
-                                                   onChange={handleChange}
-                                                   value={state.ContraseñaViajes}
-                                                   name="ContraseñaViajes"
+                                                    onChange={handleChange}
+                                                    value={state.ContraseñaViajes}
+                                                    name="ContraseñaViajes"
                                                     className="form-control"
                                                     type="password"
                                                     placeholder=""
@@ -2531,9 +2550,9 @@ function App(props) {
                                                 <label className="label"></label>
                                                 <label className="checkbox">
                                                   <input
-                                                   onChange={handleChangeAppPaqueteria}
-                                                   value={state.AppPaqueteria}
-                                                   name="AppPaqueteria"
+                                                    onChange={handleChangeAppPaqueteria}
+                                                    value={state.AppPaqueteria}
+                                                    name="AppPaqueteria"
                                                     native
                                                     type="checkbox"
                                                   />
@@ -2548,9 +2567,9 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
-                                                   onChange={handleChange}
-                                                   value={state.UsuarioPaqueteria}
-                                                   name="UsuarioPaqueteria"
+                                                    onChange={handleChange}
+                                                    value={state.UsuarioPaqueteria}
+                                                    name="UsuarioPaqueteria"
                                                     className="form-control"
                                                     type="text"
                                                     placeholder=""
@@ -2565,9 +2584,9 @@ function App(props) {
                                                 </label>
                                                 <div className="input">
                                                   <input
-                                                   onChange={handleChange}
-                                                   value={state.ContrasenaPaqueteria}
-                                                   name="ContraseñaPaqueteria"
+                                                    onChange={handleChange}
+                                                    value={state.ContrasenaPaqueteria}
+                                                    name="ContraseñaPaqueteria"
                                                     className="form-control"
                                                     type="password"
                                                     placeholder=""
@@ -2668,7 +2687,7 @@ function App(props) {
                                                           <div className="file-button">
                                                             Browse
                                                             <input
-                                                            disabled
+                                                              disabled
                                                               className="btn btn-success"
                                                               type="file"
                                                               onChange="document.getElementById('prepend-small-btn').value = this.value;"

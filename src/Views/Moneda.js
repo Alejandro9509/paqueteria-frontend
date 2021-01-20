@@ -108,10 +108,10 @@ function Moneda() {
     }, {
       Name: "Moneda",
       accessor: "m_sMoneda",
-    },{
+    }, {
       Name: "Símbolo",
       accessor: "m_sSimbolo",
-    },{
+    }, {
       Name: "Abreviación",
       accessor: "m_sAbreviacion",
     }, {
@@ -243,11 +243,24 @@ function Moneda() {
     )
   }
 
+  const ruta = [
+    {
+      actual : false,
+      nombre: "Configuración",
+      ruta: "/Configuracion"
+    },
+    {
+      actual : true,
+      nombre: "Moneda",
+      ruta: "/Moneda"
+    },
+  ];
+
   return (
     <div>
 
       <header className="topbar clearfix">
-        <Cabecera />
+        <Cabecera rutas={ruta}/>
       </header>
 
       {/*Leftbar Start Here*/}
@@ -259,10 +272,6 @@ function Moneda() {
       {/*Page Container Start Here*/}
       <section className="main-container">
         <div className="container-fluid">
-
-          <div className="page-header full-block light">
-            <h2>Moneda</h2>
-          </div>
 
           <ul className="nav nav-tabs">
             <li className="active">
