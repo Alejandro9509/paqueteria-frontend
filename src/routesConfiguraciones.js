@@ -2,7 +2,9 @@ import DepartamentoPage from './Views/Departamento';
 import MonedaPage from './Views/Moneda';
 import TipoCambio from './Views/TipoCambio';
 import PaisesPage from './Views/Paises';
-import CiudadesCodigoPostalPage from './Views/Ciudades'
+import CiudadesCodigoPostalPage from './Views/Ciudades';
+import ParametrosPage from './Views/Parametros';
+import SucursalesPage from './Views/Sucursal';
 
 import {ReactComponent as GParametroIcon} from './iconos/Configuracion/Icono Parametros/icono_parametro.svg';
 import {ReactComponent as GUsuarioIcon} from './iconos/Configuracion/Icono Usuarios/icono_usuarios.svg';
@@ -20,10 +22,10 @@ import {ReactComponent as GBitacoraIcon} from './iconos/Configuracion/Icono Bita
 const configurationRoutes = [
 
   {
-    path: "/Departamento",
+    path: "/Parametros",
     name: "Parámetros",
     icon:  GParametroIcon,
-    component: DepartamentoPage,
+    component: ParametrosPage,
   },
   {
     path: "/Usuarios",
@@ -47,7 +49,7 @@ const configurationRoutes = [
     path: "/Sucursales",
     name: "Sucursales",
     icon:  GSucursalIcon,
-    component: DepartamentoPage,
+    component: SucursalesPage,
   },
   {
     path: "/Zonas",

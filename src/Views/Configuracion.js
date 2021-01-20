@@ -10,13 +10,21 @@ import {
 import $ from 'jquery';
 window.jQuery = window.$ = $;
 
-function Recoleccion() {
+const ruta = [
+  {
+    actual : true,
+    nombre: "Configuración",
+    ruta: "/Configuracion"
+  }
+];
+
+function Configuracion() {
 
   return (
     <div>
 
       <header className="topbar clearfix">
-        <Cabecera />
+        <Cabecera rutas={ruta}/>
       </header>
 
       {/*Leftbar Start Here*/}
@@ -66,4 +74,4 @@ function Recoleccion() {
   );
 }
 
-export default Recoleccion;
+export default Configuracion;

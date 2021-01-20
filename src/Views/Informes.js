@@ -504,10 +504,18 @@ function Informes(props) {
     closeSeccions();
   }, []);
 
+  const ruta = [
+    {
+      actual : true,
+      nombre: "Informes",
+      ruta: "/Informes"
+    },
+  ];
+
   return (
     <div>
       <header className="topbar clearfix">
-        <Cabecera />
+        <Cabecera rutas={ruta}/>
       </header>
       {/*Topbar End Here*/}
       {/*Leftbar Start Here*/}

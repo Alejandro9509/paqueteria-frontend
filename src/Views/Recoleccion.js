@@ -192,7 +192,7 @@ function Recoleccion() {
       const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Modificar/${state.idRecoleccion}`;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData();
       }).catch(err => {
         console.log(err)
         alert("err")
@@ -202,7 +202,7 @@ function Recoleccion() {
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         console.log(respuesta.data)
         alert(respuesta.data)
-        window.location.reload();
+        getAllData();
       }).catch(err => {
         console.log(err)
         alert(err)
@@ -257,7 +257,7 @@ function Recoleccion() {
       .delete(url, { headers })
       .then((respuesta) => {
         alert(respuesta.data);
-        window.location.reload();
+        getAllData();
       })
       .catch((err) => {
         alert(err);
@@ -916,12 +916,19 @@ function Recoleccion() {
     );
   });
 
+  const ruta = [
+    {
+      actual : true,
+      nombre: "Recolección",
+      ruta: "/Recoleccion"
+    },
+  ];
 
   return (
     <div>
 
       <header className="topbar clearfix">
-        <Cabecera />
+        <Cabecera rutas={ruta}/>
       </header>
 
       {/*Leftbar Start Here*/}
@@ -933,10 +940,6 @@ function Recoleccion() {
       {/*Page Container Start Here*/}
       <section className="main-container">
         <div className="container-fluid">
-
-          <div className="page-header full-block light">
-            <h2>Recolección</h2>
-          </div>
 
           <ul className="nav nav-tabs">
             <li className="active">

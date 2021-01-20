@@ -46,7 +46,7 @@ function Caseta() {
       const url = `${process.env.REACT_APP_API_URL}/Casetas/Modificar/` + state.idCaseta;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData()
       }).catch(err => {
         console.log(err)
         alert("err")
@@ -55,7 +55,7 @@ function Caseta() {
       const url = `${process.env.REACT_APP_API_URL}/Casetas/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData()
       }).catch(err => {
         console.log(err)
         alert(err)
@@ -68,7 +68,7 @@ function Caseta() {
     const url = `${process.env.REACT_APP_API_URL}/Casetas/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
-      window.location.reload();
+      getAllData()
     }).catch(err => {
       alert(err)
     });
@@ -267,11 +267,24 @@ function Caseta() {
     )
   }
 
+  const ruta = [
+    {
+      actual : false,
+      nombre: "Catálogos",
+      ruta: "/Catalogos"
+    },
+    {
+      actual : true,
+      nombre: "Caseta",
+      ruta: "/Caseta"
+    },
+  ];
+
   return (
     <div>
 
       <header className="topbar clearfix">
-        <Cabecera />
+        <Cabecera rutas={ruta}/>
       </header>
 
       {/*Leftbar Start Here*/}
@@ -283,10 +296,6 @@ function Caseta() {
       {/*Page Container Start Here*/}
       <section className="main-container">
         <div className="container-fluid">
-
-          <div className="page-header full-block light">
-            <h2>Caseta</h2>
-          </div>
 
           <ul className="nav nav-tabs">
             <li className="active">

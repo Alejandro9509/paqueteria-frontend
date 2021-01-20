@@ -87,10 +87,23 @@ function App(props) {
     closeSeccions();
   }, []);
 
+  const ruta = [
+    {
+      actual : false,
+      nombre: "Configuración",
+      ruta: "/Configuracion"
+    },
+    {
+      actual : true,
+      nombre: "Moneda",
+      ruta: "/Moneda"
+    },
+  ];
+
   return (
     <div>
       <header className="topbar clearfix">
-        <Cabecera />
+        <Cabecera rutas={ruta}/>
       </header>
       {/*Topbar End Here*/}
       {/*Leftbar Start Here*/}
