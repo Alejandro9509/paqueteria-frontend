@@ -1,19 +1,18 @@
 import React from "react";
-import Departamento from "../../Views/Departamento";
 import AM from "../Departamento/AMDepartamento";
 import Login from "../../Views/Login";
 import { Route, Link, NavLink } from "react-router-dom";
 import dashboardRoutes from "../../routes";
-import { BrowserRouter as Router } from "react-router-dom";
 import SvgIcon from "@material-ui/core/SvgIcon";
 
 function BarraLateralDerecha() {
+
+  const [state, setState] = React.useState({
+    height: window.innerHeight
+  })
+
   function logout() {
     localStorage.removeItem("accessToken");
-  }
-
-  function cambioDePagina() {
-    window.open("/AM");
   }
 
   return (

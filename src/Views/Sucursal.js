@@ -28,7 +28,8 @@ function Sucursal() {
     numExterior: 0,
     iva: "18",
     zonaHoraria: "08:00|America/Tijuana",
-    activo: false
+    activo: false,
+    height: window.innerHeight
   })
 
 
@@ -350,34 +351,42 @@ function Sucursal() {
     )
   }
 
-  const ruta = [
-    {
-      actual : false,
-      nombre: "Configuración",
-      ruta: "/Configuracion"
-    },
-    {
-      actual : true,
-      nombre: "Rutas",
-      ruta: "/Rutas"
-    },
-  ];
-
   return (
     <div>
 
       <header className="topbar clearfix">
-        <Cabecera rutas={ruta}/>
+        <Cabecera />
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar">
+      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
 
       {/*Page Container Start Here*/}
       <section className="main-container">
+        
+      <div className="container-fluid">
+          <div className="page-header filled full-block light">
+            <div className="row">
+              <div className="col-md-6 col-sm-6">
+                <h2>Sucursal</h2>
+              </div>
+              <div className="col-md-6 col-sm-6">
+                <ul className="list-page-breadcrumb">
+                  <li>
+                    <a href="/Configuracion">
+                      Configuración <i className="zmdi zmdi-chevron-right" />
+                    </a>
+                  </li>
+                  <li className="active-page">Sucursal</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="container-fluid">
 
           <ul className="nav nav-tabs">

@@ -218,6 +218,7 @@ function App(props) {
     AppPaqueteria: false,
     UsuarioPaqueteria: "",
     ContraseñaPaqueteria: "",
+    height: window.innerHeight
   });
 
   function handleShowAgregar() {
@@ -702,32 +703,40 @@ function App(props) {
     closeSeccions();
   }, []);
 
-  const ruta = [
-    {
-      actual : false,
-      nombre: "Catálogos",
-      ruta: "/Catalogos"
-    },
-    {
-      actual : true,
-      nombre: "Operadores",
-      ruta: "/Operadores"
-    }
-  ];
-
   return (
     <div>
       <header className="topbar clearfix">
-        <Cabecera rutas={ruta}/>
+        <Cabecera />
       </header>
       {/*Topbar End Here*/}
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar">
+      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
       {/*Page Container Start Here*/}
       <section className="main-container">
+        
+      <div className="container-fluid">
+          <div className="page-header filled full-block light">
+            <div className="row">
+              <div className="col-md-6 col-sm-6">
+                <h2>Operadores</h2>
+              </div>
+              <div className="col-md-6 col-sm-6">
+                <ul className="list-page-breadcrumb">
+                  <li>
+                    <a href="/Catalogos">
+                      Catálogos <i className="zmdi zmdi-chevron-right" />
+                    </a>
+                  </li>
+                  <li className="active-page">Operadores</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="container-fluid">
           <div className="page-header filled full-block light">
             <div className="row">

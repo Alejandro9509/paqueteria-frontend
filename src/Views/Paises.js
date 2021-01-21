@@ -35,6 +35,7 @@ function PaisesEstado() {
 
     agregarPais: "Agregar",
     agregarEstado: "Agregar",
+    height: window.innerHeight
   })
 
   const handleAceptarPais = (e) => {
@@ -82,8 +83,8 @@ function PaisesEstado() {
       "Codigo": state.codigoEstado,
       "Estado": state.estado,
       "CreadoPor": 1,
-      "CreadoEl": fecha.getFullYear() +"-" +fecha.getMonth()+1 +"-" +fecha.getDate(),
-      "ModificadoEl": fecha.getFullYear() +"-" +fecha.getMonth()+1 +"-" +fecha.getDate(),
+      "CreadoEl": fecha.getFullYear() + "-" + fecha.getMonth() + 1 + "-" + fecha.getDate(),
+      "ModificadoEl": fecha.getFullYear() + "-" + fecha.getMonth() + 1 + "-" + fecha.getDate(),
       "ModificadoPor": 1,
       "Identificador": 0
     }
@@ -340,8 +341,8 @@ function PaisesEstado() {
                 prepareRow(row);
                 return (
                   <tr {...row.getRowProps()}
-                   onClick={handleSelectPais.bind(this, row.original.m_nIdPais)}
-                   className={state.idPais === row.original.m_nIdPais ? classes.seleccionado : classes.noSeleccionado}>
+                    onClick={handleSelectPais.bind(this, row.original.m_nIdPais)}
+                    className={state.idPais === row.original.m_nIdPais ? classes.seleccionado : classes.noSeleccionado}>
                     <td>
                       <div>
                         <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarPais(row.original.m_nIdPais))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
@@ -443,34 +444,42 @@ function PaisesEstado() {
     )
   }
 
-  const ruta = [
-    {
-      actual : false,
-      nombre: "Configuración",
-      ruta: "/Configuracion"
-    },
-    {
-      actual : true,
-      nombre: "Paises",
-      ruta: "/Paises"
-    },
-  ];
-
   return (
     <div>
 
       <header className="topbar clearfix">
-        <Cabecera rutas={ruta}/>
+        <Cabecera />
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar">
+      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
 
       {/*Page Container Start Here*/}
       <section className="main-container">
+
+        <div className="container-fluid">
+          <div className="page-header filled full-block light">
+            <div className="row">
+              <div className="col-md-6 col-sm-6">
+                <h2>Países / Estados</h2>
+              </div>
+              <div className="col-md-6 col-sm-6">
+                <ul className="list-page-breadcrumb">
+                  <li>
+                    <a href="/Configuracion">
+                      Configuración <i className="zmdi zmdi-chevron-right" />
+                    </a>
+                  </li>
+                  <li className="active-page">Países / Estados</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="container-fluid">
 
           <div className="row">

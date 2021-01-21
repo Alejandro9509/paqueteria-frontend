@@ -10,31 +10,43 @@ import {
 import $ from 'jquery';
 window.jQuery = window.$ = $;
 
-const ruta = [
-  {
-    actual : true,
-    nombre: "Configuración",
-    ruta: "/Configuracion"
-  }
-];
-
 function Configuracion() {
+
+  const [state, setState] = React.useState({
+    height: window.innerHeight
+  })
 
   return (
     <div>
 
       <header className="topbar clearfix">
-        <Cabecera rutas={ruta}/>
+        <Cabecera />
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar">
+      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
 
       {/*Page Container Start Here*/}
       <section className="main-container">
+
+        <div className="container-fluid">
+          <div className="page-header filled full-block light">
+            <div className="row">
+              <div className="col-md-6 col-sm-6">
+                <h2>Configuración</h2>
+              </div>
+              <div className="col-md-6 col-sm-6">
+                <ul className="list-page-breadcrumb">
+                  <li className="active-page">Configuración</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="container-fluid">
           {configurationRoutes.map((r, index) => {
             return (
@@ -45,7 +57,7 @@ function Configuracion() {
                     <button
                       type="button"
                       key={index}
-                      style={{textAlign: "center", alignContent: "center"}}
+                      style={{ textAlign: "center", alignContent: "center" }}
                       className="boton-de-catalogos">
                       <SvgIcon
                         component={r.icon}
