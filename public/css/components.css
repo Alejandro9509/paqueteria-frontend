@@ -1812,7 +1812,7 @@ a.waves-effect .waves-ripple {
 }
 .j-forms .unit {
   position: relative;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
 }
 .j-forms .link {
   color: #555;
@@ -2493,7 +2493,7 @@ a.waves-effect .waves-ripple {
 .j-forms .secondary-btn,
 .j-forms .secondary-btn:hover,
 .j-forms .secondary-btn:active {
-  opacity: .5;
+  opacity: 1;
 }
 .j-forms .primary-btn.processing:before {
   background: rgba(255, 255, 255, 0.4);

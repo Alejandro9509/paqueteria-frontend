@@ -102,20 +102,20 @@ function App(props) {
 
   const handleChangeNumero = (event) => {
     const url =
-      `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/ValidaNumeroRemDes/` + state.numero
-      axios.get(url, { headers }).then((respuesta) => {
-        
-        if(respuesta.data!=""){
-
+      `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/ValidaNumeroRemDes/` +
+      state.numero;
+    axios.get(url, { headers }).then((respuesta) => {
+      if (respuesta.data != "") {
         alert(respuesta.data.m_sMensaje);
         console.log(respuesta.data);
         setState({
           ...state,
-          
-           numero: respuesta.data.m_nNumero,
-        });}
-      })
-    }
+
+          numero: respuesta.data.m_nNumero,
+        });
+      }
+    });
+  };
   const handleChangeActivoCheckboxChange = (event) => {
     console.log(event.target.name + " " + state.activo);
     setState({
@@ -182,7 +182,8 @@ function App(props) {
   };
 
   function handleEliminar(id) {
-    const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/Eliminar/` + id;
+    const url =
+      `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/Eliminar/` + id;
     axios
       .delete(url, { headers })
       .then((respuesta) => {
@@ -327,11 +328,11 @@ function App(props) {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                            <i className="fa fa-caret-down" />
-                          )
+                          <i className="fa fa-caret-down" />
+                        )
                       ) : (
-                          ""
-                        )}
+                        ""
+                      )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -403,7 +404,7 @@ function App(props) {
     const url = `${process.env.REACT_APP_API_URL}/Pais/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setDataPais(respuesta.data);
-      getAllEstados(respuesta.data[0].m_nIdPais)
+      getAllEstados(respuesta.data[0].m_nIdPais);
     });
   }
 
@@ -411,7 +412,7 @@ function App(props) {
     setState({
       ...state,
       idPais: event.target.value,
-    })
+    });
     getAllEstados(event.target.value);
   };
 
@@ -427,21 +428,21 @@ function App(props) {
 
   const ruta = [
     {
-      actual : false,
+      actual: false,
       nombre: "Catálogos",
-      ruta: "/Catalogos"
+      ruta: "/Catalogos",
     },
     {
-      actual : true,
+      actual: true,
       nombre: "Remitente Destinatario",
-      ruta: "/RemitenteDestinatarios"
+      ruta: "/RemitenteDestinatarios",
     },
   ];
 
   return (
     <div>
       <header className="topbar clearfix">
-        <Cabecera rutas={ruta}/>
+        <Cabecera rutas={ruta} />
       </header>
       {/*Topbar End Here*/}
       {/*Leftbar Start Here*/}
@@ -523,7 +524,7 @@ function App(props) {
           <div id="Agregar" className="tab-pane fade ">
             <form className="j-forms" onSubmit={handleAceptar}>
               <div className="row">
-                <div className="col-md-6">
+                <div className="col-md-12">
                   <div className="widget-wrap">
                     <div className="widget-container margin-top-0">
                       <div className="widget-content">
@@ -531,47 +532,34 @@ function App(props) {
                         <div className="widget-container">
                           <div className="widget-content">
                             <div className="row">
-                              <div className="w-section-header">
-                                <h3>Información General</h3>
-                              </div>
                               <div className="col-md-12">
+                                <div className="w-section-header">
+                                  <h3>Información General</h3>
+                                </div>
+
+
+
                                 <div className="row">
-                                  <div className="col-md-6 unit">
-                                    <label className="label">Número</label>
-                                    <div className="input">
-                                      <input
-                                        onChange={handleChange}
-                                        onBlur={handleChangeNumero}
-                                        type="number"
-                                        min="0"
-                                        pattern="[0-9]*"
-                                        className="form-control"
-                                        value={state.numero}
-                                        id="numero"
-                                        maxlength="4"
-                                        required
-                                      />
-                                    </div>
-                                  </div>
-                                  <div className="col-md-6 unit">
-                                    <label className="label">Estatus</label>
-                                    <label className="checkbox">
-                                      <input
-                                        onChange={
-                                          handleChangeActivoCheckboxChange
-                                        }
-                                        native
-                                        type="checkbox"
-                                        value={state.activo}
-                                        id="activo"
-                                        name="activo"
-                                      />
-                                      <i />
-                                      Activo
-                                    </label>
+
+                                <div className="col-sm-6 col-md-2-5 unit">
+                                  <label className="label">Número</label>
+                                  <div className="input">
+                                    <input
+                                      onChange={handleChange}
+                                      onBlur={handleChangeNumero}
+                                      type="number"
+                                      min="0"
+                                      pattern="[0-9]*"
+                                      className="form-control"
+                                      value={state.numero}
+                                      id="numero"
+                                      maxlength="4"
+                                      required
+                                    />
                                   </div>
                                 </div>
-                                <div className="unit">
+
+                                <div className="col-sm-6 col-md-2-5 unit">
                                   <label className="label">RFC</label>
                                   <div className="input">
                                     <input
@@ -586,7 +574,7 @@ function App(props) {
                                     />
                                   </div>
                                 </div>
-                                <div className="unit">
+                                <div className="col-sm-6 col-md-2-5 unit">
                                   <label className="label">Nombre</label>
                                   <div className="input">
                                     <input
@@ -599,7 +587,7 @@ function App(props) {
                                     />
                                   </div>
                                 </div>
-                                <div className="unit">
+                                <div className="col-sm-6 col-md-2-5 unit">
                                   <label className="label">Cliente</label>
                                   {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
                                   <Autocomplete
@@ -629,234 +617,267 @@ function App(props) {
                                     )}
                                   />{" "}
                                 </div>
+                                <div className="col-sm-12 col-md-2-5 unit">
+                                  <label className="label">Estatus</label>
+                                  <label className="checkbox">
+                                    <input
+                                      onChange={
+                                        handleChangeActivoCheckboxChange
+                                      }
+                                      native
+                                      type="checkbox"
+                                      value={state.activo}
+                                      id="activo"
+                                      name="activo"
+                                    />
+                                    <i />
+                                    Activo
+                                  </label>
+                                </div>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div></div>
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="widget-wrap">
-                    <div className="widget-container margin-top-0">
-                      <div className="widget-content">
-                        {/*Inicio de ejemplo*/}
+
                         <div className="widget-container">
                           <div className="widget-content">
                             <div className="row">
-                              <div className="w-section-header">
-                                <h3>Domicilio Fiscal</h3>
-                              </div>
-                              <div class="col-md-8 unit">
-                                <label className="label">País</label>
-                                <label className="input select">
-                                  <select
-                                    onChange={handleSelectChange}
-                                    className="form-control"
-                                    
-                                    native
-                                    value={state.idPais}
-                                    id="idPais"
-                                    name="idPais"
-                                  >
-                                    {
-                                      dataPais.length < 1 ?
+                              <div className="col-md-12">
+                                  <div className="w-section-header">
+                                    <h3>Domicilio Fiscal</h3>
+                                  </div>
 
-                                        <option value="none">
-                                          País
-                                          </option>
-                                        :
-                                        dataPais.map((pais) => (
-                                          <option key={pais.m_nIdPais} value={pais.m_nIdPais}>
-                                            {pais.m_sPais}
-                                          </option>
-                                        ))
-                                    }
-                                  </select>
-                                  <i></i>
-                                </label>
-                              </div>
-                              <div class="col-md-4 unit">
-                                <label className="label">C.P</label>
-                                <div className="input">
-                                  <Autocomplete
-                                    freeSolo
-                                    onChange={(event, newValue) =>
-                                      setState({
-                                        ...state,
-                                        codigoPostal: newValue,
-                                      })
-                                    }
-                                    value={state.codigoPostal}
-                                    id="codigoPostal"
-                                    disableClearable
-                                    options={dataCP}
-                                    getOptionLabel={(option) => option.m_sCP}
-                                    renderInput={(params) => (
-                                      <TextField
-                                        {...params}
-                                        InputProps={{
-                                          ...params.InputProps,
-                                          type: "search",
-                                        }}
+                                  <div className="row">
+
+                                  <div class="col-md-4 unit">
+                                    <label className="label">País</label>
+                                    <label className="input select">
+                                      <select
+                                        onChange={handleSelectChange}
+                                        className="form-control"
+                                        native
+                                        value={state.idPais}
+                                        id="idPais"
+                                        name="idPais"
+                                      >
+                                        {dataPais.length < 1 ? (
+                                          <option value="none">País</option>
+                                        ) : (
+                                          dataPais.map((pais) => (
+                                            <option
+                                              key={pais.m_nIdPais}
+                                              value={pais.m_nIdPais}
+                                            >
+                                              {pais.m_sPais}
+                                            </option>
+                                          ))
+                                        )}
+                                      </select>
+                                      <i></i>
+                                    </label>
+                                  </div>
+                                  <div class="col-md-4 unit">
+                                    <label className="label">C.P</label>
+                                    <div className="input">
+                                      <Autocomplete
+                                        freeSolo
+                                        onChange={(event, newValue) =>
+                                          setState({
+                                            ...state,
+                                            codigoPostal: newValue,
+                                          })
+                                        }
+                                        value={state.codigoPostal}
+                                        id="codigoPostal"
+                                        disableClearable
+                                        options={dataCP}
+                                        getOptionLabel={(option) =>
+                                          option.m_sCP
+                                        }
+                                        renderInput={(params) => (
+                                          <TextField
+                                            {...params}
+                                            InputProps={{
+                                              ...params.InputProps,
+                                              type: "search",
+                                            }}
+                                          />
+                                        )}
+                                      />{" "}
+                                    </div>
+                                  </div>
+                                  <div className="col-md-4 unit">
+                                    <label className="label">Estado</label>
+                                    <label className="input select">
+                                      <select
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        required
+                                        native
+                                        name="idEstado"
+                                        value={state.idEstado}
+                                        id="idEstado"
+                                      >
+                                        {dataEstado.length < 1 ? (
+                                          <option value="none">Estados</option>
+                                        ) : (
+                                          dataEstado.map((estado) => (
+                                            <option value={estado.m_nIdEstado}>
+                                              {estado.m_sEstado}
+                                            </option>
+                                          ))
+                                        )}
+                                      </select>
+                                      <i></i>
+                                    </label>
+                                  </div>
+                                </div>
+
+                                <div class="row">
+                                  <div class="col-md-4 unit">
+                                    {" "}
+                                    <label className="label">Municipio</label>
+                                    <div className="input">
+                                      <input
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="text"
+                                        id="text"
+                                        value={state.municipio}
+                                        id="municipio"
                                       />
-                                    )}
-                                  />{" "}
+                                    </div>{" "}
+                                  </div>
+                                  <div class="col-md-4 unit">
+                                    <label className="label">Localidad</label>
+                                    <div className="input">
+                                      <input
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="text"
+                                        value={state.localidad}
+                                        id="localidad"
+                                      />
+                                    </div>
+                                  </div>
+                                  <div className="col-md-4 unit">
+                                    <label className="label">Colonia</label>
+                                    <div className="input">
+                                      <input
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="text"
+                                        value={state.colonia}
+                                        id="colonia"
+                                      />
+                                    </div>
+                                  </div>
                                 </div>
-                              </div>
-                            </div>
 
-                            <div className="unit">
-                              <label className="label">Estado</label>
-                              <label className="input select">
-                                <select
-                                  onChange={handleChange}
-                                  className="form-control"
-                                  required
-                                  native
-                                  name="idEstado"
-                                  value={state.idEstado}
-                                  id="idEstado"
-                                >
-                                  {
-                                    dataEstado.length < 1 ?
+                                <div class="row">
+                                  <div className="col-md-4 unit">
+                                    <label className="label">Calle</label>
+                                    <div className="input">
+                                      <input
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="text"
+                                        value={state.calle}
+                                        id="calle"
+                                      />
+                                    </div>
+                                  </div>
+                                  <div class="col-md-4 unit">
+                                    {" "}
+                                    <label className="label">
+                                      Núm. Exterior
+                                    </label>
+                                    <div className="input">
+                                      <input
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="text"
+                                        value={state.noExterior}
+                                        id="noExterior"
+                                      />
+                                    </div>{" "}
+                                  </div>
+                                  <div class="col-md-4 unit">
+                                    <label className="label">
+                                      Núm. Interior
+                                    </label>
+                                    <div className="input">
+                                      <input
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="text"
+                                        value={state.noInterior}
+                                        id="noInterior"
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
 
-                                      <option value="none">
-                                        Estados
-                                    </option>
-                                      :
-                                      dataEstado.map((estado) => (
-                                        <option value={estado.m_nIdEstado}>
-                                          {estado.m_sEstado}
-                                        </option>
-                                      ))
-                                  }
-                                </select>
-                                <i></i>
-                              </label>
-                            </div>
-                            <div class="row">
-                              <div class="col-md-6 unit">
-                                {" "}
-                                <label className="label">Municipio</label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    id="text"
-                                    value={state.municipio}
-                                    id="municipio"
-                                  />
-                                </div>{" "}
-                              </div>
-                              <div class="col-md-6 unit">
-                                <label className="label">Localidad</label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    value={state.localidad}
-                                    id="localidad"
-                                  />
+                                <div class="row">
+                                  <div className="col-md-4 ">
+                                    <label className="label">
+                                      Nombre del contacto
+                                    </label>
+                                    <div className="input">
+                                      <input
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="text"
+                                        value={state.contacto}
+                                        id="contacto"
+                                      />
+                                    </div>
+                                  </div>
+                                  <div class="col-md-4 unit">
+                                    {" "}
+                                    <label className="label">Teléfonos</label>
+                                    <div className="input">
+                                      <input
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="text"
+                                        value={state.telefono}
+                                        id="telefono"
+                                      />
+                                    </div>{" "}
+                                  </div>
+                                  <div class="col-md-4 unit">
+                                    <label className="label">Correo</label>
+                                    <div className="input">
+                                      <input
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="email"
+                                        value={state.correoElectronico}
+                                        id="correoElectronico"
+                                      />
+                                    </div>
+                                  </div>
+                                  <div
+                                    className="form-footer"
+                                    className="col-md-12"
+                                  >
+                                    <button
+                                      data-layout="topCenter"
+                                      data-type="information"
+                                      className="btn btn-secondary secondary-btn"
+                                    >
+                                      Cancelar
+                                    </button>
+                                    <button
+                                      type="submit"
+                                      className="btn btn-primary primary-btn"
+                                    >
+                                      Aceptar
+                                    </button>
+                                  </div>
                                 </div>
-                              </div>
-                            </div>
-                            <div className="unit">
-                              <label className="label">Colonia</label>
-                              <div className="input">
-                                <input
-                                  onChange={handleChange}
-                                  className="form-control"
-                                  type="text"
-                                  value={state.colonia}
-                                  id="colonia"
-                                />
-                              </div>
-                            </div>
-                            <div className="unit">
-                              <label className="label">Calle</label>
-                              <div className="input">
-                                <input
-                                  onChange={handleChange}
-                                  className="form-control"
-                                  type="text"
-                                  value={state.calle}
-                                  id="calle"
-                                />
-                              </div>
-                            </div>
-                            <div class="row">
-                              <div class="col-md-6 unit">
-                                {" "}
-                                <label className="label">Núm. Exterior</label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    value={state.noExterior}
-                                    id="noExterior"
-                                  />
-                                </div>{" "}
-                              </div>
-                              <div class="col-md-6 unit">
-                                <label className="label">Núm. Interior</label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    value={state.noInterior}
-                                    id="noInterior"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                            <div className="unit">
-                              <label className="label">
-                                Nombre del contacto
-                              </label>
-                              <div className="input">
-                                <input
-                                  onChange={handleChange}
-                                  className="form-control"
-                                  type="text"
-                                  value={state.contacto}
-                                  id="contacto"
-                                />
-                              </div>
-                            </div>
-                            <div class="row">
-                              <div class="col-md-6 unit">
-                                {" "}
-                                <label className="label">Teléfonos</label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    value={state.telefono}
-                                    id="telefono"
-                                  />
-                                </div>{" "}
-                              </div>
-                              <div class="col-md-6 unit">
-                                <label className="label">Correo</label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="email"
-                                    value={state.correoElectronico}
-                                    id="correoElectronico"
-                                  />
-                                </div>
-                              </div>
-                              <div className="form-footer" className="col-md-12">
-                                <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
-                                <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                               </div>
                             </div>
                           </div>
@@ -865,10 +886,8 @@ function App(props) {
                     </div>
                   </div>
                 </div>
-
               </div>
             </form>
-
           </div>
         </div>
       </section>
