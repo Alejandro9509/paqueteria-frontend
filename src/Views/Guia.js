@@ -2848,7 +2848,9 @@ function handleImprmir2()
                   <div className="col-md-3">
                     <div className="form-footer" className="col-md-12">
 
-                      <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
+                      <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
+                                    >
+                                      Cancelar</button>
                       <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
                     </div>
                   </div>
@@ -2891,7 +2893,9 @@ function handleImprmir2()
                         <br></br>
                         <div className="form-footer" className="col-md-12">
                           <button className="btn btn-default btn-block ex-noty" data-layout="topCenter" data-type="information">Notificación</button>
-                          <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
+                          <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
+                                    >
+                                      Cancelar</button>
                           <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
                         </div>
                       </form>

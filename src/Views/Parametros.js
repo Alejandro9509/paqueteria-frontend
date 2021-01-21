@@ -631,7 +631,9 @@ function Parametros() {
             </div>
 
             <div className="form-footer" className="col-md-12">
-              <button className="btn btn-primary secondary-btn">Cancelar</button>
+              <button className="btn btn-secondary secondary-btn"
+                                    >
+                                      Cancelar</button>
               <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
             </div>
           </form>
