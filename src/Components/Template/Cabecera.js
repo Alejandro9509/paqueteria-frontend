@@ -1,5 +1,4 @@
 import React from "react";
-import { Breadcrumbs, Link, Typography } from '@material-ui/core';
 
 function Cabecera({ rutas }) {
 
@@ -19,23 +18,6 @@ function Cabecera({ rutas }) {
         </div>
       </div>
       {/*Topbar Left Branding With Logo End*/}
-      <div className="clearfix">
-        <Breadcrumbs>
-
-          {rutas.map((r) => {
-              return (
-              r.actual ?
-              <Typography color="textPrimary"><h2>{r.nombre}</h2></Typography>
-              :
-              <Link href={r.ruta}>
-                <h2>{r.nombre}</h2>
-              </Link> 
-              
-              )
-          })}
-        </Breadcrumbs>
-
-      </div>
     </div>
 
   );

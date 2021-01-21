@@ -22,6 +22,7 @@ function Caseta() {
     tarifaEje9: "",
 
     agregar: "Agregar",
+    height: window.innerHeight
   })
 
   const handleAceptar = (e) => {
@@ -267,34 +268,42 @@ function Caseta() {
     )
   }
 
-  const ruta = [
-    {
-      actual : false,
-      nombre: "Catálogos",
-      ruta: "/Catalogos"
-    },
-    {
-      actual : true,
-      nombre: "Caseta",
-      ruta: "/Caseta"
-    },
-  ];
-
   return (
     <div>
 
       <header className="topbar clearfix">
-        <Cabecera rutas={ruta}/>
+        <Cabecera />
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar">
+      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
 
       {/*Page Container Start Here*/}
       <section className="main-container">
+
+        <div className="container-fluid">
+          <div className="page-header filled full-block light">
+            <div className="row">
+              <div className="col-md-6 col-sm-6">
+                <h2>Caseta</h2>
+              </div>
+              <div className="col-md-6 col-sm-6">
+                <ul className="list-page-breadcrumb">
+                  <li>
+                    <a href="/Catalogos">
+                      Configuración <i className="zmdi zmdi-chevron-right" />
+                    </a>
+                  </li>
+                  <li className="active-page">Caseta</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="container-fluid">
 
           <ul className="nav nav-tabs">
@@ -349,7 +358,7 @@ function Caseta() {
                             <label className="label col-md-1">
                               Tarifas
                             </label>
-                            
+
                             <div className="col-md-1">
                               <div className="input">
                                 <input

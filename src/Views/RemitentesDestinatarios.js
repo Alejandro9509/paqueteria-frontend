@@ -51,6 +51,7 @@ function App(props) {
     telefono: "",
     agregar: "Agregar",
     importar: "",
+    height: window.innerHeight
   });
 
   function handleShowAgregar() {
@@ -425,11 +426,11 @@ function App(props) {
   return (
     <div>
       <header className="topbar clearfix">
-        <Cabecera rutas={ruta}/>
+        <Cabecera />
       </header>
       {/*Topbar End Here*/}
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar">
+      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
         <BarraLateralIzquierda />
       </aside>
 
@@ -440,21 +441,26 @@ function App(props) {
               <div className="col-md-6 col-sm-6">
                 <h2>Remitente/Destinatario</h2>
               </div>
+              <div className="container-fluid">
+          <div className="page-header filled full-block light">
+            <div className="row">
+              <div className="col-md-6 col-sm-6">
+                <h2>Remitente / Destinatario</h2>
+              </div>
               <div className="col-md-6 col-sm-6">
                 <ul className="list-page-breadcrumb">
                   <li>
-                    <a href="#">
-                      Home <i className="zmdi zmdi-chevron-right" />
+                    <a href="/Catalogos">
+                      Catálogos <i className="zmdi zmdi-chevron-right" />
                     </a>
                   </li>
-                  <li>
-                    <a href="#">
-                      Layout <i className="zmdi zmdi-chevron-right" />
-                    </a>
-                  </li>
-                  <li className="active-page"> Dashboard</li>
+                  <li className="active-page">Remitente / Destinatario</li>
                 </ul>
               </div>
+            </div>
+          </div>
+        </div>
+
             </div>
           </div>
         </div>

@@ -112,6 +112,7 @@ function Embarque() {
         m_sDescripcion: ""
       }
     ],
+    height: window.innerHeight
   })
   const [fileUploaded, setFileUploaded] = React.useState([])
   const [stepActive, setStepActive] = React.useState(1);
@@ -865,29 +866,37 @@ function Embarque() {
     );
   });
 
-  const ruta = [
-    {
-      actual : true,
-      nombre: "Embarque",
-      ruta: "/Embarque"
-    },
-  ];
-
   return (
     <div>
 
       <header className="topbar clearfix">
-        <Cabecera rutas={ruta}/>
+        <Cabecera />
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar">
+      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
 
       {/*Page Container Start Here*/}
       <section className="main-container">
+
+        <div className="container-fluid">
+          <div className="page-header filled full-block light">
+            <div className="row">
+              <div className="col-md-6 col-sm-6">
+                <h2>Embarque</h2>
+              </div>
+              <div className="col-md-6 col-sm-6">
+                <ul className="list-page-breadcrumb">
+                  <li className="active-page">Embarque</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="container-fluid">
 
           <ul className="nav nav-tabs">
@@ -1633,7 +1642,7 @@ function Embarque() {
                                 </label>
                                 <div className="input">
                                   <input
-                                  required={true}
+                                    required={true}
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
@@ -2047,7 +2056,7 @@ function Embarque() {
 
                 </div>
                 <div className="form-footer" className="col-md-12">
-                  <button href="#Listado" role="tab" data-toggle="tab"  className="btn btn-primary secondary-btn">Cancelar</button>
+                  <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-primary secondary-btn">Cancelar</button>
                   <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                 </div>
               </form>

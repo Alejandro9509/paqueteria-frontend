@@ -167,7 +167,8 @@ function Guia() {
         PorcentajeRetiene: 0,
         IdGuiaConcepto:0
       }
-    ]
+    ],
+    height: window.innerHeight
   })
 
   function cargaDiv(indice,valor)
@@ -1997,29 +1998,37 @@ function handleImprmir2()
     });
   }
 
-  const ruta = [
-    {
-      actual : true,
-      nombre: "Guía",
-      ruta: "/Guia"
-    },
-  ];
-
   return (
     <div>
 
       <header className="topbar clearfix">
-        <Cabecera rutas={ruta}/>
+        <Cabecera />
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar">
+      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
 
       {/*Page Container Start Here*/}
       <section className="main-container">
+        
+      <div className="container-fluid">
+          <div className="page-header filled full-block light">
+            <div className="row">
+              <div className="col-md-6 col-sm-6">
+                <h2>Guías</h2>
+              </div>
+              <div className="col-md-6 col-sm-6">
+                <ul className="list-page-breadcrumb">
+                  <li className="active-page">Guías</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="container-fluid">
 
           <ul className="nav nav-tabs">
@@ -2873,12 +2882,6 @@ function handleImprmir2()
                               Importar
                           </label>
                             <div className="input">
-                              <label
-                                className="icon-left"
-                                htmlFor="importar"
-                              >
-                                <i className="fa fa-edit" />
-                              </label>
                               <input
                                 onChange={handleUpload}
                                 className="form-control"

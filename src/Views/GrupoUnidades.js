@@ -17,7 +17,8 @@ const [state, setState] = React.useState({
     DefinidoPorSistema: 0,
     Color: "#000000",
     ColorLetra: 0,
-    agregar: "Agregar"
+    agregar: "Agregar",
+    height: window.innerHeight
 })
 const [fileUploaded, setFileUploaded] = React.useState([])
 
@@ -322,34 +323,42 @@ function Table({ columns, data}) {
   )
 }
 
-const ruta = [
-  {
-    actual : false,
-    nombre: "Catálogos",
-    ruta: "/Catalogos"
-  },
-  {
-    actual : true,
-    nombre: "Grupo Unidad",
-    ruta: "/GrupoUnidad"
-  },
-];
-
   return (
     <div>
 
   <header className="topbar clearfix">
-    <Cabecera rutas={ruta}/>
+    <Cabecera />
   </header>
 
   {/*Leftbar Start Here*/}
-  <aside className="iconic-leftbar">
+  <aside className="iconic-leftbar" style={{minHeight: state.height}}>
     <BarraLateralIzquierda />
   </aside>
   {/*Leftbar End Here*/}
 
   {/*Page Container Start Here*/}
   <section className="main-container">
+    
+  <div className="container-fluid">
+          <div className="page-header filled full-block light">
+            <div className="row">
+              <div className="col-md-6 col-sm-6">
+                <h2>Grupo Unidades</h2>
+              </div>
+              <div className="col-md-6 col-sm-6">
+                <ul className="list-page-breadcrumb">
+                  <li>
+                    <a href="/Catalogos">
+                      Catálogos <i className="zmdi zmdi-chevron-right" />
+                    </a>
+                  </li>
+                  <li className="active-page">Grupo Unidades</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
     <div className="container-fluid">
 
       <ul className="nav nav-tabs">
@@ -391,12 +400,6 @@ const ruta = [
                             Código
                           </label>
                           <div className="input">
-                            <label
-                              className="icon-left"
-                              htmlFor="Codigo"
-                            >
-                              <i className="fa fa-edit" />
-                            </label>
                             <input
                               onChange={handleChange}
                               className="form-control"
@@ -416,12 +419,6 @@ const ruta = [
                             Color
                           </label>
                           <div className="input">
-                            <label
-                              className="icon-left"
-                              htmlFor="Color"
-                            >
-                              <i className="fa fa-edit" />
-                            </label>
                             <input
                               onChange={handleChange}
                               className="form-control"
@@ -438,12 +435,6 @@ const ruta = [
                             Grupo de Unidades
                           </label>
                           <div className="input">
-                            <label
-                              className="icon-left"
-                              htmlFor="GrupoUnidad"
-                            >
-                              <i className="fa fa-edit" />
-                            </label>
                             <input
                               onChange={handleChange}
                               className="form-control"

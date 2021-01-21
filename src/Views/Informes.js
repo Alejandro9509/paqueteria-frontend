@@ -91,6 +91,7 @@ function Informes(props) {
     FechaCancelacion: "",
     IdIdUsuarioCancelacion: 0,
     agregar: "Agregar",
+    height: window.innerHeight
   });
 
   const selectGuia = (index) => {
@@ -325,22 +326,14 @@ function Informes(props) {
     closeSeccions();
   }, []);
 
-  const ruta = [
-    {
-      actual : true,
-      nombre: "Informes",
-      ruta: "/Informes"
-    },
-  ];
-
   return (
     <div>
       <header className="topbar clearfix">
-        <Cabecera rutas={ruta}/>
+        <Cabecera />
       </header>
       {/*Topbar End Here*/}
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar">
+      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
         <BarraLateralIzquierda />
       </aside>
 
@@ -607,12 +600,6 @@ function Informes(props) {
                                                       Folio
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="Folio"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
                                                       <input
                                                         className="form-control"
                                                         type="text"
@@ -626,12 +613,6 @@ function Informes(props) {
                                                       Fecha
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="Fecha"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
                                                       <input
                                                         className="form-control"
                                                         type="text"
@@ -645,12 +626,6 @@ function Informes(props) {
                                                       Hora
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="Hora"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
                                                       <input
                                                         className="form-control"
                                                         type="text"
@@ -853,12 +828,6 @@ function Informes(props) {
                                                       Placa Int
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="Placa Int"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
                                                       <input
                                                         className="form-control"
                                                         type="text"
@@ -875,12 +844,6 @@ function Informes(props) {
                                                       Remolque
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="Remolque"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
                                                       <input
                                                         className="form-control"
                                                         type="text"
@@ -895,12 +858,6 @@ function Informes(props) {
                                                       Placa Int
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="Placa Int"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
                                                       <input
                                                         className="form-control"
                                                         type="text"
@@ -1080,12 +1037,6 @@ function Informes(props) {
                                                       Viaje
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="Viaje"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
                                                       <input
                                                         className="form-control"
                                                         type="text"
@@ -1100,12 +1051,6 @@ function Informes(props) {
                                                       Ruta
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="Ruta2"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
                                                       <input
                                                         className="form-control"
                                                         type="text"
@@ -1122,12 +1067,6 @@ function Informes(props) {
                                                       Operador
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="Operador2"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
                                                       <input
                                                         className="form-control"
                                                         type="text"
@@ -1142,12 +1081,6 @@ function Informes(props) {
                                                       Unidad
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="Unidad2"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
                                                       <input
                                                         className="form-control"
                                                         type="text"
@@ -1164,12 +1097,6 @@ function Informes(props) {
                                                       Remolque
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="Remolque2"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
                                                       <input
                                                         className="form-control"
                                                         type="text"

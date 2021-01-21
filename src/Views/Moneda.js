@@ -15,6 +15,7 @@ function Moneda() {
     simbolo: "",
     abreviacion: "",
     agregar: "Agregar",
+    height: window.innerHeight
   })
 
   const handleAceptar = (e) => {
@@ -245,12 +246,12 @@ function Moneda() {
 
   const ruta = [
     {
-      actual : false,
+      actual: false,
       nombre: "Configuración",
       ruta: "/Configuracion"
     },
     {
-      actual : true,
+      actual: true,
       nombre: "Moneda",
       ruta: "/Moneda"
     },
@@ -260,17 +261,38 @@ function Moneda() {
     <div>
 
       <header className="topbar clearfix">
-        <Cabecera rutas={ruta}/>
+        <Cabecera />
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar">
+      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
 
       {/*Page Container Start Here*/}
       <section className="main-container">
+
+        <div className="container-fluid">
+          <div className="page-header filled full-block light">
+            <div className="row">
+              <div className="col-md-6 col-sm-6">
+                <h2>Moneda</h2>
+              </div>
+              <div className="col-md-6 col-sm-6">
+                <ul className="list-page-breadcrumb">
+                  <li>
+                    <a href="/Configuracion">
+                      Configuración <i className="zmdi zmdi-chevron-right" />
+                    </a>
+                  </li>
+                  <li className="active-page">Moneda</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="container-fluid">
 
           <ul className="nav nav-tabs">

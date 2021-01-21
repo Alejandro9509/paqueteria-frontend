@@ -25,7 +25,8 @@ function EstatusUnidad() {
     tipoEstatusUnidad: 0,
     colorUnidad: "",
     agregar: "Agregar",
-    importar: ""
+    importar: "",
+    height: window.innerHeight
   })
 
   const handleAceptar = (e) => {
@@ -85,7 +86,7 @@ function EstatusUnidad() {
         estatusUnidad: respuesta.data.m_sEstatus,
         abreviacionUnidad: respuesta.data.m_sAbreviacion,
         tipoEstatusUnidad: respuesta.data.m_nTipoEstatus,
-        colorUnidad: "#" +respuesta.data.m_sColor,
+        colorUnidad: "#" + respuesta.data.m_sColor,
       })
     });
   }
@@ -246,34 +247,42 @@ function EstatusUnidad() {
     )
   }
 
-  const ruta = [
-    {
-      actual : false,
-      nombre: "Catálogos",
-      ruta: "/Catalogos"
-    },
-    {
-      actual : true,
-      nombre: "Estatus de Unidad",
-      ruta: "/EstatusUnidad"
-    },
-  ];
-
   return (
     <div>
 
       <header className="topbar clearfix">
-        <Cabecera rutas={ruta}/>
+        <Cabecera />
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar">
+      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
 
       {/*Page Container Start Here*/}
       <section className="main-container">
+
+        <div className="container-fluid">
+          <div className="page-header filled full-block light">
+            <div className="row">
+              <div className="col-md-6 col-sm-6">
+                <h2>Estatus Unidad</h2>
+              </div>
+              <div className="col-md-6 col-sm-6">
+                <ul className="list-page-breadcrumb">
+                  <li>
+                    <a href="/Catalogos">
+                      Catálogos <i className="zmdi zmdi-chevron-right" />
+                    </a>
+                  </li>
+                  <li className="active-page">Estatus Unidad</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="container-fluid">
 
           <ul className="nav nav-tabs">

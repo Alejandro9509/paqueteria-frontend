@@ -121,6 +121,7 @@ function Recoleccion() {
     ],
     fechaHoraSalida: "",
     fechaHoraLlegada: "",
+    height: window.innerHeight
 
   })
   const [fileUploaded, setFileUploaded] = React.useState([])
@@ -133,7 +134,7 @@ function Recoleccion() {
 
     var params = {
 
-      "m_nIdRecoleccion" : state.idRecoleccion,
+      "m_nIdRecoleccion": state.idRecoleccion,
       "m_nIdSucursal": state.idSucursalAgregar,
       "m_nIdEmbarque": state.folioEmbarque,
       "m_nIdGuia": state.folioGuía,
@@ -279,7 +280,7 @@ function Recoleccion() {
         folioEmbarque: respuesta.data.m_nIdEmbarque,
         folioGuía: respuesta.data.m_nIdGuia,
         folioInforme: respuesta.data.m_nIdInforme,
-        fechaHoraCreacion: respuesta.data.m_dFecha + "T" + respuesta.data.m_tHora.slice(0,5),
+        fechaHoraCreacion: respuesta.data.m_dFecha + "T" + respuesta.data.m_tHora.slice(0, 5),
         estatusRecoleccion: respuesta.data.m_nIdEstatusRecoleccion,
         moneda: respuesta.data.m_nMoneda,
         tipoCambio: respuesta.data.m_rTipoCambio,
@@ -316,9 +317,9 @@ function Recoleccion() {
         domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
         entregaEn: respuesta.data.m_sEntregarEnDetalleEntrega,
         datosAdicionalesEntrega: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
-        fechaHoraSalida: respuesta.data.m_dFechaElaboracionSalidaRecoleccion +"T" + respuesta.data.m_tHoraElaboracionSalidaRecoleccion.slice(0,5),
-        fechaHoraLlegada: respuesta.data.m_dFechaElaboracionLlegadaRecoleccion +"T" + respuesta.data.m_tHoraElaboracionLlegadaRecoleccion.slice(0,5),
-        fechaRecoleccion: respuesta.data.m_dFechaDetalleRecoleccion +"T" + respuesta.data.m_tHoraDetalleRecoleccion.slice(0,5),
+        fechaHoraSalida: respuesta.data.m_dFechaElaboracionSalidaRecoleccion + "T" + respuesta.data.m_tHoraElaboracionSalidaRecoleccion.slice(0, 5),
+        fechaHoraLlegada: respuesta.data.m_dFechaElaboracionLlegadaRecoleccion + "T" + respuesta.data.m_tHoraElaboracionLlegadaRecoleccion.slice(0, 5),
+        fechaRecoleccion: respuesta.data.m_dFechaDetalleRecoleccion + "T" + respuesta.data.m_tHoraDetalleRecoleccion.slice(0, 5),
         paquetes: respuesta.data.m_parrPaquetes,
         sobres: respuesta.data.m_parrSobres,
         cantidadDePaquetes: respuesta.data.m_parrPaquetes.length,
@@ -916,29 +917,37 @@ function Recoleccion() {
     );
   });
 
-  const ruta = [
-    {
-      actual : true,
-      nombre: "Recolección",
-      ruta: "/Recoleccion"
-    },
-  ];
-
   return (
     <div>
 
       <header className="topbar clearfix">
-        <Cabecera rutas={ruta}/>
+        <Cabecera />
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar">
+      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
 
       {/*Page Container Start Here*/}
       <section className="main-container">
+
+        <div className="container-fluid">
+          <div className="page-header filled full-block light">
+            <div className="row">
+              <div className="col-md-6 col-sm-6">
+                <h2>Recolección</h2>
+              </div>
+              <div className="col-md-6 col-sm-6">
+                <ul className="list-page-breadcrumb">
+                  <li className="active-page">Recolección</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="container-fluid">
 
           <ul className="nav nav-tabs">
@@ -2282,7 +2291,7 @@ function Recoleccion() {
                   </div>
 
                   <div className="form-footer" className="col-md-12">
-                  <button href="#Listado" role="tab" data-toggle="tab"  className="btn btn-primary secondary-btn">Cancelar</button>
+                    <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-primary secondary-btn">Cancelar</button>
                     <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                   </div>
                 </div>
@@ -2299,12 +2308,6 @@ function Recoleccion() {
                                   Importar
                           </label>
                                 <div className="input">
-                                  <label
-                                    className="icon-left"
-                                    htmlFor="importar"
-                                  >
-                                    <i className="fa fa-edit" />
-                                  </label>
                                   <input
                                     onChange={handleUpload}
                                     className="form-control"

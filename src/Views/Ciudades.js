@@ -5,6 +5,7 @@ import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda"
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import { useTable, useFilters, useGlobalFilter, useRowSelect, useSortBy } from 'react-table'
 import { makeStyles } from "@material-ui/core/styles";
+import { Breadcrumbs, Link, Typography } from '@material-ui/core';
 
 const styles = {
   seleccionado: {
@@ -37,6 +38,7 @@ function CiudadesCodigoPostal() {
 
     agregarCiudad: "Agregar",
     agregarCodigoPostal: "Agregar",
+    height: window.innerHeight
   })
 
   const handleAceptarCiudad = (e) => {
@@ -455,34 +457,41 @@ function CiudadesCodigoPostal() {
     )
   }
 
-  const ruta = [
-    {
-      actual : false,
-      nombre: "Configuración",
-      ruta: "/Configuracion"
-    },
-    {
-      actual : true,
-      nombre: "Ciudades",
-      ruta: "/Ciudades"
-    },
-  ];
-
   return (
     <div>
 
       <header className="topbar clearfix">
-        <Cabecera rutas={ruta}/>
+        <Cabecera />
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar">
+      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
 
       {/*Page Container Start Here*/}
       <section className="main-container">
+        <div className="container-fluid">
+          <div className="page-header filled full-block light">
+            <div className="row">
+              <div className="col-md-6 col-sm-6">
+                <h2>Ciudades/Código Postal</h2>
+              </div>
+              <div className="col-md-6 col-sm-6">
+                <ul className="list-page-breadcrumb">
+                  <li>
+                    <a href="/Configuracion">
+                      Configuración <i className="zmdi zmdi-chevron-right" />
+                    </a>
+                  </li>
+                  <li className="active-page">Ciudades</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="container-fluid">
 
           <div className="row">
