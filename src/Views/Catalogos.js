@@ -47,8 +47,7 @@ function Catalogo() {
           {catalogRoutes.map((r, index) => {
             return (
               <Link to={r.path}>
-                <div className="col-md-2" style={{ textAlign: "center" }}>
-                  <div className="input">
+                <div className="col-md-2 col-md-2" style={{ textAlign: "center"}}>
                     <button
                       type="button"
                       key={index}
@@ -60,7 +59,6 @@ function Catalogo() {
                         viewBox="0 0 50 60"
                       />
                     </button>
-                  </div>
                   <label>{r.name}</label>
                 </div>
               </Link>
