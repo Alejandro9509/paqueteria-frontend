@@ -20,20 +20,6 @@ h2 {
     padding: 5px;
 }
 
-.firstButtonStyle {
-    background-color: #F9A03E;
-    padding-bottom: 3px;
-    padding-top: 3px;
-    padding-left: 5px;
-    padding-right: 5px;
-    margin-bottom: 20px;
-    color: white;
-    font-size: 14px;
-    border-radius: 3px;
-    border: 1px solid #F9A03E;
-    font-family: calibri;
-}
-
 .imagen-de-catalogos {
     height: 100% !important;
     align-content: center !important;
@@ -44,27 +30,17 @@ h2 {
     stroke-width: 0% !important;
 }
 
-.imagen-de-catalogos:hover .a {
+.imagen-de-catalogos:hover {
     height: 100% !important;
     align-content: center !important;
     padding: 10px !important;
     width: 100% !important;
-    fill: #FFFFFF !important;
-    stroke: #FFFFFF !important;
+    fill: #F9A03E !important;
+    stroke: #F9A03E !important;
     stroke-width: 0% !important;
 }
 
-.a-lateral {
-    fill: #707070 !important;
-    stroke: #868686 !important;
-    stroke-width: 0% !important;
-}
 
-.a-lateral:hover {
-    fill: #FFFFFF !important;
-    stroke: #FFFFFF !important;
-    stroke-width: 0% !important;
-}
 
 .boton-de-catalogos {
     height: 72px;

@@ -47,7 +47,7 @@ function Catalogo() {
           {catalogRoutes.map((r, index) => {
             return (
               <Link to={r.path}>
-                <div className="col-md-2 col-md-2" style={{ textAlign: "center"}}>
+                <div className="col-sm-4 col-md-2" style={{ textAlign: "center"}}>
                     <button
                       type="button"
                       key={index}
