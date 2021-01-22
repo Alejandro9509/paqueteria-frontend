@@ -20,6 +20,9 @@ const headers = {
 };
 function App(props) {
   const [stepActive, setStepActive] = React.useState(1);
+  const [state, setState] = React.useState({
+    height: window.innerHeight
+  })
 
   function openSection(index) {
     closeSeccions();

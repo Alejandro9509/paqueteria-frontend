@@ -1077,6 +1077,9 @@ function Recoleccion() {
                 <div className="form-content">
 
                   <div className="widget-wrap">
+
+
+
                     <div className="wizard-breadcrumb number-style" style={{ position: "sticky", top: "50px", padding: "5px", backgroundColor: "white", zIndex: 100 }}>
                       <div className="row">
                         <div className={"col-md-2 col-sm-2 step" + (stepActive == 1 && "active-step")}
@@ -1103,7 +1106,7 @@ function Recoleccion() {
                             <p>Detalles de la Recolección</p>
                           </div>
                         </div>
-                        <div className={"col-md-2-5 col-sm-2 step" + (stepActive == 4 && "active-step")}
+                        <div className={"col-md-2 col-sm-2 step" + (stepActive == 4 && "active-step")}
                           onClick={() => openSection(4)}
                         >
                           <div className="steps">
@@ -1111,7 +1114,7 @@ function Recoleccion() {
                             <p>Información Adicional del Pago</p>
                           </div>
                         </div>
-                        <div className={"col-md-1-5 col-sm-2 step" + (stepActive == 5 && "active-step")}
+                        <div className={"col-md-2 col-sm-2 step" + (stepActive == 5 && "active-step")}
                           onClick={() => openSection(5)}
                         >
                           <div className="steps">
@@ -1119,7 +1122,7 @@ function Recoleccion() {
                             <p>General</p>
                           </div>
                         </div>
-                        <div className={"col-md-1 col-sm-2 step" + (stepActive == 6 && "active-step")}
+                        <div className={"col-md-2 col-sm-2 step" + (stepActive == 6 && "active-step")}
                           onClick={() => openSection(6)}
                         >
                           <div className="steps">
@@ -1351,7 +1354,8 @@ function Recoleccion() {
                   </div>
 
 
-                  <div className="col-md-7">
+<div className="row">
+                    <div className="col-md-7">
 
                     <div className="widget-wrap">
                       <div className="row">
@@ -2231,7 +2235,7 @@ function Recoleccion() {
 
                   <div className="col-md-12" style={{ width: '3%' }}></div>
 
-                  <div className="widget-wrap col-md-5">
+                  <div className="widget-wrap col-ms-12 col-md-5">
                     <div className="widget-header">
                       <h2>Número de Paquetes</h2>
                     </div>
@@ -2290,6 +2294,8 @@ function Recoleccion() {
                     </div>
                   </div>
 
+</div>
+
                   <div className="form-footer" className="col-md-12">
                     <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-primary secondary-btn">Cancelar</button>
                     <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
@@ -2319,7 +2325,6 @@ function Recoleccion() {
                             </div>
                             <br></br>
                             <div className="form-footer" className="col-md-12">
-                              <button className="btn btn-default btn-block ex-noty" data-layout="topCenter" data-type="information">Notificación</button>
                               <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
                               <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
                             </div>
