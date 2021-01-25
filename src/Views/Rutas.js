@@ -24,7 +24,10 @@ const headers = {
 
   function App(props) {
 
+    const [state, setState] = React.useState({
+    showMap:false
 
+    })
     
 
 
@@ -72,7 +75,7 @@ const headers = {
             </a>
           </li>
           <li>
-            <a data-toggle="tab" href="#Agregar" >
+            <a data-toggle="tab" href="#Agregar" onClick={() => setState({...state, showMap:true})}>
               Agregar
             </a>
           </li>
@@ -367,7 +370,11 @@ const headers = {
 
                                 </div>
                                 </div>
-                                <DisplayMapClass/>
+                                <div style={{width:"100%", height:"400px"}}>
+                                  {state.showMap && <DisplayMapClass/>}
+                                
+
+                                </div>
 
                                 </form>
                                 </div>
