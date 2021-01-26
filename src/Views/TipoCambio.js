@@ -14,6 +14,7 @@ function TipoCambio() {
     fecha: "",
     tipoCambio: "",
     agregar: "Agregar",
+    height: window.innerHeight
   })
 
   const handleAceptar = (e) => {
@@ -31,7 +32,7 @@ function TipoCambio() {
       const url = `${process.env.REACT_APP_API_URL}/TipoCambio/Modificar/` + state.idTipoCambio;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData();
       }).catch(err => {
         console.log(err)
         alert("err")
@@ -40,7 +41,7 @@ function TipoCambio() {
       const url = `${process.env.REACT_APP_API_URL}/TipoCambio/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData();
       }).catch(err => {
         console.log(err)
         alert(err)
@@ -53,7 +54,7 @@ function TipoCambio() {
     const url = `${process.env.REACT_APP_API_URL}/TipoCambio/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta)
-      window.location.reload();
+      getAllData();
     }).catch(err => {
       alert(err)
     });
@@ -224,18 +225,35 @@ function TipoCambio() {
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar">
+      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
 
       {/*Page Container Start Here*/}
       <section className="main-container">
-        <div className="container-fluid">
-
-          <div className="page-header full-block light">
-            <h2>Tipo de Cambio</h2>
+        
+      <div className="container-fluid">
+          <div className="page-header filled full-block light">
+            <div className="row">
+              <div className="col-md-6 col-sm-6">
+                <h2>Tipo de Cambio</h2>
+              </div>
+              <div className="col-md-6 col-sm-6">
+                <ul className="list-page-breadcrumb">
+                  <li>
+                    <a href="/Configuracion">
+                      Configuración <i className="zmdi zmdi-chevron-right" />
+                    </a>
+                  </li>
+                  <li className="active-page">Tipo de Cambio</li>
+                </ul>
+              </div>
+            </div>
           </div>
+        </div>
+
+        <div className="container-fluid">
 
           <ul className="nav nav-tabs">
             <li className="active">
@@ -306,7 +324,9 @@ function TipoCambio() {
                         </div>
                         <br></br>
                         <div className="form-footer" className="col-md-12">
-                          <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-primary secondary-btn">Cancelar</button>
+                          <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
+                                    >
+                                      Cancelar</button>
                           <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                         </div>
                       </form>

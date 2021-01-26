@@ -154,7 +154,7 @@ a.waves-effect .waves-ripple {
 .page-header {
   margin: 0px;
   border-bottom: 0px;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   padding-bottom: 0px;
 }
 .page-header h1,
@@ -183,7 +183,7 @@ a.waves-effect .waves-ripple {
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
-  padding: 30px;
+  padding: 5px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 .page-header.light {
@@ -1812,7 +1812,7 @@ a.waves-effect .waves-ripple {
 }
 .j-forms .unit {
   position: relative;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
 }
 .j-forms .link {
   color: #555;
@@ -2493,7 +2493,7 @@ a.waves-effect .waves-ripple {
 .j-forms .secondary-btn,
 .j-forms .secondary-btn:hover,
 .j-forms .secondary-btn:active {
-  opacity: .5;
+  opacity: 1;
 }
 .j-forms .primary-btn.processing:before {
   background: rgba(255, 255, 255, 0.4);

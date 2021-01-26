@@ -11,14 +11,14 @@
     border-radius: 3px;
     border: 1px solid #F9A03E;
     font-family: calibri;
-  }
+}
 
-  h2 {
+h2 {
     font: normal normal normal 21px/21px Calibri;
-    color: #F9A03E;
+    color: #707070;
     letter-spacing: 0.21px;
     padding: 5px;
-  }
+}
 
 .firstButtonStyle {
     background-color: #F9A03E;
@@ -32,94 +32,67 @@
     border-radius: 3px;
     border: 1px solid #F9A03E;
     font-family: calibri;
-  }
-  
-  .imagen-de-catalogos {
-    height: 100% !important;
-    align-content: center !important;
-    padding: 10px !important;
-    width: 100% !important;
-    fill: #F9A03E !important;
-    stroke: #F9A03E !important;
-    stroke-width: 0% !important;
-  }
-  .imagen-de-catalogos:hover .a {
-    height: 100% !important;
-    align-content: center !important;
-    padding: 10px !important;
-    width: 100% !important;
-    fill: #FFFFFF !important;
-    stroke:#FFFFFF !important;
-    stroke-width: 0% !important;
-  }
-  .a {
-    fill: #F9A03E !important;
-    stroke: #F9A03E !important;
-    stroke-width: 0% !important;
-  }
-
-  .a:hover {
-    fill: #FFFFFF !important;
-    stroke:#FFFFFF !important;
-    stroke-width: 0% !important;
-  }
-
-  @media (min-width: 992px) {
-    .boton-de-catalogos {
-      height: 72px;
-      width: 100%;
-      margin: 1%;
-      display:inline-block;
-    
-      color:#F9A03E;
-      font-size: 40px;
-      background: #FFFFFF 0% 0% no-repeat padding-box;
-box-shadow: 0px 3px 6px #0000004C;
-border-radius: 10px;
-opacity: 1;
-border-width: 0px;
-    }
-    
-    .boton-de-catalogos:hover {
-      background: #F9A03E 0% 0% no-repeat padding-box;
-      box-shadow: 0px 3px 6px #0000004C;
-      border-radius: 10px;
-      opacity: 1;
-      border-width: 0px;
-    }
-
-    
-    .division-de-botones{
-      width: 10%;
-    }
-  }
-
-  @media (min-width: 768px) {
-    .boton-de-catalogos-sm {
-      height: 72px;
-      display:inline-block;
-    
-      color:#F9A03E;
-      font-size: 40px;
-      background: #FFFFFF 0% 0% no-repeat padding-box;
-box-shadow: 0px 3px 6px #0000004C;
-border-radius: 10px;
-opacity: 1;
-border-width: 0px;
-    }
-    
-    .boton-de-catalogos-sm:hover {
-      color: #FFFFFF;
-      background: #F9A03E 0% 0% no-repeat padding-box;
-      box-shadow: 0px 3px 6px #0000004C;
-      border-radius: 10px;
-      opacity: 1;
-      border-width: 0px;
-    }
-  }
-
-  .divider{
-    width:5px;
-    display:inline-block;
 }
 
+.imagen-de-catalogos {
+    height: 100% !important;
+    align-content: center !important;
+    padding: 10px !important;
+    width: 100% !important;
+    fill: #F9A03E !important;
+    stroke: #F9A03E !important;
+    stroke-width: 0% !important;
+}
+
+.imagen-de-catalogos:hover .a {
+    height: 100% !important;
+    align-content: center !important;
+    padding: 10px !important;
+    width: 100% !important;
+    fill: #FFFFFF !important;
+    stroke: #FFFFFF !important;
+    stroke-width: 0% !important;
+}
+
+.a-lateral {
+    fill: #707070 !important;
+    stroke: #868686 !important;
+    stroke-width: 0% !important;
+}
+
+.a-lateral:hover {
+    fill: #FFFFFF !important;
+    stroke: #FFFFFF !important;
+    stroke-width: 0% !important;
+}
+
+.boton-de-catalogos {
+    height: 72px;
+    width: 100%;
+    margin: 1%;
+    display: inline-block;
+    color: #F9A03E;
+    font-size: 40px;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 3px 6px #0000004C;
+    border-radius: 10px;
+    opacity: 1;
+    border-width: 0px;
+}
+
+.boton-de-catalogos:hover {
+    background: #F9A03E 0% 0% no-repeat padding-box;
+    box-shadow: 0px 3px 6px #0000004C;
+    border-radius: 10px;
+    opacity: 1;
+    border-width: 0px;
+}
+
+.division-de-botones {
+    width: 10%;
+}
+
+.divider {
+    width: 5px;
+    display: inline-block;
+}

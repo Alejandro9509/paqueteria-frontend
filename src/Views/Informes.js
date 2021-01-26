@@ -28,9 +28,12 @@ window.jQuery = window.$ = $;
 const headers = {
   "Content-Type": "application/json",
 };
+
+
 function Informes(props) {
   const [stepActive, setStepActive] = React.useState(1);
   const [data, setData] = React.useState([]);
+
   const [dataSucursal, setDataSucursal] = React.useState([]);
   const [dataEstatusInformes, setEstatusInformes] = React.useState([]);
   const [dataOperadores, setDataOperadores] = React.useState([]);
@@ -72,6 +75,161 @@ function Informes(props) {
     },
   ]);
 
+    const columns = React.useMemo(() => [
+      {
+        Name: "Folio/Serie",
+        accessor: "m_nFolioInforme",
+      },
+      {
+        Name: "Fecha/Hora Elaboración",
+        accessor: "m_dFecha",
+      },
+      {
+        Name: "Viaje",
+        accessor: "m_nIdViaje",
+      },
+      {
+        Name: "Oficina Emisora",
+        accessor: "m_sSucursalEmisora",
+      },
+      {
+        Name: "Oficina Receptora",
+        accessor: "m_sSucursalReceptora",
+      },
+      {
+        Name: "Operador",
+        accessor: "m_sNombreCompleto",
+      },
+      {
+        Name: "Unidad",
+        accessor: "m_sCodigoUnidad",
+      }
+    ]);
+
+  
+
+  function DefaultColumnFilter({
+    column: { filterValue, preFilteredRows, setFilter },
+  }) {
+    const count = preFilteredRows.length;
+
+    return (
+      <input
+        className="form-control"
+        value={filterValue || ""}
+        onChange={(e) => {
+          setFilter(e.target.value || undefined);
+        }}
+        placeholder={`Buscar ${count} registros...`}
+      />
+    );
+  }
+
+  function Table({ columns, data }) {
+    const defaultColumn = React.useMemo(
+      () => ({
+        // Default Filter UI
+        Filter: DefaultColumnFilter,
+      }),
+      []
+    );
+
+    const {
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      rows,
+      prepareRow,
+    } = useTable(
+      {
+        columns,
+        data,
+        defaultColumn,
+      },
+      useFilters,
+      useSortBy
+    );
+
+    return (
+      <div className="col-md-12">
+        <table className="table" {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                <th></th>
+                {headerGroup.headers.map((column) => (
+                  // Add the sorting props to control sorting. For this example
+                  // we can add them into the header props
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render("Name")}
+                    {/* Add a sort direction indicator */}
+                    <span>
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <i className="fa fa-caret-up" />
+                        ) : (
+                          <i className="fa fa-caret-down" />
+                        )
+                      ) : (
+                        ""
+                      )}
+                    </span>
+                    <div>
+                      {column.canFilter ? column.render("Filter") : null}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map((row, i) => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()}>
+                  <td>
+                    <div>
+                      <a
+                        href="#Agregar"
+                        role="tab"
+                        data-toggle="tab"
+                        onClick={() =>
+                          handleShowModificar(row.original.m_nIdUnidad)
+                        }
+                        className="btn btn-default btn-sm m-user-edit"
+                      >
+                        <i className="zmdi zmdi-edit" />
+                      </a>
+                      <a
+                        href="#"
+                        className="btn btn-default btn-sm m-user-delete"
+                        onClick={() => handleEliminar(row.original.m_nIdUnidad)}
+                      >
+                        <i className="zmdi zmdi-close" />
+                      </a>
+                    </div>
+                  </td>
+                  {row.cells.map((cell) => {
+                    return (
+                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+
+
+
+
+
+
+
   const [state, setState] = React.useState({
     showPopUp: false,
     IdInforme: 0,
@@ -91,6 +249,7 @@ function Informes(props) {
     FechaCancelacion: "",
     IdIdUsuarioCancelacion: 0,
     agregar: "Agregar",
+    height: window.innerHeight
   });
 
   const selectGuia = (index) => {
@@ -163,6 +322,29 @@ function Informes(props) {
     });
   }
 
+  function handleShowModificar(id) {
+    console.log(id);
+    const url = `${process.env.REACT_APP_API_URL}/Unidadd/GetById/` + id;
+    axios.get(url, { headers }).then((respuesta) => {
+      console.log(respuesta.data);
+      setState({
+        ...state,
+       
+      });
+    });
+  }
+
+  function handleEliminar(id) {
+    const url = `${process.env.REACT_APP_API_URL}/Unidadd/Eliminar/` + id;
+    axios
+      .get(url, { headers })
+      .then((respuesta) => {
+        console.log(respuesta);
+      })
+      .catch((err) => {
+        alert(err);
+      });
+  }
   const handleChangeOrigenChange = event => {
     console.log(event.target.value)
 
@@ -252,6 +434,8 @@ function Informes(props) {
     getAllCiudades();
   }, []);
 
+
+
   function getAllData() {
     const url = `${process.env.REACT_APP_API_URL}/Informes/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
@@ -272,13 +456,9 @@ function Informes(props) {
         $section = $("#caracteristicas");
 
         break;
+     
       case 3:
         setStepActive(3);
-        $section = $("#combustible");
-
-        break;
-      case 4:
-        setStepActive(4);
         $section = $("#seguros");
         break;
 
@@ -332,7 +512,7 @@ function Informes(props) {
       </header>
       {/*Topbar End Here*/}
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar">
+      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
         <BarraLateralIzquierda />
       </aside>
 
@@ -400,10 +580,12 @@ function Informes(props) {
             className="tab-pane fade in active"
           >
             <div className="widget-wrap">
-              <div className="widget-content">
-                <div className="row">Listado</div>
+                <div className="widget-content">
+                  <div className="row">
+                    <Table columns={columns} data={data} />
+                  </div>
+                </div>
               </div>
-            </div>
           </div>
           <div id="Importar" className="tab-pane fade "></div>
           <div id="Imprimir" className="tab-pane fade ">
@@ -436,7 +618,7 @@ function Informes(props) {
                           <div className="row">
                             <div
                               className={
-                                "col-md-3 col-sm-3 step " +
+                                "col-md-4 col-sm-4 step " +
                                 (stepActive == 1 && "active-step")
                               }
                               onClick={() => openSection(1)}
@@ -448,7 +630,7 @@ function Informes(props) {
                             </div>
                             <div
                               className={
-                                "col-md-3 col-sm-3 step " +
+                                "col-md-4 col-sm-4 step " +
                                 (stepActive == 2 && "active-step")
                               }
                               onClick={() => openSection(2)}
@@ -458,24 +640,13 @@ function Informes(props) {
                                 <p>Asignar a un Viaje</p>
                               </div>
                             </div>
+                           
                             <div
                               className={
-                                "col-md-3 col-sm-3 step " +
+                                "col-md-4 col-sm-4 step " +
                                 (stepActive == 3 && "active-step")
                               }
                               onClick={() => openSection(3)}
-                            >
-                              <div className="steps">
-                                <span className="step-number">3</span>
-                                <p>Detalles de la operacion</p>
-                              </div>
-                            </div>
-                            <div
-                              className={
-                                "col-md-3 col-sm-3 step " +
-                                (stepActive == 4 && "active-step")
-                              }
-                              onClick={() => openSection(4)}
                             >
                               <div className="steps">
                                 <span className="step-number">4</span>
@@ -599,12 +770,6 @@ function Informes(props) {
                                                       Folio
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="Folio"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
                                                       <input
                                                         className="form-control"
                                                         type="text"
@@ -618,12 +783,6 @@ function Informes(props) {
                                                       Fecha
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="Fecha"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
                                                       <input
                                                         className="form-control"
                                                         type="text"
@@ -637,12 +796,6 @@ function Informes(props) {
                                                       Hora
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="Hora"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
                                                       <input
                                                         className="form-control"
                                                         type="text"
@@ -845,12 +998,6 @@ function Informes(props) {
                                                       Placa Int
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="Placa Int"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
                                                       <input
                                                         className="form-control"
                                                         type="text"
@@ -867,12 +1014,6 @@ function Informes(props) {
                                                       Remolque
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="Remolque"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
                                                       <input
                                                         className="form-control"
                                                         type="text"
@@ -887,12 +1028,6 @@ function Informes(props) {
                                                       Placa Int
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="Placa Int"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
                                                       <input
                                                         className="form-control"
                                                         type="text"
@@ -1072,12 +1207,6 @@ function Informes(props) {
                                                       Viaje
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="Viaje"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
                                                       <input
                                                         className="form-control"
                                                         type="text"
@@ -1092,12 +1221,6 @@ function Informes(props) {
                                                       Ruta
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="Ruta2"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
                                                       <input
                                                         className="form-control"
                                                         type="text"
@@ -1114,12 +1237,6 @@ function Informes(props) {
                                                       Operador
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="Operador2"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
                                                       <input
                                                         className="form-control"
                                                         type="text"
@@ -1134,12 +1251,6 @@ function Informes(props) {
                                                       Unidad
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="Unidad2"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
                                                       <input
                                                         className="form-control"
                                                         type="text"
@@ -1156,12 +1267,6 @@ function Informes(props) {
                                                       Remolque
                                                     </label>
                                                     <div className="input">
-                                                      <label
-                                                        className="icon-left"
-                                                        htmlFor="Remolque2"
-                                                      >
-                                                        <i className="fa fa-edit" />
-                                                      </label>
                                                       <input
                                                         className="form-control"
                                                         type="text"
@@ -1179,72 +1284,7 @@ function Informes(props) {
                                   </div>
                                 </div>
                               </div>
-                              <div className="row">
-                                <div className="col-md-12">
-                                  <div className="widget-wrap">
-                                    <div className="widget-header block-header margin-bottom-0 clearfix">
-                                      <div className="pull-left">
-                                        <h3>Detalles de la operación</h3>
-                                      </div>
-                                      <div className="pull-right w-action">
-                                        <ul className="widget-action-bar">
-                                          <li className="dropdown">
-                                            <a
-                                              href="#"
-                                              className="dropdown-toggle"
-                                              data-toggle="dropdown"
-                                            >
-                                              <i className="zmdi zmdi-more" />
-                                            </a>
-                                            <ul className="dropdown-menu">
-                                              <li className="widget-reload">
-                                                <a href="#">
-                                                  <i className="zmdi zmdi-refresh-alt" />
-                                                </a>
-                                              </li>
-                                              <li
-                                                className="widget-toggle"
-                                                id="combustible"
-                                              >
-                                                <a href="#">
-                                                  <i className="zmdi zmdi-chevron-down" />
-                                                </a>
-                                              </li>
-                                              <li className="widget-fullscreen">
-                                                <a href="#">
-                                                  <i className="zmdi zmdi-fullscreen" />
-                                                </a>
-                                              </li>
-                                              <li className="widget-exit">
-                                                <a href="#">
-                                                  <i className="zmdi zmdi-power" />
-                                                </a>
-                                              </li>
-                                            </ul>
-                                          </li>
-                                        </ul>
-                                      </div>
-                                    </div>
-                                    <div className="widget-container">
-                                      <div className="widget-content">
-                                        <div className="row">
-                                          <div className="col-md-12">
-                                            <form
-                                              action="#"
-                                              className="j-forms"
-                                              noValidate
-                                            >
-                                              <div className="form-content">
-                                                FORM 3
-                                              </div>
-                                            </form>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
+                              
                             </div>
                           </div>
                         </div>

@@ -41,8 +41,11 @@
 }
 .widget-wrap {
   background-color: #fff;
-  margin-bottom: 30px;
-  padding: 30px;
+  margin-bottom: 10px;
+  padding-top: 5px;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-bottom: 10px;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;

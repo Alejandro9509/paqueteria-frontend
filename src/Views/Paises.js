@@ -35,6 +35,7 @@ function PaisesEstado() {
 
     agregarPais: "Agregar",
     agregarEstado: "Agregar",
+    height: window.innerHeight
   })
 
   const handleAceptarPais = (e) => {
@@ -53,7 +54,7 @@ function PaisesEstado() {
       const url = `${process.env.REACT_APP_API_URL}/Pais/Modificar/` + state.idPais;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData();
       }).catch(err => {
         console.log(err)
         alert("err")
@@ -62,7 +63,7 @@ function PaisesEstado() {
       const url = `${process.env.REACT_APP_API_URL}/Pais/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData();
       }).catch(err => {
         console.log(err)
         alert(err)
@@ -82,8 +83,8 @@ function PaisesEstado() {
       "Codigo": state.codigoEstado,
       "Estado": state.estado,
       "CreadoPor": 1,
-      "CreadoEl": fecha.getFullYear() +"-" +fecha.getMonth()+1 +"-" +fecha.getDate(),
-      "ModificadoEl": fecha.getFullYear() +"-" +fecha.getMonth()+1 +"-" +fecha.getDate(),
+      "CreadoEl": fecha.getFullYear() + "-" + fecha.getMonth() + 1 + "-" + fecha.getDate(),
+      "ModificadoEl": fecha.getFullYear() + "-" + fecha.getMonth() + 1 + "-" + fecha.getDate(),
       "ModificadoPor": 1,
       "Identificador": 0
     }
@@ -92,7 +93,7 @@ function PaisesEstado() {
       const url = `${process.env.REACT_APP_API_URL}/Estado/Modificar/` + state.idEstado;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData();
       }).catch(err => {
         console.log(err)
         alert("err")
@@ -102,6 +103,7 @@ function PaisesEstado() {
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
         console.log(respuesta.data)
+        getAllData();
       }).catch(err => {
         console.log(err)
         alert(err)
@@ -114,7 +116,7 @@ function PaisesEstado() {
     const url = `${process.env.REACT_APP_API_URL}/Pais/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
-      window.location.reload();
+      getAllData();
     }).catch(err => {
       alert(err)
     });
@@ -124,7 +126,7 @@ function PaisesEstado() {
     const url = `${process.env.REACT_APP_API_URL}/Estado/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
-      window.location.reload();
+      getAllEstado(state.idPais)
     }).catch(err => {
       alert(err)
     });
@@ -339,8 +341,8 @@ function PaisesEstado() {
                 prepareRow(row);
                 return (
                   <tr {...row.getRowProps()}
-                   onClick={handleSelectPais.bind(this, row.original.m_nIdPais)}
-                   className={state.idPais === row.original.m_nIdPais ? classes.seleccionado : classes.noSeleccionado}>
+                    onClick={handleSelectPais.bind(this, row.original.m_nIdPais)}
+                    className={state.idPais === row.original.m_nIdPais ? classes.seleccionado : classes.noSeleccionado}>
                     <td>
                       <div>
                         <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarPais(row.original.m_nIdPais))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
@@ -450,18 +452,35 @@ function PaisesEstado() {
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar">
+      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
 
       {/*Page Container Start Here*/}
       <section className="main-container">
-        <div className="container-fluid">
 
-          <div className="page-header full-block light">
-            <h2>Paises Estados</h2>
+        <div className="container-fluid">
+          <div className="page-header filled full-block light">
+            <div className="row">
+              <div className="col-md-6 col-sm-6">
+                <h2>Países / Estados</h2>
+              </div>
+              <div className="col-md-6 col-sm-6">
+                <ul className="list-page-breadcrumb">
+                  <li>
+                    <a href="/Configuracion">
+                      Configuración <i className="zmdi zmdi-chevron-right" />
+                    </a>
+                  </li>
+                  <li className="active-page">Países / Estados</li>
+                </ul>
+              </div>
+            </div>
           </div>
+        </div>
+
+        <div className="container-fluid">
 
           <div className="row">
             <div className="col-md-6" >
@@ -560,7 +579,9 @@ function PaisesEstado() {
                             </div>
                             <br></br>
                             <div className="form-footer" className="col-md-12">
-                              <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-primary secondary-btn">Cancelar</button>
+                              <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
+                                    >
+                                      Cancelar</button>
                               <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                             </div>
                           </form>
@@ -660,7 +681,9 @@ function PaisesEstado() {
                             </div>
                             <br></br>
                             <div className="form-footer" className="col-md-12">
-                              <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-primary secondary-btn">Cancelar</button>
+                              <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
+                                    >
+                                      Cancelar</button>
                               <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                             </div>
                           </form>

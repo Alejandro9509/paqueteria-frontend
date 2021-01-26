@@ -16,7 +16,8 @@ const [state, setState] = React.useState({
     DiasHabiles: 0,
     Costo: 0,
     Activo: 0,
-    agregar: "Agregar"
+    agregar: "Agregar",
+    height: window.innerHeight
 })
 const [fileUploaded, setFileUploaded] = React.useState([])
 
@@ -36,7 +37,7 @@ const handleAceptar = (e) => {
     const url = `${process.env.REACT_APP_API_URL}/TipoServicio/Modificar/` + state.IdTipoServicio;
     axios.put(url, Object.assign({}, params), {headers}).then(respuesta => {
     alert(respuesta.data)
-    window.location.reload();
+    getAllData();
   }).catch(err => {
     console.log(err)
     alert("err")
@@ -45,7 +46,7 @@ const handleAceptar = (e) => {
   const url = `${process.env.REACT_APP_API_URL}/TipoServicio/Agregar`;
   axios.post(url, Object.assign({}, params), {headers}).then(respuesta => {
     alert(respuesta.data)
-    window.location.reload();
+    getAllData();
   }).catch(err => {
     console.log(err)
     alert(err)
@@ -58,6 +59,7 @@ function handleEliminar(id){
   const url = `${process.env.REACT_APP_API_URL}/TipoServicio/Eliminar/` + id;
   axios.delete(url, {headers}).then(respuesta => {
     console.log(respuesta)
+    getAllData();
   }).catch(err => {
     alert(err)
   });
@@ -332,18 +334,35 @@ function Table({ columns, data}) {
   </header>
 
   {/*Leftbar Start Here*/}
-  <aside className="iconic-leftbar">
+  <aside className="iconic-leftbar" style={{minHeight: state.height}}>
     <BarraLateralIzquierda />
   </aside>
   {/*Leftbar End Here*/}
 
   {/*Page Container Start Here*/}
   <section className="main-container">
-    <div className="container-fluid">
+    
+  <div className="container-fluid">
+          <div className="page-header filled full-block light">
+            <div className="row">
+              <div className="col-md-6 col-sm-6">
+                <h2>Tipo de Servicio</h2>
+              </div>
+              <div className="col-md-6 col-sm-6">
+                <ul className="list-page-breadcrumb">
+                  <li>
+                    <a href="/Configuracion">
+                      Catálogos <i className="zmdi zmdi-chevron-right" />
+                    </a>
+                  </li>
+                  <li className="active-page">Tipo de Servicio</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
 
-    <div className="page-header full-block light">
-        <h2>Tipos de Servicio</h2>
-      </div>
+    <div className="container-fluid">
 
       <ul className="nav nav-tabs">
           <li className="active">
@@ -384,12 +403,6 @@ function Table({ columns, data}) {
                             Descripción
                           </label>
                           <div className="input">
-                            <label
-                              className="icon-left"
-                              htmlFor="Descripcion"
-                            >
-                              <i className="fa fa-edit" />
-                            </label>
                             <input
                               onChange={handleChange}
                               className="form-control"
@@ -407,12 +420,6 @@ function Table({ columns, data}) {
                             Dias Habiles
                           </label>
                           <div className="input">
-                            <label
-                              className="icon-left"
-                              htmlFor="DiasHabiles"
-                            >
-                              <i className="fa fa-edit" />
-                            </label>
                             <input
                               onChange={handleChange}
                               className="form-control"
@@ -430,12 +437,6 @@ function Table({ columns, data}) {
                             Activo
                           </label>
                           <div className="input">
-                            <label
-                              className="icon-left"
-                              htmlFor="Activo"
-                            >
-                              <i className="fa fa-edit" />
-                            </label>
                             <input
                               onChange={handleChange}
                               className="form-control"
@@ -452,12 +453,6 @@ function Table({ columns, data}) {
                             Costo
                           </label>
                           <div className="input">
-                            <label
-                              className="icon-left"
-                              htmlFor="Costo"
-                            >
-                              <i className="fa fa-edit" />
-                            </label>
                             <input
                               onChange={handleChange}
                               className="form-control"
@@ -475,7 +470,9 @@ function Table({ columns, data}) {
                       </div>
                       <br></br>
                       <div className="form-footer" className="col-md-12">
-                        <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
+                        <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
+                                    >
+                                      Cancelar</button>
                         <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
                       </div>
                     </form>
@@ -501,7 +498,9 @@ function Table({ columns, data}) {
                       <br></br>
                       <div className="form-footer" className="col-md-12">
                         <button className="btn btn-default btn-block ex-noty" data-layout="topCenter" data-type="information">Notificación</button>
-                        <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
+                        <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
+                                    >
+                                      Cancelar</button>
                         <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
                       </div>
                     </form>

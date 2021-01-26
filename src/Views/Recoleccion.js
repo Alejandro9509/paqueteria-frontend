@@ -121,6 +121,7 @@ function Recoleccion() {
     ],
     fechaHoraSalida: "",
     fechaHoraLlegada: "",
+    height: window.innerHeight
 
   })
   const [fileUploaded, setFileUploaded] = React.useState([])
@@ -133,7 +134,7 @@ function Recoleccion() {
 
     var params = {
 
-      "m_nIdRecoleccion" : state.idRecoleccion,
+      "m_nIdRecoleccion": state.idRecoleccion,
       "m_nIdSucursal": state.idSucursalAgregar,
       "m_nIdEmbarque": state.folioEmbarque,
       "m_nIdGuia": state.folioGuía,
@@ -192,7 +193,7 @@ function Recoleccion() {
       const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Modificar/${state.idRecoleccion}`;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData();
       }).catch(err => {
         console.log(err)
         alert("err")
@@ -202,7 +203,7 @@ function Recoleccion() {
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         console.log(respuesta.data)
         alert(respuesta.data)
-        window.location.reload();
+        getAllData();
       }).catch(err => {
         console.log(err)
         alert(err)
@@ -257,7 +258,7 @@ function Recoleccion() {
       .delete(url, { headers })
       .then((respuesta) => {
         alert(respuesta.data);
-        window.location.reload();
+        getAllData();
       })
       .catch((err) => {
         alert(err);
@@ -279,7 +280,7 @@ function Recoleccion() {
         folioEmbarque: respuesta.data.m_nIdEmbarque,
         folioGuía: respuesta.data.m_nIdGuia,
         folioInforme: respuesta.data.m_nIdInforme,
-        fechaHoraCreacion: respuesta.data.m_dFecha + "T" + respuesta.data.m_tHora.slice(0,5),
+        fechaHoraCreacion: respuesta.data.m_dFecha + "T" + respuesta.data.m_tHora.slice(0, 5),
         estatusRecoleccion: respuesta.data.m_nIdEstatusRecoleccion,
         moneda: respuesta.data.m_nMoneda,
         tipoCambio: respuesta.data.m_rTipoCambio,
@@ -316,9 +317,9 @@ function Recoleccion() {
         domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
         entregaEn: respuesta.data.m_sEntregarEnDetalleEntrega,
         datosAdicionalesEntrega: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
-        fechaHoraSalida: respuesta.data.m_dFechaElaboracionSalidaRecoleccion +"T" + respuesta.data.m_tHoraElaboracionSalidaRecoleccion.slice(0,5),
-        fechaHoraLlegada: respuesta.data.m_dFechaElaboracionLlegadaRecoleccion +"T" + respuesta.data.m_tHoraElaboracionLlegadaRecoleccion.slice(0,5),
-        fechaRecoleccion: respuesta.data.m_dFechaDetalleRecoleccion +"T" + respuesta.data.m_tHoraDetalleRecoleccion.slice(0,5),
+        fechaHoraSalida: respuesta.data.m_dFechaElaboracionSalidaRecoleccion + "T" + respuesta.data.m_tHoraElaboracionSalidaRecoleccion.slice(0, 5),
+        fechaHoraLlegada: respuesta.data.m_dFechaElaboracionLlegadaRecoleccion + "T" + respuesta.data.m_tHoraElaboracionLlegadaRecoleccion.slice(0, 5),
+        fechaRecoleccion: respuesta.data.m_dFechaDetalleRecoleccion + "T" + respuesta.data.m_tHoraDetalleRecoleccion.slice(0, 5),
         paquetes: respuesta.data.m_parrPaquetes,
         sobres: respuesta.data.m_parrSobres,
         cantidadDePaquetes: respuesta.data.m_parrPaquetes.length,
@@ -916,7 +917,6 @@ function Recoleccion() {
     );
   });
 
-
   return (
     <div>
 
@@ -925,18 +925,30 @@ function Recoleccion() {
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar">
+      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
 
       {/*Page Container Start Here*/}
       <section className="main-container">
-        <div className="container-fluid">
 
-          <div className="page-header full-block light">
-            <h2>Recolección</h2>
+        <div className="container-fluid">
+          <div className="page-header filled full-block light">
+            <div className="row">
+              <div className="col-md-6 col-sm-6">
+                <h2>Recolección</h2>
+              </div>
+              <div className="col-md-6 col-sm-6">
+                <ul className="list-page-breadcrumb">
+                  <li className="active-page">Recolección</li>
+                </ul>
+              </div>
+            </div>
           </div>
+        </div>
+
+        <div className="container-fluid">
 
           <ul className="nav nav-tabs">
             <li className="active">
@@ -1065,6 +1077,9 @@ function Recoleccion() {
                 <div className="form-content">
 
                   <div className="widget-wrap">
+
+
+
                     <div className="wizard-breadcrumb number-style" style={{ position: "sticky", top: "50px", padding: "5px", backgroundColor: "white", zIndex: 100 }}>
                       <div className="row">
                         <div className={"col-md-2 col-sm-2 step" + (stepActive == 1 && "active-step")}
@@ -1091,7 +1106,7 @@ function Recoleccion() {
                             <p>Detalles de la Recolección</p>
                           </div>
                         </div>
-                        <div className={"col-md-2-5 col-sm-2 step" + (stepActive == 4 && "active-step")}
+                        <div className={"col-md-2 col-sm-2 step" + (stepActive == 4 && "active-step")}
                           onClick={() => openSection(4)}
                         >
                           <div className="steps">
@@ -1099,7 +1114,7 @@ function Recoleccion() {
                             <p>Información Adicional del Pago</p>
                           </div>
                         </div>
-                        <div className={"col-md-1-5 col-sm-2 step" + (stepActive == 5 && "active-step")}
+                        <div className={"col-md-2 col-sm-2 step" + (stepActive == 5 && "active-step")}
                           onClick={() => openSection(5)}
                         >
                           <div className="steps">
@@ -1107,7 +1122,7 @@ function Recoleccion() {
                             <p>General</p>
                           </div>
                         </div>
-                        <div className={"col-md-1 col-sm-2 step" + (stepActive == 6 && "active-step")}
+                        <div className={"col-md-2 col-sm-2 step" + (stepActive == 6 && "active-step")}
                           onClick={() => openSection(6)}
                         >
                           <div className="steps">
@@ -1339,7 +1354,8 @@ function Recoleccion() {
                   </div>
 
 
-                  <div className="col-md-7">
+<div className="row">
+                    <div className="col-md-7">
 
                     <div className="widget-wrap">
                       <div className="row">
@@ -2219,7 +2235,7 @@ function Recoleccion() {
 
                   <div className="col-md-12" style={{ width: '3%' }}></div>
 
-                  <div className="widget-wrap col-md-5">
+                  <div className="widget-wrap col-ms-12 col-md-5">
                     <div className="widget-header">
                       <h2>Número de Paquetes</h2>
                     </div>
@@ -2278,8 +2294,10 @@ function Recoleccion() {
                     </div>
                   </div>
 
+</div>
+
                   <div className="form-footer" className="col-md-12">
-                  <button href="#Listado" role="tab" data-toggle="tab"  className="btn btn-primary secondary-btn">Cancelar</button>
+                    <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-primary secondary-btn">Cancelar</button>
                     <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                   </div>
                 </div>
@@ -2296,12 +2314,6 @@ function Recoleccion() {
                                   Importar
                           </label>
                                 <div className="input">
-                                  <label
-                                    className="icon-left"
-                                    htmlFor="importar"
-                                  >
-                                    <i className="fa fa-edit" />
-                                  </label>
                                   <input
                                     onChange={handleUpload}
                                     className="form-control"
@@ -2313,7 +2325,6 @@ function Recoleccion() {
                             </div>
                             <br></br>
                             <div className="form-footer" className="col-md-12">
-                              <button className="btn btn-default btn-block ex-noty" data-layout="topCenter" data-type="information">Notificación</button>
                               <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
                               <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
                             </div>

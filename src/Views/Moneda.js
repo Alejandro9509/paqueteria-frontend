@@ -15,6 +15,7 @@ function Moneda() {
     simbolo: "",
     abreviacion: "",
     agregar: "Agregar",
+    height: window.innerHeight
   })
 
   const handleAceptar = (e) => {
@@ -108,10 +109,10 @@ function Moneda() {
     }, {
       Name: "Moneda",
       accessor: "m_sMoneda",
-    },{
+    }, {
       Name: "Símbolo",
       accessor: "m_sSimbolo",
-    },{
+    }, {
       Name: "Abreviación",
       accessor: "m_sAbreviacion",
     }, {
@@ -243,6 +244,19 @@ function Moneda() {
     )
   }
 
+  const ruta = [
+    {
+      actual: false,
+      nombre: "Configuración",
+      ruta: "/Configuracion"
+    },
+    {
+      actual: true,
+      nombre: "Moneda",
+      ruta: "/Moneda"
+    },
+  ];
+
   return (
     <div>
 
@@ -251,18 +265,35 @@ function Moneda() {
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar">
+      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
 
       {/*Page Container Start Here*/}
       <section className="main-container">
-        <div className="container-fluid">
 
-          <div className="page-header full-block light">
-            <h2>Moneda</h2>
+        <div className="container-fluid">
+          <div className="page-header filled full-block light">
+            <div className="row">
+              <div className="col-md-6 col-sm-6">
+                <h2>Moneda</h2>
+              </div>
+              <div className="col-md-6 col-sm-6">
+                <ul className="list-page-breadcrumb">
+                  <li>
+                    <a href="/Configuracion">
+                      Configuración <i className="zmdi zmdi-chevron-right" />
+                    </a>
+                  </li>
+                  <li className="active-page">Moneda</li>
+                </ul>
+              </div>
+            </div>
           </div>
+        </div>
+
+        <div className="container-fluid">
 
           <ul className="nav nav-tabs">
             <li className="active">
@@ -366,7 +397,9 @@ function Moneda() {
                         </div>
                         <br></br>
                         <div className="form-footer" className="col-md-12">
-                          <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-primary secondary-btn">Cancelar</button>
+                          <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
+                                    >
+                                      Cancelar</button>
                           <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                         </div>
                       </form>

@@ -119,11 +119,11 @@ function App(props) {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                          <i className="fa fa-caret-down" />
-                        )
+                            <i className="fa fa-caret-down" />
+                          )
                       ) : (
-                        ""
-                      )}
+                          ""
+                        )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -280,6 +280,7 @@ function App(props) {
         file: "",
       },
     ],
+    height: window.innerHeight
   });
 
   function handleShowAgregar() {
@@ -564,6 +565,7 @@ function App(props) {
       .get(url, { headers })
       .then((respuesta) => {
         console.log(respuesta);
+        getAllUnidades();
       })
       .catch((err) => {
         alert(err);
@@ -579,23 +581,21 @@ function App(props) {
   };
 
   const handleChangeCodigo = (event) => {
-    console.log(event.target.name + " : " + event.target.value);
     const url =
-      `${process.env.REACT_APP_API_URL}/Unidades/ValidaCodigoUnidad/` +
-      state.codigo
-    axios
-      .get(url, { headers })
-      .then((respuesta) => {
-        console.log(respuesta);
-        alert(respuesta.data.m_sMensaje);
+      `${process.env.REACT_APP_API_URL}/Unidades/ValidaCodigoUnidad/` + state.codigo
+      axios.get(url, { headers }).then((respuesta) => {
+        
+        if(respuesta.data!=""){
 
+        alert(respuesta.data.m_sMensaje);
+        console.log(respuesta.data);
         setState({
           ...state,
-
-          codigo: respuesta.data.m_nNumero,
-          [event.target.name]: event.target.value,
-        });
+          
+           codigo: respuesta.data.m_nNumero,
+        });}
       })
+    
       .catch((err) => {
         alert(err);
       });
@@ -721,8 +721,7 @@ function App(props) {
 
         .then((respuesta) => {
           alert(respuesta.data);
-
-          window.location.reload();
+          getAllUnidades();
         })
         .catch((err) => {
           console.log(err);
@@ -734,6 +733,7 @@ function App(props) {
         .post(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
           alert(respuesta.data);
+          getAllUnidades();
           //window.location.reload();
         })
         .catch((err) => {
@@ -963,12 +963,33 @@ function App(props) {
       </header>
       {/*Topbar End Here*/}
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar">
+      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
       {/*Page Container Start Here*/}
       <section className="main-container">
+
+        <div className="container-fluid">
+          <div className="page-header filled full-block light">
+            <div className="row">
+              <div className="col-md-6 col-sm-6">
+                <h2>Unidades</h2>
+              </div>
+              <div className="col-md-6 col-sm-6">
+                <ul className="list-page-breadcrumb">
+                  <li>
+                    <a href="/Configuracion">
+                      Catálogos <i className="zmdi zmdi-chevron-right" />
+                    </a>
+                  </li>
+                  <li className="active-page">Unidades</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="container-fluid">
           <div className="page-header filled full-block light">
             <div className="row">
@@ -1033,7 +1054,7 @@ function App(props) {
                   <div className="widget-wrap">
                     <div className="widget-container margin-top-0">
                       <div className="widget-content">
-                        <form className="j-forms j-multistep"  onSubmit={handleAceptar}>
+                        <form className="j-forms j-multistep" onSubmit={handleAceptar}>
                           {/*Inicio de ejemplo*/}
 
                           {/* start steps */}
@@ -1291,7 +1312,7 @@ function App(props) {
                                                   value={state.modelo}
                                                   id="modelo"
                                                   name="modelo"
-                                                  
+
                                                   native
                                                 />
                                               </div>{" "}
@@ -1405,7 +1426,7 @@ function App(props) {
                                                   value={state.serieUnidad}
                                                   id="serieUnidad"
                                                   name="serieUnidad"
-                                                  
+
                                                   native
                                                 />
                                               </div>
@@ -1423,7 +1444,7 @@ function App(props) {
                                                   id="hex"
                                                   name="colorUnidad"
                                                   native
-                                                  
+
                                                 />
                                               </div>{" "}
                                             </div>
@@ -1443,7 +1464,7 @@ function App(props) {
                                                   id="idSatelital"
                                                   name="idSatelital"
                                                   native
-                                                  
+
                                                 />
                                               </div>
                                             </div>
@@ -3214,7 +3235,7 @@ function App(props) {
                                                   value={state.horometro}
                                                   name="horometro"
                                                   className="form-control"
-                                                  type="text"
+                                                  type="number"
                                                   placeholder="00:00"
                                                   id="text"
                                                 />
@@ -3250,7 +3271,7 @@ function App(props) {
                                                   }
                                                   name="horasTrabajadasMotorNoGPS"
                                                   className="form-control"
-                                                  type="text"
+                                                  type="number"
                                                   placeholder=""
                                                   id="text"
                                                 />
@@ -3270,7 +3291,7 @@ function App(props) {
                                                   }
                                                   name="porcentajeRepIngresos"
                                                   className="form-control"
-                                                  type="text"
+                                                  type="number"
                                                   placeholder=""
                                                   id="text"
                                                 />
@@ -3288,7 +3309,7 @@ function App(props) {
                                                   }
                                                   name="horasTrabajasMotor"
                                                   className="form-control"
-                                                  type="text"
+                                                  type="number"
                                                   placeholder=""
                                                   id="text"
                                                 />
@@ -3306,7 +3327,7 @@ function App(props) {
                                                   value={state.odometro}
                                                   name="odometro"
                                                   className="form-control"
-                                                  type="text"
+                                                  type="number"
                                                   placeholder=""
                                                   id="text"
                                                 />

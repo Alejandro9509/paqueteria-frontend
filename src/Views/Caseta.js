@@ -22,6 +22,7 @@ function Caseta() {
     tarifaEje9: "",
 
     agregar: "Agregar",
+    height: window.innerHeight
   })
 
   const handleAceptar = (e) => {
@@ -46,7 +47,7 @@ function Caseta() {
       const url = `${process.env.REACT_APP_API_URL}/Casetas/Modificar/` + state.idCaseta;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData()
       }).catch(err => {
         console.log(err)
         alert("err")
@@ -55,7 +56,7 @@ function Caseta() {
       const url = `${process.env.REACT_APP_API_URL}/Casetas/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData()
       }).catch(err => {
         console.log(err)
         alert(err)
@@ -68,7 +69,7 @@ function Caseta() {
     const url = `${process.env.REACT_APP_API_URL}/Casetas/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
-      window.location.reload();
+      getAllData()
     }).catch(err => {
       alert(err)
     });
@@ -275,18 +276,35 @@ function Caseta() {
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar">
+      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
 
       {/*Page Container Start Here*/}
       <section className="main-container">
-        <div className="container-fluid">
 
-          <div className="page-header full-block light">
-            <h2>Caseta</h2>
+        <div className="container-fluid">
+          <div className="page-header filled full-block light">
+            <div className="row">
+              <div className="col-md-6 col-sm-6">
+                <h2>Caseta</h2>
+              </div>
+              <div className="col-md-6 col-sm-6">
+                <ul className="list-page-breadcrumb">
+                  <li>
+                    <a href="/Catalogos">
+                      Configuración <i className="zmdi zmdi-chevron-right" />
+                    </a>
+                  </li>
+                  <li className="active-page">Caseta</li>
+                </ul>
+              </div>
+            </div>
           </div>
+        </div>
+
+        <div className="container-fluid">
 
           <ul className="nav nav-tabs">
             <li className="active">
@@ -340,7 +358,7 @@ function Caseta() {
                             <label className="label col-md-1">
                               Tarifas
                             </label>
-                            
+
                             <div className="col-md-1">
                               <div className="input">
                                 <input
@@ -474,7 +492,9 @@ function Caseta() {
                         </div>
                         <br></br>
                         <div className="form-footer" className="col-md-12">
-                          <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-primary secondary-btn">Cancelar</button>
+                          <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
+                                    >
+                                      Cancelar</button>
                           <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                         </div>
                       </form>

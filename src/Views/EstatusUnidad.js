@@ -25,7 +25,8 @@ function EstatusUnidad() {
     tipoEstatusUnidad: 0,
     colorUnidad: "",
     agregar: "Agregar",
-    importar: ""
+    importar: "",
+    height: window.innerHeight
   })
 
   const handleAceptar = (e) => {
@@ -45,7 +46,7 @@ function EstatusUnidad() {
       const url = `${process.env.REACT_APP_API_URL}/EstatusUnidades/Modificar/` + state.idEstatusUnidad;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData();
       }).catch(err => {
         console.log(err)
         alert("err")
@@ -54,7 +55,7 @@ function EstatusUnidad() {
       const url = `${process.env.REACT_APP_API_URL}/EstatusUnidades/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
-        window.location.reload();
+        getAllData()
       }).catch(err => {
         console.log(err)
         alert(err)
@@ -67,7 +68,7 @@ function EstatusUnidad() {
     const url = `${process.env.REACT_APP_API_URL}/EstatusUnidades/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta)
-      window.location.reload();
+      getAllData()
     }).catch(err => {
       alert(err)
     });
@@ -85,7 +86,7 @@ function EstatusUnidad() {
         estatusUnidad: respuesta.data.m_sEstatus,
         abreviacionUnidad: respuesta.data.m_sAbreviacion,
         tipoEstatusUnidad: respuesta.data.m_nTipoEstatus,
-        colorUnidad: "#" +respuesta.data.m_sColor,
+        colorUnidad: "#" + respuesta.data.m_sColor,
       })
     });
   }
@@ -254,18 +255,35 @@ function EstatusUnidad() {
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar">
+      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
 
       {/*Page Container Start Here*/}
       <section className="main-container">
-        <div className="container-fluid">
 
-          <div className="page-header full-block light">
-            <h2>Estatus Unidad</h2>
+        <div className="container-fluid">
+          <div className="page-header filled full-block light">
+            <div className="row">
+              <div className="col-md-6 col-sm-6">
+                <h2>Estatus Unidad</h2>
+              </div>
+              <div className="col-md-6 col-sm-6">
+                <ul className="list-page-breadcrumb">
+                  <li>
+                    <a href="/Catalogos">
+                      Catálogos <i className="zmdi zmdi-chevron-right" />
+                    </a>
+                  </li>
+                  <li className="active-page">Estatus Unidad</li>
+                </ul>
+              </div>
+            </div>
           </div>
+        </div>
+
+        <div className="container-fluid">
 
           <ul className="nav nav-tabs">
             <li className="active">
@@ -389,7 +407,9 @@ function EstatusUnidad() {
                         </div>
                         <br></br>
                         <div className="form-footer" className="col-md-12">
-                          <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-primary secondary-btn">Cancelar</button>
+                          <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
+                                    >
+                                      Cancelar</button>
                           <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                         </div>
                       </form>
@@ -406,7 +426,9 @@ function EstatusUnidad() {
                     <div className="col-md-12">
                       <div className="form-footer" className="col-md-12">
                         <button className="btn btn-default btn-block ex-noty" data-layout="topCenter" data-type="information">Notificación</button>
-                        <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
+                        <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
+                                    >
+                                      Cancelar</button>
                         <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
                       </div>
                     </div>
