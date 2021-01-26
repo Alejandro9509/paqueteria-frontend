@@ -1330,12 +1330,17 @@ function handleImprmir2()
      
       case 4:
         setStepActive(4);
-        $section = $("#conceptosFacturacion")
+        $section = $("#detalleFacturacion")
 
         break;
      
-      case 5:
-        setStepActive(5);
+        case 5:
+          setStepActive(5);
+          $section = $("#conceptosFacturacion")
+  
+          break;
+      case 6:
+        setStepActive(6);
         $section = $("#general")
         break;
       default:
@@ -2134,7 +2139,7 @@ function handleImprmir2()
             <div className="widget-wrap">
                     <div className="wizard-breadcrumb number-style" style={{ position: "sticky", top: "50px", padding: "5px", backgroundColor: "white", zIndex: 100 }}>
                       <div className="row">
-                        <div className={"col-md-3 col-sm-2 step" + (stepActive == 1 && "active-step")}
+                        <div className={"col-md-2 col-sm-2 step" + (stepActive == 1 && "active-step")}
                           onClick={() => openSection(1)}
                         >
                           <div className={"steps"}>
@@ -2142,7 +2147,7 @@ function handleImprmir2()
                             <p>Información General</p>
                           </div>
                         </div>
-                        <div className={"col-md-3 col-sm-2 step" + (stepActive == 2 && "active-step")}
+                        <div className={"col-md-2 col-sm-2 step" + (stepActive == 2 && "active-step")}
                           onClick={() => openSection(2)}
                         >
                           <div className="steps">
@@ -2150,7 +2155,7 @@ function handleImprmir2()
                             <p>Remitentes / Destinatario</p>
                           </div>
                         </div>
-                        <div className={"col-md-3 col-sm-2 step" + (stepActive == 3 && "active-step")}
+                        <div className={"col-md-2 col-sm-2 step" + (stepActive == 3 && "active-step")}
                           onClick={() => openSection(3)}
                         >
                           <div className="steps">
@@ -2158,11 +2163,19 @@ function handleImprmir2()
                             <p>Detalles de la Recolección</p>
                           </div>
                         </div>
-                        <div className={"col-md-3 col-sm-2 step" + (stepActive == 4 && "active-step")}
+                        <div className={"col-md-2 col-sm-2 step" + (stepActive == 4 && "active-step")}
                           onClick={() => openSection(4)}
                         >
                           <div className="steps">
                             <span className="step-number">4</span>
+                            <p>Detalle de Facturación</p>
+                          </div>
+                        </div>
+                        <div className={"col-md-2 col-sm-2 step" + (stepActive == 5 && "active-step")}
+                          onClick={() => openSection(5)}
+                        >
+                          <div className="steps">
+                            <span className="step-number">5</span>
                             <p>Conceptos de Facturación</p>
                           </div>
                         </div>
@@ -2278,6 +2291,21 @@ function handleImprmir2()
                                 )}
                               </select>
                             </div>
+                            <div className="col-sm-4 col-md-2-5 unit">
+                              <label className="label">
+                                Tracking
+                          </label>
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  placeholder={state.tracking}
+                                  id="tracking"
+                                  disabled="disabled"
+                                />
+                              </div>
+                            </div>
 
 
                             <div className="col-sm-4 col-md-2-5 unit">
@@ -2356,70 +2384,7 @@ function handleImprmir2()
                               </div>
                             </div>
 
-                            <div className="col-sm-4 col-md-2-5 unit">
-                              <label className="label">
-                                Tipo Cobro
-                          </label>
-                              <select
-                                className="form-control"
-                                required
-                                onChange={handleChange}
-                                id="idTipoCobro"
-                                read="true"
-                                value={state.idTipoCobro}    
-                                disabled="disabled">
-
-                                <option value="0">
-                                  Seleccionar
-                            </option>
-                                {dataTipoCobro.map(
-                                  (tipoCobro) => (
-                                    <option key={tipoCobro.m_nIdTipoCobro} value={tipoCobro.m_nIdTipoCobro}>
-                                      {
-                                        tipoCobro.m_sDescripcion
-                                      }
-                                    </option>
-                                  )
-                                )}
-                              </select>
-                            </div>
-                            <div className="col-sm-4">
-                                <label className="label">
-                                  Tipo Servicio
-                                </label>
-                                <select
-                                  className="form-control"
-                                  required
-                                  onChange={handleChange}
-                                  id="idTipoServicio"
-                                  read="true"
-                                >
-                                  {dataTipoServicio.map(
-                                    (tipoServicio) => (
-                                      <option key={tipoServicio.m_nIdTipoServicio} value={tipoServicio.m_nIdTipoServicio}>
-                                        {
-                                          tipoServicio.m_sDescripcion
-                                        }
-                                      </option>
-                                    )
-                                  )}
-                                </select>
-                              </div>                              
-                              <div className="col-sm-4">
-                              <label className="label">
-                                  Valor Declarado
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    placeholder={state.ValorDeclarado}
-                                    id="ValorDeclarado"
-                                  />
-                                </div>
-                              </div>                                
-                          </div>
+                           </div>
                         </form>
                       </div>
                     </div>
@@ -2728,7 +2693,7 @@ function handleImprmir2()
                               <input
                                 onChange={handleChange}
                                 className="form-control"
-                                type="text"
+                                  type="text"
                                 placeholder={state.sContactoDestinatario}
                                 id="sContactoDestinatario"
                                 disabled="disabled"
@@ -2758,8 +2723,7 @@ function handleImprmir2()
                 </div>
               </div>                  
               </div>
-              </div>
-              
+              </div>              
               </div>
               <div className="widget-wrap" id="paquetesSobres">
                 <div className="widget-header">
@@ -2820,6 +2784,99 @@ function handleImprmir2()
               
      
                 </div>
+                <div className="widget-wrap" id="detalleFacturacion">
+                <div className="widget-header">
+               
+                <div className="col-md-12">
+                  <h2>Detalle de Facturación</h2>
+                </div>
+                  
+                </div>
+                <div className="row">
+                <div className="col-md-12"  >                      
+                <div className="widget-container">
+                  <div className="widget-content">
+                    <div className="row">
+                      <div className="col-md-12">
+                        <form className="j-forms">
+                          <div className="form-content">
+                          <div className="col-sm-4 col-md-4 unit">
+                              <label className="label">
+                                Tipo Cobro
+                          </label>
+                              <select
+                                className="form-control"
+                                required
+                                onChange={handleChange}
+                                id="idTipoCobro"
+                                read="true"
+                                value={state.idTipoCobro}    
+                                disabled="disabled">
+
+                                <option value="0">
+                                  Seleccionar
+                            </option>
+                                {dataTipoCobro.map(
+                                  (tipoCobro) => (
+                                    <option key={tipoCobro.m_nIdTipoCobro} value={tipoCobro.m_nIdTipoCobro}>
+                                      {
+                                        tipoCobro.m_sDescripcion
+                                      }
+                                    </option>
+                                  )
+                                )}
+                              </select>
+                            </div>
+                            <div className="col-sm-4 col-md-4">
+                                <label className="label">
+                                  Tipo Servicio
+                                </label>
+                                <select
+                                  className="form-control"
+                                  required
+                                  onChange={handleChange}
+                                  id="idTipoServicio"
+                                  read="true"
+                                >
+                                  {dataTipoServicio.map(
+                                    (tipoServicio) => (
+                                      <option key={tipoServicio.m_nIdTipoServicio} value={tipoServicio.m_nIdTipoServicio}>
+                                        {
+                                          tipoServicio.m_sDescripcion
+                                        }
+                                      </option>
+                                    )
+                                  )}
+                                </select>
+                              </div>                              
+                            <div className="col-sm-4 col-md-4">
+                              <label className="label">
+                                  Valor Declarado
+                          </label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="text"
+                                    placeholder={state.ValorDeclarado}
+                                    id="ValorDeclarado"
+                                  />
+                                </div>
+                              </div>                                
+
+                         
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>      
+                </div> 
+               </div>
+              
+     
+                </div>
+              
               <div className="widget-wrap" id="conceptosFacturacion">
               <div className="widget-header">
                 <div className="col-md-12">
