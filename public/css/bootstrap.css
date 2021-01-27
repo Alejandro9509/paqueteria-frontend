@@ -43,6 +43,11 @@ template {
   padding-right: 10px;
   padding-left: 10px;
 }
+
+.bordesizquierdo{
+  border-left: 2px solid #000000;
+  
+}
 .marcoNaranja{
   border-left: 4px solid #F9A03E;
   border-right: 4px solid #F9A03E;
