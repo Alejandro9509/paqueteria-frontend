@@ -2,15 +2,9 @@ import DepartamentoPage from './Views/Departamento';
 import RecoleccionPage from './Views/Recoleccion';
 import EmbarquePage from './Views/Embarque';
 import GuiaPage from './Views/Guia';
-import EmbalajesPage from './Views/Embalajes'
-import GrupoUnidadesPage from './Views/GrupoUnidades'
 import InformesPage from './Views/Informes'
-import UnidadesPage from './Views/Unidades';
-import RemitentesDestinatariosPage from './Views/RemitentesDestinatarios';
-import OperadoresPage from './Views/Operadores';
 import CatalogosPage from './Views/Catalogos';
 import ConfiguracionPage from './Views/Configuracion';
-import RutasPage from './Views/Rutas';
 
 
 
