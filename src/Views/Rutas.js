@@ -13,7 +13,8 @@ import $ from "jquery";
 import { useTable, useFilters, useSortBy } from "react-table";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import { DisplayMapClass } from "./mapa";
+import {DisplayMapClass} from "./DisplayMapClass";
+
 
 
 window.jQuery = window.$ = $;
@@ -21,10 +22,10 @@ const headers = {
   "Content-Type": "application/json",
 };
 
-function App(props) {
-
+  function App(props) {
   const [state, setState] = React.useState({
-    height: window.innerHeight
+    height: window.innerHeight,
+    showMap:false
   })
 
   return (
@@ -76,7 +77,7 @@ function App(props) {
             </a>
           </li>
           <li>
-            <a data-toggle="tab" href="#Agregar" >
+            <a data-toggle="tab" href="#Agregar" onClick={() => setState({...state, showMap:true})}>
               Agregar
             </a>
           </li>

@@ -230,6 +230,7 @@ function Informes(props) {
 
 
 
+  
   const [state, setState] = React.useState({
     showPopUp: false,
     IdInforme: 0,
@@ -249,22 +250,33 @@ function Informes(props) {
     FechaCancelacion: "",
     IdIdUsuarioCancelacion: 0,
     agregar: "Agregar",
-    height: window.innerHeight
+    height: window.innerHeight,
+    Guias: [
+      {
+        m_nFolioGuia: "",
+        m_sEstatusGuia: "",
+        m_cValorDeclarado: "",
+        m_sCiudadDestinatario: "",
+        tipoServicio: "",
+        observaciones: "",
+      },
+    ]
   });
 
   const selectGuia = (index) => {
-    const newGuia = [...guias];
+    const newGuia = [...dataGuias];
 
     newGuia[index]["select"] = newGuia[index].select ? false : true;
     console.log(newGuia);
-    setGuias(newGuia);
+    setDataGuias(newGuia);
   };
 
-  function getAllGuiasFrom(origen,destino) {
-    const url = `${process.env.REACT_APP_API_URL}/Guia/GetListadoPendientes/` + origen + "/" + destino;
+  function getAllGuiasFrom() {
+    console.log(state.IdCiudadOrigen);
+    console.log(state.IdCiudadDestino);
+    const url = `${process.env.REACT_APP_API_URL}/Guia/GetListadoPendientes/` + state.IdCiudadOrigen.m_nIdCiudad + "/" + state.IdCiudadDestino.m_nIdCiudad;
     axios.get(url, { headers }).then((respuesta) => {
-      console.log(respuesta);
-
+      console.log(respuesta.data);
       setDataGuias(respuesta.data);
     });
   }
@@ -363,7 +375,7 @@ function Informes(props) {
       ...state,
       idDestino: event.target.value
     });
-    getAllGuiasFrom(state.IdCiudadOrigen, state.IdCiudadDestino)
+    getAllGuiasFrom()
   };
 
   const columns2 = React.useMemo(() => [
@@ -1341,7 +1353,7 @@ function Informes(props) {
                         <div className="col-md-12">
                           <form action="#" className="j-forms" noValidate>
                             <div className="form-content">
-                              {guias.map((value, index) => {
+                              {dataGuias.map((value, index) => {
                                 return (
                                   <div>
                                     <br />
@@ -1387,7 +1399,7 @@ function Informes(props) {
                                                   Folio Guía
                                                 </label>
                                                 <input
-                                                  value={value.folio}
+                                                  value={value.m_nFolioGuia}
                                                   className="form-control"
                                                   type="text"
                                                   disabled="true"
@@ -1406,7 +1418,7 @@ function Informes(props) {
                                                   className="form-control"
                                                   type="text"
                                                   disabled="true"
-                                                  value={value.estatus}
+                                                  value={value.m_sEstatusGuia}
                                                   id={"estatus-" + index}
                                                 />
                                               </div>
@@ -1502,7 +1514,7 @@ function Informes(props) {
                                   }}
                                 >
                                   Total de guías :{" "}
-                                  {guias.filter((g) => g.select).length}
+                                  {dataGuias.filter((g) => g.select).length}
                                 </Grid>
                                 <Grid
                                   item

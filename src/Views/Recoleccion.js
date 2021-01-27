@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
@@ -10,6 +10,10 @@ import IndicatorDots from "../Util/Dots";
 import Buttons from "../Util/CarruselButtons";
 import { makeStyles } from "@material-ui/core/styles";
 import * as XLSX from "xlsx";
+import { render } from 'react-dom';
+import useModal from 'react-hooks-use-modal';
+import IconButton from '@material-ui/core/IconButton';
+import PageviewIcon from '@material-ui/icons/Pageview';
 import {
   useTable,
   useFilters,
@@ -126,7 +130,9 @@ function Recoleccion() {
   })
   const [fileUploaded, setFileUploaded] = React.useState([])
   const [stepActive, setStepActive] = React.useState(1);
-
+  const [Modal, open, close, isOpen] = useModal('root', {
+    preventScroll: true
+  });
 
   const handleAceptar = (e) => {
     e.preventDefault()
@@ -209,6 +215,15 @@ function Recoleccion() {
         alert(err)
       });
     }
+  }
+
+  function handleSelectCP(id, cp) {
+    setState({
+      ...state,
+      codigoPostalRemitente: id
+    });
+    console.log(id)
+
   }
 
   function addPaquete() {
@@ -333,53 +348,53 @@ function Recoleccion() {
       ...state,
       agregar: "Agregar",
       showPopUp: true,
-      idSucursalAgregar: dataSucursal[0].m_nIdSucursal,
+      idSucursalAgregar: 0,
       folioRecoleccion: "",
       folioEmbarque: "",
       folioGuía: "",
       folioInforme: "",
       fechaHoraCreacion: "",
-      estatusRecoleccion: dataEstatusRecoleccion[0].m_nIdEstatusEmbarque,
+      estatusRecoleccion: 0,
       moneda: dataTipoMoneda[0].m_nIdMoneda,
       tipoCambio: "",
-      tipoCobro: dataTipoCobro[0].m_nIdTipoCobro,
+      tipoCobro: 0,
       nombreRemitente: "",
       RFCRemitente: "",
       domicilioRemitente: "",
-      codigoPostalRemitente: dataCodigoPostal[0].m_nIdCP,
-      ciudadRemitente: dataCiudad[0].m_nIdCiudad,
+      codigoPostalRemitente: 0,
+      ciudadRemitente: 0,
       correoRemitente: "",
       telefonoRemitente: "",
       contactoRemitente: "",
-      origenRemitente: dataCiudad[0].m_nIdCiudad,
+      origenRemitente: 0,
       nombreDestinatario: "",
       RFCDestinatario: "",
       domicilioDestinatario: "",
-      codigoPostalDestinatario: dataCodigoPostal[0].m_nIdCP,
-      ciudadDestinatario: dataCiudad[0].m_nIdCiudad,
+      codigoPostalDestinatario: 0,
+      ciudadDestinatario: 0,
       correoDestinatario: "",
       telefonoDestinatario: "",
       contactoDestinatario: "",
-      destinoDestinatario: dataCiudad[0].m_nIdCiudad,
-      ciudadRemitente: dataCiudad[0].m_nIdCiudad,
-      ciudadDestinatario: dataCiudad[0].m_nIdCiudad,
+      destinoDestinatario: 0,
+      ciudadRemitente: 0,
+      ciudadDestinatario: 0,
       fechaRecoleccion: "",
-      codigoPostalRecoleccion: dataCodigoPostal[0].m_nIdCP,
-      ciudadRecoleccion: dataCiudad[0].m_nIdCiudad,
+      codigoPostalRecoleccion: 0,
+      ciudadRecoleccion: 0,
       zonaRecoleccion: "",
       domicilioRecoleccion: "",
       recogerEn: "",
       datosAdicionalesRecoleccion: "",
-      codigoPostalEntrega: dataCodigoPostal[0].m_nIdCP,
-      ciudadEntrega: dataCiudad[0].m_nIdCiudad,
+      codigoPostalEntrega: 0,
+      ciudadEntrega: 0,
       zonaEntrega: "",
       domicilioEntrega: "",
       entregaEn: "",
       datosAdicionalesEntrega: "",
       cantidadDePaquetes: 0,
       cantidadDeSobres: 0,
-      operador: dataOperador[0].m_nIdOperador,
-      unidad: dataUnidad[0].m_nIdUnidad
+      operador: 0,
+      unidad: 0
     })
   }
 
@@ -452,6 +467,19 @@ function Recoleccion() {
 
   ]);
 
+  const columnsCP = React.useMemo(() => [
+    {
+      Name: "Codigo",
+      accessor: "m_sCP",
+    }, {
+      Name: "Estado",
+      accessor: "m_sEstado",
+    }, {
+      Name: "Ciudad",
+      accessor: "m_sCiudad",
+    }
+  ]);
+
   useEffect((value) => {
     getAllData();
     getAllSucursales();
@@ -508,7 +536,7 @@ function Recoleccion() {
   }
 
   function getAllCodigosPostales() {
-    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/CodigoPostal/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setDataCodigoPostal(respuesta.data);
     });
@@ -649,6 +677,89 @@ function Recoleccion() {
                 prepareRow(row);
                 return (
                   <tr {...row.getRowProps()}>
+                    <td>
+                      <div>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-close" /></a>
+                      </div>
+                    </td>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
+          </tbody>
+        </table>
+      </div>
+    )
+  }
+
+  function TableCodigoPostal({ columns, data }) {
+
+    const defaultColumn = React.useMemo(
+      () => ({
+        // Default Filter UI
+        Filter: DefaultColumnFilter,
+      }),
+      []
+    )
+
+    const {
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      rows,
+      prepareRow,
+      state,
+      preGlobalFilteredRows,
+      setGlobalFilter,
+    } = useTable(
+      {
+        columns,
+        data,
+        defaultColumn
+      },
+      useFilters,
+      useGlobalFilter,
+      useSortBy
+    )
+
+    return (
+      <div className="col-md-12">
+        <table className="table" {...getTableProps()}>
+          <thead>
+            {headerGroups.map(headerGroup => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                <th></th>
+                {headerGroup.headers.map(column => (
+                  // Add the sorting props to control sorting. For this example
+                  // we can add them into the header props
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render('Name')}
+                    {/* Add a sort direction indicator */}
+                    <span>
+                      {column.isSorted
+                        ? column.isSortedDesc
+                          ? <i className="fa fa-caret-up" />
+                          : <i className="fa fa-caret-down" />
+                        : ''}
+                    </span>
+                    <div>{column.canFilter ? column.render('Filter') : null}</div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original.m_nIdCP)}>
                     <td>
                       <div>
                         <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
@@ -1418,7 +1529,8 @@ function Recoleccion() {
                                   </div>
                                 </div>
 
-                                <div className="col-sm-4 col-md-6 unit">
+                              
+                                        <div className="col-sm-4 col-md-6 unit">
                                   <label className="label">
                                     Código Postal
                                   </label>
