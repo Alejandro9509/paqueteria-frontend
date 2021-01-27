@@ -69,10 +69,10 @@ const catalogRoutes = [
     component: RecoleccionPage,
   },
   {
-    path: "/Embarque",
+    path: "/Departamento",
     name: "Departamento",
     icon: DepartamentoIcon,
-    component: EmbarquePage,
+    component: DepartamentoPage,
   },
   {
     path: "/Operador",
