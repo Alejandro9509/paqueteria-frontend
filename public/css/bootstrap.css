@@ -1107,7 +1107,7 @@ a {
 }
 a:hover,
 a:focus {
-  color: #23527c;
+  color: #F9A03E;
   text-decoration: underline;
 }
 a:focus {
@@ -1810,6 +1810,11 @@ pre code {
   .col-sm-1 {
     width: 8.33333333%;
   }
+
+  .col-division-botones {
+    width: 20%;
+  }
+
   .col-sm-pull-12 {
     right: 100%;
   }
@@ -1980,6 +1985,11 @@ pre code {
   .col-md-1 {
     width: 8.33333333%;
   }
+
+  .col-division-botones {
+    width: 12%;
+  }
+
   .col-md-pull-12 {
     right: 100%;
   }

@@ -69,7 +69,7 @@ function BarraLateralDerecha() {
                     style={{
                       height: "100%",
                       textAlign: "center",
-                      width: "50%",
+                      width: "70%",
                     }}
                     viewBox="0 0 40 40"
                   />
@@ -86,7 +86,7 @@ function BarraLateralDerecha() {
                     style={{
                       height: "100%",
                       textAlign: "center",
-                      width: "50%",
+                      width: "70%",
                     }}
                     viewBox="0 0 40 40"
                   />

@@ -1,18 +1,3 @@
-.buttonStyle {
-    background-color: #F9A03E;
-    padding-bottom: 3px;
-    padding-top: 3px;
-    padding-left: 5px;
-    padding-right: 5px;
-    margin-left: 20px;
-    margin-bottom: 20px;
-    color: white;
-    font-size: 14px;
-    border-radius: 3px;
-    border: 1px solid #F9A03E;
-    font-family: calibri;
-}
-
 h2 {
     font: normal normal normal 21px/21px Calibri;
     color: #707070;
@@ -20,51 +5,56 @@ h2 {
     padding: 5px;
 }
 
-.firstButtonStyle {
-    background-color: #F9A03E;
-    padding-bottom: 3px;
-    padding-top: 3px;
-    padding-left: 5px;
-    padding-right: 5px;
-    margin-bottom: 20px;
-    color: white;
-    font-size: 14px;
-    border-radius: 3px;
-    border: 1px solid #F9A03E;
-    font-family: calibri;
-}
-
 .imagen-de-catalogos {
     height: 100% !important;
     align-content: center !important;
     padding: 10px !important;
     width: 100% !important;
-    fill: #F9A03E !important;
-    stroke: #F9A03E !important;
     stroke-width: 0% !important;
 }
 
-.imagen-de-catalogos:hover .a {
+.imagen-de-catalogos:hover {
     height: 100% !important;
     align-content: center !important;
     padding: 10px !important;
     width: 100% !important;
-    fill: #FFFFFF !important;
-    stroke: #FFFFFF !important;
     stroke-width: 0% !important;
 }
 
-.a-lateral {
+.a {
+    fill: #F9A03E !important;
+    stroke: #F9A03E !important;
+    stroke-width: 0% !important;
+  }
+
+  .a:hover {
+    fill: #FFFFFF !important;
+    stroke: #FFFFFF !important;
+    stroke-width: 0% !important;
+  }
+
+  .b {
+    fill: #FFFFFF !important;
+    stroke: #FFFFFF !important;
+    stroke-width: 0% !important;
+  }
+
+  .b:hover {
+    fill: #F9A03E !important;
+    stroke: #F9A03E !important;
+    stroke-width: 0% !important;
+  }
+
+  .color_icono{
     fill: #707070 !important;
-    stroke: #868686 !important;
     stroke-width: 0% !important;
-}
+  }
 
-.a-lateral:hover {
-    fill: #FFFFFF !important;
-    stroke: #FFFFFF !important;
+  .color_icono:hover{
+    fill: #F9A03E !important;
+    stroke: #F9A03E !important;
     stroke-width: 0% !important;
-}
+  }
 
 .boton-de-catalogos {
     height: 72px;
@@ -83,13 +73,15 @@ h2 {
 .boton-de-catalogos:hover {
     background: #F9A03E 0% 0% no-repeat padding-box;
     box-shadow: 0px 3px 6px #0000004C;
+    fill: #FFFFFF !important;
+    stroke:#FFFFFF !important;
     border-radius: 10px;
     opacity: 1;
     border-width: 0px;
 }
 
-.division-de-botones {
-    width: 10%;
+.caja-boton {
+    padding-top: 10px;
 }
 
 .divider {
