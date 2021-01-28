@@ -934,7 +934,8 @@ function Recoleccion() {
       <section className="main-container">
 
         <div className="container-fluid">
-          <div className="page-header filled full-block light">
+
+        <div className="page-header filled full-block light">
             <div className="row">
               <div className="col-md-6 col-sm-6">
                 <h2>Recolección</h2>
@@ -946,9 +947,7 @@ function Recoleccion() {
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="container-fluid">
 
           <ul className="nav nav-tabs">
             <li className="active">
@@ -2325,7 +2324,7 @@ function Recoleccion() {
                             </div>
                             <br></br>
                             <div className="form-footer" className="col-md-12">
-                              <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
+                              <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"> Cancelar</button>
                               <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
                             </div>
                           </form>

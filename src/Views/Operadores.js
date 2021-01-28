@@ -627,7 +627,7 @@ function App(props) {
   const [stepActive, setStepActive] = React.useState(1);
 
   function openSection(index) {
-    closeSeccions();
+    //closeSeccions();
     var $section;
     switch (index) {
       case 1:
@@ -700,7 +700,7 @@ function App(props) {
   }
 
   useEffect((value) => {
-    closeSeccions();
+    //closeSeccions();
   }, []);
 
   return (
@@ -809,10 +809,10 @@ function App(props) {
                             className="wizard-breadcrumb number-style"
                             style={{
                               position: "sticky",
-                              top: "50px",
+                              top: "150px",
                               padding: "5px",
                               backgroundColor: "white",
-                              zIndex: 7,
+                              zIndex: 100,
                             }}
                           >
                             <div className="row">
@@ -962,7 +962,7 @@ function App(props) {
                                           <div className="form-content">
                                             {/* start text password */}
                                             <div className="row">
-                                              <div className="col-md-4 unit">
+                                              <div className="col-sm-12 col-md-2-5 unit">
                                                 <label className="label">
                                                   Número
                                                 </label>
@@ -978,7 +978,7 @@ function App(props) {
                                                   />
                                                 </div>
                                               </div>
-                                              <div className="col-md-4 unit">
+                                              <div className="col-sm-12 col-md-2-5 unit">
                                                 <div className="inline-group">
                                                   <label className="label">
                                                     Estado del Operador
@@ -1000,76 +1000,8 @@ function App(props) {
                                                 </div>
                                               </div>
                                               <div className="col-md-4 unit">
-                                                <img
-                                                  src="src\Views\operador.png"
-                                                  class="rounded float-right"
-                                                  alt="..."
-                                                />
-                                              </div>
-                                            </div>
-                                            {/* end text password */}
-                                            {/* start email url */}
-                                            <div className="row">
-                                              <div className="col-md-3 unit">
-                                                <label className="label">
-                                                  Apellido Paterno
-                                                </label>
-                                                <div className="input">
-                                                  <input
-                                                    className="form-control"
-                                                    onChange={handleChange}
-                                                    value={
-                                                      state.ApellidoPaterno
-                                                    }
-                                                    name="ApellidoPaterno"
-                                                    type="text"
-                                                    placeholder="Apellido Paterno"
-                                                    id="text"
-                                                    required
-                                                    native
-                                                  />
-                                                </div>
-                                              </div>
-                                              <div className="col-md-3 unit">
-                                                <label className="label">
-                                                  Apellido Materno
-                                                </label>
-                                                <div className="input">
-                                                  <input
-                                                    onChange={handleChange}
-                                                    value={
-                                                      state.ApellidoMaterno
-                                                    }
-                                                    name="ApellidoMaterno"
-                                                    className="form-control"
-                                                    type="text"
-                                                    placeholder="Apellido Materno"
-                                                    id="text"
-                                                    required
-                                                    native
-                                                  />
-                                                </div>{" "}
-                                              </div>
-                                              <div className="col-md-3 unit">
-                                                <label className="label">
-                                                  Nombre
-                                                </label>
-                                                <div className="input">
-                                                  <input
-                                                    onChange={handleChange}
-                                                    value={state.Nombre}
-                                                    name="Nombre"
-                                                    className="form-control"
-                                                    type="text"
-                                                    placeholder=""
-                                                    id="text"
-                                                    required
-                                                    native
-                                                  />
-                                                </div>{" "}
-                                              </div>
-                                              <div className="col-md-3 unit">
-                                                <label className="label">
+
+                                              <label className="label">
                                                   Foto del Operador
                                                 </label>
                                                 <div className="input prepend-small-btn">
@@ -1092,9 +1024,83 @@ function App(props) {
                                                     placeholder="no file selected"
                                                   />
                                                 </div>
+                                               
+
+                                                
+                                              </div>
+                                              <div className="col-ms-3 col-md-3 unit">
+                                              <img
+                                                  src="src\iconos\operador.png"
+                                                  class="rounded float-right"
+                                                  alt="..."
+                                                />
                                               </div>
                                             </div>
-                                            <div className="unit">
+                                            {/* end text password */}
+                                            {/* start email url */}
+                                            <div className="row">
+                                              <div className="col-sm-12 col-md-2-5 unit">
+                                                <label className="label">
+                                                  Apellido Paterno
+                                                </label>
+                                                <div className="input">
+                                                  <input
+                                                    className="form-control"
+                                                    onChange={handleChange}
+                                                    value={
+                                                      state.ApellidoPaterno
+                                                    }
+                                                    name="ApellidoPaterno"
+                                                    type="text"
+                                                    placeholder="Apellido Paterno"
+                                                    id="text"
+                                                    required
+                                                    native
+                                                  />
+                                                </div>
+                                              </div>
+                                              <div className="col-sm-12 col-md-2-5 unit">
+                                                <label className="label">
+                                                  Apellido Materno
+                                                </label>
+                                                <div className="input">
+                                                  <input
+                                                    onChange={handleChange}
+                                                    value={
+                                                      state.ApellidoMaterno
+                                                    }
+                                                    name="ApellidoMaterno"
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder="Apellido Materno"
+                                                    id="text"
+                                                    required
+                                                    native
+                                                  />
+                                                </div>{" "}
+                                              </div>
+                                              <div className="col-sm-12 col-md-2-5 unit">
+                                                <label className="label">
+                                                  Nombre
+                                                </label>
+                                                <div className="input">
+                                                  <input
+                                                    onChange={handleChange}
+                                                    value={state.Nombre}
+                                                    name="Nombre"
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder=""
+                                                    id="text"
+                                                    required
+                                                    native
+                                                  />
+                                                </div>{" "}
+                                              </div>
+                                              <div className="col-sm-12 col-md-2-5 unit">
+
+
+
                                               <label className="label">
                                                 Nombre Completo
                                               </label>
@@ -1111,8 +1117,28 @@ function App(props) {
                                                   native
                                                 />
                                               </div>{" "}
-                                            </div>
+                                              </div>
+                                              <div className="col-sm-12 col-md-2-5 unit">
+                                             
+                                              <label className="label">
+                                                  Fecha de Contratación
+                                                </label>
+                                                <div className="input">
+                                                  <input
+                                                    onChange={handleChange}
+                                                    value={
+                                                      state.FechaContratacion
+                                                    }
+                                                    name="FechaContratacion"
+                                                    className="form-control"
+                                                    type="date"
+                                                    placeholder=""
+                                                  />
+                                                </div>
 
+                                              </div>
+                                            </div>
+                                          
                                             {/* end search */}
                                             {/* start textarea */}
 
@@ -1152,27 +1178,13 @@ function App(props) {
                                                     pattern="^([A-Z&]|[a-z&]{1})([AEIOU]|[aeiou]{1})([A-Z&]|[a-z&]{1})([A-Z&]|[a-z&]{1})([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])([HM]|[hm]{1})([AS|as|BC|bc|BS|bs|CC|cc|CS|cs|CH|ch|CL|cl|CM|cm|DF|df|DG|dg|GT|gt|GR|gr|HG|hg|JC|jc|MC|mc|MN|mn|MS|ms|NT|nt|NL|nl|OC|oc|PL|pl|QT|qt|QR|qr|SP|sp|SL|sl|SR|sr|TC|tc|TS|ts|TL|tl|VZ|vz|YN|yn|ZS|zs|NE|ne]{2})([^A|a|E|e|I|i|O|o|U|u]{1})([^A|a|E|e|I|i|O|o|U|u]{1})([^A|a|E|e|I|i|O|o|U|u]{1})([0-9]{2})$"
                                                     title="Favor de introducir un CURP válido."
                                                     required
-                                                    id="hex"
+                                                    id="CURP"
                                                     native
                                                   />
                                                 </div>{" "}
                                               </div>
                                               <div className="col-md-4 unit">
-                                                <label className="label">
-                                                  Fecha de Contratación
-                                                </label>
-                                                <div className="input">
-                                                  <input
-                                                    onChange={handleChange}
-                                                    value={
-                                                      state.FechaContratacion
-                                                    }
-                                                    name="FechaContratacion"
-                                                    className="form-control"
-                                                    type="date"
-                                                    placeholder=""
-                                                  />
-                                                </div>
+                                               
                                               </div>
                                             </div>
 

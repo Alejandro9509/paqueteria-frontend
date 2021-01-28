@@ -46,6 +46,8 @@ template {
 
 .bordesizquierdo{
   border-left: 2px solid #000000;
+  margin-left: 30px;
+
   
 }
 .marcoNaranja{
@@ -3890,6 +3892,14 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   margin-bottom: 0;
   padding-left: 0;
   list-style: none;
+ 
+}
+.navStatica{
+  position: sticky;
+  top: 110px;
+  z-index: 100;
+  background-color: #E6E6E6;
+	margin-right: 15px;
 }
 .nav > li {
   position: relative;

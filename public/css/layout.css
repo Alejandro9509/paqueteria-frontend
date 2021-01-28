@@ -1643,6 +1643,9 @@
 }
 .iconic-aside-container {
   padding-top: 60px;
+  position: sticky;
+    top: 0px;
+    z-index: 140;
 }
 .iconic-aside-container .user-profile-container {
   width: 60px;

@@ -395,7 +395,7 @@ function Table({ columns, data}) {
                     <form className="j-forms" onSubmit={handleAceptar}>
                       <div className="form-content">
 {/*****************************************Codigo************************************************************/}
-                        <div className="col-sm-12 col-md-6 unit">
+<div className="col-xs-4 col-sm-3 col-md-2-5 col-lg-2-5 unit">
                           <label className="label">
                             Código
                           </label>
@@ -414,7 +414,7 @@ function Table({ columns, data}) {
                           </div>
                         </div>
 {/*****************************************Color************************************************************/}
-                        <div className="col-sm-12 col-md-6 unit">
+<div className="col-xs-4 col-sm-3 col-md-2-5 col-lg-2-5 unit">
                           <label className="label">
                             Color
                           </label>
@@ -430,7 +430,7 @@ function Table({ columns, data}) {
                           </div>
                         </div>
 {/*****************************************GrupoUnidad*******************************************************/}
-                        <div className="col-sm-12 col-md-12 unit">
+<div className="col-xs-4 col-sm-3 col-md-2-5 col-lg-2-5 unit">
                           <label className="label">
                             Grupo de Unidades
                           </label>
@@ -448,13 +448,12 @@ function Table({ columns, data}) {
 
 
                       </div>
+                      
                       <br></br>
-                      <div className="form-footer" className="col-md-12">
-                        <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
-                                    >
-                                      Cancelar</button>
-                        <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
-                      </div>
+                      <div className="form-footer" className="col-12 col-sm-9 col-md-7 unit">
+                          <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"> Cancelar</button>
+                          <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
+                        </div>
                     </form>
                   </div>
                 </div>
@@ -476,7 +475,7 @@ function Table({ columns, data}) {
                           </div>
                         </div>
                       <br></br>
-                      <div className="form-footer" className="col-md-12">
+                      <div className="col-xs-6 col-sm-3 col-md-2-5 col-lg-2-5 unit">
                         <button className="btn btn-default btn-block ex-noty" data-layout="topCenter" data-type="information">Notificación</button>
                         <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
                                     >

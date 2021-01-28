@@ -283,6 +283,8 @@ function Puesto() {
       <section className="main-container">
 
         <div className="container-fluid">
+
+
           <div className="page-header filled full-block light">
             <div className="row">
               <div className="col-md-6 col-sm-6">
@@ -300,9 +302,7 @@ function Puesto() {
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="container-fluid">
 
           <ul className="nav nav-tabs">
             <li className="active">
@@ -335,8 +335,8 @@ function Puesto() {
                     <div className="col-md-12">
                       <form className="j-forms" onSubmit={handleAceptar}>
                         <div className="form-content">
-
-                          <div className="col-sm-12 col-md-6 unit">
+<div className="row">
+                          <div className="col-xs-6 col-sm-3 col-md-2-5 col-lg-2-5 unit">
                             <label className="label">
                               Código
                           </label>
@@ -356,7 +356,7 @@ function Puesto() {
                             </div>
                           </div>
 
-                          <div className="col-sm-12 col-md-6 unit">
+                          <div className="col-xs-6 col-sm-3 col-md-2-5 col-lg-2-5 unit">
                             <label className="label">
                               Descripción
                           </label>
@@ -372,14 +372,19 @@ function Puesto() {
                                 maxLength="50"
                               />
                             </div>
+                            
                           </div>
-
-                        </div>
-                        <br></br>
-                        <div className="form-footer" className="col-md-12">
-                          <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
+                          </div>
+<div className="row">
+<div className="form-footer" className="col-sm-6 col-md-5 unit">
+                          <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"> Cancelar</button>
                           <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                         </div>
+
+</div>
+                        </div>
+                        
+                        
                       </form>
                     </div>
                   </div>

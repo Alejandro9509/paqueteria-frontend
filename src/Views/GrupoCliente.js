@@ -436,8 +436,9 @@ function GrupoCliente() {
                     <div className="col-md-12">
                       <form className="j-forms" onSubmit={handleAceptar}>
                         <div className="form-content">
+                        <div className="row">
 
-                          <div className="col-sm-12 col-md-6 unit">
+                        <div className="col-xs-6 col-sm-3 col-md-2-5 col-lg-2-5 unit">
                             <label className="label">
                               Código
                           </label>
@@ -456,7 +457,7 @@ function GrupoCliente() {
                             </div>
                           </div>
 
-                          <div className="col-sm-12 col-md-6 unit">
+                          <div className="col-xs-6 col-sm-3 col-md-2-5 col-lg-2-5 unit">
                             <label className="label">
                               Descripción
                           </label>
@@ -473,12 +474,17 @@ function GrupoCliente() {
                             </div>
                           </div>
 
-                        </div>
-                        <br></br>
-                        <div className="form-footer" className="col-md-12">
-                          <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
+                          </div>
+                          <div className="row">
+                          <div className="form-footer" className="col-sm-6 col-md-5 unit">
+                          <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"> Cancelar </button>
                           <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                         </div>
+
+</div>
+
+                        </div>
+                       
                       </form>
                     </div>
                   </div>
