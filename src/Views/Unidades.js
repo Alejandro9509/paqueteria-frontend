@@ -583,19 +583,20 @@ function App(props) {
   const handleChangeCodigo = (event) => {
     const url =
       `${process.env.REACT_APP_API_URL}/Unidades/ValidaCodigoUnidad/` + state.codigo
-      axios.get(url, { headers }).then((respuesta) => {
-        
-        if(respuesta.data!=""){
+    axios.get(url, { headers }).then((respuesta) => {
+
+      if (respuesta.data != "") {
 
         alert(respuesta.data.m_sMensaje);
         console.log(respuesta.data);
         setState({
           ...state,
-          
-           codigo: respuesta.data.m_nNumero,
-        });}
-      })
-    
+
+          codigo: respuesta.data.m_nNumero,
+        });
+      }
+    })
+
       .catch((err) => {
         alert(err);
       });
@@ -963,7 +964,7 @@ function App(props) {
       </header>
       {/*Topbar End Here*/}
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
+      <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
@@ -984,31 +985,6 @@ function App(props) {
                     </a>
                   </li>
                   <li className="active-page">Unidades</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="container-fluid">
-          <div className="page-header filled full-block light">
-            <div className="row">
-              <div className="col-md-6 col-sm-6">
-                <h2>Unidades</h2>
-              </div>
-              <div className="col-md-6 col-sm-6">
-                <ul className="list-page-breadcrumb">
-                  <li>
-                    <a href="#">
-                      Home <i className="zmdi zmdi-chevron-right" />
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      Layout <i className="zmdi zmdi-chevron-right" />
-                    </a>
-                  </li>
-                  <li className="active-page"> Dashboard</li>
                 </ul>
               </div>
             </div>

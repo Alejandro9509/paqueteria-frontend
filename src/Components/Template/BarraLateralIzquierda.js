@@ -61,7 +61,7 @@ function BarraLateralDerecha() {
       <ul className="list-accordion">
         {dashboardRoutes.map((r, index) => {
           return r.single ? (
-            <li>
+            <li  className="boton-de-menu">
               <Link component="a" to={r.path}>
                 <i>
                   <SvgIcon

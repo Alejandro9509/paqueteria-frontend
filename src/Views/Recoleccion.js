@@ -1045,6 +1045,7 @@ function Recoleccion() {
       <section className="main-container">
 
         <div className="container-fluid">
+
           <div className="page-header filled full-block light">
             <div className="row">
               <div className="col-md-6 col-sm-6">
@@ -1057,9 +1058,6 @@ function Recoleccion() {
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="container-fluid">
 
           <ul className="nav nav-tabs">
             <li className="active">
@@ -1732,8 +1730,8 @@ function Recoleccion() {
                                   </div>
                                 </div>
 
-                              
-                                        <div className="col-sm-4 col-md-6 unit">
+
+                                <div className="col-sm-4 col-md-6 unit">
                                   <label className="label">
                                     Código Postal
                                 </label>

@@ -452,7 +452,7 @@ function PaisesEstado() {
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
+      <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
@@ -461,6 +461,7 @@ function PaisesEstado() {
       <section className="main-container">
 
         <div className="container-fluid">
+
           <div className="page-header filled full-block light">
             <div className="row">
               <div className="col-md-6 col-sm-6">
@@ -478,9 +479,6 @@ function PaisesEstado() {
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="container-fluid">
 
           <div className="row">
             <div className="col-md-6" >
@@ -580,8 +578,8 @@ function PaisesEstado() {
                             <br></br>
                             <div className="form-footer" className="col-md-12">
                               <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
-                                    >
-                                      Cancelar</button>
+                              >
+                                Cancelar</button>
                               <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                             </div>
                           </form>
@@ -682,8 +680,8 @@ function PaisesEstado() {
                             <br></br>
                             <div className="form-footer" className="col-md-12">
                               <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
-                                    >
-                                      Cancelar</button>
+                              >
+                                Cancelar</button>
                               <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                             </div>
                           </form>

@@ -1816,7 +1816,7 @@ pre code {
     width: 8.33333333%;
   }
 
-  .col-division-botones {
+  .col-division-sm-botones {
     width: 20%;
   }
 
@@ -1991,8 +1991,8 @@ pre code {
     width: 8.33333333%;
   }
 
-  .col-division-botones {
-    width: 12%;
+  .col-division-md-botones {
+    width: 10%;
   }
 
   .col-md-pull-12 {
@@ -2153,6 +2153,11 @@ pre code {
   .col-lg-1 {
     width: 8.33333333%;
   }
+
+  .col-division-lg-botones {
+    width: 10%;
+  }
+
   .col-lg-pull-12 {
     right: 100%;
   }
@@ -3959,7 +3964,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .nav-tabs > li.active > a,
 .nav-tabs > li.active > a:hover,
 .nav-tabs > li.active > a:focus {
-  color: #555555;
+  color: #F9A03E;
   background-color: #ffffff;
   border: 1px solid #dddddd;
   border-bottom-color: transparent;

@@ -6,44 +6,22 @@ h2 {
 }
 
 .imagen-de-catalogos {
-    height: 100% !important;
+    height: 90% !important;
     align-content: center !important;
-    padding: 10px !important;
-    width: 100% !important;
-    stroke-width: 0% !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 3px !important;
+    width: 70% !important;
 }
 
 .imagen-de-catalogos:hover {
-    height: 100% !important;
+    height: 90% !important;
     align-content: center !important;
-    padding: 10px !important;
-    width: 100% !important;
-    stroke-width: 0% !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 3px !important;
+    width: 70% !important;
 }
-
-.a {
-    fill: #F9A03E !important;
-    stroke: #F9A03E !important;
-    stroke-width: 0% !important;
-  }
-
-  .a:hover {
-    fill: #FFFFFF !important;
-    stroke: #FFFFFF !important;
-    stroke-width: 0% !important;
-  }
-
-  .b {
-    fill: #FFFFFF !important;
-    stroke: #FFFFFF !important;
-    stroke-width: 0% !important;
-  }
-
-  .b:hover {
-    fill: #F9A03E !important;
-    stroke: #F9A03E !important;
-    stroke-width: 0% !important;
-  }
 
   .color_icono{
     fill: #707070 !important;
@@ -59,7 +37,7 @@ h2 {
 .boton-de-catalogos {
     height: 72px;
     width: 100%;
-    margin: 1%;
+    margin: 0%;
     display: inline-block;
     color: #F9A03E;
     font-size: 40px;
@@ -78,6 +56,18 @@ h2 {
     border-radius: 10px;
     opacity: 1;
     border-width: 0px;
+}
+
+.boton-de-catalogos > .a{
+  fill: #F9A03E !important;
+  stroke: #F9A03E !important;
+  stroke-width: 1% !important;
+}
+
+.boton-de-catalogos > .a:hover{
+  fill: #FFFFFF !important;
+  stroke: #FFFFFF !important;
+  stroke-width: 1% !important;
 }
 
 .caja-boton {

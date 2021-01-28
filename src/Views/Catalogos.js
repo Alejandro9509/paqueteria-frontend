@@ -28,7 +28,8 @@ function Catalogo() {
       {/*Page Container Start Here*/}
       <section className="main-container">
 
-        <div className="container-fluid">
+        <div className="container-fluid" style={{ paddingLeft: "-5px", paddingRight: "-15px" }}>
+          
           <div className="page-header filled full-block light">
             <div className="row">
               <div className="col-md-6 col-sm-6">
@@ -41,13 +42,11 @@ function Catalogo() {
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="container-fluid" style={{paddingLeft: "0px", paddingRight: "0px"}}>
           {catalogRoutes.map((r, index) => {
             return (
               <Link to={r.path}>
-                <div className="col-sm-4 col-division-botones caja-boton" style={{ textAlign: "center"}}>
+                <div className="col-sm-4 col-division-md-botones col-division-sm-botones col-division-lg-botones caja-boton" style={{ textAlign: "center" }}>
                   <button
                     type="button"
                     key={index}
@@ -56,7 +55,7 @@ function Catalogo() {
                     <SvgIcon
                       component={r.icon}
                       className="imagen-de-catalogos"
-                      viewBox="0 0 50 60"
+                      viewBox="0 0 50 50"
                     />
                   </button>
                   <label>{r.name}</label>

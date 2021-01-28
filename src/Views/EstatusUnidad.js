@@ -255,7 +255,7 @@ function EstatusUnidad() {
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
+      <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
@@ -264,6 +264,7 @@ function EstatusUnidad() {
       <section className="main-container">
 
         <div className="container-fluid">
+
           <div className="page-header filled full-block light">
             <div className="row">
               <div className="col-md-6 col-sm-6">
@@ -281,9 +282,6 @@ function EstatusUnidad() {
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="container-fluid">
 
           <ul className="nav nav-tabs">
             <li className="active">
@@ -408,8 +406,8 @@ function EstatusUnidad() {
                         <br></br>
                         <div className="form-footer" className="col-md-12">
                           <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
-                                    >
-                                      Cancelar</button>
+                          >
+                            Cancelar</button>
                           <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                         </div>
                       </form>
@@ -427,8 +425,8 @@ function EstatusUnidad() {
                       <div className="form-footer" className="col-md-12">
                         <button className="btn btn-default btn-block ex-noty" data-layout="topCenter" data-type="information">Notificación</button>
                         <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
-                                    >
-                                      Cancelar</button>
+                        >
+                          Cancelar</button>
                         <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
                       </div>
                     </div>

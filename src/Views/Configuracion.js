@@ -24,7 +24,7 @@ function Configuracion() {
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
+      <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
@@ -33,6 +33,7 @@ function Configuracion() {
       <section className="main-container">
 
         <div className="container-fluid">
+
           <div className="page-header filled full-block light">
             <div className="row">
               <div className="col-md-6 col-sm-6">
@@ -45,14 +46,12 @@ function Configuracion() {
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="container-fluid">
           {configurationRoutes.map((r, index) => {
             return (
 
               <Link to={r.path}>
-                <div className="col-sm-4 col-division-botones caja-boton" style={{ textAlign: "center"}}>
+                <div className="col-sm-4 col-division-md-botones col-division-sm-botones col-division-lg-botones caja-boton" style={{ textAlign: "center" }}>
                   <button
                     type="button"
                     key={index}
