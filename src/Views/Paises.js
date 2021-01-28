@@ -484,7 +484,7 @@ function PaisesEstado() {
 
           <div className="row">
             <div className="col-md-6" >
-              <ul className="nav nav-tabs">
+              <ul className="nav navStatica nav-tabs">
                 <li className="active">
                   <a data-toggle="tab" href="#Listado">
                     <i className="fa fa-list" /> Listado
@@ -595,7 +595,7 @@ function PaisesEstado() {
             </div>
 
             <div className="col-md-6" >
-              <ul className="nav nav-tabs">
+              <ul className="nav navStatica nav-tabs">
                 <li className="active">
                   <a data-toggle="tab" href="#ListadoEstado">
                     <i className="fa fa-list" /> Listado

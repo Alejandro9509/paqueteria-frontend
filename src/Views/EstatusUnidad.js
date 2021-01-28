@@ -285,7 +285,7 @@ function EstatusUnidad() {
 
         <div className="container-fluid">
 
-          <ul className="nav nav-tabs">
+          <ul className="nav navStatica nav-tabs">
             <li className="active">
               <a data-toggle="tab" href="#Listado">
                 <i className="fa fa-list" /> Listado
@@ -328,7 +328,7 @@ function EstatusUnidad() {
                       <form className="j-forms" onSubmit={handleAceptar}>
                         <div className="form-content">
 
-                          <div className="col-sm-12 col-md-8 unit">
+                        <div className="col-xs-6 col-sm-3 col-md-2-5 col-lg-2-5 unit">
                             <label className="label">
                               Estatus
                           </label>
@@ -345,7 +345,7 @@ function EstatusUnidad() {
                             </div>
                           </div>
 
-                          <div className="col-sm-12 col-md-4 unit">
+                          <div className="col-xs-6 col-sm-3 col-md-2-5 col-lg-2-5 unit">
                             <label className="label">
                               Abreviación
                           </label>
@@ -362,7 +362,7 @@ function EstatusUnidad() {
                             </div>
                           </div>
 
-                          <div className="col-sm-12 col-md-8 unit">
+                          <div className="col-xs-6 col-sm-3 col-md-2-5 col-lg-2-5 unit">
                             <label className="label">
                               Tipo Estatus
                             </label>
@@ -388,7 +388,7 @@ function EstatusUnidad() {
                             </label>
                           </div>
 
-                          <div className="col-sm-12 col-md-4 unit">
+                          <div className="col-xs-6 col-sm-3 col-md-3 col-lg-2-5 unit">
                             <label className="label">
                               Color
                           </label>
@@ -406,7 +406,7 @@ function EstatusUnidad() {
 
                         </div>
                         <br></br>
-                        <div className="form-footer" className="col-md-12">
+                        <div className="form-footer" className="col-12 col-sm-12 col-md-10 unit">
                           <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
                                     >
                                       Cancelar</button>

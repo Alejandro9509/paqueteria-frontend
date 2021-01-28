@@ -779,7 +779,7 @@ function App(props) {
   const [stepActive, setStepActive] = React.useState(1);
 
   function openSection(index) {
-    closeSeccions();
+    //closeSeccions();
     var $section;
     switch (index) {
       case 1:
@@ -953,7 +953,7 @@ function App(props) {
   }
 
   useEffect((value) => {
-    closeSeccions();
+    //closeSeccions();
   }, []);
 
   return (
@@ -1014,7 +1014,7 @@ function App(props) {
             </div>
           </div>
 
-          <ul className="nav nav-tabs">
+          <ul className="nav navStatica nav-tabs">
             <li className="active">
               <a data-toggle="tab" href="#Listado">
                 <i className="fa fa-list" /> Listado
@@ -1062,7 +1062,7 @@ function App(props) {
                             className="wizard-breadcrumb number-style"
                             style={{
                               position: "sticky",
-                              top: "50px",
+                              top: "150px",
                               padding: "5px",
                               backgroundColor: "white",
                               zIndex: 100,

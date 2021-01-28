@@ -415,7 +415,7 @@ function Embalaje() {
 
         <div className="container-fluid">
 
-          <ul className="nav nav-tabs">
+          <ul className="nav navStatica nav-tabs">
             <li className="active">
               <a data-toggle="tab" href="#Listado">
                 <i className="fa fa-list" /> Listado
@@ -449,7 +449,7 @@ function Embalaje() {
                       <form className="j-forms" onSubmit={handleAceptar}>
                         <div className="form-content">
                           {/*****************************************Codigo************************************************************/}
-                          <div className="col-sm-12 col-md-4 unit">
+                          <div className="col-xs-4 col-sm-3 col-md-2-5 col-lg-2-5 unit">
                             <label className="label">
                               Código
                           </label>
@@ -466,7 +466,7 @@ function Embalaje() {
                             </div>
                           </div>
                           {/*****************************************Nombre************************************************************/}
-                          <div className="col-sm-12 col-md-4 unit">
+                          <div className="col-xs-4 col-sm-3 col-md-2-5 col-lg-2-5 unit">
                             <label className="label">
                               Nombre
                           </label>
@@ -482,7 +482,7 @@ function Embalaje() {
                             </div>
                           </div>
                           {/*****************************************Descripción*******************************************************/}
-                          <div className="col-sm-12 col-md-4 unit">
+                          <div className="col-xs-4 col-sm-3 col-md-2-5 col-lg-2-5 unit">
                             <label className="label">
                               Descripción
                           </label>
@@ -501,8 +501,8 @@ function Embalaje() {
 
                         </div>
                         <br></br>
-                        <div className="form-footer" className="col-md-12">
-                          <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
+                        <div className="form-footer" className="col-12 col-sm-9 col-md-7 unit">
+                          <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"> Cancelar</button>
                           <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                         </div>
                       </form>
@@ -526,9 +526,9 @@ function Embalaje() {
                           </div>
                         </div>
                         <br></br>
-                        <div className="form-footer" className="col-md-12">
+                        <div className="col-xs-6 col-sm-3 col-md-2 col-lg-2-5 unit">
                           <button className="btn btn-default btn-block ex-noty" data-layout="topCenter" data-type="information">Notificación</button>
-                          <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
+                          <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"> Cancelar</button>
                           <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
                         </div>
                       </form>
