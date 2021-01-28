@@ -399,7 +399,7 @@ function Departamento() {
 
         <div className="container-fluid">
 
-          <ul className="nav nav-tabs">
+          <ul className="nav navStatica nav-tabs">
             <li className="active">
               <a data-toggle="tab" href="#Listado">
                 <i className="fa fa-list" /> Listado
