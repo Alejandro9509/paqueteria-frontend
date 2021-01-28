@@ -731,16 +731,11 @@ function App(props) {
               <div className="col-md-6 col-sm-6">
                 <ul className="list-page-breadcrumb">
                   <li>
-                    <a href="#">
-                      Home <i className="zmdi zmdi-chevron-right" />
+                    <a href="/Catalogos">
+                      Catálogos <i className="zmdi zmdi-chevron-right" />
                     </a>
                   </li>
-                  <li>
-                    <a href="#">
-                      Layout <i className="zmdi zmdi-chevron-right" />
-                    </a>
-                  </li>
-                  <li className="active-page"> Dashboard</li>
+                  <li className="active-page">Clientes</li>
                 </ul>
               </div>
             </div>

@@ -274,7 +274,7 @@ function Puesto() {
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
+      <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
@@ -283,7 +283,6 @@ function Puesto() {
       <section className="main-container">
 
         <div className="container-fluid">
-
 
           <div className="page-header filled full-block light">
             <div className="row">
@@ -302,7 +301,6 @@ function Puesto() {
               </div>
             </div>
           </div>
-
 
           <ul className="nav navStatica nav-tabs">
             <li className="active">

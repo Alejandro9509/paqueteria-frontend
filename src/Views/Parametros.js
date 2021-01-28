@@ -132,7 +132,7 @@ function Parametros() {
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
+      <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
@@ -141,6 +141,7 @@ function Parametros() {
       <section className="main-container">
 
         <div className="container-fluid">
+
           <div className="page-header filled full-block light">
             <div className="row">
               <div className="col-md-6 col-sm-6">
@@ -158,9 +159,7 @@ function Parametros() {
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="container-fluid">
           <form className="j-forms" onSubmit={handleAceptar}>
             <div className="widget-wrap col-md-5" style={{ width: '48%' }}>
               <div className="widget-header">
@@ -641,8 +640,8 @@ function Parametros() {
 
             <div className="form-footer" className="col-md-12">
               <button className="btn btn-secondary secondary-btn"
-                                    >
-                                      Cancelar</button>
+              >
+                Cancelar</button>
               <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
             </div>
           </form>

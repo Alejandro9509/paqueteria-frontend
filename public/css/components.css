@@ -3507,7 +3507,7 @@ a.waves-effect .waves-ripple {
   transition: opacity.3s, transform.3s;
 }
 .j-forms .wizard-breadcrumb {
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 .j-forms .wizard-breadcrumb.default-style .steps {
   border: 1px solid #eee;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import axios from "axios"; 
+import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
 
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
@@ -7,10 +7,10 @@ import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import ExportCSV from '../Components/Template/Export';
 import ExportPDF from "../Components/Template/ExportPDF";
 import Carousel from "re-carousel";
-import IndicatorDots from "../Util/Dots"; 
+import IndicatorDots from "../Util/Dots";
 import Buttons from "../Util/CarruselButtons";
 import { makeStyles } from "@material-ui/core/styles";
-import * as XLSX from 'xlsx'; 
+import * as XLSX from 'xlsx';
 import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy } from 'react-table'
 import $ from 'jquery';
 import { remove_array_element } from "../Util/Util";
@@ -22,7 +22,7 @@ const styles = {
   paqueteCarrusel: {
     height: "300px !important",
   },
-  
+
 };
 const styles2 = {
   conceptoCarrusel: {
@@ -35,10 +35,10 @@ const useStyles2 = makeStyles(styles2);
 
 function Guia() {
   var React = require('react');
-	var QRCode = require('qrcode.react');
+  var QRCode = require('qrcode.react');
   const classes = useStyles();
   const classes2 = useStyles2();
-  
+
   const [data, setData] = React.useState([])
   const [state, setState] = React.useState({
     showPopUp: false,
@@ -51,26 +51,26 @@ function Guia() {
     folioInforme: "",
     fecha: "",
     estatus: "",
-		paquetesI:[{
-		CiudadOrigen: "",
-				Remitente: "",
-				CiudadRemitente:"",
-				RFC: "",
-				Direccion: "",
-				Zona: "",
-				CP: 0,
-				Telefono: "",
-				CiudadDestino: "",
-				RFCDestinatario: "",
-				DireccionDestinatario: "",
-				ZonaDestinatario: "",
-				CPDestinatario:0,
-				CiudadDestinatario: "",
-				TelefonoDestinatario: "",
-				FolioPaquete:"",
-				Cantidad:0,
-				Descripcion:""
-		}],
+    paquetesI: [{
+      CiudadOrigen: "",
+      Remitente: "",
+      CiudadRemitente: "",
+      RFC: "",
+      Direccion: "",
+      Zona: "",
+      CP: 0,
+      Telefono: "",
+      CiudadDestino: "",
+      RFCDestinatario: "",
+      DireccionDestinatario: "",
+      ZonaDestinatario: "",
+      CPDestinatario: 0,
+      CiudadDestinatario: "",
+      TelefonoDestinatario: "",
+      FolioPaquete: "",
+      Cantidad: 0,
+      Descripcion: ""
+    }],
     origen: "",
     destino: "",
     usuarioCancela: "",
@@ -138,7 +138,7 @@ function Guia() {
         largo: "",
         ancho: "",
         alto: "",
-        volumen: "", 
+        volumen: "",
         peso: "",
         tipoEmbalaje: "",
         valorDeclarado: "",
@@ -165,17 +165,16 @@ function Guia() {
         Total: 0,
         PorcentajeIva: 0,
         PorcentajeRetiene: 0,
-        IdGuiaConcepto:0
+        IdGuiaConcepto: 0
       }
     ],
     height: window.innerHeight
   })
 
-  function cargaDiv(indice,valor)
-	{
-	//	alert(indice);
-		$("#idBarra" + indice).barcode(valor,"code128");
-	}
+  function cargaDiv(indice, valor) {
+    //	alert(indice);
+    $("#idBarra" + indice).barcode(valor, "code128");
+  }
 
   const [fileUploaded, setFileUploaded] = React.useState([])
   const [stepActive, setStepActive] = React.useState(1);
@@ -253,7 +252,7 @@ function Guia() {
       "IdMoneda": state.idMoneda,
       "TipoCambio": state.tipoCambio,
       "IdTipoCobro": state.idTipoCobro,
-       "NombreRemitente": state.nombreRemitente,
+      "NombreRemitente": state.nombreRemitente,
       "RfcRemitente": state.rfcRemitente,
       "DomicilioRemitente": state.domicilioRemitente,
       "IdCodigoPostalRemitente": state.idCodigoPostalRemitente,
@@ -299,9 +298,9 @@ function Guia() {
       "CreadoEl": state.creadoEl,
       "ModificadoEl": state.modificadoEl,
       "Idguia": state.IdGuia,
-      "ValorDeclarado":state.ValorDeclarado,
-      "idTipoServicio":state.idTipoServicio,
-      
+      "ValorDeclarado": state.ValorDeclarado,
+      "idTipoServicio": state.idTipoServicio,
+
 
     }
     if (state.idGuia != 0) {
@@ -321,7 +320,7 @@ function Guia() {
         //window.location.reload();
         var resp = respuesta.data;
         debugger;
-        var vGuia = resp.substring(resp.indexOf(":")+2);
+        var vGuia = resp.substring(resp.indexOf(":") + 2);
         getImpresion(vGuia);
       }).catch(err => {
         console.log(err)
@@ -333,58 +332,58 @@ function Guia() {
 
   async function getImpresion(id) {
     //alert (state.nGuiaId);		
-   //if (state.muestraPaquetes === true) return;		
-   const url = `${process.env.REACT_APP_API_URL}/Guia/GetImpresion/` + id;
-      await axios.get(url, { headers }).then(respuesta => {
-   setState({
-     ...state,		 	
-     paquetesI:[],
-    // muestraPaquetes:true 
-     });
-     const paquetesTemp = state.paquetesI;
-     for (var i = 0; i < respuesta.data.length; i++) {
+    //if (state.muestraPaquetes === true) return;		
+    const url = `${process.env.REACT_APP_API_URL}/Guia/GetImpresion/` + id;
+    await axios.get(url, { headers }).then(respuesta => {
+      setState({
+        ...state,
+        paquetesI: [],
+        // muestraPaquetes:true 
+      });
+      const paquetesTemp = state.paquetesI;
+      for (var i = 0; i < respuesta.data.length; i++) {
 
- 
-     paquetesTemp.push({
- 
-       CiudadOrigen: respuesta.data[i].m_sCiudadOrigen,
-       Remitente: respuesta.data[i].m_sNOmbreRemitente,
-       CiudadRemitente:respuesta.data[i].m_sCiudadRemitente,
-       RFC: respuesta.data[i].m_sRFCRemitente,
-       Direccion: respuesta.data[i].m_sDomicilioRemitente,
-       Zona: respuesta.data[i].m_sZonaRemitente,
-       CP: respuesta.data[i].m_nIdCodigoPostalRemitente,
-       Telefono: respuesta.data[i].m_sTelefonoRemitente,
-       CiudadDestino: respuesta.data[i].m_sCiudadDestino,
-       RFCDestinatario: respuesta.data[i].m_sRFCDestinatario,
-       DireccionDestinatario: respuesta.data[i].m_sDomicilioDestinatario,
-       ZonaDestinatario: respuesta.data[i].m_sZonaDestino,
-       CPDestinatario:respuesta.data[i].m_nIdCodigoPostalDestinatario,
-       CiudadDestinatario: respuesta.data[i].m_sCiudadDestinatario,
-       TelefonoDestinatario: respuesta.data[i].m_sTelefonoDestinatario,
-       FolioPaquete:respuesta.data[i].m_sFolioPaquete,
-       Cantidad:respuesta.data[i].m_nCantidadPaquete,
-       Descripcion:respuesta.data[i].m_sDescripcionPaquete,
-       Destinatario: respuesta.data[i].m_sNombreDestinatario,
-       FolioPaquete:respuesta.data[i].m_sFolioPaquete,
-       PaqueteCant:respuesta.data[i].m_nCantidadPaquete,
-       DescripcionPaquete:respuesta.data[i].m_sDescripcionPaquete,
-       RfcFiscal:respuesta.data[i].m_sRfcFiscal,
-       NombreFiscal:respuesta.data[i].m_sNombreFiscal,
-       Telefonos:respuesta.data[i].m_sTelefonos,
-       Colonia:respuesta.data[i].m_sColonia,
-       Calle:respuesta.data[i].m_sCalle
-     });
-     }
-     paquetesTemp.splice(0,1);
-     setState({
-     ...state,
-     paquetesI:paquetesTemp,
-    // muestraPaquetes:true
-     });
-     $("#Imprimir").click();
-   });   
- };
+
+        paquetesTemp.push({
+
+          CiudadOrigen: respuesta.data[i].m_sCiudadOrigen,
+          Remitente: respuesta.data[i].m_sNOmbreRemitente,
+          CiudadRemitente: respuesta.data[i].m_sCiudadRemitente,
+          RFC: respuesta.data[i].m_sRFCRemitente,
+          Direccion: respuesta.data[i].m_sDomicilioRemitente,
+          Zona: respuesta.data[i].m_sZonaRemitente,
+          CP: respuesta.data[i].m_nIdCodigoPostalRemitente,
+          Telefono: respuesta.data[i].m_sTelefonoRemitente,
+          CiudadDestino: respuesta.data[i].m_sCiudadDestino,
+          RFCDestinatario: respuesta.data[i].m_sRFCDestinatario,
+          DireccionDestinatario: respuesta.data[i].m_sDomicilioDestinatario,
+          ZonaDestinatario: respuesta.data[i].m_sZonaDestino,
+          CPDestinatario: respuesta.data[i].m_nIdCodigoPostalDestinatario,
+          CiudadDestinatario: respuesta.data[i].m_sCiudadDestinatario,
+          TelefonoDestinatario: respuesta.data[i].m_sTelefonoDestinatario,
+          FolioPaquete: respuesta.data[i].m_sFolioPaquete,
+          Cantidad: respuesta.data[i].m_nCantidadPaquete,
+          Descripcion: respuesta.data[i].m_sDescripcionPaquete,
+          Destinatario: respuesta.data[i].m_sNombreDestinatario,
+          FolioPaquete: respuesta.data[i].m_sFolioPaquete,
+          PaqueteCant: respuesta.data[i].m_nCantidadPaquete,
+          DescripcionPaquete: respuesta.data[i].m_sDescripcionPaquete,
+          RfcFiscal: respuesta.data[i].m_sRfcFiscal,
+          NombreFiscal: respuesta.data[i].m_sNombreFiscal,
+          Telefonos: respuesta.data[i].m_sTelefonos,
+          Colonia: respuesta.data[i].m_sColonia,
+          Calle: respuesta.data[i].m_sCalle
+        });
+      }
+      paquetesTemp.splice(0, 1);
+      setState({
+        ...state,
+        paquetesI: paquetesTemp,
+        // muestraPaquetes:true
+      });
+      $("#Imprimir").click();
+    });
+  };
   function addPaquete() {
     const { paquetes } = state;
     paquetes.push({
@@ -421,8 +420,8 @@ function Guia() {
       ImporteRetiene: 0,
       Total: 0,
       idConceptoFacturacion: 0,
-      PorcentajeIva:0,
-      PorcentajeRetiene:0      
+      PorcentajeIva: 0,
+      PorcentajeRetiene: 0
     });
     //console.log(conceptos);
     setState({ ...state, conceptos: conceptos });
@@ -452,8 +451,8 @@ function Guia() {
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
       //console.log(respuesta)
-      if (respuesta.data.indexOf("fracaso:") <=0)
-      getAllData()
+      if (respuesta.data.indexOf("fracaso:") <= 0)
+        getAllData()
     }).catch(function (err) {
       console.log(err.data)
     });
@@ -495,14 +494,14 @@ function Guia() {
               });*/
       //handleEmbarque (respuesta.data.m_nIdEmbarque)
       // alert(state.idMoneda)
-    }).catch(function (err) { 
+    }).catch(function (err) {
       console.log(err.data)
     });
     // debugger;
     // handleEmbarqueModificar (valor2)      
 
   }
-  
+
   /*function handleImprmir()
   {
     
@@ -554,8 +553,7 @@ function handleImprmir2()
 
 
 
-  function handleShowImprimir()
-  {
+  function handleShowImprimir() {
     //getImpresion(38);
   }
   function handleShowAgregar() {
@@ -918,7 +916,7 @@ function handleImprmir2()
         idEmbarque: respuesta.data.m_nIdEmbarque,
         idEmbarque2: respuesta.data.m_nIdEmbarque,
         tipoCambio: respuesta.data.m_cTIpoCambio,
-        idTipoCobro:respuesta.data.m_nIdTIpoCobro,
+        idTipoCobro: respuesta.data.m_nIdTIpoCobro,
         nombreRemitente: respuesta.data.m_sNOmbreRemitente,
         RFCRemitente: respuesta.data.m_sRFCRemitente,
         domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
@@ -953,7 +951,7 @@ function handleImprmir2()
         idEmbarque2: respuesta.data.m_nIdEmbarque,
         paquetes: [],
         sobres: [],
-        conceptos:[]
+        conceptos: []
       });
       const paquetesTemp = state.paquetes;
       const sobresTemp = state.sobres;
@@ -1004,8 +1002,8 @@ function handleImprmir2()
         codigoPostalRemitente: respuesta.data.m_nIdCodigoPostalRemitente,
         ciudadRemitente: respuesta.data.m_sCiudadRemitente,
         correoRemitente: respuesta.data.m_sCorreoRemitente,
-        tipoCambio:respuesta.data.m_cTIpoCambio,
-        idTipoCobro:respuesta.data.m_nIdTIpoCobro,
+        tipoCambio: respuesta.data.m_cTIpoCambio,
+        idTipoCobro: respuesta.data.m_nIdTIpoCobro,
         telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
         contactoRemitente: respuesta.data.m_sContactoRemitente,
         origenRemitente: respuesta.data.m_sCiudadRemitente,
@@ -1026,7 +1024,7 @@ function handleImprmir2()
   };
   function calculaIva(conceptos, index, tipo) {
     if (tipo === 1)
-    conceptos[index].ImporteIva = Number(conceptos[index].Importe) * (Number(conceptos[index].PorcentajeIva))
+      conceptos[index].ImporteIva = Number(conceptos[index].Importe) * (Number(conceptos[index].PorcentajeIva))
     else if (tipo === 2) {
       conceptos[index].ImporteRetiene = Number(conceptos[index].Importe) * (Number(conceptos[index].PorcentajeRetiene))
     }
@@ -1043,19 +1041,19 @@ function handleImprmir2()
   }
 
   function handleChangeConceptoImpuesto(event, index, tipo) {
-    var valor =event.target.value;
-     
+    var valor = event.target.value;
+
     const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetById/` + event.target.value;
     axios.get(url, { headers }).then(respuesta => {
 
       var { conceptos } = state
-           
+
       conceptos[index][event.target.name] = valor
-    
+
       if (tipo == 1) {
         conceptos[index].PorcentajeIva = respuesta.data.m_nPorcentaje / 100
         conceptos[index].IdImpuestoTraslada = valor
-        
+
       }
       else if (tipo == 2) {
         conceptos[index].PorcentajeRetiene = respuesta.data.m_nPorcentaje / 100
@@ -1124,7 +1122,7 @@ function handleImprmir2()
           PorcentajeIva: embarque.data.m_arClsGuiaConceptos[i].m_cPorcentajeTraslada,
           PorcentajeRetiene: embarque.data.m_arClsGuiaConceptos[i].m_cPorcentajeRetiene,
           Total: embarque.data.m_arClsGuiaConceptos[i].m_cTotal,
-          IdGuiaConcepto : embarque.data.m_arClsGuiaConceptos[i].m_nIdGuiaConcepto
+          IdGuiaConcepto: embarque.data.m_arClsGuiaConceptos[i].m_nIdGuiaConcepto
         });
       }
       conceptosTemp.splice(0, 1);
@@ -1327,15 +1325,20 @@ function handleImprmir2()
         $section = $("#paquetesSobres")
 
         break;
-     
+
       case 4:
         setStepActive(4);
+        $section = $("#detalleFacturacion")
+
+        break;
+
+      case 5:
+        setStepActive(5);
         $section = $("#conceptosFacturacion")
 
         break;
-     
-      case 5:
-        setStepActive(5);
+      case 6:
+        setStepActive(6);
         $section = $("#general")
         break;
       default:
@@ -1509,7 +1512,7 @@ function handleImprmir2()
             />
           </div>
         </div>
-       
+
 
       </div>
     );
@@ -1567,8 +1570,8 @@ function handleImprmir2()
               className="form-control"
               required
               onChange={event => (handleChangeConceptoImpuesto(event, index, 1))}
-              id="IdImpuestoTraslada"              
-              value={state.conceptos[index].IdImpuestoTraslada}             
+              id="IdImpuestoTraslada"
+              value={state.conceptos[index].IdImpuestoTraslada}
             >
               <option value="0">
                 Seleccionar
@@ -1613,7 +1616,7 @@ function handleImprmir2()
 
           </div>
         </div>
-     
+
         <div className="col-sm-4 col-md-4 unit">
           <label className="label">IVA</label>
           <div className="input">
@@ -1674,296 +1677,296 @@ function handleImprmir2()
     );
   });
   const framesPaqueteImp = state.paquetesI.map((p, index) => {
-		return (
-			<div key={`paqueteI${index}`}>
-   
-		<div className="widget-wrap" id="conceptosFacturacion">
-			
-			<div className="widget-header">
-				<div className="col-md-12">
-					<div className="col-md-6">				
-						<h2>{state.paquetesI[index].NombreFiscal}</h2>
-					<h3>{state.paquetesI[index].Colonia} {state.paquetesI[index].Calle}</h3>					
-					<h3>Tel:{state.paquetesI[index].Telefonos}</h3>
-					<h3>RFC:{state.paquetesI[index].RfcFiscal}</h3>
-					</div>
-					<div className="col-md-6">
-						<div className="col-md-6">
-						<div id={"idBarra"+index}>
-							<label>{cargaDiv(index,state.paquetesI[index].FolioPaquete)}</label>
-						</div>
-						</div>
-						<div className="col-md-6">
-						<QRCode value={state.paquetesI[index].FolioPaquete} size={48}></QRCode>
-						</div>
-						<h3>{state.paquetesI[index].FolioPaquete}</h3>
-					</div>
-				</div>                       
-			</div>	<div className="widget-container">
-				<div className="widget-content">
-					<div className="row">
-						<div className="col-md-12">
-							<form className="j-forms">
-								<div className="form-content">
-									<div className="col-md-6">
-										<div class="col-md-12 unit">
-											<label className="label">
-												Remitente
+    return (
+      <div key={`paqueteI${index}`}>
+
+        <div className="widget-wrap" id="conceptosFacturacion">
+
+          <div className="widget-header">
+            <div className="col-md-12">
+              <div className="col-md-6">
+                <h2>{state.paquetesI[index].NombreFiscal}</h2>
+                <h3>{state.paquetesI[index].Colonia} {state.paquetesI[index].Calle}</h3>
+                <h3>Tel:{state.paquetesI[index].Telefonos}</h3>
+                <h3>RFC:{state.paquetesI[index].RfcFiscal}</h3>
+              </div>
+              <div className="col-md-6">
+                <div className="col-md-6">
+                  <div id={"idBarra" + index}>
+                    <label>{cargaDiv(index, state.paquetesI[index].FolioPaquete)}</label>
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <QRCode value={state.paquetesI[index].FolioPaquete} size={48}></QRCode>
+                </div>
+                <h3>{state.paquetesI[index].FolioPaquete}</h3>
+              </div>
+            </div>
+          </div>	<div className="widget-container">
+            <div className="widget-content">
+              <div className="row">
+                <div className="col-md-12">
+                  <form className="j-forms">
+                    <div className="form-content">
+                      <div className="col-md-6">
+                        <div class="col-md-12 unit">
+                          <label className="label">
+                            Remitente
 											</label>
-											<div className="input">                  
-												<input
-												className="form-control"
-												type="text"
-												placeholder={state.paquetesI[index].Remitente}
-												id={"Remitente"+index}
-												disabled="disabled"
-												/>
-											</div>
-										</div>
-										<div class="col-md-12 unit">
-											<label className="label">
-												RFC
+                          <div className="input">
+                            <input
+                              className="form-control"
+                              type="text"
+                              placeholder={state.paquetesI[index].Remitente}
+                              id={"Remitente" + index}
+                              disabled="disabled"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-md-12 unit">
+                          <label className="label">
+                            RFC
 											</label>
-											<div className="input">                  
-												<input                    
-												className="form-control"
-												type="text"
-												placeholder={state.paquetesI[index].RFC}
-												id={"RFC"+index}
-												disabled="disabled"
-												/>
-											</div>
-										</div>
-										<div class="col-md-12 unit">
-											<label className="label">
-												Dirección
+                          <div className="input">
+                            <input
+                              className="form-control"
+                              type="text"
+                              placeholder={state.paquetesI[index].RFC}
+                              id={"RFC" + index}
+                              disabled="disabled"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-md-12 unit">
+                          <label className="label">
+                            Dirección
 											</label>
-											<div className="input">                  
-												<input
-												className="form-control"
-												type="text"
-												placeholder={state.paquetesI[index].Direccion}
-												id={"Direccion"+index}
-												disabled="disabled"
-												/>
-											</div>
-										</div>
-										<div class="col-md-12 unit">
-											<label className="label">
-												Zona
+                          <div className="input">
+                            <input
+                              className="form-control"
+                              type="text"
+                              placeholder={state.paquetesI[index].Direccion}
+                              id={"Direccion" + index}
+                              disabled="disabled"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-md-12 unit">
+                          <label className="label">
+                            Zona
 											</label>
-											<div className="input">                  
-												<input
-												className="form-control"
-												type="text"
-												placeholder={state.paquetesI[index].Zona}
-												id={"Zona"+index}
-												disabled="disabled"
-												/>
-											</div>
-										</div>
-										<div class="col-md-12 unit">
-											<label className="label">
-												CP
+                          <div className="input">
+                            <input
+                              className="form-control"
+                              type="text"
+                              placeholder={state.paquetesI[index].Zona}
+                              id={"Zona" + index}
+                              disabled="disabled"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-md-12 unit">
+                          <label className="label">
+                            CP
 											</label>
-											<div className="input">                  
-												<input
-												className="form-control"
-												type="text"
-												placeholder={state.paquetesI[index].CP}
-												id={"CP"+index}
-												disabled="disabled"
-												/>
-											</div>
-										</div>
-										<div class="col-md-12 unit">
-											<label className="label">
-												Ciudad
+                          <div className="input">
+                            <input
+                              className="form-control"
+                              type="text"
+                              placeholder={state.paquetesI[index].CP}
+                              id={"CP" + index}
+                              disabled="disabled"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-md-12 unit">
+                          <label className="label">
+                            Ciudad
 											</label>
-											<div className="input">                  
-												<input
-												className="form-control"
-												type="text"
-												placeholder={state.paquetesI[index].CiudadRemitente}
-												id={"CiudadRemitente"+index}
-												disabled="disabled"
-												/>
-											</div>
-										</div>
-										<div class="col-md-12 unit">
-											<label className="label">
-												Teléfono
+                          <div className="input">
+                            <input
+                              className="form-control"
+                              type="text"
+                              placeholder={state.paquetesI[index].CiudadRemitente}
+                              id={"CiudadRemitente" + index}
+                              disabled="disabled"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-md-12 unit">
+                          <label className="label">
+                            Teléfono
 											</label>
-											<div className="input">                  
-												<input
-												className="form-control"
-												type="text"
-												placeholder={state.paquetesI[index].Telefono}
-												id={"Telefono"+index}
-												disabled="disabled"
-												/>
-											</div>
-										</div>
-										
-										
-									</div>							
-									<div className="col-md-6">
-										<div class="col-md-12 unit">
-											<label className="label">
-												Destinatario
+                          <div className="input">
+                            <input
+                              className="form-control"
+                              type="text"
+                              placeholder={state.paquetesI[index].Telefono}
+                              id={"Telefono" + index}
+                              disabled="disabled"
+                            />
+                          </div>
+                        </div>
+
+
+                      </div>
+                      <div className="col-md-6">
+                        <div class="col-md-12 unit">
+                          <label className="label">
+                            Destinatario
 											</label>
-											<div className="input">                  
-												<input
-												className="form-control"
-												type="text"
-												placeholder={state.paquetesI[index].Destinatario}
-												id={"CiudadDestino"+index}
-												disabled="disabled"
-												/>
-											</div>
-										</div>
-										<div class="col-md-12 unit">
-											<label className="label">
-												RFC
+                          <div className="input">
+                            <input
+                              className="form-control"
+                              type="text"
+                              placeholder={state.paquetesI[index].Destinatario}
+                              id={"CiudadDestino" + index}
+                              disabled="disabled"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-md-12 unit">
+                          <label className="label">
+                            RFC
 											</label>
-											<div className="input">                  
-												<input                    
-												className="form-control"
-												type="text"
-												placeholder={state.paquetesI[index].RFCDestinatario}
-												id={"RFC"+index}
-												disabled="disabled"
-												/>
-											</div>
-										</div>
-										<div class="col-md-12 unit">
-											<label className="label">
-												Dirección
+                          <div className="input">
+                            <input
+                              className="form-control"
+                              type="text"
+                              placeholder={state.paquetesI[index].RFCDestinatario}
+                              id={"RFC" + index}
+                              disabled="disabled"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-md-12 unit">
+                          <label className="label">
+                            Dirección
 											</label>
-											<div className="input">                  
-												<input
-												className="form-control"
-												type="text"
-												placeholder={state.paquetesI[index].DireccionDestinatario}
-												id={"Direccion"+index}
-												disabled="disabled"
-												/>
-											</div>
-										</div>
-										<div class="col-md-12 unit">
-											<label className="label">
-												Zona
+                          <div className="input">
+                            <input
+                              className="form-control"
+                              type="text"
+                              placeholder={state.paquetesI[index].DireccionDestinatario}
+                              id={"Direccion" + index}
+                              disabled="disabled"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-md-12 unit">
+                          <label className="label">
+                            Zona
 											</label>
-											<div className="input">                  
-												<input
-												className="form-control"
-												type="text"
-												placeholder={state.paquetesI[index].ZonaDestinatario}
-												id={"Zona"+index}
-												disabled="disabled"
-												/>
-											</div>
-										</div>
-										<div class="col-md-12 unit">
-											<label className="label">
-												CP
+                          <div className="input">
+                            <input
+                              className="form-control"
+                              type="text"
+                              placeholder={state.paquetesI[index].ZonaDestinatario}
+                              id={"Zona" + index}
+                              disabled="disabled"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-md-12 unit">
+                          <label className="label">
+                            CP
 											</label>
-											<div className="input">                  
-												<input
-												className="form-control"
-												type="text"
-												placeholder={state.paquetesI[index].CPDestinatario}
-												id={"CP"+index}
-												disabled="disabled"
-												/>
-											</div>
-										</div>
-										<div class="col-md-12 unit">
-											<label className="label">
-												Ciudad
+                          <div className="input">
+                            <input
+                              className="form-control"
+                              type="text"
+                              placeholder={state.paquetesI[index].CPDestinatario}
+                              id={"CP" + index}
+                              disabled="disabled"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-md-12 unit">
+                          <label className="label">
+                            Ciudad
 											</label>
-											<div className="input">                  
-												<input
-												className="form-control"
-												type="text"
-												placeholder={state.paquetesI[index].CiudadDestinatario}
-												id={"Ciudad"+index}
-												disabled="disabled"
-												/>
-											</div>
-										</div>
-										<div class="col-md-12 unit">
-											<label className="label">
-												Teléfono
+                          <div className="input">
+                            <input
+                              className="form-control"
+                              type="text"
+                              placeholder={state.paquetesI[index].CiudadDestinatario}
+                              id={"Ciudad" + index}
+                              disabled="disabled"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-md-12 unit">
+                          <label className="label">
+                            Teléfono
 											</label>
-											<div className="input">                  
-												<input
-												className="form-control"
-												type="text"
-												placeholder={state.paquetesI[index].TelefonoDestinatario}
-												id={"Telefono"+index}
-												disabled="disabled"
-												/>
-											</div>
-										</div>
-										<div class="col-md-12 unit">
-											<label className="label">
-												Cantidad
+                          <div className="input">
+                            <input
+                              className="form-control"
+                              type="text"
+                              placeholder={state.paquetesI[index].TelefonoDestinatario}
+                              id={"Telefono" + index}
+                              disabled="disabled"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-md-12 unit">
+                          <label className="label">
+                            Cantidad
 											</label>
-											<div className="input">                  
-												<input
-												className="form-control"
-												type="text"
-												placeholder={state.paquetesI[index].PaqueteCant}
-												id={"Cantidad"+index}
-												disabled="disabled"
-												/>
-											</div>
-										</div>
-										<div class="col-md-12 unit">
-											<label className="label">
-												Descripcion
+                          <div className="input">
+                            <input
+                              className="form-control"
+                              type="text"
+                              placeholder={state.paquetesI[index].PaqueteCant}
+                              id={"Cantidad" + index}
+                              disabled="disabled"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-md-12 unit">
+                          <label className="label">
+                            Descripcion
 											</label>
-											<div className="input">                  
-												<input
-												className="form-control"
-												type="text"
-												placeholder={state.paquetesI[index].DescripcionPaquete}
-												id="Cantidad"
-												disabled="disabled"
-												/>
-											</div>
-										</div>
-										
-									</div>	
-									<div className="col-md-12">						
-									<div className="col-md-6">
-										<div className="widget-header">
-											<div className="col-md-12">
-												<h2>{state.paquetesI[index].CiudadOrigen}</h2>
-											</div>                                  
-										</div>
-									</div>
-									<div className="col-md-6">
-										<div className="widget-header">
-											<div className="col-md-12">
-												<h2>{state.paquetesI[index].CiudadDestino}</h2>
-											</div>                                  
-										</div>
-									</div>
-									</div>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-	
-			</div>								
-	   </div>
-	   ); 
-		});
-	
+                          <div className="input">
+                            <input
+                              className="form-control"
+                              type="text"
+                              placeholder={state.paquetesI[index].DescripcionPaquete}
+                              id="Cantidad"
+                              disabled="disabled"
+                            />
+                          </div>
+                        </div>
+
+                      </div>
+                      <div className="col-md-12">
+                        <div className="col-md-6">
+                          <div className="widget-header">
+                            <div className="col-md-12">
+                              <h2>{state.paquetesI[index].CiudadOrigen}</h2>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <div className="widget-header">
+                            <div className="col-md-12">
+                              <h2>{state.paquetesI[index].CiudadDestino}</h2>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    );
+  });
+
   const framesSobres = state.sobres.map((p, index) => {
     return (
       <div key={`sobre${index}`}>
@@ -1978,10 +1981,10 @@ function handleImprmir2()
               read="true"
               disabled="true"
               value={state.sobres[index].descripcionSobre}
-            />             
+            />
           </div>
         </div>
-       
+
 
       </div>
     );
@@ -2006,15 +2009,16 @@ function handleImprmir2()
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
+      <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
 
       {/*Page Container Start Here*/}
       <section className="main-container">
-        
-      <div className="container-fluid">
+
+        <div className="container-fluid">
+
           <div className="page-header filled full-block light">
             <div className="row">
               <div className="col-md-6 col-sm-6">
@@ -2027,9 +2031,6 @@ function handleImprmir2()
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="container-fluid">
 
           <ul className="nav navStatica nav-tabs">
             <li className="active">
@@ -2119,22 +2120,22 @@ function handleImprmir2()
                       </div>
                     </form>
                   </div>
-                  
+
                   <div className="row">
                     <Table columns={columns} data={data} />
-                   
+
                   </div>
-                  
+
                 </div>
               </div>
             </div>
             <div id="Agregar" className="tab-pane fade">
-            <form className="j-forms">
+              <form className="j-forms">
                 <div className="form-content">
-            <div className="widget-wrap">
+                  <div className="widget-wrap">
                     <div className="wizard-breadcrumb number-style" style={{ position: "sticky", top: "50px", padding: "5px", backgroundColor: "white", zIndex: 100 }}>
                       <div className="row">
-                        <div className={"col-md-3 col-sm-2 step" + (stepActive == 1 && "active-step")}
+                        <div className={"col-md-2 col-sm-2 step" + (stepActive == 1 && "active-step")}
                           onClick={() => openSection(1)}
                         >
                           <div className={"steps"}>
@@ -2142,7 +2143,7 @@ function handleImprmir2()
                             <p>Información General</p>
                           </div>
                         </div>
-                        <div className={"col-md-3 col-sm-2 step" + (stepActive == 2 && "active-step")}
+                        <div className={"col-md-2 col-sm-2 step" + (stepActive == 2 && "active-step")}
                           onClick={() => openSection(2)}
                         >
                           <div className="steps">
@@ -2150,7 +2151,7 @@ function handleImprmir2()
                             <p>Remitentes / Destinatario</p>
                           </div>
                         </div>
-                        <div className={"col-md-3 col-sm-2 step" + (stepActive == 3 && "active-step")}
+                        <div className={"col-md-2 col-sm-2 step" + (stepActive == 3 && "active-step")}
                           onClick={() => openSection(3)}
                         >
                           <div className="steps">
@@ -2158,720 +2159,772 @@ function handleImprmir2()
                             <p>Detalles de la Recolección</p>
                           </div>
                         </div>
-                        <div className={"col-md-3 col-sm-2 step" + (stepActive == 4 && "active-step")}
+                        <div className={"col-md-2 col-sm-2 step" + (stepActive == 4 && "active-step")}
                           onClick={() => openSection(4)}
                         >
                           <div className="steps">
                             <span className="step-number">4</span>
+                            <p>Detalle de Facturación</p>
+                          </div>
+                        </div>
+                        <div className={"col-md-2 col-sm-2 step" + (stepActive == 5 && "active-step")}
+                          onClick={() => openSection(5)}
+                        >
+                          <div className="steps">
+                            <span className="step-number">5</span>
                             <p>Conceptos de Facturación</p>
                           </div>
                         </div>
-                                             </div>
+                      </div>
                     </div>
                   </div>
 
-              <div className="widget-wrap" id="informacionGeneral">
-                <div className="widget-header">
-                  <h2>Información General</h2>
-                </div>
-                <div className="widget-container">
-                  <div className="widget-content">
-                    <div className="row">
-                      <div className="col-md-12">
-                        <form className="j-forms">
-                          <div className="form-content">
+                  <div className="widget-wrap" id="informacionGeneral">
+                    <div className="widget-header">
+                      <h2>Información General</h2>
+                    </div>
+                    <div className="widget-container">
+                      <div className="widget-content">
+                        <div className="row">
+                          <div className="col-md-12">
+                            <form className="j-forms">
+                              <div className="form-content">
 
-                            <div className="col-sm-4 col-md-2-5 unit">
-                              <label className="label">
-                                Sucursal
+                                <div className="col-sm-4 col-md-2-5 unit">
+                                  <label className="label">
+                                    Sucursal
                           </label>
-                              <select
-                                className="form-control"
-                                required
-                                onChange={event => (cargaEmbarqueSucursal(event.target.value))}
-                                id="idSucursal"
-                                read="true"
-                                value={state.idSucursal}
-                              >
-                                <option value="0">
-                                  Seleccionar
-                            </option>
-                                {dataSucursal.map(
-                                  (sucursal) => (
-                                    <option key={sucursal.m_nIdSucursal} value={sucursal.m_nIdSucursal}>
-                                      {
-                                        sucursal.m_sSucursal
-                                      }
-                                    </option>
-                                  )
-                                )}
-                              </select>
-                            </div>
-
-                            <div className="col-sm-4 col-md-2-5 unit">
-                              <label className="label">
-                                Moneda
-                          </label>
-                              <select
-                                className="form-control"
-                                required
-                                onChange={event => (cargaEmbarqueMoneda(event.target.value))}
-                                id="idMoneda"
-                                read="true"
-                                value={state.idMoneda}
-                              >
-                                <option value="0">
-                                  Seleccionar
-                            </option>
-                                {dataMoneda.map(
-                                  (moneda) => (
-                                    <option key={moneda.m_nIdMoneda} value={moneda.m_nIdMoneda}>
-                                      {
-                                        moneda.m_sMoneda
-                                      }
-                                    </option>
-                                  )
-                                )}
-                              </select>
-                            </div>
-
-                            <div className="col-sm-4 col-md-2-5 unit">
-                              <label className="label">
-                                Folio Guia
-                          </label>
-                              <div className="input">
-                                <input
-                                  onChange={handleChange}
-                                  className="form-control"
-                                  type="text"
-                                  placeholder={state.folioGuía}
-                                  id="folioGuia"
-                                  disabled="disabled"
-                                />
-                              </div>
-                            </div>
-
-                            <div className="col-sm-4 col-md-2-5 unit">
-                              <label className="label">
-                                Folio Embarque
-                          </label>
-                              <select
-                                className="form-control"
-                                required
-                                onChange={event => (handleEmbarque(event.target.value))}
-                                id="idEmbarque"
-                                read="true"
-                                value={state.idEmbarque}
-
-                              >
-                                <option value="0">
-                                  Seleccionar
-                            </option>
-                                {dataEmbarque.map(
-                                  (embarque) => (
-                                    <option key={embarque.m_nIdEmbarque} value={embarque.m_nIdEmbarque} >
-                                      {
-                                        embarque.m_nFolioEmbarque
-                                      }
-                                    </option>
-                                  )
-                                )}
-                              </select>
-                            </div>
-
-
-                            <div className="col-sm-4 col-md-2-5 unit">
-                              <label className="label">
-                                Folio Informe
-                          </label>
-                              <div className="input">
-                                <input
-                                  onChange={handleChange}
-                                  className="form-control"
-                                  type="text"
-                                  placeholder={state.folioInforme}
-                                  id="folioInforme"
-                                  disabled="disabled"
-                                />
-                              </div>
-                            </div>
-
-                            <div className="col-sm-4 col-md-2-5 unit">
-                              <label className="label">
-                                Fecha / Hora
-                          </label>
-                              <div className="input">
-                                <input
-                                  onChange={handleChange}
-                                  className="form-control"
-                                  type="text"
-                                  placeholder={state.fecha}
-                                  id="fecha"
-                                  disabled="disabled"
-                                />
-                              </div>
-                            </div>
-
-                            <div className="col-sm-4 col-md-2-5 unit">
-                              <label className="label">
-                                Estatus de la Guia
-                          </label>
-                              <select
-                                className="form-control"
-                                required
-                                onChange={handleChange}
-                                id="idEstatusGuia"
-                                read="true"
-                                value={state.idEstatusGuia}
-                              >
-                                <option value="0">
-                                  Seleccionar
-                            </option>
-                                {dataEstatusGuia.map(
-                                  (estatusGuia) => (
-                                    <option key={estatusGuia.m_nIdEstatusGuia} value={estatusGuia.m_nIdEstatusGuia} >
-                                      {
-                                        estatusGuia.m_sEstatus
-                                      }
-                                    </option>
-                                  )
-                                )}
-                              </select>
-
-                            </div>
-
-                            <div className="col-sm-4 col-md-2-5 unit">
-                              <label className="label">
-                                Tipo de Cambio
-                          </label>
-                              <div className="input">
-                                <input
-                                  onChange={handleChange}
-                                  className="form-control"
-                                  type="text"
-                                  placeholder={state.tipoCambio}
-                                  id="tipoCambio"
-                                 disabled="disabled"
-                                />
-                              </div>
-                            </div>
-
-                            <div className="col-sm-4 col-md-2-5 unit">
-                              <label className="label">
-                                Tipo Cobro
-                          </label>
-                              <select
-                                className="form-control"
-                                required
-                                onChange={handleChange}
-                                id="idTipoCobro"
-                                read="true"
-                                value={state.idTipoCobro}    
-                                disabled="disabled">
-
-                                <option value="0">
-                                  Seleccionar
-                            </option>
-                                {dataTipoCobro.map(
-                                  (tipoCobro) => (
-                                    <option key={tipoCobro.m_nIdTipoCobro} value={tipoCobro.m_nIdTipoCobro}>
-                                      {
-                                        tipoCobro.m_sDescripcion
-                                      }
-                                    </option>
-                                  )
-                                )}
-                              </select>
-                            </div>
-                            <div className="col-sm-4">
-                                <label className="label">
-                                  Tipo Servicio
-                                </label>
-                                <select
-                                  className="form-control"
-                                  required
-                                  onChange={handleChange}
-                                  id="idTipoServicio"
-                                  read="true"
-                                >
-                                  {dataTipoServicio.map(
-                                    (tipoServicio) => (
-                                      <option key={tipoServicio.m_nIdTipoServicio} value={tipoServicio.m_nIdTipoServicio}>
-                                        {
-                                          tipoServicio.m_sDescripcion
-                                        }
-                                      </option>
-                                    )
-                                  )}
-                                </select>
-                              </div>                              
-                              <div className="col-sm-4">
-                              <label className="label">
-                                  Valor Declarado
-                          </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
+                                  <select
                                     className="form-control"
-                                    type="text"
-                                    placeholder={state.ValorDeclarado}
-                                    id="ValorDeclarado"
-                                  />
+                                    required
+                                    onChange={event => (cargaEmbarqueSucursal(event.target.value))}
+                                    id="idSucursal"
+                                    read="true"
+                                    value={state.idSucursal}
+                                  >
+                                    <option value="0">
+                                      Seleccionar
+                            </option>
+                                    {dataSucursal.map(
+                                      (sucursal) => (
+                                        <option key={sucursal.m_nIdSucursal} value={sucursal.m_nIdSucursal}>
+                                          {
+                                            sucursal.m_sSucursal
+                                          }
+                                        </option>
+                                      )
+                                    )}
+                                  </select>
                                 </div>
-                              </div>                                
+
+                                <div className="col-sm-4 col-md-2-5 unit">
+                                  <label className="label">
+                                    Moneda
+                          </label>
+                                  <select
+                                    className="form-control"
+                                    required
+                                    onChange={event => (cargaEmbarqueMoneda(event.target.value))}
+                                    id="idMoneda"
+                                    read="true"
+                                    value={state.idMoneda}
+                                  >
+                                    <option value="0">
+                                      Seleccionar
+                            </option>
+                                    {dataMoneda.map(
+                                      (moneda) => (
+                                        <option key={moneda.m_nIdMoneda} value={moneda.m_nIdMoneda}>
+                                          {
+                                            moneda.m_sMoneda
+                                          }
+                                        </option>
+                                      )
+                                    )}
+                                  </select>
+                                </div>
+
+                                <div className="col-sm-4 col-md-2-5 unit">
+                                  <label className="label">
+                                    Folio Guia
+                          </label>
+                                  <div className="input">
+                                    <input
+                                      onChange={handleChange}
+                                      className="form-control"
+                                      type="text"
+                                      placeholder={state.folioGuía}
+                                      id="folioGuia"
+                                      disabled="disabled"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="col-sm-4 col-md-2-5 unit">
+                                  <label className="label">
+                                    Folio Embarque
+                          </label>
+                                  <select
+                                    className="form-control"
+                                    required
+                                    onChange={event => (handleEmbarque(event.target.value))}
+                                    id="idEmbarque"
+                                    read="true"
+                                    value={state.idEmbarque}
+
+                                  >
+                                    <option value="0">
+                                      Seleccionar
+                            </option>
+                                    {dataEmbarque.map(
+                                      (embarque) => (
+                                        <option key={embarque.m_nIdEmbarque} value={embarque.m_nIdEmbarque} >
+                                          {
+                                            embarque.m_nFolioEmbarque
+                                          }
+                                        </option>
+                                      )
+                                    )}
+                                  </select>
+                                </div>
+                                <div className="col-sm-4 col-md-2-5 unit">
+                                  <label className="label">
+                                    Tracking
+                          </label>
+                                  <div className="input">
+                                    <input
+                                      onChange={handleChange}
+                                      className="form-control"
+                                      type="text"
+                                      placeholder={state.tracking}
+                                      id="tracking"
+                                      disabled="disabled"
+                                    />
+                                  </div>
+                                </div>
+
+
+                                <div className="col-sm-4 col-md-2-5 unit">
+                                  <label className="label">
+                                    Folio Informe
+                          </label>
+                                  <div className="input">
+                                    <input
+                                      onChange={handleChange}
+                                      className="form-control"
+                                      type="text"
+                                      placeholder={state.folioInforme}
+                                      id="folioInforme"
+                                      disabled="disabled"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="col-sm-4 col-md-2-5 unit">
+                                  <label className="label">
+                                    Fecha / Hora
+                          </label>
+                                  <div className="input">
+                                    <input
+                                      onChange={handleChange}
+                                      className="form-control"
+                                      type="text"
+                                      placeholder={state.fecha}
+                                      id="fecha"
+                                      disabled="disabled"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="col-sm-4 col-md-2-5 unit">
+                                  <label className="label">
+                                    Estatus de la Guia
+                          </label>
+                                  <select
+                                    className="form-control"
+                                    required
+                                    onChange={handleChange}
+                                    id="idEstatusGuia"
+                                    read="true"
+                                    value={state.idEstatusGuia}
+                                  >
+                                    <option value="0">
+                                      Seleccionar
+                            </option>
+                                    {dataEstatusGuia.map(
+                                      (estatusGuia) => (
+                                        <option key={estatusGuia.m_nIdEstatusGuia} value={estatusGuia.m_nIdEstatusGuia} >
+                                          {
+                                            estatusGuia.m_sEstatus
+                                          }
+                                        </option>
+                                      )
+                                    )}
+                                  </select>
+
+                                </div>
+
+                                <div className="col-sm-4 col-md-2-5 unit">
+                                  <label className="label">
+                                    Tipo de Cambio
+                          </label>
+                                  <div className="input">
+                                    <input
+                                      onChange={handleChange}
+                                      className="form-control"
+                                      type="text"
+                                      placeholder={state.tipoCambio}
+                                      id="tipoCambio"
+                                      disabled="disabled"
+                                    />
+                                  </div>
+                                </div>
+
+                              </div>
+                            </form>
                           </div>
-                        </form>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
 
-              {/*remitente*/}
-              <div className="widget-wrap" id="remitenteDestinatario">
-                
-              <div className="widget-header">
-                <div className="col-md-6">
-                  <h2>Remitente</h2>
-                </div>
-                <div className="col-md-6">
-                  <h2>Destinatario</h2>
-                </div>
-              </div>
-              
-              <div className="row">  
-              <div className="col-md-6">
-              <div className="widget-container">
-                  <div className="widget-content">
+                  {/*remitente*/}
+                  <div className="widget-wrap" id="remitenteDestinatario">
+
+                    <div className="widget-header">
+                      <div className="col-md-6">
+                        <h2>Remitente</h2>
+                      </div>
+                      <div className="col-md-6">
+                        <h2>Destinatario</h2>
+                      </div>
+                    </div>
+
                     <div className="row">
-                      <div className="col-md-12">
-                        <form className="j-forms">
-                          <div className="form-content">
+                      <div className="col-md-6">
+                        <div className="widget-container">
+                          <div className="widget-content">
+                            <div className="row">
+                              <div className="col-md-12">
+                                <form className="j-forms">
+                                  <div className="form-content">
 
-                            <div className="col-md-8 unit">
-                              <label className="label">
-                                Nombre
+                                    <div className="col-md-8 unit">
+                                      <label className="label">
+                                        Nombre
                         </label>
-                              <div className="input">
-                                <input
-                                  onChange={handleChange}
-                                  className="form-control"
-                                  type="text"
-                                  placeholder={state.nombreRemitente}
-                                  id="nombreRemitente"
-                                  disabled="disabled"
-                                />
-                              </div>
-                            </div>
+                                      <div className="input">
+                                        <input
+                                          onChange={handleChange}
+                                          className="form-control"
+                                          type="text"
+                                          placeholder={state.nombreRemitente}
+                                          id="nombreRemitente"
+                                          disabled="disabled"
+                                        />
+                                      </div>
+                                    </div>
 
-                            <div className="col-md-4 unit">
-                              <label className="label">
-                                RFC
+                                    <div className="col-md-4 unit">
+                                      <label className="label">
+                                        RFC
                         </label>
-                              <div className="input">
-                                <input
-                                  onChange={handleChange}
-                                  className="form-control"
-                                  type="text"
-                                  placeholder={state.RFCRemitente}
-                                  id="RFCRemitente"
-                                  disabled="disabled"
-                                />
-                              </div>
-                            </div>
+                                      <div className="input">
+                                        <input
+                                          onChange={handleChange}
+                                          className="form-control"
+                                          type="text"
+                                          placeholder={state.RFCRemitente}
+                                          id="RFCRemitente"
+                                          disabled="disabled"
+                                        />
+                                      </div>
+                                    </div>
 
-                            <div className="col-md-8 unit">
-                              <label className="label">
-                                Domicilio
+                                    <div className="col-md-8 unit">
+                                      <label className="label">
+                                        Domicilio
                         </label>
-                              <div className="input">
-                                <input
-                                  onChange={handleChange}
-                                  className="form-control"
-                                  type="text"
-                                  placeholder={state.domicilioRemitente}
-                                  id="domicilioRemitente"
-                                  disabled="disabled"
-                                />
-                              </div>
-                            </div>
+                                      <div className="input">
+                                        <input
+                                          onChange={handleChange}
+                                          className="form-control"
+                                          type="text"
+                                          placeholder={state.domicilioRemitente}
+                                          id="domicilioRemitente"
+                                          disabled="disabled"
+                                        />
+                                      </div>
+                                    </div>
 
-                            <div className="col-md-4 unit">
-                              <label className="label">
-                                Código Postal
+                                    <div className="col-md-4 unit">
+                                      <label className="label">
+                                        Código Postal
                         </label>
-                              <div className="input">
-                                <input
-                                  onChange={handleChange}
-                                  className="form-control"
-                                  type="text"
-                                  placeholder={state.codigoPostalRemitente}
-                                  id="codigoPostalRemitente"
-                                  disabled="disabled"
-                                />
-                              </div>
-                            </div>
+                                      <div className="input">
+                                        <input
+                                          onChange={handleChange}
+                                          className="form-control"
+                                          type="text"
+                                          placeholder={state.codigoPostalRemitente}
+                                          id="codigoPostalRemitente"
+                                          disabled="disabled"
+                                        />
+                                      </div>
+                                    </div>
 
-                            <div className="col-md-4 unit">
-                              <label className="label">
-                                Ciudad
+                                    <div className="col-md-4 unit">
+                                      <label className="label">
+                                        Ciudad
                         </label>
-                              <div className="input">
-                                <input
-                                  onChange={handleChange}
-                                  className="form-control"
-                                  type="text"
-                                  placeholder={state.ciudadRemitente}
-                                  id="ciudadRemitente"
-                                  disabled="disabled"
-                                />
+                                      <div className="input">
+                                        <input
+                                          onChange={handleChange}
+                                          className="form-control"
+                                          type="text"
+                                          placeholder={state.ciudadRemitente}
+                                          id="ciudadRemitente"
+                                          disabled="disabled"
+                                        />
 
-                              </div>
-                            </div>
+                                      </div>
+                                    </div>
 
-                            <div className="col-md-4 unit">
-                              <label className="label">
-                                Correo Electrónico
+                                    <div className="col-md-4 unit">
+                                      <label className="label">
+                                        Correo Electrónico
                         </label>
-                              <div className="input">
-                                <input
-                                  onChange={handleChange}
-                                  className="form-control"
-                                  type="text"
-                                  placeholder={state.correoRemitente}
-                                  id="correoRemitente"
-                                  disabled="disabled"
-                                />
-                              </div>
-                            </div>
+                                      <div className="input">
+                                        <input
+                                          onChange={handleChange}
+                                          className="form-control"
+                                          type="text"
+                                          placeholder={state.correoRemitente}
+                                          id="correoRemitente"
+                                          disabled="disabled"
+                                        />
+                                      </div>
+                                    </div>
 
-                            <div className="col-md-4 unit">
-                              <label className="label">
-                                Teléfono
+                                    <div className="col-md-4 unit">
+                                      <label className="label">
+                                        Teléfono
                         </label>
-                              <div className="input">
-                                <input
-                                  onChange={handleChange}
-                                  className="form-control"
-                                  type="text"
-                                  placeholder={state.telefonoRemitente}
-                                  id="telefonoRemitente"
-                                  disabled="disabled"
-                                />
-                              </div>
-                            </div>
+                                      <div className="input">
+                                        <input
+                                          onChange={handleChange}
+                                          className="form-control"
+                                          type="text"
+                                          placeholder={state.telefonoRemitente}
+                                          id="telefonoRemitente"
+                                          disabled="disabled"
+                                        />
+                                      </div>
+                                    </div>
 
-                            <div className="col-md-6 unit">
-                              <label className="label">
-                                Contacto
+                                    <div className="col-md-6 unit">
+                                      <label className="label">
+                                        Contacto
                         </label>
-                              <div className="input">
-                                <input
-                                  onChange={handleChange}
-                                  className="form-control"
-                                  type="text"
-                                  placeholder={state.contactoRemitente}
-                                  id="contactoRemitente"
-                                  disabled="disabled"
-                                />
-                              </div>
-                            </div>
+                                      <div className="input">
+                                        <input
+                                          onChange={handleChange}
+                                          className="form-control"
+                                          type="text"
+                                          placeholder={state.contactoRemitente}
+                                          id="contactoRemitente"
+                                          disabled="disabled"
+                                        />
+                                      </div>
+                                    </div>
 
-                            <div className="col-md-6 unit">
-                              <label className="label">
-                                Origen
+                                    <div className="col-md-6 unit">
+                                      <label className="label">
+                                        Origen
                         </label>
-                              <div className="input">
-                                <input
-                                  onChange={handleChange}
-                                  className="form-control"
-                                  type="text"
-                                  placeholder={state.origenRemitente}
-                                  id="origenRemitente"
-                                  disabled="disabled"
-                                />
+                                      <div className="input">
+                                        <input
+                                          onChange={handleChange}
+                                          className="form-control"
+                                          type="text"
+                                          placeholder={state.origenRemitente}
+                                          id="origenRemitente"
+                                          disabled="disabled"
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </form>
                               </div>
-                            </div>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-              </div>
-              </div>      
-                {/*destinatario*/}
-              <div className="col-md-6">      
-              <div className="widget-container">
-                <div className="widget-content">
-                  <div className="row">
-                    <div className="col-md-12">
-                      <form className="j-forms">
-                        <div className="form-content">
-
-                          <div className="col-md-8 unit">
-                            <label className="label">
-                              Nombre
-                      </label>
-                            <div className="input">
-                              <input
-                                onChange={handleChange}
-                                className="form-control"
-                                type="text"
-                                placeholder={state.sNombreDestinatario}
-                                id="sNombreDestinatario"
-                                disabled="disabled"
-                              />
-                            </div>
-                          </div>
-
-                          <div className="col-md-4 unit">
-                            <label className="label">
-                              RFC
-                      </label>
-                            <div className="input">
-                              <input
-                                onChange={handleChange}
-                                className="form-control"
-                                type="text"
-                                placeholder={state.sRFCDestinatario}
-                                id="sRFCDestinatario"
-                                disabled="disabled"
-                              />
-                            </div>
-                          </div>
-
-                          <div className="col-md-8 unit">
-                            <label className="label">
-                              Domicilio
-                      </label>
-                            <div className="input">
-                              <input
-                                onChange={handleChange}
-                                className="form-control"
-                                type="text"
-                                placeholder={state.sDomicilioDestinatario}
-                                id="sDomicilioDestinatario"
-                                disabled="disabled"
-                              />
-                            </div>
-                          </div>
-
-                          <div className="col-md-4 unit">
-                            <label className="label">
-                              Código Postal
-                      </label>
-                            <div className="input">
-                              <input
-                                onChange={handleChange}
-                                className="form-control"
-                                type="text"
-                                placeholder={state.idCodigoPostalDestinatario}
-                                id="idCodigoPostalDestinatario"
-                                disabled="disabled"
-                              />
-                            </div>
-                          </div>
-
-                          <div className="col-md-4 unit">
-                            <label className="label">
-                              Ciudad
-                      </label>
-                            <div className="input">
-                              <input
-                                onChange={handleChange}
-                                className="form-control"
-                                type="text"
-                                placeholder={state.ciudadDestinatario}
-                                id="ciudadDestinatario"
-                                disabled="disabled"
-                              />
-                            </div>
-                          </div>
-
-                          <div className="col-md-4 unit">
-                            <label className="label">
-                              Correo Electrónico
-                      </label>
-                            <div className="input">
-                              <input
-                                onChange={handleChange}
-                                className="form-control"
-                                type="text"
-                                placeholder={state.sCorreoDestinatario}
-                                id="sCorreoDestinatario"
-                                disabled="disabled"
-                              />
-                            </div>
-                          </div>
-
-                          <div className="col-md-4 unit">
-                            <label className="label">
-                              Teléfono
-                      </label>
-                            <div className="input">
-                              <input
-                                onChange={handleChange}
-                                className="form-control"
-                                type="text"
-                                placeholder={state.sTelefonoDestinatario}
-                                id="sTelefonoDestinatario"
-                                disabled="disabled"
-                              />
-                            </div>
-                          </div>
-
-                          <div className="col-md-6 unit">
-                            <label className="label">
-                              Contacto
-                      </label>
-                            <div className="input">
-                              <input
-                                onChange={handleChange}
-                                className="form-control"
-                                type="text"
-                                placeholder={state.sContactoDestinatario}
-                                id="sContactoDestinatario"
-                                disabled="disabled"
-                              />
-                            </div>
-                          </div>
-
-                          <div className="col-md-6 unit">
-                            <label className="label">
-                              Destino
-                      </label>
-                            <div className="input">
-                              <input
-                                onChange={handleChange}
-                                className="form-control"
-                                type="text"
-                                placeholder={state.CiudadDestino}
-                                id="CiudadDestino"
-                                disabled="disabled"
-                              />
                             </div>
                           </div>
                         </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </div>                  
-              </div>
-              </div>
-              
-              </div>
-              <div className="widget-wrap" id="paquetesSobres">
-                <div className="widget-header">
-                <div className="col-md-6">
-                  <h2>Número de Paquetes</h2>
-                </div>
-                <div className="col-md-6">
-                  <h2>Número de Sobres</h2>
-                </div>
-                  
-                </div>
-                <div className="row">
-                <div className="col-md-6"  >                      
-                <div className="widget-container">
-                  <div className="widget-content">
-                    <div className="row">
-                      <div className="col-md-12">
-                        <form className="j-forms">
-                          <div className="form-content">
-                           
+                      </div>
+                      {/*destinatario*/}
+                      <div className="col-md-6">
+                        <div className="widget-container">
+                          <div className="widget-content">
+                            <div className="row">
+                              <div className="col-md-12">
+                                <form className="j-forms">
+                                  <div className="form-content">
 
-                            <div style={{ padding: "20px" }}>
-                              <Carousel
-                                className={classes.paqueteCarrusel}
-                                widgets={[IndicatorDots, Buttons]}
-                                frames={framesPaquete}
-                              ></Carousel>
+                                    <div className="col-md-8 unit">
+                                      <label className="label">
+                                        Nombre
+                      </label>
+                                      <div className="input">
+                                        <input
+                                          onChange={handleChange}
+                                          className="form-control"
+                                          type="text"
+                                          placeholder={state.sNombreDestinatario}
+                                          id="sNombreDestinatario"
+                                          disabled="disabled"
+                                        />
+                                      </div>
+                                    </div>
+
+                                    <div className="col-md-4 unit">
+                                      <label className="label">
+                                        RFC
+                      </label>
+                                      <div className="input">
+                                        <input
+                                          onChange={handleChange}
+                                          className="form-control"
+                                          type="text"
+                                          placeholder={state.sRFCDestinatario}
+                                          id="sRFCDestinatario"
+                                          disabled="disabled"
+                                        />
+                                      </div>
+                                    </div>
+
+                                    <div className="col-md-8 unit">
+                                      <label className="label">
+                                        Domicilio
+                      </label>
+                                      <div className="input">
+                                        <input
+                                          onChange={handleChange}
+                                          className="form-control"
+                                          type="text"
+                                          placeholder={state.sDomicilioDestinatario}
+                                          id="sDomicilioDestinatario"
+                                          disabled="disabled"
+                                        />
+                                      </div>
+                                    </div>
+
+                                    <div className="col-md-4 unit">
+                                      <label className="label">
+                                        Código Postal
+                      </label>
+                                      <div className="input">
+                                        <input
+                                          onChange={handleChange}
+                                          className="form-control"
+                                          type="text"
+                                          placeholder={state.idCodigoPostalDestinatario}
+                                          id="idCodigoPostalDestinatario"
+                                          disabled="disabled"
+                                        />
+                                      </div>
+                                    </div>
+
+                                    <div className="col-md-4 unit">
+                                      <label className="label">
+                                        Ciudad
+                      </label>
+                                      <div className="input">
+                                        <input
+                                          onChange={handleChange}
+                                          className="form-control"
+                                          type="text"
+                                          placeholder={state.ciudadDestinatario}
+                                          id="ciudadDestinatario"
+                                          disabled="disabled"
+                                        />
+                                      </div>
+                                    </div>
+
+                                    <div className="col-md-4 unit">
+                                      <label className="label">
+                                        Correo Electrónico
+                      </label>
+                                      <div className="input">
+                                        <input
+                                          onChange={handleChange}
+                                          className="form-control"
+                                          type="text"
+                                          placeholder={state.sCorreoDestinatario}
+                                          id="sCorreoDestinatario"
+                                          disabled="disabled"
+                                        />
+                                      </div>
+                                    </div>
+
+                                    <div className="col-md-4 unit">
+                                      <label className="label">
+                                        Teléfono
+                      </label>
+                                      <div className="input">
+                                        <input
+                                          onChange={handleChange}
+                                          className="form-control"
+                                          type="text"
+                                          placeholder={state.sTelefonoDestinatario}
+                                          id="sTelefonoDestinatario"
+                                          disabled="disabled"
+                                        />
+                                      </div>
+                                    </div>
+
+                                    <div className="col-md-6 unit">
+                                      <label className="label">
+                                        Contacto
+                      </label>
+                                      <div className="input">
+                                        <input
+                                          onChange={handleChange}
+                                          className="form-control"
+                                          type="text"
+                                          placeholder={state.sContactoDestinatario}
+                                          id="sContactoDestinatario"
+                                          disabled="disabled"
+                                        />
+                                      </div>
+                                    </div>
+
+                                    <div className="col-md-6 unit">
+                                      <label className="label">
+                                        Destino
+                      </label>
+                                      <div className="input">
+                                        <input
+                                          onChange={handleChange}
+                                          className="form-control"
+                                          type="text"
+                                          placeholder={state.CiudadDestino}
+                                          id="CiudadDestino"
+                                          disabled="disabled"
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </form>
+                              </div>
                             </div>
                           </div>
-                        </form>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>      
-                </div> 
-                <div className="col-md-6"  >      
-                <div className="widget-container">
-                  <div className="widget-content">
-                    <div className="clone-widget">
-                    <form className="j-forms">
-                          <div className="form-content">
-                            
+                  <div className="widget-wrap" id="paquetesSobres">
+                    <div className="widget-header">
+                      <div className="col-md-6">
+                        <h2>Número de Paquetes</h2>
+                      </div>
+                      <div className="col-md-6">
+                        <h2>Número de Sobres</h2>
+                      </div>
 
-                            <div style={{ padding: "20px" }}>
-                              <Carousel
-                                className={classes.paqueteCarrusel}
-                                widgets={[IndicatorDots, Buttons]}
-                                frames={framesSobres}
-                              ></Carousel>
+                    </div>
+                    <div className="row">
+                      <div className="col-md-6"  >
+                        <div className="widget-container">
+                          <div className="widget-content">
+                            <div className="row">
+                              <div className="col-md-12">
+                                <form className="j-forms">
+                                  <div className="form-content">
+
+
+                                    <div style={{ padding: "20px" }}>
+                                      <Carousel
+                                        className={classes.paqueteCarrusel}
+                                        widgets={[IndicatorDots, Buttons]}
+                                        frames={framesPaquete}
+                                      ></Carousel>
+                                    </div>
+                                  </div>
+                                </form>
+                              </div>
                             </div>
                           </div>
-                        </form>
+                        </div>
+                      </div>
+                      <div className="col-md-6"  >
+                        <div className="widget-container">
+                          <div className="widget-content">
+                            <div className="clone-widget">
+                              <form className="j-forms">
+                                <div className="form-content">
+
+
+                                  <div style={{ padding: "20px" }}>
+                                    <Carousel
+                                      className={classes.paqueteCarrusel}
+                                      widgets={[IndicatorDots, Buttons]}
+                                      frames={framesSobres}
+                                    ></Carousel>
+                                  </div>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
+
+
                   </div>
-                </div>
-                </div>
-              </div>
-              
-     
-                </div>
-              <div className="widget-wrap" id="conceptosFacturacion">
-              <div className="widget-header">
-                <div className="col-md-12">
-                  <h2>Conceptos de Facturación</h2>
-                </div>                                  
-                </div>
-              
-              <div className="widget-container">
-                <div className="widget-content">
-                  <div className="row">
-                    <div className="col-md-12">
-                      <form className="j-forms">
-                        <div className="form-content">
-                          <a
-                            className="btn"
-                            style={{ margin: "10px" }}
-                            onClick={() => addConcepto()}
-                          >
-                            <i className="zmdi zmdi-plus"></i> Agregar Concepto
+                  <div className="widget-wrap" id="detalleFacturacion">
+                    <div className="widget-header">
+
+                      <div className="col-md-12">
+                        <h2>Detalle de Facturación</h2>
+                      </div>
+
+                    </div>
+                    <div className="row">
+                      <div className="col-md-12"  >
+                        <div className="widget-container">
+                          <div className="widget-content">
+                            <div className="row">
+                              <div className="col-md-12">
+                                <form className="j-forms">
+                                  <div className="form-content">
+                                    <div className="col-sm-4 col-md-4 unit">
+                                      <label className="label">
+                                        Tipo Cobro
+                          </label>
+                                      <select
+                                        className="form-control"
+                                        required
+                                        onChange={handleChange}
+                                        id="idTipoCobro"
+                                        read="true"
+                                        value={state.idTipoCobro}
+                                        disabled="disabled">
+
+                                        <option value="0">
+                                          Seleccionar
+                            </option>
+                                        {dataTipoCobro.map(
+                                          (tipoCobro) => (
+                                            <option key={tipoCobro.m_nIdTipoCobro} value={tipoCobro.m_nIdTipoCobro}>
+                                              {
+                                                tipoCobro.m_sDescripcion
+                                              }
+                                            </option>
+                                          )
+                                        )}
+                                      </select>
+                                    </div>
+                                    <div className="col-sm-4 col-md-4">
+                                      <label className="label">
+                                        Tipo Servicio
+                                </label>
+                                      <select
+                                        className="form-control"
+                                        required
+                                        onChange={handleChange}
+                                        id="idTipoServicio"
+                                        read="true"
+                                      >
+                                        {dataTipoServicio.map(
+                                          (tipoServicio) => (
+                                            <option key={tipoServicio.m_nIdTipoServicio} value={tipoServicio.m_nIdTipoServicio}>
+                                              {
+                                                tipoServicio.m_sDescripcion
+                                              }
+                                            </option>
+                                          )
+                                        )}
+                                      </select>
+                                    </div>
+                                    <div className="col-sm-4 col-md-4">
+                                      <label className="label">
+                                        Valor Declarado
+                          </label>
+                                      <div className="input">
+                                        <input
+                                          onChange={handleChange}
+                                          className="form-control"
+                                          type="text"
+                                          placeholder={state.ValorDeclarado}
+                                          id="ValorDeclarado"
+                                        />
+                                      </div>
+                                    </div>
+
+
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                  </div>
+
+                  <div className="widget-wrap" id="conceptosFacturacion">
+                    <div className="widget-header">
+                      <div className="col-md-12">
+                        <h2>Conceptos de Facturación</h2>
+                      </div>
+                    </div>
+
+                    <div className="widget-container">
+                      <div className="widget-content">
+                        <div className="row">
+                          <div className="col-md-12">
+                            <form className="j-forms">
+                              <div className="form-content">
+                                <a
+                                  className="btn"
+                                  style={{ margin: "10px" }}
+                                  onClick={() => addConcepto()}
+                                >
+                                  <i className="zmdi zmdi-plus"></i> Agregar Concepto
                         </a>
 
-                          <div style={{ padding: "20px" }}>
-                            <Carousel
-                              className={classes2.conceptoCarrusel}
-                              widgets={[IndicatorDots, Buttons]}
-                              frames={framesConcepto}
-                            ></Carousel>
+                                <div style={{ padding: "20px" }}>
+                                  <Carousel
+                                    className={classes2.conceptoCarrusel}
+                                    widgets={[IndicatorDots, Buttons]}
+                                    frames={framesConcepto}
+                                  ></Carousel>
+                                </div>
+                              </div>
+                            </form>
                           </div>
                         </div>
-                      </form>
-                    </div>
-                  </div>
-                
-                      <div className="row">
-                  <div className="col-md-3">
-                    <div className="form-footer" className="col-md-12">
 
-                      <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
-                                    >
-                                      Cancelar</button>
-                      <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
-                    </div>
+                        <div className="row">
+                          <div className="col-md-3">
+                            <div className="form-footer" className="col-md-12">
+
+                              <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
+                              >
+                                Cancelar</button>
+                              <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
+                            </div>
+                          </div>
+                        </div></div></div>
+
                   </div>
-               </div></div></div>
-                                        
-                                        </div>
-              
-           </div>
-           </form>
-            </div>  
+
+                </div>
+              </form>
+            </div>
             <div id="Importar" className="tab-pane fade">
-              
+
               <div className="widget-wrap">
                 <div className="widget-content">
                   <div className="row">
@@ -2897,8 +2950,8 @@ function handleImprmir2()
                         <div className="form-footer" className="col-md-12">
                           <button className="btn btn-default btn-block ex-noty" data-layout="topCenter" data-type="information">Notificación</button>
                           <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
-                                    >
-                                      Cancelar</button>
+                          >
+                            Cancelar</button>
                           <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
                         </div>
                       </form>
@@ -2907,17 +2960,17 @@ function handleImprmir2()
                 </div>
               </div>
             </div>
-            <div id="Imprimir" className="tab-pane fade">             
-            <div style={{ padding: "20px" }}  className="widget-wrap">
-              <div id="impresionDiv">
-              
-                {framesPaqueteImp}
-              </div>
-              
+            <div id="Imprimir" className="tab-pane fade">
+              <div style={{ padding: "20px" }} className="widget-wrap">
+                <div id="impresionDiv">
+
+                  {framesPaqueteImp}
+                </div>
+
 
               </div>
-          
-              </div>
+
+            </div>
           </div>
         </div>
 

@@ -874,7 +874,7 @@ function Embarque() {
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
+      <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
@@ -883,6 +883,7 @@ function Embarque() {
       <section className="main-container">
 
         <div className="container-fluid">
+
           <div className="page-header filled full-block light">
             <div className="row">
               <div className="col-md-6 col-sm-6">
@@ -895,9 +896,6 @@ function Embarque() {
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="container-fluid">
 
           <ul className="nav navStatica nav-tabs">
             <li className="active">
