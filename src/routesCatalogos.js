@@ -207,6 +207,12 @@ const catalogRoutes = [
     icon: PConfiguracionIcon,
     component: EmbalajesPage,
   },
+  {
+    path: "/TiposServicio",
+    name: "Tipos de Servicio",
+    icon: PConfiguracionIcon,
+    component: TipoServicioPage,
+  },
 ];
 
 export default catalogRoutes;

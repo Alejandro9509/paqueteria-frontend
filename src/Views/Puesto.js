@@ -14,6 +14,7 @@ function Puesto() {
     codigoPuesto: 0,
     puesto: "",
     agregar: "Agregar",
+    DerechoBorrar:55,
     height: window.innerHeight
   })
 
@@ -50,11 +51,26 @@ function Puesto() {
   }
 
   function handleEliminar(id) {
+    var derecho;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${process.env.REACT_APP_ID_USUARIO}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      
     const url = `${process.env.REACT_APP_API_URL}/Puesto/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       console.log(respuesta)
       getAllData();
     }).catch(err => {
+      alert(err)
+    });
+	}).catch(err => {
       alert(err)
     });
   }

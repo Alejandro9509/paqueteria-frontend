@@ -31,7 +31,7 @@ function CiudadesCodigoPostal() {
     abreviacionCiudad: "",
     idEstado: 0,
     idPais: 0,
-
+    DerechoBorrar:13,
     idCodigoPostal: 0,
     codigoPostal: "",
     zona: "",
@@ -120,13 +120,28 @@ function CiudadesCodigoPostal() {
   }
 
   function handleEliminarCodigoPostal(id) {
-    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/Eliminar/` + id;
+    var derecho;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${process.env.REACT_APP_ID_USUARIO}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
       getAllCodigoPostal();
     }).catch(err => {
       alert(err)
     });
+	}).catch(err => {
+      alert(err)
+    });
+    
   }
 
   function handleShowModificarCiudad(id) {

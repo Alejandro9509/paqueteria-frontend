@@ -228,6 +228,7 @@ function Informes(props) {
     IdInforme: 0,
     FolioInforme: 0,
     Fecha: "",
+    DerechoBorrar:151,
     Hora: "",
     IdEstatusInforme: 0,
     IdViaje: 0,
@@ -339,6 +340,18 @@ function Informes(props) {
   }
 
   function handleEliminar(id) {
+    var derecho;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${process.env.REACT_APP_ID_USUARIO}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      
     const url = `${process.env.REACT_APP_API_URL}/Unidadd/Eliminar/` + id;
     axios
       .get(url, { headers })
@@ -348,6 +361,9 @@ function Informes(props) {
       .catch((err) => {
         alert(err);
       });
+	}).catch(err => {
+      alert(err)
+    });
   }
   const handleChangeOrigenChange = event => {
     console.log(event.target.value)
