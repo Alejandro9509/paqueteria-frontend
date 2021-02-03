@@ -63,7 +63,9 @@ function Configuracion() {
                       viewBox="0 0 50 60"
                     />
                   </button>
+                  <br></br>
                   <label>{r.name}</label>
+                  <br></br>
                 </div>
               </Link>
             )

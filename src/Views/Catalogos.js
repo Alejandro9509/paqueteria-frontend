@@ -28,8 +28,8 @@ function Catalogo() {
       {/*Page Container Start Here*/}
       <section className="main-container">
 
-        <div className="container-fluid" style={{ paddingLeft: "-5px", paddingRight: "-15px" }}>
-          
+        <div className="container-fluid" style={{ paddingLeft: "-5px", paddingRight: "-15px", justifyContent: "flex-start" }}>
+
           <div className="page-header filled full-block light">
             <div className="row">
               <div className="col-md-6 col-sm-6">
@@ -42,11 +42,10 @@ function Catalogo() {
               </div>
             </div>
           </div>
-
           {catalogRoutes.map((r, index) => {
             return (
               <Link to={r.path}>
-                <div className="col-division-md-botones col-division-sm-botones col-division-lg-botones caja-boton" style={{ textAlign: "center" }}>
+                <div className="col-division-md-botones col-division-sm-botones col-division-lg-botones caja-boton">
                   <button
                     type="button"
                     key={index}
@@ -58,7 +57,9 @@ function Catalogo() {
                       viewBox="0 0 50 50"
                     />
                   </button>
-                  <label>{r.name}</label>
+                  <br></br>
+                  <label style={{ alignSelf: "center" }}>{r.name}</label>
+                  <br></br>
                 </div>
               </Link>
             );

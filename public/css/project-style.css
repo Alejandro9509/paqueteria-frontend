@@ -10,6 +10,8 @@ h2 {
     align-content: center !important;
     align-items: center !important;
     justify-content: center !important;
+    text-align: center;
+    vertical-align: middle;
     padding: 3px !important;
     width: 70% !important;
 }
@@ -19,6 +21,8 @@ h2 {
     align-content: center !important;
     align-items: center !important;
     justify-content: center !important;
+    text-align: center;
+    vertical-align: middle;
     padding: 3px !important;
     width: 70% !important;
 }
@@ -40,8 +44,8 @@ h2 {
     margin: 0%;
     display: inline-block;
     color: #F9A03E;
-    font-size: 40px;
-    background: #FFFFFF 0% 0% no-repeat padding-box;
+    font-size: 20px;
+    background: #FFFFFF 0% 0% no-repeat;
     box-shadow: 0px 3px 6px #0000004C;
     border-radius: 10px;
     opacity: 1;
@@ -49,7 +53,7 @@ h2 {
 }
 
 .boton-de-catalogos:hover {
-    background: #F9A03E 0% 0% no-repeat padding-box;
+    background: #F9A03E 0% 0% no-repeat;
     box-shadow: 0px 3px 6px #0000004C;
     fill: #FFFFFF !important;
     stroke:#FFFFFF !important;
@@ -58,20 +62,24 @@ h2 {
     border-width: 0px;
 }
 
+.boton-de-catalogos:hover > .a{
+  fill: #FFFFFF !important;
+  stroke: #FFFFFF !important;
+  stroke-width: 1% !important;
+}
+
 .boton-de-catalogos > .a{
   fill: #F9A03E !important;
   stroke: #F9A03E !important;
   stroke-width: 1% !important;
 }
 
-.boton-de-catalogos > .a:hover{
-  fill: #FFFFFF !important;
-  stroke: #FFFFFF !important;
-  stroke-width: 1% !important;
-}
-
 .caja-boton {
-    padding-top: 10px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  align-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .divider {
