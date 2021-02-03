@@ -33,6 +33,7 @@ function App(props) {
     nombre: "",
     rfc: "",
     activo: false,
+    DerechoBorrar:50,
     calle: "",
     noExterior: 0,
     noInterior: 0,
@@ -183,17 +184,32 @@ function App(props) {
   };
 
   function handleEliminar(id) {
+    var derecho;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${process.env.REACT_APP_ID_USUARIO}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      
     const url =
-      `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/Eliminar/` + id;
-    axios
-      .delete(url, { headers })
-      .then((respuesta) => {
-        alert(respuesta.data);
-        getAllDataRemDes();
-      })
-      .catch((err) => {
-        alert(err);
-      });
+    `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/Eliminar/` + id;
+  axios
+    .delete(url, { headers })
+    .then((respuesta) => {
+      alert(respuesta.data);
+      getAllDataRemDes();
+    })
+    .catch((err) => {
+      alert(err);
+    });
+	}).catch(err => {
+      alert(err)
+    });
   }
 
   function handleShowModificar(row) {

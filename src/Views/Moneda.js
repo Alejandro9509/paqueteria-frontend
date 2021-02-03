@@ -13,13 +13,14 @@ function Moneda() {
     codigo: "",
     moneda: "",
     simbolo: "",
+    DerechoBorrar:33,
     abreviacion: "",
     agregar: "Agregar",
     height: window.innerHeight
   })
 
   const handleAceptar = (e) => {
-    /**
+    
     e.preventDefault()
     var params = {
 
@@ -51,19 +52,34 @@ function Moneda() {
         alert(err)
       });
     }
-     */
-    alert("No existe servicio todavia")
+     
+    //alert("No existe servicio todavia")
 
   }
 
   function handleEliminar(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Moneda/Eliminar/` + id;
+    var derecho;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${process.env.REACT_APP_ID_USUARIO}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      const url = `${process.env.REACT_APP_API_URL}/Moneda/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta)
       window.location.reload();
     }).catch(err => {
       alert(err)
     });
+	}).catch(err => {
+      alert(err)
+    });
+    
   }
 
   function handleShowModificar(id) {

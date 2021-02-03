@@ -17,6 +17,7 @@ function GrupoCliente() {
   const [state, setState] = React.useState({
     showPopUp: false,
     idGrupoCliente: 0,
+    DerechoBorrar:40,
     codigoGrupo: 0,
     grupoCliente: "",
     agregar: "Agregar",
@@ -58,11 +59,26 @@ function GrupoCliente() {
   }
 
   function handleEliminar(id) {
+    var derecho;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${process.env.REACT_APP_ID_USUARIO}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      
     const url = `${process.env.REACT_APP_API_URL}/GruposClientes/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       console.log(respuesta);
       getAllData();
     }).catch(err => {
+      alert(err)
+    });
+	}).catch(err => {
       alert(err)
     });
   }

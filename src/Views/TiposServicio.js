@@ -14,6 +14,7 @@ function TiposServicio() {
     IdTipoServicio: 0,
     Descripcion: "",
     DiasHabiles: 0,
+    DerechoBorrar:84,
     Costo: 0,
     Activo: 0,
     agregar: "Agregar",
@@ -56,11 +57,26 @@ function TiposServicio() {
   }
 
   function handleEliminar(id) {
+    var derecho;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${process.env.REACT_APP_ID_USUARIO}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      
     const url = `${process.env.REACT_APP_API_URL}/TipoServicio/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       console.log(respuesta)
       getAllData();
     }).catch(err => {
+      alert(err)
+    });
+	}).catch(err => {
       alert(err)
     });
   }

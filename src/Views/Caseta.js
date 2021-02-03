@@ -11,7 +11,7 @@ function Caseta() {
   const [state, setState] = React.useState({
     idCaseta: 0,
     descripcion: "",
-
+    DerechoBorrar:105,
     tarifaEje2: "",
     tarifaEje3: "",
     tarifaEje4: "",
@@ -64,15 +64,31 @@ function Caseta() {
     }
 
   }
-
   function handleEliminar(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Casetas/Eliminar/` + id;
+    var derecho;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${process.env.REACT_APP_ID_USUARIO}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      const url = `${process.env.REACT_APP_API_URL}/Casetas/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
       getAllData()
     }).catch(err => {
       alert(err)
     });
+    }).catch(err => {
+      alert(err)
+    });
+    
+    
+    
   }
 
   function handleShowModificar(id) {

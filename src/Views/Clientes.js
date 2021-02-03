@@ -312,6 +312,7 @@ function App(props) {
     nombreFiscal: "",
     nombreCorto: "",
     idSucursal: 0,
+    DerechoBorrar:45,
     idMoneda: 0,
     idImpuestoTransladado: 0,
     aplicarDetalleMaterialesCadaViajeXML: false,
@@ -369,6 +370,18 @@ function App(props) {
   }
 
   function handleShowModificar(id) {
+    var derecho;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${process.env.REACT_APP_ID_USUARIO}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      
     console.log(id);
     const url = `${process.env.REACT_APP_API_URL}/Unidad/GetById/` + id;
     axios.get(url, { headers }).then((respuesta) => {
@@ -377,6 +390,9 @@ function App(props) {
         ...state,
         
       });
+    });
+	}).catch(err => {
+      alert(err)
     });
   }
 
@@ -506,6 +522,18 @@ function App(props) {
   };
 
   function handleEliminar(id) {
+    var derecho;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${process.env.REACT_APP_ID_USUARIO}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      
     const url = `${process.env.REACT_APP_API_URL}/Unidad/Eliminar/` + id;
     axios
       .get(url, { headers })
@@ -515,6 +543,9 @@ function App(props) {
       .catch((err) => {
         alert(err);
       });
+	}).catch(err => {
+      alert(err)
+    });
   }
 
   const handleChange = (event) => {

@@ -49,6 +49,7 @@ function Recoleccion() {
   const [dataUnidad, setDataUnidad] = React.useState([]);
   const [state, setState] = React.useState({
     showPopUp: false,
+    DerechoBorrar:133,
     agregar: "Agregar",
     idRecoleccion: 0,
     fechaInicial: "",
@@ -268,6 +269,18 @@ function Recoleccion() {
   }
 
   function handleEliminar(id) {
+    var derecho;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${process.env.REACT_APP_ID_USUARIO}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      
     const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Eliminar/` + id;
     axios
       .delete(url, { headers })
@@ -278,6 +291,9 @@ function Recoleccion() {
       .catch((err) => {
         alert(err);
       });
+	}).catch(err => {
+      alert(err)
+    });
   }
 
   function handleShowModificar(id) {
