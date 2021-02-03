@@ -30,7 +30,7 @@ function Catalogo() {
 
         <div className="container-fluid" style={{ paddingLeft: "-5px", paddingRight: "-15px", justifyContent: "flex-start" }}>
 
-          <div className="page-header filled full-block light">
+          <div className="page-header filled full-block light" >
             <div className="row">
               <div className="col-md-6 col-sm-6">
                 <h2>Catálogos</h2>
@@ -42,28 +42,32 @@ function Catalogo() {
               </div>
             </div>
           </div>
-          {catalogRoutes.map((r, index) => {
-            return (
-              <Link to={r.path}>
-                <div className="col-division-md-botones col-division-sm-botones col-division-lg-botones caja-boton">
-                  <button
-                    type="button"
-                    key={index}
-                    style={{ textAlign: "center", alignContent: "center" }}
-                    className="boton-de-catalogos">
-                    <SvgIcon
-                      component={r.icon}
-                      className="imagen-de-catalogos"
-                      viewBox="0 0 50 50"
-                    />
-                  </button>
-                  <br></br>
-                  <label style={{ alignSelf: "center" }}>{r.name}</label>
-                  <br></br>
-                </div>
-              </Link>
-            );
-          })}
+
+          <div style={{ display: "flex", flexWrap: "wrap" }}>
+            {catalogRoutes.map((r, index) => {
+              return (
+                <Link to={r.path}>
+                  <div className="caja-boton">
+                    <button
+                      type="button"
+                      key={index}
+                      style={{ textAlign: "center", alignContent: "center" }}
+                      className="boton-de-catalogos">
+                      <SvgIcon
+                        style={{ position: "relative" }}
+                        component={r.icon}
+                        className="imagen-de-catalogos"
+                        viewBox="0 0 50 50"
+                      />
+                    </button>
+                    <br></br>
+                    <label style={{ alignSelf: "center" }}>{r.name}</label>
+                    <br></br>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
         </div>
       </section>
       {/*Page Container End Here*/}
