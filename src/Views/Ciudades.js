@@ -266,8 +266,8 @@ function CiudadesCodigoPostal() {
     });
   };
 
-  function getAllCodigoPostal() {
-    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
+  function getAllCodigoPostal(id) {
+    const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListadoCP/`+id;
     axios.get(url, { headers }).then(respuesta => {
       setDataCodigoPostal(respuesta.data)
     });

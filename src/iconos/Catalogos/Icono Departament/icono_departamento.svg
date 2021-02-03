@@ -1,1 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="64" height="43" viewBox="0 0 64 43"><defs><style>.a{fill:#f9a03e;}.b{fill:none;stroke:#f9a03e;stroke-width:2px;}</style></defs><g transform="translate(-584 -65)"><rect class="a" width="26" height="15" rx="5" transform="translate(602 65)"/><rect class="a" width="26" height="15" rx="5" transform="translate(584 93)"/><rect class="a" width="26" height="15" rx="5" transform="translate(622 93)"/><path class="b" d="M0,8.6V0" transform="translate(615.5 79.398)"/><path class="b" d="M0,8.6V0" transform="translate(635.5 88)"/><path class="b" d="M0,8.6V0" transform="translate(596.5 89)"/><path class="b" d="M0,40.986V0" transform="translate(636.486 88) rotate(90)"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="43" viewBox="0 0 64 43">
+<defs><style>.b{fill:none;stroke:#f9a03e;stroke-width:2px;} .b:hover{fill:none;stroke:#FFFFFF;stroke-width:2px;}</style></defs>
+<g transform="translate(-584 -65)">
+<rect width="26" height="15" rx="5" transform="translate(602 65)" fill="current"/>
+<rect width="26" height="15" rx="5" transform="translate(584 93)" fill="current"/>
+<rect width="26" height="15" rx="5" transform="translate(622 93)" fill="current"/>
+<path class="b" d="M0,8.6V0" transform="translate(615.5 79.398)"/>
+<path class="b" d="M0,8.6V0" transform="translate(635.5 88)"/>
+<path class="b" d="M0,8.6V0" transform="translate(596.5 89)"/>
+<path class="b" d="M0,40.986V0" transform="translate(636.486 88) rotate(90)"/>
+</g></svg>
