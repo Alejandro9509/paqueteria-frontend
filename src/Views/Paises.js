@@ -514,7 +514,7 @@ function PaisesEstado() {
                           <form className="j-forms" onSubmit={handleAceptarPais}>
                             <div className="form-content">
 
-                              <div className="col-sm-12 col-md-6 unit">
+                              <div className="col-sm-4 col-md-4 unit">
                                 <label className="label">
                                   Código
                               </label>
@@ -530,7 +530,7 @@ function PaisesEstado() {
                                 </div>
                               </div>
 
-                              <div className="col-sm-12 col-md-6 unit">
+                              <div className="col-sm-4 col-md-4 unit">
                                 <label className="label">
                                   Moneda
                               </label>
@@ -558,7 +558,7 @@ function PaisesEstado() {
                                 </div>
                               </div>
 
-                              <div className="col-sm-12 col-md-12 unit">
+                              <div className="col-sm-4 col-md-4  unit">
                                 <label className="label">
                                   País
                               </label>
@@ -625,7 +625,7 @@ function PaisesEstado() {
                           <form className="j-forms" onSubmit={handleAceptarEstado}>
                             <div className="form-content">
 
-                              <div className="col-sm-12 col-md-6 unit">
+                              <div className="col-sm-4 col-md-4 unit">
                                 <label className="label">
                                   Código
                                 </label>
@@ -642,7 +642,7 @@ function PaisesEstado() {
                                 </div>
                               </div>
 
-                              <div className="col-sm-12 col-md-6 unit">
+                              <div className="col-sm-4 col-md-4 unit">
                                 <label className="label">
                                   Abreviación
                                 </label>
@@ -659,7 +659,7 @@ function PaisesEstado() {
                                 </div>
                               </div>
 
-                              <div className="col-sm-12 col-md-12 unit">
+                              <div className="col-sm-4 col-md-4 unit">
                                 <label className="label">
                                   Estado
                                 </label>

@@ -527,7 +527,7 @@ function CiudadesCodigoPostal() {
                           <form className="j-forms" onSubmit={handleAceptarCiudad}>
                             <div className="form-content">
 
-                              <div className="col-sm-12 col-md-6 unit">
+                              <div className="col-sm-4 col-md-4 unit">
                                 <label className="label">
                                   Código
                               </label>
@@ -544,7 +544,7 @@ function CiudadesCodigoPostal() {
                                 </div>
                               </div>
 
-                              <div className="col-sm-12 col-md-6 unit">
+                              <div className="col-sm-4 col-md-4 unit">
                                 <label className="label">
                                   Abreviación
                               </label>
@@ -560,7 +560,7 @@ function CiudadesCodigoPostal() {
                                 </div>
                               </div>
 
-                              <div className="col-sm-12 col-md-12 unit">
+                              <div className="col-sm-4 col-md-4 unit">
                                 <label className="label">
                                   Ciudad
                               </label>
@@ -576,7 +576,7 @@ function CiudadesCodigoPostal() {
                                 </div>
                               </div>
 
-                              <div className="col-sm-12 col-md-12 unit">
+                              <div className="col-sm-4 col-md-4 unit">
                                 <label className="label">
                                   País
                               </label>
@@ -609,7 +609,7 @@ function CiudadesCodigoPostal() {
                                 </div>
                               </div>
 
-                              <div className="col-sm-12 col-md-12 unit">
+                              <div className="col-sm-4 col-md-4 unit">
                                 <label className="label">
                                   Estado
                               </label>
@@ -693,7 +693,7 @@ function CiudadesCodigoPostal() {
                           <form className="j-forms" onSubmit={handleAceptarCodigoPostal}>
                             <div className="form-content">
 
-                              <div className="col-sm-12 col-md-12 unit">
+                              <div className="col-sm-4 col-md-4 unit">
                                 <label className="label">
                                   Código Postal
                                 </label>
@@ -709,7 +709,7 @@ function CiudadesCodigoPostal() {
                                 </div>
                               </div>
 
-                              <div className="col-sm-12 col-md-12 unit">
+                              <div className="col-sm-4 col-md-4 unit">
                                 <label className="label">
                                   Zona
                                 </label>

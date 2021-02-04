@@ -3,14 +3,13 @@ import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import axios from "axios";
-import $ from 'jquery';
+import $ from "jquery";
 window.jQuery = window.$ = $;
 
 function Parametros() {
-
-  const [dataPais, setDataPais] = React.useState([])
-  const [dataEstado, setDataEstado] = React.useState([])
-  const [dataCodigoPostal, setDataCodigoPostal] = React.useState([])
+  const [dataPais, setDataPais] = React.useState([]);
+  const [dataEstado, setDataEstado] = React.useState([]);
+  const [dataCodigoPostal, setDataCodigoPostal] = React.useState([]);
   const [state, setState] = React.useState({
     RFC: "",
     registroFiscal: "",
@@ -34,70 +33,73 @@ function Parametros() {
     RFCFiscal: "",
     blanco: "",
     telefono: "",
-    height: window.innerHeight
-  })
+    height: window.innerHeight,
+  });
 
   const headers = {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
     //    'access-control-allow-origin': '*'
-  }
+  };
 
   const handleAceptar = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     var params = {
-
-      "m_sRFC": state.RFC,
-      "m_sRegistroFiscal": state.registroFiscal,
-      "m_sNombreFiscal": state.nombreFiscal,
-      "m_sNombreComercial": state.nombreComercial,
-      "m_sIdRegimenFiscal": state.regimenFiscal,
-      "m_nIdRetencionIva": state.retencionFiscal,
-      "m_sCURP": state.curp,
-      "m_sUsuario": state.usuario,
-      "m_sContrasenia": state.password,
-      "m_bTimbrarPruebas": state.timbrar,
-      "m_sApiKey": state.apiKey,
-      "m_sHashGMTGPS": state.hash,
-      "m_nIdPais": state.idPais,
-      "m_nIdCodigoPostal": state.codigoPostal,
-      "m_nIsEstado": state.idEstado,
-      "m_nIdMunicipio": state.munipio,
-      "m_nIdLocalidad": state.localidad,
-      "m_nIdColonia": state.colonia,
-      "m_sCalle": state.calle,
-      "m_sRFCFiscal": state.RFCFiscal,
+      m_sRFC: state.RFC,
+      m_sRegistroFiscal: state.registroFiscal,
+      m_sNombreFiscal: state.nombreFiscal,
+      m_sNombreComercial: state.nombreComercial,
+      m_sIdRegimenFiscal: state.regimenFiscal,
+      m_nIdRetencionIva: state.retencionFiscal,
+      m_sCURP: state.curp,
+      m_sUsuario: state.usuario,
+      m_sContrasenia: state.password,
+      m_bTimbrarPruebas: state.timbrar,
+      m_sApiKey: state.apiKey,
+      m_sHashGMTGPS: state.hash,
+      m_nIdPais: state.idPais,
+      m_nIdCodigoPostal: state.codigoPostal,
+      m_nIsEstado: state.idEstado,
+      m_nIdMunicipio: state.munipio,
+      m_nIdLocalidad: state.localidad,
+      m_nIdColonia: state.colonia,
+      m_sCalle: state.calle,
+      m_sRFCFiscal: state.RFCFiscal,
       "": state.blanco,
-      "m_sTelefonos": state.telefono,
-      "CreadoPor": 1,
-      "ModificadoPor": 1
-    }
-    console.log(params)
-    const url = `${process.env.REACT_APP_API_URL}/Pais/Modificar/` + state.idPais;
-    axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
-      alert(respuesta.data)
-      window.location.reload();
-    }).catch(err => {
-      console.log(err)
-      alert("err")
-    });
-  }
+      m_sTelefonos: state.telefono,
+      CreadoPor: 1,
+      ModificadoPor: 1,
+    };
+    console.log(params);
+    const url =
+      `${process.env.REACT_APP_API_URL}/Pais/Modificar/` + state.idPais;
+    axios
+      .put(url, Object.assign({}, params), { headers })
+      .then((respuesta) => {
+        alert(respuesta.data);
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("err");
+      });
+  };
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     setState({
       ...state,
-      [event.target.id]: event.target.value
+      [event.target.id]: event.target.value,
     });
   };
 
-  const handleSelectPais = event => {
+  const handleSelectPais = (event) => {
     setState({
       ...state,
-      idPais: event.target.value
+      idPais: event.target.value,
     });
-    getAllEstado(event.target.value)
-  }
+    getAllEstado(event.target.value);
+  };
 
-  useEffect(value => {
+  useEffect((value) => {
     getAllPais();
     getAllCodigosPostales();
   }, []);
@@ -106,7 +108,7 @@ function Parametros() {
     const url = `${process.env.REACT_APP_API_URL}/Pais/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setDataPais(respuesta.data);
-      getAllEstado(respuesta.data[0].m_nIdPais)
+      getAllEstado(respuesta.data[0].m_nIdPais);
     });
   }
 
@@ -126,7 +128,6 @@ function Parametros() {
 
   return (
     <div>
-
       <header className="topbar clearfix">
         <Cabecera />
       </header>
@@ -139,9 +140,7 @@ function Parametros() {
 
       {/*Page Container Start Here*/}
       <section className="main-container">
-
         <div className="container-fluid">
-
           <div className="page-header filled full-block light">
             <div className="row">
               <div className="col-md-6 col-sm-6">
@@ -161,16 +160,14 @@ function Parametros() {
           </div>
 
           <form className="j-forms" onSubmit={handleAceptar}>
-            <div className="widget-wrap col-md-5" style={{ width: '48%' }}>
+            <div className="widget-wrap col-xs-12 col-sm-12 col-md-5" style={{ width: "48%" }}>
               <div className="widget-header">
                 <h2>Datos Generales</h2>
               </div>
               <div className="widget-container">
                 <div className="widget-content">
-                  <div className="col-md-6 unit">
-                    <label className="label">
-                      RFC
-                    </label>
+                  <div className="col-xs-2-5 col-sm-4 col-md-4 unit">
+                    <label className="label">RFC</label>
                     <div className="input">
                       <input
                         onChange={handleChange}
@@ -185,10 +182,8 @@ function Parametros() {
                     </div>
                   </div>
 
-                  <div className="col-md-6 unit">
-                    <label className="label">
-                      Registro Fiscal
-                    </label>
+                  <div className="col-xs-4 col-sm-4 col-md-4 unit">
+                    <label className="label">Registro Fiscal</label>
                     <div className="input">
                       <input
                         onChange={handleChange}
@@ -201,10 +196,8 @@ function Parametros() {
                     </div>
                   </div>
 
-                  <div className="col-md-12 unit">
-                    <label className="label">
-                      Nombre Fiscal
-                    </label>
+                  <div className="col-sm-4 col-md-4 unit">
+                    <label className="label">Nombre Fiscal</label>
                     <div className="input">
                       <input
                         onChange={handleChange}
@@ -217,10 +210,8 @@ function Parametros() {
                     </div>
                   </div>
 
-                  <div className="col-md-12 unit">
-                    <label className="label">
-                      Nombre Comercial
-                    </label>
+                  <div className="col-sm-4 col-md-4 unit">
+                    <label className="label">Nombre Comercial</label>
                     <div className="input">
                       <input
                         onChange={handleChange}
@@ -233,10 +224,8 @@ function Parametros() {
                     </div>
                   </div>
 
-                  <div className="col-md-12 unit">
-                    <label className="label">
-                      Regimen Fiscal
-                      </label>
+                  <div className=" col-sm-4 col-md-4 unit">
+                    <label className="label">Regimen Fiscal</label>
                     <div className="input">
                       <label className="input select">
                         <select
@@ -246,19 +235,15 @@ function Parametros() {
                           value={state.regimenFiscal}
                           id="regimenFiscal"
                         >
-                          <option value="0">
-                            Por Definir
-                          </option>
+                          <option value="0">Por Definir</option>
                         </select>
                         <i></i>
                       </label>
                     </div>
                   </div>
 
-                  <div className="col-md-6 unit">
-                    <label className="label">
-                      Retención IVA
-                      </label>
+                  <div className="col-sm-4 col-md-4 unit">
+                    <label className="label">Retención IVA</label>
                     <div className="input">
                       <label className="input select">
                         <select
@@ -268,19 +253,15 @@ function Parametros() {
                           value={state.retencionIVA}
                           id="retencionIVA"
                         >
-                          <option value="0">
-                            Por Definir
-                          </option>
+                          <option value="0">Por Definir</option>
                         </select>
                         <i></i>
                       </label>
                     </div>
                   </div>
 
-                  <div className="col-md-6 unit">
-                    <label className="label">
-                      CURP
-                    </label>
+                  <div className="col-sm-4 col-md-4 unit">
+                    <label className="label">CURP</label>
                     <div className="input">
                       <input
                         onChange={handleChange}
@@ -292,25 +273,20 @@ function Parametros() {
                       />
                     </div>
                   </div>
-
                 </div>
               </div>
-
             </div>
 
-            <div className="col-md-12" style={{ width: '4%' }}></div>
+            <div className="col-md-12" style={{ width: "4%" }}></div>
 
-            <div className="widget-wrap col-md-5" style={{ width: '48%' }}>
+            <div className="widget-wrap  col-xs-12 col-sm-12 col-sm-12 col-md-5" style={{ width: "48%" }}>
               <div className="widget-header">
                 <h2>Datos del Usuario</h2>
               </div>
               <div className="widget-container">
                 <div className="widget-content">
-
-                  <div className="col-md-12 unit">
-                    <label className="label">
-                      Usuario
-                    </label>
+                  <div className="col-sm-4 col-md-4 unit">
+                    <label className="label">Usuario</label>
                     <div className="input">
                       <input
                         onChange={handleChange}
@@ -323,10 +299,8 @@ function Parametros() {
                     </div>
                   </div>
 
-                  <div className="col-md-12 unit">
-                    <label className="control-label">
-                      Contraseña
-                    </label>
+                  <div className="col-md-4 unit">
+                    <label className="control-label">Contraseña</label>
                     <div className="input">
                       <input
                         onChange={handleChange}
@@ -339,24 +313,25 @@ function Parametros() {
                     </div>
                   </div>
 
-                  <div className="col-md-12 unit">
-                    <label className="label col-md-4">
-                      Timbrar de Pruebas
-                    </label>
-                    <div className="input col-md-4">
-                      <input
+                  <div className="col-sm-4 col-md-2-5 unit">
+                    <div className="inline-group">
+                      <label className="checkbox">
+                        <input
                         onChange={handleChange}
-                        type="checkbox"
-                        value={state.timbrar}
-                        id="timbrar"
-                      />
+                        native
+                          name="timbrar"
+                          type="checkbox"
+                          value={state.timbrar}
+                          id="timbrar"
+                        />
+                        <i />
+                        Timbrar de prueba
+                      </label>
                     </div>
                   </div>
 
-                  <div className="col-md-12 unit">
-                    <label className="label">
-                      API Key
-                    </label>
+                  <div className="col-md-4 col-md-4 unit">
+                    <label className="label">API Key</label>
                     <div className="input">
                       <input
                         onChange={handleChange}
@@ -369,10 +344,8 @@ function Parametros() {
                     </div>
                   </div>
 
-                  <div className="col-md-12 unit">
-                    <label className="label">
-                      HASH GMTGPS
-                    </label>
+                  <div className="col-md-4 col-md-4 unit">
+                    <label className="label">HASH GMTGPS</label>
                     <div className="input">
                       <input
                         onChange={handleChange}
@@ -384,10 +357,8 @@ function Parametros() {
                       />
                     </div>
                   </div>
-
                 </div>
               </div>
-
             </div>
 
             <div className="widget-wrap col-md-12">
@@ -396,13 +367,9 @@ function Parametros() {
               </div>
               <div className="widget-container">
                 <div className="widget-content">
-
                   <div className="col-md-6">
-
-                    <div className="col-md-6 unit">
-                      <label className="label">
-                        País
-                      </label>
+                    <div className="col-xs-4 col-sm-4 col-md-4 unit">
+                      <label className="label">País</label>
                       <div className="input">
                         <label className="input select">
                           <select
@@ -412,29 +379,26 @@ function Parametros() {
                             value={state.idPais}
                             id="idPais"
                           >
-                            {
-                              dataPais.length < 1 ?
-
-                                <option value="none">
-                                  País
+                            {dataPais.length < 1 ? (
+                              <option value="none">País</option>
+                            ) : (
+                              dataPais.map((pais) => (
+                                <option
+                                  key={pais.m_nIdPais}
+                                  value={pais.m_nIdPais}
+                                >
+                                  {pais.m_sPais}
                                 </option>
-                                :
-                                dataPais.map((pais) => (
-                                  <option key={pais.m_nIdPais} value={pais.m_nIdPais}>
-                                    {pais.m_sPais}
-                                  </option>
-                                ))
-                            }
+                              ))
+                            )}
                           </select>
                           <i></i>
                         </label>
                       </div>
                     </div>
 
-                    <div className="col-md-6 unit">
-                      <label className="label">
-                        Código Postal
-                      </label>
+                    <div className="col-xs-4 col-sm-4 col-md-4 unit">
+                      <label className="label">Código Postal</label>
                       <label className="input select">
                         <select
                           className="form-control"
@@ -443,24 +407,21 @@ function Parametros() {
                           onChange={handleChange}
                           id="codigoPostalRemitente"
                         >
-                          {dataCodigoPostal.map(
-                            (codigoPostal) => (
-                              <option key={codigoPostal.m_nIdCP} value={codigoPostal.m_nIdCP}>
-                                {
-                                  codigoPostal.m_sCP
-                                }
-                              </option>
-                            )
-                          )}
+                          {dataCodigoPostal.map((codigoPostal) => (
+                            <option
+                              key={codigoPostal.m_nIdCP}
+                              value={codigoPostal.m_nIdCP}
+                            >
+                              {codigoPostal.m_sCP}
+                            </option>
+                          ))}
                         </select>
                         <i className="fa fa-arrow-down" />
                       </label>
                     </div>
 
-                    <div className="col-md-12 unit">
-                      <label className="label">
-                        Estado
-                      </label>
+                    <div className="col-xs-4 col-sm-4 col-md-4 unit">
+                      <label className="label">Estado</label>
                       <div className="input">
                         <label className="input select">
                           <select
@@ -470,29 +431,23 @@ function Parametros() {
                             value={state.idEstado}
                             id="idEstado"
                           >
-                            {
-                              dataEstado.length < 1 ?
-
-                                <option value="none">
-                                  Estados
-                                    </option>
-                                :
-                                dataEstado.map((estado) => (
-                                  <option value={estado.m_nIdEstado}>
-                                    {estado.m_sEstado}
-                                  </option>
-                                ))
-                            }
+                            {dataEstado.length < 1 ? (
+                              <option value="none">Estados</option>
+                            ) : (
+                              dataEstado.map((estado) => (
+                                <option value={estado.m_nIdEstado}>
+                                  {estado.m_sEstado}
+                                </option>
+                              ))
+                            )}
                           </select>
                           <i></i>
                         </label>
                       </div>
                     </div>
 
-                    <div className="col-md-12 unit">
-                      <label className="label">
-                        Municipio
-                      </label>
+                    <div className="col-xs-4 col-md-4 col-lg-4 unit">
+                      <label className="label">Municipio</label>
                       <div className="input">
                         <label className="input select">
                           <select
@@ -502,25 +457,22 @@ function Parametros() {
                             value={state.municipio}
                             id="municipio"
                           >
-                            {dataEstado.map(
-                              (estado) => (
-                                <option key={estado.m_nIdEstado} value={estado.m_nIdEstado}>
-                                  {
-                                    estado.m_sEstado
-                                  }
-                                </option>
-                              )
-                            )}
+                            {dataEstado.map((estado) => (
+                              <option
+                                key={estado.m_nIdEstado}
+                                value={estado.m_nIdEstado}
+                              >
+                                {estado.m_sEstado}
+                              </option>
+                            ))}
                           </select>
                           <i></i>
                         </label>
                       </div>
                     </div>
 
-                    <div className="col-md-12 unit">
-                      <label className="label">
-                        Localidad
-                      </label>
+                    <div className="col-xs-4 col-md-4 col-lg-4  unit">
+                      <label className="label">Localidad</label>
                       <div className="input">
                         <label className="input select">
                           <select
@@ -530,29 +482,24 @@ function Parametros() {
                             value={state.localidad}
                             id="localidad"
                           >
-                            {dataEstado.map(
-                              (estado) => (
-                                <option key={estado.m_nIdEstado} value={estado.m_nIdEstado}>
-                                  {
-                                    estado.m_sEstado
-                                  }
-                                </option>
-                              )
-                            )}
+                            {dataEstado.map((estado) => (
+                              <option
+                                key={estado.m_nIdEstado}
+                                value={estado.m_nIdEstado}
+                              >
+                                {estado.m_sEstado}
+                              </option>
+                            ))}
                           </select>
                           <i></i>
                         </label>
                       </div>
                     </div>
-
                   </div>
 
                   <div className="col-md-6">
-
-                    <div className="col-md-12 unit">
-                      <label className="label">
-                        Colonia
-                      </label>
+                    <div className="col-xs-4 col-md-4 col-lg-4  unit">
+                      <label className="label">Colonia</label>
                       <div className="input">
                         <input
                           onChange={handleChange}
@@ -565,10 +512,8 @@ function Parametros() {
                       </div>
                     </div>
 
-                    <div className="col-md-12 unit">
-                      <label className="label">
-                        Calle
-                      </label>
+                    <div className="col-xs-4 col-md-4 col-lg-4  unit">
+                      <label className="label">Calle</label>
                       <div className="input">
                         <input
                           onChange={handleChange}
@@ -581,10 +526,8 @@ function Parametros() {
                       </div>
                     </div>
 
-                    <div className="col-md-6 unit">
-                      <label className="label">
-                        RFC
-                      </label>
+                    <div className="col-xs-4 col-md-4 col-lg-4  unit">
+                      <label className="label">RFC</label>
                       <div className="input">
                         <input
                           onChange={handleChange}
@@ -599,10 +542,8 @@ function Parametros() {
                       </div>
                     </div>
 
-                    <div className="col-md-6 unit">
-                      <label className="label">
-                        Blanco
-                      </label>
+                    <div className="col-xs-4 col-md-4 col-lg-4  unit">
+                      <label className="label">Blanco</label>
                       <div className="input">
                         <input
                           onChange={handleChange}
@@ -615,10 +556,8 @@ function Parametros() {
                       </div>
                     </div>
 
-                    <div className="col-md-12 unit">
-                      <label className="label">
-                        Teléfono
-                      </label>
+                    <div className="col-xs-4 col-md-4 col-lg-4  unit">
+                      <label className="label">Teléfono</label>
                       <div className="input">
                         <input
                           onChange={handleChange}
@@ -630,23 +569,21 @@ function Parametros() {
                         />
                       </div>
                     </div>
-
                   </div>
-
                 </div>
               </div>
-
             </div>
 
             <div className="form-footer" className="col-md-12">
-              <button className="btn btn-secondary secondary-btn"
-              >
-                Cancelar</button>
-              <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
+              <button className="btn btn-secondary secondary-btn">
+                Cancelar
+              </button>
+              <button type="submit" className="btn btn-primary primary-btn">
+                Aceptar
+              </button>
             </div>
           </form>
         </div>
-
       </section>
       {/*Page Container End Here*/}
 
@@ -654,9 +591,7 @@ function Parametros() {
       <aside className="rightbar">
         <BarraLateralDerecha />
       </aside>
-
     </div>
-
   );
 }
 

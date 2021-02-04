@@ -626,42 +626,34 @@ function Embarque() {
   }
 
   function openSection(index) {
-    closeSeccions()
+    // closeSeccions()
     var $section;
     switch (index) {
       case 1:
         setStepActive(1);
-        $section = $("#informacionGeneral")
+        $section = $("#informacionGeneral");
         break;
       case 2:
         setStepActive(2);
-        $section = $("#remitenteDestinatario")
+        $section = $("#remitenteDestinatario");
 
         break;
       case 3:
         setStepActive(3);
-        $section = $("#detallesDeLaRecoleccion")
+        $section = $("#detallesRecoleccion");
 
         break;
       case 4:
         setStepActive(4);
-        $section = $("#informacionAdicional")
+        $section = $("#paquetesSobres");
         break;
       case 5:
         setStepActive(5);
-        $section = $("#general")
+        $section = $("#detallesOperacion");
         break;
-      case 6:
-        setStepActive(6);
-        $section = $("#contacto")
-        break;
-      case 7:
-        setStepActive(7);
-        $section = $("#otros")
-        break;
+
       default:
     }
-
     var $welem = $section.parentsUntil(".widget-action-bar").parentsUntil(".w-action").parents(".widget-header").next(".widget-container");
 
     $welem.slideDown();
@@ -688,7 +680,7 @@ function Embarque() {
   const framesPaquete = state.paquetes.map((p, index) => {
     return (
       <div key={`paquete${index}`}>
-        <div className="col-sm-4 col-md-1-5 unit">
+        <div className="col-sm-4 col-md-2-5 unit">
           <label className="label">Peso</label>
           <div className="input">
             <input
@@ -702,7 +694,7 @@ function Embarque() {
           </div>
         </div>
 
-        <div className="col-sm-4 col-md-1-5 unit">
+        <div className="col-sm-4 col-md-2-5 unit">
           <label className="label">Largo</label>
           <div className="input">
             <input
@@ -716,7 +708,7 @@ function Embarque() {
           </div>
         </div>
 
-        <div className="col-sm-4 col-md-1-5 unit">
+        <div className="col-sm-4 col-md-2-5 unit">
           <label className="label">Ancho</label>
           <div className="input">
             <input
@@ -730,7 +722,7 @@ function Embarque() {
           </div>
         </div>
 
-        <div className="col-sm-4 col-md-1-5 unit">
+        <div className="col-sm-4 col-md-2-5 unit">
           <label className="label">Alto</label>
           <div className="input">
             <input
@@ -744,7 +736,7 @@ function Embarque() {
           </div>
         </div>
 
-        <div className="col-sm-4 col-md-1-5 unit">
+        <div className="col-sm-4 col-md-2-5 unit">
           <label className="label">Volumen</label>
           <div className="input">
             <input
@@ -758,7 +750,7 @@ function Embarque() {
           </div>
         </div>
 
-        <div className="col-sm-4 col-md-4-5 unit">
+        <div className="col-sm-4 col-md-6 unit">
           <label className="label">Tipo de Embalaje</label>
           <div className="input">
             <input
@@ -772,7 +764,7 @@ function Embarque() {
           </div>
         </div>
 
-        <div className="col-sm-4 col-md-3 unit">
+        <div className="col-sm-4 col-md-6 unit">
           <label className="label">Valor Declarado</label>
           <div className="input">
             <input
@@ -786,7 +778,7 @@ function Embarque() {
           </div>
         </div>
 
-        <div className="col-sm-4 col-md-7-5 unit">
+        <div className="col-sm-4 col-md-8 unit">
           <label className="label">Descripción</label>
           <div className="input">
             <input
@@ -800,7 +792,7 @@ function Embarque() {
           </div>
         </div>
 
-        <div className="col-sm-4 col-md-1-5 unit">
+        <div className="col-sm-4 col-md-4 unit">
           <label className="label">Ctd</label>
           <div className="input">
             <input
@@ -1023,56 +1015,77 @@ function Embarque() {
               <form className="j-forms" onSubmit={handleAceptar}>
                 <div className="form-content">
 
-                  <div className="widget-wrap">
-                    <div className="wizard-breadcrumb number-style" style={{ position: "sticky", top: "50px", padding: "5px", backgroundColor: "white", zIndex: 100 }}>
-                      <div className="row">
-                        <div className={"col-md-2 col-sm-2 step" + (stepActive == 1 && "active-step")}
-                          onClick={() => openSection(1)}
-                        >
-                          <div className={"steps"}>
-                            <span className={"step-number"}>1</span>
-                            <p>Información General</p>
-                          </div>
+                <div
+                    className="wizard-breadcrumb number-style"
+                    style={{
+                      position: "sticky",
+                      top: "150px",
+                      padding: "5px",
+                      backgroundColor: "white",
+                      zIndex: 100,
+                      marginBottom: "10px",
+                    }}
+                  >
+                    <div className="row">
+                      <div
+                        className={
+                          "col-md-2-5 col-sm-2 step " +
+                          (stepActive == 1 && "active-step")
+                        }
+                        onClick={() => openSection(1)}
+                      >
+                        <div className={"steps"}>
+                          <span className={"step-number"}>1</span>
+                          <p>Información General</p>
                         </div>
-                        <div className={"col-md-2 col-sm-2 step" + (stepActive == 2 && "active-step")}
-                          onClick={() => openSection(2)}
-                        >
-                          <div className="steps">
-                            <span className="step-number">2</span>
-                            <p>Remitentes / Destinatario</p>
-                          </div>
+                      </div>
+                      <div
+                        className={
+                          "col-md-2-5 col-sm-2 step " +
+                          (stepActive == 2 && "active-step")
+                        }
+                        onClick={() => openSection(2)}
+                      >
+                        <div className="steps">
+                          <span className="step-number">2</span>
+                          <p>Remitentes / Destinatario</p>
                         </div>
-                        <div className={"col-md-2 col-sm-2 step" + (stepActive == 3 && "active-step")}
-                          onClick={() => openSection(3)}
-                        >
-                          <div className="steps">
-                            <span className="step-number">3</span>
-                            <p>Detalles de la Recolección</p>
-                          </div>
+                      </div>
+                      <div
+                        className={
+                          "col-md-2-5 col-sm-2 step " +
+                          (stepActive == 3 && "active-step")
+                        }
+                        onClick={() => openSection(3)}
+                      >
+                        <div className="steps">
+                          <span className="step-number">3</span>
+                          <p>Paquetes y Sobres</p>
                         </div>
-                        <div className={"col-md-2-5 col-sm-2 step" + (stepActive == 4 && "active-step")}
-                          onClick={() => openSection(4)}
-                        >
-                          <div className="steps">
-                            <span className="step-number">4</span>
-                            <p>Información Adicional del Pago</p>
-                          </div>
+                      </div>
+
+                      <div
+                        className={
+                          "col-md-2-5 col-sm-2 step " +
+                          (stepActive == 4 && "active-step")
+                        }
+                        onClick={() => openSection(4)}
+                      >
+                        <div className="steps">
+                          <span className="step-number">4</span>
+                          <p>Información Adicional del Pago</p>
                         </div>
-                        <div className={"col-md-1-5 col-sm-2 step" + (stepActive == 5 && "active-step")}
-                          onClick={() => openSection(5)}
-                        >
-                          <div className="steps">
-                            <span className="step-number">5</span>
-                            <p>General</p>
-                          </div>
-                        </div>
-                        <div className={"col-md-1 col-sm-2 step" + (stepActive == 6 && "active-step")}
-                          onClick={() => openSection(6)}
-                        >
-                          <div className="steps">
-                            <span className="step-number">6</span>
-                            <p>Contacto</p>
-                          </div>
+                      </div>
+                      <div
+                        className={
+                          "col-md-2-5 col-sm-2 step " +
+                          (stepActive == 5 && "active-step")
+                        }
+                        onClick={() => openSection(5)}
+                      >
+                        <div className="steps">
+                          <span className="step-number">5</span>
+                          <p>Detalles de Operación</p>
                         </div>
                       </div>
                     </div>
@@ -1297,10 +1310,10 @@ function Embarque() {
                     </div>
 
                   </div>
-
+<div className="row">
                   <div className="col-md-7">
 
-                    <div className="widget-wrap">
+                    <div className="widget-wrap" id="remitenteDestinatario">
                       <div className="row">
                         <div className="col-md-6">
                           <div className="widget-header">
@@ -1310,7 +1323,7 @@ function Embarque() {
                             <div className="widget-content">
                               <div className="row">
 
-                                <div className="col-sm-4 col-md-12 unit">
+                                <div className="col-sm-4 col-md-6 unit">
                                   <label className="label">
                                     Nombre
                                   </label>
@@ -1327,7 +1340,7 @@ function Embarque() {
 
                                 </div>
 
-                                <div className="col-sm-4 col-md-12 unit">
+                                <div className="col-sm-4 col-md-6 unit">
                                   <label className="label">
                                     RFC
                                   </label>
@@ -1446,7 +1459,7 @@ function Embarque() {
                                   </div>
                                 </div>
 
-                                <div className="col-sm-4 col-md-12 unit">
+                                <div className="col-sm-4 col-md-6 unit">
                                   <label className="label">
                                     Contacto
                                   </label>
@@ -1462,7 +1475,7 @@ function Embarque() {
                                   </div>
                                 </div>
 
-                                <div className="col-sm-12 col-md-12 unit">
+                                <div className="col-sm-12 col-md-6 unit">
                                   <label className="label">
                                     Destino
                                 </label>
@@ -1499,7 +1512,7 @@ function Embarque() {
                           <div className="widget-container">
                             <div className="widget-content">
 
-                              <div className="col-sm-4 col-md-12 unit">
+                              <div className="col-sm-4 col-md-6 unit">
                                 <label className="label">
                                   Nombre
                               </label>
@@ -1515,7 +1528,7 @@ function Embarque() {
                                 </div>
                               </div>
 
-                              <div className="col-sm-4 col-md-12 unit">
+                              <div className="col-sm-4 col-md-6 unit">
                                 <label className="label">
                                   RFC
                                 </label>
@@ -1634,7 +1647,7 @@ function Embarque() {
                                 </div>
                               </div>
 
-                              <div className="col-sm-4 col-md-12 unit">
+                              <div className="col-sm-4 col-md-6 unit">
                                 <label className="label">
                                   Contacto
                                 </label>
@@ -1651,7 +1664,7 @@ function Embarque() {
                                 </div>
                               </div>
 
-                              <div className="col-sm-12 col-md-12 unit">
+                              <div className="col-sm-12 col-md-6 unit">
                                 <label className="label">
                                   Origen
                                 </label>
@@ -1700,7 +1713,7 @@ function Embarque() {
                     </div>
 
                     {state.diferenteEntrega ?
-                      <div className="widget-wrap" id="detallesDeLaRecoleccion">
+                      <div className="widget-wrap" id="detallesRecoleccion">
 
                         {state.diferenteEntrega ?
                           <div>
@@ -1780,7 +1793,7 @@ function Embarque() {
                                       </div>
                                     </div>
 
-                                    <div className="col-sm-4 col-md-12 unit">
+                                    <div className="col-sm-4 col-md-4 unit">
                                       <label className="label">
                                         Domicilio
                                       </label>
@@ -1796,7 +1809,7 @@ function Embarque() {
                                       </div>
                                     </div>
 
-                                    <div className="col-sm-4 col-md-12 unit">
+                                    <div className="col-sm-4 col-md-4 unit">
                                       <label className="label">
                                         Entrega En
                                       </label>
@@ -1812,7 +1825,7 @@ function Embarque() {
                                       </div>
                                     </div>
 
-                                    <div className="col-sm-4 col-md-12 unit">
+                                    <div className="col-sm-4 col-md-6 unit">
                                       <label className="label">
                                         Datos Adicionales para la Entrega
                                       </label>
@@ -1829,7 +1842,7 @@ function Embarque() {
                                     </div>
 
                                   </div>
-                                </div>
+                                </div>  
                               </div>
                             </div>
                           </div>
@@ -1840,7 +1853,7 @@ function Embarque() {
                       : <div></div>
                     }
 
-                    <div className="widget-wrap" id="informacionAdicionalDePago">
+                    <div className="widget-wrap" id="detallesOperacion">
                       <div className="row">
 
                         <div className="col-md-12">
@@ -1851,7 +1864,7 @@ function Embarque() {
                             <div className="widget-content">
                               <div className="row">
 
-                                <div className="col-sm-4 col-md-12 unit">
+                                <div className="col-sm-4 col-md-4 unit">
                                   <label className="label">
                                     Operador
                                   </label>
@@ -1877,7 +1890,7 @@ function Embarque() {
                                   </label>
                                 </div>
 
-                                <div className="col-sm-4 col-md-12 unit">
+                                <div className="col-sm-4 col-md-4 unit">
                                   <label className="label">
                                     Tipo Unidad
                                   </label>
@@ -1903,7 +1916,7 @@ function Embarque() {
                                   </label>
                                 </div>
 
-                                <div className="col-sm-4 col-md-12 unit">
+                                <div className="col-sm-4 col-md-4 unit">
                                   <label className="label">
                                     Unidad
                                   </label>
@@ -1991,9 +2004,8 @@ function Embarque() {
 
                   </div>
 
-                  <div className="col-md-12" style={{ width: '3%' }}></div>
 
-                  <div className="widget-wrap col-md-5">
+                  <div className="widget-wrap col-md-5" id="paquetesSobres">
                     <div className="widget-header">
                       <h2>Número de Paquetes</h2>
                     </div>
@@ -2049,12 +2061,13 @@ function Embarque() {
                           </div>
                         </div>
                       </div>
+                      </div>
                     </div>
                   </div>
 
                 </div>
                 <div className="form-footer" className="col-md-12">
-                  <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-primary secondary-btn">Cancelar</button>
+                  <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn">Cancelar</button>
                   <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                 </div>
               </form>

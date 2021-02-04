@@ -1350,7 +1350,7 @@ function handleImprmir2()
     $section.children("a").children("i").removeClass("zmdi-chevron-up");
     $section.children("a").children("i").addClass("zmdi-chevron-down");
     $('html, body').animate({
-      scrollTop: parseInt($section.offset().top)
+      scrollTop: parseInt($section.offset().top - ($section.height() / 2))
     }, 200);
     var $welem = $section
       .parentsUntil(".widget-action-bar")
@@ -1520,7 +1520,7 @@ function handleImprmir2()
   const framesConcepto = state.conceptos.map((p, index) => {
     return (
       <div key={`concepto${index}`}>
-        <div className="col-sm-4 col-md-3 unit">
+        <div className="col-sm-4 col-md-2-5 unit">
           <label className="label">Concepto</label>
           <div className="input">
             <select
@@ -1549,7 +1549,7 @@ function handleImprmir2()
         </div>
 
 
-        <div className="col-sm-4 col-md-3 unit">
+        <div className="col-sm-4 col-md-2-5 unit">
           <label className="label">Importe</label>
           <div className="input">
             <input
@@ -1563,7 +1563,7 @@ function handleImprmir2()
           </div>
         </div>
 
-        <div className="col-sm-4 col-md-3 unit">
+        <div className="col-sm-4 col-md-2-5 unit">
           <label className="label">Impuesto Trasladado</label>
           <div className="input">
             <select
@@ -1589,7 +1589,7 @@ function handleImprmir2()
 
           </div>
         </div>
-        <div className="col-sm-4 col-md-3 unit">
+        <div className="col-sm-4 col-md-2-5 unit">
           <label className="label">Impuesto Retiene</label>
           <div className="input">
             <select
@@ -1617,7 +1617,7 @@ function handleImprmir2()
           </div>
         </div>
 
-        <div className="col-sm-4 col-md-4 unit">
+        <div className="col-sm-4 col-md-2-5 unit">
           <label className="label">IVA</label>
           <div className="input">
             <input
@@ -1633,7 +1633,7 @@ function handleImprmir2()
           </div>
         </div>
 
-        <div className="col-sm-4 col-md-4 unit">
+        <div className="col-sm-4 col-md-2-5 unit">
           <label className="label">Importe Retencion</label>
           <div className="input">
             <input
@@ -1650,7 +1650,7 @@ function handleImprmir2()
         </div>
 
 
-        <div className="col-sm-4 col-md-4 unit">
+        <div className="col-sm-4 col-md-2-5 unit">
           <label className="label">Total</label>
           <div className="input">
             <input
@@ -2132,57 +2132,96 @@ function handleImprmir2()
             <div id="Agregar" className="tab-pane fade">
               <form className="j-forms">
                 <div className="form-content">
-                  <div className="widget-wrap">
-                    <div className="wizard-breadcrumb number-style" style={{ position: "sticky", top: "50px", padding: "5px", backgroundColor: "white", zIndex: 100 }}>
-                      <div className="row">
-                        <div className={"col-md-2 col-sm-2 step" + (stepActive == 1 && "active-step")}
-                          onClick={() => openSection(1)}
-                        >
-                          <div className={"steps"}>
-                            <span className={"step-number"}>1</span>
-                            <p>Información General</p>
+                   
+                  <div
+                            className="wizard-breadcrumb number-style"
+                            style={{
+                              position: "sticky",
+                              top: "150px",
+                              padding: "5px",
+                              backgroundColor: "white",
+                              zIndex: 100,
+                              marginBottom: "10px"
+                            }}
+                          >
+
+
+
+                            
+                            <div className="row">
+                              <div
+                                className={
+                                  "col-md-2-5 col-sm-3 step " +
+                                  (stepActive == 1 && "active-step")
+                                }
+                                onClick={() => openSection(1)}
+                              >
+                                <div className={"steps"}>
+                                  <span className={"step-number"}>1</span>
+                                  <p>Información General</p>
+                                </div>
+                              </div>
+                              <div
+                                className={
+                                  "col-md-2-5 col-sm-3 step " +
+                                  (stepActive == 2 && "active-step")
+                                }
+                                onClick={() => openSection(2)}
+                              >
+                                <div className="steps">
+                                  <span className="step-number">2</span>
+                                  <p>Remitentes / Destinatario</p>
+                                </div>
+                              </div>
+                              <div
+                                className={
+                                  "col-md-2-5 col-sm-3 step " +
+                                  (stepActive == 3 && "active-step")
+                                }
+                                onClick={() => openSection(3)}
+                              >
+                                <div className="steps">
+                                  <span className="step-number">3</span>
+                                  <p>Detalles de la Recolección</p>
+                                </div>
+                              </div>
+
+                              <div
+                                className={
+                                  "col-md-2-5 col-sm-2 step " +
+                                  (stepActive == 4 && "active-step")
+                                }
+                                onClick={() => openSection(4)}
+                              >
+                                <div className="steps">
+                                  <span className="step-number">4</span>
+                                  <p>Detalle de Facturación</p>
+                                </div>
+                              </div>
+                              <div
+                                className={
+                                  "col-md-2-5 col-sm-2 step " +
+                                  (stepActive == 5 && "active-step")
+                                }
+                                onClick={() => openSection(5)}
+                              >
+                                <div className="steps">
+                                  <span className="step-number">5</span>
+                                  <p>Conceptos de Facturación</p>
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                        <div className={"col-md-2 col-sm-2 step" + (stepActive == 2 && "active-step")}
-                          onClick={() => openSection(2)}
-                        >
-                          <div className="steps">
-                            <span className="step-number">2</span>
-                            <p>Remitentes / Destinatario</p>
-                          </div>
-                        </div>
-                        <div className={"col-md-2 col-sm-2 step" + (stepActive == 3 && "active-step")}
-                          onClick={() => openSection(3)}
-                        >
-                          <div className="steps">
-                            <span className="step-number">3</span>
-                            <p>Detalles de la Recolección</p>
-                          </div>
-                        </div>
-                        <div className={"col-md-2 col-sm-2 step" + (stepActive == 4 && "active-step")}
-                          onClick={() => openSection(4)}
-                        >
-                          <div className="steps">
-                            <span className="step-number">4</span>
-                            <p>Detalle de Facturación</p>
-                          </div>
-                        </div>
-                        <div className={"col-md-2 col-sm-2 step" + (stepActive == 5 && "active-step")}
-                          onClick={() => openSection(5)}
-                        >
-                          <div className="steps">
-                            <span className="step-number">5</span>
-                            <p>Conceptos de Facturación</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+
+
+                 
 
                   <div className="widget-wrap" id="informacionGeneral">
                     <div className="widget-header">
                       <h2>Información General</h2>
                     </div>
+
+                    
                     <div className="widget-container">
                       <div className="widget-content">
                         <div className="row">
@@ -2409,7 +2448,7 @@ function handleImprmir2()
                                 <form className="j-forms">
                                   <div className="form-content">
 
-                                    <div className="col-md-8 unit">
+                                    <div className="col-md-4 unit">
                                       <label className="label">
                                         Nombre
                         </label>
@@ -2441,7 +2480,7 @@ function handleImprmir2()
                                       </div>
                                     </div>
 
-                                    <div className="col-md-8 unit">
+                                    <div className="col-md-4 unit">
                                       <label className="label">
                                         Domicilio
                         </label>
@@ -2522,7 +2561,7 @@ function handleImprmir2()
                                       </div>
                                     </div>
 
-                                    <div className="col-md-6 unit">
+                                    <div className="col-md-4 unit">
                                       <label className="label">
                                         Contacto
                         </label>
@@ -2538,7 +2577,7 @@ function handleImprmir2()
                                       </div>
                                     </div>
 
-                                    <div className="col-md-6 unit">
+                                    <div className="col-md-4 unit">
                                       <label className="label">
                                         Origen
                         </label>
@@ -2569,7 +2608,7 @@ function handleImprmir2()
                                 <form className="j-forms">
                                   <div className="form-content">
 
-                                    <div className="col-md-8 unit">
+                                    <div className="col-md-4 unit">
                                       <label className="label">
                                         Nombre
                       </label>
@@ -2601,7 +2640,7 @@ function handleImprmir2()
                                       </div>
                                     </div>
 
-                                    <div className="col-md-8 unit">
+                                    <div className="col-md-4 unit">
                                       <label className="label">
                                         Domicilio
                       </label>
@@ -2681,7 +2720,7 @@ function handleImprmir2()
                                       </div>
                                     </div>
 
-                                    <div className="col-md-6 unit">
+                                    <div className="col-md-4 unit">
                                       <label className="label">
                                         Contacto
                       </label>
@@ -2697,7 +2736,7 @@ function handleImprmir2()
                                       </div>
                                     </div>
 
-                                    <div className="col-md-6 unit">
+                                    <div className="col-md-4 unit">
                                       <label className="label">
                                         Destino
                       </label>
@@ -2796,7 +2835,7 @@ function handleImprmir2()
                               <div className="col-md-12">
                                 <form className="j-forms">
                                   <div className="form-content">
-                                    <div className="col-sm-4 col-md-4 unit">
+                                    <div className="col-sm-4 col-md-2-5 unit">
                                       <label className="label">
                                         Tipo Cobro
                           </label>
@@ -2823,7 +2862,7 @@ function handleImprmir2()
                                         )}
                                       </select>
                                     </div>
-                                    <div className="col-sm-4 col-md-4">
+                                    <div className="col-sm-4 col-md-2-5">
                                       <label className="label">
                                         Tipo Servicio
                                 </label>
@@ -2845,7 +2884,7 @@ function handleImprmir2()
                                         )}
                                       </select>
                                     </div>
-                                    <div className="col-sm-4 col-md-4">
+                                    <div className="col-sm-4 col-md-2-5">
                                       <label className="label">
                                         Valor Declarado
                           </label>
@@ -2904,19 +2943,21 @@ function handleImprmir2()
                               </div>
                             </form>
                           </div>
+                          
+                          <div className="form-footer" className="col-md-12">
+
+<button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
+>
+  Cancelar</button>
+<button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
+</div>
+
                         </div>
 
-                        <div className="row">
-                          <div className="col-md-3">
-                            <div className="form-footer" className="col-md-12">
-
-                              <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
-                              >
-                                Cancelar</button>
-                              <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
-                            </div>
-                          </div>
-                        </div></div></div>
+                        
+                        
+                        
+                        </div></div>
 
                   </div>
 
