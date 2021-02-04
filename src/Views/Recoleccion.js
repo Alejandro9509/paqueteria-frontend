@@ -201,6 +201,8 @@ function Recoleccion() {
       "m_nNoSobres": state.sobres.length,
       "m_nIdOperador": state.operador,
       "m_nIdUnidad": state.unidad,
+      "m_nCreadoPor":state.CreadoPor,
+      "m_nModificadoPor":state.ModificadoPor
 
     }
     console.log(params)
@@ -214,6 +216,7 @@ function Recoleccion() {
         alert("err")
       });
     } else {
+      debugger;
       const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         console.log(respuesta.data)
