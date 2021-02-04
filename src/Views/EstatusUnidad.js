@@ -20,13 +20,16 @@ function EstatusUnidad() {
 
   const [state, setState] = React.useState({
     idEstatusUnidad: 0,
+    DerechoBorrar:81,
     estatusUnidad: "",
     abreviacionUnidad: "",
     tipoEstatusUnidad: 0,
     colorUnidad: "",
     agregar: "Agregar",
     importar: "",
-    height: window.innerHeight
+    height: window.innerHeight,
+    CreadoPor:localStorage.getItem("UsuarioId"),
+    ModificadoPor:localStorage.getItem("UsuarioId")
   })
 
   const handleAceptar = (e) => {
@@ -37,9 +40,9 @@ function EstatusUnidad() {
       "Color": state.colorUnidad.slice(-6),
       "ColorLetra": state.colorUnidad.slice(-6),
       "Abreviacion": state.abreviacionUnidad,
-      "TipoEstatus": state.tipoEstatusUnidad,
-      "CreadoPor": 1,
-      "ModificadoPor": 1
+      "TipoEstatus": state.tipoEstatusUnidad,      
+      "CreadoPor": state.CreadoPor,
+      "ModificadoPor": state.ModificadoPor  
     }
     console.log(params)
     if (state.idEstatusUnidad != 0) {
@@ -65,11 +68,26 @@ function EstatusUnidad() {
   }
 
   function handleEliminar(id) {
+    var derecho;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      
     const url = `${process.env.REACT_APP_API_URL}/EstatusUnidades/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta)
       getAllData()
     }).catch(err => {
+      alert(err)
+    });
+	}).catch(err => {
       alert(err)
     });
   }
@@ -135,6 +153,12 @@ function EstatusUnidad() {
   ]);
 
   useEffect(value => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("configuracion");
+      return;
+    }
     getAllData();
   }, []);
 
@@ -255,7 +279,7 @@ function EstatusUnidad() {
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
+      <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
@@ -264,6 +288,7 @@ function EstatusUnidad() {
       <section className="main-container">
 
         <div className="container-fluid">
+
           <div className="page-header filled full-block light">
             <div className="row">
               <div className="col-md-6 col-sm-6">
@@ -281,11 +306,8 @@ function EstatusUnidad() {
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="container-fluid">
-
-          <ul className="nav nav-tabs">
+          <ul className="nav navStatica nav-tabs">
             <li className="active">
               <a data-toggle="tab" href="#Listado">
                 <i className="fa fa-list" /> Listado
@@ -328,7 +350,7 @@ function EstatusUnidad() {
                       <form className="j-forms" onSubmit={handleAceptar}>
                         <div className="form-content">
 
-                          <div className="col-sm-12 col-md-8 unit">
+                        <div className="col-xs-6 col-sm-3 col-md-2-5 col-lg-2-5 unit">
                             <label className="label">
                               Estatus
                           </label>
@@ -345,7 +367,7 @@ function EstatusUnidad() {
                             </div>
                           </div>
 
-                          <div className="col-sm-12 col-md-4 unit">
+                          <div className="col-xs-6 col-sm-3 col-md-2-5 col-lg-2-5 unit">
                             <label className="label">
                               Abreviación
                           </label>
@@ -362,7 +384,7 @@ function EstatusUnidad() {
                             </div>
                           </div>
 
-                          <div className="col-sm-12 col-md-8 unit">
+                          <div className="col-xs-6 col-sm-3 col-md-2-5 col-lg-2-5 unit">
                             <label className="label">
                               Tipo Estatus
                             </label>
@@ -388,7 +410,7 @@ function EstatusUnidad() {
                             </label>
                           </div>
 
-                          <div className="col-sm-12 col-md-4 unit">
+                          <div className="col-xs-6 col-sm-3 col-md-3 col-lg-2-5 unit">
                             <label className="label">
                               Color
                           </label>
@@ -406,10 +428,10 @@ function EstatusUnidad() {
 
                         </div>
                         <br></br>
-                        <div className="form-footer" className="col-md-12">
+                        <div className="form-footer" className="col-12 col-sm-12 col-md-10 unit">
                           <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
-                                    >
-                                      Cancelar</button>
+                          >
+                            Cancelar</button>
                           <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                         </div>
                       </form>
@@ -427,8 +449,8 @@ function EstatusUnidad() {
                       <div className="form-footer" className="col-md-12">
                         <button className="btn btn-default btn-block ex-noty" data-layout="topCenter" data-type="information">Notificación</button>
                         <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
-                                    >
-                                      Cancelar</button>
+                        >
+                          Cancelar</button>
                         <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
                       </div>
                     </div>

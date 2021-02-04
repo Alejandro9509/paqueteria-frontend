@@ -12,8 +12,9 @@ import dashboardRoutes from './routes'
 import catalogdRoutes from './routesCatalogos'
 import configuracionRoutes from './routesConfiguraciones'
 
+
 class App extends Component {
-  constructor(props) {
+  constructor(props) { 
     super(props);
     this.state = {};
   }
@@ -56,6 +57,7 @@ render(){
     </AplicationProvider>
   );
 }
+
 }
 
 export default App;

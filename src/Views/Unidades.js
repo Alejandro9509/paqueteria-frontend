@@ -198,9 +198,9 @@ function App(props) {
     idConvoy: "",
     idGrupoUnidad: 0,
     creadoEl: "",
-    creadoPor: 0,
+    creadoPor: localStorage.getItem("UsuarioId"),
     creadoEl: "",
-    modificadoPor: "",
+    modificadoPor: localStorage.getItem("UsuarioId"),
     modificadoEl: "",
     largo: 0,
     ancho: 0,
@@ -303,9 +303,8 @@ function App(props) {
       idConvoy: "",
       idGrupoUnidad: 0,
       creadoEl: "",
-      creadoPor: 0,
+      
       creadoEl: "",
-      modificadoPor: "",
       modificadoEl: "",
       largo: 0,
       ancho: 0,
@@ -481,6 +480,12 @@ function App(props) {
   }
 
   useEffect((value) => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     getAllOperadores();
     getAllTipoUnidades();
     getAllSucursales();
@@ -560,6 +565,7 @@ function App(props) {
   };
 
   function handleEliminar(id) {
+    //no esta el derecho de borrar en el listado original
     const url = `${process.env.REACT_APP_API_URL}/Unidad/Eliminar/` + id;
     axios
       .get(url, { headers })
@@ -583,19 +589,20 @@ function App(props) {
   const handleChangeCodigo = (event) => {
     const url =
       `${process.env.REACT_APP_API_URL}/Unidades/ValidaCodigoUnidad/` + state.codigo
-      axios.get(url, { headers }).then((respuesta) => {
-        
-        if(respuesta.data!=""){
+    axios.get(url, { headers }).then((respuesta) => {
+
+      if (respuesta.data != "") {
 
         alert(respuesta.data.m_sMensaje);
         console.log(respuesta.data);
         setState({
           ...state,
-          
-           codigo: respuesta.data.m_nNumero,
-        });}
-      })
-    
+
+          codigo: respuesta.data.m_nNumero,
+        });
+      }
+    })
+
       .catch((err) => {
         alert(err);
       });
@@ -779,7 +786,7 @@ function App(props) {
   const [stepActive, setStepActive] = React.useState(1);
 
   function openSection(index) {
-    closeSeccions();
+    //closeSeccions();
     var $section;
     switch (index) {
       case 1:
@@ -953,7 +960,7 @@ function App(props) {
   }
 
   useEffect((value) => {
-    closeSeccions();
+    //closeSeccions();
   }, []);
 
   return (
@@ -963,7 +970,7 @@ function App(props) {
       </header>
       {/*Topbar End Here*/}
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
+      <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
@@ -988,33 +995,8 @@ function App(props) {
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="container-fluid">
-          <div className="page-header filled full-block light">
-            <div className="row">
-              <div className="col-md-6 col-sm-6">
-                <h2>Unidades</h2>
-              </div>
-              <div className="col-md-6 col-sm-6">
-                <ul className="list-page-breadcrumb">
-                  <li>
-                    <a href="#">
-                      Home <i className="zmdi zmdi-chevron-right" />
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      Layout <i className="zmdi zmdi-chevron-right" />
-                    </a>
-                  </li>
-                  <li className="active-page"> Dashboard</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <ul className="nav nav-tabs">
+          <ul className="nav navStatica nav-tabs">
             <li className="active">
               <a data-toggle="tab" href="#Listado">
                 <i className="fa fa-list" /> Listado
@@ -1062,7 +1044,7 @@ function App(props) {
                             className="wizard-breadcrumb number-style"
                             style={{
                               position: "sticky",
-                              top: "50px",
+                              top: "150px",
                               padding: "5px",
                               backgroundColor: "white",
                               zIndex: 100,

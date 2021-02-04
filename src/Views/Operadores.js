@@ -195,9 +195,9 @@ function App(props) {
     Diabetico: false,
     Hipertenso: false,
     CreadoEl: "",
-    CreadoPor: 0,
+    CreadoPor: localStorage.getItem("UsuarioId"),
     ModificadoEl: "",
-    ModificadoPor: 0,
+    ModificadoPor: localStorage.getItem("UsuarioId"),
     IdBanco: 0,
     NumeroCuentaBancaria: "",
     NoTarjeta: "",
@@ -263,9 +263,7 @@ function App(props) {
       Diabetico: false,
       Hipertenso: false,
       CreadoEl: "",
-      CreadoPor: 0,
       ModificadoEl: "",
-      ModificadoPor: 0,
       IdBanco: 0,
       NumeroCuentaBancaria: "",
       NoTarjeta: "",
@@ -401,6 +399,12 @@ function App(props) {
   const [dataEstado, setDataEstado] = React.useState([]);
 
   useEffect((value) => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("configuracion");
+      return;
+    }
     getAllSucursales();
     getAllPaises();
     getAllOperadores();
@@ -505,10 +509,8 @@ function App(props) {
         Diabetico: respuesta.data.m_bDiabetico,
         Hipertenso: respuesta.data.m_bHipertenso,
         CreadoEl: respuesta.data.m_dtCreadoEl,
-        CreadoPor: respuesta.data.m_nCreadoPor,
-        ModificadoEl: respuesta.data.m_dtModificadoEl,
-        ModificadoPor: respuesta.data.m_nModificadoPor,
-        IdBanco: respuesta.data.m_nIdBanco,
+         ModificadoEl: respuesta.data.m_dtModificadoEl,
+         IdBanco: respuesta.data.m_nIdBanco,
         NumeroCuentaBancaria: respuesta.data.m_sNumeroCuentaBancaria,
         NoTarjeta: respuesta.data.m_sNoTarjeta,
         Observaciones: respuesta.data.m_sObservaciones,
@@ -575,15 +577,28 @@ function App(props) {
   }
 
   function handleEliminar(id) {
+    var derecho;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
     const url = `${process.env.REACT_APP_API_URL}/Operador/Eliminar/` + id;
     axios
       .get(url, { headers })
       .then((respuesta) => {
         console.log(respuesta);
         getAllOperadores();
-      })
-      .catch((err) => {
-        alert(err);
+      }).catch(err => {
+        alert(err)
+      });
+    }).catch(err => {
+        alert(err)
       });
   }
 
@@ -627,7 +642,7 @@ function App(props) {
   const [stepActive, setStepActive] = React.useState(1);
 
   function openSection(index) {
-    closeSeccions();
+    //closeSeccions();
     var $section;
     switch (index) {
       case 1:
@@ -700,7 +715,13 @@ function App(props) {
   }
 
   useEffect((value) => {
-    closeSeccions();
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
+    //closeSeccions();
   }, []);
 
   return (
@@ -710,14 +731,14 @@ function App(props) {
       </header>
       {/*Topbar End Here*/}
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
+      <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
       {/*Page Container Start Here*/}
       <section className="main-container">
-        
-      <div className="container-fluid">
+
+        <div className="container-fluid">
           <div className="page-header filled full-block light">
             <div className="row">
               <div className="col-md-6 col-sm-6">
@@ -761,7 +782,7 @@ function App(props) {
             </div>
           </div>
 
-          <ul className="nav nav-tabs">
+          <ul className="nav navStatica nav-tabs">
             <li className="active">
               <a data-toggle="tab" href="#Listado">
                 <i className="fa fa-list" /> Listado
@@ -809,10 +830,10 @@ function App(props) {
                             className="wizard-breadcrumb number-style"
                             style={{
                               position: "sticky",
-                              top: "50px",
+                              top: "150px",
                               padding: "5px",
                               backgroundColor: "white",
-                              zIndex: 7,
+                              zIndex: 100,
                             }}
                           >
                             <div className="row">
@@ -962,7 +983,7 @@ function App(props) {
                                           <div className="form-content">
                                             {/* start text password */}
                                             <div className="row">
-                                              <div className="col-md-4 unit">
+                                              <div className="col-sm-12 col-md-2-5 unit">
                                                 <label className="label">
                                                   Número
                                                 </label>
@@ -978,7 +999,7 @@ function App(props) {
                                                   />
                                                 </div>
                                               </div>
-                                              <div className="col-md-4 unit">
+                                              <div className="col-sm-12 col-md-2-5 unit">
                                                 <div className="inline-group">
                                                   <label className="label">
                                                     Estado del Operador
@@ -1000,76 +1021,8 @@ function App(props) {
                                                 </div>
                                               </div>
                                               <div className="col-md-4 unit">
-                                                <img
-                                                  src="src\Views\operador.png"
-                                                  class="rounded float-right"
-                                                  alt="..."
-                                                />
-                                              </div>
-                                            </div>
-                                            {/* end text password */}
-                                            {/* start email url */}
-                                            <div className="row">
-                                              <div className="col-md-3 unit">
-                                                <label className="label">
-                                                  Apellido Paterno
-                                                </label>
-                                                <div className="input">
-                                                  <input
-                                                    className="form-control"
-                                                    onChange={handleChange}
-                                                    value={
-                                                      state.ApellidoPaterno
-                                                    }
-                                                    name="ApellidoPaterno"
-                                                    type="text"
-                                                    placeholder="Apellido Paterno"
-                                                    id="text"
-                                                    required
-                                                    native
-                                                  />
-                                                </div>
-                                              </div>
-                                              <div className="col-md-3 unit">
-                                                <label className="label">
-                                                  Apellido Materno
-                                                </label>
-                                                <div className="input">
-                                                  <input
-                                                    onChange={handleChange}
-                                                    value={
-                                                      state.ApellidoMaterno
-                                                    }
-                                                    name="ApellidoMaterno"
-                                                    className="form-control"
-                                                    type="text"
-                                                    placeholder="Apellido Materno"
-                                                    id="text"
-                                                    required
-                                                    native
-                                                  />
-                                                </div>{" "}
-                                              </div>
-                                              <div className="col-md-3 unit">
-                                                <label className="label">
-                                                  Nombre
-                                                </label>
-                                                <div className="input">
-                                                  <input
-                                                    onChange={handleChange}
-                                                    value={state.Nombre}
-                                                    name="Nombre"
-                                                    className="form-control"
-                                                    type="text"
-                                                    placeholder=""
-                                                    id="text"
-                                                    required
-                                                    native
-                                                  />
-                                                </div>{" "}
-                                              </div>
-                                              <div className="col-md-3 unit">
-                                                <label className="label">
+
+                                              <label className="label">
                                                   Foto del Operador
                                                 </label>
                                                 <div className="input prepend-small-btn">
@@ -1092,9 +1045,83 @@ function App(props) {
                                                     placeholder="no file selected"
                                                   />
                                                 </div>
+                                               
+
+                                                
+                                              </div>
+                                              <div className="col-ms-3 col-md-3 unit">
+                                              <img
+                                                  src="src\iconos\operador.png"
+                                                  class="rounded float-right"
+                                                  alt="..."
+                                                />
                                               </div>
                                             </div>
-                                            <div className="unit">
+                                            {/* end text password */}
+                                            {/* start email url */}
+                                            <div className="row">
+                                              <div className="col-sm-12 col-md-2-5 unit">
+                                                <label className="label">
+                                                  Apellido Paterno
+                                                </label>
+                                                <div className="input">
+                                                  <input
+                                                    className="form-control"
+                                                    onChange={handleChange}
+                                                    value={
+                                                      state.ApellidoPaterno
+                                                    }
+                                                    name="ApellidoPaterno"
+                                                    type="text"
+                                                    placeholder="Apellido Paterno"
+                                                    id="text"
+                                                    required
+                                                    native
+                                                  />
+                                                </div>
+                                              </div>
+                                              <div className="col-sm-12 col-md-2-5 unit">
+                                                <label className="label">
+                                                  Apellido Materno
+                                                </label>
+                                                <div className="input">
+                                                  <input
+                                                    onChange={handleChange}
+                                                    value={
+                                                      state.ApellidoMaterno
+                                                    }
+                                                    name="ApellidoMaterno"
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder="Apellido Materno"
+                                                    id="text"
+                                                    required
+                                                    native
+                                                  />
+                                                </div>{" "}
+                                              </div>
+                                              <div className="col-sm-12 col-md-2-5 unit">
+                                                <label className="label">
+                                                  Nombre
+                                                </label>
+                                                <div className="input">
+                                                  <input
+                                                    onChange={handleChange}
+                                                    value={state.Nombre}
+                                                    name="Nombre"
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder=""
+                                                    id="text"
+                                                    required
+                                                    native
+                                                  />
+                                                </div>{" "}
+                                              </div>
+                                              <div className="col-sm-12 col-md-2-5 unit">
+
+
+
                                               <label className="label">
                                                 Nombre Completo
                                               </label>
@@ -1111,8 +1138,28 @@ function App(props) {
                                                   native
                                                 />
                                               </div>{" "}
-                                            </div>
+                                              </div>
+                                              <div className="col-sm-12 col-md-2-5 unit">
+                                             
+                                              <label className="label">
+                                                  Fecha de Contratación
+                                                </label>
+                                                <div className="input">
+                                                  <input
+                                                    onChange={handleChange}
+                                                    value={
+                                                      state.FechaContratacion
+                                                    }
+                                                    name="FechaContratacion"
+                                                    className="form-control"
+                                                    type="date"
+                                                    placeholder=""
+                                                  />
+                                                </div>
 
+                                              </div>
+                                            </div>
+                                          
                                             {/* end search */}
                                             {/* start textarea */}
 
@@ -1152,27 +1199,13 @@ function App(props) {
                                                     pattern="^([A-Z&]|[a-z&]{1})([AEIOU]|[aeiou]{1})([A-Z&]|[a-z&]{1})([A-Z&]|[a-z&]{1})([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])([HM]|[hm]{1})([AS|as|BC|bc|BS|bs|CC|cc|CS|cs|CH|ch|CL|cl|CM|cm|DF|df|DG|dg|GT|gt|GR|gr|HG|hg|JC|jc|MC|mc|MN|mn|MS|ms|NT|nt|NL|nl|OC|oc|PL|pl|QT|qt|QR|qr|SP|sp|SL|sl|SR|sr|TC|tc|TS|ts|TL|tl|VZ|vz|YN|yn|ZS|zs|NE|ne]{2})([^A|a|E|e|I|i|O|o|U|u]{1})([^A|a|E|e|I|i|O|o|U|u]{1})([^A|a|E|e|I|i|O|o|U|u]{1})([0-9]{2})$"
                                                     title="Favor de introducir un CURP válido."
                                                     required
-                                                    id="hex"
+                                                    id="CURP"
                                                     native
                                                   />
                                                 </div>{" "}
                                               </div>
                                               <div className="col-md-4 unit">
-                                                <label className="label">
-                                                  Fecha de Contratación
-                                                </label>
-                                                <div className="input">
-                                                  <input
-                                                    onChange={handleChange}
-                                                    value={
-                                                      state.FechaContratacion
-                                                    }
-                                                    name="FechaContratacion"
-                                                    className="form-control"
-                                                    type="date"
-                                                    placeholder=""
-                                                  />
-                                                </div>
+                                               
                                               </div>
                                             </div>
 

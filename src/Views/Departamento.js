@@ -17,10 +17,13 @@ function Departamento() {
   const [state, setState] = React.useState({
     showPopUp: false,
     idDepartamento: 0,
+    DerechoBorrar:58,
     codigoDepartamento: "",
     descripcionDepartamento: "",
     agregar: "Agregar",
     importar: "",
+    CreadoPor:localStorage.getItem("UsuarioId"),
+    ModificadoPor:localStorage.getItem("UsuarioId"),
     height: window.innerHeight
   })
   const [fileUploaded, setFileUploaded] = React.useState([])
@@ -32,8 +35,9 @@ function Departamento() {
 
       "Codigo": state.codigoDepartamento,
       "Descripcion": state.descripcionDepartamento,
-      "CreadoPor": 1,
-      "ModificadoPor": 1
+      
+      "CreadoPor": state.CreadoPor,
+      "ModificadoPor": state.ModificadoPor  
     }
     console.log(params)
     if (state.idDepartamento != 0) {
@@ -59,11 +63,26 @@ function Departamento() {
   }
 
   function handleEliminar(id) {
+    var derecho;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      
     const url = `${process.env.REACT_APP_API_URL}/Departamento/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       console.log(respuesta);
       getAllData();
     }).catch(err => {
+      alert(err)
+    });
+	}).catch(err => {
       alert(err)
     });
   }
@@ -176,6 +195,12 @@ function Departamento() {
   ]);
 
   useEffect(value => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     getAllData();
   }, []);
 
@@ -369,7 +394,7 @@ function Departamento() {
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
+      <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
@@ -378,6 +403,7 @@ function Departamento() {
       <section className="main-container">
 
         <div className="container-fluid">
+
           <div className="page-header filled full-block light">
             <div className="row">
               <div className="col-md-6 col-sm-6">
@@ -395,11 +421,8 @@ function Departamento() {
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="container-fluid">
-
-          <ul className="nav nav-tabs">
+          <ul className="nav navStatica nav-tabs">
             <li className="active">
               <a data-toggle="tab" href="#Listado">
                 <i className="fa fa-list" /> Listado
@@ -441,8 +464,9 @@ function Departamento() {
                     <div className="col-md-12">
                       <form className="j-forms" onSubmit={handleAceptar}>
                         <div className="form-content">
+                        <div className="row">
 
-                          <div className="col-sm-12 col-md-6 unit">
+                        <div className="col-xs-6  col-sm-3 col-md-2-5 col-lg-2-5 unit">
                             <label className="label">
                               Código
                           </label>
@@ -461,7 +485,7 @@ function Departamento() {
                             </div>
                           </div>
 
-                          <div className="col-sm-12 col-md-6 unit">
+                          <div className="col-xs-6  col-sm-3 col-md-2-5 col-lg-2-5 unit">
                             <label className="label">
                               Descripción
                           </label>
@@ -477,13 +501,16 @@ function Departamento() {
                               />
                             </div>
                           </div>
-
-                        </div>
-                        <br></br>
-                        <div className="form-footer" className="col-md-12">
-                          <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
+                          </div>
+                          <div className="row">
+                          <div className="form-footer" className="col-sm-6 col-md-5 unit">
+                          <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"> Cancelar</button>
                           <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                         </div>
+
+</div>
+                        </div>
+                       
                       </form>
                     </div>
                   </div>
@@ -516,7 +543,7 @@ function Departamento() {
                         <br></br>
                         <div className="form-footer" className="col-md-12">
                           <button className="btn btn-default btn-block ex-noty" data-layout="topCenter" data-type="information">Notificación</button>
-                          <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
+                          <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"> Cancelar</button>
                           <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
                         </div>
                       </form>

@@ -21,6 +21,7 @@ function Sucursal() {
     idEstado: 0,
     codigoPostal: 0,
     municipio: "",
+    DerechoBorrar:17,
     localidad: "",
     colonia: "",
     calle: "",
@@ -29,7 +30,9 @@ function Sucursal() {
     iva: "18",
     zonaHoraria: "08:00|America/Tijuana",
     activo: false,
-    height: window.innerHeight
+    height: window.innerHeight,
+    CreadoPor:localStorage.getItem("UsuarioId"),
+    ModificadoPor:localStorage.getItem("UsuarioId")
   })
 
 
@@ -49,7 +52,8 @@ function Sucursal() {
       "IdEstado": state.idEstado,
       "IdImpuestoTraslado": state.iva,
       "Activa": state.activo,
-      "CreadoPor": 1,
+      "CreadoPor": state.CreadoPor,
+      "ModificadoPor":state.ModificadoPor,
       "ZonaHoraria": state.zonaHoraria.split("|")[0],
       "DescripcionZonaHoraria": state.zonaHoraria.split("|")[1],
     }
@@ -79,14 +83,28 @@ function Sucursal() {
   }
 
   function handleEliminar(id) {
-    console.log(id)
-    const url = `${process.env.REACT_APP_API_URL}/Sucursales/Eliminar/` + id;
-    axios.delete(url, { headers }).then(respuesta => {
-      alert(respuesta.data)
-      getAllData();
-    }).catch(err => {
+    var derecho;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      const url = `${process.env.REACT_APP_API_URL}/Sucursales/Eliminar/` + id;
+      axios.delete(url, { headers }).then(respuesta => {
+        alert(respuesta.data)
+        getAllData();
+      }).catch(err => {
+        alert(err)
+      });
+  
+	}).catch(err => {
       alert(err)
-    });
+    });  
   }
 
   function handleShowModificar(row) {
@@ -180,6 +198,12 @@ function Sucursal() {
   ]);
 
   useEffect(value => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     getAllData();
     getAllPais();
     getAllCodigosPostales();
@@ -359,15 +383,16 @@ function Sucursal() {
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
+      <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
 
       {/*Page Container Start Here*/}
       <section className="main-container">
-        
-      <div className="container-fluid">
+
+        <div className="container-fluid">
+
           <div className="page-header filled full-block light">
             <div className="row">
               <div className="col-md-6 col-sm-6">
@@ -385,11 +410,8 @@ function Sucursal() {
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="container-fluid">
-
-          <ul className="nav nav-tabs">
+          <ul className="nav navStatica nav-tabs">
             <li className="active">
               <a data-toggle="tab" href="#Listado">
                 <i className="fa fa-list" /> Listado
@@ -712,8 +734,8 @@ function Sucursal() {
                         <br></br>
                         <div className="form-footer" className="col-md-12">
                           <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
-                                    >
-                                      Cancelar</button>
+                          >
+                            Cancelar</button>
                           <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                         </div>
                       </form>

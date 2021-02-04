@@ -14,7 +14,10 @@ function Puesto() {
     codigoPuesto: 0,
     puesto: "",
     agregar: "Agregar",
-    height: window.innerHeight
+    DerechoBorrar:55,
+    height: window.innerHeight,
+    CreadoPor:localStorage.getItem("UsuarioId"),
+    ModificadoPor:localStorage.getItem("UsuarioId")
   })
 
   const handleAceptar = (e) => {
@@ -23,8 +26,8 @@ function Puesto() {
 
       "Codigo": state.codigoPuesto,
       "Puesto": state.puesto,
-      "CreadoPor": 1,
-      "ModificadoPor": 1
+      "CreadoPor": state.CreadoPor,
+      "ModificadoPor": state.ModificadoPor
     }
     console.log(params)
     if (state.idPuesto != 0) {
@@ -50,11 +53,26 @@ function Puesto() {
   }
 
   function handleEliminar(id) {
+    var derecho;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      
     const url = `${process.env.REACT_APP_API_URL}/Puesto/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       console.log(respuesta)
       getAllData();
     }).catch(err => {
+      alert(err)
+    });
+	}).catch(err => {
       alert(err)
     });
   }
@@ -119,6 +137,12 @@ function Puesto() {
   ]);
 
   useEffect(value => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     getAllData();
   }, []);
 
@@ -274,7 +298,7 @@ function Puesto() {
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
+      <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
@@ -283,6 +307,7 @@ function Puesto() {
       <section className="main-container">
 
         <div className="container-fluid">
+
           <div className="page-header filled full-block light">
             <div className="row">
               <div className="col-md-6 col-sm-6">
@@ -300,11 +325,8 @@ function Puesto() {
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="container-fluid">
-
-          <ul className="nav nav-tabs">
+          <ul className="nav navStatica nav-tabs">
             <li className="active">
               <a data-toggle="tab" href="#Listado">
                 <i className="fa fa-list" /> Listado
@@ -335,8 +357,8 @@ function Puesto() {
                     <div className="col-md-12">
                       <form className="j-forms" onSubmit={handleAceptar}>
                         <div className="form-content">
-
-                          <div className="col-sm-12 col-md-6 unit">
+<div className="row">
+                          <div className="col-xs-6 col-sm-3 col-md-2-5 col-lg-2-5 unit">
                             <label className="label">
                               Código
                           </label>
@@ -356,7 +378,7 @@ function Puesto() {
                             </div>
                           </div>
 
-                          <div className="col-sm-12 col-md-6 unit">
+                          <div className="col-xs-6 col-sm-3 col-md-2-5 col-lg-2-5 unit">
                             <label className="label">
                               Descripción
                           </label>
@@ -372,14 +394,19 @@ function Puesto() {
                                 maxLength="50"
                               />
                             </div>
+                            
                           </div>
-
-                        </div>
-                        <br></br>
-                        <div className="form-footer" className="col-md-12">
-                          <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
+                          </div>
+<div className="row">
+<div className="form-footer" className="col-sm-6 col-md-5 unit">
+                          <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"> Cancelar</button>
                           <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                         </div>
+
+</div>
+                        </div>
+                        
+                        
                       </form>
                     </div>
                   </div>

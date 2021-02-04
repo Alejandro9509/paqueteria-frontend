@@ -31,11 +31,12 @@ function CiudadesCodigoPostal() {
     abreviacionCiudad: "",
     idEstado: 0,
     idPais: 0,
-
+    DerechoBorrar:13,
     idCodigoPostal: 0,
     codigoPostal: "",
     zona: "",
-
+    CreadoPor: localStorage.getItem("UsuarioId"),
+    ModificadoPor: localStorage.getItem("UsuarioId"),
     agregarCiudad: "Agregar",
     agregarCodigoPostal: "Agregar",
     height: window.innerHeight
@@ -48,10 +49,9 @@ function CiudadesCodigoPostal() {
       "m_nCodigo": state.codigoCiudad,
       "m_sCiudad": state.ciudad,
       "m_sAbreviacion": state.abreviacionCiudad,
-      "m_nIdEstado": state.idEstado,
-      "CreadoPor": 1,
-      "ModificadoPor": 1,
-
+      "m_nIdEstado": state.idEstado,         
+      "m_nCreadoPor": state.CreadoPor,
+      "m_nModificadoPor": state.ModificadoPor   
     }
     console.log(params)
     if (state.idCiudad != 0) {
@@ -84,8 +84,8 @@ function CiudadesCodigoPostal() {
       "m_nIdCiudad": state.idCiudad,
       "m_sCP": state.codigoPostal,
       "m_nIdCP": state.idCodigoPostal,
-      "CreadoPor": 1,
-      "ModificadoPor": 1
+      "m_nCreadoPor": state.CreadoPor,
+      "m_nModificadoPor": state.ModificadoPor       
     }
     console.log(params)
     if (state.idCodigoPostal != 0) {
@@ -120,13 +120,29 @@ function CiudadesCodigoPostal() {
   }
 
   function handleEliminarCodigoPostal(id) {
-    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/Eliminar/` + id;
+    var derecho;
+    debugger;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
       getAllCodigoPostal();
     }).catch(err => {
       alert(err)
     });
+	}).catch(err => {
+      alert(err)
+    });
+    
   }
 
   function handleShowModificarCiudad(id) {
@@ -234,6 +250,12 @@ function CiudadesCodigoPostal() {
   ]);
 
   useEffect(value => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     getAllData();
     getAllPais();
   }, []);
@@ -251,8 +273,8 @@ function CiudadesCodigoPostal() {
     });
   };
 
-  function getAllCodigoPostal() {
-    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
+  function getAllCodigoPostal(id) {
+    const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListadoCP/`+id;
     axios.get(url, { headers }).then(respuesta => {
       setDataCodigoPostal(respuesta.data)
     });
@@ -465,14 +487,16 @@ function CiudadesCodigoPostal() {
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
+      <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
 
       {/*Page Container Start Here*/}
       <section className="main-container">
+
         <div className="container-fluid">
+
           <div className="page-header filled full-block light">
             <div className="row">
               <div className="col-md-6 col-sm-6">
@@ -490,13 +514,10 @@ function CiudadesCodigoPostal() {
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="container-fluid">
 
           <div className="row">
             <div className="col-md-7" >
-              <ul className="nav nav-tabs">
+              <ul className="nav navStatica nav-tabs">
                 <li className="active">
                   <a data-toggle="tab" href="#Listado">
                     <i className="fa fa-list" /> Listado
@@ -647,8 +668,8 @@ function CiudadesCodigoPostal() {
                             <br></br>
                             <div className="form-footer" className="col-md-12">
                               <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
-                                    >
-                                      Cancelar</button>
+                              >
+                                Cancelar</button>
                               <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                             </div>
                           </form>
@@ -662,7 +683,7 @@ function CiudadesCodigoPostal() {
             </div>
 
             <div className="col-md-5" >
-              <ul className="nav nav-tabs">
+              <ul className="nav navStatica nav-tabs">
                 <li className="active">
                   <a data-toggle="tab" href="#ListadoEstado">
                     <i className="fa fa-list" /> Listado
@@ -730,8 +751,8 @@ function CiudadesCodigoPostal() {
                             <br></br>
                             <div className="form-footer" className="col-md-12">
                               <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
-                                    >
-                                      Cancelar</button>
+                              >
+                                Cancelar</button>
                               <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                             </div>
                           </form>

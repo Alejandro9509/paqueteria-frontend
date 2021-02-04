@@ -39,6 +39,7 @@ function Embarque() {
   const [dataUnidad, setDataUnidad] = React.useState([]);
   const [state, setState] = React.useState({
     showPopUp: false,
+    DerechoBorrar:139,
     agregar: "Agregar",
     idEmbarque: 0,
     fechaInicial: "",
@@ -90,6 +91,8 @@ function Embarque() {
     diferenteEntrega: true,
     idOperador: 0,
     idTipoUnidad: 0,
+    CreadoPor: localStorage.getItem("UsuarioId"),
+    ModificadoPor: localStorage.getItem("UsuarioId"),
     idUnidad: 0,
     paquetes: [
       {
@@ -169,7 +172,8 @@ function Embarque() {
       "DatosAdicionales": state.datosAdicionalesEntrega,
       "IdSucursal": state.idSucursalAgregar,
       "m_arrClsDetalle": state.paquetes,
-
+      "CreadoPor": state.CreadoPor,
+      "ModificadoPor": state.ModificadoPor  ,
       "m_tFechaDetalleEntrega": state.fechaEntrega.split("T")[0],
       "m_tHoraDetalleEntrega": state.fechaEntrega.split("T")[1],
       "m_parrSobres": state.sobres,
@@ -262,11 +266,26 @@ function Embarque() {
   };
 
   function handleEliminar(id) {
+    var derecho;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      
     const url = `${process.env.REACT_APP_API_URL}/Embarques/Eliminar/${id}`;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
       getAllData()
     }).catch(err => {
+      alert(err)
+    });
+	}).catch(err => {
       alert(err)
     });
   }
@@ -431,6 +450,12 @@ function Embarque() {
   ]);
 
   useEffect(value => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     getAllData();
     getAllSucursales();
     getAllEstatusEmbarque();
@@ -874,7 +899,7 @@ function Embarque() {
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
+      <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
@@ -883,6 +908,7 @@ function Embarque() {
       <section className="main-container">
 
         <div className="container-fluid">
+
           <div className="page-header filled full-block light">
             <div className="row">
               <div className="col-md-6 col-sm-6">
@@ -895,11 +921,8 @@ function Embarque() {
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="container-fluid">
-
-          <ul className="nav nav-tabs">
+          <ul className="nav navStatica nav-tabs">
             <li className="active">
               <a data-toggle="tab" href="#Listado">
                 <i className="fa fa-list" /> Listado

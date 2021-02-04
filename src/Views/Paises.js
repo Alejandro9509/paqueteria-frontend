@@ -27,7 +27,7 @@ function PaisesEstado() {
     idMoneda: 0,
     codigo: "",
     pais: "",
-
+    DerechoBorrar:10,
     idEstado: 0,
     estado: "",
     codigoEstado: "",
@@ -35,7 +35,9 @@ function PaisesEstado() {
 
     agregarPais: "Agregar",
     agregarEstado: "Agregar",
-    height: window.innerHeight
+    height: window.innerHeight,
+    CreadoPor:localStorage.getItem("UsuarioId") ,
+    ModificadoPor:localStorage.getItem("UsuarioId") 
   })
 
   const handleAceptarPais = (e) => {
@@ -46,8 +48,8 @@ function PaisesEstado() {
       "m_nIdMoneda": state.idMoneda,
       "m_sCodigo": state.codigo,
       "m_sPais": state.pais,
-      "CreadoPor": 1,
-      "ModificadoPor": 1
+      "CreadoPor": state.CreadoPor,
+      "ModificadoPor": state.ModificadoPor
     }
     console.log(params)
     if (state.idPais != 0) {
@@ -82,7 +84,7 @@ function PaisesEstado() {
       "Abreviacion": state.abreviacionEstado,
       "Codigo": state.codigoEstado,
       "Estado": state.estado,
-      "CreadoPor": 1,
+      "CreadoPor": state.CreadoPor,
       "CreadoEl": fecha.getFullYear() + "-" + fecha.getMonth() + 1 + "-" + fecha.getDate(),
       "ModificadoEl": fecha.getFullYear() + "-" + fecha.getMonth() + 1 + "-" + fecha.getDate(),
       "ModificadoPor": 1,
@@ -113,13 +115,29 @@ function PaisesEstado() {
   }
 
   function handleEliminarPais(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Pais/Eliminar/` + id;
+    var derecho;
+    debugger;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      const url = `${process.env.REACT_APP_API_URL}/Pais/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
       getAllData();
     }).catch(err => {
       alert(err)
     });
+	}).catch(err => {
+      alert(err)
+    });
+    
   }
 
   function handleEliminarEstado(id) {
@@ -230,6 +248,12 @@ function PaisesEstado() {
   ]);
 
   useEffect(value => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     getAllData();
     getAllMoneda();
   }, []);
@@ -452,7 +476,7 @@ function PaisesEstado() {
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
+      <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
@@ -461,6 +485,7 @@ function PaisesEstado() {
       <section className="main-container">
 
         <div className="container-fluid">
+
           <div className="page-header filled full-block light">
             <div className="row">
               <div className="col-md-6 col-sm-6">
@@ -478,13 +503,10 @@ function PaisesEstado() {
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="container-fluid">
 
           <div className="row">
             <div className="col-md-6" >
-              <ul className="nav nav-tabs">
+              <ul className="nav navStatica nav-tabs">
                 <li className="active">
                   <a data-toggle="tab" href="#Listado">
                     <i className="fa fa-list" /> Listado
@@ -580,8 +602,8 @@ function PaisesEstado() {
                             <br></br>
                             <div className="form-footer" className="col-md-12">
                               <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
-                                    >
-                                      Cancelar</button>
+                              >
+                                Cancelar</button>
                               <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                             </div>
                           </form>
@@ -595,7 +617,7 @@ function PaisesEstado() {
             </div>
 
             <div className="col-md-6" >
-              <ul className="nav nav-tabs">
+              <ul className="nav navStatica nav-tabs">
                 <li className="active">
                   <a data-toggle="tab" href="#ListadoEstado">
                     <i className="fa fa-list" /> Listado
@@ -682,8 +704,8 @@ function PaisesEstado() {
                             <br></br>
                             <div className="form-footer" className="col-md-12">
                               <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
-                                    >
-                                      Cancelar</button>
+                              >
+                                Cancelar</button>
                               <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                             </div>
                           </form>

@@ -6,12 +6,13 @@ import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy } from 'react-table'
 
 function Caseta() {
+ 
 
   const [data, setData] = React.useState([])
   const [state, setState] = React.useState({
     idCaseta: 0,
     descripcion: "",
-
+    DerechoBorrar:105,
     tarifaEje2: "",
     tarifaEje3: "",
     tarifaEje4: "",
@@ -20,7 +21,9 @@ function Caseta() {
     tarifaEje7: "",
     tarifaEje8: "",
     tarifaEje9: "",
-
+    CreadoPor: localStorage.getItem("UsuarioId"),
+    ModificadoPor: localStorage.getItem("UsuarioId"),
+    
     agregar: "Agregar",
     height: window.innerHeight
   })
@@ -39,9 +42,9 @@ function Caseta() {
       "m_cTarifaEje7": state.tarifaEje7,
       "m_cTarifaEje8": state.tarifaEje8,
       "m_cTarifaEje9": state.tarifaEje9,
-      "CreadoPor": 1,
-      "ModificadoPor": 1
-    }
+      "m_nCreadoPor": state.CreadoPor,
+      "m_nModificadoPor": state.ModificadoPor 
+     }
     console.log(params)
     if (state.idCaseta != 0) {
       const url = `${process.env.REACT_APP_API_URL}/Casetas/Modificar/` + state.idCaseta;
@@ -54,6 +57,7 @@ function Caseta() {
       });
     } else {
       const url = `${process.env.REACT_APP_API_URL}/Casetas/Agregar`;
+      //alert(state.CreadoPor);
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
         getAllData()
@@ -64,15 +68,32 @@ function Caseta() {
     }
 
   }
-
   function handleEliminar(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Casetas/Eliminar/` + id;
+    var derecho;
+    debugger;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      const url = `${process.env.REACT_APP_API_URL}/Casetas/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
       getAllData()
     }).catch(err => {
       alert(err)
     });
+    }).catch(err => {
+      alert(err)
+    });
+    
+    
+    
   }
 
   function handleShowModificar(id) {
@@ -156,6 +177,12 @@ function Caseta() {
   ]);
 
   useEffect(value => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     getAllData();
   }, []);
 
@@ -276,7 +303,7 @@ function Caseta() {
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
+      <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
@@ -285,6 +312,7 @@ function Caseta() {
       <section className="main-container">
 
         <div className="container-fluid">
+
           <div className="page-header filled full-block light">
             <div className="row">
               <div className="col-md-6 col-sm-6">
@@ -302,11 +330,9 @@ function Caseta() {
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="container-fluid">
 
-          <ul className="nav nav-tabs">
+          <ul className="nav navStatica nav-tabs">
             <li className="active">
               <a data-toggle="tab" href="#Listado">
                 <i className="fa fa-list" /> Listado
@@ -493,8 +519,8 @@ function Caseta() {
                         <br></br>
                         <div className="form-footer" className="col-md-12">
                           <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
-                                    >
-                                      Cancelar</button>
+                          >
+                            Cancelar</button>
                           <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                         </div>
                       </form>

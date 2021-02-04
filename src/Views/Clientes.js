@@ -13,6 +13,8 @@ import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import { useTable, useFilters, useSortBy } from "react-table";
 import ExportCSV from "../Components/Template/Export";
 import ExportPDF from "../Components/Template/ExportPDF";
+import TextField from "@material-ui/core/TextField";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 
 import $ from "jquery";
 import { remove_array_element } from "../Util/Util";
@@ -51,6 +53,129 @@ function App(props) {
       accessor: "m_sNombreSucursal",
     },
   ]);
+
+
+  const columns2 = React.useMemo(() => [
+    
+    {
+      Name: "Formato",
+      accessor: "m_sFormato",
+    },
+    {
+      Name: "Tipo proceso",
+      accessor: "m_nTipoProceso",
+    },
+    
+  ]);
+
+  function DefaultColumnFilter2({
+    column: { filterValue, preFilteredRows, setFilter },
+  }) {
+    const count = preFilteredRows.length;
+
+    return (
+      <input
+        className="form-control"
+        value={filterValue || ""}
+        onChange={(e) => {
+          setFilter(e.target.value || undefined);
+        }}
+        placeholder={`Buscar ${count} registros...`}
+      />
+    );
+  }
+
+  function TableFormatos({ columns, data }) {
+    const defaultColumn = React.useMemo(
+      () => ({
+        // Default Filter UI
+        Filter: DefaultColumnFilter2,
+      }),
+      []
+    );
+
+    const {
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      rows,
+      prepareRow,
+    } = useTable(
+      {
+        columns,
+        data,
+        defaultColumn,
+      },
+      useFilters,
+      useSortBy
+    );
+
+    return (
+      <div className="col-md-12">
+        <table className="tableFormatos" {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                <th></th>
+                {headerGroup.headers.map((column) => (
+                  // Add the sorting props to control sorting. For this example
+                  // we can add them into the header props
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render("Name")}
+                    {/* Add a sort direction indicator */}
+                    <span>
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <i className="fa fa-caret-up" />
+                        ) : (
+                          <i className="fa fa-caret-down" />
+                        )
+                      ) : (
+                        ""
+                      )}
+                    </span>
+                    <div>
+                      {column.canFilter ? column.render("Filter") : null}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map((row, i) => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()}>
+                  <td>
+                    <div>
+                    <input
+                                                  onChange={handleChangeFormatoSelectCheckboxChange
+                                                    
+                                                  }
+
+                                                  native
+                                                  name="formatoSelect"
+                                                  type="checkbox"
+                                                  value={state.formatoSelect}
+                                                  id="formatoSelect"
+                                                />
+                   
+                    </div>
+                  </td>
+                  {row.cells.map((cell) => {
+                    return (
+                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
 
   function DefaultColumnFilter({
     column: { filterValue, preFilteredRows, setFilter },
@@ -170,10 +295,11 @@ function App(props) {
   const [data, setData] = React.useState([]);
   const [dataPais, setDataPais] = React.useState([]);
   const [dataEstado, setDataEstado] = React.useState([]);
-
-  const [dataTiposUnidad, setDataTiposUnidad] = React.useState([]);
+  const [dataImpuesto, setDataImpuesto] = React.useState([]);
+  const [dataGrupoClientes, setDataGrupoClientes] = React.useState([]);
   const [dataSucursales, setDataSucursales] = React.useState([]);
-  const [dataGruposUnidades, setDataGruposUnidades] = React.useState([]);
+  const [dataFormatos, setDataFormatos] = React.useState([]);
+
   const [dataListadoClientes, setDataListadoClientes] = React.useState([]);
   const [state, setState] = React.useState({
     agregar: "Agregar",
@@ -186,16 +312,18 @@ function App(props) {
     nombreFiscal: "",
     nombreCorto: "",
     idSucursal: 0,
+    DerechoBorrar:45,
     idMoneda: 0,
     idImpuestoTransladado: 0,
     aplicarDetalleMaterialesCadaViajeXML: false,
+    aplicarDetalleConceptoCadaViajeXML: false,
     idEstado: 0,
-    idGrupoCliente: 0,
+    idGrupoCliente: {},
     metodoPago: "",
     diasCredito: 0,
-    creadoPor: 0,
+    creadoPor: localStorage.getItem("UsuarioId"),
     creadoEl: "",
-    modificadoPor: "",
+    modificadoPor: localStorage.getItem("UsuarioId"),
     modificadoEl: "",
     credito: 0,
     creditoDlls: 0,
@@ -203,8 +331,10 @@ function App(props) {
     saldoCreditoDLLS: 0,
     pendFacturar: 0,
     pendFacturarDLLS: 0,
-    bancoOrdente: "",
-    rfcBancoOrdentnte: "",
+    bancoOrdenante: "",
+    rfcBancoOrdenante: "",
+    cuentaBancoOrdenante: "",
+
     codigoPostal: 0,
     idEstado: 0,
     municipio: "",
@@ -218,6 +348,8 @@ function App(props) {
     nextel: "",
     correoElectronico: "",
     tableformatos: "",
+    frecuenciaEnvioDias:0,
+    enviarApartir:"",
     envioAutoSeguimientoViajes: "",
     fechaEnvioCorreo: "",
     envioAutomaticoSeguimiento: "",
@@ -226,213 +358,60 @@ function App(props) {
     agruparCantidadPorConcepto: "",
     ajustarImporte2Dec: "",
     detalleMateriales: "",
+    formatoSelect:false
   });
 
   function handleShowAgregar() {
     setState({
       ...state,
-      agregar: "Agregar",
-      idUnidad: 0,
-      idTipoUnidad: 0,
-      codigo: "",
-      activo: false,
-      rentada: false,
-      esUnidadPermisionario: false,
-      idSucursal: 0,
-      idOperador: 0,
-      descripcion: "",
-      modelo: "",
-      serieUnidad: "",
-      colorUnidad: "",
-      idSatelital: "",
-      idConvoy: "",
-      idGrupoUnidad: 0,
-      creadoEl: "",
-      creadoPor: 0,
-      creadoEl: "",
-      modificadoPor: "",
-      modificadoEl: "",
-      largo: 0,
-      ancho: 0,
-      alto: 0,
-      capacidad: 0,
-      numeroEjes: 0,
-      numeroLlanta: 0,
-      llantaRefaccion: 0,
-      tipoLlanta: 0,
-      marcaLlanta: 0,
-      modeloLlanta: 0,
-      medidaLlanta: 0,
-      serieMotor: "",
-      tipoMotor: "",
-      tipoTransmision: "",
-      tipoCombustible: 0,
-      capacidadTanqueGal: 0,
-      rendimientoCargado: 0,
-      rendimientoVacio: 0,
-      tarjetaDiesel1: "",
-      tarjetaDiesel2: "",
-      tarjetaDiesel3: "",
-      companiaSeguros1: "",
-      telefono1: "",
-      numeroSeguro1: "",
-      vencimientoSeguro1: "",
-      tipoCobertura1: 0,
-      companiaSeguros: "",
-      telefono: "",
-      numeroSeguro: "",
-      vencimientoSeguro: "",
-      tipoCobertura: 0,
-      paroMotor: false,
-      tiempoParo: 0,
-      placas: "",
-      placasVencimiento: "",
-      placasExtranjeras: "",
-      placasExtranjerasVencimiento: "",
-      placasDefault: 0,
-      permisoSCT: "",
-      verificacionVehicular: "",
-      verificacionVehicularVencimiento: "",
-      velocidadPromedio: 0,
-      neutralizaciones: 0,
-      frenadoBrusco: 0,
-      cargaAceleracion: 0,
-      accionamientoPedal: 0,
-      velocidadMaximaMotor: 0,
-      porcUltimoCambio: 0,
-      velocidadPromedioUM: "",
-      neutralizacionesUM: "",
-      frenadoBruscoUM: "",
-      cargaAceleracionUM: "",
-      accionamientoPedalUM: "",
-      velocidadMaximaMotorUM: "",
-      porcUltimoCambioUM: "",
-      tarjetaIAVE: "",
-      horometro: 0,
-      tarjetaEPASS: "",
-      horasTrabajasMotor: 0,
-      horasTrabajadasMotorNoGPS: 0,
-      porcentajeRepIngresos: 0,
-      odometro: 0,
-      odometroGPSKMS: "",
-      idPropietario: 0,
-      tiempoParoStatus: "disabled",
-      documentos: [
-        {
-          numDocumento: "",
-          documento: "",
-          fechaDocumento: "",
-        },
-      ],
-      fotosDocs: [
-        {
-          descripcion: "",
-          file: "",
-        },
-      ],
+     
+      
     });
   }
 
   function handleShowModificar(id) {
-    console.log(id);
     const url = `${process.env.REACT_APP_API_URL}/Unidad/GetById/` + id;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
       setState({
         ...state,
-        idUnidad: id,
-        idTipoUnidad: respuesta.data.m_nIdTipoUnidad,
-        codigo: respuesta.data.m_sCodigo,
-        activo: respuesta.data.m_bActivo,
-        rentada: respuesta.data.m_bRentada,
-        esUnidadPermisionario: respuesta.data.m_bEsUnidadPermisionario,
-        idSucursal: respuesta.data.m_nIdSucursal,
-        idOperador: respuesta.data.m_nIdOperador,
-        descripcion: respuesta.data.m_sDescripcion,
-        modelo: respuesta.data.m_nModelo,
-        serieUnidad: respuesta.data.m_sSerieUnidad,
-        colorUnidad: respuesta.data.m_sColorUnidad,
-        idSatelital: respuesta.data.m_sIdentificadorSatelital,
-        idConvoy: respuesta.data.m_sIdentificadorConvoy,
-        idGrupoUnidad: respuesta.data.m_nIdGrupoUnidad,
-        largo: respuesta.data.Largo,
-        ancho: respuesta.data.Ancho,
-        alto: respuesta.data.Alto,
-        capacidad: respuesta.data.m_nCapacidad,
-        numeroEjes: respuesta.data.m_nNumeroEjes,
-        numeroLlanta: respuesta.data.m_nNumeroLlanta,
-        llantaRefaccion: respuesta.data.m_nLlantaRefaccion,
-        tipoLlanta: respuesta.data.m_nIdTipoLlanta,
-        marcaLlanta: respuesta.data.m_nIdMarcaLlanta,
-        modeloLlanta: respuesta.data.m_nIdModeloLLanta,
-        medidaLlanta: respuesta.data.m_nIdMedidaLlanta,
-        serieMotor: respuesta.data.m_sSerieMotor,
-        tipoMotor: respuesta.data.m_sTipoMotor,
-        tipoTransmision: respuesta.data.m_sTipoTransmision,
-        tipoCombustible: respuesta.data.m_nTipoCombustible,
-        capacidadTanqueGal: respuesta.data.m_nCapacidadTanqueCombustibleGalones,
-        rendimientoCargado: respuesta.data.RendimientoCargado,
-        rendimientoVacio: respuesta.data.RendimientoVacio,
-        tarjetaDiesel1: respuesta.data.m_sTarjetaDiesel1,
-        tarjetaDiesel2: respuesta.data.m_sTarjetaDiesel2,
-        tarjetaDiesel3: respuesta.data.m_sTarjetaDiesel3,
-        companiaSeguros1: respuesta.data.m_sCompaniaSeguros1,
-        telefono1: respuesta.data.m_sTelefonosCompaniaSeguros1,
-        numeroSeguro1: respuesta.data.m_sNumeroSeguro1,
-        vencimientoSeguro1: respuesta.data.m_dtVencimientoSeguro1,
-        tipoCobertura1: respuesta.data.m_nTipoCoberturaSeguro1,
-        companiaSeguros: respuesta.data.m_sCompaniaSeguros,
-        telefono: respuesta.data.m_sTelefonosCompaniaSeguros,
-        numeroSeguro: respuesta.data.m_sNumeroSeguro,
-        vencimientoSeguro: respuesta.data.m_dtVencimientoSeguro,
-        tipoCobertura: respuesta.data.m_nTipoCoberturaSeguro,
-        paroMotor: respuesta.data.m_bParoDeMotorRelenti,
-        tiempoParo: respuesta.data.m_nTiempoParo,
-        placas: respuesta.data.m_sPlacas,
-        placasVencimiento: respuesta.data.m_dtPlacasVencimiento,
-        placasExtranjeras: respuesta.data.m_sPlacasExtranjeras,
-        placasExtranjerasVencimiento:
-          respuesta.data.m_dtPlacasExtranjerasVencimiento,
-        placasDefault: respuesta.data.m_nPlacasDefault,
-        permisoSCT: respuesta.data.m_sPermisoSCT,
-        verificacionVehicular: respuesta.data.m_sVerificacionVehicular,
-        verificacionVehicularVencimiento:
-          respuesta.data.m_dtVerificacionVehicularVencimiento,
-        velocidadPromedio: respuesta.data.VelocidadPromedio,
-        neutralizaciones: respuesta.data.Neutralizaciones,
-        frenadoBrusco: respuesta.data.FrenadosBrusco,
-        cargaAceleracion: respuesta.data.CargaDeAceleracion,
-        accionamientoPedal: respuesta.data.AccionamientoPedalFreno,
-        velocidadMaximaMotor: respuesta.data.VelocidadMaximaMotor,
-        porcUltimoCambio: respuesta.data.PorcUltimoCambio,
-        velocidadPromedioUM: respuesta.data.m_sVelocidadPromedioUM,
-        neutralizacionesUM: respuesta.data.m_sNeutralizacionesUM,
-        frenadoBruscoUM: respuesta.data.m_sFrenadosBruscoUM,
-        cargaAceleracionUM: respuesta.data.m_sCargaDeAceleracionUM,
-        accionamientoPedalUM: respuesta.data.m_sAccionamientoPedalFrenoUM,
-        velocidadMaximaMotorUM: respuesta.data.m_sVelocidadMaximaMotorUM,
-        porcUltimoCambioUM: respuesta.data.m_sPorcUltimoCambioUM,
-        tarjetaIAVE: respuesta.data.m_sTarjetaIAVE,
-        horometro: respuesta.data.m_nHorometro,
-        tarjetaEPASS: respuesta.data.m_sTarjetaEPASS,
-        horasTrabajasMotor: respuesta.data.m_nHorasTrabajadasMotor,
-        horasTrabajadasMotorNoGPS: respuesta.data.m_nHorasTrabajadasMotorNoGPS,
-        porcentajeRepIngresos: respuesta.data.PorcentajeRepIngresos,
-        odometro: respuesta.data.m_nOdometro,
-        odometroGPSKMS: respuesta.data.OdometroGPSKMS,
-        idPropietario: respuesta.data.m_nIdPropietarioEquipo,
+        
       });
+    });
+	}
+
+  useEffect((value) => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
+    getAllSucursales();
+    getAllPaises();
+    getAllImpuestos();
+    getAllGrupoClientes();
+    getAllClientes();
+    getAllFormatos();
+  }, []);
+
+  function getAllGrupoClientes() {
+    const url = `${process.env.REACT_APP_API_URL}/GruposClientes/GetListado`;
+    axios.get(url, { headers }).then((respuesta) => {
+      console.log(respuesta);
+
+      setDataGrupoClientes(respuesta.data);
+    });
+  }
+  function getAllFormatos() {
+    const url = `${process.env.REACT_APP_API_URL}/Formato/GetListado`;
+    axios.get(url, { headers }).then((respuesta) => {
+      console.log(respuesta);
+
+      setDataFormatos(respuesta.data);
     });
   }
 
-  useEffect((value) => {
-    getAllOperadores();
-    getAllTipoUnidades();
-    getAllSucursales();
-    getAllPaises();
-
-    getAllClientes();
-  }, []);
 
   function getAllClientes() {
     const url = `${process.env.REACT_APP_API_URL}/Clientes/GetListado`;
@@ -464,19 +443,18 @@ function App(props) {
     console.log(dataEstado);
   }
 
-  function getAllOperadores() {
-    const url = `${process.env.REACT_APP_API_URL}/Operadores/GetListado`;
+
+  function getAllImpuestos() {
+  
+    const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
-      setData(respuesta.data);
+      console.log(respuesta.data);
+      setDataImpuesto(respuesta.data);
     });
+    console.log(dataImpuesto);
   }
 
-  function getAllTipoUnidades() {
-    const url = `${process.env.REACT_APP_API_URL}/TiposUnidades/GetListado`;
-    axios.get(url, { headers }).then((respuesta) => {
-      setDataTiposUnidad(respuesta.data);
-    });
-  }
+  
 
   function getAllSucursales() {
     const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
@@ -484,10 +462,10 @@ function App(props) {
       setDataSucursales(respuesta.data);
     });
   }
-  function getAllGruposUnidades() {
+
+  function getAllGruposClientes() {
     const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
-      setDataGruposUnidades(respuesta.data);
     });
   }
 
@@ -495,6 +473,13 @@ function App(props) {
     setState({
       ...state,
       activo: !state.activo,
+    });
+    console.log(event.target.name + " " + state.activo);
+  };
+  const handleChangeFormatoSelectCheckboxChange = (event) => {
+    setState({
+      ...state,
+      formatoSelect: !state.formatoSelect,
     });
     console.log(event.target.name + " " + state.activo);
   };
@@ -527,6 +512,18 @@ function App(props) {
   };
 
   function handleEliminar(id) {
+    var derecho;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.creadoPor}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      
     const url = `${process.env.REACT_APP_API_URL}/Unidad/Eliminar/` + id;
     axios
       .get(url, { headers })
@@ -536,6 +533,9 @@ function App(props) {
       .catch((err) => {
         alert(err);
       });
+	}).catch(err => {
+      alert(err)
+    });
   }
 
   const handleChange = (event) => {
@@ -591,93 +591,7 @@ function App(props) {
   const handleAceptar = (e) => {
     e.preventDefault();
     var params = {
-      IdTipoUnidad: state.idTipoUnidad,
-      Codigo: state.codigo,
-      Activo: state.activo,
-      Rentada: state.rentada,
-      EsUnidadPermisionario: state.esUnidadPermisionario,
-      IdSucursal: state.idSucursal,
-      IdOperador: state.idOperador,
-      Descripcion: state.descripcion,
-      Modelo: state.modelo,
-      SerieUnidad: state.serieUnidad,
-      ColorUnidad: state.colorUnidad,
-      IdentificadorSatelital: state.idSatelital,
-      IdentificadorConvoy: state.idConvoy,
-      IdGrupoUnidad: state.idGrupoUnidad,
-      CreadoPor: state.creadoPor,
-      CreadoEl: state.creadoEl,
-      ModificadoPor: state.modificadoPor,
-      ModificadoEl: state.modificadoEl,
-      Largo: state.largo,
-      Ancho: state.ancho,
-      Alto: state.alto,
-      Capacidad: state.capacidad,
-      NumeroEjes: state.numeroEjes,
-      NumeroLlanta: state.numeroLlanda,
-      LlantaRefaccion: state.llantaRefaccion,
-      IdTipoLlanta: state.tipoLlanta,
-      IdMarcaLlanta: state.marcaLlanta,
-      IdModeloLLanta: state.modeloLlanta,
-      IdMedidaLlanta: state.medidaLlanta,
-      SerieMotor: state.serieMotor,
-      TipoMotor: state.tipoMotor,
-      TipoTransmision: state.tipoTransmision,
-      TipoCombustible: state.tipoCombustible,
-      CapacidadTanqueCombustibleGalones: state.capacidadTanqueGal,
-      RendimientoCargado: state.rendimientoCargado,
-      RendimientoVacio: state.rendimientoVacio,
-      TarjetaDiesel1: state.tarjetaDiesel1,
-      TarjetaDiesel2: state.tarjetaDiesel2,
-      TarjetaDiesel3: state.tarjetaDiesel3,
-      CompaniaSeguros1: state.companiaSeguros1,
-      TelefonosCompaniaSeguros1: state.telefono1,
-      NumeroSeguro1: state.numeroSeguro1,
-      VencimientoSeguro1: state.vencimientoSeguro1,
-      TipoCoberturaSeguro1: state.tipoCobertura1,
-      CompaniaSeguros: state.companiaSeguros,
-      TelefonosCompaniaSeguros: state.telefono,
-      NumeroSeguro: state.numeroSeguro,
-      VencimientoSeguro: state.vencimientoSeguro,
-      TipoCoberturaSeguro: state.tipoCobertura,
-      ParoDeMotorRelenti: state.paroMotor,
-      TiempoParo: state.tiempoParo,
-      Placas: state.placas,
-      PlacasVencimiento: state.placasVencimiento,
-      PlacasExtranjeras: state.placasExtranjeras,
-      PlacasExtranjerasVencimiento: state.placasExtranjerasVencimiento,
-      PlacasDefault: state.placasDefault,
-      PermisoSCT: state.permisoSCT,
-      VerificacionVehicular: state.verificacionVehicular,
-      VerificacionVehicularVencimiento: state.verificacionVehicularVencimiento,
-      VelocidadPromedio: state.velocidadPromedio,
-      Neutralizaciones: state.neutralizaciones,
-      FrenadosBrusco: state.frenadoBrusco,
-      CargaDeAceleracion: state.cargaAceleracion,
-      AccionamientoPedalFreno: state.accionamientoPedal,
-      VelocidadMaximaMotor: state.velocidadMaximaMotor,
-      PorcUltimoCambio: state.porcUltimoCambio,
-      VelocidadPromedioUM: state.velocidadPromedioUM,
-      NeutralizacionesUM: state.neutralizacionesUM,
-      FrenadosBruscoUM: state.frenadoBruscoUM,
-      CargaDeAceleracionUM: state.cargaAceleracionUM,
-      AccionamientoPedalFrenoUM: state.accionamientoPedalUM,
-      VelocidadMaximaMotorUM: state.velocidadMaximaMotorUM,
-      PorcUltimoCambioUM: state.porcUltimoCambioUM,
-      TarjetaIAVE: state.tarjetaIAVE,
-      Horometro: state.horometro,
-      TarjetaEPASS: state.tarjetaEPASS,
-      HorasTrabajadasMotorNoGPS: state.horasTrabajadasMotorNoGPS,
-      HorasTrabajadasMotor: state.horasTrabajasMotor,
-      PorcentajeRepIngresos: state.porcentajeRepIngresos,
-      Odometro: state.odometro,
-      OdometroGPSKMS: state.odometroGPSKMS,
-      IdPropietarioEquipo: state.idPropietario,
-
-      arrAdicionales: state.documentos,
-
-      agregar: "Agregar",
-      importar: "",
+      
     };
 
     console.log(params);
@@ -747,7 +661,7 @@ function App(props) {
   const [stepActive, setStepActive] = React.useState(1);
 
   function openSection(index) {
-    closeSeccions();
+    //closeSeccions();
     var $section;
     switch (index) {
       case 1:
@@ -813,7 +727,7 @@ function App(props) {
   }
 
   useEffect((value) => {
-    closeSeccions();
+    //closeSeccions();
   }, []);
 
   return (
@@ -838,22 +752,17 @@ function App(props) {
               <div className="col-md-6 col-sm-6">
                 <ul className="list-page-breadcrumb">
                   <li>
-                    <a href="#">
-                      Home <i className="zmdi zmdi-chevron-right" />
+                    <a href="/Catalogos">
+                      Catálogos <i className="zmdi zmdi-chevron-right" />
                     </a>
                   </li>
-                  <li>
-                    <a href="#">
-                      Layout <i className="zmdi zmdi-chevron-right" />
-                    </a>
-                  </li>
-                  <li className="active-page"> Dashboard</li>
+                  <li className="active-page">Clientes</li>
                 </ul>
               </div>
             </div>
           </div>
 
-          <ul className="nav nav-tabs">
+          <ul className="nav navStatica nav-tabs">
             <li className="active">
               <a data-toggle="tab" href="#Listado">
                 <i className="fa fa-list" /> Listado
@@ -904,7 +813,7 @@ function App(props) {
                             className="wizard-breadcrumb number-style"
                             style={{
                               position: "sticky",
-                              top: "50px",
+                              top: "150px",
                               padding: "5px",
                               backgroundColor: "white",
                               zIndex: 100,
@@ -1028,8 +937,7 @@ function App(props) {
                                       <div className="col-md-12">
                                         <div className="form-content">
                                           {/* start text password */}
-                                          <div className="row">
-                                            <div className="col-sm-6 col-md-2-5 unit">
+                                            <div className="col-sm-4 col-md-2-5 unit">
                                               <label className="label">
                                                 Número de Cliente
                                               </label>
@@ -1039,14 +947,14 @@ function App(props) {
                                                   onBlur={handleChangeCodigo}
                                                   className="form-control"
                                                   type="text"
-                                                  value={state.codigo}
-                                                  id="codigo"
-                                                  name="codigo"
+                                                  value={state.numeroCliente}
+                                                  id="numeroCliente"
+                                                  name="numeroCliente"
                                                   required
                                                 />
                                               </div>
                                             </div>
-                                            <div className="col-sm-6 col-md-2-5  unit">
+                                            <div className="col-sm-4 col-md-2-5  unit">
                                               <label className="label">
                                                 RFC
                                               </label>
@@ -1055,15 +963,15 @@ function App(props) {
                                                   onChange={handleChange}
                                                   className="form-control"
                                                   type="text"
-                                                  value={state.descripcion}
-                                                  id="descripcion"
-                                                  name="descripcion"
+                                                  value={state.rfc}
+                                                  id="rfc"
+                                                  name="rfc"
                                                   required
                                                   native
                                                 />
                                               </div>
                                             </div>
-                                            <div className="col-sm-6 col-md-2-5 unit">
+                                            <div className="col-sm-4 col-md-2-5 unit">
                                               <label className="label">
                                                 Nombre Fiscal
                                               </label>
@@ -1072,16 +980,16 @@ function App(props) {
                                                   onChange={handleChange}
                                                   className="form-control"
                                                   type="text"
-                                                  value={state.descripcion}
-                                                  id="descripcion"
-                                                  name="descripcion"
+                                                  value={state.nombreFiscal}
+                                                  id="nombreFiscal"
+                                                  name="nombreFiscal"
                                                   required
                                                   native
                                                 />
                                               </div>
                                             </div>
 
-                                            <div className="col-sm-6 col-md-2-5 unit">
+                                            <div className="col-sm-4 col-md-2-5 unit">
                                               <label className="label">
                                                 Nombre Corto
                                               </label>
@@ -1090,15 +998,15 @@ function App(props) {
                                                   onChange={handleChange}
                                                   className="form-control"
                                                   type="text"
-                                                  value={state.descripcion}
-                                                  id="descripcion"
-                                                  name="descripcion"
+                                                  value={state.nombreCorto}
+                                                  id="nombreCorto"
+                                                  name="nombreCorto"
                                                   required
                                                   native
                                                 />
                                               </div>
                                             </div>
-                                            <div className="col-sm-6 col-md-2-5 unit">
+                                            <div className="col-sm-4 col-md-2-5 unit">
                                               <label className="label">
                                                 Tipo de Cliente
                                               </label>
@@ -1106,11 +1014,11 @@ function App(props) {
                                                 <select
                                                   onChange={handleChange}
                                                   className="form-control"
-                                                  value={state.idTipoUnidad}
+                                                  value={state.tipoCliente}
                                                   required
                                                   native
-                                                  name="idTipoUnidad"
-                                                  id="idTipoUnidad"
+                                                  name="tipoCliente"
+                                                  id="tipoCliente"
                                                 >
                                                   <option value="">
                                                     Tipo de Cliente
@@ -1125,10 +1033,8 @@ function App(props) {
                                                 <i></i>
                                               </label>
                                             </div>
-                                          </div>
 
-                                          <div className="row">
-                                            <div className="col-sm-6 col-md-2-5 unit">
+                                            <div className="col-sm-4 col-md-2-5 unit">
                                               <label className="label">
                                                 &nbsp;{" "}
                                               </label>
@@ -1161,18 +1067,18 @@ function App(props) {
                                                 <i></i>
                                               </label>
                                             </div>
-                                            <div className="col-sm-6 col-md-2-5  unit">
+                                            <div className="col-sm-4 col-md-2-5  unit">
                                               <label className="label">
                                                 &nbsp;{" "}
                                               </label>
                                               <label className="input select">
                                                 <select
                                                   onChange={handleChange}
-                                                  value={state.idSucursal}
-                                                  id="idSucursal"
+                                                  value={state.idMoneda}
+                                                  id="idMoneda"
                                                   native
                                                   className="form-control"
-                                                  name="idSucursal"
+                                                  name="idMoneda"
                                                   required
                                                 >
                                                   <option value="">
@@ -1188,46 +1094,71 @@ function App(props) {
                                                 <i></i>
                                               </label>
                                             </div>
-                                            <div className="col-sm-6 col-md-2-5 unit">
+                                            <div className="col-sm-4 col-md-2-5 unit">
                                               <label className="label">
                                                 &nbsp;{" "}
                                               </label>
                                               <label className="input select">
                                                 <select
                                                   onChange={handleChange}
-                                                  value={state.idSucursal}
-                                                  id="idSucursal"
+                                                  value={state.idImpuestoTransladado}
+                                                  id="idImpuestoTransladado"
                                                   native
                                                   className="form-control"
-                                                  name="idSucursal"
+                                                  name="idImpuestoTransladado"
                                                   required
                                                 >
                                                   <option value="">IVA</option>
-                                                  <option value="1">16%</option>
-                                                  <option value="2">8%</option>
+                                                 
+                                                                {dataImpuesto.map(
+                                                                  (impuesto) => (
+                                                                    <option
+                                                                      value={
+                                                                        impuesto.m_nIdImpuesto
+                                                                      }
+                                                                    >
+                                                                      {
+                                                                        impuesto.m_sImpuesto
+                                                                      }
+                                                                    </option>
+                                                                  )
+                                                                )}
                                                 </select>
                                                 <i></i>
                                               </label>
                                             </div>
 
-                                            <div className="col-sm-6 col-md-2-5 unit">
-                                              <div className="input">
+                                            <div className="col-sm-4 col-md-2-5 unit">
                                                 <label className="label">
                                                   Grupo
                                                 </label>
-                                                <input
-                                                  onChange={handleChange}
-                                                  className="form-control"
-                                                  type="text"
-                                                  value={state.descripcion}
-                                                  id="descripcion"
-                                                  name="descripcion"
-                                                  required
-                                                  native
-                                                />
-                                              </div>
+                                                <Autocomplete
+                                    freeSolo
+                                    onChange={(event, newValue) =>
+                                      setState({
+                                        ...state,
+                                        idGrupoCliente: newValue,
+                                      })
+                                    }
+                                    value={state.idGrupoCliente}
+                                    id="idGrupoCliente"
+                                    disableClearable
+                                    getOptionLabel={(option) =>
+                                      option.m_sGrupo
+                                    }
+                                    options={dataGrupoClientes}
+                                    renderInput={(params) => (
+                                      <TextField
+                                        {...params}
+                                        InputProps={{
+                                          ...params.InputProps,
+                                          type: "search",
+                                          value: state.idGrupoCliente,
+                                        }}
+                                      />
+                                    )}
+                                  />{" "}
                                             </div>
-                                          </div>
 
                                           <div className="unit">
                                             <div className="inline-group">
@@ -1251,10 +1182,10 @@ function App(props) {
                                                     handleChangeRentadaCheckboxChange
                                                   }
                                                   native
-                                                  name="rentada"
+                                                  name="operadorLogistico"
                                                   type="checkbox"
-                                                  id="rentada"
-                                                  value={state.rentada}
+                                                  id="operadorLogistico"
+                                                  value={state.operadorLogistico}
                                                 />
                                                 <i />
                                                 Operador Lógistico
@@ -1269,10 +1200,10 @@ function App(props) {
                                                     handleChangeActivoCheckboxChange
                                                   }
                                                   native
-                                                  name="activo"
+                                                  name="aplicarDetalleMaterialesCadaViajeXML"
                                                   type="checkbox"
-                                                  value={state.activo}
-                                                  id="activo"
+                                                  value={state.aplicarDetalleMaterialesCadaViajeXML}
+                                                  id="aplicarDetalleMaterialesCadaViajeXML"
                                                 />
                                                 <i />
                                                 Aplicar en el XML de factura, el
@@ -1340,7 +1271,7 @@ function App(props) {
                                 <div className="widget-container">
                                   <div className="widget-content">
                                     <div className="row">
-                                      <div className="col-md-8">
+                                      <div className="col-sm-12 col-md-8">
                                         <div className="w-section-header">
                                           <h4>Metodos de Pago y Crédito</h4>
                                         </div>
@@ -1354,11 +1285,11 @@ function App(props) {
                                               <label className="input select">
                                                 <select
                                                   onChange={handleChange}
-                                                  value={state.idGrupoUnidad}
-                                                  id="idGrupoUnidad"
+                                                  value={state.metodoPago}
+                                                  id="metodoPago"
                                                   native
                                                   className="form-control"
-                                                  name="idGrupoUnidad"
+                                                  name="metodoPago"
                                                   required
                                                 >
                                                   <option value="1">
@@ -1380,9 +1311,9 @@ function App(props) {
                                                   onChange={handleChange}
                                                   className="form-control"
                                                   type="number"
-                                                  value={state.ancho}
-                                                  id="ancho"
-                                                  name="ancho"
+                                                  value={state.diasCredito}
+                                                  id="diasCredito"
+                                                  name="diasCredito"
                                                   native
                                                 />
                                               </div>
@@ -1402,9 +1333,9 @@ function App(props) {
                                                   onChange={handleChange}
                                                   className="form-control"
                                                   type="number"
-                                                  value={state.numeroLlanta}
-                                                  id="numeroLlanta"
-                                                  name="numeroLlanta"
+                                                  value={state.credito}
+                                                  id="credito"
+                                                  name="credito"
                                                 />
                                               </div>
                                             </div>
@@ -1417,9 +1348,9 @@ function App(props) {
                                                   onChange={handleChange}
                                                   className="form-control"
                                                   type="number"
-                                                  value={state.llantaRefaccion}
-                                                  id="llantaRefaccion"
-                                                  name="llantaRefaccion"
+                                                  value={state.saldoCredito}
+                                                  id="saldoCredito"
+                                                  name="saldoCredito"
                                                 />
                                               </div>
                                             </div>
@@ -1432,9 +1363,9 @@ function App(props) {
                                                   onChange={handleChange}
                                                   className="form-control"
                                                   type="number"
-                                                  value={state.llantaRefaccion}
-                                                  id="llantaRefaccion"
-                                                  name="llantaRefaccion"
+                                                  value={state.pendFacturar}
+                                                  id="pendFacturar"
+                                                  name="pendFacturar"
                                                 />
                                               </div>
                                             </div>
@@ -1452,9 +1383,9 @@ function App(props) {
                                                   onChange={handleChange}
                                                   className="form-control"
                                                   type="number"
-                                                  value={state.numeroLlanta}
-                                                  id="numeroLlanta"
-                                                  name="numeroLlanta"
+                                                  value={state.creditoDlls}
+                                                  id="creditoDlls"
+                                                  name="creditoDlls"
                                                 />
                                               </div>
                                             </div>
@@ -1467,9 +1398,9 @@ function App(props) {
                                                   onChange={handleChange}
                                                   className="form-control"
                                                   type="number"
-                                                  value={state.llantaRefaccion}
-                                                  id="llantaRefaccion"
-                                                  name="llantaRefaccion"
+                                                  value={state.saldoCreditoDLLS}
+                                                  id="saldoCreditoDLLS"
+                                                  name="saldoCreditoDLLS"
                                                 />
                                               </div>
                                             </div>
@@ -1482,9 +1413,9 @@ function App(props) {
                                                   onChange={handleChange}
                                                   className="form-control"
                                                   type="number"
-                                                  value={state.llantaRefaccion}
-                                                  id="llantaRefaccion"
-                                                  name="llantaRefaccion"
+                                                  value={state.pendFacturarDLLS}
+                                                  id="pendFacturarDLLS"
+                                                  name="pendFacturarDLLS"
                                                 />
                                               </div>
                                             </div>
@@ -1492,7 +1423,7 @@ function App(props) {
                                         </div>
                                       </div>
 
-                                      <div className="col-md-4 bordesizquierdo">
+                                      <div className="col-sm-12 col-md-3 bordesizquierdo">
                                         <div className="w-section-header">
                                           <h4>
                                             Información Adicional del Pago
@@ -1501,7 +1432,7 @@ function App(props) {
                                         <div className="form-content">
                                           {/* start text password */}
                                           <div className="row">
-                                            <div className="col-md-6 unit">
+                                            <div className="col-xs-6 col-ms-6 col-md-10 unit">
                                               <label className="label">
                                                 Banco Ordenante
                                               </label>
@@ -1510,16 +1441,16 @@ function App(props) {
                                                   onChange={handleChange}
                                                   className="form-control"
                                                   type="text"
-                                                  value={state.llantaRefaccion}
-                                                  id="llantaRefaccion"
-                                                  name="llantaRefaccion"
+                                                  value={state.bancoOrdenante}
+                                                  id="bancoOrdenante"
+                                                  name="bancoOrdenante"
                                                 />
                                               </div>
                                             </div>
                                           </div>
 
                                           <div className="row">
-                                            <div className="col-md-6 unit">
+                                            <div className="col-xs-6 col-ms-6 col-md-10 unit">
                                               <label className="label">
                                                 RFC
                                               </label>
@@ -1528,15 +1459,15 @@ function App(props) {
                                                   onChange={handleChange}
                                                   className="form-control"
                                                   type="text"
-                                                  value={state.llantaRefaccion}
-                                                  id="llantaRefaccion"
-                                                  name="llantaRefaccion"
+                                                  value={state.rfcBancoOrdenante}
+                                                  id="rfcBancoOrdenante"
+                                                  name="rfcBancoOrdenante"
                                                 />
                                               </div>
                                             </div>
                                           </div>
                                           <div className="row">
-                                            <div className="col-md-6 unit">
+                                            <div className="col-xs-6 col-ms-6 col-md-10 unit">
                                               <label className="label">
                                                 Núm. Cuenta
                                               </label>
@@ -1545,9 +1476,9 @@ function App(props) {
                                                   onChange={handleChange}
                                                   className="form-control"
                                                   type="text"
-                                                  value={state.llantaRefaccion}
-                                                  id="llantaRefaccion"
-                                                  name="llantaRefaccion"
+                                                  value={state.cuentaBancoOrdenante}
+                                                  id="cuentaBancoOrdenante"
+                                                  name="cuentaBancoOrdenante"
                                                 />
                                               </div>
                                             </div>
@@ -1663,7 +1594,8 @@ function App(props) {
                                                         <div className="row">
                                                           <div className="col-sm-6 col-md-2-5 unit">
                                                             <label className="label">
-                                                              País
+                                                            &nbsp;{" "}
+
                                                             </label>
                                                             <label className="input select">
                                                               <select
@@ -1711,17 +1643,18 @@ function App(props) {
                                                                 type="text"
                                                                 placeholder=""
                                                                 value={
-                                                                  state.placasVencimiento
+                                                                  state.codigoPostal
                                                                 }
-                                                                id="placasVencimiento"
-                                                                name="placasVencimiento"
+                                                                id="codigoPostal"
+                                                                name="codigoPostal"
                                                               />
                                                             </div>
                                                           </div>
 
                                                           <div className="col-sm-6 col-md-2-5 ">
                                                             <label className="label">
-                                                              Estado
+                                                            &nbsp;{" "}
+
                                                             </label>
                                                             <label className="input select">
                                                               <select
@@ -1772,10 +1705,10 @@ function App(props) {
                                                                   type="text"
                                                                   placeholder=""
                                                                   value={
-                                                                    state.permisoSCT
+                                                                    state.municipio
                                                                   }
-                                                                  id="permisoSCT"
-                                                                  name="permisoSCT"
+                                                                  id="municipio"
+                                                                  name="municipio"
                                                                 />
                                                               </div>
                                                             </div>
@@ -1794,10 +1727,10 @@ function App(props) {
                                                                   type="text"
                                                                   placeholder=""
                                                                   value={
-                                                                    state.permisoSCT
+                                                                    state.localidad
                                                                   }
-                                                                  id="permisoSCT"
-                                                                  name="permisoSCT"
+                                                                  id="localidad"
+                                                                  name="localidad"
                                                                 />
                                                               </div>
                                                             </div>
@@ -1817,10 +1750,10 @@ function App(props) {
                                                               type="text"
                                                               placeholder=""
                                                               value={
-                                                                state.placasExtranjeras
+                                                                state.colonia
                                                               }
-                                                              id="placasExtranjeras"
-                                                              name="placasExtranjeras"
+                                                              id="colonia"
+                                                              name="colonia"
                                                             />
                                                           </div>
                                                           </div>
@@ -1837,10 +1770,10 @@ function App(props) {
                                                               type="text"
                                                               placeholder=""
                                                               value={
-                                                                state.placasExtranjeras
+                                                                state.calle
                                                               }
-                                                              id="placasExtranjeras"
-                                                              name="placasExtranjeras"
+                                                              id="calle"
+                                                              name="calle"
                                                             />
                                                           </div>
                                                           </div>
@@ -1859,10 +1792,10 @@ function App(props) {
                                                                   type="text"
                                                                   placeholder=""
                                                                   value={
-                                                                    state.permisoSCT
+                                                                    state.numeroExterior
                                                                   }
-                                                                  id="permisoSCT"
-                                                                  name="permisoSCT"
+                                                                  id="numeroExterior"
+                                                                  name="numeroExterior"
                                                                 />
                                                               </div>
                                                             </div>
@@ -1881,10 +1814,10 @@ function App(props) {
                                                                   type="text"
                                                                   placeholder=""
                                                                   value={
-                                                                    state.permisoSCT
+                                                                    state.numeroInterior
                                                                   }
-                                                                  id="permisoSCT"
-                                                                  name="permisoSCT"
+                                                                  id="numeroInterior"
+                                                                  name="numeroInterior"
                                                                 />
                                                               </div>
                                                             </div>
@@ -1903,7 +1836,7 @@ function App(props) {
                                                                   type="text"
                                                                   placeholder=""
                                                                   value={
-                                                                    state.permisoSCT
+                                                                    state.telefono
                                                                   }
                                                                   id="permisoSCT"
                                                                   name="permisoSCT"
@@ -1930,10 +1863,10 @@ function App(props) {
                                                                   type="text"
                                                                   placeholder=""
                                                                   value={
-                                                                    state.permisoSCT
+                                                                    state.celular
                                                                   }
-                                                                  id="permisoSCT"
-                                                                  name="permisoSCT"
+                                                                  id="celular"
+                                                                  name="celular"
                                                                 />
                                                               </div>
                                                             </div>
@@ -1952,10 +1885,10 @@ function App(props) {
                                                                   type="text"
                                                                   placeholder=""
                                                                   value={
-                                                                    state.permisoSCT
+                                                                    state.nextel
                                                                   }
-                                                                  id="permisoSCT"
-                                                                  name="permisoSCT"
+                                                                  id="nextel"
+                                                                  name="nextel"
                                                                 />
                                                               </div>
                                                             </div>
@@ -1975,10 +1908,10 @@ function App(props) {
                                                                   type="text"
                                                                   placeholder=""
                                                                   value={
-                                                                    state.permisoSCT
+                                                                    state.correoElectronico
                                                                   }
-                                                                  id="permisoSCT"
-                                                                  name="permisoSCT"
+                                                                  id="correoElectronico"
+                                                                  name="correoElectronico"
                                                                 />
                                                               </div>
                                                             </div>
@@ -1992,28 +1925,13 @@ function App(props) {
                                                     id="Formatos"
                                                     className="tab-pane fade"
                                                   >
-                                                    <div className="row">
-                                                      <div className="col-md-12 unit">
-                                                        {/* start cloned right side buttons element */}
-                                                        <div className="clone-rightside-btn-1">
-                                                          <label className="label">
-                                                            Documentos
-                                                          </label>
-                                                          <a
-                                                            className="btn"
-                                                            style={{
-                                                              margin: "10px",
-                                                            }}
-                                                            onClick={() =>
-                                                              addDocumento()
-                                                            }
-                                                          >
-                                                            <i className="zmdi zmdi-plus"></i>{" "}
-                                                            Agregar Documento
-                                                          </a>
-                                                        </div>
-                                                      </div>
-                                                    </div>
+                                                   <div className="widget-wrap">
+                <div className="widget-content">
+                  <div className="row">
+                    <TableFormatos columns={columns2} data={dataFormatos} />
+                  </div>
+                </div>
+              </div>
                                                   </div>
                                                   <div
                                                     id="Especiales"
@@ -2043,10 +1961,10 @@ function App(props) {
                                                                   type="text"
                                                                   placeholder=""
                                                                   value={
-                                                                    state.permisoSCT
+                                                                    state.frecuenciaEnvioDias
                                                                   }
-                                                                  id="permisoSCT"
-                                                                  name="permisoSCT"
+                                                                  id="frecuenciaEnvioDias"
+                                                                  name="frecuenciaEnvioDias"
                                                                 />
                                                               </div>
                                                             </div>
@@ -2068,10 +1986,10 @@ function App(props) {
                                                                   type="datetime-local"
                                                                   placeholder=""
                                                                   value={
-                                                                    state.permisoSCT
+                                                                    state.enviarApartir
                                                                   }
-                                                                  id="permisoSCT"
-                                                                  name="permisoSCT"
+                                                                  id="enviarApartir"
+                                                                  name="enviarApartir"
                                                                 />
                                                               </div>
                                                             </div>
@@ -2091,12 +2009,12 @@ function App(props) {
                                                                   handleChangeActivoCheckboxChange
                                                                 }
                                                                 native
-                                                                name="activo"
+                                                                name="envioAutoSeguimientoViajes"
                                                                 type="checkbox"
                                                                 value={
-                                                                  state.activo
+                                                                  state.envioAutomaticoSeguimiento
                                                                 }
-                                                                id="activo"
+                                                                id="envioAutoSeguimientoViajes"
                                                               />
                                                               <i />
                                                               Envio Automático
@@ -2116,11 +2034,11 @@ function App(props) {
                                                                   handleChangeRentadaCheckboxChange
                                                                 }
                                                                 native
-                                                                name="rentada"
+                                                                name="excluirNodo"
                                                                 type="checkbox"
-                                                                id="rentada"
+                                                                id="excluirNodo"
                                                                 value={
-                                                                  state.rentada
+                                                                  state.excluirNodo
                                                                 }
                                                               />
                                                               <i />
@@ -2152,11 +2070,11 @@ function App(props) {
                                                               className="form-control"
                                                               required
                                                               native
-                                                              name="idEstado"
+                                                              name="idUSOCFDI"
                                                               value={
-                                                                state.idEstado
+                                                                state.idUSOCFDI
                                                               }
-                                                              id="idEstado"
+                                                              id="idUSOCFDI"
                                                             >
                                                               <option value="">
                                                                 ""
@@ -2177,12 +2095,12 @@ function App(props) {
                                                                   handleChangeActivoCheckboxChange
                                                                 }
                                                                 native
-                                                                name="activo"
+                                                                name="agruparCantidadPorConcepto"
                                                                 type="checkbox"
                                                                 value={
-                                                                  state.activo
+                                                                  state.agruparCantidadPorConcepto
                                                                 }
-                                                                id="activo"
+                                                                id="agruparCantidadPorConcepto"
                                                               />
                                                               <i />
                                                               Permitir agrupar
@@ -2204,12 +2122,12 @@ function App(props) {
                                                                   handleChangeActivoCheckboxChange
                                                                 }
                                                                 native
-                                                                name="activo"
+                                                                name="ajustarImporte2Dec"
                                                                 type="checkbox"
                                                                 value={
-                                                                  state.activo
+                                                                  state.ajustarImporte2Dec
                                                                 }
-                                                                id="activo"
+                                                                id="ajustarImporte2Dec"
                                                               />
                                                               <i />
                                                               Ajusta a 2
@@ -2233,12 +2151,12 @@ function App(props) {
                                                                   handleChangeActivoCheckboxChange
                                                                 }
                                                                 native
-                                                                name="activo"
+                                                                name="aplicarDetalleConceptoCadaViajeXML"
                                                                 type="checkbox"
                                                                 value={
-                                                                  state.activo
+                                                                  state.aplicarDetalleConceptoCadaViajeXML
                                                                 }
-                                                                id="activo"
+                                                                id="aplicarDetalleConceptoCadaViajeXML"
                                                               />
                                                               <i />
                                                               Aplicar en el XML
@@ -2348,7 +2266,7 @@ function App(props) {
                                                     native
                                                     name="activo"
                                                     type="checkbox"
-                                                    value={state.activo}
+                                                    value={state.factura}
                                                     id="activo"
                                                   />
                                                   <i />

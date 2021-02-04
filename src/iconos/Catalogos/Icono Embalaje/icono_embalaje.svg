@@ -1,1 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="46" height="46.106" viewBox="0 0 46 46.106"><defs><style>.a{fill:#f9a03e;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style></defs><g transform="translate(4.5 6.989)"><path class="a" d="M24.75,14.1,11.25,6.315"/><path class="a" d="M48.5,33.8V16.2a4.342,4.342,0,0,0-2.444-3.807l-17.111-8.8a5.362,5.362,0,0,0-4.889,0l-17.111,8.8A4.342,4.342,0,0,0,4.5,16.2V33.8a4.342,4.342,0,0,0,2.444,3.807l17.111,8.8a5.362,5.362,0,0,0,4.889,0l17.111-8.8A4.342,4.342,0,0,0,48.5,33.8Z" transform="translate(-8 -8.939)"/><path class="a" d="M-1.9,5.873,18,18.015,38.967,5.873"/><path class="a" d="M18,37.061V18" transform="translate(0 1.003)"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="46" height="46.106" viewBox="0 0 46 46.106">
+<defs><style>.a{fill:#f9a03e;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style></defs>
+<g transform="translate(4.5 6.989)">
+<path d="M24.75,14.1,11.25,6.315"/>
+<path d="M48.5,33.8V16.2a4.342,4.342,0,0,0-2.444-3.807l-17.111-8.8a5.362,5.362,0,0,0-4.889,0l-17.111,8.8A4.342,4.342,0,0,0,4.5,16.2V33.8a4.342,4.342,0,0,0,2.444,3.807l17.111,8.8a5.362,5.362,0,0,0,4.889,0l17.111-8.8A4.342,4.342,0,0,0,48.5,33.8Z" transform="translate(-8 -8.939)"/>
+<path d="M-1.9,5.873,18,18.015,38.967,5.873"/>
+<path d="M18,37.061V18" transform="translate(0 1.003)"/>
+</g></svg>

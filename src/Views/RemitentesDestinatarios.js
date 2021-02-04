@@ -33,6 +33,7 @@ function App(props) {
     nombre: "",
     rfc: "",
     activo: false,
+    DerechoBorrar:50,
     calle: "",
     noExterior: 0,
     noInterior: 0,
@@ -42,9 +43,9 @@ function App(props) {
     idPais: 0,
     idEstado: 0,
     codigoPostal: 0,
-    creadoPor: 0,
+    creadoPor: localStorage.getItem("UsuarioId") ,
     creadoEl: "",
-    modificadoPor: "",
+    modificadoPor: localStorage.getItem("UsuarioId") ,
     modificadoEl: "",
     contacto: "",
     correoElectronico: "",
@@ -72,9 +73,9 @@ function App(props) {
       idPais: 0,
       idEstado: 0,
       codigoPostal: 0,
-      creadoPor: 0,
+      creadoPor: state.creadoPor,
       creadoEl: "",
-      modificadoPor: "",
+      modificadoPor: state.modificadoPor,
       modificadoEl: "",
       contacto: "",
       correoElectronico: "",
@@ -183,17 +184,32 @@ function App(props) {
   };
 
   function handleEliminar(id) {
+    var derecho;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.creadoPor}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      
     const url =
-      `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/Eliminar/` + id;
-    axios
-      .delete(url, { headers })
-      .then((respuesta) => {
-        alert(respuesta.data);
-        getAllDataRemDes();
-      })
-      .catch((err) => {
-        alert(err);
-      });
+    `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/Eliminar/` + id;
+  axios
+    .delete(url, { headers })
+    .then((respuesta) => {
+      alert(respuesta.data);
+      getAllDataRemDes();
+    })
+    .catch((err) => {
+      alert(err);
+    });
+	}).catch(err => {
+      alert(err)
+    });
   }
 
   function handleShowModificar(row) {
@@ -329,11 +345,11 @@ function App(props) {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                          <i className="fa fa-caret-down" />
-                        )
+                            <i className="fa fa-caret-down" />
+                          )
                       ) : (
-                        ""
-                      )}
+                          ""
+                        )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -388,6 +404,12 @@ function App(props) {
   }
 
   useEffect((value) => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     getAllPaises();
     getAllDataRemDes();
     getAllClientes();
@@ -447,18 +469,12 @@ function App(props) {
       </header>
       {/*Topbar End Here*/}
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
+      <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
         <BarraLateralIzquierda />
       </aside>
 
       <section className="main-container">
         <div className="container-fluid">
-          <div className="page-header filled full-block light">
-            <div className="row">
-              <div className="col-md-6 col-sm-6">
-                <h2>Remitente/Destinatario</h2>
-              </div>
-              <div className="container-fluid">
           <div className="page-header filled full-block light">
             <div className="row">
               <div className="col-md-6 col-sm-6">
@@ -478,11 +494,7 @@ function App(props) {
           </div>
         </div>
 
-            </div>
-          </div>
-        </div>
-
-        <ul className="nav nav-tabs">
+        <ul className="nav navStatica nav-tabs">
           <li className="active">
             <a data-toggle="tab" href="#Listado">
               <i className="fa fa-list" />
@@ -547,99 +559,99 @@ function App(props) {
 
                                 <div className="row">
 
-                                <div className="col-sm-6 col-md-2-5 unit">
-                                  <label className="label">Número</label>
-                                  <div className="input">
-                                    <input
-                                      onChange={handleChange}
-                                      onBlur={handleChangeNumero}
-                                      type="number"
-                                      min="0"
-                                      pattern="[0-9]*"
-                                      className="form-control"
-                                      value={state.numero}
-                                      id="numero"
-                                      maxlength="4"
-                                      required
-                                    />
-                                  </div>
-                                </div>
-
-                                <div className="col-sm-6 col-md-2-5 unit">
-                                  <label className="label">RFC</label>
-                                  <div className="input">
-                                    <input
-                                      onChange={handleChange}
-                                      className="form-control"
-                                      type="text"
-                                      pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
-                                      title="Favor de introducir un RFC válido."
-                                      value={state.rfc}
-                                      id="rfc"
-                                      required
-                                    />
-                                  </div>
-                                </div>
-                                <div className="col-sm-6 col-md-2-5 unit">
-                                  <label className="label">Nombre</label>
-                                  <div className="input">
-                                    <input
-                                      onChange={handleChange}
-                                      className="form-control"
-                                      type="text"
-                                      value={state.nombre}
-                                      id="nombre"
-                                      required
-                                    />
-                                  </div>
-                                </div>
-                                <div className="col-sm-6 col-md-2-5 unit">
-                                  <label className="label">Cliente</label>
-                                  {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
-                                  <Autocomplete
-                                    freeSolo
-                                    onChange={(event, newValue) =>
-                                      setState({
-                                        ...state,
-                                        idCliente: newValue,
-                                      })
-                                    }
-                                    value={state.idCliente}
-                                    id="idCliente"
-                                    disableClearable
-                                    getOptionLabel={(option) =>
-                                      option.m_sNombreFiscal
-                                    }
-                                    options={dataClientes}
-                                    renderInput={(params) => (
-                                      <TextField
-                                        {...params}
-                                        InputProps={{
-                                          ...params.InputProps,
-                                          type: "search",
-                                          value: state.idCliente,
-                                        }}
+                                  <div className="col-sm-6 col-md-2-5 unit">
+                                    <label className="label">Número</label>
+                                    <div className="input">
+                                      <input
+                                        onChange={handleChange}
+                                        onBlur={handleChangeNumero}
+                                        type="number"
+                                        min="0"
+                                        pattern="[0-9]*"
+                                        className="form-control"
+                                        value={state.numero}
+                                        id="numero"
+                                        maxlength="4"
+                                        required
                                       />
-                                    )}
-                                  />{" "}
-                                </div>
-                                <div className="col-sm-12 col-md-2-5 unit">
-                                  <label className="label">Estatus</label>
-                                  <label className="checkbox">
-                                    <input
-                                      onChange={
-                                        handleChangeActivoCheckboxChange
+                                    </div>
+                                  </div>
+
+                                  <div className="col-sm-6 col-md-2-5 unit">
+                                    <label className="label">RFC</label>
+                                    <div className="input">
+                                      <input
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="text"
+                                        pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
+                                        title="Favor de introducir un RFC válido."
+                                        value={state.rfc}
+                                        id="rfc"
+                                        required
+                                      />
+                                    </div>
+                                  </div>
+                                  <div className="col-sm-6 col-md-2-5 unit">
+                                    <label className="label">Nombre</label>
+                                    <div className="input">
+                                      <input
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="text"
+                                        value={state.nombre}
+                                        id="nombre"
+                                        required
+                                      />
+                                    </div>
+                                  </div>
+                                  <div className="col-sm-6 col-md-2-5 unit">
+                                    <label className="label">Cliente</label>
+                                    {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
+                                    <Autocomplete
+                                      freeSolo
+                                      onChange={(event, newValue) =>
+                                        setState({
+                                          ...state,
+                                          idCliente: newValue,
+                                        })
                                       }
-                                      native
-                                      type="checkbox"
-                                      value={state.activo}
-                                      id="activo"
-                                      name="activo"
-                                    />
-                                    <i />
+                                      value={state.idCliente}
+                                      id="idCliente"
+                                      disableClearable
+                                      getOptionLabel={(option) =>
+                                        option.m_sNombreFiscal
+                                      }
+                                      options={dataClientes}
+                                      renderInput={(params) => (
+                                        <TextField
+                                          {...params}
+                                          InputProps={{
+                                            ...params.InputProps,
+                                            type: "search",
+                                            value: state.idCliente,
+                                          }}
+                                        />
+                                      )}
+                                    />{" "}
+                                  </div>
+                                  <div className="col-sm-12 col-md-2-5 unit">
+                                    <label className="label">Estatus</label>
+                                    <label className="checkbox">
+                                      <input
+                                        onChange={
+                                          handleChangeActivoCheckboxChange
+                                        }
+                                        native
+                                        type="checkbox"
+                                        value={state.activo}
+                                        id="activo"
+                                        name="activo"
+                                      />
+                                      <i />
                                     Activo
                                   </label>
-                                </div>
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -650,11 +662,11 @@ function App(props) {
                           <div className="widget-content">
                             <div className="row">
                               <div className="col-md-12">
-                                  <div className="w-section-header">
-                                    <h3>Domicilio Fiscal</h3>
-                                  </div>
+                                <div className="w-section-header">
+                                  <h3>Domicilio Fiscal</h3>
+                                </div>
 
-                                  <div className="row">
+                                <div className="row">
 
                                   <div class="col-md-4 unit">
                                     <label className="label">País</label>
@@ -670,15 +682,15 @@ function App(props) {
                                         {dataPais.length < 1 ? (
                                           <option value="none">País</option>
                                         ) : (
-                                          dataPais.map((pais) => (
-                                            <option
-                                              key={pais.m_nIdPais}
-                                              value={pais.m_nIdPais}
-                                            >
-                                              {pais.m_sPais}
-                                            </option>
-                                          ))
-                                        )}
+                                            dataPais.map((pais) => (
+                                              <option
+                                                key={pais.m_nIdPais}
+                                                value={pais.m_nIdPais}
+                                              >
+                                                {pais.m_sPais}
+                                              </option>
+                                            ))
+                                          )}
                                       </select>
                                       <i></i>
                                     </label>
@@ -728,12 +740,12 @@ function App(props) {
                                         {dataEstado.length < 1 ? (
                                           <option value="none">Estados</option>
                                         ) : (
-                                          dataEstado.map((estado) => (
-                                            <option value={estado.m_nIdEstado}>
-                                              {estado.m_sEstado}
-                                            </option>
-                                          ))
-                                        )}
+                                            dataEstado.map((estado) => (
+                                              <option value={estado.m_nIdEstado}>
+                                                {estado.m_sEstado}
+                                              </option>
+                                            ))
+                                          )}
                                       </select>
                                       <i></i>
                                     </label>

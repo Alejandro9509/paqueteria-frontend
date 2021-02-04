@@ -13,13 +13,16 @@ function Moneda() {
     codigo: "",
     moneda: "",
     simbolo: "",
+    DerechoBorrar:33,
     abreviacion: "",
+    CreadoPor:localStorage.getItem("UsuarioId"),
+    ModificadoPor:localStorage.getItem("UsuarioId"),
     agregar: "Agregar",
     height: window.innerHeight
   })
 
   const handleAceptar = (e) => {
-    /**
+    
     e.preventDefault()
     var params = {
 
@@ -27,9 +30,9 @@ function Moneda() {
       "m_sMoneda": state.moneda,
       "m_sCodigo": state.codigo,
       "m_sAbreviacion": state.abreviacion,
-      "m_sSimbolo": state.simbolo,
-      "CreadoPor": 1,
-      "ModificadoPor": 1
+      "m_sSimbolo": state.simbolo,          
+      "CreadoPor": state.CreadoPor,
+      "ModificadoPor": state.ModificadoPor  
     }
     console.log(params)
     if (state.idMoneda != 0) {
@@ -51,19 +54,34 @@ function Moneda() {
         alert(err)
       });
     }
-     */
-    alert("No existe servicio todavia")
+     
+    //alert("No existe servicio todavia")
 
   }
 
   function handleEliminar(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Moneda/Eliminar/` + id;
+    var derecho;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      const url = `${process.env.REACT_APP_API_URL}/Moneda/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta)
       window.location.reload();
     }).catch(err => {
       alert(err)
     });
+	}).catch(err => {
+      alert(err)
+    });
+    
   }
 
   function handleShowModificar(id) {
@@ -132,6 +150,12 @@ function Moneda() {
   ]);
 
   useEffect(value => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     getAllData();
   }, []);
 
@@ -265,7 +289,7 @@ function Moneda() {
       </header>
 
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar" style={{minHeight: state.height}}>
+      <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
@@ -274,6 +298,7 @@ function Moneda() {
       <section className="main-container">
 
         <div className="container-fluid">
+
           <div className="page-header filled full-block light">
             <div className="row">
               <div className="col-md-6 col-sm-6">
@@ -291,11 +316,8 @@ function Moneda() {
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="container-fluid">
-
-          <ul className="nav nav-tabs">
+          <ul className="nav navStatica nav-tabs">
             <li className="active">
               <a data-toggle="tab" href="#Listado">
                 <i className="fa fa-list" /> Listado
@@ -398,8 +420,8 @@ function Moneda() {
                         <br></br>
                         <div className="form-footer" className="col-md-12">
                           <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
-                                    >
-                                      Cancelar</button>
+                          >
+                            Cancelar</button>
                           <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                         </div>
                       </form>

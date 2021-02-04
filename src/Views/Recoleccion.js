@@ -34,7 +34,7 @@ const useStyles = makeStyles({
       padding: 0
     }
   },paqueteCarrusel: {
-    height: "300px !important",
+    height: "400px !important",
   },
   sobreCarrusel: {
     height: "150px !important"
@@ -55,6 +55,7 @@ function Recoleccion() {
   const [state, setState] = React.useState({
     showPopUp: false,
     identificadorModal: "",
+    DerechoBorrar:133,
     agregar: "Agregar",
     idRecoleccion: 0,
     fechaInicial: "",
@@ -110,6 +111,8 @@ function Recoleccion() {
     operador: 0,
     tipoUnidad: 0,
     unidad: 0,
+    CreadoPor:localStorage.getItem("UsuarioId")  ,
+    ModificadoPor:localStorage.getItem("UsuarioId")  ,
     paquetes: [
       {
         m_rPeso: "",
@@ -275,6 +278,18 @@ function Recoleccion() {
   }
 
   function handleEliminar(id) {
+    var derecho;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      
     const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Eliminar/` + id;
     axios
       .delete(url, { headers })
@@ -285,6 +300,9 @@ function Recoleccion() {
       .catch((err) => {
         alert(err);
       });
+	}).catch(err => {
+      alert(err)
+    });
   }
 
   function handleShowModificar(id) {
@@ -488,6 +506,12 @@ function Recoleccion() {
   ]);
 
   useEffect((value) => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     getAllData();
     getAllSucursales();
     getAllEstatusRecoleccion();
@@ -857,7 +881,7 @@ function Recoleccion() {
   const framesPaquete = state.paquetes.map((p, index) => {
     return (
       <div key={`paquete${index}`}>
-        <div className="col-sm-4 col-md-1-5 unit">
+        <div className="col-sm-4 col-md-2-5 unit">
           <label className="label">Peso</label>
           <div className="input">
             <input
@@ -871,7 +895,7 @@ function Recoleccion() {
           </div>
         </div>
 
-        <div className="col-sm-4 col-md-1-5 unit">
+        <div className="col-sm-4 col-md-2-5 unit">
           <label className="label">Largo</label>
           <div className="input">
             <input
@@ -885,7 +909,7 @@ function Recoleccion() {
           </div>
         </div>
 
-        <div className="col-sm-4 col-md-1-5 unit">
+        <div className="col-sm-4 col-md-2-5 unit">
           <label className="label">Ancho</label>
           <div className="input">
             <input
@@ -899,7 +923,7 @@ function Recoleccion() {
           </div>
         </div>
 
-        <div className="col-sm-4 col-md-1-5 unit">
+        <div className="col-sm-4 col-md-2-5 unit">
           <label className="label">Alto</label>
           <div className="input">
             <input
@@ -913,7 +937,7 @@ function Recoleccion() {
           </div>
         </div>
 
-        <div className="col-sm-4 col-md-1-5 unit">
+        <div className="col-sm-4 col-md-2-5 unit">
           <label className="label">Volumen</label>
           <div className="input">
             <input
@@ -927,7 +951,7 @@ function Recoleccion() {
           </div>
         </div>
 
-        <div className="col-sm-4 col-md-4-5 unit">
+        <div className="col-sm-4 col-md-6 unit">
           <label className="label">Tipo de Embalaje</label>
           <div className="input">
             <input
@@ -941,7 +965,7 @@ function Recoleccion() {
           </div>
         </div>
 
-        <div className="col-sm-4 col-md-3 unit">
+        <div className="col-sm-4 col-md-6 unit">
           <label className="label">Valor Declarado</label>
           <div className="input">
             <input
@@ -955,7 +979,7 @@ function Recoleccion() {
           </div>
         </div>
 
-        <div className="col-sm-4 col-md-7-5 unit">
+        <div className="col-sm-4 col-md-8 unit">
           <label className="label">Descripción</label>
           <div className="input">
             <input
@@ -969,7 +993,7 @@ function Recoleccion() {
           </div>
         </div>
 
-        <div className="col-sm-4 col-md-1-5 unit">
+        <div className="col-sm-4 col-md-4 unit">
           <label className="label">Ctd</label>
           <div className="input">
             <input
@@ -1052,6 +1076,7 @@ function Recoleccion() {
       <section className="main-container">
 
         <div className="container-fluid">
+
           <div className="page-header filled full-block light">
             <div className="row">
               <div className="col-md-6 col-sm-6">
@@ -1064,11 +1089,8 @@ function Recoleccion() {
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="container-fluid">
-
-          <ul className="nav nav-tabs">
+          <ul className="nav navStatica nav-tabs">
             <li className="active">
               <a data-toggle="tab" href="#Listado">
                 <i className="fa fa-list" /> Listado
@@ -1196,9 +1218,7 @@ function Recoleccion() {
 
                   <div className="widget-wrap">
 
-
-
-                    <div className="wizard-breadcrumb number-style" style={{ position: "sticky", top: "50px", padding: "5px", backgroundColor: "white", zIndex: 100 }}>
+                    <div className="wizard-breadcrumb number-style" style={{ position: "sticky", top: "50px", backgroundColor: "white", zIndex: 100 }}>
                       <div className="row">
                         <div className={"col-md-2 col-sm-2 step" + (stepActive == 1 && "active-step")}
                           onClick={() => openSection(1)}
@@ -2508,7 +2528,7 @@ function Recoleccion() {
                             </div>
                             <br></br>
                             <div className="form-footer" className="col-md-12">
-                              <button data-layout="topCenter" data-type="information" className="btn btn-primary secondary-btn">Cancelar</button>
+                              <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"> Cancelar</button>
                               <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
                             </div>
                           </form>
