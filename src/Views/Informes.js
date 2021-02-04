@@ -156,7 +156,7 @@ function Informes(props) {
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th></th>
+                <th>Acciones</th>
                 {headerGroup.headers.map((column) => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -196,16 +196,23 @@ function Informes(props) {
                         onClick={() =>
                           handleShowModificar(row.original.m_nIdUnidad)
                         }
-                        className="btn btn-default btn-sm m-user-edit"
+                        className="btn btn-default btn-sm"
                       >
-                        <i className="zmdi zmdi-edit" />
+                        <i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} />
                       </a>
                       <a
                         href="#"
-                        className="btn btn-default btn-sm m-user-delete"
+                        className="btn btn-default btn-sm"
                         onClick={() => handleEliminar(row.original.m_nIdUnidad)}
                       >
-                        <i className="zmdi zmdi-close" />
+                        <i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} />
+                      </a>
+                      <a
+                        href="#"
+                        className="btn btn-default btn-sm"
+                        onClick={() => handleEliminar(row.original.m_nIdUnidad)}
+                      >
+                        <i className="fa fa-eye" style={{color:"#F9A03E"}} />
                       </a>
                     </div>
                   </td>

@@ -685,7 +685,7 @@ function Recoleccion() {
           <thead>
             {headerGroups.map(headerGroup => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th></th>
+                <th>Acciones</th>
                 {headerGroup.headers.map(column => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -713,8 +713,9 @@ function Recoleccion() {
                   <tr {...row.getRowProps()}>
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-close" /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -768,7 +769,7 @@ function Recoleccion() {
           <thead>
             {headerGroups.map(headerGroup => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th></th>
+                <th>Acciones</th>
                 {headerGroup.headers.map(column => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -796,8 +797,9 @@ function Recoleccion() {
                   <tr {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-close" /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -1117,7 +1119,7 @@ function Recoleccion() {
             </li>
           </ul>
 
-          <div className="row" className="tab-content">
+          <div className="row" className="tab-content" style={{paddingLeft: "-15px"}}>
             <div id="Listado" className="tab-pane fade in active">
               <div className="widget-wrap">
                 <div className="widget-content">
