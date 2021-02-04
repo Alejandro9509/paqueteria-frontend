@@ -1,6 +1,5 @@
 import React from "react";
 import axios from "axios";
-
 import {
   FormControl,
   Input, InputLabel
@@ -31,6 +30,12 @@ function login(){
       {
         console.log(respuesta.data)
         localStorage.setItem("accessToken", true);
+        localStorage.setItem("UsuarioId",respuesta.data.m_nIdUsuario);
+        localStorage.setItem("Sucursal",respuesta.data.m_nIdSucursal);
+        localStorage.setItem("TipoUsuario",respuesta.data.m_nTipoUsuario);
+        localStorage.setItem("Email",respuesta.data.m_sCorreoElectronico);
+        localStorage.setItem("Usuario",respuesta.data.m_sUsuario);
+        localStorage.setItem("Nombre",respuesta.data.m_sNombre);     
         window.location.replace("configuracion");  
       }
       else

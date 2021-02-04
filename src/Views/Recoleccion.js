@@ -10,10 +10,13 @@ import IndicatorDots from "../Util/Dots";
 import Buttons from "../Util/CarruselButtons";
 import { makeStyles } from "@material-ui/core/styles";
 import * as XLSX from "xlsx";
-import { render } from "react-dom";
-import useModal from "react-hooks-use-modal";
-import IconButton from "@material-ui/core/IconButton";
-import PageviewIcon from "@material-ui/icons/Pageview";
+import { render } from 'react-dom';
+import useModal from 'react-hooks-use-modal';
+import IconButton from '@material-ui/core/IconButton';
+import PageviewIcon from '@material-ui/icons/Pageview';
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import TextField from "@material-ui/core/TextField";
+import InputAdornment from '@material-ui/core/InputAdornment';
 import {
   useTable,
   useFilters,
@@ -25,16 +28,18 @@ import $ from "jquery";
 import { remove_array_element } from "../Util/Util";
 window.jQuery = window.$ = $;
 
-const styles = {
-  paqueteCarrusel: {
+const useStyles = makeStyles({
+  myComponent: {
+    "& .MuiIconButton-root": {
+      padding: 0
+    }
+  },paqueteCarrusel: {
     height: "400px !important",
   },
   sobreCarrusel: {
-    height: "150px !important",
-  },
-};
-const useStyles = makeStyles(styles);
-
+    height: "150px !important"
+  }
+});
 function Recoleccion() {
   const classes = useStyles();
   const [data, setData] = React.useState([]);
@@ -49,6 +54,8 @@ function Recoleccion() {
   const [dataUnidad, setDataUnidad] = React.useState([]);
   const [state, setState] = React.useState({
     showPopUp: false,
+    identificadorModal: "",
+    DerechoBorrar:133,
     agregar: "Agregar",
     idRecoleccion: 0,
     fechaInicial: "",
@@ -68,7 +75,7 @@ function Recoleccion() {
     nombreRemitente: "",
     RFCRemitente: "",
     domicilioRemitente: "",
-    codigoPostalRemitente: 0,
+    codigoPostalRemitente: {},
     ciudadRemitente: 0,
     correoRemitente: "",
     telefonoRemitente: "",
@@ -104,6 +111,8 @@ function Recoleccion() {
     operador: 0,
     tipoUnidad: 0,
     unidad: 0,
+    CreadoPor:localStorage.getItem("UsuarioId")  ,
+    ModificadoPor:localStorage.getItem("UsuarioId")  ,
     paquetes: [
       {
         m_rPeso: "",
@@ -137,60 +146,64 @@ function Recoleccion() {
     e.preventDefault();
 
     var params = {
-      m_nIdRecoleccion: state.idRecoleccion,
-      m_nIdSucursal: state.idSucursalAgregar,
-      m_nIdEmbarque: state.folioEmbarque,
-      m_nIdGuia: state.folioGuía,
-      m_nIdInforme: state.folioInforme,
-      m_dFecha: state.fechaHoraCreacion.split("T")[0],
-      m_tHora: state.fechaHoraCreacion.split("T")[1],
-      m_nMoneda: state.moneda,
-      m_rTipoCambio: state.tipoCambio,
-      m_nIdTipoDeCobro: state.tipoCobro,
-      m_sNombreRemitente: state.nombreRemitente,
-      m_sNombreDestinatario: state.nombreDestinatario,
-      m_sRFCRemitente: state.RFCRemitente,
-      m_sRFCDestinatario: state.RFCDestinatario,
-      m_sDomicilioRemitente: state.domicilioRemitente,
-      m_sDomicilioDestinatario: state.domicilioDestinatario,
-      m_sIdCodigoPostalRemitente: state.codigoPostalRemitente,
-      m_sIdCodigoPostalDestinatario: state.codigoPostalDestinatario,
-      m_nIdCiudadRemitente: state.ciudadRemitente,
-      m_nIdCiudadDestinatario: state.ciudadDestinatario,
-      m_sCorreoRemitente: state.correoRemitente,
-      m_sCorreoDestinatario: state.correoDestinatario,
-      m_sTelefonoRemitente: state.telefonoRemitente,
-      m_sTelefonoDestinatario: state.telefonoDestinatario,
-      m_sContactoRemitente: state.contactoRemitente,
-      m_sContactoDestinatario: state.contactoDestinatario,
-      m_nIdCiudadOrigen: state.ciudadRemitente,
-      m_nIdCiudadDestino: state.ciudadDestinatario,
-      m_dFechaDetalleRecoleccion: state.fechaRecoleccion.split("T")[0],
-      m_tHoraDetalleRecoleccion: state.fechaRecoleccion.split("T")[1],
-      m_nIdCPDetalleRecoleccion: state.codigoPostalRecoleccion,
-      m_nIdCiudadDetalleRecoleccion: state.ciudadRecoleccion,
-      m_nIdZonaDetalleRecoleccion: state.zonaRecoleccion,
-      m_sDomicilioDetalleRecoleccion: state.domicilioRecoleccion,
-      m_sRecogerEnDetalleRecoleccion: state.recogerEn,
-      m_sDatosAdicionalesDetalleRecoleccion: state.datosAdicionalesRecoleccion,
-      m_nIdCPDetalleEntrega: state.codigoPostalEntrega,
-      m_nIdCiudadDetalleEntrega: state.ciudadEntrega,
-      m_nIdZonaDetalleEntrega: state.zonaEntrega,
-      m_sDomicilioDetalleEntrega: state.domicilioEntrega,
-      m_sEntregarEnDetalleEntrega: state.entregaEn,
-      m_sDatosAdicionalesDetalleEntrega: state.datosAdicionalesEntrega,
-      m_dFechaSalida: state.fechaHoraSalida.split("T")[0],
-      m_dFechaLlegada: state.fechaHoraLlegada.split("T")[0],
-      m_tHoraSalida: state.fechaHoraSalida.split("T")[1],
-      m_tHoraLlegada: state.fechaHoraLlegada.split("T")[1],
-      m_parrPaquetes: state.paquetes,
-      m_nNoPaquetes: state.paquetes.length,
-      m_parrSobres: state.sobres,
-      m_nNoSobres: state.sobres.length,
-      m_nIdOperador: state.operador,
-      m_nIdUnidad: state.unidad,
-    };
-    console.log(params);
+
+      "m_nIdRecoleccion": state.idRecoleccion,
+      "m_nIdSucursal": state.idSucursalAgregar,
+      "m_nIdEmbarque": state.folioEmbarque,
+      "m_nIdGuia": state.folioGuía,
+      "m_nIdInforme": state.folioInforme,
+      "m_dFecha": state.fechaHoraCreacion.split("T")[0],
+      "m_tHora": state.fechaHoraCreacion.split("T")[1],
+      "m_nMoneda": state.moneda,
+      "m_rTipoCambio": state.tipoCambio,
+      "m_nIdTipoDeCobro": state.tipoCobro,
+      "m_sNombreRemitente": state.nombreRemitente,
+      "m_sNombreDestinatario": state.nombreDestinatario,
+      "m_sRFCRemitente": state.RFCRemitente,
+      "m_sRFCDestinatario": state.RFCDestinatario,
+      "m_sDomicilioRemitente": state.domicilioRemitente,
+      "m_sDomicilioDestinatario": state.domicilioDestinatario,
+      "m_sIdCodigoPostalRemitente": state.codigoPostalRemitente,
+      "m_sIdCodigoPostalDestinatario": state.codigoPostalDestinatario,
+      "m_nIdCiudadRemitente": state.ciudadRemitente,
+      "m_nIdCiudadDestinatario": state.ciudadDestinatario,
+      "m_sCorreoRemitente": state.correoRemitente,
+      "m_sCorreoDestinatario": state.correoDestinatario,
+      "m_sTelefonoRemitente": state.telefonoRemitente,
+      "m_sTelefonoDestinatario": state.telefonoDestinatario,
+      "m_sContactoRemitente": state.contactoRemitente,
+      "m_sContactoDestinatario": state.contactoDestinatario,
+      "m_nIdCiudadOrigen": state.ciudadRemitente,
+      "m_nIdCiudadDestino": state.ciudadDestinatario,
+      "m_dFechaDetalleRecoleccion": state.fechaRecoleccion.split("T")[0],
+      "m_tHoraDetalleRecoleccion": state.fechaRecoleccion.split("T")[1],
+      "m_nIdCPDetalleRecoleccion": state.codigoPostalRecoleccion,
+      "m_nIdCiudadDetalleRecoleccion": state.ciudadRecoleccion,
+      "m_nIdZonaDetalleRecoleccion": state.zonaRecoleccion,
+      "m_sDomicilioDetalleRecoleccion": state.domicilioRecoleccion,
+      "m_sRecogerEnDetalleRecoleccion": state.recogerEn,
+      "m_sDatosAdicionalesDetalleRecoleccion": state.datosAdicionalesRecoleccion,
+      "m_nIdCPDetalleEntrega": state.codigoPostalEntrega,
+      "m_nIdCiudadDetalleEntrega": state.ciudadEntrega,
+      "m_nIdZonaDetalleEntrega": state.zonaEntrega,
+      "m_sDomicilioDetalleEntrega": state.domicilioEntrega,
+      "m_sEntregarEnDetalleEntrega": state.entregaEn,
+      "m_sDatosAdicionalesDetalleEntrega": state.datosAdicionalesEntrega,
+      "m_dFechaSalida": state.fechaHoraSalida.split("T")[0],
+      "m_dFechaLlegada": state.fechaHoraLlegada.split("T")[0],
+      "m_tHoraSalida": state.fechaHoraSalida.split("T")[1],
+      "m_tHoraLlegada": state.fechaHoraLlegada.split("T")[1],
+      "m_parrPaquetes": state.paquetes,
+      "m_nNoPaquetes": state.paquetes.length,
+      "m_parrSobres": state.sobres,
+      "m_nNoSobres": state.sobres.length,
+      "m_nIdOperador": state.operador,
+      "m_nIdUnidad": state.unidad,
+      "m_nCreadoPor":state.CreadoPor,
+      "m_nModificadoPor":state.ModificadoPor
+
+    }
+    console.log(params)
     if (state.idRecoleccion != 0) {
       const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Modificar/${state.idRecoleccion}`;
       axios
@@ -204,6 +217,7 @@ function Recoleccion() {
           alert("err");
         });
     } else {
+      debugger;
       const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Agregar`;
       axios
         .post(url, Object.assign({}, params), { headers })
@@ -219,12 +233,14 @@ function Recoleccion() {
     }
   };
 
+  
+
   function handleSelectCP(id, cp) {
     setState({
       ...state,
-      codigoPostalRemitente: id,
+      [state.identificadorModal] : id
     });
-    console.log(id);
+    console.log(id)
   }
 
   function addPaquete() {
@@ -269,6 +285,18 @@ function Recoleccion() {
   }
 
   function handleEliminar(id) {
+    var derecho;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      
     const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Eliminar/` + id;
     axios
       .delete(url, { headers })
@@ -279,6 +307,9 @@ function Recoleccion() {
       .catch((err) => {
         alert(err);
       });
+	}).catch(err => {
+      alert(err)
+    });
   }
 
   function handleShowModificar(id) {
@@ -368,7 +399,7 @@ function Recoleccion() {
       folioInforme: "",
       fechaHoraCreacion: "",
       estatusRecoleccion: 0,
-      moneda: dataTipoMoneda[0].m_nIdMoneda,
+      moneda: 0,
       tipoCambio: "",
       tipoCobro: 0,
       nombreRemitente: "",
@@ -498,6 +529,12 @@ function Recoleccion() {
   ]);
 
   useEffect((value) => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     getAllData();
     getAllSucursales();
     getAllEstatusRecoleccion();
@@ -553,7 +590,7 @@ function Recoleccion() {
   }
 
   function getAllCodigosPostales() {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/CodigoPostal/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setDataCodigoPostal(respuesta.data);
     });
@@ -667,8 +704,8 @@ function Recoleccion() {
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th></th>
-                {headerGroup.headers.map((column) => (
+                <th>Acciones</th>
+                {headerGroup.headers.map(column => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
                   <th {...column.getHeaderProps(column.getSortByToggleProps())}>
@@ -694,42 +731,27 @@ function Recoleccion() {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  <td>
-                    <div>
-                      <a
-                        href="#Agregar"
-                        role="tab"
-                        data-toggle="tab"
-                        onClick={() =>
-                          handleShowModificar(row.original.m_nIdRecoleccion)
-                        }
-                        className="btn btn-default btn-sm m-user-edit"
-                      >
-                        <i className="zmdi zmdi-edit" />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i className="zmdi zmdi-close" />
-                      </a>
-                    </div>
-                  </td>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr {...row.getRowProps()}>
+                    <td>
+                      <div>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                      </div>
+                    </td>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
           </tbody>
         </table>
       </div>
@@ -771,8 +793,8 @@ function Recoleccion() {
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th></th>
-                {headerGroup.headers.map((column) => (
+                <th>Acciones</th>
+                {headerGroup.headers.map(column => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
                   <th {...column.getHeaderProps(column.getSortByToggleProps())}>
@@ -798,45 +820,27 @@ function Recoleccion() {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-              prepareRow(row);
-              return (
-                <tr
-                  {...row.getRowProps()}
-                  onClick={handleSelectCP.bind(this, row.original.m_nIdCP)}
-                >
-                  <td>
-                    <div>
-                      <a
-                        href="#Agregar"
-                        role="tab"
-                        data-toggle="tab"
-                        onClick={() =>
-                          handleShowModificar(row.original.m_nIdRecoleccion)
-                        }
-                        className="btn btn-default btn-sm m-user-edit"
-                      >
-                        <i className="zmdi zmdi-edit" />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i className="zmdi zmdi-close" />
-                      </a>
-                    </div>
-                  </td>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                    <td>
+                      <div>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                      </div>
+                    </td>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
           </tbody>
         </table>
       </div>
@@ -1139,7 +1143,7 @@ function Recoleccion() {
             </li>
           </ul>
 
-          <div className="row" className="tab-content">
+          <div className="row" className="tab-content" style={{paddingLeft: "-15px"}}>
             <div id="Listado" className="tab-pane fade in active">
               <div className="widget-wrap">
                 <div className="widget-content">
@@ -1497,6 +1501,8 @@ function Recoleccion() {
                   </div>
 <div className="row">
 
+
+                  <div className="row">
                     <div className="col-md-7">
                       <div className="widget-wrap" id="remitenteDestinatario">
                         <div className="row">
@@ -1507,8 +1513,11 @@ function Recoleccion() {
                             <div className="widget-container">
                               <div className="widget-content">
                                 <div className="row">
-                                  <div className="col-sm-4 col-md-6 unit">
-                                    <label className="label">Nombre</label>
+{/* --------------------------------------- Nombre -------------------------------------- */}
+                                  <div className="col-sm-4 col-md-12 unit">
+                                    <label className="label">
+                                      Nombre
+                                  </label>
                                     <div className="input">
                                       <input
                                         onChange={handleChange}
@@ -1520,9 +1529,11 @@ function Recoleccion() {
                                       />
                                     </div>
                                   </div>
-
-                                  <div className="col-sm-4 col-md-6 unit">
-                                    <label className="label">RFC</label>
+{/* --------------------------------------- RFC -------------------------------------- */}
+                                  <div className="col-sm-4 col-md-12 unit">
+                                    <label className="label">
+                                      RFC
+                                  </label>
                                     <div className="input">
                                       <input
                                         onChange={handleChange}
@@ -1536,7 +1547,7 @@ function Recoleccion() {
                                       />
                                     </div>
                                   </div>
-
+{/* --------------------------------------- Domicilio -------------------------------------- */}
                                   <div className="col-sm-4 col-md-12 unit">
                                     <label className="label">Domicilio</label>
                                     <div className="input">
@@ -1550,34 +1561,58 @@ function Recoleccion() {
                                       />
                                     </div>
                                   </div>
-
-                                  <div className="col-sm-4 col-md-6 unit">
-                                    <label className="label">
-                                      Código Postal
-                                    </label>
-                                    <label className="input select">
-                                      <select
-                                        className="form-control"
-                                        required
+{/* --------------------------------------- AutocompleteCPRemitente -------------------------------------- */}
+                                  <div className="col-sm-4 col-md-6 unit" >
+                                    <label className="label">Código Postal</label>
+                                    <div className="input">
+                                      <Autocomplete
+                                        freeSolo
+                                        onChange={(event, newValue) =>
+                                          setState({
+                                            ...state,
+                                            codigoPostalRemitente: newValue,
+                                          })
+                                        }
                                         value={state.codigoPostalRemitente}
-                                        onChange={handleChange}
                                         id="codigoPostalRemitente"
-                                      >
-                                        {dataCodigoPostal.map(
-                                          (codigoPostal) => (
-                                            <option
-                                              key={codigoPostal.m_nIdCP}
-                                              value={codigoPostal.m_nIdCP}
-                                            >
-                                              {codigoPostal.m_sCP}
-                                            </option>
-                                          )
-                                        )}
-                                      </select>
-                                      <i className="fa fa-arrow-down" />
-                                    </label>
+                                        disableClearable
+                                        forcePopupIcon={false}
+                                        options={dataCodigoPostal}
+                                        getOptionLabel={(option) =>
+                                          option.m_sCP
+                                        }
+                                        variant="outlined"
+                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle: "solid",borderRadius: "5px", width: "124px"}}
+                                        renderInput={(params) => (
+                                          <div>
+                                            <TextField
+                                              {...params}
+                                              InputProps={{
+                                                ...params.InputProps,
+                                                style: { height: 24},
+                                                type: "search",
+                                                 endAdornment: 
+                                                <InputAdornment position="end">
+                                                  <IconButton padding="0px" onClick={() => {open(); setState({...state, identificadorModal: "codigoPostalRemitente"})} }>
+                                                    <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
+                                                 </IconButton> 
+                                                </InputAdornment> 
+                                              }}
+                                            />                                                                                       
+                                          </div>
+                                        )}                                        
+                                                       />
+                                    </div>
                                   </div>
-
+                                  <Modal>
+                                    <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+                                      {dataCodigoPostal.length != 0 ? <TableCodigoPostal columns={columnsCP} data={dataCodigoPostal} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+                                      <a onClick={close}>Cerrar</a>
+                                      <a href="/Ciudades">Agregar</a>
+                                    </div>
+                                  </Modal>
+                              
+{/* --------------------------------------- Ciudad ------------------------------------------------- */}
                                   <div className="col-sm-4 col-md-6 unit">
                                     <label className="label">Ciudad</label>
                                     <label className="input select">
@@ -1600,8 +1635,8 @@ function Recoleccion() {
                                       <i className="fa fa-arrow-down" />
                                     </label>
                                   </div>
-
-                                  <div className="col-sm-4 col-md-6 unit">
+{/* --------------------------------------- Correo ------------------------------------------------- */}
+                                  <div className="col-sm-4 col-md-12 unit">
                                     <label className="label">
                                       Correo Electrónico
                                     </label>
@@ -1616,9 +1651,11 @@ function Recoleccion() {
                                       />
                                     </div>
                                   </div>
-
-                                  <div className="col-sm-4 col-md-6 unit">
-                                    <label className="label">Teléfono</label>
+{/* --------------------------------------- Telefono ------------------------------------------------- */}
+                                  <div className="col-sm-4 col-md-12 unit">
+                                    <label className="label">
+                                      Teléfono
+                                  </label>
                                     <div className="input">
                                       <input
                                         onChange={handleChange}
@@ -1632,9 +1669,11 @@ function Recoleccion() {
                                       />
                                     </div>
                                   </div>
-
-                                  <div className="col-sm-4 col-md-6 unit">
-                                    <label className="label">Contacto</label>
+{/* --------------------------------------- Contacto ------------------------------------------------- */}
+                                  <div className="col-sm-4 col-md-12 unit">
+                                    <label className="label">
+                                      Contacto
+                                  </label>
                                     <div className="input">
                                       <input
                                         onChange={handleChange}
@@ -1646,9 +1685,11 @@ function Recoleccion() {
                                       />
                                     </div>
                                   </div>
-
-                                  <div className="col-sm-12 col-md-6 unit">
-                                    <label className="label">Origen</label>
+{/* --------------------------------------- Origen ------------------------------------------------- */}
+                                  <div className="col-sm-12 col-md-12 unit">
+                                    <label className="label">
+                                      Origen
+                                </label>
                                     <label className="input select">
                                       <select
                                         className="form-control"
@@ -1669,7 +1710,7 @@ function Recoleccion() {
                                       <i className="fa fa-arrow-down" />
                                     </label>
                                   </div>
-
+{/* --------------------------------------- RecoleccionDD ------------------------------------------------- */}
                                   <div className="col-sm-12 col-md-12 unit">
                                     <label className="label">
                                       Recolección en Diferente Domicilio
@@ -1741,28 +1782,47 @@ function Recoleccion() {
                                   </div>
                                 </div>
 
-                                <div className="col-sm-4 col-md-6 unit">
-                                  <label className="label">Código Postal</label>
-                                  <label className="input select">
-                                    <select
-                                      className="form-control"
-                                      required
-                                      value={state.codigoPostalDestinatario}
-                                      onChange={handleChange}
-                                      id="codigoPostalDestinatario"
-                                    >
-                                      {dataCodigoPostal.map((codigoPostal) => (
-                                        <option
-                                          key={codigoPostal.m_nIdCP}
-                                          value={codigoPostal.m_nIdCP}
-                                        >
-                                          {codigoPostal.m_sCP}
-                                        </option>
-                                      ))}
-                                    </select>
-                                    <i className="fa fa-arrow-down" />
-                                  </label>
-                                </div>
+                                <div className="col-sm-4 col-md-6 unit" >
+                                    <label className="label">Código Postal</label>
+                                    <div className="input">
+                                      <Autocomplete
+                                        freeSolo
+                                        onChange={(event, newValue) =>
+                                          setState({
+                                            ...state,
+                                            codigoPostalDestinatario: newValue,
+                                          })
+                                        }
+                                        value={state.codigoPostalDestinatario}
+                                        id="codigoPostalDestinatario"
+                                        disableClearable
+                                        options={dataCodigoPostal}
+                                        getOptionLabel={(option) =>
+                                          option.m_sCP
+                                        }
+                                        variant="outlined"
+                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle:"solid",borderRadius: "5px"}}
+                                        renderInput={(params) => (
+                                          <div>
+                                            <TextField
+                                              {...params}
+                                              InputProps={{
+                                                ...params.InputProps,
+                                                style: { height: 24},
+                                                type: "search",
+                                                 endAdornment:  <InputAdornment position="end"> <IconButton onClick={() => {open(); setState({...state, identificadorModal: "codigoPostalDestinatario"})} }>
+                                                 <PageviewIcon style={{ color: "#F9A03E", fontSize: 32 }} />
+                                                 </IconButton>  </InputAdornment> 
+                                              }}
+                                            />                                                                                       
+                                          </div>
+                                        )}                                        
+                                      />
+                                    </div>
+                                  </div>
+                        
+                             
+
 
                                 <div className="col-sm-4 col-md-6 unit">
                                   <label className="label">Ciudad</label>
@@ -1787,7 +1847,7 @@ function Recoleccion() {
                                   </label>
                                 </div>
 
-                                <div className="col-sm-4 col-md-6 unit">
+                                <div className="col-sm-4 col-md-12 unit">
                                   <label className="label">
                                     Correo Electrónico
                                   </label>
@@ -1803,8 +1863,10 @@ function Recoleccion() {
                                   </div>
                                 </div>
 
-                                <div className="col-sm-4 col-md-6 unit">
-                                  <label className="label">Teléfono</label>
+                                <div className="col-sm-4 col-md-12 unit">
+                                  <label className="label">
+                                    Teléfono
+                                </label>
                                   <div className="input">
                                     <input
                                       onChange={handleChange}
@@ -1902,35 +1964,45 @@ function Recoleccion() {
                                         </div>
                                       </div>
 
-                                      <div className="col-sm-4 col-md-4 unit">
-                                        <label className="label">
-                                          Código Postal
-                                        </label>
-                                        <label className="input select">
-                                          <select
-                                            className="form-control"
-                                            required
-                                            value={
-                                              state.codigoPostalRecoleccion
-                                            }
-                                            onChange={handleChange}
-                                            id="codigoPostalRecoleccion"
-                                          >
-                                            {dataCodigoPostal.map(
-                                              (codigoPostal) => (
-                                                <option
-                                                  key={codigoPostal.m_nIdCP}
-                                                  value={codigoPostal.m_nIdCP}
-                                                >
-                                                  {codigoPostal.m_sCP}
-                                                </option>
-                                              )
-                                            )}
-                                          </select>
-                                          <i className="fa fa-arrow-down" />
-                                        </label>
-                                      </div>
-
+                                      <div className="col-sm-4 col-md-5 unit" >
+                                    <label className="label">Código Postal</label>
+                                    <div className="input">
+                                      <Autocomplete
+                                        freeSolo
+                                        onChange={(event, newValue) =>
+                                          setState({
+                                            ...state,
+                                            codigoPostalRecoleccion: newValue,
+                                          })
+                                        }
+                                        value={state.codigoPostalRecoleccion}
+                                        id="codigoPostalRecoleccion"
+                                        disableClearable
+                                        options={dataCodigoPostal}
+                                        getOptionLabel={(option) =>
+                                          option.m_sCP
+                                        }
+                                        variant="outlined"
+                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle:"solid",borderRadius: "5px"}}
+                                        renderInput={(params) => (
+                                          <div>
+                                            <TextField
+                                              {...params}
+                                              InputProps={{
+                                                ...params.InputProps,
+                                                style: { height: 24},
+                                                type: "search",
+                                                 endAdornment:  <InputAdornment position="end"> <IconButton onClick={() => {open(); setState({...state, identificadorModal: "codigoPostalRecoleccion"})} }>
+                                                 <PageviewIcon style={{ color: "#F9A03E", fontSize: 32 }} />
+                                                 </IconButton>  </InputAdornment> 
+                                              }}
+                                            />                                                                                       
+                                          </div>
+                                        )}                                        
+                                      />
+                                    </div>
+                                  </div>
+                          
                                       <div className="col-sm-4 col-md-4 unit">
                                         <label className="label">Ciudad</label>
                                         <label className="input select">
@@ -2044,33 +2116,46 @@ function Recoleccion() {
                                 <div className="widget-content">
                                   <div className="row">
                                     <div className="col-md-12">
-                                      <div className="col-sm-4 col-md-4 unit">
-                                        <label className="label">
-                                          Código Postal
-                                        </label>
-                                        <label className="input select">
-                                          <select
-                                            className="form-control"
-                                            required
-                                            value={state.codigoPostalEntrega}
-                                            onChange={handleChange}
-                                            id="codigoPostalEntrega"
-                                          >
-                                            {dataCodigoPostal.map(
-                                              (codigoPostal) => (
-                                                <option
-                                                  key={codigoPostal.m_nIdCP}
-                                                  value={codigoPostal.m_nIdCP}
-                                                >
-                                                  {codigoPostal.m_sCP}
-                                                </option>
-                                              )
-                                            )}
-                                          </select>
-                                          <i className="fa fa-arrow-down" />
-                                        </label>
-                                      </div>
 
+                            <div className="col-sm-4 col-md-4 unit" >
+                                    <label className="label">Código Postal</label>
+                                    <div className="input">
+                                      <Autocomplete
+                                        freeSolo
+                                        onChange={(event, newValue) =>
+                                          setState({
+                                            ...state,
+                                            codigoPostalEntrega: newValue,
+                                          })
+                                        }
+                                        value={state.codigoPostalEntrega}
+                                        id="codigoPostalEntrega"
+                                        disableClearable
+                                        options={dataCodigoPostal}
+                                        getOptionLabel={(option) =>
+                                          option.m_sCP
+                                        }
+                                        variant="outlined"
+                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle:"solid",borderRadius: "5px"}}
+                                        renderInput={(params) => (
+                                          <div>
+                                            <TextField
+                                              {...params}
+                                              InputProps={{
+                                                ...params.InputProps,
+                                                style: { height: 24},
+                                                type: "search",
+                                                 endAdornment:  <InputAdornment position="end"> <IconButton onClick={() => {open(); setState({...state, identificadorModal: "codigoPostalEntrega"})} }>
+                                                 <PageviewIcon style={{ color: "#F9A03E", fontSize: 32 }} />
+                                                 </IconButton>  </InputAdornment> 
+                                              }}
+                                            />                                                                                       
+                                          </div>
+                                        )}                                        
+                                      />
+                                    </div>
+                                  </div>
+                         
                                       <div className="col-sm-4 col-md-4 unit">
                                         <label className="label">Ciudad</label>
                                         <label className="input select">
@@ -2428,9 +2513,8 @@ function Recoleccion() {
                             </div>
                           </form>
                         </div>
-                      </div>
+                      </div></div> </div>
                     </div>
-                  </div>
                 </div>
               </form>
             </div>

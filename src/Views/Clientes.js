@@ -113,7 +113,7 @@ function App(props) {
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th></th>
+                <th>Acciones</th>
                 {headerGroup.headers.map((column) => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -218,7 +218,7 @@ function App(props) {
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th></th>
+                <th>Acciones</th>
                 {headerGroup.headers.map((column) => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -258,16 +258,23 @@ function App(props) {
                         onClick={() =>
                           handleShowModificar(row.original.m_nIdUnidad)
                         }
-                        className="btn btn-default btn-sm m-user-edit"
+                        className="btn btn-default  btn-sm"
                       >
-                        <i className="zmdi zmdi-edit" />
+                        <i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} />
                       </a>
                       <a
                         href="#"
-                        className="btn btn-default btn-sm m-user-delete"
+                        className="btn btn-default btn-sm"
                         onClick={() => handleEliminar(row.original.m_nIdUnidad)}
                       >
-                        <i className="zmdi zmdi-close" />
+                        <i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} />
+                      </a>
+                      <a
+                        href="#"
+                        className="btn btn-default btn-sm"
+                        onClick={() => handleEliminar(row.original.m_nIdUnidad)}
+                      >
+                        <i className="fa fa-eye" style={{color:"#F9A03E"}} />
                       </a>
                     </div>
                   </td>
@@ -305,6 +312,7 @@ function App(props) {
     nombreFiscal: "",
     nombreCorto: "",
     idSucursal: 0,
+    DerechoBorrar:45,
     idMoneda: 0,
     idImpuestoTransladado: 0,
     aplicarDetalleMaterialesCadaViajeXML: false,
@@ -313,9 +321,9 @@ function App(props) {
     idGrupoCliente: {},
     metodoPago: "",
     diasCredito: 0,
-    creadoPor: 0,
+    creadoPor: localStorage.getItem("UsuarioId"),
     creadoEl: "",
-    modificadoPor: "",
+    modificadoPor: localStorage.getItem("UsuarioId"),
     modificadoEl: "",
     credito: 0,
     creditoDlls: 0,
@@ -360,7 +368,6 @@ function App(props) {
   }
 
   function handleShowModificar(id) {
-    console.log(id);
     const url = `${process.env.REACT_APP_API_URL}/Unidad/GetById/` + id;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
@@ -368,9 +375,15 @@ function App(props) {
         ...state,
       });
     });
-  }
+	}
 
   useEffect((value) => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     getAllSucursales();
     getAllPaises();
     getAllImpuestos();
@@ -490,6 +503,18 @@ function App(props) {
   };
 
   function handleEliminar(id) {
+    var derecho;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.creadoPor}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      
     const url = `${process.env.REACT_APP_API_URL}/Unidad/Eliminar/` + id;
     axios
       .get(url, { headers })
@@ -499,6 +524,9 @@ function App(props) {
       .catch((err) => {
         alert(err);
       });
+	}).catch(err => {
+      alert(err)
+    });
   }
 
   const handleChange = (event) => {

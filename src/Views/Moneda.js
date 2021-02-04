@@ -13,13 +13,16 @@ function Moneda() {
     codigo: "",
     moneda: "",
     simbolo: "",
+    DerechoBorrar:33,
     abreviacion: "",
+    CreadoPor:localStorage.getItem("UsuarioId"),
+    ModificadoPor:localStorage.getItem("UsuarioId"),
     agregar: "Agregar",
     height: window.innerHeight
   })
 
   const handleAceptar = (e) => {
-    /**
+    
     e.preventDefault()
     var params = {
 
@@ -27,9 +30,9 @@ function Moneda() {
       "m_sMoneda": state.moneda,
       "m_sCodigo": state.codigo,
       "m_sAbreviacion": state.abreviacion,
-      "m_sSimbolo": state.simbolo,
-      "CreadoPor": 1,
-      "ModificadoPor": 1
+      "m_sSimbolo": state.simbolo,          
+      "CreadoPor": state.CreadoPor,
+      "ModificadoPor": state.ModificadoPor  
     }
     console.log(params)
     if (state.idMoneda != 0) {
@@ -51,19 +54,34 @@ function Moneda() {
         alert(err)
       });
     }
-     */
-    alert("No existe servicio todavia")
+     
+    //alert("No existe servicio todavia")
 
   }
 
   function handleEliminar(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Moneda/Eliminar/` + id;
+    var derecho;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      const url = `${process.env.REACT_APP_API_URL}/Moneda/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta)
       window.location.reload();
     }).catch(err => {
       alert(err)
     });
+	}).catch(err => {
+      alert(err)
+    });
+    
   }
 
   function handleShowModificar(id) {
@@ -132,6 +150,12 @@ function Moneda() {
   ]);
 
   useEffect(value => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     getAllData();
   }, []);
 
@@ -197,7 +221,7 @@ function Moneda() {
           <thead>
             {headerGroups.map(headerGroup => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th></th>
+                <th>Acciones</th>
                 {headerGroup.headers.map(column => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -225,8 +249,9 @@ function Moneda() {
                   <tr {...row.getRowProps()}>
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdMoneda))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdMoneda))}><i className="zmdi zmdi-close" /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdMoneda))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdMoneda))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdMoneda))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {

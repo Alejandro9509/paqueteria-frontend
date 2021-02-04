@@ -19,8 +19,8 @@ function TablaDepartamento() {
   },
   {
     cell: () => <div>
-          <button href="#"  data-bb="departamento_modal" className="btn btn-default btn-sm m-user-edit" onClick= {() => {modificar()}}><i className="zmdi zmdi-edit" /></button>
-          <a href="#" className="btn btn-default btn-sm m-user-delete" onClick= {() => {modificar()}}><i className="zmdi zmdi-close" /></a>
+          <button href="#"  data-bb="departamento_modal" className="btn btn-default btn-sm" onClick= {() => {modificar()}}><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></button>
+          <a href="#" className="btn btn-default btn-sm" onClick= {() => {modificar()}}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
       </div>,
     ignoreRowClick: true,
     allowOverflow: true,

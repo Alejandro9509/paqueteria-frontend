@@ -252,6 +252,7 @@ a.waves-effect .waves-ripple {
   position: sticky;
   top: 60px;
   z-index: 100;
+  padding-left: 15px;
 }
 .page-header.full-block .overlay-bg {
   -webkit-border-radius: 0px;

@@ -17,8 +17,11 @@ function GrupoUnidades() {
     DefinidoPorSistema: 0,
     Color: "#000000",
     ColorLetra: 0,
+    DerechoBorrar:70,
     agregar: "Agregar",
-    height: window.innerHeight
+    height: window.innerHeight,
+    CreadoPor:localStorage.getItem("UsuarioId"),
+    ModificadoPor:localStorage.getItem("UsuarioId")
   })
   const [fileUploaded, setFileUploaded] = React.useState([])
 
@@ -29,9 +32,9 @@ function GrupoUnidades() {
       "Codigo": state.Codigo,
       "GrupoUnidad": state.GrupoUnidad.slice(-6),
       "Color": state.Color,
-      "ColorLetra": state.ColorLetra,
-      "CreadoPor": 1,
-      "ModificadoPor": 1
+      "ColorLetra": state.ColorLetra,          
+      "CreadoPor": state.CreadoPor,
+      "ModificadoPor": state.ModificadoPor  
     }
     console.log(params)
     if (state.IdGrupoUnidad != 0) {
@@ -57,11 +60,26 @@ function GrupoUnidades() {
   }
 
   function handleEliminar(id) {
+    var derecho;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      
     const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       console.log(respuesta);
       getAllData();
     }).catch(err => {
+      alert(err)
+    });
+	}).catch(err => {
       alert(err)
     });
   }
@@ -127,6 +145,12 @@ function GrupoUnidades() {
   ]);
 
   useEffect(value => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     getAllData();
   }, []);
 
@@ -276,7 +300,7 @@ function GrupoUnidades() {
           <thead>
             {headerGroups.map(headerGroup => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th></th>
+                <th>Acciones</th>
                 {headerGroup.headers.map(column => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -304,8 +328,9 @@ function GrupoUnidades() {
                   <tr {...row.getRowProps()}>
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdDepartamento))}><i className="zmdi zmdi-close" /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdDepartamento))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdDepartamento))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {

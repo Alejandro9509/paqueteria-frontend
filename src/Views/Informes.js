@@ -153,7 +153,7 @@ function Informes(props) {
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th></th>
+                <th>Acciones</th>
                 {headerGroup.headers.map((column) => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -193,16 +193,23 @@ function Informes(props) {
                         onClick={() =>
                           handleShowModificar(row.original.m_nIdUnidad)
                         }
-                        className="btn btn-default btn-sm m-user-edit"
+                        className="btn btn-default btn-sm"
                       >
-                        <i className="zmdi zmdi-edit" />
+                        <i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} />
                       </a>
                       <a
                         href="#"
-                        className="btn btn-default btn-sm m-user-delete"
+                        className="btn btn-default btn-sm"
                         onClick={() => handleEliminar(row.original.m_nIdUnidad)}
                       >
-                        <i className="zmdi zmdi-close" />
+                        <i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} />
+                      </a>
+                      <a
+                        href="#"
+                        className="btn btn-default btn-sm"
+                        onClick={() => handleEliminar(row.original.m_nIdUnidad)}
+                      >
+                        <i className="fa fa-eye" style={{color:"#F9A03E"}} />
                       </a>
                     </div>
                   </td>
@@ -225,6 +232,7 @@ function Informes(props) {
     IdInforme: 0,
     FolioInforme: 0,
     Fecha: "",
+    DerechoBorrar:151,
     Hora: "",
     IdEstatusInforme: 0,
     IdViaje: 0,
@@ -240,6 +248,8 @@ function Informes(props) {
     IdIdUsuarioCancelacion: 0,
     agregar: "Agregar",
     height: window.innerHeight,
+    CreadoPor:localStorage.getItem("UsuarioId"),
+    ModificadoPor:localStorage.getItem("UsuarioId"),
     Guias: [
       {
         m_nFolioGuia: "",
@@ -339,6 +349,18 @@ function Informes(props) {
   }
 
   function handleEliminar(id) {
+    var derecho;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      
     const url = `${process.env.REACT_APP_API_URL}/Unidadd/Eliminar/` + id;
     axios
       .get(url, { headers })
@@ -348,6 +370,9 @@ function Informes(props) {
       .catch((err) => {
         alert(err);
       });
+	}).catch(err => {
+      alert(err)
+    });
   }
   const handleChangeOrigenChange = (event) => {
     console.log(event.target.value);
@@ -429,6 +454,12 @@ function Informes(props) {
   ]);
 
   useEffect((value) => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     getAllData();
     getAllEstatusInformes();
     getAllSucursales();

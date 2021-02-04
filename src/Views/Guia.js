@@ -38,6 +38,7 @@ function Guia() {
   var QRCode = require('qrcode.react');
   const classes = useStyles();
   const classes2 = useStyles2();
+  localStorage.getItem("UsuarioId");
 
   const [data, setData] = React.useState([])
   const [state, setState] = React.useState({
@@ -50,6 +51,7 @@ function Guia() {
     folioGuía: "",
     folioInforme: "",
     fecha: "",
+    DerechoBorrar:145,
     estatus: "",
     paquetesI: [{
       CiudadOrigen: "",
@@ -125,8 +127,8 @@ function Guia() {
     datosAdicionalesis: "",
     tracking: 0,
     arClsGuiaConceptos: [],
-    creadoPor: 0,
-    modificadoPor: 0,
+    creadoPor: localStorage.getItem("UsuarioId"),
+    modificadoPor: localStorage.getItem("UsuarioId"),
     creadoEl: "",
     modificadoEl: "",
     idSucursal: 2,
@@ -293,8 +295,8 @@ function Guia() {
       "DatosAdicionalesis": state.datosAdicionalesis,
       "Tracking": state.tracking,
       "arClsGuiaConceptos": state.conceptos,
-      "CreadoPor": 1,
-      "ModificadoPor": 1,
+      "CreadoPor": state.creadoPor,
+      "ModificadoPor": state.modificadoPor,
       "CreadoEl": state.creadoEl,
       "ModificadoEl": state.modificadoEl,
       "Idguia": state.IdGuia,
@@ -447,6 +449,18 @@ function Guia() {
   }
 
   function handleEliminar(row) {
+    var derecho;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.creadoPor}/${state.DerechoBorrar}/3` ;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      
     const url = `${process.env.REACT_APP_API_URL}/Guia/Eliminar/` + row.original.m_nIdGuia;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
@@ -455,6 +469,9 @@ function Guia() {
         getAllData()
     }).catch(function (err) {
       console.log(err.data)
+    });
+	}).catch(err => {
+      alert(err)
     });
   }
   function handleShowModificar(row) {
@@ -622,8 +639,6 @@ function handleImprmir2()
       datosAdicionalesis: "",
       tracking: 0,
       arClsGuiaConceptos: [],
-      creadoPor: 1,
-      modificadoPor: 1,
       creadoEl: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
       modificadoEl: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
       idSucursal: 1
@@ -717,6 +732,12 @@ function handleImprmir2()
   ]);
 
   useEffect(value => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     getAllData();
     getAllDataSucursal();
     getAllDataMoneda();
@@ -1260,7 +1281,7 @@ function handleImprmir2()
 
             {headerGroups.map(headerGroup => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th></th>
+                <th>Acciones</th>
                 {headerGroup.headers.map(column => (
 
                   // Add the sorting props to control sorting. For this example
@@ -1289,8 +1310,9 @@ function handleImprmir2()
                   <tr {...row.getRowProps()}>
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row))}><i className="zmdi zmdi-close" /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {

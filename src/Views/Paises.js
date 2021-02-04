@@ -27,7 +27,7 @@ function PaisesEstado() {
     idMoneda: 0,
     codigo: "",
     pais: "",
-
+    DerechoBorrar:10,
     idEstado: 0,
     estado: "",
     codigoEstado: "",
@@ -35,7 +35,9 @@ function PaisesEstado() {
 
     agregarPais: "Agregar",
     agregarEstado: "Agregar",
-    height: window.innerHeight
+    height: window.innerHeight,
+    CreadoPor:localStorage.getItem("UsuarioId") ,
+    ModificadoPor:localStorage.getItem("UsuarioId") 
   })
 
   const handleAceptarPais = (e) => {
@@ -46,8 +48,8 @@ function PaisesEstado() {
       "m_nIdMoneda": state.idMoneda,
       "m_sCodigo": state.codigo,
       "m_sPais": state.pais,
-      "CreadoPor": 1,
-      "ModificadoPor": 1
+      "CreadoPor": state.CreadoPor,
+      "ModificadoPor": state.ModificadoPor
     }
     console.log(params)
     if (state.idPais != 0) {
@@ -82,7 +84,7 @@ function PaisesEstado() {
       "Abreviacion": state.abreviacionEstado,
       "Codigo": state.codigoEstado,
       "Estado": state.estado,
-      "CreadoPor": 1,
+      "CreadoPor": state.CreadoPor,
       "CreadoEl": fecha.getFullYear() + "-" + fecha.getMonth() + 1 + "-" + fecha.getDate(),
       "ModificadoEl": fecha.getFullYear() + "-" + fecha.getMonth() + 1 + "-" + fecha.getDate(),
       "ModificadoPor": 1,
@@ -113,13 +115,29 @@ function PaisesEstado() {
   }
 
   function handleEliminarPais(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Pais/Eliminar/` + id;
+    var derecho;
+    debugger;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
+      const url = `${process.env.REACT_APP_API_URL}/Pais/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
       getAllData();
     }).catch(err => {
       alert(err)
     });
+	}).catch(err => {
+      alert(err)
+    });
+    
   }
 
   function handleEliminarEstado(id) {
@@ -230,6 +248,12 @@ function PaisesEstado() {
   ]);
 
   useEffect(value => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     getAllData();
     getAllMoneda();
   }, []);
@@ -315,7 +339,7 @@ function PaisesEstado() {
           <thead>
             {headerGroups.map(headerGroup => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th></th>
+                <th>Acciones</th>
                 {headerGroup.headers.map(column => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -345,8 +369,8 @@ function PaisesEstado() {
                     className={state.idPais === row.original.m_nIdPais ? classes.seleccionado : classes.noSeleccionado}>
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarPais(row.original.m_nIdPais))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminarPais(row.original.m_nIdPais))}><i className="zmdi zmdi-close" /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarPais(row.original.m_nIdPais))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminarPais(row.original.m_nIdPais))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -397,7 +421,7 @@ function PaisesEstado() {
           <thead>
             {headerGroups.map(headerGroup => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th></th>
+                <th>Acciones</th>
                 {headerGroup.headers.map(column => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -425,8 +449,9 @@ function PaisesEstado() {
                   <tr {...row.getRowProps()}>
                     <td>
                       <div>
-                        <a href="#AgregarEstado" role="tab" data-toggle="tab" onClick={() => (handleShowModificarEstado(row.original.m_nIdEstado))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminarEstado(row.original.m_nIdEstado))}><i className="zmdi zmdi-close" /></a>
+                        <a href="#AgregarEstado" role="tab" data-toggle="tab" onClick={() => (handleShowModificarEstado(row.original.m_nIdEstado))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm btn-sm" onClick={() => (handleEliminarEstado(row.original.m_nIdEstado))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm btn-sm" onClick={() => (handleEliminarEstado(row.original.m_nIdEstado))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
