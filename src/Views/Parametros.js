@@ -34,7 +34,10 @@ function Parametros() {
     RFCFiscal: "",
     blanco: "",
     telefono: "",
-    height: window.innerHeight
+    height: window.innerHeight,
+    CreadoPor:localStorage.getItem("UsuarioId"),
+    ModificadoPor:localStorage.getItem("UsuarioId")
+
   })
 
   const headers = {
@@ -68,8 +71,8 @@ function Parametros() {
       "m_sRFCFiscal": state.RFCFiscal,
       "": state.blanco,
       "m_sTelefonos": state.telefono,
-      "CreadoPor": 1,
-      "ModificadoPor": 1
+      "CreadoPor": state.CreadoPor,
+      "ModificadoPor": state.ModificadoPor
     }
     console.log(params)
     const url = `${process.env.REACT_APP_API_URL}/Pais/Modificar/` + state.idPais;
@@ -98,6 +101,12 @@ function Parametros() {
   }
 
   useEffect(value => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     getAllPais();
     getAllCodigosPostales();
   }, []);

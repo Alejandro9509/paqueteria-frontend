@@ -15,6 +15,8 @@ function Moneda() {
     simbolo: "",
     DerechoBorrar:33,
     abreviacion: "",
+    CreadoPor:localStorage.getItem("UsuarioId"),
+    ModificadoPor:localStorage.getItem("UsuarioId"),
     agregar: "Agregar",
     height: window.innerHeight
   })
@@ -28,9 +30,9 @@ function Moneda() {
       "m_sMoneda": state.moneda,
       "m_sCodigo": state.codigo,
       "m_sAbreviacion": state.abreviacion,
-      "m_sSimbolo": state.simbolo,
-      "CreadoPor": 1,
-      "ModificadoPor": 1
+      "m_sSimbolo": state.simbolo,          
+      "CreadoPor": state.CreadoPor,
+      "ModificadoPor": state.ModificadoPor  
     }
     console.log(params)
     if (state.idMoneda != 0) {
@@ -59,7 +61,7 @@ function Moneda() {
 
   function handleEliminar(id) {
     var derecho;
-    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${process.env.REACT_APP_ID_USUARIO}/${state.DerechoBorrar}/3`;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
       //alert(respuesta.data)
 
@@ -148,6 +150,12 @@ function Moneda() {
   ]);
 
   useEffect(value => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     getAllData();
   }, []);
 

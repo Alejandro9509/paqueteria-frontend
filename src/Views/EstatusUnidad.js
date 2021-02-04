@@ -27,7 +27,9 @@ function EstatusUnidad() {
     colorUnidad: "",
     agregar: "Agregar",
     importar: "",
-    height: window.innerHeight
+    height: window.innerHeight,
+    CreadoPor:localStorage.getItem("UsuarioId"),
+    ModificadoPor:localStorage.getItem("UsuarioId")
   })
 
   const handleAceptar = (e) => {
@@ -38,9 +40,9 @@ function EstatusUnidad() {
       "Color": state.colorUnidad.slice(-6),
       "ColorLetra": state.colorUnidad.slice(-6),
       "Abreviacion": state.abreviacionUnidad,
-      "TipoEstatus": state.tipoEstatusUnidad,
-      "CreadoPor": 1,
-      "ModificadoPor": 1
+      "TipoEstatus": state.tipoEstatusUnidad,      
+      "CreadoPor": state.CreadoPor,
+      "ModificadoPor": state.ModificadoPor  
     }
     console.log(params)
     if (state.idEstatusUnidad != 0) {
@@ -67,7 +69,7 @@ function EstatusUnidad() {
 
   function handleEliminar(id) {
     var derecho;
-    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${process.env.REACT_APP_ID_USUARIO}/${state.DerechoBorrar}/3`;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
       //alert(respuesta.data)
 
@@ -151,6 +153,12 @@ function EstatusUnidad() {
   ]);
 
   useEffect(value => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("configuracion");
+      return;
+    }
     getAllData();
   }, []);
 

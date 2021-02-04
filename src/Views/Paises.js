@@ -35,7 +35,9 @@ function PaisesEstado() {
 
     agregarPais: "Agregar",
     agregarEstado: "Agregar",
-    height: window.innerHeight
+    height: window.innerHeight,
+    CreadoPor:localStorage.getItem("UsuarioId") ,
+    ModificadoPor:localStorage.getItem("UsuarioId") 
   })
 
   const handleAceptarPais = (e) => {
@@ -46,8 +48,8 @@ function PaisesEstado() {
       "m_nIdMoneda": state.idMoneda,
       "m_sCodigo": state.codigo,
       "m_sPais": state.pais,
-      "CreadoPor": 1,
-      "ModificadoPor": 1
+      "CreadoPor": state.CreadoPor,
+      "ModificadoPor": state.ModificadoPor
     }
     console.log(params)
     if (state.idPais != 0) {
@@ -82,7 +84,7 @@ function PaisesEstado() {
       "Abreviacion": state.abreviacionEstado,
       "Codigo": state.codigoEstado,
       "Estado": state.estado,
-      "CreadoPor": 1,
+      "CreadoPor": state.CreadoPor,
       "CreadoEl": fecha.getFullYear() + "-" + fecha.getMonth() + 1 + "-" + fecha.getDate(),
       "ModificadoEl": fecha.getFullYear() + "-" + fecha.getMonth() + 1 + "-" + fecha.getDate(),
       "ModificadoPor": 1,
@@ -115,7 +117,7 @@ function PaisesEstado() {
   function handleEliminarPais(id) {
     var derecho;
     debugger;
-    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${process.env.REACT_APP_ID_USUARIO}/${state.DerechoBorrar}/3`;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
       //alert(respuesta.data)
 
@@ -246,6 +248,12 @@ function PaisesEstado() {
   ]);
 
   useEffect(value => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     getAllData();
     getAllMoneda();
   }, []);
