@@ -15,7 +15,9 @@ function Puesto() {
     puesto: "",
     agregar: "Agregar",
     DerechoBorrar:55,
-    height: window.innerHeight
+    height: window.innerHeight,
+    CreadoPor:localStorage.getItem("UsuarioId"),
+    ModificadoPor:localStorage.getItem("UsuarioId")
   })
 
   const handleAceptar = (e) => {
@@ -24,8 +26,8 @@ function Puesto() {
 
       "Codigo": state.codigoPuesto,
       "Puesto": state.puesto,
-      "CreadoPor": 1,
-      "ModificadoPor": 1
+      "CreadoPor": state.CreadoPor,
+      "ModificadoPor": state.ModificadoPor
     }
     console.log(params)
     if (state.idPuesto != 0) {
@@ -52,7 +54,7 @@ function Puesto() {
 
   function handleEliminar(id) {
     var derecho;
-    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${process.env.REACT_APP_ID_USUARIO}/${state.DerechoBorrar}/3`;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
       //alert(respuesta.data)
 
@@ -135,6 +137,12 @@ function Puesto() {
   ]);
 
   useEffect(value => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     getAllData();
   }, []);
 

@@ -321,9 +321,9 @@ function App(props) {
     idGrupoCliente: {},
     metodoPago: "",
     diasCredito: 0,
-    creadoPor: 0,
+    creadoPor: localStorage.getItem("UsuarioId"),
     creadoEl: "",
-    modificadoPor: "",
+    modificadoPor: localStorage.getItem("UsuarioId"),
     modificadoEl: "",
     credito: 0,
     creditoDlls: 0,
@@ -370,19 +370,6 @@ function App(props) {
   }
 
   function handleShowModificar(id) {
-    var derecho;
-    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${process.env.REACT_APP_ID_USUARIO}/${state.DerechoBorrar}/3`;
-    axios.get(urlDelete, { headers }).then(respuesta => {
-      //alert(respuesta.data)
-
-      derecho = respuesta.data;
-      if (derecho == false)
-      {
-        alert ("El usuario no tiene derechos para realizar el proceso");
-        return; 
-      }
-      
-    console.log(id);
     const url = `${process.env.REACT_APP_API_URL}/Unidad/GetById/` + id;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
@@ -391,12 +378,15 @@ function App(props) {
         
       });
     });
-	}).catch(err => {
-      alert(err)
-    });
-  }
+	}
 
   useEffect((value) => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     getAllSucursales();
     getAllPaises();
     getAllImpuestos();
@@ -523,7 +513,7 @@ function App(props) {
 
   function handleEliminar(id) {
     var derecho;
-    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${process.env.REACT_APP_ID_USUARIO}/${state.DerechoBorrar}/3`;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.creadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
       //alert(respuesta.data)
 

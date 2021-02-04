@@ -195,9 +195,9 @@ function App(props) {
     Diabetico: false,
     Hipertenso: false,
     CreadoEl: "",
-    CreadoPor: 0,
+    CreadoPor: localStorage.getItem("UsuarioId"),
     ModificadoEl: "",
-    ModificadoPor: 0,
+    ModificadoPor: localStorage.getItem("UsuarioId"),
     IdBanco: 0,
     NumeroCuentaBancaria: "",
     NoTarjeta: "",
@@ -263,9 +263,7 @@ function App(props) {
       Diabetico: false,
       Hipertenso: false,
       CreadoEl: "",
-      CreadoPor: 0,
       ModificadoEl: "",
-      ModificadoPor: 0,
       IdBanco: 0,
       NumeroCuentaBancaria: "",
       NoTarjeta: "",
@@ -401,6 +399,12 @@ function App(props) {
   const [dataEstado, setDataEstado] = React.useState([]);
 
   useEffect((value) => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("configuracion");
+      return;
+    }
     getAllSucursales();
     getAllPaises();
     getAllOperadores();
@@ -505,10 +509,8 @@ function App(props) {
         Diabetico: respuesta.data.m_bDiabetico,
         Hipertenso: respuesta.data.m_bHipertenso,
         CreadoEl: respuesta.data.m_dtCreadoEl,
-        CreadoPor: respuesta.data.m_nCreadoPor,
-        ModificadoEl: respuesta.data.m_dtModificadoEl,
-        ModificadoPor: respuesta.data.m_nModificadoPor,
-        IdBanco: respuesta.data.m_nIdBanco,
+         ModificadoEl: respuesta.data.m_dtModificadoEl,
+         IdBanco: respuesta.data.m_nIdBanco,
         NumeroCuentaBancaria: respuesta.data.m_sNumeroCuentaBancaria,
         NoTarjeta: respuesta.data.m_sNoTarjeta,
         Observaciones: respuesta.data.m_sObservaciones,
@@ -575,15 +577,28 @@ function App(props) {
   }
 
   function handleEliminar(id) {
+    var derecho;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
+
+      derecho = respuesta.data;
+      if (derecho == false)
+      {
+        alert ("El usuario no tiene derechos para realizar el proceso");
+        return; 
+      }
     const url = `${process.env.REACT_APP_API_URL}/Operador/Eliminar/` + id;
     axios
       .get(url, { headers })
       .then((respuesta) => {
         console.log(respuesta);
         getAllOperadores();
-      })
-      .catch((err) => {
-        alert(err);
+      }).catch(err => {
+        alert(err)
+      });
+    }).catch(err => {
+        alert(err)
       });
   }
 
@@ -700,6 +715,12 @@ function App(props) {
   }
 
   useEffect((value) => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     //closeSeccions();
   }, []);
 

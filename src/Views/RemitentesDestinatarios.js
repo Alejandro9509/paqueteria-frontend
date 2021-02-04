@@ -43,9 +43,9 @@ function App(props) {
     idPais: 0,
     idEstado: 0,
     codigoPostal: 0,
-    creadoPor: 0,
+    creadoPor: localStorage.getItem("UsuarioId") ,
     creadoEl: "",
-    modificadoPor: "",
+    modificadoPor: localStorage.getItem("UsuarioId") ,
     modificadoEl: "",
     contacto: "",
     correoElectronico: "",
@@ -73,9 +73,9 @@ function App(props) {
       idPais: 0,
       idEstado: 0,
       codigoPostal: 0,
-      creadoPor: 0,
+      creadoPor: state.creadoPor,
       creadoEl: "",
-      modificadoPor: "",
+      modificadoPor: state.modificadoPor,
       modificadoEl: "",
       contacto: "",
       correoElectronico: "",
@@ -185,7 +185,7 @@ function App(props) {
 
   function handleEliminar(id) {
     var derecho;
-    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${process.env.REACT_APP_ID_USUARIO}/${state.DerechoBorrar}/3`;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.creadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
       //alert(respuesta.data)
 
@@ -404,6 +404,12 @@ function App(props) {
   }
 
   useEffect((value) => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     getAllPaises();
     getAllDataRemDes();
     getAllClientes();

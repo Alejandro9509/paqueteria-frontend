@@ -38,6 +38,7 @@ function Guia() {
   var QRCode = require('qrcode.react');
   const classes = useStyles();
   const classes2 = useStyles2();
+  localStorage.getItem("UsuarioId");
 
   const [data, setData] = React.useState([])
   const [state, setState] = React.useState({
@@ -126,8 +127,8 @@ function Guia() {
     datosAdicionalesis: "",
     tracking: 0,
     arClsGuiaConceptos: [],
-    creadoPor: 0,
-    modificadoPor: 0,
+    creadoPor: localStorage.getItem("UsuarioId"),
+    modificadoPor: localStorage.getItem("UsuarioId"),
     creadoEl: "",
     modificadoEl: "",
     idSucursal: 2,
@@ -294,8 +295,8 @@ function Guia() {
       "DatosAdicionalesis": state.datosAdicionalesis,
       "Tracking": state.tracking,
       "arClsGuiaConceptos": state.conceptos,
-      "CreadoPor": 1,
-      "ModificadoPor": 1,
+      "CreadoPor": state.creadoPor,
+      "ModificadoPor": state.modificadoPor,
       "CreadoEl": state.creadoEl,
       "ModificadoEl": state.modificadoEl,
       "Idguia": state.IdGuia,
@@ -449,7 +450,7 @@ function Guia() {
 
   function handleEliminar(row) {
     var derecho;
-    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${process.env.REACT_APP_ID_USUARIO}/${state.DerechoBorrar}/3` ;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.creadoPor}/${state.DerechoBorrar}/3` ;
     axios.get(urlDelete, { headers }).then(respuesta => {
       //alert(respuesta.data)
 
@@ -638,8 +639,6 @@ function handleImprmir2()
       datosAdicionalesis: "",
       tracking: 0,
       arClsGuiaConceptos: [],
-      creadoPor: 1,
-      modificadoPor: 1,
       creadoEl: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
       modificadoEl: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
       idSucursal: 1
@@ -733,6 +732,12 @@ function handleImprmir2()
   ]);
 
   useEffect(value => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     getAllData();
     getAllDataSucursal();
     getAllDataMoneda();

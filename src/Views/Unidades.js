@@ -198,9 +198,9 @@ function App(props) {
     idConvoy: "",
     idGrupoUnidad: 0,
     creadoEl: "",
-    creadoPor: 0,
+    creadoPor: localStorage.getItem("UsuarioId"),
     creadoEl: "",
-    modificadoPor: "",
+    modificadoPor: localStorage.getItem("UsuarioId"),
     modificadoEl: "",
     largo: 0,
     ancho: 0,
@@ -303,9 +303,8 @@ function App(props) {
       idConvoy: "",
       idGrupoUnidad: 0,
       creadoEl: "",
-      creadoPor: 0,
+      
       creadoEl: "",
-      modificadoPor: "",
       modificadoEl: "",
       largo: 0,
       ancho: 0,
@@ -481,6 +480,12 @@ function App(props) {
   }
 
   useEffect((value) => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     getAllOperadores();
     getAllTipoUnidades();
     getAllSucursales();
@@ -560,6 +565,7 @@ function App(props) {
   };
 
   function handleEliminar(id) {
+    //no esta el derecho de borrar en el listado original
     const url = `${process.env.REACT_APP_API_URL}/Unidad/Eliminar/` + id;
     axios
       .get(url, { headers })

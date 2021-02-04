@@ -244,6 +244,8 @@ function Informes(props) {
     IdIdUsuarioCancelacion: 0,
     agregar: "Agregar",
     height: window.innerHeight,
+    CreadoPor:localStorage.getItem("UsuarioId"),
+    ModificadoPor:localStorage.getItem("UsuarioId"),
     Guias: [
       {
         m_nFolioGuia: "",
@@ -341,7 +343,7 @@ function Informes(props) {
 
   function handleEliminar(id) {
     var derecho;
-    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${process.env.REACT_APP_ID_USUARIO}/${state.DerechoBorrar}/3`;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
       //alert(respuesta.data)
 
@@ -446,6 +448,12 @@ function Informes(props) {
   ]);
 
   useEffect((value) => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     getAllData();
     getAllEstatusInformes();
     getAllSucursales();

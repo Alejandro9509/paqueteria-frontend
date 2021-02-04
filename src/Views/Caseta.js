@@ -6,6 +6,7 @@ import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy } from 'react-table'
 
 function Caseta() {
+ 
 
   const [data, setData] = React.useState([])
   const [state, setState] = React.useState({
@@ -20,7 +21,9 @@ function Caseta() {
     tarifaEje7: "",
     tarifaEje8: "",
     tarifaEje9: "",
-
+    CreadoPor: localStorage.getItem("UsuarioId"),
+    ModificadoPor: localStorage.getItem("UsuarioId"),
+    
     agregar: "Agregar",
     height: window.innerHeight
   })
@@ -39,9 +42,9 @@ function Caseta() {
       "m_cTarifaEje7": state.tarifaEje7,
       "m_cTarifaEje8": state.tarifaEje8,
       "m_cTarifaEje9": state.tarifaEje9,
-      "CreadoPor": 1,
-      "ModificadoPor": 1
-    }
+      "m_nCreadoPor": state.CreadoPor,
+      "m_nModificadoPor": state.ModificadoPor 
+     }
     console.log(params)
     if (state.idCaseta != 0) {
       const url = `${process.env.REACT_APP_API_URL}/Casetas/Modificar/` + state.idCaseta;
@@ -54,6 +57,7 @@ function Caseta() {
       });
     } else {
       const url = `${process.env.REACT_APP_API_URL}/Casetas/Agregar`;
+      //alert(state.CreadoPor);
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         alert(respuesta.data)
         getAllData()
@@ -66,7 +70,8 @@ function Caseta() {
   }
   function handleEliminar(id) {
     var derecho;
-    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${process.env.REACT_APP_ID_USUARIO}/${state.DerechoBorrar}/3`;
+    debugger;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
       //alert(respuesta.data)
 
@@ -172,6 +177,12 @@ function Caseta() {
   ]);
 
   useEffect(value => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
+    {
+      alert("Es necesario iniciar sesion para acceder a este proceso");
+      window.location.replace("login");
+      return;
+    }
     getAllData();
   }, []);
 
