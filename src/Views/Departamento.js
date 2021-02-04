@@ -119,56 +119,7 @@ function Departamento() {
     });
   };
 
-  const columns = useMemo(() => [{
-    cell: (row) => <div>
-      <a data-toggle="tab" data-target="#Agregar" onClick={() => (handleShowModificar(row.m_nIdDepartamento))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
-      <a href="#" onClick={() => (handleEliminar(row.m_nIdDepartamento))} className="btn btn-default btn-sm m-user-delete"><i className="zmdi zmdi-close" /></a>
-    </div>,
-    ignoreRowClick: true,
-    allowOverflow: true,
-    button: true,
-  },
-  {
-    name: "IdDepartamento",
-    selector: "m_nIdDepartamento",
-    omit: "true",
-    type: "int"
-  },
-  {
-    visible: true,
-    name: "Código",
-    selector: "m_nCodigo",
-    sortable: true
-  }, {
-    visible: true,
-    name: "Descripción",
-    selector: "m_sDescripcion",
-    sortable: true
-  }, {
-    visible: true,
-    name: "Creado El",
-    selector: "m_dtCreadoEl",
-    sortable: true
-  }, {
-    visible: true,
-    name: "Creado Por",
-    selector: "m_nCreadoPor",
-    sortable: true
-  }, {
-    visible: true,
-    name: "Modificado El",
-    selector: "m_dtModificadoEl",
-    sortable: true
-  }, {
-    visible: true,
-    name: "Modificado Por",
-    selector: "m_nModificadoPor",
-    sortable: true
-  }
-
-  ]);
-
-  const columns2 = React.useMemo(() => [
+  const columns = React.useMemo(() => [
     {
       Name: "Código",
       accessor: "m_nCodigo",
@@ -330,7 +281,7 @@ function Departamento() {
           <thead>
             {headerGroups.map(headerGroup => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th></th>
+                <th>Acciones</th>
                 {headerGroup.headers.map(column => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -358,8 +309,9 @@ function Departamento() {
                   <tr {...row.getRowProps()}>
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdDepartamento))}><i className="zmdi zmdi-close" /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdDepartamento))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdDepartamento))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -442,7 +394,7 @@ function Departamento() {
               <div className="widget-wrap">
                 <div className="widget-content">
                   <div className="row">
-                    <Table columns={columns2} data={data} />
+                    <Table columns={columns} data={data} />
                   </div>
                 </div>
               </div>
