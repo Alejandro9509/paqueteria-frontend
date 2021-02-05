@@ -131,7 +131,7 @@ function Guia() {
     modificadoPor: localStorage.getItem("UsuarioId"),
     creadoEl: "",
     modificadoEl: "",
-    idSucursal: 2,
+    idSucursal: localStorage.getItem("Sucursal"),
     valorDeclarado: 0,
     CiudadDestino: "",
     paquetes: [
@@ -641,7 +641,6 @@ function handleImprmir2()
       arClsGuiaConceptos: [],
       creadoEl: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
       modificadoEl: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
-      idSucursal: 1
     });
     //getImpresion(38);
   }
@@ -2262,6 +2261,7 @@ function handleImprmir2()
                                     id="idSucursal"
                                     read="true"
                                     value={state.idSucursal}
+                                    disabled="disabled"
                                   >
                                     <option value="0">
                                       Seleccionar
