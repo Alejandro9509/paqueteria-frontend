@@ -25,10 +25,10 @@ function BarraLateralDerecha() {
           <div className="admin-user-info">
             <ul>
               <li>
-                <a href="index.html">Kamrujaman Shohel</a>
+                <a href="index.html">{localStorage.getItem("Usuario")}</a>
               </li>
               <li>
-                <a href="index.html">Info@jaman.me</a>
+                <a href="index.html">{localStorage.getItem("Email")}</a>
               </li>
             </ul>
           </div>
