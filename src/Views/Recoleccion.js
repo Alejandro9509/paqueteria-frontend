@@ -62,7 +62,7 @@ function Recoleccion() {
     fechaIcinial2: "",
     sucursalListado: 0,
     estatusListado: 0,
-    idSucursalAgregar: 0,
+    idSucursalAgregar: localStorage.getItem("Sucursal"),
     folioRecoleccion: "",
     folioEmbarque: "",
     folioGuía: "",
@@ -392,7 +392,7 @@ function Recoleccion() {
       ...state,
       agregar: "Agregar",
       showPopUp: true,
-      idSucursalAgregar: 0,
+      
       folioRecoleccion: "",
       folioEmbarque: "",
       folioGuía: "",
@@ -1177,6 +1177,7 @@ function Recoleccion() {
                               required
                               onChange={handleChange}
                               id="sucursal"
+
                             >
                               <option value="0">Todas</option>
                               {dataSucursal.map((sucursal) => (
@@ -1324,6 +1325,7 @@ function Recoleccion() {
                                   value={state.idSucursalAgregar}
                                   onChange={handleChange}
                                   id="idSucursalAgregar"
+                                  disabled="disabled"
                                 >
                                   {dataSucursal.map((sucursal) => (
                                     <option
