@@ -75,7 +75,7 @@ function Recoleccion() {
     nombreRemitente: "",
     RFCRemitente: "",
     domicilioRemitente: "",
-    codigoPostalRemitente: {},
+    codigoPostalRemitente: 0,
     ciudadRemitente: 0,
     correoRemitente: "",
     telefonoRemitente: "",
@@ -149,6 +149,7 @@ function Recoleccion() {
 
       "m_nIdRecoleccion": state.idRecoleccion,
       "m_nIdSucursal": state.idSucursalAgregar,
+      "m_nIdEstatusRecoleccion": state.estatusRecoleccion,
       "m_nIdEmbarque": state.folioEmbarque,
       "m_nIdGuia": state.folioGuía,
       "m_nIdInforme": state.folioInforme,
@@ -199,6 +200,7 @@ function Recoleccion() {
       "m_nNoSobres": state.sobres.length,
       "m_nIdOperador": state.operador,
       "m_nIdUnidad": state.unidad,
+      "m_nIdRemolqueLlegadaRecoleccion": state.tipoUnidad,
       "m_nCreadoPor":state.CreadoPor,
       "m_nModificadoPor":state.ModificadoPor
 
