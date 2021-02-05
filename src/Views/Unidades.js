@@ -849,7 +849,7 @@ function App(props) {
   const framesDocumentos = state.documentos.map((p, index) => {
     return (
       <div className="j-row toclone-widget-right toclone">
-        <div className="span4 unit">
+        <div className="span2 unit">
           <div className="input">
             <input
               onChange={(event) => handleChangeDocumento(event, index)}
@@ -860,7 +860,7 @@ function App(props) {
             />
           </div>
         </div>
-        <div className="span4 unit">
+        <div className="span3 unit">
           <div className="input">
             <input
               onChange={(event) => handleChangeDocumento(event, index)}
@@ -1146,7 +1146,7 @@ function App(props) {
                           {/* end steps */}
 
                        
-                              <div className="widget-wrap">
+                              <div className="widget-wrap" id="infogral">
                                 <div className="widget-header block-header margin-bottom-0 clearfix">
                                   <div className="pull-left">
                                     <h3>Información General</h3>
@@ -1159,8 +1159,8 @@ function App(props) {
                                       <div className="col-md-12">
                                         <div className="form-content">
                                           {/* start text password */}
-                                          <div className="row">
-                                            <div className="col-md-6 unit">
+                                          <div className="row ">
+                                            <div className="col-md-2-5 col-sm-6 unit">
                                               <label className="label">
                                                 Código
                                               </label>
@@ -1177,7 +1177,45 @@ function App(props) {
                                                 />
                                               </div>
                                             </div>
-                                            <div className="col-md-6 unit">
+                                        
+                                          {/* end text password */}
+                                          {/* start email url */}
+                                            <div className="col-md-2-5 col-sm-6 unit">
+                                              <label className="label">
+                                                Descripción
+                                              </label>
+                                              <div className="input">
+                                                <input
+
+                                                  onChange={handleChange}
+                                                  className="form-control"
+                                                  type="text"
+                                                  value={state.descripcion}
+                                                  id="descripcion"
+                                                  name="descripcion"
+                                                  required
+                                                  native
+                                                />
+                                              </div>
+                                            </div>
+                                            <div className="col-md-2-5 col-sm-6 unit">
+                                              <label className="label">
+                                                Modelo
+                                              </label>
+                                              <div className="input">
+                                                <input
+                                                  onChange={handleChange}
+                                                  className="form-control"
+                                                  type="number"
+                                                  value={state.modelo}
+                                                  id="modelo"
+                                                  name="modelo"
+
+                                                  native
+                                                />
+                                              </div>{" "}
+                                            </div>
+                                            <div className="col-md-4 col-sm-6 unit">
                                               <div className="inline-group">
                                                 <label className="label">
                                                   Estados de unidad
@@ -1228,48 +1266,9 @@ function App(props) {
                                                 </label>
                                               </div>
                                             </div>
-                                          </div>
-                                          {/* end text password */}
-                                          {/* start email url */}
-                                          <div className="row">
-                                            <div className="col-md-10 unit">
-                                              <label className="label">
-                                                Descripción
-                                              </label>
-                                              <div className="input">
-                                                <input
-
-                                                  onChange={handleChange}
-                                                  className="form-control"
-                                                  type="text"
-                                                  value={state.descripcion}
-                                                  id="descripcion"
-                                                  name="descripcion"
-                                                  required
-                                                  native
-                                                />
-                                              </div>
                                             </div>
-                                            <div className="col-md-2 unit">
-                                              <label className="label">
-                                                Modelo
-                                              </label>
-                                              <div className="input">
-                                                <input
-                                                  onChange={handleChange}
-                                                  className="form-control"
-                                                  type="number"
-                                                  value={state.modelo}
-                                                  id="modelo"
-                                                  name="modelo"
 
-                                                  native
-                                                />
-                                              </div>{" "}
-                                            </div>
-                                          </div>
-
-                                          <div className="unit">
+                                          <div className="col-sm-6 col-md-2-5 unit">
                                             <label className="label">
                                               Tipos de Unidad
                                             </label>
@@ -1304,7 +1303,9 @@ function App(props) {
                                           </div>
                                           {/* end search */}
                                           {/* start textarea */}
-                                          <div className="unit">
+                                          <div className="col-sm-6 col-md-2-5 unit">
+                                          <label className="label">&nbsp; </label>
+
                                             <label className="input select">
                                               <select
                                                 onChange={handleChange}
@@ -1334,7 +1335,9 @@ function App(props) {
                                               <i></i>
                                             </label>
                                           </div>
-                                          <div className="unit">
+                                          <div className="col-sm-6 col-md-2-5 unit">
+                                                                          <label className="label">&nbsp; </label>
+
                                             <label className="input select">
                                               <select
                                                 onChange={handleChange}
@@ -1363,8 +1366,7 @@ function App(props) {
                                               <i></i>
                                             </label>
                                           </div>
-                                          <div className="row">
-                                            <div className="col-md-6 unit">
+                                            <div className="col-sm-6 col-md-2-5 unit">
                                               <label className="label">
                                                 Número Serie
                                               </label>
@@ -1381,7 +1383,7 @@ function App(props) {
                                                 />
                                               </div>
                                             </div>
-                                            <div className="col-md-6 unit">
+                                            <div className="col-sm-6 col-md-2-5 unit">
                                               <label className="label">
                                                 Color
                                               </label>
@@ -1398,10 +1400,8 @@ function App(props) {
                                                 />
                                               </div>{" "}
                                             </div>
-                                          </div>
 
-                                          <div className="row">
-                                            <div className="col-md-6 unit">
+                                            <div className="col-sm-6 col-md-2-5 unit">
                                               <label className="label">
                                                 Identificador Satelital
                                               </label>
@@ -1418,7 +1418,7 @@ function App(props) {
                                                 />
                                               </div>
                                             </div>
-                                            <div className="col-md-6 unit">
+                                            <div className="col-sm-6 col-md-2-5 unit">
                                               <label className="label">
                                                 Identificador Convoy
                                               </label>
@@ -1434,8 +1434,9 @@ function App(props) {
                                                 />
                                               </div>{" "}
                                             </div>
-                                          </div>
-                                          <div className="unit">
+                                          <div className="col-sm-6 col-md-2-5 unit">
+                                          <label className="label">&nbsp; </label>
+
                                             <label className="input select">
                                               <select
                                                 onChange={handleChange}
@@ -1479,7 +1480,7 @@ function App(props) {
                          
 
                        
-                              <div className="widget-wrap">
+                              <div className="widget-wrap" id="caracteristicas">
                                 <div className="widget-header block-header margin-bottom-0 clearfix">
                                   <div className="pull-left">
                                     <h3>Carácteristicas de la unidad</h3>
@@ -1697,7 +1698,7 @@ function App(props) {
                                               <h3>Motor</h3>
                                             </div>
 
-                                            <div className="col-sm-6  col-md-3 unit">
+                                            <div className="col-sm-12 col-md-2-5 unit">
                                               <label className="label">
                                                 Tipo Motor
                                               </label>
@@ -1712,7 +1713,7 @@ function App(props) {
                                                 />
                                               </div>
                                             </div>
-                                            <div className="col-sm-6  col-md-3 unit">
+                                            <div className="col-sm-12 col-md-2-5 unit">
                                               <label className="label">
                                                 Número de serie
                                               </label>
@@ -1727,7 +1728,7 @@ function App(props) {
                                                 />
                                               </div>
                                             </div>
-                                            <div className="col-sm-6  col-md-3 unit">
+                                            <div className="col-sm-12 col-md-2-5 unit">
                                               <label className="label">
                                                 Tipo de Transmisión
                                               </label>
@@ -1742,7 +1743,7 @@ function App(props) {
                                                 />
                                               </div>
                                             </div>
-                                            <div className="col-sm-6  col-md-3 unit">
+                                            <div className="col-sm-12 col-md-2-5 unit">
                                               <label className="label">
                                                 Observaciones
                                               </label>
@@ -1766,7 +1767,7 @@ function App(props) {
                               {/*Fin de ejemplo*/}
                     
                           
-                              <div className="widget-wrap">
+                              <div className="widget-wrap" id="combustible">
                                 <div className="widget-header block-header margin-bottom-0 clearfix">
                                   <div className="pull-left">
                                     <h3>Combustible</h3>
@@ -1779,8 +1780,7 @@ function App(props) {
                                       <div className="col-md-12">
                                         <div className="form-content">
                                           {/* start text password */}
-                                          <div className="row">
-                                            <div className="col-sm-12 col-md-12 unit">
+                                            <div className="col-sm-12 col-md-2-5 unit">
                                               <label className="label">
                                                 Tipo de combustible
                                               </label>
@@ -1810,7 +1810,7 @@ function App(props) {
                                               </label>
                                             </div>
 
-                                            <div className="col-sm-12 col-md-4 unit">
+                                            <div className="col-sm-12 col-md-2-5 unit">
                                               <label className="label">
                                                 Capacidad de tanque
                                               </label>
@@ -1827,7 +1827,7 @@ function App(props) {
                                                 />
                                               </div>
                                             </div>
-                                            <div className="col-sm-12 col-lg-4 unit">
+                                            <div className="col-sm-12 col-md-2-5 unit">
                                               <label className="label">
                                                 Rendimiento cargado
                                               </label>
@@ -1844,7 +1844,7 @@ function App(props) {
                                                 />
                                               </div>
                                             </div>
-                                            <div className="col-sm-12 col-md-4 unit">
+                                            <div className="col-sm-12 col-md-2-5 unit">
                                               <label className="label">
                                                 Rendimiento Vacio
                                               </label>
@@ -1859,7 +1859,7 @@ function App(props) {
                                                 />
                                               </div>
                                             </div>
-                                            <div className="col-sm-12 col-md-4 unit">
+                                            <div className="col-sm-12 col-md-2-5 unit">
                                               <label className="label">
                                                 Tarjeta combustible
                                               </label>
@@ -1874,7 +1874,7 @@ function App(props) {
                                                 />
                                               </div>
                                             </div>
-                                            <div className="col-sm-12 col-md-4 unit">
+                                            <div className="col-sm-12 col-md-2-5 unit">
                                               <label className="label">
                                                 Tarjeta combustible 2
                                               </label>
@@ -1889,7 +1889,7 @@ function App(props) {
                                                 />
                                               </div>
                                             </div>
-                                            <div className="col-sm-12 col-md-4 unit">
+                                            <div className="col-sm-12 col-md-2-5 unit">
                                               <label className="label">
                                                 Tarjeta combustible 3
                                               </label>
@@ -1904,7 +1904,6 @@ function App(props) {
                                                 />
                                               </div>
                                             </div>
-                                          </div>
                                         </div>
                                       </div>
                                     </div>
@@ -1913,7 +1912,7 @@ function App(props) {
                               </div>
                               {/*Fin de ejemplo*/}
                      
-                              <div className="widget-wrap">
+                              <div className="widget-wrap" id="seguros">
                                 <div className="widget-header block-header margin-bottom-0 clearfix">
                                   <div className="pull-left">
                                     <h3>Seguros</h3>
@@ -2177,7 +2176,7 @@ function App(props) {
                               {/*Fin de ejemplo*/}
                            
                          
-                              <div className="widget-wrap">
+                              <div className="widget-wrap" id="paromotor">
                                 <div className="widget-header block-header margin-bottom-0 clearfix">
                                   <div className="pull-left">
                                     <h3>Paro de Motor de Ralentí</h3>
@@ -2191,7 +2190,7 @@ function App(props) {
                                         <div className="form-content">
                                           {/* start text password */}
                                           <div className="row">
-                                            <div className="col-sm-6 col-md-2 unit">
+                                          <div className="col-sm-12 col-md-2-5 unit">
                                               <label className="checkbox-toggle">
                                                 <input
                                                   type="checkbox"
@@ -2206,7 +2205,7 @@ function App(props) {
                                                 Paro por Ralenti
                                               </label>
                                             </div>
-                                            <div className="col-sm-6 col-md-4 unit">
+                                            <div className="col-sm-12 col-md-2-5 unit">
                                               <label className="label">
                                                 Tiempo para paro
                                               </label>
@@ -2235,7 +2234,7 @@ function App(props) {
                               {/*Fin de ejemplo*/}
                         
                          
-                              <div className="widget-wrap">
+                              <div className="widget-wrap" id="detalles">
                                 <div className="widget-header block-header margin-bottom-0 clearfix">
                                   <div className="pull-left">
                                     <h3>Detalles</h3>
@@ -2497,7 +2496,7 @@ function App(props) {
                                                     <div className="row">
                                                       <div className="col-md-12 unit">
                                                         <div className="row">
-                                                          <div className="col-sm-6 col-md-4 col-lg-4 unit">
+                                                        <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <label className="label">
                                                               Velocidad Promedio
                                                             </label>
@@ -2516,7 +2515,7 @@ function App(props) {
                                                               />
                                                             </div>
                                                           </div>
-                                                          <div className="col-sm-6  col-md-4 col-lg-4  unit">
+                                                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <label className="label">
                                                               &nbsp;
                                                             </label>
@@ -2549,7 +2548,7 @@ function App(props) {
                                                           </div>
                                                         </div>
                                                         <div className="row">
-                                                          <div className="col-sm-6 col-md-4 col-lg-4 unit">
+                                                        <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <label className="label">
                                                               Neutralizaciones
                                                             </label>
@@ -2571,7 +2570,7 @@ function App(props) {
                                                               />
                                                             </div>
                                                           </div>
-                                                          <div className="col-sm-6  col-md-4 col-lg-4  unit">
+                                                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <label className="label">
                                                               &nbsp;
                                                             </label>
@@ -2604,7 +2603,7 @@ function App(props) {
                                                           </div>
                                                         </div>
                                                         <div className="row">
-                                                          <div className="col-sm-6 col-md-4 col-lg-4 unit">
+                                                        <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <label className="label">
                                                               Frenado Brusco
                                                             </label>
@@ -2623,7 +2622,7 @@ function App(props) {
                                                               />
                                                             </div>
                                                           </div>
-                                                          <div className="col-sm-6  col-md-4 col-lg-4  unit">
+                                                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <label className="label">
                                                               &nbsp;
                                                             </label>
@@ -2656,7 +2655,7 @@ function App(props) {
                                                           </div>
                                                         </div>
                                                         <div className="row">
-                                                          <div className="col-sm-6 col-md-4 col-lg-4 unit">
+                                                        <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <label className="label">
                                                               Carga de
                                                               Aceleración
@@ -2677,7 +2676,7 @@ function App(props) {
                                                               />
                                                             </div>
                                                           </div>
-                                                          <div className="col-sm-6  col-md-4 col-lg-4  unit">
+                                                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <label className="label">
                                                               &nbsp;
                                                             </label>
@@ -2710,7 +2709,7 @@ function App(props) {
                                                           </div>
                                                         </div>
                                                         <div className="row">
-                                                          <div className="col-sm-6 col-md-4 col-lg-4 unit">
+                                                        <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <label className="label">
                                                               Accionamiento
                                                               Pedal Freno
@@ -2730,7 +2729,7 @@ function App(props) {
                                                               />
                                                             </div>
                                                           </div>
-                                                          <div className="col-sm-6  col-md-4 col-lg-4  unit">
+                                                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <label className="label">
                                                               &nbsp;
                                                             </label>
@@ -2763,7 +2762,7 @@ function App(props) {
                                                           </div>
                                                         </div>
                                                         <div className="row">
-                                                          <div className="col-sm-6 col-md-4 col-lg-4 unit">
+                                                        <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <label className="label">
                                                               Velocidad Máxima
                                                               Motor
@@ -2783,7 +2782,7 @@ function App(props) {
                                                               />
                                                             </div>
                                                           </div>
-                                                          <div className="col-sm-6  col-md-4 col-lg-4  unit">
+                                                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <label className="label">
                                                               &nbsp;
                                                             </label>
@@ -2816,7 +2815,7 @@ function App(props) {
                                                           </div>
                                                         </div>
                                                         <div className="row">
-                                                          <div className="col-sm-6 col-md-4 col-lg-4 unit">
+                                                        <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <label className="label">
                                                               % Ultimo Cambio
                                                             </label>
@@ -2835,7 +2834,7 @@ function App(props) {
                                                               />
                                                             </div>
                                                           </div>
-                                                          <div className="col-sm-6  col-md-4 col-lg-4  unit">
+                                                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <label className="label">
                                                               &nbsp;
                                                             </label>
@@ -2923,7 +2922,7 @@ function App(props) {
                                         <div className="form-content">
                                           {/* start text password */}
                                           <div className="row">
-                                            <div className="col-sm-6 col-md-4 col-lg-4 unit">
+                                            <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                               <label className="label">
                                                 Tarjeta IAVE
                                               </label>
@@ -2939,7 +2938,7 @@ function App(props) {
                                                 />
                                               </div>
                                             </div>
-                                            <div className="col-sm-6  col-md-2 col-lg-2  unit">
+                                            <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                               <label className="label">
                                                 Horómetro
                                               </label>
@@ -2957,7 +2956,7 @@ function App(props) {
                                             </div>
                                           </div>
                                           <div className="row">
-                                            <div className="col-sm-6 col-md-4 col-lg-4 unit">
+                                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                               <label className="label">
                                                 Tarjeta EPASS
                                               </label>
@@ -2973,7 +2972,7 @@ function App(props) {
                                                 />
                                               </div>
                                             </div>
-                                            <div className="col-sm-6  col-md-4 col-lg-4  unit">
+                                            <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                               <label className="label">
                                                 Horas trabajadas motor GPS
                                               </label>
@@ -2993,8 +2992,8 @@ function App(props) {
                                             </div>
                                           </div>
                                           <div className="row">
-                                            <div className="col-sm-6 col-md-4 col-lg-4 unit">
-                                              <label className="label">
+                                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                                <label className="label">
                                                 Calculo Reporte de Ingresos (%)
                                               </label>
                                               <div className="input">
@@ -3011,7 +3010,7 @@ function App(props) {
                                                 />
                                               </div>
                                             </div>
-                                            <div className="col-sm-6 col-md-4 col-lg-4 unit">
+                                            <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                               <label className="label">
                                                 Horas trabajadas Motor{" "}
                                               </label>
@@ -3031,7 +3030,7 @@ function App(props) {
                                             </div>
                                           </div>
                                           <div className="row">
-                                            <div className="col-sm-6 col-md-2 col-lg-2 unit">
+                                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                               <label className="label">
                                                 Odómetro (Kms)
                                               </label>
@@ -3047,7 +3046,7 @@ function App(props) {
                                                 />
                                               </div>
                                             </div>
-                                            <div className="col-sm-6  col-md-2 col-lg-2  unit">
+                                            <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                               <label className="label">
                                                 Odómetro GPS (Kms)
                                               </label>
@@ -3063,7 +3062,7 @@ function App(props) {
                                                 />
                                               </div>
                                             </div>
-                                            <div className="col-sm-6  col-md-2 col-lg-2  unit">
+                                            <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                               <label className="label">
                                                 Propietario
                                               </label>
