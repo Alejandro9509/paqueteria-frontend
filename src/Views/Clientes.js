@@ -125,11 +125,11 @@ function App(props) {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                          <i className="fa fa-caret-down" />
-                        )
+                            <i className="fa fa-caret-down" />
+                          )
                       ) : (
-                        ""
-                      )}
+                          ""
+                        )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -230,11 +230,11 @@ function App(props) {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                          <i className="fa fa-caret-down" />
-                        )
+                            <i className="fa fa-caret-down" />
+                          )
                       ) : (
-                        ""
-                      )}
+                          ""
+                        )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -260,20 +260,14 @@ function App(props) {
                         }
                         className="btn btn-default  btn-sm"
                       >
-                        <i
-                          className="fa fa-pencil-square-o"
-                          style={{ color: "#F9A03E" }}
-                        />
+                        <i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} />
                       </a>
                       <a
                         href="#"
                         className="btn btn-default btn-sm"
                         onClick={() => handleEliminar(row.original.m_nIdUnidad)}
                       >
-                        <i
-                          className="zmdi zmdi-delete"
-                          style={{ color: "#F30B0B" }}
-                        />
+                        <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
                       </a>
                       <a
                         href="#"
@@ -384,10 +378,7 @@ function App(props) {
   }
 
   useEffect((value) => {
-    if (
-      localStorage.getItem("UsuarioId") === null ||
-      localStorage.getItem("UsuarioId") <= 0
-    ) {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
       alert("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
@@ -513,30 +504,27 @@ function App(props) {
   function handleEliminar(id) {
     var derecho;
     const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.creadoPor}/${state.DerechoBorrar}/3`;
-    axios
-      .get(urlDelete, { headers })
-      .then((respuesta) => {
-        //alert(respuesta.data)
+    axios.get(urlDelete, { headers }).then(respuesta => {
+      //alert(respuesta.data)
 
-        derecho = respuesta.data;
-        if (derecho == false) {
-          alert("El usuario no tiene derechos para realizar el proceso");
-          return;
-        }
+      derecho = respuesta.data;
+      if (derecho == false) {
+        alert("El usuario no tiene derechos para realizar el proceso");
+        return;
+      }
 
-        const url = `${process.env.REACT_APP_API_URL}/Unidad/Eliminar/` + id;
-        axios
-          .get(url, { headers })
-          .then((respuesta) => {
-            console.log(respuesta);
-          })
-          .catch((err) => {
-            alert(err);
-          });
-      })
-      .catch((err) => {
-        alert(err);
-      });
+      const url = `${process.env.REACT_APP_API_URL}/Unidad/Eliminar/` + id;
+      axios
+        .get(url, { headers })
+        .then((respuesta) => {
+          console.log(respuesta);
+        })
+        .catch((err) => {
+          alert(err);
+        });
+    }).catch(err => {
+      alert(err)
+    });
   }
 
   const handleChange = (event) => {

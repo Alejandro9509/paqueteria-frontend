@@ -162,13 +162,44 @@ function CiudadesCodigoPostal() {
     });
   }
 
+  function handleShowConsultaCiudad(id) {
+    const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetById/${id}`;
+    axios.get(url, { headers }).then(respuesta => {
+      console.log(respuesta.data)
+      setState({
+        ...state,
+        agregar: "Consulta",
+        idCiudad: id,
+        codigoCiudad: respuesta.data.m_nCodigo,
+        ciudad: respuesta.data.m_sCiudad,
+        abreviacionCiudad: respuesta.data.m_sAbreviacion,
+        idEstado: respuesta.data.m_nIdEstado
+
+      })
+    });
+  }
+
   function handleShowModificarCodigoPostal(id) {
     const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetById/${id}`;
     axios.get(url, { headers }).then(respuesta => {
       console.log(respuesta.data)
       setState({
         ...state,
-        agregar: "Modificar",
+        agregarCodigoPostal: "Modificar",
+        idCodigoPostal: id,
+        codigoPostal: respuesta.data.m_sCP,
+        zona: respuesta.data.m_sCiudad,
+      })
+    });
+  }
+  
+  function handleConsultarCodigoPostal(id) {
+    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetById/${id}`;
+    axios.get(url, { headers }).then(respuesta => {
+      console.log(respuesta.data)
+      setState({
+        ...state,
+        agregarCodigoPostal: "Consulta",
         idCodigoPostal: id,
         codigoPostal: respuesta.data.m_sCP,
         zona: respuesta.data.m_sCiudad,
@@ -380,9 +411,9 @@ function CiudadesCodigoPostal() {
                     className={state.idCiudad === row.original.m_nIdCiudad ? classes.seleccionado : classes.noSeleccionado}>
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarCiudad(row.original.m_nIdCiudad))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowModificarCiudad(row.original.m_nIdCiudad))}><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
                         <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminarCiudad(row.original.m_nIdCiudad))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminarCiudad(row.original.m_nIdCiudad))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultaCiudad(row.original.m_nIdCiudad))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -461,9 +492,9 @@ function CiudadesCodigoPostal() {
                   <tr {...row.getRowProps()}>
                     <td>
                       <div>
-                        <a href="#AgregarCP" role="tab" data-toggle="tab" onClick={() => (handleShowModificarCodigoPostal(row.original.m_nIdCP))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#AgregarCP" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowModificarCodigoPostal(row.original.m_nIdCP))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
                         <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminarCodigoPostal(row.original.m_nIdCP))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminarCodigoPostal(row.original.m_nIdCP))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                        <a href="#AgregarCP" role="tab" data-toggle="tab"  className="btn btn-default btn-sm" onClick={() => (handleConsultarCodigoPostal(row.original.m_nIdCP))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -562,6 +593,7 @@ function CiudadesCodigoPostal() {
                                     type="number"
                                     min="0"
                                     required={true}
+                                    readOnly={state.agregar == "Consulta"}
                                     value={state.codigoCiudad}
                                     id="codigoCiudad"
                                   />
@@ -578,6 +610,7 @@ function CiudadesCodigoPostal() {
                                     className="form-control"
                                     type="text"
                                     required={true}
+                                    readOnly={state.agregar == "Consulta"}
                                     value={state.abreviacionCiudad}
                                     id="abreviacionCiudad"
                                   />
@@ -594,6 +627,7 @@ function CiudadesCodigoPostal() {
                                     className="form-control"
                                     type="text"
                                     required={true}
+                                    readOnly={state.agregar == "Consulta"}
                                     value={state.ciudad}
                                     id="ciudad"
                                   />
@@ -610,6 +644,7 @@ function CiudadesCodigoPostal() {
                                       className="form-control"
                                       required
                                       onChange={handleSelectPais}
+                                      readOnly={state.agregar == "Consulta"}
                                       value={state.idPais}
                                       id="idPais"
                                     >
@@ -643,6 +678,7 @@ function CiudadesCodigoPostal() {
                                       className="form-control"
                                       required
                                       onChange={handleChange}
+                                      readOnly={state.agregar == "Consulta"}
                                       value={state.idEstado}
                                       id="idEstado"
                                     >
@@ -727,6 +763,7 @@ function CiudadesCodigoPostal() {
                                     className="form-control"
                                     type="text"
                                     required={true}
+                                    readOnly={state.agregarCodigoPostal == "Consulta"}
                                     value={state.codigoPostal}
                                     id="codigoPostal"
                                   />
@@ -743,6 +780,7 @@ function CiudadesCodigoPostal() {
                                     className="form-control"
                                     type="text"
                                     required={true}
+                                    readOnly={state.agregarCodigoPostal == "Consulta"}
                                     value={state.zona}
                                     id="zona"
                                   />

@@ -109,6 +109,23 @@ function EstatusUnidad() {
     });
   }
 
+  function handleShowConsultar(id) {
+    const url = `${process.env.REACT_APP_API_URL}/EstatusUnidades/GetById/${id}`;
+    axios.get(url, { headers }).then(respuesta => {
+      console.log(respuesta.data)
+      setState({
+        ...state,
+        agregar: "Consulta",
+        showPopUp: true,
+        idEstatusUnidad: id,
+        estatusUnidad: respuesta.data.m_sEstatus,
+        abreviacionUnidad: respuesta.data.m_sAbreviacion,
+        tipoEstatusUnidad: respuesta.data.m_nTipoEstatus,
+        colorUnidad: "#" + respuesta.data.m_sColor,
+      })
+    });
+  }
+
   function handleShowAgregar() {
     setState({
       ...state,
@@ -252,9 +269,9 @@ function EstatusUnidad() {
                   <tr {...row.getRowProps()}>
                     <td>
                       <div>
-                        <a href="#Agregar" className="btn btn-default btn-sm" onClick={() => (handleShowModificar(row.original.m_nIdEstatusUnidad))} ><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowModificar(row.original.m_nIdEstatusUnidad))} ><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
                         <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdEstatusUnidad))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdEstatusUnidad))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                        <a href="#" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdEstatusUnidad))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {

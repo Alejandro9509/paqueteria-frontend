@@ -46,7 +46,7 @@ function Embarque() {
     fechaIcinial2: "",
     sucursalListado: 0,
     estatusListado: 0,
-    idSucursalAgregar: 0,
+    idSucursalAgregar:  localStorage.getItem("Sucursal"),
     folioRecoleccion: "",
     folioEmbarque: "",
     folioGuía: "",
@@ -353,7 +353,6 @@ function Embarque() {
       agregar: "Agregar",
       showPopUp: true,
       idEntrega: 0,
-      idSucursalAgregar: dataSucursal[0].m_nIdSucursal,
       folioRecoleccion: "",
       folioEmbarque: "",
       folioGuía: "",
@@ -1137,6 +1136,7 @@ function Embarque() {
                                   onChange={handleChange}
                                   value={state.idSucursalAgregar}
                                   id="idSucursalAgregar"
+                                  disabled="disabled"
                                 >
                                   {dataSucursal.map(
                                     (sucursal) => (
