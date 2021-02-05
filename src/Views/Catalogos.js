@@ -61,7 +61,7 @@ function Catalogo() {
                       />
                     </button>
                     <br></br>
-                    <label style={{ alignSelf: "center" }}>{r.name}</label>
+                    <label style={{ alignSelf: "center", paddingTop: "10px"  }}>{r.name}</label>
                     <br></br>
                   </div>
                 </Link>

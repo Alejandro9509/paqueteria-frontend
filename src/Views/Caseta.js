@@ -6,13 +6,13 @@ import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy } from 'react-table'
 
 function Caseta() {
- 
+
 
   const [data, setData] = React.useState([])
   const [state, setState] = React.useState({
     idCaseta: 0,
     descripcion: "",
-    DerechoBorrar:105,
+    DerechoBorrar: 105,
     tarifaEje2: "",
     tarifaEje3: "",
     tarifaEje4: "",
@@ -23,7 +23,7 @@ function Caseta() {
     tarifaEje9: "",
     CreadoPor: localStorage.getItem("UsuarioId"),
     ModificadoPor: localStorage.getItem("UsuarioId"),
-    
+
     agregar: "Agregar",
     height: window.innerHeight
   })
@@ -43,8 +43,8 @@ function Caseta() {
       "m_cTarifaEje8": state.tarifaEje8,
       "m_cTarifaEje9": state.tarifaEje9,
       "m_nCreadoPor": state.CreadoPor,
-      "m_nModificadoPor": state.ModificadoPor 
-     }
+      "m_nModificadoPor": state.ModificadoPor
+    }
     console.log(params)
     if (state.idCaseta != 0) {
       const url = `${process.env.REACT_APP_API_URL}/Casetas/Modificar/` + state.idCaseta;
@@ -68,6 +68,7 @@ function Caseta() {
     }
 
   }
+
   function handleEliminar(id) {
     var derecho;
     debugger;
@@ -76,24 +77,47 @@ function Caseta() {
       //alert(respuesta.data)
 
       derecho = respuesta.data;
-      if (derecho == false)
-      {
-        alert ("El usuario no tiene derechos para realizar el proceso");
-        return; 
+      if (derecho == false) {
+        alert("El usuario no tiene derechos para realizar el proceso");
+        return;
       }
       const url = `${process.env.REACT_APP_API_URL}/Casetas/Eliminar/` + id;
-    axios.delete(url, { headers }).then(respuesta => {
-      alert(respuesta.data)
-      getAllData()
+      axios.delete(url, { headers }).then(respuesta => {
+        alert(respuesta.data)
+        getAllData()
+      }).catch(err => {
+        alert(err)
+      });
     }).catch(err => {
       alert(err)
     });
-    }).catch(err => {
-      alert(err)
+
+
+
+  }
+
+  function handleShowConsultar(id) {
+
+    const url = `${process.env.REACT_APP_API_URL}/Casetas/GetById/${id}`;
+    axios.get(url, { headers }).then(respuesta => {
+      console.log(respuesta.data)
+      setState({
+        ...state,
+        agregar: "Consulta",
+        idCaseta: id,
+        descripcion: respuesta.data.m_sDescripcion,
+        tarifaEje2: respuesta.data.m_cTarifaEje2,
+        tarifaEje3: respuesta.data.m_cTarifaEje3,
+        tarifaEje4: respuesta.data.m_cTarifaEje4,
+        tarifaEje5: respuesta.data.m_cTarifaEje5,
+        tarifaEje6: respuesta.data.m_cTarifaEje6,
+        tarifaEje7: respuesta.data.m_cTarifaEje7,
+        tarifaEje8: respuesta.data.m_cTarifaEje8,
+        tarifaEje9: respuesta.data.m_cTarifaEje9,
+
+      })
     });
-    
-    
-    
+
   }
 
   function handleShowModificar(id) {
@@ -177,8 +201,7 @@ function Caseta() {
   ]);
 
   useEffect(value => {
-    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
-    {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
       alert("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
@@ -276,9 +299,9 @@ function Caseta() {
                   <tr {...row.getRowProps()}>
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdCaseta))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdCaseta))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdCaseta))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowModificar(row.original.m_nIdCaseta))}><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdCaseta))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdCaseta))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -375,6 +398,7 @@ function Caseta() {
                                 className="form-control"
                                 type="text"
                                 required={true}
+                                readOnly={state.agregar == "Consulta"}
                                 value={state.descripcion}
                                 id="descripcion"
                               />
@@ -396,6 +420,7 @@ function Caseta() {
                                   min="0"
                                   step="0.01"
                                   required={true}
+                                  readOnly={state.agregar == "Consulta"}
                                   value={state.tarifaEje2}
                                   id="tarifaEje2"
                                 />
@@ -412,6 +437,7 @@ function Caseta() {
                                   min="0"
                                   step="0.01"
                                   required={true}
+                                  readOnly={state.agregar == "Consulta"}
                                   value={state.tarifaEje3}
                                   id="tarifaEje3"
                                 />
@@ -428,6 +454,7 @@ function Caseta() {
                                   min="0"
                                   step="0.01"
                                   required={true}
+                                  readOnly={state.agregar == "Consulta"}
                                   value={state.tarifaEje4}
                                   id="tarifaEje4"
                                 />
@@ -444,6 +471,7 @@ function Caseta() {
                                   min="0"
                                   step="0.01"
                                   required={true}
+                                  readOnly={state.agregar == "Consulta"}
                                   value={state.tarifaEje5}
                                   id="tarifaEje5"
                                 />
@@ -460,6 +488,7 @@ function Caseta() {
                                   min="0"
                                   step="0.01"
                                   required={true}
+                                  readOnly={state.agregar == "Consulta"}
                                   value={state.tarifaEje6}
                                   id="tarifaEje6"
                                 />
@@ -476,6 +505,7 @@ function Caseta() {
                                   min="0"
                                   step="0.01"
                                   required={true}
+                                  readOnly={state.agregar == "Consulta"}
                                   value={state.tarifaEje7}
                                   id="tarifaEje7"
                                 />
@@ -492,6 +522,7 @@ function Caseta() {
                                   min="0"
                                   step="0.01"
                                   required={true}
+                                  readOnly={state.agregar == "Consulta"}
                                   value={state.tarifaEje8}
                                   id="tarifaEje8"
                                 />
@@ -508,6 +539,7 @@ function Caseta() {
                                   min="0"
                                   step="0.01"
                                   required={true}
+                                  readOnly={state.agregar == "Consulta"}
                                   value={state.tarifaEje9}
                                   id="tarifaEje9"
                                 />

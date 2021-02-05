@@ -87,16 +87,30 @@ function Departamento() {
     });
   }
 
-  function handleShowModificar(row) {
-    console.log(row.original.m_nIdDepartamento)
-    const url = `${process.env.REACT_APP_API_URL}/Departamento/GetById/` + row.original.m_nIdDepartamento;
+  function handleShowModificar(id) {
+    const url = `${process.env.REACT_APP_API_URL}/Departamento/GetById/` + id;
     axios.get(url, { headers }).then(respuesta => {
       console.log(respuesta.data)
       setState({
         ...state,
         agregar: "Modificar",
         showPopUp: true,
-        idDepartamento: row.original.m_nIdDepartamento,
+        idDepartamento: id,
+        codigoDepartamento: respuesta.data.m_nCodigo,
+        descripcionDepartamento: respuesta.data.m_sDescripcion
+      })
+    });
+  }
+
+  function handleShowConsultar(id) {
+    const url = `${process.env.REACT_APP_API_URL}/Departamento/GetById/` + id;
+    axios.get(url, { headers }).then(respuesta => {
+      console.log(respuesta.data)
+      setState({
+        ...state,
+        agregar: "Consulta",
+        showPopUp: true,
+        idDepartamento: id,
         codigoDepartamento: respuesta.data.m_nCodigo,
         descripcionDepartamento: respuesta.data.m_sDescripcion
       })
@@ -318,9 +332,9 @@ function Departamento() {
                   <tr {...row.getRowProps()}>
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#Agregar" className="btn btn-default btn-sm" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdDepartamento))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
                         <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdDepartamento))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdDepartamento))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdDepartamento))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -431,6 +445,7 @@ function Departamento() {
                                 max="999"
                                 step="1"
                                 required
+                                readOnly={state.agregar == "Consulta"}
                                 value={state.codigoDepartamento}
                                 id="codigoDepartamento"
                               />
@@ -448,6 +463,7 @@ function Departamento() {
                                 type="text"
                                 maxLength="100"
                                 required
+                                readOnly={state.agregar == "Consulta"}
                                 value={state.descripcionDepartamento}
                                 id="descripcionDepartamento"
                               />
