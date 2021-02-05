@@ -29,7 +29,6 @@ const headers = {
   "Content-Type": "application/json",
 };
 
-
 function Informes(props) {
   const [stepActive, setStepActive] = React.useState(1);
   const [data, setData] = React.useState([]);
@@ -103,10 +102,8 @@ function Informes(props) {
     {
       Name: "Unidad",
       accessor: "m_sCodigoUnidad",
-    }
+    },
   ]);
-
-
 
   function DefaultColumnFilter({
     column: { filterValue, preFilteredRows, setFilter },
@@ -156,7 +153,7 @@ function Informes(props) {
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th></th>
+                <th>Acciones</th>
                 {headerGroup.headers.map((column) => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -168,11 +165,11 @@ function Informes(props) {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                            <i className="fa fa-caret-down" />
-                          )
+                          <i className="fa fa-caret-down" />
+                        )
                       ) : (
-                          ""
-                        )}
+                        ""
+                      )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -196,16 +193,23 @@ function Informes(props) {
                         onClick={() =>
                           handleShowModificar(row.original.m_nIdUnidad)
                         }
-                        className="btn btn-default btn-sm m-user-edit"
+                        className="btn btn-default btn-sm"
                       >
-                        <i className="zmdi zmdi-edit" />
+                        <i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} />
                       </a>
                       <a
                         href="#"
-                        className="btn btn-default btn-sm m-user-delete"
+                        className="btn btn-default btn-sm"
                         onClick={() => handleEliminar(row.original.m_nIdUnidad)}
                       >
-                        <i className="zmdi zmdi-close" />
+                        <i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} />
+                      </a>
+                      <a
+                        href="#"
+                        className="btn btn-default btn-sm"
+                        onClick={() => handleEliminar(row.original.m_nIdUnidad)}
+                      >
+                        <i className="fa fa-eye" style={{color:"#F9A03E"}} />
                       </a>
                     </div>
                   </td>
@@ -255,7 +259,7 @@ function Informes(props) {
         tipoServicio: "",
         observaciones: "",
       },
-    ]
+    ],
   });
 
   const selectGuia = (index) => {
@@ -269,7 +273,11 @@ function Informes(props) {
   function getAllGuiasFrom() {
     console.log(state.IdCiudadOrigen);
     console.log(state.IdCiudadDestino);
-    const url = `${process.env.REACT_APP_API_URL}/Guia/GetListadoPendientes/` + state.IdCiudadOrigen.m_nIdCiudad + "/" + state.IdCiudadDestino.m_nIdCiudad;
+    const url =
+      `${process.env.REACT_APP_API_URL}/Guia/GetListadoPendientes/` +
+      state.IdCiudadOrigen.m_nIdCiudad +
+      "/" +
+      state.IdCiudadDestino.m_nIdCiudad;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
       setDataGuias(respuesta.data);
@@ -336,7 +344,6 @@ function Informes(props) {
       console.log(respuesta.data);
       setState({
         ...state,
-
       });
     });
   }
@@ -367,25 +374,24 @@ function Informes(props) {
       alert(err)
     });
   }
-  const handleChangeOrigenChange = event => {
-    console.log(event.target.value)
+  const handleChangeOrigenChange = (event) => {
+    console.log(event.target.value);
 
     setState({
       ...state,
-      idOrigen: event.target.value
+      idOrigen: event.target.value,
     });
     //Aqui hacer la peticion
     //No se que peticion tienes que hacer, aqui lo haces
   };
 
-  const handleChangeDestinoChange = event => {
-
-    console.log(state.IdCiudadDestino)
+  const handleChangeDestinoChange = (event) => {
+    console.log(state.IdCiudadDestino);
     setState({
       ...state,
-      idDestino: event.target.value
+      idDestino: event.target.value,
     });
-    getAllGuiasFrom()
+    getAllGuiasFrom();
   };
 
   const columns2 = React.useMemo(() => [
@@ -470,7 +476,7 @@ function Informes(props) {
   }
 
   function openSection(index) {
-    closeSeccions();
+    // closeSeccions();
     var $section;
     switch (index) {
       case 1:
@@ -528,7 +534,7 @@ function Informes(props) {
   }
 
   useEffect((value) => {
-    closeSeccions();
+    //closeSeccions();
   }, []);
 
   return (
@@ -571,7 +577,7 @@ function Informes(props) {
             <li className="active">
               <a data-toggle="tab" href="#Listado">
                 <i className="fa fa-list" /> Listado
-            </a>
+              </a>
             </li>
             <li>
               <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
@@ -582,19 +588,19 @@ function Informes(props) {
             <li>
               <a data-toggle="tab" href="#Imprimir">
                 <i className="fa fa-print" /> Imprimir
-            </a>
+              </a>
             </li>
 
             <li>
               <a data-toggle="tab" href="#Cancelar">
                 <i className="fa fa-ban" /> Cancelar
-            </a>
+              </a>
             </li>
 
             <li>
               <a data-toggle="tab" href="#Cubicar">
                 <i className="fa fa-adjust" /> Cubicar / Optimizar Rutas
-            </a>
+              </a>
             </li>
           </ul>
 
@@ -614,79 +620,70 @@ function Informes(props) {
             </div>
             <div id="Imprimir" className="tab-pane fade ">
               Imprimir
-          </div>
+            </div>
             <div id="Importar" className="tab-pane fade ">
               Importar
-          </div>
+            </div>
             <div id="Agregar" className="tab-pane fade ">
               {/*INICIO DE ESTRUCTURA */}
-              <div className="row">
-                <div className="col-md-12">
-                  <div className="widget-wrap">
-                    <div className="widget-container margin-top-0">
-                      <div className="widget-content">
-                        <form className="j-forms j-multistep" id="j-forms">
-                          {/*Inicio de ejemplo*/}
 
-                          {/* start steps */}
-                          <div
-                            className="wizard-breadcrumb number-style"
-                            style={{
-                              position: "sticky",
-                              top: "50px",
-                              padding: "5px",
-                              backgroundColor: "white",
-                              zIndex: 100,
-                            }}
-                          >
-                            <div className="row">
-                              <div
-                                className={
-                                  "col-md-4 col-sm-4 step " +
-                                  (stepActive == 1 && "active-step")
-                                }
-                                onClick={() => openSection(1)}
-                              >
-                                <div className={"steps"}>
-                                  <span className={"step-number"}>1</span>
-                                  <p>Información De Envio</p>
-                                </div>
-                              </div>
-                              <div
-                                className={
-                                  "col-md-4 col-sm-4 step " +
-                                  (stepActive == 2 && "active-step")
-                                }
-                                onClick={() => openSection(2)}
-                              >
-                                <div className="steps">
-                                  <span className="step-number">2</span>
-                                  <p>Asignar a un Viaje</p>
-                                </div>
-                              </div>
-
-                              <div
-                                className={
-                                  "col-md-4 col-sm-4 step " +
-                                  (stepActive == 3 && "active-step")
-                                }
-                                onClick={() => openSection(3)}
-                              >
-                                <div className="steps">
-                                  <span className="step-number">4</span>
-                                  <p>Detalles de Guias</p>
-                                </div>
-                              </div>
-                              <div></div>
-                            </div>
-                          </div>
-                          {/* end steps */}
-                        </form>
+              <form className="j-forms">
+                {/*Inicio de ejemplo*/}
+                <div className="form-content">
+                  {/* start steps */}
+                  <div
+                    className="wizard-breadcrumb number-style"
+                    style={{
+                      position: "sticky",
+                      top: "150px",
+                      padding: "5px",
+                      backgroundColor: "white",
+                      zIndex: 100,
+                      marginBottom: "10px",
+                    }}
+                  >
+                    <div className="row">
+                      <div
+                        className={
+                          "col-md-4 col-sm-2 step " +
+                          (stepActive == 1 && "active-step")
+                        }
+                        onClick={() => openSection(1)}
+                      >
+                        <div className={"steps"}>
+                          <span className={"step-number"}>1</span>
+                          <p>Información De Envio</p>
+                        </div>
+                      </div>
+                      <div
+                        className={
+                          "col-md-4 col-sm-2 step " +
+                          (stepActive == 2 && "active-step")
+                        }
+                        onClick={() => openSection(2)}
+                      >
+                        <div className="steps">
+                          <span className="step-number">2</span>
+                          <p>Asignar a un Viaje</p>
+                        </div>
+                      </div>
+                      <div
+                        className={
+                          "col-md-4 col-sm-2 step " +
+                          (stepActive == 3 && "active-step")
+                        }
+                        onClick={() => openSection(3)}
+                      >
+                        <div className="steps">
+                          <span className="step-number">3</span>
+                          <p>Detalles de Guias</p>
+                        </div>
                       </div>
                     </div>
                   </div>
+                  {/* end steps */}
                 </div>
-              </div>
+              </form>
 
               <div className="row">
                 <div className="col-md-8">
@@ -704,44 +701,6 @@ function Informes(props) {
                                         <div className="pull-left">
                                           <h3>Información De Envio</h3>
                                         </div>
-                                        <div className="pull-right w-action">
-                                          <ul className="widget-action-bar">
-                                            <li className="dropdown">
-                                              <a
-                                                href="#"
-                                                className="dropdown-toggle"
-                                                data-toggle="dropdown"
-                                              >
-                                                <i className="zmdi zmdi-more" />
-                                              </a>
-                                              <ul className="dropdown-menu">
-                                                <li className="widget-reload">
-                                                  <a href="#">
-                                                    <i className="zmdi zmdi-refresh-alt" />
-                                                  </a>
-                                                </li>
-                                                <li
-                                                  className="widget-toggle"
-                                                  id="infogral"
-                                                >
-                                                  <a href="#">
-                                                    <i className="zmdi zmdi-chevron-down" />
-                                                  </a>
-                                                </li>
-                                                <li className="widget-fullscreen">
-                                                  <a href="#">
-                                                    <i className="zmdi zmdi-fullscreen" />
-                                                  </a>
-                                                </li>
-                                                <li className="widget-exit">
-                                                  <a href="#">
-                                                    <i className="zmdi zmdi-power" />
-                                                  </a>
-                                                </li>
-                                              </ul>
-                                            </li>
-                                          </ul>
-                                        </div>
                                       </div>
 
                                       <div className="widget-container">
@@ -756,10 +715,10 @@ function Informes(props) {
                                                 <div className="form-content">
                                                   <div className="row">
                                                     {/*****************************************Sucursal**********************************************************/}
-                                                    <div className="col-sm-6 col-md-2 unit">
+                                                    <div className="col-sm-6 col-md-3 unit">
                                                       <label className="label">
                                                         Sucursal
-                                                    </label>
+                                                      </label>
                                                       <label className="input select">
                                                         <select
                                                           className="form-control"
@@ -768,7 +727,7 @@ function Informes(props) {
                                                         >
                                                           <option value="0">
                                                             Todas
-                                                        </option>
+                                                          </option>
                                                           {dataSucursal.map(
                                                             (sucursal) => (
                                                               <option
@@ -789,10 +748,10 @@ function Informes(props) {
                                                       </label>
                                                     </div>
                                                     {/*****************************************Folio************************************************************/}
-                                                    <div className="col-sm-12 col-md-2 unit">
+                                                    <div className="col-sm-12 col-md-3 unit">
                                                       <label className="label">
                                                         Folio
-                                                    </label>
+                                                      </label>
                                                       <div className="input">
                                                         <input
                                                           className="form-control"
@@ -802,10 +761,10 @@ function Informes(props) {
                                                       </div>
                                                     </div>
                                                     {/*****************************************Fecha*******************************************************/}
-                                                    <div className="col-sm-12 col-md-2 unit">
+                                                    <div className="col-sm-12 col-md-3 unit">
                                                       <label className="label">
                                                         Fecha
-                                                    </label>
+                                                      </label>
                                                       <div className="input">
                                                         <input
                                                           className="form-control"
@@ -815,10 +774,10 @@ function Informes(props) {
                                                       </div>
                                                     </div>
                                                     {/*****************************************Hora*******************************************************/}
-                                                    <div className="col-sm-12 col-md-2 unit">
+                                                    <div className="col-sm-12 col-md-3 unit">
                                                       <label className="label">
                                                         Hora
-                                                    </label>
+                                                      </label>
                                                       <div className="input">
                                                         <input
                                                           className="form-control"
@@ -828,10 +787,10 @@ function Informes(props) {
                                                       </div>
                                                     </div>
                                                     {/*****************************************Oficina Emisora***************************************************/}
-                                                    <div className="col-sm-6 col-md-2 unit">
+                                                    <div className="col-sm-6 col-md-3 unit">
                                                       <label className="label">
                                                         Oficina Emisora
-                                                    </label>
+                                                      </label>
                                                       <label className="input select">
                                                         <select
                                                           className="form-control"
@@ -840,7 +799,7 @@ function Informes(props) {
                                                         >
                                                           <option value="0">
                                                             Todas
-                                                        </option>
+                                                          </option>
                                                           {dataSucursal.map(
                                                             (sucursal) => (
                                                               <option
@@ -861,10 +820,10 @@ function Informes(props) {
                                                       </label>
                                                     </div>
                                                     {/*****************************************Oficina Receptora*************************************************/}
-                                                    <div className="col-sm-6 col-md-2 unit">
+                                                    <div className="col-sm-6 col-md-3 unit">
                                                       <label className="label">
                                                         Oficina Receptora
-                                                    </label>
+                                                      </label>
                                                       <label className="input select">
                                                         <select
                                                           className="form-control"
@@ -873,7 +832,7 @@ function Informes(props) {
                                                         >
                                                           <option value="0">
                                                             Todas
-                                                        </option>
+                                                          </option>
                                                           {dataSucursal.map(
                                                             (sucursal) => (
                                                               <option
@@ -893,13 +852,11 @@ function Informes(props) {
                                                         </select>
                                                       </label>
                                                     </div>
-                                                  </div>
                                                   {/*****************************************Estatus de Entrega*************************************************/}
-                                                  <div className="row">
                                                     <div className="col-sm-6 col-md-3 unit">
                                                       <label className="label">
                                                         Estatus
-                                                    </label>
+                                                      </label>
                                                       <label className="input select">
                                                         <select
                                                           className="form-control"
@@ -908,7 +865,7 @@ function Informes(props) {
                                                         >
                                                           <option value="0">
                                                             Todos
-                                                        </option>
+                                                          </option>
                                                           {dataEstatusInformes.map(
                                                             (estatus) => (
                                                               <option
@@ -928,7 +885,8 @@ function Informes(props) {
                                                         </select>
                                                       </label>
                                                     </div>
-                                                  </div>
+                                                    </div>
+
 
                                                   {/*****************************************Operador*************************************************/}
 
@@ -936,7 +894,7 @@ function Informes(props) {
                                                     <div className="col-sm-12 col-md-6 unit">
                                                       <label className="label">
                                                         Operador
-                                                    </label>
+                                                      </label>
                                                       {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
                                                       <Autocomplete
                                                         freeSolo
@@ -960,7 +918,9 @@ function Informes(props) {
                                                           option.m_sNombreCompleto
                                                         }
                                                         options={dataOperadores}
-                                                        renderInput={(params) => (
+                                                        renderInput={(
+                                                          params
+                                                        ) => (
                                                           <TextField
                                                             {...params}
                                                             InputProps={{
@@ -978,7 +938,7 @@ function Informes(props) {
                                                     <div className="col-sm-12 col-md-6 unit">
                                                       <label className="label">
                                                         Unidad
-                                                    </label>
+                                                      </label>
                                                       {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
                                                       <Autocomplete
                                                         freeSolo
@@ -1004,7 +964,9 @@ function Informes(props) {
                                                           option.m_sDescripcion
                                                         }
                                                         options={dataUnidades}
-                                                        renderInput={(params) => (
+                                                        renderInput={(
+                                                          params
+                                                        ) => (
                                                           <TextField
                                                             {...params}
                                                             InputProps={{
@@ -1020,7 +982,7 @@ function Informes(props) {
                                                     <div className="col-sm-12 col-md-2 unit">
                                                       <label className="label">
                                                         Placa Int
-                                                    </label>
+                                                      </label>
                                                       <div className="input">
                                                         <input
                                                           className="form-control"
@@ -1036,7 +998,7 @@ function Informes(props) {
                                                     <div className="col-sm-12 col-md-6 unit">
                                                       <label className="label">
                                                         Remolque
-                                                    </label>
+                                                      </label>
                                                       <div className="input">
                                                         <input
                                                           className="form-control"
@@ -1050,7 +1012,7 @@ function Informes(props) {
                                                     <div className="col-sm-12 col-md-2 unit">
                                                       <label className="label">
                                                         Placa Int
-                                                    </label>
+                                                      </label>
                                                       <div className="input">
                                                         <input
                                                           className="form-control"
@@ -1066,11 +1028,19 @@ function Informes(props) {
                                                     <div className="col-sm-12 col-md-6 unit">
                                                       <label className="label">
                                                         Origen
-                                                    </label>
+                                                      </label>
                                                       {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
                                                       <Autocomplete
                                                         freeSolo
-                                                        onChange={(event, newValue) => setState({ ...state, IdCiudadOrigen: newValue })}
+                                                        onChange={(
+                                                          event,
+                                                          newValue
+                                                        ) =>
+                                                          setState({
+                                                            ...state,
+                                                            IdCiudadOrigen: newValue,
+                                                          })
+                                                        }
                                                         placeholder={
                                                           state.idOrigen
                                                         }
@@ -1080,7 +1050,9 @@ function Informes(props) {
                                                           option
                                                         ) => option.m_sCiudad}
                                                         options={dataOrigenes}
-                                                        renderInput={(params) => (
+                                                        renderInput={(
+                                                          params
+                                                        ) => (
                                                           <TextField
                                                             {...params}
                                                             InputProps={{
@@ -1095,11 +1067,18 @@ function Informes(props) {
                                                     <div className="col-sm-12 col-md-6 unit">
                                                       <label className="label">
                                                         Destino
-                                                    </label>
+                                                      </label>
                                                       {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
                                                       <Autocomplete
                                                         freeSolo
-                                                        onChange={(event, newValue) => setState({ ...state, IdCiudadDestino: newValue }), handleChangeDestinoChange}
+                                                        onChange={
+                                                          ((event, newValue) =>
+                                                            setState({
+                                                              ...state,
+                                                              IdCiudadDestino: newValue,
+                                                            }),
+                                                          handleChangeDestinoChange)
+                                                        }
                                                         placeholder={
                                                           state.idDestino
                                                         }
@@ -1109,7 +1088,9 @@ function Informes(props) {
                                                           option
                                                         ) => option.m_sCiudad}
                                                         options={dataOrigenes}
-                                                        renderInput={(params) => (
+                                                        renderInput={(
+                                                          params
+                                                        ) => (
                                                           <TextField
                                                             {...params}
                                                             InputProps={{
@@ -1127,7 +1108,7 @@ function Informes(props) {
                                                     <div className="col-sm-12 col-md-6 unit">
                                                       <label className="label">
                                                         Ruta
-                                                    </label>
+                                                      </label>
                                                       {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
                                                       <Autocomplete
                                                         freeSolo
@@ -1140,14 +1121,18 @@ function Informes(props) {
                                                             idRuta: newValue,
                                                           })
                                                         }
-                                                        placeholder={state.idRuta}
+                                                        placeholder={
+                                                          state.idRuta
+                                                        }
                                                         id="idRuta"
                                                         disableClearable
                                                         getOptionLabel={(
                                                           option
                                                         ) => option.m_sCiudad}
                                                         options={dataOrigenes}
-                                                        renderInput={(params) => (
+                                                        renderInput={(
+                                                          params
+                                                        ) => (
                                                           <TextField
                                                             {...params}
                                                             InputProps={{
@@ -1175,44 +1160,6 @@ function Informes(props) {
                                         <div className="pull-left">
                                           <h3>Asignar a un Viaje</h3>
                                         </div>
-                                        <div className="pull-right w-action">
-                                          <ul className="widget-action-bar">
-                                            <li className="dropdown">
-                                              <a
-                                                href="#"
-                                                className="dropdown-toggle"
-                                                data-toggle="dropdown"
-                                              >
-                                                <i className="zmdi zmdi-more" />
-                                              </a>
-                                              <ul className="dropdown-menu">
-                                                <li className="widget-reload">
-                                                  <a href="#">
-                                                    <i className="zmdi zmdi-refresh-alt" />
-                                                  </a>
-                                                </li>
-                                                <li
-                                                  className="widget-toggle"
-                                                  id="caracteristicas"
-                                                >
-                                                  <a href="#">
-                                                    <i className="zmdi zmdi-chevron-down" />
-                                                  </a>
-                                                </li>
-                                                <li className="widget-fullscreen">
-                                                  <a href="#">
-                                                    <i className="zmdi zmdi-fullscreen" />
-                                                  </a>
-                                                </li>
-                                                <li className="widget-exit">
-                                                  <a href="#">
-                                                    <i className="zmdi zmdi-power" />
-                                                  </a>
-                                                </li>
-                                              </ul>
-                                            </li>
-                                          </ul>
-                                        </div>
                                       </div>
                                       <div className="widget-container">
                                         <div className="widget-content">
@@ -1229,7 +1176,7 @@ function Informes(props) {
                                                     <div className="col-sm-12 col-md-6 unit">
                                                       <label className="label">
                                                         Viaje
-                                                    </label>
+                                                      </label>
                                                       <div className="input">
                                                         <input
                                                           className="form-control"
@@ -1243,7 +1190,7 @@ function Informes(props) {
                                                     <div className="col-sm-12 col-md-6 unit">
                                                       <label className="label">
                                                         Ruta
-                                                    </label>
+                                                      </label>
                                                       <div className="input">
                                                         <input
                                                           className="form-control"
@@ -1259,7 +1206,7 @@ function Informes(props) {
                                                     <div className="col-sm-12 col-md-6 unit">
                                                       <label className="label">
                                                         Operador
-                                                    </label>
+                                                      </label>
                                                       <div className="input">
                                                         <input
                                                           className="form-control"
@@ -1273,7 +1220,7 @@ function Informes(props) {
                                                     <div className="col-sm-12 col-md-6 unit">
                                                       <label className="label">
                                                         Unidad
-                                                    </label>
+                                                      </label>
                                                       <div className="input">
                                                         <input
                                                           className="form-control"
@@ -1289,7 +1236,7 @@ function Informes(props) {
                                                     <div className="col-sm-12 col-md-6 unit">
                                                       <label className="label">
                                                         Remolque
-                                                    </label>
+                                                      </label>
                                                       <div className="input">
                                                         <input
                                                           className="form-control"
@@ -1308,7 +1255,6 @@ function Informes(props) {
                                     </div>
                                   </div>
                                 </div>
-
                               </div>
                             </div>
                           </div>
@@ -1322,41 +1268,6 @@ function Informes(props) {
                     <div className="widget-header block-header margin-bottom-0 clearfix">
                       <div className="pull-left">
                         <h3>Detalles de Guias</h3>
-                      </div>
-                      <div className="pull-right w-action">
-                        <ul className="widget-action-bar">
-                          <li className="dropdown">
-                            <a
-                              href="#"
-                              className="dropdown-toggle"
-                              data-toggle="dropdown"
-                            >
-                              <i className="zmdi zmdi-more" />
-                            </a>
-                            <ul className="dropdown-menu">
-                              <li className="widget-reload">
-                                <a href="#">
-                                  <i className="zmdi zmdi-refresh-alt" />
-                                </a>
-                              </li>
-                              <li className="widget-toggle" id="seguros">
-                                <a href="#">
-                                  <i className="zmdi zmdi-chevron-down" />
-                                </a>
-                              </li>
-                              <li className="widget-fullscreen">
-                                <a href="#">
-                                  <i className="zmdi zmdi-fullscreen" />
-                                </a>
-                              </li>
-                              <li className="widget-exit">
-                                <a href="#">
-                                  <i className="zmdi zmdi-power" />
-                                </a>
-                              </li>
-                            </ul>
-                          </li>
-                        </ul>
                       </div>
                     </div>
                     <div className="widget-container">
@@ -1409,7 +1320,7 @@ function Informes(props) {
                                                     htmlFor={"folio-" + index}
                                                   >
                                                     Folio Guía
-                                                </label>
+                                                  </label>
                                                   <input
                                                     value={value.m_nFolioGuia}
                                                     className="form-control"
@@ -1425,7 +1336,7 @@ function Informes(props) {
                                                     htmlFor={"estatus-" + index}
                                                   >
                                                     Estatus Guía
-                                                </label>
+                                                  </label>
                                                   <input
                                                     className="form-control"
                                                     type="text"
@@ -1441,7 +1352,7 @@ function Informes(props) {
                                                     htmlFor={"total-" + index}
                                                   >
                                                     Total
-                                                </label>
+                                                  </label>
                                                   <input
                                                     value={value.total}
                                                     disabled="true"
@@ -1457,7 +1368,7 @@ function Informes(props) {
                                                     htmlFor={"destino-" + index}
                                                   >
                                                     Destino
-                                                </label>
+                                                  </label>
                                                   <input
                                                     value={value.destino}
                                                     className="form-control"
@@ -1470,10 +1381,12 @@ function Informes(props) {
                                               <Grid item sm={12} md={6}>
                                                 <div className="input">
                                                   <label
-                                                    htmlFor={"servicio-" + index}
+                                                    htmlFor={
+                                                      "servicio-" + index
+                                                    }
                                                   >
                                                     Tipo de Servicio
-                                                </label>
+                                                  </label>
                                                   <input
                                                     disabled="true"
                                                     value={value.servicio}
@@ -1491,7 +1404,7 @@ function Informes(props) {
                                                     }
                                                   >
                                                     Observaciones
-                                                </label>
+                                                  </label>
                                                   <input
                                                     disabled="true"
                                                     value={value.observaciones}
@@ -1510,10 +1423,14 @@ function Informes(props) {
                                   );
                                 })}
                                 <br />
-                                <Grid container style={{
-                                  borderStyle: "solid",
-                                  borderRadius: "10px"
-                                }} spacing={1}>
+                                <Grid
+                                  container
+                                  style={{
+                                    borderStyle: "solid",
+                                    borderRadius: "10px",
+                                  }}
+                                  spacing={1}
+                                >
                                   <Grid
                                     item
                                     sm={4}
@@ -1524,7 +1441,6 @@ function Informes(props) {
                                       justifyContent: "center",
                                       alignItems: "center",
                                       textAlign: "center",
-
                                     }}
                                   >
                                     Total de guías :{" "}
@@ -1539,7 +1455,7 @@ function Informes(props) {
                                       textAlign: "left",
                                     }}
                                   >
-                                    <Grid container >
+                                    <Grid container>
                                       <Grid
                                         item
                                         sm={6}
@@ -1550,7 +1466,7 @@ function Informes(props) {
                                         }}
                                       >
                                         Total Por Cobrar Destinatario
-                                    </Grid>
+                                      </Grid>
                                       <Grid
                                         item
                                         sm={6}
@@ -1572,7 +1488,7 @@ function Informes(props) {
                                         }}
                                       >
                                         Total Por Cobrar Remitente
-                                    </Grid>
+                                      </Grid>
                                       <Grid
                                         item
                                         sm={6}
@@ -1594,7 +1510,7 @@ function Informes(props) {
                                         }}
                                       >
                                         Total Pagado en Mostrador
-                                    </Grid>
+                                      </Grid>
                                       <Grid
                                         item
                                         sm={6}
@@ -1616,7 +1532,7 @@ function Informes(props) {
                                         }}
                                       >
                                         Total Unidad Completa
-                                    </Grid>
+                                      </Grid>
                                       <Grid
                                         item
                                         sm={6}
@@ -1638,7 +1554,7 @@ function Informes(props) {
                                         }}
                                       >
                                         Total Unidad Completa
-                                    </Grid>
+                                      </Grid>
                                       <Grid
                                         item
                                         sm={6}
@@ -1657,10 +1573,11 @@ function Informes(props) {
                                           justifyContent: "left",
                                           alignItems: "left",
                                           textAlign: "left",
-
                                         }}
                                       >
-                                        <b style={{ fontWeight: "bold" }}>Total General</b>
+                                        <b style={{ fontWeight: "bold" }}>
+                                          Total General
+                                        </b>
                                       </Grid>
                                       <Grid
                                         item

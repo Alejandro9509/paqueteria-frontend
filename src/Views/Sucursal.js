@@ -328,7 +328,7 @@ function Sucursal() {
           <thead>
             {headerGroups.map(headerGroup => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th></th>
+                <th>Acciones</th>
                 {headerGroup.headers.map(column => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -356,8 +356,9 @@ function Sucursal() {
                   <tr {...row.getRowProps()}>
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdSucursal))}><i className="zmdi zmdi-close" /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdSucursal))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdSucursal))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -443,7 +444,8 @@ function Sucursal() {
                       <form className="j-forms" onSubmit={handleAceptar}>
                         <div className="form-content">
 
-                          <div className="col-sm-12 col-md-6 unit">
+<div className="row">
+                          <div className="col-sm-6 col-md-2-5 unit">
                             <label className="label">
                               Sucursal
                           </label>
@@ -461,20 +463,9 @@ function Sucursal() {
                             </div>
                           </div>
 
-                          <div className="col-sm-12 col-md-6 unit">
-                            <br></br>
-                            <label className="label col-md-4">
-                              Activo
-                              </label>
-                            <input className="col-md-4"
-                              onChange={handleChangeBoolean}
-                              type="checkbox"
-                              value={state.activo}
-                              id="activo"
-                            />
-                          </div>
+                         
 
-                          <div className="col-sm-12 col-md-6 unit">
+                          <div className="col-sm-6 col-md-2-5 unit unit">
                             <label className="label">
                               Abreviación
                           </label>
@@ -491,7 +482,28 @@ function Sucursal() {
                             </div>
                           </div>
 
-                          <div className="col-sm-12 col-md-6 unit">
+
+                          <div className="col-sm-12 col-md-2-5 unit">
+                                    <label className="label">Estatus</label>
+                                    <label className="checkbox">
+                                      <input
+                                        onChange={
+                                          handleChangeBoolean
+                                        }
+                                        native
+                                        type="checkbox"
+                                        value={state.activo}
+                                        id="activo"
+                                        name="activo"
+                                      />
+                                      <i />
+                                    Activo
+                                  </label>
+                                  </div>
+</div>
+
+<div className="row">
+                          <div className="col-sm-12 col-md-2-5 unit">
                             <label className="label">
                               País
                             </label>
@@ -523,7 +535,7 @@ function Sucursal() {
                             </div>
                           </div>
 
-                          <div className="col-sm-12 col-md-6 unit">
+                          <div className="col-sm-12 col-md-2-5 unit">
                             <label className="label">
                               Estado
                               </label>
@@ -555,7 +567,7 @@ function Sucursal() {
                             </div>
                           </div>
 
-                          <div className="col-sm-12 col-md-6 unit">
+                          <div className="col-sm-12 col-md-2-5 unit">
                             <label className="label">
                               Código Postal
                                   </label>
@@ -581,7 +593,7 @@ function Sucursal() {
                             </label>
                           </div>
 
-                          <div className="col-sm-12 col-md-12 unit">
+                          <div className="col-sm-12 col-md-2-5 unit">
                             <label className="label">
                               Municipio
                           </label>
@@ -599,7 +611,7 @@ function Sucursal() {
                             </div>
                           </div>
 
-                          <div className="col-sm-12 col-md-12 unit">
+                          <div className="col-sm-12 col-md-2-5 unit">
                             <label className="label">
                               Localidad
                           </label>
@@ -616,7 +628,9 @@ function Sucursal() {
                             </div>
                           </div>
 
-                          <div className="col-sm-12 col-md-12 unit">
+                          </div>
+<div className="row">
+                          <div className="col-sm-12 col-md-2-5  unit">
                             <label className="label">
                               Colonia
                           </label>
@@ -633,7 +647,7 @@ function Sucursal() {
                             </div>
                           </div>
 
-                          <div className="col-sm-12 col-md-12 unit">
+                          <div className="col-sm-12 col-md-2-5  unit">
                             <label className="label">
                               Calle
                           </label>
@@ -650,7 +664,7 @@ function Sucursal() {
                             </div>
                           </div>
 
-                          <div className="col-sm-12 col-md-6 unit">
+                          <div className="col-sm-12 col-md-2-5  unit">
                             <label className="label">
                               Num. Interior
                           </label>
@@ -667,7 +681,7 @@ function Sucursal() {
                             </div>
                           </div>
 
-                          <div className="col-sm-12 col-md-6 unit">
+                          <div className="col-sm-12 col-md-2-5 unit">
                             <label className="label">
                               Num. Exterior
                           </label>
@@ -684,7 +698,11 @@ function Sucursal() {
                             </div>
                           </div>
 
-                          <div className="col-sm-12 col-md-6 unit">
+                          </div>
+                          <div className="row">
+
+                  
+                          <div className="col-sm-12 col-md-2-5  unit">
                             <label className="label">
                               IVA
                             </label>
@@ -707,7 +725,7 @@ function Sucursal() {
                             </label>
                           </div>
 
-                          <div className="col-sm-12 col-md-6 unit">
+                          <div className="col-sm-12 col-md-2-5  unit">
                             <label className="label">
                               Zona Horaria
                             </label>
@@ -729,7 +747,7 @@ function Sucursal() {
                               <i className="fa fa-arrow-down" />
                             </label>
                           </div>
-
+</div>
                         </div>
                         <br></br>
                         <div className="form-footer" className="col-md-12">

@@ -54,9 +54,7 @@ function App(props) {
     },
   ]);
 
-
   const columns2 = React.useMemo(() => [
-    
     {
       Name: "Formato",
       accessor: "m_sFormato",
@@ -65,7 +63,6 @@ function App(props) {
       Name: "Tipo proceso",
       accessor: "m_nTipoProceso",
     },
-    
   ]);
 
   function DefaultColumnFilter2({
@@ -116,7 +113,7 @@ function App(props) {
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th></th>
+                <th>Acciones</th>
                 {headerGroup.headers.map((column) => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -149,18 +146,14 @@ function App(props) {
                 <tr {...row.getRowProps()}>
                   <td>
                     <div>
-                    <input
-                                                  onChange={handleChangeFormatoSelectCheckboxChange
-                                                    
-                                                  }
-
-                                                  native
-                                                  name="formatoSelect"
-                                                  type="checkbox"
-                                                  value={state.formatoSelect}
-                                                  id="formatoSelect"
-                                                />
-                   
+                      <input
+                        onChange={handleChangeFormatoSelectCheckboxChange}
+                        native
+                        name="formatoSelect"
+                        type="checkbox"
+                        value={state.formatoSelect}
+                        id="formatoSelect"
+                      />
                     </div>
                   </td>
                   {row.cells.map((cell) => {
@@ -225,7 +218,7 @@ function App(props) {
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th></th>
+                <th>Acciones</th>
                 {headerGroup.headers.map((column) => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -265,16 +258,23 @@ function App(props) {
                         onClick={() =>
                           handleShowModificar(row.original.m_nIdUnidad)
                         }
-                        className="btn btn-default btn-sm m-user-edit"
+                        className="btn btn-default  btn-sm"
                       >
-                        <i className="zmdi zmdi-edit" />
+                        <i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} />
                       </a>
                       <a
                         href="#"
-                        className="btn btn-default btn-sm m-user-delete"
+                        className="btn btn-default btn-sm"
                         onClick={() => handleEliminar(row.original.m_nIdUnidad)}
                       >
-                        <i className="zmdi zmdi-close" />
+                        <i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} />
+                      </a>
+                      <a
+                        href="#"
+                        className="btn btn-default btn-sm"
+                        onClick={() => handleEliminar(row.original.m_nIdUnidad)}
+                      >
+                        <i className="fa fa-eye" style={{color:"#F9A03E"}} />
                       </a>
                     </div>
                   </td>
@@ -348,8 +348,8 @@ function App(props) {
     nextel: "",
     correoElectronico: "",
     tableformatos: "",
-    frecuenciaEnvioDias:0,
-    enviarApartir:"",
+    frecuenciaEnvioDias: 0,
+    enviarApartir: "",
     envioAutoSeguimientoViajes: "",
     fechaEnvioCorreo: "",
     envioAutomaticoSeguimiento: "",
@@ -358,14 +358,12 @@ function App(props) {
     agruparCantidadPorConcepto: "",
     ajustarImporte2Dec: "",
     detalleMateriales: "",
-    formatoSelect:false
+    formatoSelect: false,
   });
 
   function handleShowAgregar() {
     setState({
       ...state,
-     
-      
     });
   }
 
@@ -375,7 +373,6 @@ function App(props) {
       console.log(respuesta.data);
       setState({
         ...state,
-        
       });
     });
 	}
@@ -412,7 +409,6 @@ function App(props) {
     });
   }
 
-
   function getAllClientes() {
     const url = `${process.env.REACT_APP_API_URL}/Clientes/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
@@ -443,9 +439,7 @@ function App(props) {
     console.log(dataEstado);
   }
 
-
   function getAllImpuestos() {
-  
     const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
@@ -453,8 +447,6 @@ function App(props) {
     });
     console.log(dataImpuesto);
   }
-
-  
 
   function getAllSucursales() {
     const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
@@ -465,8 +457,7 @@ function App(props) {
 
   function getAllGruposClientes() {
     const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/GetListado`;
-    axios.get(url, { headers }).then((respuesta) => {
-    });
+    axios.get(url, { headers }).then((respuesta) => {});
   }
 
   const handleChangeActivoCheckboxChange = (event) => {
@@ -590,9 +581,7 @@ function App(props) {
 
   const handleAceptar = (e) => {
     e.preventDefault();
-    var params = {
-      
-    };
+    var params = {};
 
     console.log(params);
     if (state.idUnidad != 0) {
@@ -797,400 +786,981 @@ function App(props) {
             </div>
 
             <div id="Agregar" className="tab-pane fade">
-              <div className="row">
-                <div className="col-md-12">
-                  <div className="widget-wrap">
-                    <div className="widget-container margin-top-0">
-                      <div className="widget-content">
-                        <form
-                          className="j-forms j-multistep"
-                          onSubmit={handleAceptar}
-                        >
-                          {/*Inicio de ejemplo*/}
+              <form className="j-forms j-multistep" onSubmit={handleAceptar}>
+                {/*Inicio de ejemplo*/}
+                <div className="form-content">
 
-                          {/* start steps */}
-                          <div
-                            className="wizard-breadcrumb number-style"
-                            style={{
-                              position: "sticky",
-                              top: "150px",
-                              padding: "5px",
-                              backgroundColor: "white",
-                              zIndex: 100,
-                            }}
-                          >
+                {/* start steps */}
+                <div
+                  className="wizard-breadcrumb number-style"
+                  style={{
+                    position: "sticky",
+                    top: "150px",
+                    padding: "5px",
+                    backgroundColor: "white",
+                    zIndex: 100,
+                    marginBottom: "10px",
+
+                  }}
+                >
+                  <div className="row">
+                    <div
+                      className={
+                        "col-md-2-5 col-sm-3 step " +
+                        (stepActive == 1 && "active-step")
+                      }
+                      onClick={() => openSection(1)}
+                    >
+                      <div className={"steps"}>
+                        <span className={"step-number"}>1</span>
+                        <p>Información General</p>
+                      </div>
+                    </div>
+                    <div
+                      className={
+                        "col-md-2-5 col-sm-3 step " +
+                        (stepActive == 2 && "active-step")
+                      }
+                      onClick={() => openSection(2)}
+                    >
+                      <div className="steps">
+                        <span className="step-number">2</span>
+                        <p>Metodos de Pago y Crédito</p>
+                      </div>
+                    </div>
+                    <div
+                      className={
+                        "col-md-2-5 col-sm-3 step " +
+                        (stepActive == 3 && "active-step")
+                      }
+                      onClick={() => openSection(3)}
+                    >
+                      <div className="steps">
+                        <span className="step-number">3</span>
+                        <p>Información Adicional del pago</p>
+                      </div>
+                    </div>
+
+                    <div
+                      className={
+                        "col-md-2-5 col-sm-2 step " +
+                        (stepActive == 4 && "active-step")
+                      }
+                      onClick={() => openSection(4)}
+                    >
+                      <div className="steps">
+                        <span className="step-number">4</span>
+                        <p>Datos Generales</p>
+                      </div>
+                    </div>
+                    <div
+                      className={
+                        "col-md-2-5 col-sm-2 step " +
+                        (stepActive == 5 && "active-step")
+                      }
+                      onClick={() => openSection(5)}
+                    >
+                      <div className="steps">
+                        <span className="step-number">5</span>
+                        <p>Contacto</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {/* end steps */}
+
+                <div className="widget-wrap" id="infogral">
+                  <div className="widget-header block-header margin-bottom-0 clearfix">
+                    <h3>Información General</h3>
+                  </div>
+                  <div className="widget-container">
+                    <div className="widget-content">
+                      <div className="row">
+                        <div className="col-md-12">
+                          <div className="form-content">
+                            {/* start text password */}
+                            <div className="col-sm-4 col-md-2-5 unit">
+                              <label className="label">Número de Cliente</label>
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  onBlur={handleChangeCodigo}
+                                  className="form-control"
+                                  type="text"
+                                  value={state.numeroCliente}
+                                  id="numeroCliente"
+                                  name="numeroCliente"
+                                  required
+                                />
+                              </div>
+                            </div>
+                            <div className="col-sm-4 col-md-2-5  unit">
+                              <label className="label">RFC</label>
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  value={state.rfc}
+                                  id="rfc"
+                                  name="rfc"
+                                  required
+                                  native
+                                />
+                              </div>
+                            </div>
+                            <div className="col-sm-4 col-md-2-5 unit">
+                              <label className="label">Nombre Fiscal</label>
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  value={state.nombreFiscal}
+                                  id="nombreFiscal"
+                                  name="nombreFiscal"
+                                  required
+                                  native
+                                />
+                              </div>
+                            </div>
+
+                            <div className="col-sm-4 col-md-2-5 unit">
+                              <label className="label">Nombre Corto</label>
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  value={state.nombreCorto}
+                                  id="nombreCorto"
+                                  name="nombreCorto"
+                                  required
+                                  native
+                                />
+                              </div>
+                            </div>
+                            <div className="col-sm-4 col-md-2-5 unit">
+                              <label className="label">Tipo de Cliente</label>
+                              <label className="input select">
+                                <select
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  value={state.tipoCliente}
+                                  required
+                                  native
+                                  name="tipoCliente"
+                                  id="tipoCliente"
+                                >
+                                  <option value="">Tipo de Cliente</option>
+                                  <option value="1">Nacional</option>
+                                  <option value="2">Extranjero</option>
+                                </select>
+                                <i></i>
+                              </label>
+                            </div>
+
+                            <div className="col-sm-4 col-md-2-5 unit">
+                              <label className="label">&nbsp; </label>
+                              <label className="input select">
+                                <select
+                                  onChange={handleChange}
+                                  value={state.idSucursal}
+                                  id="idSucursal"
+                                  native
+                                  className="form-control"
+                                  name="idSucursal"
+                                  required
+                                >
+                                  <option value="">Sucursal</option>
+
+                                  {dataSucursales.map((sucursal) => (
+                                    <option value={sucursal.m_nIdSucursal}>
+                                      {sucursal.m_sSucursal}
+                                    </option>
+                                  ))}
+                                </select>
+                                <i></i>
+                              </label>
+                            </div>
+                            <div className="col-sm-4 col-md-2-5  unit">
+                              <label className="label">&nbsp; </label>
+                              <label className="input select">
+                                <select
+                                  onChange={handleChange}
+                                  value={state.idMoneda}
+                                  id="idMoneda"
+                                  native
+                                  className="form-control"
+                                  name="idMoneda"
+                                  required
+                                >
+                                  <option value="">Moneda</option>
+                                  <option value="1">Pesos</option>
+                                  <option value="2">Dolares</option>
+                                </select>
+                                <i></i>
+                              </label>
+                            </div>
+                            <div className="col-sm-4 col-md-2-5 unit">
+                              <label className="label">&nbsp; </label>
+                              <label className="input select">
+                                <select
+                                  onChange={handleChange}
+                                  value={state.idImpuestoTransladado}
+                                  id="idImpuestoTransladado"
+                                  native
+                                  className="form-control"
+                                  name="idImpuestoTransladado"
+                                  required
+                                >
+                                  <option value="">IVA</option>
+
+                                  {dataImpuesto.map((impuesto) => (
+                                    <option value={impuesto.m_nIdImpuesto}>
+                                      {impuesto.m_sImpuesto}
+                                    </option>
+                                  ))}
+                                </select>
+                                <i></i>
+                              </label>
+                            </div>
+
+                            <div className="col-sm-4 col-md-2-5 unit">
+                              <label className="label">Grupo</label>
+                              <Autocomplete
+                                freeSolo
+                                onChange={(event, newValue) =>
+                                  setState({
+                                    ...state,
+                                    idGrupoCliente: newValue,
+                                  })
+                                }
+                                value={state.idGrupoCliente}
+                                id="idGrupoCliente"
+                                disableClearable
+                                getOptionLabel={(option) => option.m_sGrupo}
+                                options={dataGrupoClientes}
+                                renderInput={(params) => (
+                                  <TextField
+                                    {...params}
+                                    InputProps={{
+                                      ...params.InputProps,
+                                      type: "search",
+                                      value: state.idGrupoCliente,
+                                    }}
+                                  />
+                                )}
+                              />{" "}
+                            </div>
+
+                            <div className="unit">
+                              <div className="inline-group">
+                                <label className="checkbox">
+                                  <input
+                                    onChange={handleChangeActivoCheckboxChange}
+                                    native
+                                    name="activo"
+                                    type="checkbox"
+                                    value={state.activo}
+                                    id="activo"
+                                  />
+                                  <i />
+                                  Activa
+                                </label>
+                                <label className="checkbox">
+                                  <input
+                                    onChange={handleChangeRentadaCheckboxChange}
+                                    native
+                                    name="operadorLogistico"
+                                    type="checkbox"
+                                    id="operadorLogistico"
+                                    value={state.operadorLogistico}
+                                  />
+                                  <i />
+                                  Operador Lógistico
+                                </label>
+
+                                <label className="label">{}</label>
+                                <label className="checkbox">
+                                  <input
+                                    onChange={handleChangeActivoCheckboxChange}
+                                    native
+                                    name="aplicarDetalleMaterialesCadaViajeXML"
+                                    type="checkbox"
+                                    value={
+                                      state.aplicarDetalleMaterialesCadaViajeXML
+                                    }
+                                    id="aplicarDetalleMaterialesCadaViajeXML"
+                                  />
+                                  <i />
+                                  Aplicar en el XML de factura, el detalle por
+                                  Viaje
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                          {/* end textarea */}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {/*Fin de ejemplo*/}
+
+                <div className="widget-wrap" id="caracteristicas">
+                  <div className="widget-header block-header margin-bottom-0 clearfix">
+                    <h3>Información Monetaria</h3>
+                  </div>
+                  <div className="widget-container">
+                    <div className="widget-content">
+                      <div className="row">
+                        <div className="col-sm-12 col-md-8">
+                          <div className="w-section-header ">
+                            <h4>Metodos de Pago y Crédito</h4>
+                          </div>
+                          <div className="form-content">
+                            {/* start text password */}
                             <div className="row">
-                              <div
-                                className={
-                                  "col-md-2-5 col-sm-3 step " +
-                                  (stepActive == 1 && "active-step")
-                                }
-                                onClick={() => openSection(1)}
-                              >
-                                <div className={"steps"}>
-                                  <span className={"step-number"}>1</span>
-                                  <p>Información General</p>
+                              <div className="col-sm-6 col-md-4 unit">
+                                <label className="label">Forma de pago</label>
+                                <label className="input select">
+                                  <select
+                                    onChange={handleChange}
+                                    value={state.metodoPago}
+                                    id="metodoPago"
+                                    native
+                                    className="form-control"
+                                    name="metodoPago"
+                                    required
+                                  >
+                                    <option value="1">
+                                      Transferencia Eléctronica
+                                    </option>
+                                    <option value="2">Efectivo</option>
+                                  </select>
+                                  <i></i>
+                                </label>
+                              </div>
+                              <div className="col-sm-6 col-md-4 unit">
+                                <label className="label">Dias de Crédito</label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="number"
+                                    value={state.diasCredito}
+                                    id="diasCredito"
+                                    name="diasCredito"
+                                    native
+                                  />
                                 </div>
                               </div>
-                              <div
-                                className={
-                                  "col-md-2-5 col-sm-3 step " +
-                                  (stepActive == 2 && "active-step")
-                                }
-                                onClick={() => openSection(2)}
-                              >
-                                <div className="steps">
-                                  <span className="step-number">2</span>
-                                  <p>Metodos de Pago y Crédito</p>
-                                </div>
-                              </div>
-                              <div
-                                className={
-                                  "col-md-2-5 col-sm-3 step " +
-                                  (stepActive == 3 && "active-step")
-                                }
-                                onClick={() => openSection(3)}
-                              >
-                                <div className="steps">
-                                  <span className="step-number">3</span>
-                                  <p>Información Adicional del pago</p>
-                                </div>
-                              </div>
+                            </div>
 
-                              <div
-                                className={
-                                  "col-md-2-5 col-sm-2 step " +
-                                  (stepActive == 4 && "active-step")
-                                }
-                                onClick={() => openSection(4)}
-                              >
-                                <div className="steps">
-                                  <span className="step-number">4</span>
-                                  <p>Datos Generales</p>
+                            <div className="row">
+                              <div className="w-section-header">
+                                <h3>Pesos</h3>
+                              </div>
+                              <div className="col-sm-4  col-md-4 unit">
+                                <label className="label">Limite Credito</label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="number"
+                                    value={state.credito}
+                                    id="credito"
+                                    name="credito"
+                                  />
                                 </div>
                               </div>
-                              <div
-                                className={
-                                  "col-md-2-5 col-sm-2 step " +
-                                  (stepActive == 5 && "active-step")
-                                }
-                                onClick={() => openSection(5)}
-                              >
-                                <div className="steps">
-                                  <span className="step-number">5</span>
-                                  <p>Contacto</p>
+                              <div className="col-sm-4  col-md-4 unit">
+                                <label className="label">
+                                  Saldo facturado por cobrar
+                                </label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="number"
+                                    value={state.saldoCredito}
+                                    id="saldoCredito"
+                                    name="saldoCredito"
+                                  />
+                                </div>
+                              </div>
+                              <div className="col-sm-4  col-md-4 unit">
+                                <label className="label">
+                                  Viajes pendientes por facturar
+                                </label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="number"
+                                    value={state.pendFacturar}
+                                    id="pendFacturar"
+                                    name="pendFacturar"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div className="row">
+                              <div className="w-section-header">
+                                <h5>Dolares</h5>
+                              </div>
+                              <div className="col-sm-4  col-md-4 unit">
+                                <label className="label">Limite Credito</label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="number"
+                                    value={state.creditoDlls}
+                                    id="creditoDlls"
+                                    name="creditoDlls"
+                                  />
+                                </div>
+                              </div>
+                              <div className="col-sm-4  col-md-4 unit">
+                                <label className="label">
+                                  Saldo facturado por cobrar
+                                </label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="number"
+                                    value={state.saldoCreditoDLLS}
+                                    id="saldoCreditoDLLS"
+                                    name="saldoCreditoDLLS"
+                                  />
+                                </div>
+                              </div>
+                              <div className="col-sm-4  col-md-4 unit">
+                                <label className="label">
+                                  Viajes pendientes por facturar
+                                </label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="number"
+                                    value={state.pendFacturarDLLS}
+                                    id="pendFacturarDLLS"
+                                    name="pendFacturarDLLS"
+                                  />
                                 </div>
                               </div>
                             </div>
                           </div>
-                          {/* end steps */}
+                        </div>
 
-                          <div className="row">
-                            <div className="col-md-12 col-sm-12">
-                              <div className="widget-wrap">
-                                <div className="widget-header block-header margin-bottom-0 clearfix">
-                                  <div className="pull-left">
-                                    <h3>Información General</h3>
-                                  </div>
-                                  <div className="pull-right w-action">
-                                    <ul className="widget-action-bar">
-                                      <li className="dropdown">
-                                        <a
-                                          href="#"
-                                          className="dropdown-toggle"
-                                          data-toggle="dropdown"
-                                        >
-                                          <i className="zmdi zmdi-more" />
-                                        </a>
-                                        <ul className="dropdown-menu">
-                                          <li className="widget-reload">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-refresh-alt" />
-                                            </a>
-                                          </li>
-                                          <li
-                                            className="widget-toggle"
-                                            id="infogral"
-                                          >
-                                            <a href="#">
-                                              <i className="zmdi zmdi-chevron-down" />
-                                            </a>
-                                          </li>
-                                          <li className="widget-fullscreen">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-fullscreen" />
-                                            </a>
-                                          </li>
-                                          <li className="widget-exit">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-power" />
-                                            </a>
-                                          </li>
-                                        </ul>
-                                      </li>
-                                    </ul>
-                                  </div>
+                        <div className="col-sm-12 col-md-3 bordesizquierdo">
+                          <div className="w-section-header">
+                            <h4>Información Adicional del Pago</h4>
+                          </div>
+                          <div className="form-content">
+                            {/* start text password */}
+                            <div className="row">
+                              <div className="col-xs-6 col-ms-6 col-md-10 unit">
+                                <label className="label">Banco Ordenante</label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="text"
+                                    value={state.bancoOrdenante}
+                                    id="bancoOrdenante"
+                                    name="bancoOrdenante"
+                                  />
                                 </div>
-                                <div className="widget-container">
-                                  <div className="widget-content">
-                                    <div className="row">
-                                      <div className="col-md-12">
-                                        <div className="form-content">
-                                          {/* start text password */}
-                                            <div className="col-sm-4 col-md-2-5 unit">
-                                              <label className="label">
-                                                Número de Cliente
-                                              </label>
-                                              <div className="input">
-                                                <input
-                                                  onChange={handleChange}
-                                                  onBlur={handleChangeCodigo}
-                                                  className="form-control"
-                                                  type="text"
-                                                  value={state.numeroCliente}
-                                                  id="numeroCliente"
-                                                  name="numeroCliente"
-                                                  required
-                                                />
-                                              </div>
-                                            </div>
-                                            <div className="col-sm-4 col-md-2-5  unit">
-                                              <label className="label">
-                                                RFC
-                                              </label>
-                                              <div className="input">
-                                                <input
-                                                  onChange={handleChange}
-                                                  className="form-control"
-                                                  type="text"
-                                                  value={state.rfc}
-                                                  id="rfc"
-                                                  name="rfc"
-                                                  required
-                                                  native
-                                                />
-                                              </div>
-                                            </div>
-                                            <div className="col-sm-4 col-md-2-5 unit">
-                                              <label className="label">
-                                                Nombre Fiscal
-                                              </label>
-                                              <div className="input">
-                                                <input
-                                                  onChange={handleChange}
-                                                  className="form-control"
-                                                  type="text"
-                                                  value={state.nombreFiscal}
-                                                  id="nombreFiscal"
-                                                  name="nombreFiscal"
-                                                  required
-                                                  native
-                                                />
-                                              </div>
-                                            </div>
+                              </div>
+                            </div>
 
-                                            <div className="col-sm-4 col-md-2-5 unit">
+                            <div className="row">
+                              <div className="col-xs-6 col-ms-6 col-md-10 unit">
+                                <label className="label">RFC</label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="text"
+                                    value={state.rfcBancoOrdenante}
+                                    id="rfcBancoOrdenante"
+                                    name="rfcBancoOrdenante"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div className="row">
+                              <div className="col-xs-6 col-ms-6 col-md-10 unit">
+                                <label className="label">Núm. Cuenta</label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="text"
+                                    value={state.cuentaBancoOrdenante}
+                                    id="cuentaBancoOrdenante"
+                                    name="cuentaBancoOrdenante"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {/*Fin de ejemplo*/}
+
+                <div className="widget-wrap" id="detalles">
+                  <div className="widget-header block-header margin-bottom-0 clearfix">
+                    <h3>Datos generales</h3>
+                  </div>
+                  <div className="widget-container">
+                    <div className="widget-content">
+                      <div className="row">
+                        <div className="col-md-12">
+                          <ul className="nav nav-tabs">
+                            <li className="active">
+                              <a data-toggle="tab" href="#Domicilio">
+                                Domicilio
+                              </a>
+                            </li>
+                            <li>
+                              <a data-toggle="tab" href="#Formatos">
+                                Formatos
+                              </a>
+                            </li>
+                            <li>
+                              <a data-toggle="tab" href="#Especiales">
+                                Procesos Especiales
+                              </a>
+                            </li>
+                            <li>
+                              <a data-toggle="tab" href="#Adicional">
+                                Inf. Adicional
+                              </a>
+                            </li>
+                          </ul>
+
+                          <div className="form-content">
+                            {/* start text password */}
+                            <div className="widget-wrap">
+                              <div className="widget-container margin-top-0">
+                                <div className="widget-content">
+                                  <div className="tab-content">
+                                    <div
+                                      id="Domicilio"
+                                      className="tab-pane fade in active"
+                                    >
+                                      <div className="row">
+                                        <div className="col-md-12 unit">
+                                          <div className="row">
+                                            <div className="col-sm-6 col-md-2-5 unit">
                                               <label className="label">
-                                                Nombre Corto
-                                              </label>
-                                              <div className="input">
-                                                <input
-                                                  onChange={handleChange}
-                                                  className="form-control"
-                                                  type="text"
-                                                  value={state.nombreCorto}
-                                                  id="nombreCorto"
-                                                  name="nombreCorto"
-                                                  required
-                                                  native
-                                                />
-                                              </div>
-                                            </div>
-                                            <div className="col-sm-4 col-md-2-5 unit">
-                                              <label className="label">
-                                                Tipo de Cliente
+                                                &nbsp;{" "}
                                               </label>
                                               <label className="input select">
                                                 <select
-                                                  onChange={handleChange}
+                                                  onChange={handleSelectChange}
                                                   className="form-control"
-                                                  value={state.tipoCliente}
-                                                  required
                                                   native
-                                                  name="tipoCliente"
-                                                  id="tipoCliente"
+                                                  value={state.idPais}
+                                                  id="idPais"
+                                                  name="idPais"
                                                 >
-                                                  <option value="">
-                                                    Tipo de Cliente
-                                                  </option>
-                                                  <option value="1">
-                                                    Nacional
-                                                  </option>
-                                                  <option value="2">
-                                                    Extranjero
-                                                  </option>
+                                                  <option value="">Pais</option>
+                                                  {dataPais.map((pais) => (
+                                                    <option
+                                                      value={pais.m_nIdPais}
+                                                    >
+                                                      {pais.m_sPais}
+                                                    </option>
+                                                  ))}
                                                 </select>
                                                 <i></i>
                                               </label>
                                             </div>
+                                            <div className="col-sm-6 col-md-2-5 ">
+                                              <label className="label">
+                                                Código Postal
+                                              </label>
+                                              <div className="input">
+                                                <input
+                                                  onChange={handleChange}
+                                                  className="form-control"
+                                                  type="text"
+                                                  placeholder=""
+                                                  value={state.codigoPostal}
+                                                  id="codigoPostal"
+                                                  name="codigoPostal"
+                                                />
+                                              </div>
+                                            </div>
 
-                                            <div className="col-sm-4 col-md-2-5 unit">
+                                            <div className="col-sm-6 col-md-2-5 ">
                                               <label className="label">
                                                 &nbsp;{" "}
                                               </label>
                                               <label className="input select">
                                                 <select
                                                   onChange={handleChange}
-                                                  value={state.idSucursal}
-                                                  id="idSucursal"
-                                                  native
                                                   className="form-control"
-                                                  name="idSucursal"
                                                   required
+                                                  native
+                                                  name="idEstado"
+                                                  value={state.idEstado}
+                                                  id="idEstado"
                                                 >
                                                   <option value="">
-                                                    Sucursal
+                                                    Estado
                                                   </option>
 
-                                                  {dataSucursales.map(
-                                                    (sucursal) => (
-                                                      <option
-                                                        value={
-                                                          sucursal.m_nIdSucursal
-                                                        }
-                                                      >
-                                                        {sucursal.m_sSucursal}
-                                                      </option>
-                                                    )
-                                                  )}
+                                                  {dataEstado.map((estado) => (
+                                                    <option
+                                                      value={estado.m_nIdEstado}
+                                                    >
+                                                      {estado.m_sEstado}
+                                                    </option>
+                                                  ))}
                                                 </select>
                                                 <i></i>
                                               </label>
                                             </div>
-                                            <div className="col-sm-4 col-md-2-5  unit">
+                                            <div className="col-sm-6 col-md-2-5 ">
                                               <label className="label">
-                                                &nbsp;{" "}
+                                                Municipio
                                               </label>
-                                              <label className="input select">
-                                                <select
-                                                  onChange={handleChange}
-                                                  value={state.idMoneda}
-                                                  id="idMoneda"
-                                                  native
-                                                  className="form-control"
-                                                  name="idMoneda"
-                                                  required
-                                                >
-                                                  <option value="">
-                                                    Moneda
-                                                  </option>
-                                                  <option value="1">
-                                                    Pesos
-                                                  </option>
-                                                  <option value="2">
-                                                    Dolares
-                                                  </option>
-                                                </select>
-                                                <i></i>
-                                              </label>
+                                              <div className="input">
+                                                <div className="input">
+                                                  <input
+                                                    onChange={handleChange}
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder=""
+                                                    value={state.municipio}
+                                                    id="municipio"
+                                                    name="municipio"
+                                                  />
+                                                </div>
+                                              </div>
                                             </div>
-                                            <div className="col-sm-4 col-md-2-5 unit">
+                                            <div className="col-sm-6 col-md-2-5 ">
                                               <label className="label">
-                                                &nbsp;{" "}
+                                                Localidad
                                               </label>
-                                              <label className="input select">
-                                                <select
+                                              <div className="input">
+                                                <div className="input">
+                                                  <input
+                                                    onChange={handleChange}
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder=""
+                                                    value={state.localidad}
+                                                    id="localidad"
+                                                    name="localidad"
+                                                  />
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <div className="row">
+                                            <div className="col-sm-6 col-md-2-5 unit">
+                                              <label className="label">
+                                                Colonia
+                                              </label>
+                                              <div className="input">
+                                                <input
                                                   onChange={handleChange}
-                                                  value={state.idImpuestoTransladado}
-                                                  id="idImpuestoTransladado"
-                                                  native
                                                   className="form-control"
-                                                  name="idImpuestoTransladado"
-                                                  required
-                                                >
-                                                  <option value="">IVA</option>
-                                                 
-                                                                {dataImpuesto.map(
-                                                                  (impuesto) => (
-                                                                    <option
-                                                                      value={
-                                                                        impuesto.m_nIdImpuesto
-                                                                      }
-                                                                    >
-                                                                      {
-                                                                        impuesto.m_sImpuesto
-                                                                      }
-                                                                    </option>
-                                                                  )
-                                                                )}
-                                                </select>
-                                                <i></i>
+                                                  type="text"
+                                                  placeholder=""
+                                                  value={state.colonia}
+                                                  id="colonia"
+                                                  name="colonia"
+                                                />
+                                              </div>
+                                            </div>
+                                            <div className="col-sm-6 col-md-2-5 ">
+                                              <label className="label">
+                                                Calle
                                               </label>
+                                              <div className="input">
+                                                <input
+                                                  onChange={handleChange}
+                                                  className="form-control"
+                                                  type="text"
+                                                  placeholder=""
+                                                  value={state.calle}
+                                                  id="calle"
+                                                  name="calle"
+                                                />
+                                              </div>
                                             </div>
 
-                                            <div className="col-sm-4 col-md-2-5 unit">
-                                                <label className="label">
-                                                  Grupo
-                                                </label>
-                                                <Autocomplete
-                                    freeSolo
-                                    onChange={(event, newValue) =>
-                                      setState({
-                                        ...state,
-                                        idGrupoCliente: newValue,
-                                      })
-                                    }
-                                    value={state.idGrupoCliente}
-                                    id="idGrupoCliente"
-                                    disableClearable
-                                    getOptionLabel={(option) =>
-                                      option.m_sGrupo
-                                    }
-                                    options={dataGrupoClientes}
-                                    renderInput={(params) => (
-                                      <TextField
-                                        {...params}
-                                        InputProps={{
-                                          ...params.InputProps,
-                                          type: "search",
-                                          value: state.idGrupoCliente,
-                                        }}
-                                      />
-                                    )}
-                                  />{" "}
+                                            <div className="col-sm-6 col-md-2-5 ">
+                                              <label className="label">
+                                                Núm. Exterior
+                                              </label>
+                                              <div className="input">
+                                                <div className="input">
+                                                  <input
+                                                    onChange={handleChange}
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder=""
+                                                    value={state.numeroExterior}
+                                                    id="numeroExterior"
+                                                    name="numeroExterior"
+                                                  />
+                                                </div>
+                                              </div>
                                             </div>
+                                            <div className="col-sm-6 col-md-2-5 ">
+                                              <label className="label">
+                                                Número Interior
+                                              </label>
+                                              <div className="input">
+                                                <div className="input">
+                                                  <input
+                                                    onChange={handleChange}
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder=""
+                                                    value={state.numeroInterior}
+                                                    id="numeroInterior"
+                                                    name="numeroInterior"
+                                                  />
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <div className="col-sm-6 col-md-2-5 ">
+                                              <label className="label">
+                                                Teléfonos
+                                              </label>
+                                              <div className="input">
+                                                <div className="input">
+                                                  <input
+                                                    onChange={handleChange}
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder=""
+                                                    value={state.telefono}
+                                                    id="permisoSCT"
+                                                    name="permisoSCT"
+                                                  />
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+
+                                          <div className="row">
+                                            <div className="col-sm-6  col-md-2-5 unit">
+                                              <label className="label">
+                                                Celular
+                                              </label>
+                                              <div className="input">
+                                                <div className="input">
+                                                  <input
+                                                    onChange={handleChange}
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder=""
+                                                    value={state.celular}
+                                                    id="celular"
+                                                    name="celular"
+                                                  />
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <div className="col-sm-6 col-md-2-5 unit">
+                                              <label className="label">
+                                                Nextel
+                                              </label>
+                                              <div className="input">
+                                                <div className="input">
+                                                  <input
+                                                    onChange={handleChange}
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder=""
+                                                    value={state.nextel}
+                                                    id="nextel"
+                                                    name="nextel"
+                                                  />
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <div className="col-sm-6 col-md-2-5 unit">
+                                              <label className="label">
+                                                Correo
+                                              </label>
+                                              <div className="input">
+                                                <div className="input">
+                                                  <input
+                                                    onChange={handleChange}
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder=""
+                                                    value={
+                                                      state.correoElectronico
+                                                    }
+                                                    id="correoElectronico"
+                                                    name="correoElectronico"
+                                                  />
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div
+                                      id="Formatos"
+                                      className="tab-pane fade"
+                                    >
+                                      <div className="widget-wrap">
+                                        <div className="widget-content">
+                                          <div className="row">
+                                            <TableFormatos
+                                              columns={columns2}
+                                              data={dataFormatos}
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div
+                                      id="Especiales"
+                                      className="tab-pane fade "
+                                    >
+                                      <div className="row">
+                                        <div className="col-md-12 unit">
+                                          <div className="w-section-header">
+                                            <h3>Envio de Estados de Cuentas</h3>
+                                          </div>
+                                          <div className="row">
+                                            <div className="col-md-2-5">
+                                              <label className="label">
+                                                Frecuencia de Envio (Dias)
+                                              </label>
+                                              <div className="input">
+                                                <div className="input">
+                                                  <input
+                                                    onChange={handleChange}
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder=""
+                                                    value={
+                                                      state.frecuenciaEnvioDias
+                                                    }
+                                                    id="frecuenciaEnvioDias"
+                                                    name="frecuenciaEnvioDias"
+                                                  />
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <div className="row">
+                                            <div className="col-md-2-5">
+                                              <label className="label">
+                                                Enviar a partir de
+                                              </label>
+                                              <div className="input">
+                                                <div className="input">
+                                                  <input
+                                                    onChange={handleChange}
+                                                    className="form-control"
+                                                    type="datetime-local"
+                                                    placeholder=""
+                                                    value={state.enviarApartir}
+                                                    id="enviarApartir"
+                                                    name="enviarApartir"
+                                                  />
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div className="unit">
+                                          <div className="inline-group">
+                                            <label className="label">
+                                              &nbsp;{" "}
+                                            </label>
+                                            <label className="checkbox">
+                                              <input
+                                                onChange={
+                                                  handleChangeActivoCheckboxChange
+                                                }
+                                                native
+                                                name="envioAutoSeguimientoViajes"
+                                                type="checkbox"
+                                                value={
+                                                  state.envioAutomaticoSeguimiento
+                                                }
+                                                id="envioAutoSeguimientoViajes"
+                                              />
+                                              <i />
+                                              Envio Automático de Seguimiento de
+                                              Viajes
+                                            </label>
+                                          </div>
+                                        </div>
+                                        <div className="unit">
+                                          <div className="inline-group">
+                                            <label className="checkbox">
+                                              <input
+                                                onChange={
+                                                  handleChangeRentadaCheckboxChange
+                                                }
+                                                native
+                                                name="excluirNodo"
+                                                type="checkbox"
+                                                id="excluirNodo"
+                                                value={state.excluirNodo}
+                                              />
+                                              <i />
+                                              Excluir Nodo Condiciones de Pago
+                                              en el XML
+                                            </label>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div
+                                      id="Adicional"
+                                      className="tab-pane fade "
+                                    >
+                                      <div className="row">
+                                        <div className="col-md-12 unit">
+                                          <div className="unit ">
+                                            <label className="label">
+                                              Uso de CFDI
+                                            </label>
+                                            <label className="input select">
+                                              <select
+                                                onChange={handleChange}
+                                                className="form-control"
+                                                required
+                                                native
+                                                name="idUSOCFDI"
+                                                value={state.idUSOCFDI}
+                                                id="idUSOCFDI"
+                                              >
+                                                <option value="">""</option>
+                                              </select>
+                                              <i></i>
+                                            </label>
+                                          </div>
 
                                           <div className="unit">
                                             <div className="inline-group">
-                                              <label className="checkbox">
-                                                <input
-                                                  onChange={
-                                                    handleChangeActivoCheckboxChange
-                                                  }
-                                                  native
-                                                  name="activo"
-                                                  type="checkbox"
-                                                  value={state.activo}
-                                                  id="activo"
-                                                />
-                                                <i />
-                                                Activa
-                                              </label>
-                                              <label className="checkbox">
-                                                <input
-                                                  onChange={
-                                                    handleChangeRentadaCheckboxChange
-                                                  }
-                                                  native
-                                                  name="operadorLogistico"
-                                                  type="checkbox"
-                                                  id="operadorLogistico"
-                                                  value={state.operadorLogistico}
-                                                />
-                                                <i />
-                                                Operador Lógistico
-                                              </label>
-
                                               <label className="label">
                                                 {}
                                               </label>
@@ -1200,287 +1770,69 @@ function App(props) {
                                                     handleChangeActivoCheckboxChange
                                                   }
                                                   native
-                                                  name="aplicarDetalleMaterialesCadaViajeXML"
+                                                  name="agruparCantidadPorConcepto"
                                                   type="checkbox"
-                                                  value={state.aplicarDetalleMaterialesCadaViajeXML}
-                                                  id="aplicarDetalleMaterialesCadaViajeXML"
+                                                  value={
+                                                    state.agruparCantidadPorConcepto
+                                                  }
+                                                  id="agruparCantidadPorConcepto"
                                                 />
                                                 <i />
-                                                Aplicar en el XML de factura, el
-                                                detalle por Viaje
+                                                Permitir agrupar la cantidad de
+                                                conceptos al facturar
                                               </label>
                                             </div>
                                           </div>
-                                        </div>
-                                        {/* end textarea */}
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              {/*Fin de ejemplo*/}
-                            </div>
-                          </div>
 
-                          <div className="row">
-                            <div className="col-md-12 col-sm-12">
-                              <div className="widget-wrap">
-                                <div className="widget-header block-header margin-bottom-0 clearfix">
-                                  <div className="pull-left">
-                                    <h3>Información Monetaria</h3>
-                                  </div>
-                                  <div className="pull-right w-action">
-                                    <ul className="widget-action-bar">
-                                      <li className="dropdown">
-                                        <a
-                                          href="#"
-                                          className="dropdown-toggle"
-                                          data-toggle="dropdown"
-                                        >
-                                          <i className="zmdi zmdi-more" />
-                                        </a>
-                                        <ul className="dropdown-menu">
-                                          <li className="widget-reload">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-refresh-alt" />
-                                            </a>
-                                          </li>
-                                          <li
-                                            className="widget-toggle"
-                                            id="caracteristicas"
-                                          >
-                                            <a href="#">
-                                              <i className="zmdi zmdi-chevron-down" />
-                                            </a>
-                                          </li>
-                                          <li className="widget-fullscreen">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-fullscreen" />
-                                            </a>
-                                          </li>
-                                          <li className="widget-exit">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-power" />
-                                            </a>
-                                          </li>
-                                        </ul>
-                                      </li>
-                                    </ul>
-                                  </div>
-                                </div>
-                                <div className="widget-container">
-                                  <div className="widget-content">
-                                    <div className="row">
-                                      <div className="col-sm-12 col-md-8">
-                                        <div className="w-section-header">
-                                          <h4>Metodos de Pago y Crédito</h4>
-                                        </div>
-                                        <div className="form-content">
-                                          {/* start text password */}
-                                          <div className="row">
-                                            <div className="col-sm-6 col-md-4 unit">
+                                          <div className="unit">
+                                            <div className="inline-group">
                                               <label className="label">
-                                                Forma de pago
+                                                {}
                                               </label>
-                                              <label className="input select">
-                                                <select
-                                                  onChange={handleChange}
-                                                  value={state.metodoPago}
-                                                  id="metodoPago"
+                                              <label className="checkbox">
+                                                <input
+                                                  onChange={
+                                                    handleChangeActivoCheckboxChange
+                                                  }
                                                   native
-                                                  className="form-control"
-                                                  name="metodoPago"
-                                                  required
-                                                >
-                                                  <option value="1">
-                                                    Transferencia Eléctronica
-                                                  </option>
-                                                  <option value="2">
-                                                    Efectivo
-                                                  </option>
-                                                </select>
-                                                <i></i>
+                                                  name="ajustarImporte2Dec"
+                                                  type="checkbox"
+                                                  value={
+                                                    state.ajustarImporte2Dec
+                                                  }
+                                                  id="ajustarImporte2Dec"
+                                                />
+                                                <i />
+                                                Ajusta a 2 Decimales los
+                                                importes de los conceptos en
+                                                Facturacion por viaje
                                               </label>
                                             </div>
-                                            <div className="col-sm-6 col-md-4 unit">
+                                          </div>
+
+                                          <div className="unit">
+                                            <div className="inline-group">
                                               <label className="label">
-                                                Dias de Crédito
+                                                {}
                                               </label>
-                                              <div className="input">
+                                              <label className="checkbox">
                                                 <input
-                                                  onChange={handleChange}
-                                                  className="form-control"
-                                                  type="number"
-                                                  value={state.diasCredito}
-                                                  id="diasCredito"
-                                                  name="diasCredito"
+                                                  onChange={
+                                                    handleChangeActivoCheckboxChange
+                                                  }
                                                   native
+                                                  name="aplicarDetalleConceptoCadaViajeXML"
+                                                  type="checkbox"
+                                                  value={
+                                                    state.aplicarDetalleConceptoCadaViajeXML
+                                                  }
+                                                  id="aplicarDetalleConceptoCadaViajeXML"
                                                 />
-                                              </div>
-                                            </div>
-                                          </div>
-
-                                          <div className="row">
-                                            <div className="w-section-header">
-                                              <h3>Pesos</h3>
-                                            </div>
-                                            <div className="col-sm-4  col-md-4 unit">
-                                              <label className="label">
-                                                Limite Credito
+                                                <i />
+                                                Aplicar en el XML de la factura,
+                                                el Detalle por Concepto de Cada
+                                                Viaje/CartaPorte
                                               </label>
-                                              <div className="input">
-                                                <input
-                                                  onChange={handleChange}
-                                                  className="form-control"
-                                                  type="number"
-                                                  value={state.credito}
-                                                  id="credito"
-                                                  name="credito"
-                                                />
-                                              </div>
-                                            </div>
-                                            <div className="col-sm-4  col-md-4 unit">
-                                              <label className="label">
-                                                Saldo facturado por cobrar
-                                              </label>
-                                              <div className="input">
-                                                <input
-                                                  onChange={handleChange}
-                                                  className="form-control"
-                                                  type="number"
-                                                  value={state.saldoCredito}
-                                                  id="saldoCredito"
-                                                  name="saldoCredito"
-                                                />
-                                              </div>
-                                            </div>
-                                            <div className="col-sm-4  col-md-4 unit">
-                                              <label className="label">
-                                                Viajes pendientes por facturar
-                                              </label>
-                                              <div className="input">
-                                                <input
-                                                  onChange={handleChange}
-                                                  className="form-control"
-                                                  type="number"
-                                                  value={state.pendFacturar}
-                                                  id="pendFacturar"
-                                                  name="pendFacturar"
-                                                />
-                                              </div>
-                                            </div>
-                                          </div>
-                                          <div className="row">
-                                            <div className="w-section-header">
-                                              <h5>Dolares</h5>
-                                            </div>
-                                            <div className="col-sm-4  col-md-4 unit">
-                                              <label className="label">
-                                                Limite Credito
-                                              </label>
-                                              <div className="input">
-                                                <input
-                                                  onChange={handleChange}
-                                                  className="form-control"
-                                                  type="number"
-                                                  value={state.creditoDlls}
-                                                  id="creditoDlls"
-                                                  name="creditoDlls"
-                                                />
-                                              </div>
-                                            </div>
-                                            <div className="col-sm-4  col-md-4 unit">
-                                              <label className="label">
-                                                Saldo facturado por cobrar
-                                              </label>
-                                              <div className="input">
-                                                <input
-                                                  onChange={handleChange}
-                                                  className="form-control"
-                                                  type="number"
-                                                  value={state.saldoCreditoDLLS}
-                                                  id="saldoCreditoDLLS"
-                                                  name="saldoCreditoDLLS"
-                                                />
-                                              </div>
-                                            </div>
-                                            <div className="col-sm-4  col-md-4 unit">
-                                              <label className="label">
-                                                Viajes pendientes por facturar
-                                              </label>
-                                              <div className="input">
-                                                <input
-                                                  onChange={handleChange}
-                                                  className="form-control"
-                                                  type="number"
-                                                  value={state.pendFacturarDLLS}
-                                                  id="pendFacturarDLLS"
-                                                  name="pendFacturarDLLS"
-                                                />
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-
-                                      <div className="col-sm-12 col-md-3 bordesizquierdo">
-                                        <div className="w-section-header">
-                                          <h4>
-                                            Información Adicional del Pago
-                                          </h4>
-                                        </div>
-                                        <div className="form-content">
-                                          {/* start text password */}
-                                          <div className="row">
-                                            <div className="col-xs-6 col-ms-6 col-md-10 unit">
-                                              <label className="label">
-                                                Banco Ordenante
-                                              </label>
-                                              <div className="input">
-                                                <input
-                                                  onChange={handleChange}
-                                                  className="form-control"
-                                                  type="text"
-                                                  value={state.bancoOrdenante}
-                                                  id="bancoOrdenante"
-                                                  name="bancoOrdenante"
-                                                />
-                                              </div>
-                                            </div>
-                                          </div>
-
-                                          <div className="row">
-                                            <div className="col-xs-6 col-ms-6 col-md-10 unit">
-                                              <label className="label">
-                                                RFC
-                                              </label>
-                                              <div className="input">
-                                                <input
-                                                  onChange={handleChange}
-                                                  className="form-control"
-                                                  type="text"
-                                                  value={state.rfcBancoOrdenante}
-                                                  id="rfcBancoOrdenante"
-                                                  name="rfcBancoOrdenante"
-                                                />
-                                              </div>
-                                            </div>
-                                          </div>
-                                          <div className="row">
-                                            <div className="col-xs-6 col-ms-6 col-md-10 unit">
-                                              <label className="label">
-                                                Núm. Cuenta
-                                              </label>
-                                              <div className="input">
-                                                <input
-                                                  onChange={handleChange}
-                                                  className="form-control"
-                                                  type="text"
-                                                  value={state.cuentaBancoOrdenante}
-                                                  id="cuentaBancoOrdenante"
-                                                  name="cuentaBancoOrdenante"
-                                                />
-                                              </div>
                                             </div>
                                           </div>
                                         </div>
@@ -1489,963 +1841,225 @@ function App(props) {
                                   </div>
                                 </div>
                               </div>
-                              {/*Fin de ejemplo*/}
                             </div>
+                            {/* end textarea */}
                           </div>
-
-                          <div className="row">
-                            <div className="col-md-12 col-sm-12">
-                              <div className="widget-wrap">
-                                <div className="widget-header block-header margin-bottom-0 clearfix">
-                                  <div className="pull-left">
-                                    <h3>Datos generales</h3>
-                                  </div>
-                                  <div className="pull-right w-action">
-                                    <ul className="widget-action-bar">
-                                      <li className="dropdown">
-                                        <a
-                                          href="#"
-                                          className="dropdown-toggle"
-                                          data-toggle="dropdown"
-                                        >
-                                          <i className="zmdi zmdi-more" />
-                                        </a>
-                                        <ul className="dropdown-menu">
-                                          <li className="widget-reload">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-refresh-alt" />
-                                            </a>
-                                          </li>
-                                          <li
-                                            className="widget-toggle"
-                                            id="detalles"
-                                          >
-                                            <a href="#">
-                                              <i className="zmdi zmdi-chevron-down" />
-                                            </a>
-                                          </li>
-                                          <li className="widget-fullscreen">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-fullscreen" />
-                                            </a>
-                                          </li>
-                                          <li className="widget-exit">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-power" />
-                                            </a>
-                                          </li>
-                                        </ul>
-                                      </li>
-                                    </ul>
-                                  </div>
-                                </div>
-                                <div className="widget-container">
-                                  <div className="widget-content">
-                                    <div className="row">
-                                      <div className="col-md-12">
-                                        <ul className="nav nav-tabs">
-                                          <li className="active">
-                                            <a
-                                              data-toggle="tab"
-                                              href="#Domicilio"
-                                            >
-                                              Domicilio
-                                            </a>
-                                          </li>
-                                          <li>
-                                            <a
-                                              data-toggle="tab"
-                                              href="#Formatos"
-                                            >
-                                              Formatos
-                                            </a>
-                                          </li>
-                                          <li>
-                                            <a
-                                              data-toggle="tab"
-                                              href="#Especiales"
-                                            >
-                                              Procesos Especiales
-                                            </a>
-                                          </li>
-                                          <li>
-                                            <a
-                                              data-toggle="tab"
-                                              href="#Adicional"
-                                            >
-                                              Inf. Adicional
-                                            </a>
-                                          </li>
-                                        
-                                        </ul>
-
-                                        <div className="form-content">
-                                          {/* start text password */}
-                                          <div className="widget-wrap">
-                                            <div className="widget-container margin-top-0">
-                                              <div className="widget-content">
-                                                <div className="tab-content">
-                                                  <div
-                                                    id="Domicilio"
-                                                    className="tab-pane fade in active"
-                                                  >
-                                                    <div className="row">
-                                                      <div className="col-md-12 unit">
-                                                        <div className="row">
-                                                          <div className="col-sm-6 col-md-2-5 unit">
-                                                            <label className="label">
-                                                            &nbsp;{" "}
-
-                                                            </label>
-                                                            <label className="input select">
-                                                              <select
-                                                                onChange={
-                                                                  handleSelectChange
-                                                                }
-                                                                className="form-control"
-                                                                native
-                                                                value={
-                                                                  state.idPais
-                                                                }
-                                                                id="idPais"
-                                                                name="idPais"
-                                                              >
-                                                                <option value="">
-                                                                  Pais
-                                                                </option>
-                                                                {dataPais.map(
-                                                                  (pais) => (
-                                                                    <option
-                                                                      value={
-                                                                        pais.m_nIdPais
-                                                                      }
-                                                                    >
-                                                                      {
-                                                                        pais.m_sPais
-                                                                      }
-                                                                    </option>
-                                                                  )
-                                                                )}
-                                                              </select>
-                                                              <i></i>
-                                                            </label>
-                                                          </div>
-                                                          <div className="col-sm-6 col-md-2-5 ">
-                                                            <label className="label">
-                                                              Código Postal
-                                                            </label>
-                                                            <div className="input">
-                                                              <input
-                                                                onChange={
-                                                                  handleChange
-                                                                }
-                                                                className="form-control"
-                                                                type="text"
-                                                                placeholder=""
-                                                                value={
-                                                                  state.codigoPostal
-                                                                }
-                                                                id="codigoPostal"
-                                                                name="codigoPostal"
-                                                              />
-                                                            </div>
-                                                          </div>
-
-                                                          <div className="col-sm-6 col-md-2-5 ">
-                                                            <label className="label">
-                                                            &nbsp;{" "}
-
-                                                            </label>
-                                                            <label className="input select">
-                                                              <select
-                                                                onChange={
-                                                                  handleChange
-                                                                }
-                                                                className="form-control"
-                                                                required
-                                                                native
-                                                                name="idEstado"
-                                                                value={
-                                                                  state.idEstado
-                                                                }
-                                                                id="idEstado"
-                                                              >
-                                                                <option value="">
-                                                                  Estado
-                                                                </option>
-
-                                                                {dataEstado.map(
-                                                                  (estado) => (
-                                                                    <option
-                                                                      value={
-                                                                        estado.m_nIdEstado
-                                                                      }
-                                                                    >
-                                                                      {
-                                                                        estado.m_sEstado
-                                                                      }
-                                                                    </option>
-                                                                  )
-                                                                )}
-                                                              </select>
-                                                              <i></i>
-                                                            </label>
-                                                          </div>
-                                                          <div className="col-sm-6 col-md-2-5 ">
-                                                            <label className="label">
-                                                              Municipio
-                                                            </label>
-                                                            <div className="input">
-                                                              <div className="input">
-                                                                <input
-                                                                  onChange={
-                                                                    handleChange
-                                                                  }
-                                                                  className="form-control"
-                                                                  type="text"
-                                                                  placeholder=""
-                                                                  value={
-                                                                    state.municipio
-                                                                  }
-                                                                  id="municipio"
-                                                                  name="municipio"
-                                                                />
-                                                              </div>
-                                                            </div>
-                                                          </div>
-                                                          <div className="col-sm-6 col-md-2-5 ">
-                                                            <label className="label">
-                                                              Localidad
-                                                            </label>
-                                                            <div className="input">
-                                                              <div className="input">
-                                                                <input
-                                                                  onChange={
-                                                                    handleChange
-                                                                  }
-                                                                  className="form-control"
-                                                                  type="text"
-                                                                  placeholder=""
-                                                                  value={
-                                                                    state.localidad
-                                                                  }
-                                                                  id="localidad"
-                                                                  name="localidad"
-                                                                />
-                                                              </div>
-                                                            </div>
-                                                          </div>
-                                                        </div>
-                                                        <div className="row">
-                                                          <div className="col-sm-6 col-md-2-5 unit">
-                                                          <label className="label">
-                                                            Colonia
-                                                          </label>
-                                                          <div className="input">
-                                                            <input
-                                                              onChange={
-                                                                handleChange
-                                                              }
-                                                              className="form-control"
-                                                              type="text"
-                                                              placeholder=""
-                                                              value={
-                                                                state.colonia
-                                                              }
-                                                              id="colonia"
-                                                              name="colonia"
-                                                            />
-                                                          </div>
-                                                          </div>
-                                                          <div className="col-sm-6 col-md-2-5 ">
-                                                          <label className="label">
-                                                            Calle
-                                                          </label>
-                                                          <div className="input">
-                                                            <input
-                                                              onChange={
-                                                                handleChange
-                                                              }
-                                                              className="form-control"
-                                                              type="text"
-                                                              placeholder=""
-                                                              value={
-                                                                state.calle
-                                                              }
-                                                              id="calle"
-                                                              name="calle"
-                                                            />
-                                                          </div>
-                                                          </div>
-
-                                                          <div className="col-sm-6 col-md-2-5 ">
-                                                          <label className="label">
-                                                              Núm. Exterior
-                                                            </label>
-                                                            <div className="input">
-                                                              <div className="input">
-                                                                <input
-                                                                  onChange={
-                                                                    handleChange
-                                                                  }
-                                                                  className="form-control"
-                                                                  type="text"
-                                                                  placeholder=""
-                                                                  value={
-                                                                    state.numeroExterior
-                                                                  }
-                                                                  id="numeroExterior"
-                                                                  name="numeroExterior"
-                                                                />
-                                                              </div>
-                                                            </div>
-                                                          </div>
-                                                          <div className="col-sm-6 col-md-2-5 ">
-                                                            <label className="label">
-                                                              Número Interior
-                                                            </label>
-                                                            <div className="input">
-                                                              <div className="input">
-                                                                <input
-                                                                  onChange={
-                                                                    handleChange
-                                                                  }
-                                                                  className="form-control"
-                                                                  type="text"
-                                                                  placeholder=""
-                                                                  value={
-                                                                    state.numeroInterior
-                                                                  }
-                                                                  id="numeroInterior"
-                                                                  name="numeroInterior"
-                                                                />
-                                                              </div>
-                                                            </div>
-                                                          </div>
-                                                          <div className="col-sm-6 col-md-2-5 ">
-                                                            <label className="label">
-                                                              Teléfonos
-                                                            </label>
-                                                            <div className="input">
-                                                              <div className="input">
-                                                                <input
-                                                                  onChange={
-                                                                    handleChange
-                                                                  }
-                                                                  className="form-control"
-                                                                  type="text"
-                                                                  placeholder=""
-                                                                  value={
-                                                                    state.telefono
-                                                                  }
-                                                                  id="permisoSCT"
-                                                                  name="permisoSCT"
-                                                                />
-                                                              </div>
-                                                            </div>
-                                                          </div>
-                                                        </div>
-
-                            
-                                                        
-                                                        <div className="row">
-                                                          <div className="col-sm-6  col-md-2-5 unit">
-                                                            <label className="label">
-                                                              Celular
-                                                            </label>
-                                                            <div className="input">
-                                                              <div className="input">
-                                                                <input
-                                                                  onChange={
-                                                                    handleChange
-                                                                  }
-                                                                  className="form-control"
-                                                                  type="text"
-                                                                  placeholder=""
-                                                                  value={
-                                                                    state.celular
-                                                                  }
-                                                                  id="celular"
-                                                                  name="celular"
-                                                                />
-                                                              </div>
-                                                            </div>
-                                                          </div>
-                                                          <div className="col-sm-6 col-md-2-5 unit">
-                                                            <label className="label">
-                                                              Nextel
-                                                            </label>
-                                                            <div className="input">
-                                                              <div className="input">
-                                                                <input
-                                                                  onChange={
-                                                                    handleChange
-                                                                  }
-                                                                  className="form-control"
-                                                                  type="text"
-                                                                  placeholder=""
-                                                                  value={
-                                                                    state.nextel
-                                                                  }
-                                                                  id="nextel"
-                                                                  name="nextel"
-                                                                />
-                                                              </div>
-                                                            </div>
-                                                          </div>
-                                                          <div className="col-sm-6 col-md-2-5 unit">
-
-                                                          <label className="label">
-                                                              Correo
-                                                            </label>
-                                                            <div className="input">
-                                                              <div className="input">
-                                                                <input
-                                                                  onChange={
-                                                                    handleChange
-                                                                  }
-                                                                  className="form-control"
-                                                                  type="text"
-                                                                  placeholder=""
-                                                                  value={
-                                                                    state.correoElectronico
-                                                                  }
-                                                                  id="correoElectronico"
-                                                                  name="correoElectronico"
-                                                                />
-                                                              </div>
-                                                            </div>
-                                                            </div>
-                                                        </div>
-                                                       
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                  <div
-                                                    id="Formatos"
-                                                    className="tab-pane fade"
-                                                  >
-                                                   <div className="widget-wrap">
-                <div className="widget-content">
-                  <div className="row">
-                    <TableFormatos columns={columns2} data={dataFormatos} />
-                  </div>
-                </div>
-              </div>
-                                                  </div>
-                                                  <div
-                                                    id="Especiales"
-                                                    className="tab-pane fade "
-                                                  >
-                                                    <div className="row">
-                                                      <div className="col-md-12 unit">
-                                                        <div className="w-section-header">
-                                                          <h3>
-                                                            Envio de Estados de
-                                                            Cuentas
-                                                          </h3>
-                                                        </div>
-                                                        <div className="row">
-                                                          <div className="col-md-2-5">
-                                                            <label className="label">
-                                                              Frecuencia de
-                                                              Envio (Dias)
-                                                            </label>
-                                                            <div className="input">
-                                                              <div className="input">
-                                                                <input
-                                                                  onChange={
-                                                                    handleChange
-                                                                  }
-                                                                  className="form-control"
-                                                                  type="text"
-                                                                  placeholder=""
-                                                                  value={
-                                                                    state.frecuenciaEnvioDias
-                                                                  }
-                                                                  id="frecuenciaEnvioDias"
-                                                                  name="frecuenciaEnvioDias"
-                                                                />
-                                                              </div>
-                                                            </div>
-                                                          </div>
-                                                        
-                                                        </div>
-<div className="row">
-                                                        <div className="col-md-2-5">
-                                                            <label className="label">
-                                                              Enviar a partir de
-                                                            </label>
-                                                            <div className="input">
-                                                              <div className="input">
-                                                                <input
-                                                                  onChange={
-                                                                    handleChange
-                                                                  }
-                                                                  className="form-control"
-                                                                  type="datetime-local"
-                                                                  placeholder=""
-                                                                  value={
-                                                                    state.enviarApartir
-                                                                  }
-                                                                  id="enviarApartir"
-                                                                  name="enviarApartir"
-                                                                />
-                                                              </div>
-                                                            </div>
-                                                          </div>
-                                                          </div>
-                                                       
-                                                        
-                                                      </div>
-                                                      <div className="unit">
-                                                          <div className="inline-group">
-                                                            <label className="label">
-                                                              &nbsp;{" "}
-                                                            </label>
-                                                            <label className="checkbox">
-                                                              <input
-                                                                onChange={
-                                                                  handleChangeActivoCheckboxChange
-                                                                }
-                                                                native
-                                                                name="envioAutoSeguimientoViajes"
-                                                                type="checkbox"
-                                                                value={
-                                                                  state.envioAutomaticoSeguimiento
-                                                                }
-                                                                id="envioAutoSeguimientoViajes"
-                                                              />
-                                                              <i />
-                                                              Envio Automático
-                                                              de Seguimiento de
-                                                              Viajes
-                                                            </label>
-                                                          
-                                                          </div>
-
-                                                        </div>
-                                                        <div className="unit">
-                                                          <div className="inline-group">
-                                                         
-                                                            <label className="checkbox">
-                                                              <input
-                                                                onChange={
-                                                                  handleChangeRentadaCheckboxChange
-                                                                }
-                                                                native
-                                                                name="excluirNodo"
-                                                                type="checkbox"
-                                                                id="excluirNodo"
-                                                                value={
-                                                                  state.excluirNodo
-                                                                }
-                                                              />
-                                                              <i />
-                                                              Excluir Nodo
-                                                              Condiciones de
-                                                              Pago en el XML
-                                                            </label>
-                                                          </div>
-
-                                                        </div>
-                                                    </div>
-                                                  </div>
-                                                
-                                                  <div
-                                                    id="Adicional"
-                                                    className="tab-pane fade "
-                                                  >
-                                                    <div className="row">
-                                                      <div className="col-md-12 unit">
-                                                        <div className="unit ">
-                                                          <label className="label">
-                                                            Uso de CFDI
-                                                          </label>
-                                                          <label className="input select">
-                                                            <select
-                                                              onChange={
-                                                                handleChange
-                                                              }
-                                                              className="form-control"
-                                                              required
-                                                              native
-                                                              name="idUSOCFDI"
-                                                              value={
-                                                                state.idUSOCFDI
-                                                              }
-                                                              id="idUSOCFDI"
-                                                            >
-                                                              <option value="">
-                                                                ""
-                                                              </option>
-                                                            </select>
-                                                            <i></i>
-                                                          </label>
-                                                        </div>
-
-                                                        <div className="unit">
-                                                          <div className="inline-group">
-                                                            <label className="label">
-                                                              {}
-                                                            </label>
-                                                            <label className="checkbox">
-                                                              <input
-                                                                onChange={
-                                                                  handleChangeActivoCheckboxChange
-                                                                }
-                                                                native
-                                                                name="agruparCantidadPorConcepto"
-                                                                type="checkbox"
-                                                                value={
-                                                                  state.agruparCantidadPorConcepto
-                                                                }
-                                                                id="agruparCantidadPorConcepto"
-                                                              />
-                                                              <i />
-                                                              Permitir agrupar
-                                                              la cantidad de
-                                                              conceptos al
-                                                              facturar
-                                                            </label>
-                                                          </div>
-                                                        </div>
-
-                                                        <div className="unit">
-                                                          <div className="inline-group">
-                                                            <label className="label">
-                                                              {}
-                                                            </label>
-                                                            <label className="checkbox">
-                                                              <input
-                                                                onChange={
-                                                                  handleChangeActivoCheckboxChange
-                                                                }
-                                                                native
-                                                                name="ajustarImporte2Dec"
-                                                                type="checkbox"
-                                                                value={
-                                                                  state.ajustarImporte2Dec
-                                                                }
-                                                                id="ajustarImporte2Dec"
-                                                              />
-                                                              <i />
-                                                              Ajusta a 2
-                                                              Decimales los
-                                                              importes de los
-                                                              conceptos en
-                                                              Facturacion por
-                                                              viaje
-                                                            </label>
-                                                          </div>
-                                                        </div>
-
-                                                        <div className="unit">
-                                                          <div className="inline-group">
-                                                            <label className="label">
-                                                              {}
-                                                            </label>
-                                                            <label className="checkbox">
-                                                              <input
-                                                                onChange={
-                                                                  handleChangeActivoCheckboxChange
-                                                                }
-                                                                native
-                                                                name="aplicarDetalleConceptoCadaViajeXML"
-                                                                type="checkbox"
-                                                                value={
-                                                                  state.aplicarDetalleConceptoCadaViajeXML
-                                                                }
-                                                                id="aplicarDetalleConceptoCadaViajeXML"
-                                                              />
-                                                              <i />
-                                                              Aplicar en el XML
-                                                              de la factura, el
-                                                              Detalle por
-                                                              Concepto de Cada
-                                                              Viaje/CartaPorte
-                                                            </label>
-                                                          </div>
-                                                        </div>
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            </div>
-                                          </div>
-                                          {/* end textarea */}
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              {/*Fin de ejemplo*/}
-                            </div>
-                          </div>
-                          <div className="row">
-                            <div className="col-md-12 col-sm-12">
-                              <div className="widget-wrap">
-                                <div className="widget-header block-header margin-bottom-0 clearfix">
-                                  <div className="pull-left">
-                                    <h3> Contacto</h3>
-                                  </div>
-                                  <div className="pull-right w-action">
-                                    <ul className="widget-action-bar">
-                                      <li className="dropdown">
-                                        <a
-                                          href="#"
-                                          className="dropdown-toggle"
-                                          data-toggle="dropdown"
-                                        >
-                                          <i className="zmdi zmdi-more" />
-                                        </a>
-                                        <ul className="dropdown-menu">
-                                          <li className="widget-reload">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-refresh-alt" />
-                                            </a>
-                                          </li>
-                                          <li
-                                            className="widget-toggle"
-                                            id="otros"
-                                          >
-                                            <a href="#">
-                                              <i className="zmdi zmdi-chevron-down" />
-                                            </a>
-                                          </li>
-                                          <li className="widget-fullscreen">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-fullscreen" />
-                                            </a>
-                                          </li>
-                                          <li className="widget-exit">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-power" />
-                                            </a>
-                                          </li>
-                                        </ul>
-                                      </li>
-                                    </ul>
-                                  </div>
-                                </div>
-                                <div className="widget-container">
-                                  <div className="widget-content">
-                                    <div className="row">
-                                      <div className="col-md-12">
-                                        <div className="form-content">
-                                          {/* start text password */}
-                                          <div className="row">
-                                            <div className="col-sm-6 col-md-6 col-lg-4 unit">
-                                              <label className="label">
-                                                Contacto
-                                              </label>
-                                              <div className="input">
-                                                <input
-                                                  onChange={handleChange}
-                                                  value={state.tarjetaIAVE}
-                                                  name="tarjetaIAVE"
-                                                  className="form-control"
-                                                  type="text"
-                                                  placeholder=""
-                                                  id="text"
-                                                />
-                                              </div>
-                                            </div>
-                                            <div className="col-sm-6  col-md-6 col-lg-2  unit">
-                                              <div className="inline-group">
-                                                <label className="label">
-                                                  &nbsp;{" "}
-                                                </label>
-                                                <label className="checkbox">
-                                                  <input
-                                                    onChange={
-                                                      handleChangeActivoCheckboxChange
-                                                    }
-                                                    native
-                                                    name="activo"
-                                                    type="checkbox"
-                                                    value={state.factura}
-                                                    id="activo"
-                                                  />
-                                                  <i />
-                                                  Recibir factura
-                                                </label>
-                                              </div>
-                                            </div>
-                                          </div>
-                                          <div className="row">
-                                            <div className="col-sm-6 col-md-6 col-lg-4 unit">
-                                              <label className="label">
-                                                Correo
-                                              </label>
-                                              <div className="input">
-                                                <input
-                                                  onChange={handleChange}
-                                                  value={state.tarjetaEPASS}
-                                                  name="tarjetaEPASS"
-                                                  className="form-control"
-                                                  type="text"
-                                                  placeholder=""
-                                                  id="text"
-                                                />
-                                              </div>
-                                            </div>
-                                            <div className="col-sm-6  col-md-6 col-lg-4  unit">
-                                              <div className="inline-group">
-                                                <label className="checkbox">
-                                                  <input
-                                                    onChange={
-                                                      handleChangeRentadaCheckboxChange
-                                                    }
-                                                    native
-                                                    name="rentada"
-                                                    type="checkbox"
-                                                    id="rentada"
-                                                    value={state.rentada}
-                                                  />
-                                                  <i />
-                                                  Recibir Edo de cuenta
-                                                </label>
-                                              </div>
-                                            </div>
-                                          </div>
-                                          <div className="row">
-                                            <div className="col-sm-6 col-md-6 col-lg-4 unit">
-                                              <label className="label">
-                                                Teléfono
-                                              </label>
-                                              <div className="input">
-                                                <input
-                                                  onChange={handleChange}
-                                                  value={state.tarjetaEPASS}
-                                                  name="tarjetaEPASS"
-                                                  className="form-control"
-                                                  type="text"
-                                                  placeholder=""
-                                                  id="text"
-                                                />
-                                              </div>
-                                            </div>
-                                            <div className="col-sm-6  col-md-6 col-lg-4  unit">
-                                              <div className="inline-group">
-                                                <label className="checkbox">
-                                                  <input
-                                                    onChange={
-                                                      handleChangeRentadaCheckboxChange
-                                                    }
-                                                    native
-                                                    name="rentada"
-                                                    type="checkbox"
-                                                    id="rentada"
-                                                    value={state.rentada}
-                                                  />
-                                                  <i />
-                                                  Permitir Seguiiento de
-                                                  Viajes/Unidades
-                                                </label>
-                                              </div>
-                                            </div>
-                                          </div>
-                                          <div className="row">
-                                            <div className="col-sm-6 col-md-6 col-lg-4 unit"></div>
-                                            <div className="col-sm-6  col-md-6 col-lg-4  unit">
-                                              <div className="inline-group">
-                                                <label className="checkbox">
-                                                  <input
-                                                    onChange={
-                                                      handleChangeRentadaCheckboxChange
-                                                    }
-                                                    native
-                                                    name="rentada"
-                                                    type="checkbox"
-                                                    id="rentada"
-                                                    value={state.rentada}
-                                                  />
-                                                  <i />
-                                                  Uso de un servicio web
-                                                </label>
-                                              </div>
-                                            </div>
-                                          </div>
-                                          <div className="row">
-                                            <div className="col-sm-6 col-md-6 col-lg-4 unit"></div>
-                                            <div className="col-sm-6  col-md-6 col-lg-4  unit">
-                                              <div className="inline-group">
-                                                <label className="checkbox">
-                                                  <input
-                                                    onChange={
-                                                      handleChangeRentadaCheckboxChange
-                                                    }
-                                                    native
-                                                    name="rentada"
-                                                    type="checkbox"
-                                                    id="rentada"
-                                                    value={state.rentada}
-                                                  />
-                                                  <i />
-                                                  Permitir ver Portal de
-                                                  Clientes
-                                                </label>
-                                              </div>
-                                            </div>
-                                         
-                                          </div>
-
-                                          <div className="row">
-                                            <div className="col-sm-6 col-md-6 col-lg-4 unit"></div>
-                                            <div className="col-sm-6  col-md-6 col-lg-4  unit">
-                                              <div className="inline-group">
-                                                <label className="checkbox">
-                                                  <input
-                                                    onChange={
-                                                      handleChangeRentadaCheckboxChange
-                                                    }
-                                                    native
-                                                    name="rentada"
-                                                    type="checkbox"
-                                                    id="rentada"
-                                                    value={state.rentada}
-                                                  />
-                                                  <i />
-                                                 Recibir carta porte
-                                                </label>
-                                              </div>
-                                            </div>
-                                         
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-
-                              {/*Fin de ejemplo*/}
-                            </div>
-                            <div className="form-footer" className="col-md-12">
-                              <button
-                                data-layout="topCenter"
-                                data-type="information"
-                                className="btn btn-primary secondary-btn"
-                              >
-                                Cancelar
-                              </button>
-                              <button
-                                type="submit"
-                                className="btn btn-primary primary-btn"
-                              >
-                                Aceptar
-                              </button>
-                            </div>
-                          </div>
-                        </form>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
+                {/*Fin de ejemplo*/}
+
+                    <div className="widget-wrap" id="otros">
+                      <div className="widget-header block-header margin-bottom-0 clearfix">
+                        <div className="pull-left">
+                          <h3> Contacto</h3>
+                        </div>
+                 
+                      </div>
+                      <div className="widget-container">
+                        <div className="widget-content">
+                          <div className="row">
+                            <div className="col-md-12">
+                              <div className="form-content">
+                                {/* start text password */}
+                                <div className="row">
+                                  <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                    <label className="label">Contacto</label>
+                                    <div className="input">
+                                      <input
+                                        onChange={handleChange}
+                                        value={state.tarjetaIAVE}
+                                        name="tarjetaIAVE"
+                                        className="form-control"
+                                        type="text"
+                                        placeholder=""
+                                        id="text"
+                                      />
+                                    </div>
+                                  </div>
+                                  <div className="col-sm-6  col-md-6 col-lg-2  unit">
+                                    <div className="inline-group">
+                                      <label className="label">&nbsp; </label>
+                                      <label className="checkbox">
+                                        <input
+                                          onChange={
+                                            handleChangeActivoCheckboxChange
+                                          }
+                                          native
+                                          name="activo"
+                                          type="checkbox"
+                                          value={state.factura}
+                                          id="activo"
+                                        />
+                                        <i />
+                                        Recibir factura
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="row">
+                                  <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                    <label className="label">Correo</label>
+                                    <div className="input">
+                                      <input
+                                        onChange={handleChange}
+                                        value={state.tarjetaEPASS}
+                                        name="tarjetaEPASS"
+                                        className="form-control"
+                                        type="text"
+                                        placeholder=""
+                                        id="text"
+                                      />
+                                    </div>
+                                  </div>
+                                  <div className="col-sm-6  col-md-6 col-lg-4  unit">
+                                    <div className="inline-group">
+                                      <label className="checkbox">
+                                        <input
+                                          onChange={
+                                            handleChangeRentadaCheckboxChange
+                                          }
+                                          native
+                                          name="rentada"
+                                          type="checkbox"
+                                          id="rentada"
+                                          value={state.rentada}
+                                        />
+                                        <i />
+                                        Recibir Edo de cuenta
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="row">
+                                  <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                    <label className="label">Teléfono</label>
+                                    <div className="input">
+                                      <input
+                                        onChange={handleChange}
+                                        value={state.tarjetaEPASS}
+                                        name="tarjetaEPASS"
+                                        className="form-control"
+                                        type="text"
+                                        placeholder=""
+                                        id="text"
+                                      />
+                                    </div>
+                                  </div>
+                                  <div className="col-sm-6  col-md-6 col-lg-4  unit">
+                                    <div className="inline-group">
+                                      <label className="checkbox">
+                                        <input
+                                          onChange={
+                                            handleChangeRentadaCheckboxChange
+                                          }
+                                          native
+                                          name="rentada"
+                                          type="checkbox"
+                                          id="rentada"
+                                          value={state.rentada}
+                                        />
+                                        <i />
+                                        Permitir Seguiiento de Viajes/Unidades
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="row">
+                                  <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit"></div>
+                                  <div className="col-sm-6  col-md-6 col-lg-4  unit">
+                                    <div className="inline-group">
+                                      <label className="checkbox">
+                                        <input
+                                          onChange={
+                                            handleChangeRentadaCheckboxChange
+                                          }
+                                          native
+                                          name="rentada"
+                                          type="checkbox"
+                                          id="rentada"
+                                          value={state.rentada}
+                                        />
+                                        <i />
+                                        Uso de un servicio web
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="row">
+                                  <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit"></div>
+                                  <div className="col-sm-6  col-md-6 col-lg-4  unit">
+                                    <div className="inline-group">
+                                      <label className="checkbox">
+                                        <input
+                                          onChange={
+                                            handleChangeRentadaCheckboxChange
+                                          }
+                                          native
+                                          name="rentada"
+                                          type="checkbox"
+                                          id="rentada"
+                                          value={state.rentada}
+                                        />
+                                        <i />
+                                        Permitir ver Portal de Clientes
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div className="row">
+                                  <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit"></div>
+                                  <div className="col-sm-6  col-md-6 col-lg-4  unit">
+                                    <div className="inline-group">
+                                      <label className="checkbox">
+                                        <input
+                                          onChange={
+                                            handleChangeRentadaCheckboxChange
+                                          }
+                                          native
+                                          name="rentada"
+                                          type="checkbox"
+                                          id="rentada"
+                                          value={state.rentada}
+                                        />
+                                        <i />
+                                        Recibir carta porte
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="form-footer" className="col-md-12">
+                    <button
+                      data-layout="topCenter"
+                      data-type="information"
+                      className="btn btn-secondary secondary-btn"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="submit"
+                      className="btn btn-primary primary-btn"
+                    >
+                      Aceptar
+                    </button>
+                  </div>
+                          </div>
+                          
+                        </div>
+                        
+                      </div>
+                      </div>
+
+                    </div>
+
+                    {/*Fin de ejemplo*/}
+                 
+              </form>
             </div>
           </div>
         </div>

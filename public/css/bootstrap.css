@@ -1608,7 +1608,6 @@ pre code {
 .container-fluid {
   margin-right: auto;
   margin-left: auto;
-  padding-left: 15px;
   padding-right: 15px;
 }
 .row {
@@ -3914,7 +3913,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   top: 110px;
   z-index: 100;
   background-color: #E6E6E6;
-	margin-right: 15px;
+	
 }
 .nav > li {
   position: relative;
@@ -4681,9 +4680,9 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 .pagination > li > span:hover,
 .pagination > li > a:focus,
 .pagination > li > span:focus {
-  color: #23527c;
+  color: #F9A03E;
   background-color: #eeeeee;
-  border-color: #dddddd;
+  border-color: #F9A03E;
 }
 .pagination > .active > a,
 .pagination > .active > span,

@@ -350,7 +350,7 @@ function CiudadesCodigoPostal() {
           <thead>
             {headerGroups.map(headerGroup => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th></th>
+                <th>Acciones</th>
                 {headerGroup.headers.map(column => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -380,8 +380,9 @@ function CiudadesCodigoPostal() {
                     className={state.idCiudad === row.original.m_nIdCiudad ? classes.seleccionado : classes.noSeleccionado}>
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarCiudad(row.original.m_nIdCiudad))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminarCiudad(row.original.m_nIdCiudad))}><i className="zmdi zmdi-close" /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarCiudad(row.original.m_nIdCiudad))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminarCiudad(row.original.m_nIdCiudad))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminarCiudad(row.original.m_nIdCiudad))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -432,7 +433,7 @@ function CiudadesCodigoPostal() {
           <thead>
             {headerGroups.map(headerGroup => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th></th>
+                <th>Acciones</th>
                 {headerGroup.headers.map(column => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -460,8 +461,9 @@ function CiudadesCodigoPostal() {
                   <tr {...row.getRowProps()}>
                     <td>
                       <div>
-                        <a href="#AgregarCP" role="tab" data-toggle="tab" onClick={() => (handleShowModificarCodigoPostal(row.original.m_nIdCP))} className="btn btn-default btn-sm m-user-edit"><i className="zmdi zmdi-edit" /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminarCodigoPostal(row.original.m_nIdCP))}><i className="zmdi zmdi-close" /></a>
+                        <a href="#AgregarCP" role="tab" data-toggle="tab" onClick={() => (handleShowModificarCodigoPostal(row.original.m_nIdCP))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminarCodigoPostal(row.original.m_nIdCP))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminarCodigoPostal(row.original.m_nIdCP))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -549,7 +551,7 @@ function CiudadesCodigoPostal() {
                           <form className="j-forms" onSubmit={handleAceptarCiudad}>
                             <div className="form-content">
 
-                              <div className="col-sm-12 col-md-6 unit">
+                              <div className="col-sm-4 col-md-4 unit">
                                 <label className="label">
                                   Código
                               </label>
@@ -566,7 +568,7 @@ function CiudadesCodigoPostal() {
                                 </div>
                               </div>
 
-                              <div className="col-sm-12 col-md-6 unit">
+                              <div className="col-sm-4 col-md-4 unit">
                                 <label className="label">
                                   Abreviación
                               </label>
@@ -582,7 +584,7 @@ function CiudadesCodigoPostal() {
                                 </div>
                               </div>
 
-                              <div className="col-sm-12 col-md-12 unit">
+                              <div className="col-sm-4 col-md-4 unit">
                                 <label className="label">
                                   Ciudad
                               </label>
@@ -598,7 +600,7 @@ function CiudadesCodigoPostal() {
                                 </div>
                               </div>
 
-                              <div className="col-sm-12 col-md-12 unit">
+                              <div className="col-sm-4 col-md-4 unit">
                                 <label className="label">
                                   País
                               </label>
@@ -631,7 +633,7 @@ function CiudadesCodigoPostal() {
                                 </div>
                               </div>
 
-                              <div className="col-sm-12 col-md-12 unit">
+                              <div className="col-sm-4 col-md-4 unit">
                                 <label className="label">
                                   Estado
                               </label>
@@ -715,7 +717,7 @@ function CiudadesCodigoPostal() {
                           <form className="j-forms" onSubmit={handleAceptarCodigoPostal}>
                             <div className="form-content">
 
-                              <div className="col-sm-12 col-md-12 unit">
+                              <div className="col-sm-4 col-md-4 unit">
                                 <label className="label">
                                   Código Postal
                                 </label>
@@ -731,7 +733,7 @@ function CiudadesCodigoPostal() {
                                 </div>
                               </div>
 
-                              <div className="col-sm-12 col-md-12 unit">
+                              <div className="col-sm-4 col-md-4 unit">
                                 <label className="label">
                                   Zona
                                 </label>
