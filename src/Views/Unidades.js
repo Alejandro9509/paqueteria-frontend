@@ -1038,13 +1038,10 @@ function App(props) {
             </div>
 
             <div id="Agregar" className="tab-pane fade">
-              <div className="row">
-                <div className="col-md-12">
-                  <div className="widget-wrap">
-                    <div className="widget-container margin-top-0">
-                      <div className="widget-content">
+           
                         <form className="j-forms j-multistep" onSubmit={handleAceptar}>
                           {/*Inicio de ejemplo*/}
+                          <div className="form-content">
 
                           {/* start steps */}
                           <div
@@ -1055,6 +1052,8 @@ function App(props) {
                               padding: "5px",
                               backgroundColor: "white",
                               zIndex: 100,
+                              marginBottom: "10px",
+
                             }}
                           >
                             <div className="row">
@@ -1146,51 +1145,13 @@ function App(props) {
                           </div>
                           {/* end steps */}
 
-                          <div className="row">
-                            <div className="col-md-12 col-sm-12">
+                       
                               <div className="widget-wrap">
                                 <div className="widget-header block-header margin-bottom-0 clearfix">
                                   <div className="pull-left">
                                     <h3>Información General</h3>
                                   </div>
-                                  <div className="pull-right w-action">
-                                    <ul className="widget-action-bar">
-                                      <li className="dropdown">
-                                        <a
-                                          href="#"
-                                          className="dropdown-toggle"
-                                          data-toggle="dropdown"
-                                        >
-                                          <i className="zmdi zmdi-more" />
-                                        </a>
-                                        <ul className="dropdown-menu">
-                                          <li className="widget-reload">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-refresh-alt" />
-                                            </a>
-                                          </li>
-                                          <li
-                                            className="widget-toggle"
-                                            id="infogral"
-                                          >
-                                            <a href="#">
-                                              <i className="zmdi zmdi-chevron-down" />
-                                            </a>
-                                          </li>
-                                          <li className="widget-fullscreen">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-fullscreen" />
-                                            </a>
-                                          </li>
-                                          <li className="widget-exit">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-power" />
-                                            </a>
-                                          </li>
-                                        </ul>
-                                      </li>
-                                    </ul>
-                                  </div>
+                                
                                 </div>
                                 <div className="widget-container">
                                   <div className="widget-content">
@@ -1515,54 +1476,15 @@ function App(props) {
                                 </div>
                               </div>
                               {/*Fin de ejemplo*/}
-                            </div>
-                          </div>
+                         
 
-                          <div className="row">
-                            <div className="col-md-12 col-sm-12">
+                       
                               <div className="widget-wrap">
                                 <div className="widget-header block-header margin-bottom-0 clearfix">
                                   <div className="pull-left">
                                     <h3>Carácteristicas de la unidad</h3>
                                   </div>
-                                  <div className="pull-right w-action">
-                                    <ul className="widget-action-bar">
-                                      <li className="dropdown">
-                                        <a
-                                          href="#"
-                                          className="dropdown-toggle"
-                                          data-toggle="dropdown"
-                                        >
-                                          <i className="zmdi zmdi-more" />
-                                        </a>
-                                        <ul className="dropdown-menu">
-                                          <li className="widget-reload">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-refresh-alt" />
-                                            </a>
-                                          </li>
-                                          <li
-                                            className="widget-toggle"
-                                            id="caracteristicas"
-                                          >
-                                            <a href="#">
-                                              <i className="zmdi zmdi-chevron-down" />
-                                            </a>
-                                          </li>
-                                          <li className="widget-fullscreen">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-fullscreen" />
-                                            </a>
-                                          </li>
-                                          <li className="widget-exit">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-power" />
-                                            </a>
-                                          </li>
-                                        </ul>
-                                      </li>
-                                    </ul>
-                                  </div>
+                                  
                                 </div>
                                 <div className="widget-container">
                                   <div className="widget-content">
@@ -1842,53 +1764,14 @@ function App(props) {
                                 </div>
                               </div>
                               {/*Fin de ejemplo*/}
-                            </div>
-                          </div>
-                          <div className="row">
-                            <div className="col-md-12 col-sm-12">
+                    
+                          
                               <div className="widget-wrap">
                                 <div className="widget-header block-header margin-bottom-0 clearfix">
                                   <div className="pull-left">
                                     <h3>Combustible</h3>
                                   </div>
-                                  <div className="pull-right w-action">
-                                    <ul className="widget-action-bar">
-                                      <li className="dropdown">
-                                        <a
-                                          href="#"
-                                          className="dropdown-toggle"
-                                          data-toggle="dropdown"
-                                        >
-                                          <i className="zmdi zmdi-more" />
-                                        </a>
-                                        <ul className="dropdown-menu">
-                                          <li className="widget-reload">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-refresh-alt" />
-                                            </a>
-                                          </li>
-                                          <li
-                                            className="widget-toggle"
-                                            id="combustible"
-                                          >
-                                            <a href="#">
-                                              <i className="zmdi zmdi-chevron-down" />
-                                            </a>
-                                          </li>
-                                          <li className="widget-fullscreen">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-fullscreen" />
-                                            </a>
-                                          </li>
-                                          <li className="widget-exit">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-power" />
-                                            </a>
-                                          </li>
-                                        </ul>
-                                      </li>
-                                    </ul>
-                                  </div>
+                                  
                                 </div>
                                 <div className="widget-container">
                                   <div className="widget-content">
@@ -2029,53 +1912,13 @@ function App(props) {
                                 </div>
                               </div>
                               {/*Fin de ejemplo*/}
-                            </div>
-                          </div>
-                          <div className="row">
-                            <div className="col-md-12 col-sm-12">
+                     
                               <div className="widget-wrap">
                                 <div className="widget-header block-header margin-bottom-0 clearfix">
                                   <div className="pull-left">
                                     <h3>Seguros</h3>
                                   </div>
-                                  <div className="pull-right w-action">
-                                    <ul className="widget-action-bar">
-                                      <li className="dropdown">
-                                        <a
-                                          href="#"
-                                          className="dropdown-toggle"
-                                          data-toggle="dropdown"
-                                        >
-                                          <i className="zmdi zmdi-more" />
-                                        </a>
-                                        <ul className="dropdown-menu">
-                                          <li className="widget-reload">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-refresh-alt" />
-                                            </a>
-                                          </li>
-                                          <li
-                                            className="widget-toggle"
-                                            id="seguros"
-                                          >
-                                            <a href="#">
-                                              <i className="zmdi zmdi-chevron-down" />
-                                            </a>
-                                          </li>
-                                          <li className="widget-fullscreen">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-fullscreen" />
-                                            </a>
-                                          </li>
-                                          <li className="widget-exit">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-power" />
-                                            </a>
-                                          </li>
-                                        </ul>
-                                      </li>
-                                    </ul>
-                                  </div>
+                                  
                                 </div>
                                 <div className="widget-container">
                                   <div className="widget-content">
@@ -2332,53 +2175,14 @@ function App(props) {
                                 </div>
                               </div>
                               {/*Fin de ejemplo*/}
-                            </div>
-                          </div>
-                          <div className="row">
-                            <div className="col-md-12 col-sm-12">
+                           
+                         
                               <div className="widget-wrap">
                                 <div className="widget-header block-header margin-bottom-0 clearfix">
                                   <div className="pull-left">
                                     <h3>Paro de Motor de Ralentí</h3>
                                   </div>
-                                  <div className="pull-right w-action">
-                                    <ul className="widget-action-bar">
-                                      <li className="dropdown">
-                                        <a
-                                          href="#"
-                                          className="dropdown-toggle"
-                                          data-toggle="dropdown"
-                                        >
-                                          <i className="zmdi zmdi-more" />
-                                        </a>
-                                        <ul className="dropdown-menu">
-                                          <li className="widget-reload">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-refresh-alt" />
-                                            </a>
-                                          </li>
-                                          <li
-                                            className="widget-toggle"
-                                            id="paromotor"
-                                          >
-                                            <a href="#">
-                                              <i className="zmdi zmdi-chevron-down" />
-                                            </a>
-                                          </li>
-                                          <li className="widget-fullscreen">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-fullscreen" />
-                                            </a>
-                                          </li>
-                                          <li className="widget-exit">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-power" />
-                                            </a>
-                                          </li>
-                                        </ul>
-                                      </li>
-                                    </ul>
-                                  </div>
+                            
                                 </div>
                                 <div className="widget-container">
                                   <div className="widget-content">
@@ -2429,53 +2233,14 @@ function App(props) {
                                 </div>
                               </div>
                               {/*Fin de ejemplo*/}
-                            </div>
-                          </div>
-                          <div className="row">
-                            <div className="col-md-12 col-sm-12">
+                        
+                         
                               <div className="widget-wrap">
                                 <div className="widget-header block-header margin-bottom-0 clearfix">
                                   <div className="pull-left">
                                     <h3>Detalles</h3>
                                   </div>
-                                  <div className="pull-right w-action">
-                                    <ul className="widget-action-bar">
-                                      <li className="dropdown">
-                                        <a
-                                          href="#"
-                                          className="dropdown-toggle"
-                                          data-toggle="dropdown"
-                                        >
-                                          <i className="zmdi zmdi-more" />
-                                        </a>
-                                        <ul className="dropdown-menu">
-                                          <li className="widget-reload">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-refresh-alt" />
-                                            </a>
-                                          </li>
-                                          <li
-                                            className="widget-toggle"
-                                            id="detalles"
-                                          >
-                                            <a href="#">
-                                              <i className="zmdi zmdi-chevron-down" />
-                                            </a>
-                                          </li>
-                                          <li className="widget-fullscreen">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-fullscreen" />
-                                            </a>
-                                          </li>
-                                          <li className="widget-exit">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-power" />
-                                            </a>
-                                          </li>
-                                        </ul>
-                                      </li>
-                                    </ul>
-                                  </div>
+                                  
                                 </div>
                                 <div className="widget-container">
                                   <div className="widget-content">
@@ -3143,53 +2908,13 @@ function App(props) {
                                 </div>
                               </div>
                               {/*Fin de ejemplo*/}
-                            </div>
-                          </div>
-                          <div className="row">
-                            <div className="col-md-12 col-sm-12">
+               
                               <div className="widget-wrap">
                                 <div className="widget-header block-header margin-bottom-0 clearfix">
                                   <div className="pull-left">
                                     <h3>Otros Datos</h3>
                                   </div>
-                                  <div className="pull-right w-action">
-                                    <ul className="widget-action-bar">
-                                      <li className="dropdown">
-                                        <a
-                                          href="#"
-                                          className="dropdown-toggle"
-                                          data-toggle="dropdown"
-                                        >
-                                          <i className="zmdi zmdi-more" />
-                                        </a>
-                                        <ul className="dropdown-menu">
-                                          <li className="widget-reload">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-refresh-alt" />
-                                            </a>
-                                          </li>
-                                          <li
-                                            className="widget-toggle"
-                                            id="otros"
-                                          >
-                                            <a href="#">
-                                              <i className="zmdi zmdi-chevron-down" />
-                                            </a>
-                                          </li>
-                                          <li className="widget-fullscreen">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-fullscreen" />
-                                            </a>
-                                          </li>
-                                          <li className="widget-exit">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-power" />
-                                            </a>
-                                          </li>
-                                        </ul>
-                                      </li>
-                                    </ul>
-                                  </div>
+                                
                                 </div>
                                 <div className="widget-container">
                                   <div className="widget-content">
@@ -3361,18 +3086,11 @@ function App(props) {
                                           </div>
                                         </div>
                                       </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-
-                              {/*Fin de ejemplo*/}
-                            </div>
-                            <div className="form-footer" className="col-md-12">
+                                      <div className="form-footer" className="col-md-12">
                               <button
                                 data-layout="topCenter"
                                 data-type="information"
-                                className="btn btn-primary secondary-btn"
+                                className="btn btn-secondary secondary-btn"
                               >
                                 Cancelar
                               </button>
@@ -3383,13 +3101,18 @@ function App(props) {
                                 Aceptar
                               </button>
                             </div>
+                                    </div>
+                                    
+                                  </div>
+                                  
+                                </div>
+
+                              {/*Fin de ejemplo*/}
+                           
+                            </div>
                           </div>
                         </form>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                     
             </div>
           </div>
         </div>
