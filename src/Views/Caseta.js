@@ -103,7 +103,7 @@ function Caseta() {
       console.log(respuesta.data)
       setState({
         ...state,
-        agregar: "Consulta",
+        agregar: "Consultar",
         idCaseta: id,
         descripcion: respuesta.data.m_sDescripcion,
         tarifaEje2: respuesta.data.m_cTarifaEje2,
@@ -300,8 +300,8 @@ function Caseta() {
                     <td>
                       <div>
                         <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowModificar(row.original.m_nIdCaseta))}><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdCaseta))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
                         <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdCaseta))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdCaseta))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -398,7 +398,7 @@ function Caseta() {
                                 className="form-control"
                                 type="text"
                                 required={true}
-                                readOnly={state.agregar == "Consulta"}
+                                readOnly={state.agregar == "Consultar"}
                                 value={state.descripcion}
                                 id="descripcion"
                               />
@@ -420,7 +420,7 @@ function Caseta() {
                                   min="0"
                                   step="0.01"
                                   required={true}
-                                  readOnly={state.agregar == "Consulta"}
+                                  readOnly={state.agregar == "Consultar"}
                                   value={state.tarifaEje2}
                                   id="tarifaEje2"
                                 />
@@ -437,7 +437,7 @@ function Caseta() {
                                   min="0"
                                   step="0.01"
                                   required={true}
-                                  readOnly={state.agregar == "Consulta"}
+                                  readOnly={state.agregar == "Consultar"}
                                   value={state.tarifaEje3}
                                   id="tarifaEje3"
                                 />
@@ -454,7 +454,7 @@ function Caseta() {
                                   min="0"
                                   step="0.01"
                                   required={true}
-                                  readOnly={state.agregar == "Consulta"}
+                                  readOnly={state.agregar == "Consultar"}
                                   value={state.tarifaEje4}
                                   id="tarifaEje4"
                                 />
@@ -471,7 +471,7 @@ function Caseta() {
                                   min="0"
                                   step="0.01"
                                   required={true}
-                                  readOnly={state.agregar == "Consulta"}
+                                  readOnly={state.agregar == "Consultar"}
                                   value={state.tarifaEje5}
                                   id="tarifaEje5"
                                 />
@@ -488,7 +488,7 @@ function Caseta() {
                                   min="0"
                                   step="0.01"
                                   required={true}
-                                  readOnly={state.agregar == "Consulta"}
+                                  readOnly={state.agregar == "Consultar"}
                                   value={state.tarifaEje6}
                                   id="tarifaEje6"
                                 />
@@ -505,7 +505,7 @@ function Caseta() {
                                   min="0"
                                   step="0.01"
                                   required={true}
-                                  readOnly={state.agregar == "Consulta"}
+                                  readOnly={state.agregar == "Consultar"}
                                   value={state.tarifaEje7}
                                   id="tarifaEje7"
                                 />
@@ -522,7 +522,7 @@ function Caseta() {
                                   min="0"
                                   step="0.01"
                                   required={true}
-                                  readOnly={state.agregar == "Consulta"}
+                                  readOnly={state.agregar == "Consultar"}
                                   value={state.tarifaEje8}
                                   id="tarifaEje8"
                                 />
@@ -539,7 +539,7 @@ function Caseta() {
                                   min="0"
                                   step="0.01"
                                   required={true}
-                                  readOnly={state.agregar == "Consulta"}
+                                  readOnly={state.agregar == "Consultar"}
                                   value={state.tarifaEje9}
                                   id="tarifaEje9"
                                 />

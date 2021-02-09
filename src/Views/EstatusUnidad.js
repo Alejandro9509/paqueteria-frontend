@@ -115,7 +115,7 @@ function EstatusUnidad() {
       console.log(respuesta.data)
       setState({
         ...state,
-        agregar: "Consulta",
+        agregar: "Consultar",
         showPopUp: true,
         idEstatusUnidad: id,
         estatusUnidad: respuesta.data.m_sEstatus,
@@ -270,8 +270,8 @@ function EstatusUnidad() {
                     <td>
                       <div>
                         <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowModificar(row.original.m_nIdEstatusUnidad))} ><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdEstatusUnidad))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                         <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdEstatusUnidad))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-                        <a href="#" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdEstatusUnidad))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -380,6 +380,7 @@ function EstatusUnidad() {
                                 maxLength="30"
                                 required={true}
                                 value={state.estatusUnidad}
+                                readOnly={state.agregar == "Consultar"}
                                 id="estatusUnidad"
                               />
                             </div>
@@ -397,6 +398,7 @@ function EstatusUnidad() {
                                 maxLength="5"
                                 required={true}
                                 value={state.abreviacionUnidad}
+                                readOnly={state.agregar == "Consultar"}
                                 id="abreviacionUnidad"
                               />
                             </div>
@@ -412,6 +414,7 @@ function EstatusUnidad() {
                                 required
                                 onChange={handleChange}
                                 value={state.tipoEstatusUnidad}
+                                readOnly={state.agregar == "Consultar"}
                                 id="tipoEstatusUnidad"
                               >
                                 {dataEstatus.map(
@@ -439,6 +442,7 @@ function EstatusUnidad() {
                                 required={true}
                                 type="color"
                                 value={state.colorUnidad}
+                                readOnly={state.agregar == "Consultar"}
                                 id="colorUnidad"
                               />
                             </div>

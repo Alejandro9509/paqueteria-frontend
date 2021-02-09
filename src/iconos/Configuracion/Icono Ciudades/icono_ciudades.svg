@@ -1,1 +1,43 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="60" height="57" viewBox="0 0 60 57"><defs><style>.a{fill:#f9a03e;}.b{fill:#fff;}</style></defs><g transform="translate(-468 -60)"><rect class="a" width="16" height="35" rx="1" transform="translate(468 80)"/><rect class="a" width="19" height="45" rx="1" transform="translate(509 70)"/><rect class="a" width="25" height="55" rx="2" transform="translate(484 60)"/><rect class="a" width="25" height="55" rx="1" transform="translate(484 60)"/><rect class="b" width="4" height="4" rx="1" transform="translate(471 84)"/><rect class="b" width="4" height="4" rx="1" transform="translate(512 74)"/><rect class="b" width="4" height="4" rx="1" transform="translate(488 64)"/><rect class="b" width="4" height="4" rx="1" transform="translate(512 92)"/><rect class="b" width="4" height="4" rx="1" transform="translate(488 82)"/><rect class="b" width="4" height="4" rx="1" transform="translate(471 90)"/><rect class="b" width="4" height="4" rx="1" transform="translate(512 80)"/><rect class="b" width="4" height="4" rx="1" transform="translate(488 70)"/><rect class="b" width="4" height="4" rx="1" transform="translate(512 98)"/><rect class="b" width="4" height="4" rx="1" transform="translate(488 88)"/><rect class="b" width="4" height="4" rx="1" transform="translate(471 96)"/><rect class="b" width="4" height="4" rx="1" transform="translate(512 86)"/><rect class="b" width="4" height="4" rx="1" transform="translate(488 76)"/><rect class="b" width="4" height="4" rx="1" transform="translate(488 94)"/><rect class="b" width="4" height="4" rx="1" transform="translate(477 84)"/><rect class="b" width="4" height="4" rx="1" transform="translate(521 74)"/><rect class="b" width="4" height="4" rx="1" transform="translate(495 64)"/><rect class="b" width="4" height="4" rx="1" transform="translate(502 64)"/><rect class="b" width="4" height="4" rx="1" transform="translate(521 92)"/><rect class="b" width="4" height="4" rx="1" transform="translate(495 82)"/><rect class="b" width="4" height="4" rx="1" transform="translate(502 82)"/><rect class="b" width="4" height="4" rx="1" transform="translate(477 90)"/><rect class="b" width="4" height="4" rx="1" transform="translate(521 80)"/><rect class="b" width="4" height="4" rx="1" transform="translate(495 70)"/><rect class="b" width="4" height="4" rx="1" transform="translate(502 70)"/><rect class="b" width="4" height="4" rx="1" transform="translate(521 98)"/><rect class="b" width="4" height="4" rx="1" transform="translate(495 88)"/><rect class="b" width="4" height="4" rx="1" transform="translate(502 88)"/><rect class="b" width="4" height="4" rx="1" transform="translate(477 96)"/><rect class="b" width="4" height="4" rx="1" transform="translate(521 86)"/><rect class="b" width="4" height="4" rx="1" transform="translate(495 76)"/><rect class="b" width="4" height="4" rx="1" transform="translate(502 76)"/><rect class="b" width="4" height="4" rx="1" transform="translate(495 94)"/><rect class="b" width="4" height="4" rx="1" transform="translate(502 94)"/><path class="b" d="M1,0H6A1,1,0,0,1,7,1V12a1,1,0,0,1-1,1H1a1,1,0,0,1-1-1V1A1,1,0,0,1,1,0Z" transform="translate(493 104)"/><path class="b" d="M1,0H6A1,1,0,0,1,7,1V12a1,1,0,0,1-1,1H1a1,1,0,0,1-1-1V1A1,1,0,0,1,1,0Z" transform="translate(473 104)"/><path class="b" d="M1,0H6A1,1,0,0,1,7,1V12a1,1,0,0,1-1,1H1a1,1,0,0,1-1-1V1A1,1,0,0,1,1,0Z" transform="translate(515 104)"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="57" viewBox="0 0 60 57">
+<defs><style>.a{fill:#f9a03e;}.b{fill:#fff;}</style></defs><g transform="translate(-468 -60)">
+<rect  fill="current" width="16" height="35" rx="1" transform="translate(468 80)"/>
+<rect  fill="current" width="19" height="45" rx="1" transform="translate(509 70)"/>
+<rect  fill="current" width="25" height="55" rx="2" transform="translate(484 60)"/>
+<rect  fill="current" width="25" height="55" rx="1" transform="translate(484 60)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(471 84)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(512 74)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(488 64)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(512 92)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(488 82)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(471 90)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(512 80)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(488 70)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(512 98)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(488 88)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(471 96)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(512 86)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(488 76)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(488 94)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(477 84)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(521 74)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(495 64)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(502 64)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(521 92)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(495 82)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(502 82)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(477 90)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(521 80)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(495 70)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(502 70)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(521 98)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(495 88)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(502 88)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(477 96)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(521 86)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(495 76)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(502 76)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(495 94)"/>
+<rect class="b" width="4" height="4" rx="1" transform="translate(502 94)"/>
+<path class="b" d="M1,0H6A1,1,0,0,1,7,1V12a1,1,0,0,1-1,1H1a1,1,0,0,1-1-1V1A1,1,0,0,1,1,0Z" transform="translate(493 104)"/>
+<path class="b" d="M1,0H6A1,1,0,0,1,7,1V12a1,1,0,0,1-1,1H1a1,1,0,0,1-1-1V1A1,1,0,0,1,1,0Z" transform="translate(473 104)"/>
+<path class="b" d="M1,0H6A1,1,0,0,1,7,1V12a1,1,0,0,1-1,1H1a1,1,0,0,1-1-1V1A1,1,0,0,1,1,0Z" transform="translate(515 104)"/></g></svg>
