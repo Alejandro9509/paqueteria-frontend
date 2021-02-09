@@ -2323,7 +2323,7 @@ a.waves-effect .waves-ripple {
 /* Select
 =============================== */
 .j-forms select {
-  padding-left: 13px;
+  padding-left: 0px;
 }
 .j-forms .multiple-select select {
   height: auto;

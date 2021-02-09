@@ -3910,7 +3910,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 }
 .navStatica{
   position: sticky;
-  top: 110px;
+  top: 105px;
   z-index: 100;
   background-color: #E6E6E6;
 	
