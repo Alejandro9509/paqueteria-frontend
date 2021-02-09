@@ -50,26 +50,26 @@ function Configuracion() {
           <div style={{ display: "flex", flexWrap: "wrap" }}>
             {configurationRoutes.map((r, index) => {
               return (
-
                 <Link to={r.path}>
-                  <div className="col-division-md-botones col-division-sm-botones col-division-lg-botones caja-boton" style={{ textAlign: "center" }}>
+                  <div className="caja-boton">
                     <button
                       type="button"
                       key={index}
                       style={{ textAlign: "center", alignContent: "center" }}
                       className="boton-de-catalogos">
                       <SvgIcon
+                        style={{ position: "relative" }}
                         component={r.icon}
                         className="imagen-de-catalogos"
-                        viewBox="0 0 50 60"
+                        viewBox="0 0 50 50"
                       />
                     </button>
                     <br></br>
-                    <label>{r.name}</label>
+                    <label style={{ alignSelf: "center", paddingTop: "10px" }}>{r.name}</label>
                     <br></br>
                   </div>
                 </Link>
-              )
+              );
             })}
           </div>
         </div>

@@ -934,7 +934,7 @@ function App(props) {
                           {/* end steps */}
 
                         
-                              <div className="widget-wrap">
+                              <div className="widget-wrap" id="infogral">
                                 <div className="widget-header block-header margin-bottom-0 clearfix">
                                   <div className="pull-left">
                                     <h3>Información General</h3>
@@ -1351,7 +1351,7 @@ function App(props) {
                        
 
                          
-                              <div className="widget-wrap">
+                              <div className="widget-wrap" id="general">
                                 <div className="widget-header block-header margin-bottom-0 clearfix">
                                   <div className="pull-left">
                                     <h3>General</h3>
@@ -1716,7 +1716,7 @@ function App(props) {
                               {/*Fin de ejemplo*/}
                        
                          
-                              <div className="widget-wrap">
+                              <div className="widget-wrap" id="liquidaciones">
                                 <div className="widget-header block-header margin-bottom-0 clearfix">
                                   <div className="pull-left">
                                     <h3>Liquidaciones CFDI</h3>
@@ -1944,7 +1944,7 @@ function App(props) {
                               {/*Fin de ejemplo*/}
                          
                           
-                              <div className="widget-wrap">
+                              <div className="widget-wrap" id="mas">
                                 <div className="widget-header block-header margin-bottom-0 clearfix">
                                   <div className="pull-left">
                                     <h3>Más Información</h3>
@@ -2174,7 +2174,7 @@ function App(props) {
                               {/*Fin de ejemplo*/}
                         
                        
-                              <div className="widget-wrap">
+                              <div className="widget-wrap" id="incidencias">
                                 <div className="widget-header block-header margin-bottom-0 clearfix">
                                   <div className="pull-left">
                                     <h3>Incidencias</h3>
@@ -2275,7 +2275,7 @@ function App(props) {
                               {/*Fin de ejemplo*/}
                        
                          
-                              <div className="widget-wrap">
+                              <div className="widget-wrap" id="appmoviles">
                                 <div className="widget-header block-header margin-bottom-0 clearfix">
                                   <div className="pull-left">
                                     <h3>App. Móviles</h3>
@@ -2401,51 +2401,13 @@ function App(props) {
                               </div>
                               {/*Fin de ejemplo*/}
                            
-                          <div className="row">
-                            <div className="col-md-12 col-sm-12">
-                              <div className="widget-wrap">
+                         
+                              <div className="widget-wrap" id="fotosDocs">
                                 <div className="widget-header block-header margin-bottom-0 clearfix">
                                   <div className="pull-left">
                                     <h3>Fotos / Documentos</h3>
                                   </div>
-                                  <div className="pull-right w-action">
-                                    <ul className="widget-action-bar">
-                                      <li className="dropdown">
-                                        <a
-                                          href="#"
-                                          className="dropdown-toggle"
-                                          data-toggle="dropdown"
-                                        >
-                                          <i className="zmdi zmdi-more" />
-                                        </a>
-                                        <ul className="dropdown-menu">
-                                          <li className="widget-reload">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-refresh-alt" />
-                                            </a>
-                                          </li>
-                                          <li
-                                            className="widget-toggle"
-                                            id="fotosdocs"
-                                          >
-                                            <a href="#">
-                                              <i className="zmdi zmdi-chevron-down" />
-                                            </a>
-                                          </li>
-                                          <li className="widget-fullscreen">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-fullscreen" />
-                                            </a>
-                                          </li>
-                                          <li className="widget-exit">
-                                            <a href="#">
-                                              <i className="zmdi zmdi-power" />
-                                            </a>
-                                          </li>
-                                        </ul>
-                                      </li>
-                                    </ul>
-                                  </div>
+                                 
                                 </div>
                                 <div className="widget-container">
                                   <div className="widget-content">
@@ -2533,8 +2495,7 @@ function App(props) {
                                 Aceptar
                               </button>
                             </div>
-                          </div>
-                          </div>
+                        
                         
                         </form>
                       
