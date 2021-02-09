@@ -33,7 +33,7 @@ const useStyles = makeStyles({
     "& .MuiIconButton-root": {
       padding: 0
     }
-  },paqueteCarrusel: {
+  }, paqueteCarrusel: {
     height: "400px !important",
   },
   sobreCarrusel: {
@@ -55,7 +55,7 @@ function Recoleccion() {
   const [state, setState] = React.useState({
     showPopUp: false,
     identificadorModal: "",
-    DerechoBorrar:133,
+    DerechoBorrar: 133,
     agregar: "Agregar",
     idRecoleccion: 0,
     fechaInicial: "",
@@ -111,8 +111,8 @@ function Recoleccion() {
     operador: 0,
     tipoUnidad: 0,
     unidad: 0,
-    CreadoPor:localStorage.getItem("UsuarioId")  ,
-    ModificadoPor:localStorage.getItem("UsuarioId")  ,
+    CreadoPor: localStorage.getItem("UsuarioId"),
+    ModificadoPor: localStorage.getItem("UsuarioId"),
     paquetes: [
       {
         m_rPeso: "",
@@ -201,8 +201,8 @@ function Recoleccion() {
       "m_nIdOperador": state.operador,
       "m_nIdUnidad": state.unidad,
       "m_nIdRemolqueLlegadaRecoleccion": state.tipoUnidad,
-      "m_nCreadoPor":state.CreadoPor,
-      "m_nModificadoPor":state.ModificadoPor
+      "m_nCreadoPor": state.CreadoPor,
+      "m_nModificadoPor": state.ModificadoPor
 
     }
     console.log(params)
@@ -235,12 +235,12 @@ function Recoleccion() {
     }
   };
 
-  
+
 
   function handleSelectCP(id, cp) {
     setState({
       ...state,
-      [state.identificadorModal] : id
+      [state.identificadorModal]: id
     });
     console.log(id)
   }
@@ -293,23 +293,22 @@ function Recoleccion() {
       //alert(respuesta.data)
 
       derecho = respuesta.data;
-      if (derecho == false)
-      {
-        alert ("El usuario no tiene derechos para realizar el proceso");
-        return; 
+      if (derecho == false) {
+        alert("El usuario no tiene derechos para realizar el proceso");
+        return;
       }
-      
-    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Eliminar/` + id;
-    axios
-      .delete(url, { headers })
-      .then((respuesta) => {
-        alert(respuesta.data);
-        getAllData();
-      })
-      .catch((err) => {
-        alert(err);
-      });
-	}).catch(err => {
+
+      const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Eliminar/` + id;
+      axios
+        .delete(url, { headers })
+        .then((respuesta) => {
+          alert(respuesta.data);
+          getAllData();
+        })
+        .catch((err) => {
+          alert(err);
+        });
+    }).catch(err => {
       alert(err)
     });
   }
@@ -389,12 +388,86 @@ function Recoleccion() {
     });
   }
 
+  function handleShowConsultar(id) {
+    console.log(id);
+    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetById/${id}`;
+    axios.get(url, { headers }).then((respuesta) => {
+      console.log(respuesta.data);
+      setState({
+        ...state,
+        agregar: "Consultar",
+        showPopUp: true,
+        idRecoleccion: id,
+        idSucursalAgregar: respuesta.data.m_nIdSucursal,
+        folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
+        folioEmbarque: respuesta.data.m_nIdEmbarque,
+        folioGuía: respuesta.data.m_nIdGuia,
+        folioInforme: respuesta.data.m_nIdInforme,
+        fechaHoraCreacion: respuesta.data.m_dFecha + "T" + respuesta.data.m_tHora.slice(0, 5),
+        estatusRecoleccion: respuesta.data.m_nIdEstatusRecoleccion,
+        moneda: respuesta.data.m_nMoneda,
+        tipoCambio: respuesta.data.m_rTipoCambio,
+        tipoCobro: respuesta.data.m_nIdTipoDeCobro,
+        nombreRemitente: respuesta.data.m_sNombreRemitente,
+        RFCRemitente: respuesta.data.m_sRFCRemitente,
+        domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
+        codigoPostalRemitente: respuesta.data.m_sIdCodigoPostalRemitente,
+        ciudadRemitente: respuesta.data.m_nIdCiudadRemitente,
+        correoRemitente: respuesta.data.m_sCorreoRemitente,
+        telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
+        contactoRemitente: respuesta.data.m_sContactoRemitente,
+        origenRemitente: respuesta.data.m_nIdCiudadOrigen,
+        nombreDestinatario: respuesta.data.m_sNombreDestinatario,
+        RFCDestinatario: respuesta.data.m_sRFCDestinatario,
+        domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
+        codigoPostalDestinatario: respuesta.data.m_sIdCodigoPostalDestinatario,
+        ciudadDestinatario: respuesta.data.m_nIdCiudadDestinatario,
+        correoDestinatario: respuesta.data.m_sCorreoDestinatario,
+        telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
+        contactoDestinatario: respuesta.data.m_sContactoDestinatario,
+        destinoDestinatario: respuesta.data.m_nIdCiudadDestino,
+        ciudadRemitente: respuesta.data.m_nIdCiudadRemitente,
+        ciudadDestinatario: respuesta.data.m_nIdCiudadDestinatario,
+        codigoPostalRecoleccion: respuesta.data.m_sIdCodigoPostalRemitente,
+        ciudadRecoleccion: respuesta.data.m_nIdCiudadDetalleRecoleccion,
+        zonaRecoleccion: respuesta.data.m_nIdZonaDetalleRecoleccion,
+        domicilioRecoleccion: respuesta.data.m_sDomicilioDetalleRecoleccion,
+        recogerEn: respuesta.data.m_sRecogerEnDetalleRecoleccion,
+        datosAdicionalesRecoleccion:
+          respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
+        codigoPostalEntrega: respuesta.data.m_sIdCodigoPostalRemitente,
+        ciudadEntrega: respuesta.data.m_nIdCiudadDetalleEntrega,
+        zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
+        domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
+        entregaEn: respuesta.data.m_sEntregarEnDetalleEntrega,
+        datosAdicionalesEntrega:
+          respuesta.data.m_sDatosAdicionalesDetalleEntrega,
+        fechaHoraSalida:
+          respuesta.data.m_dFechaElaboracionSalidaRecoleccion +
+          "T" +
+          respuesta.data.m_tHoraElaboracionSalidaRecoleccion.slice(0, 5),
+        fechaHoraLlegada:
+          respuesta.data.m_dFechaElaboracionLlegadaRecoleccion +
+          "T" +
+          respuesta.data.m_tHoraElaboracionLlegadaRecoleccion.slice(0, 5),
+        fechaRecoleccion:
+          respuesta.data.m_dFechaDetalleRecoleccion +
+          "T" +
+          respuesta.data.m_tHoraDetalleRecoleccion.slice(0, 5),
+        paquetes: respuesta.data.m_parrPaquetes,
+        sobres: respuesta.data.m_parrSobres,
+        cantidadDePaquetes: respuesta.data.m_parrPaquetes.length,
+        cantidadDeSobres: respuesta.data.m_parrSobres.length,
+      });
+    });
+  }
+
   function handleShowAgregar() {
     setState({
       ...state,
       agregar: "Agregar",
       showPopUp: true,
-      
+
       folioRecoleccion: "",
       folioEmbarque: "",
       folioGuía: "",
@@ -531,8 +604,7 @@ function Recoleccion() {
   ]);
 
   useEffect((value) => {
-    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
-    {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
       alert("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
@@ -718,11 +790,11 @@ function Recoleccion() {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                          <i className="fa fa-caret-down" />
-                        )
+                            <i className="fa fa-caret-down" />
+                          )
                       ) : (
-                        ""
-                      )}
+                          ""
+                        )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -740,9 +812,9 @@ function Recoleccion() {
                   <tr {...row.getRowProps()}>
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -807,11 +879,11 @@ function Recoleccion() {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                          <i className="fa fa-caret-down" />
-                        )
+                            <i className="fa fa-caret-down" />
+                          )
                       ) : (
-                        ""
-                      )}
+                          ""
+                        )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -829,9 +901,9 @@ function Recoleccion() {
                   <tr {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -1145,7 +1217,7 @@ function Recoleccion() {
             </li>
           </ul>
 
-          <div className="row" className="tab-content" style={{paddingLeft: "-15px"}}>
+          <div className="row" className="tab-content" style={{ paddingLeft: "-15px" }}>
             <div id="Listado" className="tab-pane fade in active">
               <div className="widget-wrap">
                 <div className="widget-content">
@@ -1224,8 +1296,8 @@ function Recoleccion() {
                     {conDatos() ? (
                       <Table columns={columns} data={data} />
                     ) : (
-                      <div>No se encontró ningún registro</div>
-                    )}
+                        <div>No se encontró ningún registro</div>
+                      )}
                   </div>
                 </div>
               </div>
@@ -1325,6 +1397,7 @@ function Recoleccion() {
                                   className="form-control"
                                   required
                                   value={state.idSucursalAgregar}
+                                  readOnly={state.agregar == "Consultar"}
                                   onChange={handleChange}
                                   id="idSucursalAgregar"
                                   disabled="disabled"
@@ -1406,6 +1479,7 @@ function Recoleccion() {
                                   type="datetime-local"
                                   required
                                   value={state.fechaHoraCreacion}
+                                  readOnly={state.agregar == "Consultar"}
                                   className="form-control"
                                   id="fechaHoraCreacion"
                                 />
@@ -1421,6 +1495,7 @@ function Recoleccion() {
                                   className="form-control"
                                   required
                                   value={state.estatus}
+                                  readOnly={state.agregar == "Consultar"}
                                   onChange={handleChange}
                                   id="estatus"
                                 >
@@ -1444,6 +1519,7 @@ function Recoleccion() {
                                   className="form-control"
                                   required
                                   value={state.moneda}
+                                  readOnly={state.agregar == "Consultar"}
                                   onChange={handleChange}
                                   id="moneda"
                                 >
@@ -1471,6 +1547,7 @@ function Recoleccion() {
                                   step="0.01"
                                   required
                                   value={state.tipoCambio}
+                                  readOnly={state.agregar == "Consultar"}
                                   id="tipoCambio"
                                 />
                               </div>
@@ -1483,6 +1560,7 @@ function Recoleccion() {
                                   className="form-control"
                                   required
                                   value={state.tipoCobro}
+                                  readOnly={state.agregar == "Consultar"}
                                   onChange={handleChange}
                                   id="tipoCobro"
                                 >
@@ -1503,41 +1581,276 @@ function Recoleccion() {
                       </div>
                     </div>
                   </div>
-<div className="row">
-
 
                   <div className="row">
-                    <div className="col-md-7">
-                      <div className="widget-wrap" id="remitenteDestinatario">
-                        <div className="row">
-                          <div className="col-md-6">
-                            <div className="widget-header">
-                              <h2>Remitente</h2>
-                            </div>
-                            <div className="widget-container">
-                              <div className="widget-content">
-                                <div className="row">
-{/* --------------------------------------- Nombre -------------------------------------- */}
-                                  <div className="col-sm-4 col-md-12 unit">
-                                    <label className="label">
-                                      Nombre
+
+
+                    <div className="row">
+                      <div className="col-md-7">
+                        <div className="widget-wrap" id="remitenteDestinatario">
+                          <div className="row">
+                            <div className="col-md-6">
+                              <div className="widget-header">
+                                <h2>Remitente</h2>
+                              </div>
+                              <div className="widget-container">
+                                <div className="widget-content">
+                                  <div className="row">
+                                    {/* --------------------------------------- Nombre -------------------------------------- */}
+                                    <div className="col-sm-4 col-md-12 unit">
+                                      <label className="label">
+                                        Nombre
                                   </label>
+                                      <div className="input">
+                                        <input
+                                          onChange={handleChange}
+                                          className="form-control"
+                                          type="text"
+                                          required
+                                          value={state.nombreRemitente}
+                                          readOnly={state.agregar == "Consultar"}
+                                          id="nombreRemitente"
+                                        />
+                                      </div>
+                                    </div>
+                                    {/* --------------------------------------- RFC -------------------------------------- */}
+                                    <div className="col-sm-4 col-md-12 unit">
+                                      <label className="label">
+                                        RFC
+                                  </label>
+                                      <div className="input">
+                                        <input
+                                          onChange={handleChange}
+                                          className="form-control"
+                                          type="text"
+                                          pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
+                                          title="Favor de introducir un RFC válido."
+                                          required
+                                          value={state.RFCRemitente}
+                                          readOnly={state.agregar == "Consultar"}
+                                          id="RFCRemitente"
+                                        />
+                                      </div>
+                                    </div>
+                                    {/* --------------------------------------- Domicilio -------------------------------------- */}
+                                    <div className="col-sm-4 col-md-12 unit">
+                                      <label className="label">Domicilio</label>
+                                      <div className="input">
+                                        <input
+                                          onChange={handleChange}
+                                          className="form-control"
+                                          type="text"
+                                          required
+                                          value={state.domicilioRemitente}
+                                          readOnly={state.agregar == "Consultar"}
+                                          id="domicilioRemitente"
+                                        />
+                                      </div>
+                                    </div>
+                                    {/* --------------------------------------- AutocompleteCPRemitente -------------------------------------- */}
+                                    <div className="col-sm-4 col-md-6 unit" >
+                                      <label className="label">Código Postal</label>
+                                      <div className="input">
+                                        <Autocomplete
+                                          freeSolo
+                                          onChange={(event, newValue) =>
+                                            setState({
+                                              ...state,
+                                              codigoPostalRemitente: newValue,
+                                            })
+                                          }
+                                          value={state.codigoPostalRemitente}
+                                          readOnly={state.agregar == "Consultar"}
+                                          id="codigoPostalRemitente"
+                                          disableClearable
+                                          forcePopupIcon={false}
+                                          options={dataCodigoPostal}
+                                          getOptionLabel={(option) =>
+                                            option.m_sCP
+                                          }
+                                          variant="outlined"
+                                          style={{ borderWidth: "1px", borderColor: "#dddddd", borderStyle: "solid", borderRadius: "5px", width: "124px" }}
+                                          renderInput={(params) => (
+                                            <div>
+                                              <TextField
+                                                {...params}
+                                                InputProps={{
+                                                  ...params.InputProps,
+                                                  style: { height: 24 },
+                                                  type: "search",
+                                                  value: state.codigoPostalRemitente,
+                                                  readOnly: state.agregar == "Consultar",
+                                                  endAdornment:
+                                                    <InputAdornment position="end">
+                                                      <IconButton padding="0px" onClick={() => { open(); setState({ ...state, identificadorModal: "codigoPostalRemitente" }) }}>
+                                                        <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
+                                                      </IconButton>
+                                                    </InputAdornment>
+                                                }}
+                                              />
+                                            </div>
+                                          )}
+                                        />
+
+                                      </div>
+                                    </div>
+                                    <Modal>
+                                      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+                                        {dataCodigoPostal.length != 0 ? <TableCodigoPostal columns={columnsCP} data={dataCodigoPostal} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
+                                        <a onClick={close}>Cerrar</a>
+                                        <a href="/Ciudades">Agregar</a>
+                                      </div>
+                                    </Modal>
+
+                                    {/* --------------------------------------- Ciudad ------------------------------------------------- */}
+                                    <div className="col-sm-4 col-md-6 unit">
+                                      <label className="label">Ciudad</label>
+                                      <label className="input select">
+                                        <select
+                                          className="form-control"
+                                          required
+                                          value={state.ciudadRemitente}
+                                          readOnly={state.agregar == "Consultar"}
+                                          onChange={handleChange}
+                                          id="ciudadRemitente"
+                                        >
+                                          {dataCiudad.map((ciudad) => (
+                                            <option
+                                              key={ciudad.m_nIdCiudad}
+                                              value={ciudad.m_nIdCiudad}
+                                            >
+                                              {ciudad.m_sCiudad}
+                                            </option>
+                                          ))}
+                                        </select>
+                                        <i className="fa fa-arrow-down" />
+                                      </label>
+                                    </div>
+                                    {/* --------------------------------------- Correo ------------------------------------------------- */}
+                                    <div className="col-sm-4 col-md-12 unit">
+                                      <label className="label">
+                                        Correo Electrónico
+                                    </label>
+                                      <div className="input">
+                                        <input
+                                          onChange={handleChange}
+                                          className="form-control"
+                                          type="email"
+                                          required
+                                          value={state.correoRemitente}
+                                          readOnly={state.agregar == "Consultar"}
+                                          id="correoRemitente"
+                                        />
+                                      </div>
+                                    </div>
+                                    {/* --------------------------------------- Telefono ------------------------------------------------- */}
+                                    <div className="col-sm-4 col-md-12 unit">
+                                      <label className="label">
+                                        Teléfono
+                                  </label>
+                                      <div className="input">
+                                        <input
+                                          onChange={handleChange}
+                                          className="form-control"
+                                          type="text"
+                                          pattern="[0-9]{10}"
+                                          maxLength="10"
+                                          required
+                                          value={state.telefonoRemitente}
+                                          readOnly={state.agregar == "Consultar"}
+                                          id="telefonoRemitente"
+                                        />
+                                      </div>
+                                    </div>
+                                    {/* --------------------------------------- Contacto ------------------------------------------------- */}
+                                    <div className="col-sm-4 col-md-12 unit">
+                                      <label className="label">
+                                        Contacto
+                                  </label>
+                                      <div className="input">
+                                        <input
+                                          onChange={handleChange}
+                                          className="form-control"
+                                          type="text"
+                                          required
+                                          value={state.contactoRemitente}
+                                          readOnly={state.agregar == "Consultar"}
+                                          id="contactoRemitente"
+                                        />
+                                      </div>
+                                    </div>
+                                    {/* --------------------------------------- Origen ------------------------------------------------- */}
+                                    <div className="col-sm-12 col-md-12 unit">
+                                      <label className="label">
+                                        Origen
+                                </label>
+                                      <label className="input select">
+                                        <select
+                                          className="form-control"
+                                          required
+                                          value={state.origenRemitente}
+                                          readOnly={state.agregar == "Consultar"}
+                                          onChange={handleChange}
+                                          id="origenRemitente"
+                                        >
+                                          {dataCiudad.map((ciudad) => (
+                                            <option
+                                              key={ciudad.m_nIdCiudad}
+                                              value={ciudad.m_nIdCiudad}
+                                            >
+                                              {ciudad.m_sCiudad}
+                                            </option>
+                                          ))}
+                                        </select>
+                                        <i className="fa fa-arrow-down" />
+                                      </label>
+                                    </div>
+                                    {/* --------------------------------------- RecoleccionDD ------------------------------------------------- */}
+                                    <div className="col-sm-12 col-md-12 unit">
+                                      <label className="label">
+                                        Recolección en Diferente Domicilio
+                                    </label>
+                                      <div className="form">
+                                        <input
+                                          onChange={
+                                            handleRecoleccionCheckboxChange
+                                          }
+                                          className="form-control"
+                                          value={state.diferenteRecoleccion}
+                                          readOnly={state.agregar == "Consultar"}
+                                          checked={state.diferenteRecoleccion}
+                                          type="checkbox"
+                                          id="diferenteRecoleccion"
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="col-md-6">
+                              <div className="widget-header">
+                                <h2>Destinatario</h2>
+                              </div>
+                              <div className="widget-container">
+                                <div className="widget-content">
+                                  <div className="col-sm-4 col-md-6    unit">
+                                    <label className="label">Nombre</label>
                                     <div className="input">
                                       <input
                                         onChange={handleChange}
                                         className="form-control"
                                         type="text"
                                         required
-                                        value={state.nombreRemitente}
-                                        id="nombreRemitente"
+                                        value={state.nombreDestinatario}
+                                        readOnly={state.agregar == "Consultar"}
+                                        id="nombreDestinatario"
                                       />
                                     </div>
                                   </div>
-{/* --------------------------------------- RFC -------------------------------------- */}
-                                  <div className="col-sm-4 col-md-12 unit">
-                                    <label className="label">
-                                      RFC
-                                  </label>
+
+                                  <div className="col-sm-4 col-md-6 unit">
+                                    <label className="label">RFC</label>
                                     <div className="input">
                                       <input
                                         onChange={handleChange}
@@ -1546,12 +1859,13 @@ function Recoleccion() {
                                         pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
                                         title="Favor de introducir un RFC válido."
                                         required
-                                        value={state.RFCRemitente}
-                                        id="RFCRemitente"
+                                        value={state.RFCDestinatario}
+                                        readOnly={state.agregar == "Consultar"}
+                                        id="RFCDestinatario"
                                       />
                                     </div>
                                   </div>
-{/* --------------------------------------- Domicilio -------------------------------------- */}
+
                                   <div className="col-sm-4 col-md-12 unit">
                                     <label className="label">Domicilio</label>
                                     <div className="input">
@@ -1560,234 +1874,14 @@ function Recoleccion() {
                                         className="form-control"
                                         type="text"
                                         required
-                                        value={state.domicilioRemitente}
-                                        id="domicilioRemitente"
+                                        value={state.domicilioDestinatario}
+                                        readOnly={state.agregar == "Consultar"}
+                                        id="domicilioDestinatario"
                                       />
                                     </div>
                                   </div>
-{/* --------------------------------------- AutocompleteCPRemitente -------------------------------------- */}
+
                                   <div className="col-sm-4 col-md-6 unit" >
-                                    <label className="label">Código Postal</label>
-                                    <div className="input">
-                                      <Autocomplete
-                                        freeSolo
-                                        onChange={(event, newValue) =>
-                                          setState({
-                                            ...state,
-                                            codigoPostalRemitente: newValue,
-                                          })
-                                        }
-                                        value={state.codigoPostalRemitente}
-                                        id="codigoPostalRemitente"
-                                        disableClearable
-                                        forcePopupIcon={false}
-                                        options={dataCodigoPostal}
-                                        getOptionLabel={(option) =>
-                                          option.m_sCP
-                                        }
-                                        variant="outlined"
-                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle: "solid",borderRadius: "5px", width: "124px"}}
-                                        renderInput={(params) => (
-                                          <div>
-                                            <TextField
-                                              {...params}
-                                              InputProps={{
-                                                ...params.InputProps,
-                                                style: { height: 24},
-                                                type: "search",
-                                                value: state.codigoPostalRemitente,
-                                                 endAdornment: 
-                                                <InputAdornment position="end">
-                                                  <IconButton padding="0px" onClick={() => {open(); setState({...state, identificadorModal: "codigoPostalRemitente"})} }>
-                                                    <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
-                                                 </IconButton> 
-                                                </InputAdornment> 
-                                              }}
-                                            />                                                                                       
-                                          </div>
-                                        )}                                        
-                                                       />
-                                    </div>
-                                  </div>
-                                  <Modal>
-                                    <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-                                      {dataCodigoPostal.length != 0 ? <TableCodigoPostal columns={columnsCP} data={dataCodigoPostal} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-                                      <a onClick={close}>Cerrar</a>
-                                      <a href="/Ciudades">Agregar</a>
-                                    </div>
-                                  </Modal>
-                              
-{/* --------------------------------------- Ciudad ------------------------------------------------- */}
-                                  <div className="col-sm-4 col-md-6 unit">
-                                    <label className="label">Ciudad</label>
-                                    <label className="input select">
-                                      <select
-                                        className="form-control"
-                                        required
-                                        value={state.ciudadRemitente}
-                                        onChange={handleChange}
-                                        id="ciudadRemitente"
-                                      >
-                                        {dataCiudad.map((ciudad) => (
-                                          <option
-                                            key={ciudad.m_nIdCiudad}
-                                            value={ciudad.m_nIdCiudad}
-                                          >
-                                            {ciudad.m_sCiudad}
-                                          </option>
-                                        ))}
-                                      </select>
-                                      <i className="fa fa-arrow-down" />
-                                    </label>
-                                  </div>
-{/* --------------------------------------- Correo ------------------------------------------------- */}
-                                  <div className="col-sm-4 col-md-12 unit">
-                                    <label className="label">
-                                      Correo Electrónico
-                                    </label>
-                                    <div className="input">
-                                      <input
-                                        onChange={handleChange}
-                                        className="form-control"
-                                        type="email"
-                                        required
-                                        value={state.correoRemitente}
-                                        id="correoRemitente"
-                                      />
-                                    </div>
-                                  </div>
-{/* --------------------------------------- Telefono ------------------------------------------------- */}
-                                  <div className="col-sm-4 col-md-12 unit">
-                                    <label className="label">
-                                      Teléfono
-                                  </label>
-                                    <div className="input">
-                                      <input
-                                        onChange={handleChange}
-                                        className="form-control"
-                                        type="text"
-                                        pattern="[0-9]{10}"
-                                        maxLength="10"
-                                        required
-                                        value={state.telefonoRemitente}
-                                        id="telefonoRemitente"
-                                      />
-                                    </div>
-                                  </div>
-{/* --------------------------------------- Contacto ------------------------------------------------- */}
-                                  <div className="col-sm-4 col-md-12 unit">
-                                    <label className="label">
-                                      Contacto
-                                  </label>
-                                    <div className="input">
-                                      <input
-                                        onChange={handleChange}
-                                        className="form-control"
-                                        type="text"
-                                        required
-                                        value={state.contactoRemitente}
-                                        id="contactoRemitente"
-                                      />
-                                    </div>
-                                  </div>
-{/* --------------------------------------- Origen ------------------------------------------------- */}
-                                  <div className="col-sm-12 col-md-12 unit">
-                                    <label className="label">
-                                      Origen
-                                </label>
-                                    <label className="input select">
-                                      <select
-                                        className="form-control"
-                                        required
-                                        value={state.origenRemitente}
-                                        onChange={handleChange}
-                                        id="origenRemitente"
-                                      >
-                                        {dataCiudad.map((ciudad) => (
-                                          <option
-                                            key={ciudad.m_nIdCiudad}
-                                            value={ciudad.m_nIdCiudad}
-                                          >
-                                            {ciudad.m_sCiudad}
-                                          </option>
-                                        ))}
-                                      </select>
-                                      <i className="fa fa-arrow-down" />
-                                    </label>
-                                  </div>
-{/* --------------------------------------- RecoleccionDD ------------------------------------------------- */}
-                                  <div className="col-sm-12 col-md-12 unit">
-                                    <label className="label">
-                                      Recolección en Diferente Domicilio
-                                    </label>
-                                    <div className="form">
-                                      <input
-                                        onChange={
-                                          handleRecoleccionCheckboxChange
-                                        }
-                                        className="form-control"
-                                        value={state.diferenteRecoleccion}
-                                        checked={state.diferenteRecoleccion}
-                                        type="checkbox"
-                                        id="diferenteRecoleccion"
-                                      />
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="col-md-6">
-                            <div className="widget-header">
-                              <h2>Destinatario</h2>
-                            </div>
-                            <div className="widget-container">
-                              <div className="widget-content">
-                                <div className="col-sm-4 col-md-6    unit">
-                                  <label className="label">Nombre</label>
-                                  <div className="input">
-                                    <input
-                                      onChange={handleChange}
-                                      className="form-control"
-                                      type="text"
-                                      required
-                                      value={state.nombreDestinatario}
-                                      id="nombreDestinatario"
-                                    />
-                                  </div>
-                                </div>
-
-                                <div className="col-sm-4 col-md-6 unit">
-                                  <label className="label">RFC</label>
-                                  <div className="input">
-                                    <input
-                                      onChange={handleChange}
-                                      className="form-control"
-                                      type="text"
-                                      pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
-                                      title="Favor de introducir un RFC válido."
-                                      required
-                                      value={state.RFCDestinatario}
-                                      id="RFCDestinatario"
-                                    />
-                                  </div>
-                                </div>
-
-                                <div className="col-sm-4 col-md-12 unit">
-                                  <label className="label">Domicilio</label>
-                                  <div className="input">
-                                    <input
-                                      onChange={handleChange}
-                                      className="form-control"
-                                      type="text"
-                                      required
-                                      value={state.domicilioDestinatario}
-                                      id="domicilioDestinatario"
-                                    />
-                                  </div>
-                                </div>
-
-                                <div className="col-sm-4 col-md-6 unit" >
                                     <label className="label">Código Postal</label>
                                     <div className="input">
                                       <Autocomplete
@@ -1799,6 +1893,7 @@ function Recoleccion() {
                                           })
                                         }
                                         value={state.codigoPostalDestinatario}
+                                        readOnly={state.agregar == "Consultar"}
                                         id="codigoPostalDestinatario"
                                         disableClearable
                                         options={dataCodigoPostal}
@@ -1806,134 +1901,610 @@ function Recoleccion() {
                                           option.m_sCP
                                         }
                                         variant="outlined"
-                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle:"solid",borderRadius: "5px"}}
+                                        style={{ borderWidth: "1px", borderColor: "#dddddd", borderStyle: "solid", borderRadius: "5px" }}
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
-                                                style: { height: 24},
+                                                style: { height: 24 },
                                                 type: "search",
-                                                 endAdornment:  <InputAdornment position="end"> <IconButton onClick={() => {open(); setState({...state, identificadorModal: "codigoPostalDestinatario"})} }>
-                                                 <PageviewIcon style={{ color: "#F9A03E", fontSize: 32 }} />
-                                                 </IconButton>  </InputAdornment> 
+                                                endAdornment: <InputAdornment position="end"> <IconButton onClick={() => { open(); setState({ ...state, identificadorModal: "codigoPostalDestinatario" }) }}>
+                                                  <PageviewIcon style={{ color: "#F9A03E", fontSize: 32 }} />
+                                                </IconButton>  </InputAdornment>
                                               }}
-                                            />                                                                                       
+                                            />
                                           </div>
-                                        )}                                        
+                                        )}
                                       />
                                     </div>
                                   </div>
-                        
-                             
 
-
-                                <div className="col-sm-4 col-md-6 unit">
-                                  <label className="label">Ciudad</label>
-                                  <label className="input select">
-                                    <select
-                                      className="form-control"
-                                      required
-                                      value={state.ciudadDestinatario}
-                                      onChange={handleChange}
-                                      id="ciudadDestinatario"
-                                    >
-                                      {dataCiudad.map((ciudad) => (
-                                        <option
-                                          key={ciudad.m_nIdCiudad}
-                                          value={ciudad.m_nIdCiudad}
-                                        >
-                                          {ciudad.m_sCiudad}
-                                        </option>
-                                      ))}
-                                    </select>
-                                    <i className="fa fa-arrow-down" />
-                                  </label>
-                                </div>
-
-                                <div className="col-sm-4 col-md-12 unit">
-                                  <label className="label">
-                                    Correo Electrónico
-                                  </label>
-                                  <div className="input">
-                                    <input
-                                      onChange={handleChange}
-                                      className="form-control"
-                                      type="email"
-                                      required
-                                      value={state.correoDestinatario}
-                                      id="correoDestinatario"
-                                    />
+                                  <div className="col-sm-4 col-md-6 unit">
+                                    <label className="label">Ciudad</label>
+                                    <label className="input select">
+                                      <select
+                                        className="form-control"
+                                        required
+                                        value={state.ciudadDestinatario}
+                                        readOnly={state.agregar == "Consultar"}
+                                        onChange={handleChange}
+                                        id="ciudadDestinatario"
+                                      >
+                                        {dataCiudad.map((ciudad) => (
+                                          <option
+                                            key={ciudad.m_nIdCiudad}
+                                            value={ciudad.m_nIdCiudad}
+                                          >
+                                            {ciudad.m_sCiudad}
+                                          </option>
+                                        ))}
+                                      </select>
+                                      <i className="fa fa-arrow-down" />
+                                    </label>
                                   </div>
-                                </div>
 
-                                <div className="col-sm-4 col-md-12 unit">
-                                  <label className="label">
-                                    Teléfono
+                                  <div className="col-sm-4 col-md-12 unit">
+                                    <label className="label">
+                                      Correo Electrónico
+                                  </label>
+                                    <div className="input">
+                                      <input
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="email"
+                                        required
+                                        value={state.correoDestinatario}
+                                        readOnly={state.agregar == "Consultar"}
+                                        id="correoDestinatario"
+                                      />
+                                    </div>
+                                  </div>
+
+                                  <div className="col-sm-4 col-md-12 unit">
+                                    <label className="label">
+                                      Teléfono
                                 </label>
-                                  <div className="input">
-                                    <input
-                                      onChange={handleChange}
-                                      className="form-control"
-                                      type="text"
-                                      required
-                                      value={state.telefonoDestinatario}
-                                      id="telefonoDestinatario"
-                                    />
+                                    <div className="input">
+                                      <input
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="text"
+                                        required
+                                        value={state.telefonoDestinatario}
+                                        readOnly={state.agregar == "Consultar"}
+                                        id="telefonoDestinatario"
+                                      />
+                                    </div>
+                                  </div>
+
+                                  <div className="col-sm-4 col-md-6 unit">
+                                    <label className="label">Contacto</label>
+                                    <div className="input">
+                                      <input
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="text"
+                                        required
+                                        value={state.contactoDestinatario}
+                                        readOnly={state.agregar == "Consultar"}
+                                        id="contactoDestinatario"
+                                      />
+                                    </div>
+                                  </div>
+
+                                  <div className="col-sm-12 col-md-6 unit">
+                                    <label className="label">Destino</label>
+                                    <label className="input select">
+                                      <select
+                                        className="form-control"
+                                        required
+                                        value={state.destinoDestinatario}
+                                        readOnly={state.agregar == "Consultar"}
+                                        onChange={handleChange}
+                                        id="destinoDestinatario"
+                                      >
+                                        {dataCiudad.map((ciudad) => (
+                                          <option
+                                            key={ciudad.m_nIdCiudad}
+                                            value={ciudad.m_nIdCiudad}
+                                          >
+                                            {ciudad.m_sCiudad}
+                                          </option>
+                                        ))}
+                                      </select>
+                                      <i className="fa fa-arrow-down" />
+                                    </label>
+                                  </div>
+
+                                  <div className="col-sm-12 col-md-12 unit">
+                                    <label className="label">
+                                      Entrega en Diferente Domicilio
+                                  </label>
+                                    <div className="input">
+                                      <input
+                                        onChange={handleEntregaCheckboxChange}
+                                        className="form-control"
+                                        value={state.diferenteEntrega}
+                                        readOnly={state.agregar == "Consultar"}
+                                        checked={state.diferenteEntrega}
+                                        type="checkbox"
+                                        id="diferenteEntrega"
+                                      />
+                                    </div>
                                   </div>
                                 </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
 
-                                <div className="col-sm-4 col-md-6 unit">
-                                  <label className="label">Contacto</label>
-                                  <div className="input">
-                                    <input
-                                      onChange={handleChange}
-                                      className="form-control"
-                                      type="text"
-                                      required
-                                      value={state.contactoDestinatario}
-                                      id="contactoDestinatario"
-                                    />
+                        {state.diferenteRecoleccion || state.diferenteEntrega ? (
+                          <div className="widget-wrap" id="detallesRecoleccion">
+                            {state.diferenteRecoleccion ? (
+                              <div>
+                                <div className="widget-header">
+                                  <h2>Detalles de la Recolección</h2>
+                                </div>
+                                <div className="widget-container">
+                                  <div className="widget-content">
+                                    <div className="row">
+                                      <div className="col-md-12">
+                                        <div className="col-sm-4 col-md-4 unit">
+                                          <label className="label">
+                                            Fecha y Hora
+                                        </label>
+                                          <div className="input">
+                                            <input
+                                              onChange={handleChange}
+                                              className="form-control"
+                                              type="datetime-local"
+                                              required
+                                              value={state.fechaRecoleccion}
+                                              readOnly={state.agregar == "Consultar"}
+                                              id="fechaRecoleccion"
+                                            />
+                                          </div>
+                                        </div>
+
+                                        <div className="col-sm-4 col-md-5 unit" >
+                                          <label className="label">Código Postal</label>
+                                          <div className="input">
+                                            <Autocomplete
+                                              freeSolo
+                                              onChange={(event, newValue) =>
+                                                setState({
+                                                  ...state,
+                                                  codigoPostalRecoleccion: newValue,
+                                                })
+                                              }
+                                              value={state.codigoPostalRecoleccion}
+                                              readOnly={state.agregar == "Consultar"}
+                                              id="codigoPostalRecoleccion"
+                                              disableClearable
+                                              options={dataCodigoPostal}
+                                              getOptionLabel={(option) =>
+                                                option.m_sCP
+                                              }
+                                              variant="outlined"
+                                              style={{ borderWidth: "1px", borderColor: "#dddddd", borderStyle: "solid", borderRadius: "5px" }}
+                                              renderInput={(params) => (
+                                                <div>
+                                                  <TextField
+                                                    {...params}
+                                                    InputProps={{
+                                                      ...params.InputProps,
+                                                      style: { height: 24 },
+                                                      type: "search",
+                                                      readOnly: state.agregar == "Consultar",
+                                                      endAdornment: <InputAdornment position="end"> <IconButton onClick={() => { open(); setState({ ...state, identificadorModal: "codigoPostalRecoleccion" }) }}>
+                                                        <PageviewIcon style={{ color: "#F9A03E", fontSize: 32 }} />
+                                                      </IconButton>  </InputAdornment>
+                                                    }}
+                                                  />
+                                                </div>
+                                              )}
+                                            />
+                                          </div>
+                                        </div>
+
+                                        <div className="col-sm-4 col-md-4 unit">
+                                          <label className="label">Ciudad</label>
+                                          <label className="input select">
+                                            <select
+                                              className="form-control"
+                                              required
+                                              value={state.ciudadRecoleccion}
+                                              readOnly={state.agregar == "Consultar"}
+                                              onChange={handleChange}
+                                              id="ciudadRecoleccion"
+                                            >
+                                              {dataCiudad.map((ciudad) => (
+                                                <option
+                                                  key={ciudad.m_nIdCiudad}
+                                                  value={ciudad.m_nIdCiudad}
+                                                >
+                                                  {ciudad.m_sCiudad}
+                                                </option>
+                                              ))}
+                                            </select>
+                                            <i className="fa fa-arrow-down" />
+                                          </label>
+                                        </div>
+
+                                        <div className="col-sm-4 col-md-4 unit">
+                                          <label className="label">Zona</label>
+                                          <label className="input select">
+                                            <select
+                                              className="form-control"
+                                              required
+                                              value={state.zonaRecoleccion}
+                                              readOnly={state.agregar == "Consultar"}
+                                              onChange={handleChange}
+                                              id="zonaRecoleccion"
+                                            >
+                                              {dataCiudad.map((ciudad) => (
+                                                <option
+                                                  key={ciudad.m_nIdCiudad}
+                                                  value={ciudad.m_nIdCiudad}
+                                                >
+                                                  {ciudad.m_sCiudad}
+                                                </option>
+                                              ))}
+                                            </select>
+                                            <i className="fa fa-arrow-down" />
+                                          </label>
+                                        </div>
+
+                                        <div className="col-sm-4 col-md-4 unit">
+                                          <label className="label">
+                                            Domicilio
+                                        </label>
+                                          <div className="input">
+                                            <input
+                                              onChange={handleChange}
+                                              className="form-control"
+                                              type="text"
+                                              required
+                                              value={state.domicilioRecoleccion}
+                                              readOnly={state.agregar == "Consultar"}
+                                              id="domicilioRecoleccion"
+                                            />
+                                          </div>
+                                        </div>
+
+                                        <div className="col-sm-4 col-md-4 unit">
+                                          <label className="label">
+                                            Recoger En
+                                        </label>
+                                          <div className="input">
+                                            <input
+                                              onChange={handleChange}
+                                              className="form-control"
+                                              type="text"
+                                              required
+                                              value={state.recogerEn}
+                                              readOnly={state.agregar == "Consultar"}
+                                              id="recogerEn"
+                                            />
+                                          </div>
+                                        </div>
+
+                                        <div className="col-sm-4 col-md-4 unit">
+                                          <label className="label">
+                                            Datos Adicionales para la Recolección
+                                        </label>
+                                          <div className="input">
+                                            <input
+                                              onChange={handleChange}
+                                              className="form-control"
+                                              type="text"
+                                              required
+                                              value={
+                                                state.datosAdicionalesRecoleccion
+                                              }
+                                              readOnly={state.agregar == "Consultar"}
+                                              id="datosAdicionalesRecoleccion"
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
                                   </div>
                                 </div>
+                              </div>
+                            ) : (
+                                <div></div>
+                              )}
 
-                                <div className="col-sm-12 col-md-6 unit">
-                                  <label className="label">Destino</label>
-                                  <label className="input select">
-                                    <select
-                                      className="form-control"
-                                      required
-                                      value={state.destinoDestinatario}
-                                      onChange={handleChange}
-                                      id="destinoDestinatario"
-                                    >
-                                      {dataCiudad.map((ciudad) => (
-                                        <option
-                                          key={ciudad.m_nIdCiudad}
-                                          value={ciudad.m_nIdCiudad}
+                            {state.diferenteEntrega ? (
+                              <div>
+                                <div className="widget-header">
+                                  <h2>Detalles de la Entrega</h2>
+                                </div>
+                                <div className="widget-container">
+                                  <div className="widget-content">
+                                    <div className="row">
+                                      <div className="col-md-12">
+
+                                        <div className="col-sm-4 col-md-4 unit" >
+                                          <label className="label">Código Postal</label>
+                                          <div className="input">
+                                            <Autocomplete
+                                              freeSolo
+                                              onChange={(event, newValue) =>
+                                                setState({
+                                                  ...state,
+                                                  codigoPostalEntrega: newValue,
+                                                })
+                                              }
+                                              value={state.codigoPostalEntrega}
+                                              readOnly={state.agregar == "Consultar"}
+                                              id="codigoPostalEntrega"
+                                              disableClearable
+                                              options={dataCodigoPostal}
+                                              getOptionLabel={(option) =>
+                                                option.m_sCP
+                                              }
+                                              variant="outlined"
+                                              style={{ borderWidth: "1px", borderColor: "#dddddd", borderStyle: "solid", borderRadius: "5px" }}
+                                              renderInput={(params) => (
+                                                <div>
+                                                  <TextField
+                                                    {...params}
+                                                    InputProps={{
+                                                      ...params.InputProps,
+                                                      style: { height: 24 },
+                                                      readOnly: state.agregar == "Consultar",
+                                                      type: "search",
+                                                      endAdornment: <InputAdornment position="end"> <IconButton onClick={() => { open(); setState({ ...state, identificadorModal: "codigoPostalEntrega" }) }}>
+                                                        <PageviewIcon style={{ color: "#F9A03E", fontSize: 32 }} />
+                                                      </IconButton>  </InputAdornment>
+                                                    }}
+                                                  />
+                                                </div>
+                                              )}
+                                            />
+                                          </div>
+                                        </div>
+
+                                        <div className="col-sm-4 col-md-4 unit">
+                                          <label className="label">Ciudad</label>
+                                          <label className="input select">
+                                            <select
+                                              className="form-control"
+                                              required
+                                              value={state.ciudadEntrega}
+                                              readOnly={state.agregar == "Consultar"}
+                                              onChange={handleChange}
+                                              id="ciudadEntrega"
+                                            >
+                                              {dataCiudad.map((ciudad) => (
+                                                <option
+                                                  key={ciudad.m_nIdCiudad}
+                                                  value={ciudad.m_nIdCiudad}
+                                                >
+                                                  {ciudad.m_sCiudad}
+                                                </option>
+                                              ))}
+                                            </select>
+                                            <i className="fa fa-arrow-down" />
+                                          </label>
+                                        </div>
+
+                                        <div className="col-sm-4 col-md-4 unit">
+                                          <label className="label">Zona</label>
+                                          <label className="input select">
+                                            <select
+                                              className="form-control"
+                                              required
+                                              value={state.zonaEntrega}
+                                              readOnly={state.agregar == "Consultar"}
+                                              onChange={handleChange}
+                                              id="zonaEntrega"
+                                            >
+                                              {dataCiudad.map((ciudad) => (
+                                                <option
+                                                  key={ciudad.m_nIdCiudad}
+                                                  value={ciudad.m_nIdCiudad}
+                                                >
+                                                  {ciudad.m_sCiudad}
+                                                </option>
+                                              ))}
+                                            </select>
+                                            <i className="fa fa-arrow-down" />
+                                          </label>
+                                        </div>
+
+                                        <div className="col-sm-4 col-md-4 unit">
+                                          <label className="label">
+                                            Domicilio
+                                        </label>
+                                          <div className="input">
+                                            <input
+                                              onChange={handleChange}
+                                              className="form-control"
+                                              type="text"
+                                              value={state.domicilioEntrega}
+                                              readOnly={state.agregar == "Consultar"}
+                                              id="domicilioEntrega"
+                                            />
+                                          </div>
+                                        </div>
+
+                                        <div className="col-sm-4 col-md-4 unit">
+                                          <label className="label">
+                                            Entrega En
+                                        </label>
+                                          <div className="input">
+                                            <input
+                                              onChange={handleChange}
+                                              className="form-control"
+                                              type="text"
+                                              value={state.entregaEn}
+                                              readOnly={state.agregar == "Consultar"}
+                                              id="entregaEn"
+                                            />
+                                          </div>
+                                        </div>
+
+                                        <div className="col-sm-4 col-md-4 unit">
+                                          <label className="label ">
+                                            Datos Adicionales para la Entrega
+                                        </label>
+                                          <div className="input">
+                                            <input
+                                              onChange={handleChange}
+                                              className="form-control"
+                                              type="text"
+                                              value={
+                                                state.datosAdicionalesEntrega
+                                              }
+                                              readOnly={state.agregar == "Consultar"}
+                                              id="datosAdicionalesEntrega"
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            ) : (
+                                <div></div>
+                              )}
+                          </div>
+                        ) : (
+                            <div></div>
+                          )}
+
+                        <div className="widget-wrap" id="detallesOperacion">
+                          <div className="row">
+                            <div className="col-md-12">
+                              <div className="widget-header">
+                                <h2>Detalles de la Operación</h2>
+                              </div>
+                              <div className="widget-container">
+                                <div className="widget-content">
+                                  <div className="row">
+                                    <div className="col-sm-4 col-md-4 unit">
+                                      <label className="label">Operador</label>
+                                      <label className="input select">
+                                        <select
+                                          className="form-control"
+                                          required
+                                          value={state.operador}
+                                          readOnly={state.agregar == "Consultar"}
+                                          onChange={handleChange}
+                                          id="operador"
                                         >
-                                          {ciudad.m_sCiudad}
-                                        </option>
-                                      ))}
-                                    </select>
-                                    <i className="fa fa-arrow-down" />
-                                  </label>
-                                </div>
+                                          {dataOperador.map((operador) => (
+                                            <option
+                                              key={operador.m_nIdOperador}
+                                              value={operador.m_nIdOperador}
+                                            >
+                                              {operador.m_sNombreCompleto}
+                                            </option>
+                                          ))}
+                                        </select>
+                                        <i className="fa fa-arrow-down" />
+                                      </label>
+                                    </div>
 
-                                <div className="col-sm-12 col-md-12 unit">
-                                  <label className="label">
-                                    Entrega en Diferente Domicilio
-                                  </label>
-                                  <div className="input">
-                                    <input
-                                      onChange={handleEntregaCheckboxChange}
-                                      className="form-control"
-                                      value={state.diferenteEntrega}
-                                      checked={state.diferenteEntrega}
-                                      type="checkbox"
-                                      id="diferenteEntrega"
-                                    />
+                                    <div className="col-sm-4 col-md-4 unit">
+                                      <label className="label">Tipo Unidad</label>
+                                      <label className="input select">
+                                        <select
+                                          className="form-control"
+                                          required
+                                          value={state.tipoUnidad}
+                                          readOnly={state.agregar == "Consultar"}
+                                          onChange={handleSelectChange}
+                                          id="tipoUnidad"
+                                        >
+                                          {dataTipoUnidad.map((tipoUnidad) => (
+                                            <option
+                                              key={tipoUnidad.m_nIdTipoUnidad}
+                                              value={tipoUnidad.m_nIdTipoUnidad}
+                                            >
+                                              {tipoUnidad.m_sTipoUnidad}
+                                            </option>
+                                          ))}
+                                        </select>
+                                        <i className="fa fa-arrow-down" />
+                                      </label>
+                                    </div>
+
+                                    <div className="col-sm-4 col-md-4 unit">
+                                      <label className="label">Unidad</label>
+                                      <label className="input select">
+                                        <select
+                                          className="form-control"
+                                          required
+                                          value={state.idUnidad}
+                                          readOnly={state.agregar == "Consultar"}
+                                          onChange={handleChange}
+                                          id="idUnidad"
+                                        >
+                                          {dataUnidad.map((unidad) => (
+                                            <option
+                                              key={unidad.m_nIdUnidad}
+                                              value={unidad.m_nIdUnidad}
+                                            >
+                                              {unidad.m_sDescripcion}
+                                            </option>
+                                          ))}
+                                        </select>
+                                        <i className="fa fa-arrow-down" />
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="col-md-6">
+                              <div className="widget-header">
+                                <h2>Salida para la Recolección</h2>
+                              </div>
+                              <div className="widget-container">
+                                <div className="widget-content">
+                                  <div className="col-md-12">
+                                    <label className="label">Fecha y Hora</label>
+                                    <div className="input">
+                                      <input
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="datetime-local"
+                                        required
+                                        value={state.fechaHoraSalida}
+                                        readOnly={state.agregar == "Consultar"}
+                                        id="fechaHoraSalida"
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="col-md-6">
+                              <div className="widget-header">
+                                <h2>Llegada de la Recolección</h2>
+                              </div>
+                              <div className="widget-container">
+                                <div className="widget-content">
+                                  <div className="col-md-12">
+                                    <label className="label">Fecha y Hora</label>
+                                    <div className="input">
+                                      <input
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="datetime-local"
+                                        required
+                                        value={state.fechaHoraLlegada}
+                                        readOnly={state.agregar == "Consultar"}
+                                        id="fechaHoraLlegada"
+                                      />
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -1942,584 +2513,131 @@ function Recoleccion() {
                         </div>
                       </div>
 
-                      {state.diferenteRecoleccion || state.diferenteEntrega ? (
-                        <div className="widget-wrap" id="detallesRecoleccion">
-                          {state.diferenteRecoleccion ? (
-                            <div>
-                              <div className="widget-header">
-                                <h2>Detalles de la Recolección</h2>
-                              </div>
-                              <div className="widget-container">
-                                <div className="widget-content">
-                                  <div className="row">
-                                    <div className="col-md-12">
-                                      <div className="col-sm-4 col-md-4 unit">
-                                        <label className="label">
-                                          Fecha y Hora
-                                        </label>
-                                        <div className="input">
-                                          <input
-                                            onChange={handleChange}
-                                            className="form-control"
-                                            type="datetime-local"
-                                            required
-                                            value={state.fechaRecoleccion}
-                                            id="fechaRecoleccion"
-                                          />
-                                        </div>
-                                      </div>
 
-                                      <div className="col-sm-4 col-md-5 unit" >
-                                    <label className="label">Código Postal</label>
-                                    <div className="input">
-                                      <Autocomplete
-                                        freeSolo
-                                        onChange={(event, newValue) =>
-                                          setState({
-                                            ...state,
-                                            codigoPostalRecoleccion: newValue,
-                                          })
-                                        }
-                                        value={state.codigoPostalRecoleccion}
-                                        id="codigoPostalRecoleccion"
-                                        disableClearable
-                                        options={dataCodigoPostal}
-                                        getOptionLabel={(option) =>
-                                          option.m_sCP
-                                        }
-                                        variant="outlined"
-                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle:"solid",borderRadius: "5px"}}
-                                        renderInput={(params) => (
-                                          <div>
-                                            <TextField
-                                              {...params}
-                                              InputProps={{
-                                                ...params.InputProps,
-                                                style: { height: 24},
-                                                type: "search",
-                                                 endAdornment:  <InputAdornment position="end"> <IconButton onClick={() => {open(); setState({...state, identificadorModal: "codigoPostalRecoleccion"})} }>
-                                                 <PageviewIcon style={{ color: "#F9A03E", fontSize: 32 }} />
-                                                 </IconButton>  </InputAdornment> 
-                                              }}
-                                            />                                                                                       
-                                          </div>
-                                        )}                                        
-                                      />
-                                    </div>
-                                  </div>
-                          
-                                      <div className="col-sm-4 col-md-4 unit">
-                                        <label className="label">Ciudad</label>
-                                        <label className="input select">
-                                          <select
-                                            className="form-control"
-                                            required
-                                            value={state.ciudadRecoleccion}
-                                            onChange={handleChange}
-                                            id="ciudadRecoleccion"
-                                          >
-                                            {dataCiudad.map((ciudad) => (
-                                              <option
-                                                key={ciudad.m_nIdCiudad}
-                                                value={ciudad.m_nIdCiudad}
-                                              >
-                                                {ciudad.m_sCiudad}
-                                              </option>
-                                            ))}
-                                          </select>
-                                          <i className="fa fa-arrow-down" />
-                                        </label>
-                                      </div>
-
-                                      <div className="col-sm-4 col-md-4 unit">
-                                        <label className="label">Zona</label>
-                                        <label className="input select">
-                                          <select
-                                            className="form-control"
-                                            required
-                                            value={state.zonaRecoleccion}
-                                            onChange={handleChange}
-                                            id="zonaRecoleccion"
-                                          >
-                                            {dataCiudad.map((ciudad) => (
-                                              <option
-                                                key={ciudad.m_nIdCiudad}
-                                                value={ciudad.m_nIdCiudad}
-                                              >
-                                                {ciudad.m_sCiudad}
-                                              </option>
-                                            ))}
-                                          </select>
-                                          <i className="fa fa-arrow-down" />
-                                        </label>
-                                      </div>
-
-                                      <div className="col-sm-4 col-md-4 unit">
-                                        <label className="label">
-                                          Domicilio
-                                        </label>
-                                        <div className="input">
-                                          <input
-                                            onChange={handleChange}
-                                            className="form-control"
-                                            type="text"
-                                            required
-                                            value={state.domicilioRecoleccion}
-                                            id="domicilioRecoleccion"
-                                          />
-                                        </div>
-                                      </div>
-
-                                      <div className="col-sm-4 col-md-4 unit">
-                                        <label className="label">
-                                          Recoger En
-                                        </label>
-                                        <div className="input">
-                                          <input
-                                            onChange={handleChange}
-                                            className="form-control"
-                                            type="text"
-                                            required
-                                            value={state.recogerEn}
-                                            id="recogerEn"
-                                          />
-                                        </div>
-                                      </div>
-
-                                      <div className="col-sm-4 col-md-4 unit">
-                                        <label className="label">
-                                          Datos Adicionales para la Recolección
-                                        </label>
-                                        <div className="input">
-                                          <input
-                                            onChange={handleChange}
-                                            className="form-control"
-                                            type="text"
-                                            required
-                                            value={
-                                              state.datosAdicionalesRecoleccion
-                                            }
-                                            id="datosAdicionalesRecoleccion"
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          ) : (
-                            <div></div>
-                          )}
-
-                          {state.diferenteEntrega ? (
-                            <div>
-                              <div className="widget-header">
-                                <h2>Detalles de la Entrega</h2>
-                              </div>
-                              <div className="widget-container">
-                                <div className="widget-content">
-                                  <div className="row">
-                                    <div className="col-md-12">
-
-                            <div className="col-sm-4 col-md-4 unit" >
-                                    <label className="label">Código Postal</label>
-                                    <div className="input">
-                                      <Autocomplete
-                                        freeSolo
-                                        onChange={(event, newValue) =>
-                                          setState({
-                                            ...state,
-                                            codigoPostalEntrega: newValue,
-                                          })
-                                        }
-                                        value={state.codigoPostalEntrega}
-                                        id="codigoPostalEntrega"
-                                        disableClearable
-                                        options={dataCodigoPostal}
-                                        getOptionLabel={(option) =>
-                                          option.m_sCP
-                                        }
-                                        variant="outlined"
-                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle:"solid",borderRadius: "5px"}}
-                                        renderInput={(params) => (
-                                          <div>
-                                            <TextField
-                                              {...params}
-                                              InputProps={{
-                                                ...params.InputProps,
-                                                style: { height: 24},
-                                                type: "search",
-                                                 endAdornment:  <InputAdornment position="end"> <IconButton onClick={() => {open(); setState({...state, identificadorModal: "codigoPostalEntrega"})} }>
-                                                 <PageviewIcon style={{ color: "#F9A03E", fontSize: 32 }} />
-                                                 </IconButton>  </InputAdornment> 
-                                              }}
-                                            />                                                                                       
-                                          </div>
-                                        )}                                        
-                                      />
-                                    </div>
-                                  </div>
-                         
-                                      <div className="col-sm-4 col-md-4 unit">
-                                        <label className="label">Ciudad</label>
-                                        <label className="input select">
-                                          <select
-                                            className="form-control"
-                                            required
-                                            value={state.ciudadEntrega}
-                                            onChange={handleChange}
-                                            id="ciudadEntrega"
-                                          >
-                                            {dataCiudad.map((ciudad) => (
-                                              <option
-                                                key={ciudad.m_nIdCiudad}
-                                                value={ciudad.m_nIdCiudad}
-                                              >
-                                                {ciudad.m_sCiudad}
-                                              </option>
-                                            ))}
-                                          </select>
-                                          <i className="fa fa-arrow-down" />
-                                        </label>
-                                      </div>
-
-                                      <div className="col-sm-4 col-md-4 unit">
-                                        <label className="label">Zona</label>
-                                        <label className="input select">
-                                          <select
-                                            className="form-control"
-                                            required
-                                            value={state.zonaEntrega}
-                                            onChange={handleChange}
-                                            id="zonaEntrega"
-                                          >
-                                            {dataCiudad.map((ciudad) => (
-                                              <option
-                                                key={ciudad.m_nIdCiudad}
-                                                value={ciudad.m_nIdCiudad}
-                                              >
-                                                {ciudad.m_sCiudad}
-                                              </option>
-                                            ))}
-                                          </select>
-                                          <i className="fa fa-arrow-down" />
-                                        </label>
-                                      </div>
-
-                                      <div className="col-sm-4 col-md-4 unit">
-                                        <label className="label">
-                                          Domicilio
-                                        </label>
-                                        <div className="input">
-                                          <input
-                                            onChange={handleChange}
-                                            className="form-control"
-                                            type="text"
-                                            value={state.domicilioEntrega}
-                                            id="domicilioEntrega"
-                                          />
-                                        </div>
-                                      </div>
-
-                                      <div className="col-sm-4 col-md-4 unit">
-                                        <label className="label">
-                                          Entrega En
-                                        </label>
-                                        <div className="input">
-                                          <input
-                                            onChange={handleChange}
-                                            className="form-control"
-                                            type="text"
-                                            value={state.entregaEn}
-                                            id="entregaEn"
-                                          />
-                                        </div>
-                                      </div>
-
-                                      <div className="col-sm-4 col-md-4 unit">
-                                        <label className="label ">
-                                          Datos Adicionales para la Entrega
-                                        </label>
-                                        <div className="input">
-                                          <input
-                                            onChange={handleChange}
-                                            className="form-control"
-                                            type="text"
-                                            value={
-                                              state.datosAdicionalesEntrega
-                                            }
-                                            id="datosAdicionalesEntrega"
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          ) : (
-                            <div></div>
-                          )}
-                        </div>
-                      ) : (
-                        <div></div>
-                      )}
-
-                      <div className="widget-wrap" id="detallesOperacion">
-                        <div className="row">
-                          <div className="col-md-12">
-                            <div className="widget-header">
-                              <h2>Detalles de la Operación</h2>
-                            </div>
-                            <div className="widget-container">
-                              <div className="widget-content">
-                                <div className="row">
-                                  <div className="col-sm-4 col-md-4 unit">
-                                    <label className="label">Operador</label>
-                                    <label className="input select">
-                                      <select
-                                        className="form-control"
-                                        required
-                                        value={state.operador}
-                                        onChange={handleChange}
-                                        id="operador"
-                                      >
-                                        {dataOperador.map((operador) => (
-                                          <option
-                                            key={operador.m_nIdOperador}
-                                            value={operador.m_nIdOperador}
-                                          >
-                                            {operador.m_sNombreCompleto}
-                                          </option>
-                                        ))}
-                                      </select>
-                                      <i className="fa fa-arrow-down" />
-                                    </label>
-                                  </div>
-
-                                  <div className="col-sm-4 col-md-4 unit">
-                                    <label className="label">Tipo Unidad</label>
-                                    <label className="input select">
-                                      <select
-                                        className="form-control"
-                                        required
-                                        value={state.tipoUnidad}
-                                        onChange={handleSelectChange}
-                                        id="tipoUnidad"
-                                      >
-                                        {dataTipoUnidad.map((tipoUnidad) => (
-                                          <option
-                                            key={tipoUnidad.m_nIdTipoUnidad}
-                                            value={tipoUnidad.m_nIdTipoUnidad}
-                                          >
-                                            {tipoUnidad.m_sTipoUnidad}
-                                          </option>
-                                        ))}
-                                      </select>
-                                      <i className="fa fa-arrow-down" />
-                                    </label>
-                                  </div>
-
-                                  <div className="col-sm-4 col-md-4 unit">
-                                    <label className="label">Unidad</label>
-                                    <label className="input select">
-                                      <select
-                                        className="form-control"
-                                        required
-                                        value={state.idUnidad}
-                                        onChange={handleChange}
-                                        id="idUnidad"
-                                      >
-                                        {dataUnidad.map((unidad) => (
-                                          <option
-                                            key={unidad.m_nIdUnidad}
-                                            value={unidad.m_nIdUnidad}
-                                          >
-                                            {unidad.m_sDescripcion}
-                                          </option>
-                                        ))}
-                                      </select>
-                                      <i className="fa fa-arrow-down" />
-                                    </label>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
+                      <div className="col-ms-12 col-md-5">
+                        <div className="widget-wrap " id="paquetesSobres">
+                          <div className="widget-header">
+                            <h2>Número de Paquetes</h2>
                           </div>
-                          <div className="col-md-6">
-                            <div className="widget-header">
-                              <h2>Salida para la Recolección</h2>
-                            </div>
-                            <div className="widget-container">
-                              <div className="widget-content">
+                          <div className="widget-container">
+                            <div className="widget-content">
+                              <div className="row">
                                 <div className="col-md-12">
-                                  <label className="label">Fecha y Hora</label>
-                                  <div className="input">
-                                    <input
-                                      onChange={handleChange}
-                                      className="form-control"
-                                      type="datetime-local"
-                                      required
-                                      value={state.fechaHoraSalida}
-                                      id="fechaHoraSalida"
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="col-md-6">
-                            <div className="widget-header">
-                              <h2>Llegada de la Recolección</h2>
-                            </div>
-                            <div className="widget-container">
-                              <div className="widget-content">
-                                <div className="col-md-12">
-                                  <label className="label">Fecha y Hora</label>
-                                  <div className="input">
-                                    <input
-                                      onChange={handleChange}
-                                      className="form-control"
-                                      type="datetime-local"
-                                      required
-                                      value={state.fechaHoraLlegada}
-                                      id="fechaHoraLlegada"
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-
-                    <div className="col-ms-12 col-md-5">
-                      <div className="widget-wrap " id="paquetesSobres">
-                        <div className="widget-header">
-                          <h2>Número de Paquetes</h2>
-                        </div>
-                        <div className="widget-container">
-                          <div className="widget-content">
-                            <div className="row">
-                              <div className="col-md-12">
-                                <form className="j-forms">
-                                  <div className="form-content">
-                                    <a
-                                      className="btn"
-                                      style={{ margin: "10px" }}
-                                      onClick={() => addPaquete()}
-                                    >
-                                      <i className="zmdi zmdi-plus"></i> Agregar
+                                  <form className="j-forms">
+                                    <div className="form-content">
+                                      <a
+                                        className="btn"
+                                        style={{ margin: "10px" }}
+                                        onClick={() => addPaquete()}
+                                      >
+                                        <i className="zmdi zmdi-plus"></i> Agregar
                                       Paquete
                                     </a>
 
-                                    <Carousel
-                                      className={classes.paqueteCarrusel}
-                                      widgets={[IndicatorDots, Buttons]}
-                                      frames={framesPaquete}
-                                    ></Carousel>
-                                  </div>
-                                </form>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="widget-header">
-                          <h2>Número de Sobres</h2>
-                        </div>
-                        <div className="widget-container">
-                          <div className="widget-content">
-                            <div className="row">
-                              <div className="col-md-12">
-                                <form className="j-forms">
-                                  <div className="form-content">
-                                    <a
-                                      className="btn"
-                                      style={{ margin: "10px" }}
-                                      onClick={() => addSobre()}
-                                    >
-                                      <i className="zmdi zmdi-plus"></i> Agregar
-                                      Sobre
-                                    </a>
-
-                                    <Carousel
-                                      className={classes.sobreCarrusel}
-                                      widgets={[IndicatorDots, Buttons]}
-                                      frames={framesSobre}
-                                    ></Carousel>
-                                  </div>
-                                </form>
-                              </div>
-                            </div>
-                          </div>
-                          
-                        </div>
-                    </div>
-                    </div>
-                  </div>
-
-                  <div className="form-footer" className="col-md-12">
-                    <button
-                      href="#Listado"
-                      role="tab"
-                      data-toggle="tab"
-                      className="btn btn-secondary secondary-btn"
-                    >
-                      Cancelar
-                    </button>
-                    <button
-                      type="submit"
-                      className="btn btn-primary primary-btn"
-                    >
-                      Aceptar
-                    </button>
-                  </div>
-                </div>
-
-                <div id="Importar" className="tab-pane fade">
-                  <div className="widget-wrap">
-                    <div className="widget-content">
-                      <div className="row">
-                        <div className="col-md-12">
-                          <form className="j-forms">
-                            <div className="form-content">
-                              <div className="col-sm-12 col-md-12 unit">
-                                <label className="label">Importar</label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleUpload}
-                                    className="form-control"
-                                    type="file"
-                                    id="importar"
-                                  />
+                                      <Carousel
+                                        className={classes.paqueteCarrusel}
+                                        widgets={[IndicatorDots, Buttons]}
+                                        frames={framesPaquete}
+                                      ></Carousel>
+                                    </div>
+                                  </form>
                                 </div>
                               </div>
                             </div>
-                            <br></br>
-                            <div className="form-footer" className="col-md-12">
-                              <button
-                                data-layout="topCenter"
-                                data-type="information"
-                                className="btn btn-secondary secondary-btn"
-                              >
-                                {" "}
+                          </div>
+
+                          <div className="widget-header">
+                            <h2>Número de Sobres</h2>
+                          </div>
+                          <div className="widget-container">
+                            <div className="widget-content">
+                              <div className="row">
+                                <div className="col-md-12">
+                                  <form className="j-forms">
+                                    <div className="form-content">
+                                      <a
+                                        className="btn"
+                                        style={{ margin: "10px" }}
+                                        onClick={() => addSobre()}
+                                      >
+                                        <i className="zmdi zmdi-plus"></i> Agregar
+                                      Sobre
+                                    </a>
+
+                                      <Carousel
+                                        className={classes.sobreCarrusel}
+                                        widgets={[IndicatorDots, Buttons]}
+                                        frames={framesSobre}
+                                      ></Carousel>
+                                    </div>
+                                  </form>
+                                </div>
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="form-footer" className="col-md-12">
+                      <button
+                        href="#Listado"
+                        role="tab"
+                        data-toggle="tab"
+                        className="btn btn-secondary secondary-btn"
+                      >
+                        Cancelar
+                    </button>
+                      <button
+                        type="submit"
+                        className="btn btn-primary primary-btn"
+                      >
+                        Aceptar
+                    </button>
+                    </div>
+                  </div>
+
+                  <div id="Importar" className="tab-pane fade">
+                    <div className="widget-wrap">
+                      <div className="widget-content">
+                        <div className="row">
+                          <div className="col-md-12">
+                            <form className="j-forms">
+                              <div className="form-content">
+                                <div className="col-sm-12 col-md-12 unit">
+                                  <label className="label">Importar</label>
+                                  <div className="input">
+                                    <input
+                                      onChange={handleUpload}
+                                      className="form-control"
+                                      type="file"
+                                      id="importar"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                              <br></br>
+                              <div className="form-footer" className="col-md-12">
+                                <button
+                                  data-layout="topCenter"
+                                  data-type="information"
+                                  className="btn btn-secondary secondary-btn"
+                                >
+                                  {" "}
                                 Cancelar
                               </button>
-                              <button
-                                onClick={handleAceptar}
-                                className="btn btn-primary primary-btn"
-                              >
-                                Aceptar
+                                <button
+                                  onClick={handleAceptar}
+                                  className="btn btn-primary primary-btn"
+                                >
+                                  Aceptar
                               </button>
-                            </div>
-                          </form>
-                        </div>
-                      </div></div> </div>
-                    </div>
+                              </div>
+                            </form>
+                          </div>
+                        </div></div> </div>
+                  </div>
                 </div>
               </form>
             </div>

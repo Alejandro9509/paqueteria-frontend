@@ -86,16 +86,32 @@ function GrupoCliente() {
     });
   }
 
-  function handleShowModificar(row) {
-    console.log(row.original.m_nIdGrupoCliente)
-    const url = `${process.env.REACT_APP_API_URL}/GruposClientes/GetById/` + row.original.m_nIdGrupoCliente;
+  function handleShowModificar(id) {
+    console.log(id)
+    const url = `${process.env.REACT_APP_API_URL}/GruposClientes/GetById/` + id;
     axios.get(url, { headers }).then(respuesta => {
       console.log(respuesta.data)
       setState({
         ...state,
         agregar: "Modificar",
         showPopUp: true,
-        idGrupoCliente: row.original.m_nIdGrupoCliente,
+        idGrupoCliente: id,
+        codigoGrupo: respuesta.data.m_sCodigo,
+        grupoCliente: respuesta.data.m_sGrupo
+      })
+    });
+  }
+
+  function handleShowConsultar(id) {
+    console.log(id)
+    const url = `${process.env.REACT_APP_API_URL}/GruposClientes/GetById/` + id;
+    axios.get(url, { headers }).then(respuesta => {
+      console.log(respuesta.data)
+      setState({
+        ...state,
+        agregar: "Consaltar",
+        showPopUp: true,
+        idGrupoCliente: id,
         codigoGrupo: respuesta.data.m_sCodigo,
         grupoCliente: respuesta.data.m_sGrupo
       })
@@ -121,57 +137,7 @@ function GrupoCliente() {
     });
   };
 
-  const columns = useMemo(() => [{
-    cell: (row) => <div>
-      <a data-toggle="tab" data-target="#Agregar" onClick={() => (handleShowModificar(row.m_nIdGrupoCliente))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
-      <a href="#" onClick={() => (handleEliminar(row.m_nIdGrupoCliente))} className="btn btn-default btn-sm"><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-      <a href="#" onClick={() => (handleEliminar(row.m_nIdGrupoCliente))} className="btn btn-default btn-sm"><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
-    </div>,
-    ignoreRowClick: true,
-    allowOverflow: true,
-    button: true,
-  },
-  {
-    name: "IdGrupo",
-    selector: "m_nIdGrupoCliente",
-    omit: "true",
-    type: "int"
-  },
-  {
-    visible: true,
-    name: "Código",
-    selector: "m_nCodigo",
-    sortable: true
-  }, {
-    visible: true,
-    name: "Grupo",
-    selector: "m_sGrupo",
-    sortable: true
-  }, {
-    visible: true,
-    name: "Creado El",
-    selector: "m_dtCreadoEl",
-    sortable: true
-  }, {
-    visible: true,
-    name: "Creado Por",
-    selector: "m_nCreadoPor",
-    sortable: true
-  }, {
-    visible: true,
-    name: "Modificado El",
-    selector: "m_dtModificadoEl",
-    sortable: true
-  }, {
-    visible: true,
-    name: "Modificado Por",
-    selector: "m_nModificadoPor",
-    sortable: true
-  }
-
-  ]);
-
-  const columns2 = React.useMemo(() => [
+  const columns = React.useMemo(() => [
     {
       Name: "Código",
       accessor: "m_nCodigo",
@@ -212,44 +178,6 @@ function GrupoCliente() {
     });
   };
 
-  const handleUpload = (e) => {
-    e.preventDefault();
-
-    var files = e.target.files, f = files[0];
-    var reader = new FileReader();
-    console.log(e.target.files)
-    reader.onload = function (e) {
-      console.log("Nothing Happened")
-      var data = e.target.result;
-      let readedData = XLSX.read(data, { type: 'binary' });
-      const wsname = readedData.SheetNames[0];
-      const ws = readedData.Sheets[wsname];
-
-      /* Convert array to json*/
-      const dataParse = XLSX.utils.sheet_to_json(ws, { header: 1 });
-      console.log("dataParse : " + dataParse)
-      setFileUploaded(dataParse);
-    };
-    reader.readAsBinaryString(f)
-  }
-
-  const FilterComponent = ({ filterText, onFilter, onClear }) => (
-    <>
-      <input
-        id="search"
-        type="text"
-        placeholder="Filter By Name"
-        aria-label="Search Input"
-        value={filterText}
-        onChange={handleChange} />
-      <button type="button" onClick={onClear}>X</button>
-    </>
-  );
-
-  const getSubHeaderComponent = () => {
-
-  };
-
   const headers = {
     'Content-Type': 'application/json',
     //    'access-control-allow-origin': '*'
@@ -276,7 +204,7 @@ function GrupoCliente() {
             setValue(e.target.value);
             onChange(e.target.value);
           }}
-          placeholder={`${count} registros...`}
+          value={`${count} registros...`}
         />
       </span>
     )
@@ -294,7 +222,7 @@ function GrupoCliente() {
         onChange={e => {
           setFilter(e.target.value || undefined)
         }}
-        placeholder={`Buscar ${count} registros...`}
+        value={`Buscar ${count} registros...`}
       />
     )
   }
@@ -368,7 +296,8 @@ function GrupoCliente() {
                   <tr {...row.getRowProps()}>
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdGrupoCliente))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowConsultar(row.original.m_nIdGrupoCliente))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
                         <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdGrupoCliente))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
                       </div>
                     </td>
@@ -448,7 +377,7 @@ function GrupoCliente() {
               <div className="widget-wrap">
                 <div className="widget-content">
                   <div className="row">
-                    <Table columns={columns2} data={data} />
+                    <Table columns={columns} data={data} />
                   </div>
                 </div>
               </div>
@@ -476,7 +405,8 @@ function GrupoCliente() {
                                 max="999"
                                 step="1"
                                 required
-                                placeholder={state.codigoGrupo}
+                                value={state.codigoGrupo}
+                                readOnly={state.agregar == "Consultar"}
                                 id="codigoGrupo"
                               />
                             </div>
@@ -493,7 +423,8 @@ function GrupoCliente() {
                                 type="text"
                                 required
                                 maxLength="50"
-                                placeholder={state.grupoCliente}
+                                value={state.grupoCliente}
+                                readOnly={state.agregar == "Consultar"}
                                 id="grupoCliente"
                               />
                             </div>

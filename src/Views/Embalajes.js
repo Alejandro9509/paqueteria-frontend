@@ -27,6 +27,7 @@ function Embalaje() {
   const handleAceptar = (e) => {
     e.preventDefault()
     var params = {
+      "IdEmbalaje": state.IdEmbalaje,
       "Codigo": state.CodigoEmbalaje,
       "Nombre": state.NombreEmbalaje,
       "Descripcion": state.DescripcionEmbalaje,
@@ -82,17 +83,33 @@ function Embalaje() {
     });
   }
 
-  function handleShowModificar(row) {
-    console.log(row.original.m_nIdEmbalaje)
-    const url = `${process.env.REACT_APP_API_URL}/Embalaje/GetById/` + row.original.m_nIdEmbalaje;
+  function handleShowModificar(id) {
+    console.log(id)
+    const url = `${process.env.REACT_APP_API_URL}/Embalaje/GetById/` + id;
     axios.get(url, { headers }).then(respuesta => {
       console.log(respuesta.data)
       setState({
         ...state,
         agregar: "Modificar",
         showPopUp: true,
-        IdEmbalaje: row.original.m_nIdEmbalaje,
-        CodigoEmbalaje: respuesta.data.m_nCodigo,
+        IdEmbalaje: id,
+        CodigoEmbalaje: respuesta.data.m_sCodigo,
+        NombreEmbalaje: respuesta.data.m_sNombre,
+        DescripcionEmbalaje: respuesta.data.m_sDescripcion
+      })
+    });
+  }
+
+  function handleShowConsultar(id) {
+    const url = `${process.env.REACT_APP_API_URL}/Embalaje/GetById/` + id;
+    axios.get(url, { headers }).then(respuesta => {
+      console.log(respuesta.data)
+      setState({
+        ...state,
+        agregar: "Consultar",
+        showPopUp: true,
+        IdEmbalaje: id,
+        CodigoEmbalaje: respuesta.data.m_sCodigo,
         NombreEmbalaje: respuesta.data.m_sNombre,
         DescripcionEmbalaje: respuesta.data.m_sDescripcion
       })
@@ -119,61 +136,7 @@ function Embalaje() {
     });
   };
 
-  const columns = useMemo(() => [{
-    cell: (row) => <div>
-      <a data-toggle="tab" data-target="#Agregar" onClick={() => (handleShowModificar(row.m_nIdDepartamento))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
-      <a href="#" onClick={() => (handleEliminar(row.m_nIdDepartamento))} className="btn btn-default btn-sm"><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-    </div>,
-    ignoreRowClick: true,
-    allowOverflow: true,
-    button: true,
-  },
-  {
-    name: "IdEmbalaje",
-    selector: "m_nIdEmbalaje",
-    omit: "true",
-    type: "int"
-  },
-  {
-    visible: true,
-    name: "Código",
-    selector: "m_sCodigo",
-    sortable: true
-  }, {
-    visible: true,
-    name: "Nombre",
-    selector: "m_sNombre",
-    sortable: true
-  }, {
-    visible: true,
-    name: "Descripción",
-    selector: "m_sDescripcion",
-    sortable: true
-  }, {
-    visible: true,
-    name: "Creado El",
-    selector: "m_dtCreadoEl",
-    sortable: true
-  }, {
-    visible: true,
-    name: "Creado Por",
-    selector: "m_nCreadoPor",
-    sortable: true
-  }, {
-    visible: true,
-    name: "Modificado El",
-    selector: "m_dtModificadoEl",
-    sortable: true
-  }, {
-    visible: true,
-    name: "Modificado Por",
-    selector: "m_nModificadoPor",
-    sortable: true
-  }
-
-  ]);
-
-  const columns2 = React.useMemo(() => [
+  const columns = React.useMemo(() => [
     {
       Name: "Código",
       accessor: "m_sCodigo",
@@ -242,7 +205,7 @@ function Embalaje() {
       <input
         id="search"
         type="text"
-        placeholder="Filter By Name"
+        value="Filter By Name"
         aria-label="Search Input"
         value={filterText}
         onChange={handleChange} />
@@ -383,9 +346,9 @@ function Embalaje() {
                   <tr {...row.getRowProps()}>
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row))} className="btn btn-default  btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdDepartamento))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdDepartamento))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdEmbalaje))} className="btn btn-default  btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdEmbalaje))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdEmbalaje))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -459,7 +422,7 @@ function Embalaje() {
               <div className="widget-wrap">
                 <div className="widget-content">
                   <div className="row">
-                    <Table columns={columns2} data={data} />
+                    <Table columns={columns} data={data} />
                   </div>
                 </div>
               </div>
@@ -484,7 +447,8 @@ function Embalaje() {
                                 type="text"
                                 maxlength="10"
                                 required
-                                placeholder={state.CodigoEmbalaje}
+                                value={state.CodigoEmbalaje}
+                                readOnly={state.agregar == "Consultar"}
                                 id="CodigoEmbalaje"
                               />
                             </div>
@@ -500,7 +464,8 @@ function Embalaje() {
                                 className="form-control"
                                 type="text"
                                 required
-                                placeholder={state.NombreEmbalaje}
+                                value={state.NombreEmbalaje}
+                                readOnly={state.agregar == "Consultar"}
                                 id="NombreEmbalaje"
                               />
                             </div>
@@ -516,7 +481,8 @@ function Embalaje() {
                                 className="form-control"
                                 type="text"
                                 required
-                                placeholder={state.DescripcionEmbalaje}
+                                value={state.DescripcionEmbalaje}
+                                readOnly={state.agregar == "Consultar"}
                                 id="DescripcionEmbalaje"
                               />
                             </div>

@@ -108,7 +108,7 @@ function Departamento() {
       console.log(respuesta.data)
       setState({
         ...state,
-        agregar: "Consulta",
+        agregar: "Consultar",
         showPopUp: true,
         idDepartamento: id,
         codigoDepartamento: respuesta.data.m_nCodigo,
@@ -445,7 +445,7 @@ function Departamento() {
                                 max="999"
                                 step="1"
                                 required
-                                readOnly={state.agregar == "Consulta"}
+                                readOnly={state.agregar == "Consultar"}
                                 value={state.codigoDepartamento}
                                 id="codigoDepartamento"
                               />
@@ -463,7 +463,7 @@ function Departamento() {
                                 type="text"
                                 maxLength="100"
                                 required
-                                readOnly={state.agregar == "Consulta"}
+                                readOnly={state.agregar == "Consultar"}
                                 value={state.descripcionDepartamento}
                                 id="descripcionDepartamento"
                               />
