@@ -448,7 +448,7 @@ function Guia() {
     setState({ ...state, conceptos: conceptos });
   }
 
-  function handleEliminar(row) {
+  function handleEliminar(id) {
     var derecho;
     const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.creadoPor}/${state.DerechoBorrar}/3` ;
     axios.get(urlDelete, { headers }).then(respuesta => {
@@ -461,7 +461,7 @@ function Guia() {
         return; 
       }
       
-    const url = `${process.env.REACT_APP_API_URL}/Guia/Eliminar/` + row.original.m_nIdGuia;
+    const url = `${process.env.REACT_APP_API_URL}/Guia/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
       alert(respuesta.data)
       //console.log(respuesta)
@@ -474,19 +474,20 @@ function Guia() {
       alert(err)
     });
   }
-  function handleShowModificar(row) {
+
+  function handleShowModificar(id) {
     //console.log(row.original.m_nIdGuia)
     //TODO
     //var valor2="";
-    const url = `${process.env.REACT_APP_API_URL}/Guia/GetById/` + row.original.m_nIdGuia;
+    const url = `${process.env.REACT_APP_API_URL}/Guia/GetById/` + id;
     axios.get(url, { headers }).then(respuesta => {
       //console.log(respuesta.data)
       // debugger;
-      cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, row.original.m_nIdGuia)
+      cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)
       handleEmbarqueModificar(respuesta)
       //valor2=respuesta.data.m_nIdEmbarque;
       //     debugger;
-      /*setState({
+      setState({
         ...state,
         agregar: "Modificar",
         showPopUp: true,       
@@ -508,7 +509,46 @@ function Guia() {
         creadoEl:respuesta.data.m_dCreadoEl,
         idSucursal:respuesta.data.IdSucursal      
 
-              });*/
+              });
+      //handleEmbarque (respuesta.data.m_nIdEmbarque)
+      // alert(state.idMoneda)
+    }).catch(function (err) {
+      console.log(err.data)
+    });
+    // debugger;
+    // handleEmbarqueModificar (valor2)      
+
+  }
+
+  function handleShowConsultar(id) {
+    const url = `${process.env.REACT_APP_API_URL}/Guia/GetById/` + id;
+    axios.get(url, { headers }).then(respuesta => {
+      //cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)
+      //handleEmbarqueModificar(respuesta)
+      //valor2=respuesta.data.m_nIdEmbarque;
+      //     debugger;
+      setState({
+        ...state,
+        agregar: "Consultar",
+        showPopUp: true,       
+        IdEmbarque: respuesta.data.m_nIdEmbarque,        
+        folioGuía:respuesta.data.m_nFolioGuia,
+        folioRecoleccion:respuesta.data.m_nFolioRecoleccion,
+        folioInforme: respuesta.data.m_nFolioInforme,
+        idGuia: respuesta.data.m_nIdGuia,
+        fecha: respuesta.data.m_dFecha,
+        hora: respuesta.data.m_sHora,
+        idEstatusGuia: respuesta.data.m_nIdEstatusGuia,
+        valorDeclardao: respuesta.data.m_cValorDeclarado,
+        idMoneda: respuesta.data.m_nIdMoneda,
+        tipoCambio: respuesta.data.m_cTIpoCambio,
+        idTipoCobro: respuesta.data.m_nIdTIpoCobro,
+        arrClsDetalle: respuesta.data.m_arrClsDetalle,
+        tracking: respuesta.data.m_nTracking,
+        arClsGuiaConceptos:respuesta.data.m_arClsGuiaConceptos,
+        creadoEl:respuesta.data.m_dCreadoEl,
+        idSucursal:respuesta.data.IdSucursal      
+              });
       //handleEmbarque (respuesta.data.m_nIdEmbarque)
       // alert(state.idMoneda)
     }).catch(function (err) {
@@ -573,6 +613,7 @@ function handleImprmir2()
   function handleShowImprimir() {
     //getImpresion(38);
   }
+
   function handleShowAgregar() {
     var today = new Date();
     setState({
@@ -652,6 +693,7 @@ function handleImprmir2()
       [event.target.id]: event.target.value
     });
   };
+
   const handleChangePaquete = (event, index) => {
 
     var { paquetes } = state
@@ -1309,9 +1351,9 @@ function handleImprmir2()
                   <tr {...row.getRowProps()}>
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdGuia))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdGuia))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdGuia))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -1552,6 +1594,7 @@ function handleImprmir2()
               name="IdConceptoFacturacion"
               read="true"
               value={state.conceptos[index].IdConceptoFacturacion}
+              disabled={state.agregar == "Consultar"}
             >
               <option value="0">
                 Seleccionar
@@ -1593,6 +1636,7 @@ function handleImprmir2()
               onChange={event => (handleChangeConceptoImpuesto(event, index, 1))}
               id="IdImpuestoTraslada"
               value={state.conceptos[index].IdImpuestoTraslada}
+              disabled={state.agregar == "Consultar"}
             >
               <option value="0">
                 Seleccionar
@@ -1620,6 +1664,7 @@ function handleImprmir2()
               id="IdImpuestoRetiene"
               read="true"
               value={state.conceptos[index].IdImpuestoRetiene}
+              disabled={state.agregar == "Consultar"}
             >
               <option value="0">
                 Seleccionar
@@ -2132,6 +2177,7 @@ function handleImprmir2()
                               className="form-control"
                               type="calendar"
                               placeholder={state.codigoDepartamento}
+                              disabled={state.agregar == "Consultar"}
                               id="codigoDepartamento"
                             />
                           </div>
@@ -2289,6 +2335,7 @@ function handleImprmir2()
                                     id="idMoneda"
                                     read="true"
                                     value={state.idMoneda}
+                                    disabled={state.agregar == "Consultar"}
                                   >
                                     <option value="0">
                                       Seleccionar
@@ -2315,6 +2362,7 @@ function handleImprmir2()
                                       className="form-control"
                                       type="text"
                                       placeholder={state.folioGuía}
+                                      readOnly={state.agregar == "Consultar"}
                                       id="folioGuia"
                                       disabled="disabled"
                                     />
@@ -2332,6 +2380,7 @@ function handleImprmir2()
                                     id="idEmbarque"
                                     read="true"
                                     value={state.idEmbarque}
+                                    disabled={state.agregar == "Consultar"}
 
                                   >
                                     <option value="0">
@@ -2358,6 +2407,7 @@ function handleImprmir2()
                                       className="form-control"
                                       type="text"
                                       placeholder={state.tracking}
+                                      readOnly={state.agregar == "Consultar"}
                                       id="tracking"
                                       disabled="disabled"
                                     />
@@ -2375,6 +2425,7 @@ function handleImprmir2()
                                       className="form-control"
                                       type="text"
                                       placeholder={state.folioInforme}
+                                      readOnly={state.agregar == "Consultar"}
                                       id="folioInforme"
                                       disabled="disabled"
                                     />
@@ -2391,6 +2442,7 @@ function handleImprmir2()
                                       className="form-control"
                                       type="text"
                                       placeholder={state.fecha}
+                                      readOnly={state.agregar == "Consultar"}
                                       id="fecha"
                                       disabled="disabled"
                                     />
@@ -2408,6 +2460,7 @@ function handleImprmir2()
                                     id="idEstatusGuia"
                                     read="true"
                                     value={state.idEstatusGuia}
+                                    disabled={state.agregar == "Consultar"}
                                   >
                                     <option value="0">
                                       Seleccionar
@@ -2435,6 +2488,7 @@ function handleImprmir2()
                                       className="form-control"
                                       type="text"
                                       placeholder={state.tipoCambio}
+                                      readOnly={state.agregar == "Consultar"}
                                       id="tipoCambio"
                                       disabled="disabled"
                                     />
@@ -2480,6 +2534,7 @@ function handleImprmir2()
                                           className="form-control"
                                           type="text"
                                           placeholder={state.nombreRemitente}
+                                          readOnly={state.agregar == "Consultar"}
                                           id="nombreRemitente"
                                           disabled="disabled"
                                         />
@@ -2496,6 +2551,7 @@ function handleImprmir2()
                                           className="form-control"
                                           type="text"
                                           placeholder={state.RFCRemitente}
+                                          readOnly={state.agregar == "Consultar"}
                                           id="RFCRemitente"
                                           disabled="disabled"
                                         />
@@ -2512,6 +2568,7 @@ function handleImprmir2()
                                           className="form-control"
                                           type="text"
                                           placeholder={state.domicilioRemitente}
+                                          readOnly={state.agregar == "Consultar"}
                                           id="domicilioRemitente"
                                           disabled="disabled"
                                         />
@@ -2528,6 +2585,7 @@ function handleImprmir2()
                                           className="form-control"
                                           type="text"
                                           placeholder={state.codigoPostalRemitente}
+                                          readOnly={state.agregar == "Consultar"}
                                           id="codigoPostalRemitente"
                                           disabled="disabled"
                                         />
@@ -2544,6 +2602,7 @@ function handleImprmir2()
                                           className="form-control"
                                           type="text"
                                           placeholder={state.ciudadRemitente}
+                                          readOnly={state.agregar == "Consultar"}
                                           id="ciudadRemitente"
                                           disabled="disabled"
                                         />
@@ -2561,6 +2620,7 @@ function handleImprmir2()
                                           className="form-control"
                                           type="text"
                                           placeholder={state.correoRemitente}
+                                          readOnly={state.agregar == "Consultar"}
                                           id="correoRemitente"
                                           disabled="disabled"
                                         />
@@ -2577,6 +2637,7 @@ function handleImprmir2()
                                           className="form-control"
                                           type="text"
                                           placeholder={state.telefonoRemitente}
+                                          readOnly={state.agregar == "Consultar"}
                                           id="telefonoRemitente"
                                           disabled="disabled"
                                         />
@@ -2593,6 +2654,7 @@ function handleImprmir2()
                                           className="form-control"
                                           type="text"
                                           placeholder={state.contactoRemitente}
+                                          readOnly={state.agregar == "Consultar"}
                                           id="contactoRemitente"
                                           disabled="disabled"
                                         />
@@ -2609,6 +2671,7 @@ function handleImprmir2()
                                           className="form-control"
                                           type="text"
                                           placeholder={state.origenRemitente}
+                                          readOnly={state.agregar == "Consultar"}
                                           id="origenRemitente"
                                           disabled="disabled"
                                         />
@@ -2640,6 +2703,7 @@ function handleImprmir2()
                                           className="form-control"
                                           type="text"
                                           placeholder={state.sNombreDestinatario}
+                                          readOnly={state.agregar == "Consultar"}
                                           id="sNombreDestinatario"
                                           disabled="disabled"
                                         />
@@ -2656,6 +2720,7 @@ function handleImprmir2()
                                           className="form-control"
                                           type="text"
                                           placeholder={state.sRFCDestinatario}
+                                          readOnly={state.agregar == "Consultar"}
                                           id="sRFCDestinatario"
                                           disabled="disabled"
                                         />
@@ -2672,6 +2737,7 @@ function handleImprmir2()
                                           className="form-control"
                                           type="text"
                                           placeholder={state.sDomicilioDestinatario}
+                                          readOnly={state.agregar == "Consultar"}
                                           id="sDomicilioDestinatario"
                                           disabled="disabled"
                                         />
@@ -2688,6 +2754,7 @@ function handleImprmir2()
                                           className="form-control"
                                           type="text"
                                           placeholder={state.idCodigoPostalDestinatario}
+                                          readOnly={state.agregar == "Consultar"}
                                           id="idCodigoPostalDestinatario"
                                           disabled="disabled"
                                         />
@@ -2704,6 +2771,7 @@ function handleImprmir2()
                                           className="form-control"
                                           type="text"
                                           placeholder={state.ciudadDestinatario}
+                                          readOnly={state.agregar == "Consultar"}
                                           id="ciudadDestinatario"
                                           disabled="disabled"
                                         />
@@ -2720,6 +2788,7 @@ function handleImprmir2()
                                           className="form-control"
                                           type="text"
                                           placeholder={state.sCorreoDestinatario}
+                                          readOnly={state.agregar == "Consultar"}
                                           id="sCorreoDestinatario"
                                           disabled="disabled"
                                         />
@@ -2736,6 +2805,7 @@ function handleImprmir2()
                                           className="form-control"
                                           type="text"
                                           placeholder={state.sTelefonoDestinatario}
+                                          readOnly={state.agregar == "Consultar"}
                                           id="sTelefonoDestinatario"
                                           disabled="disabled"
                                         />
@@ -2752,6 +2822,7 @@ function handleImprmir2()
                                           className="form-control"
                                           type="text"
                                           placeholder={state.sContactoDestinatario}
+                                          readOnly={state.agregar == "Consultar"}
                                           id="sContactoDestinatario"
                                           disabled="disabled"
                                         />
@@ -2768,6 +2839,7 @@ function handleImprmir2()
                                           className="form-control"
                                           type="text"
                                           placeholder={state.CiudadDestino}
+                                          readOnly={state.agregar == "Consultar"}
                                           id="CiudadDestino"
                                           disabled="disabled"
                                         />
@@ -2868,6 +2940,7 @@ function handleImprmir2()
                                         id="idTipoCobro"
                                         read="true"
                                         value={state.idTipoCobro}
+                                        disabled={state.agregar == "Consultar"}
                                         disabled="disabled">
 
                                         <option value="0">
@@ -2892,6 +2965,7 @@ function handleImprmir2()
                                         className="form-control"
                                         required
                                         onChange={handleChange}
+                                        disabled={state.agregar == "Consultar"}
                                         id="idTipoServicio"
                                         read="true"
                                       >
@@ -2916,6 +2990,7 @@ function handleImprmir2()
                                           className="form-control"
                                           type="text"
                                           placeholder={state.ValorDeclarado}
+                                          readonly={state.agregar == "Consultar"}
                                           id="ValorDeclarado"
                                         />
                                       </div>

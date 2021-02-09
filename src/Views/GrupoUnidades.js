@@ -84,16 +84,33 @@ function GrupoUnidades() {
     });
   }
 
-  function handleShowModificar(row) {
-    console.log(row.original.m_nIdGrupoUnidad)
-    const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/GetById/` + row.original.m_nIdGrupoUnidad;
+  function handleShowModificar(id) {
+    console.log(id)
+    const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/GetById/` + id;
     axios.get(url, { headers }).then(respuesta => {
       console.log(respuesta.data)
       setState({
         ...state,
         agregar: "Modificar",
         showPopUp: true,
-        IdEmbalaje: row.original.m_nIdGrupoUnidad,
+        IdEmbalaje: id,
+        Codigo: respuesta.data.m_nCodigo,
+        GrupoUnidad: respuesta.data.m_sGrupoUnidad,
+        Color: respuesta.data.m_sColor.slice(-6)
+      })
+    });
+  }
+
+  function handleShowConsultar(id) {
+    console.log(id)
+    const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/GetById/` + id;
+    axios.get(url, { headers }).then(respuesta => {
+      console.log(respuesta.data)
+      setState({
+        ...state,
+        agregar: "Consultar",
+        showPopUp: true,
+        IdEmbalaje: id,
         Codigo: respuesta.data.m_nCodigo,
         GrupoUnidad: respuesta.data.m_sGrupoUnidad,
         Color: respuesta.data.m_sColor.slice(-6)
@@ -328,9 +345,9 @@ function GrupoUnidades() {
                   <tr {...row.getRowProps()}>
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdDepartamento))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdDepartamento))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdGrupoUnidad))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdGrupoUnidad))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdGrupoUnidad))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -431,7 +448,8 @@ function GrupoUnidades() {
                                 step="1"
                                 min="0"
                                 max="999"
-                                placeholder={state.Codigo}
+                                value={state.Codigo}
+                                disabled={state.agregar == "Consultar"}
                                 id="Codigo"
                               />
                             </div>
@@ -447,7 +465,8 @@ function GrupoUnidades() {
                                 className="form-control"
                                 type="color"
                                 required
-                                placeholder={state.Color}
+                                value={state.Color}
+                                readOnly={state.agregar == "Consultar"}
                                 id="Color"
                               />
                             </div>
@@ -463,7 +482,8 @@ function GrupoUnidades() {
                                 className="form-control"
                                 type="text"
                                 required
-                                placeholder={state.GrupoUnidad}
+                                value={state.GrupoUnidad}
+                                readOnly={state.agregar == "Consultar"}
                                 id="GrupoUnidad"
                               />
                             </div>

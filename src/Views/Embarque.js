@@ -39,14 +39,14 @@ function Embarque() {
   const [dataUnidad, setDataUnidad] = React.useState([]);
   const [state, setState] = React.useState({
     showPopUp: false,
-    DerechoBorrar:139,
+    DerechoBorrar: 139,
     agregar: "Agregar",
     idEmbarque: 0,
     fechaInicial: "",
     fechaIcinial2: "",
     sucursalListado: 0,
     estatusListado: 0,
-    idSucursalAgregar:  localStorage.getItem("Sucursal"),
+    idSucursalAgregar: localStorage.getItem("Sucursal"),
     folioRecoleccion: "",
     folioEmbarque: "",
     folioGuía: "",
@@ -173,7 +173,7 @@ function Embarque() {
       "IdSucursal": state.idSucursalAgregar,
       "m_arrClsDetalle": state.paquetes,
       "CreadoPor": state.CreadoPor,
-      "ModificadoPor": state.ModificadoPor  ,
+      "ModificadoPor": state.ModificadoPor,
       "m_tFechaDetalleEntrega": state.fechaEntrega.split("T")[0],
       "m_tHoraDetalleEntrega": state.fechaEntrega.split("T")[1],
       "m_parrSobres": state.sobres,
@@ -272,20 +272,19 @@ function Embarque() {
       //alert(respuesta.data)
 
       derecho = respuesta.data;
-      if (derecho == false)
-      {
-        alert ("El usuario no tiene derechos para realizar el proceso");
-        return; 
+      if (derecho == false) {
+        alert("El usuario no tiene derechos para realizar el proceso");
+        return;
       }
-      
-    const url = `${process.env.REACT_APP_API_URL}/Embarques/Eliminar/${id}`;
-    axios.delete(url, { headers }).then(respuesta => {
-      alert(respuesta.data)
-      getAllData()
+
+      const url = `${process.env.REACT_APP_API_URL}/Embarques/Eliminar/${id}`;
+      axios.delete(url, { headers }).then(respuesta => {
+        alert(respuesta.data)
+        getAllData()
+      }).catch(err => {
+        alert(err)
+      });
     }).catch(err => {
-      alert(err)
-    });
-	}).catch(err => {
       alert(err)
     });
   }
@@ -297,6 +296,63 @@ function Embarque() {
       setState({
         ...state,
         agregar: "Modificar",
+        idEmbarque: id,
+        showPopUp: true,
+        idEntrega: 0,
+        idSucursalAgregar: respuesta.data.IdSucursal,
+        folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
+        folioEmbarque: respuesta.data.m_nFolioEmbarque,
+        folioGuía: respuesta.data.m_nFolioGuia,
+        folioInforme: respuesta.data.m_nFolioInforme,
+        fechaHoraCreacion: respuesta.data.m_dFecha + "T" + respuesta.data.m_tHora.split(":")[0] + ":" + respuesta.data.m_tHora.split(":")[1],
+        moneda: dataTipoMoneda[0].m_nIdMoneda,
+        tipoCambio: respuesta.data.m_cTIpoCambio,
+        tipoCobro: dataTipoCobro[0].m_nIdTipoCobro,
+        estatusEmbarque: dataEstatusEmbarque[0].m_nIdEstatusEmbarque,
+        nombreRemitente: respuesta.data.m_sNOmbreRemitente,
+        RFCRemitente: respuesta.data.m_sRFCRemitente,
+        domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
+        codigoPostalRemitente: dataCodigoPostal[0].m_nIdCP,
+        ciudadRemitente: dataCiudad[0].m_nIdCiudad, //respuesta.data.m_nCiudadRemitente,
+        correoRemitente: respuesta.data.m_sCorreoRemitente,
+        telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
+        contactoRemitente: respuesta.data.m_sContactoRemitente,
+        origenRemitente: dataCiudad[0].m_nIdCiudad,
+        ciudadOrigen: dataCiudad[0].m_nIdCiudad,
+        nombreDestinatario: respuesta.data.m_sNombreDestinatario,
+        RFCDestinatario: respuesta.data.m_sRFCDestinatario,
+        domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
+        codigoPostalDestinatario: dataCodigoPostal[0].m_nIdCP,
+        ciudadDestinatario: dataCiudad[0].m_nIdCiudad,
+        correoDestinatario: respuesta.data.m_sCorreoDestinatario,
+        telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
+        contactoDestinatario: respuesta.data.m_sContactoDestinatario,
+        destinoDestinatario: dataCiudad[0].m_nIdCiudad,
+        ciudadRemitente: dataCiudad[0].m_nIdCiudad,
+        ciudadDestinatario: dataCiudad[0].m_nIdCiudad,
+        fechaEntrega: respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
+        codigoPostalEntrega: dataCodigoPostal[0].m_nIdCP,
+        ciudadEntrega: dataCiudad[0].m_nIdCiudad,
+        fechaHoraSalida: respuesta.data.m_dFechaSalida + "T" + respuesta.data.m_tHoraSalida,
+        fechaHoraLlegada: respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,
+        idOperador: dataOperador[0].m_nIdOperador,
+        idTipoUnidad: dataTipoUnidad[0].m_nIdTipoUnidad,
+        zonaEntrega: respuesta.data.IdZonaEntrega,
+        domicilioEntrega: respuesta.data.DomicilioEntrega,
+        entregaEn: respuesta.data.EntregarEn,
+        datosAdicionalesEntrega: respuesta.data.DatosAdicionalesis,
+        paquetes: respuesta.data.m_arrPaquetes
+      })
+    });
+  }
+
+  function handleShowConsultar(id) {
+    console.log(id)
+    const url = `${process.env.REACT_APP_API_URL}/Embarques/GetById/${id}`;
+    axios.get(url, { headers }).then(respuesta => {
+      setState({
+        ...state,
+        agregar: "Consultar",
         idEmbarque: id,
         showPopUp: true,
         idEntrega: 0,
@@ -449,8 +505,7 @@ function Embarque() {
   ]);
 
   useEffect(value => {
-    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
-    {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
       alert("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
@@ -630,9 +685,9 @@ function Embarque() {
                   <tr {...row.getRowProps()}>
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdEmbarque))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdEmbarque))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdEmbarque))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdEmbarque))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdEmbarque))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdEmbarque))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -1040,7 +1095,7 @@ function Embarque() {
               <form className="j-forms" onSubmit={handleAceptar}>
                 <div className="form-content">
 
-                <div
+                  <div
                     className="wizard-breadcrumb number-style"
                     style={{
                       position: "sticky",
@@ -1135,6 +1190,7 @@ function Embarque() {
                                   required
                                   onChange={handleChange}
                                   value={state.idSucursalAgregar}
+                                  readOnly={state.agregar == "Consultar"}
                                   id="idSucursalAgregar"
                                   disabled="disabled"
                                 >
@@ -1227,6 +1283,7 @@ function Embarque() {
                                   className="form-control"
                                   required
                                   value={state.fechaHoraCreacion}
+                                  readOnly={state.agregar == "Consultar"}
                                   id="fechaHoraCreacion"
                                 />
                               </div>
@@ -1242,6 +1299,7 @@ function Embarque() {
                                   required
                                   onChange={handleChange}
                                   value={state.estatusEmbarque}
+                                  readOnly={state.agregar == "Consultar"}
                                   id="estatusEmbarque"
                                 >
                                   {dataEstatusEmbarque.map(
@@ -1267,6 +1325,7 @@ function Embarque() {
                                   className="form-control"
                                   required
                                   value={state.moneda}
+                                  readOnly={state.agregar == "Consultar"}
                                   onChange={handleChange}
                                   id="moneda"
                                 >
@@ -1298,6 +1357,7 @@ function Embarque() {
                                   step="0.01"
                                   required
                                   value={state.tipoCambio}
+                                  readOnly={state.agregar == "Consultar"}
                                   id="tipoCambio"
                                 />
                               </div>
@@ -1312,6 +1372,7 @@ function Embarque() {
                                   className="form-control"
                                   required
                                   value={state.tipoCobro}
+                                  readOnly={state.agregar == "Consultar"}
                                   onChange={handleChange}
                                   id="tipoCobro"
                                 >
@@ -1336,40 +1397,238 @@ function Embarque() {
                     </div>
 
                   </div>
-<div className="row">
-                  <div className="col-md-7">
+                  <div className="row">
+                    <div className="col-md-7">
 
-                    <div className="widget-wrap" id="remitenteDestinatario">
-                      <div className="row">
-                        <div className="col-md-6">
-                          <div className="widget-header">
-                            <h2>Remitente</h2>
+                      <div className="widget-wrap" id="remitenteDestinatario">
+                        <div className="row">
+                          <div className="col-md-6">
+                            <div className="widget-header">
+                              <h2>Remitente</h2>
+                            </div>
+                            <div className="widget-container">
+                              <div className="widget-content">
+                                <div className="row">
+
+                                  <div className="col-sm-4 col-md-6 unit">
+                                    <label className="label">
+                                      Nombre
+                                  </label>
+                                    <div className="input">
+                                      <input
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="text"
+                                        required
+                                        value={state.nombreRemitente}
+                                        readOnly={state.agregar == "Consultar"}
+                                        id="nombreRemitente"
+                                      />
+                                    </div>
+
+                                  </div>
+
+                                  <div className="col-sm-4 col-md-6 unit">
+                                    <label className="label">
+                                      RFC
+                                  </label>
+                                    <div className="input">
+                                      <input
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="text"
+                                        pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
+                                        title="Favor de introducir un RFC válido."
+                                        required
+                                        value={state.RFCRemitente}
+                                        readOnly={state.agregar == "Consultar"}
+                                        id="RFCRemitente"
+                                      />
+                                    </div>
+                                  </div>
+
+                                  <div className="col-sm-4 col-md-12 unit">
+                                    <label className="label">
+                                      Domicilio
+                                  </label>
+                                    <div className="input">
+                                      <input
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="text"
+                                        required
+                                        value={state.domicilioRemitente}
+                                        readOnly={state.agregar == "Consultar"}
+                                        id="domicilioRemitente"
+                                      />
+                                    </div>
+                                  </div>
+
+                                  <div className="col-sm-4 col-md-6 unit">
+                                    <label className="label">
+                                      Código Postal
+                                  </label>
+                                    <label className="input select">
+                                      <select
+                                        className="form-control"
+                                        required
+                                        value={state.codigoPostalRemitente}
+                                        readOnly={state.agregar == "Consultar"}
+                                        onChange={handleChange}
+                                        id="codigoPostalRemitente"
+                                      >
+                                        {dataCodigoPostal.map(
+                                          (codigoPostal) => (
+                                            <option key={codigoPostal.m_nIdCP} value={codigoPostal.m_nIdCP}>
+                                              {
+                                                codigoPostal.m_sCP
+                                              }
+                                            </option>
+                                          )
+                                        )}
+                                      </select>
+                                      <i className="fa fa-arrow-down" />
+                                    </label>
+                                  </div>
+
+                                  <div className="col-sm-4 col-md-6 unit">
+                                    <label className="label">
+                                      Ciudad
+                                  </label>
+                                    <label className="input select">
+                                      <select
+                                        className="form-control"
+                                        required
+                                        value={state.ciudadRemitente}
+                                        readOnly={state.agregar == "Consultar"}
+                                        onChange={handleChange}
+                                        id="ciudadRemitente"
+                                      >
+                                        {dataCiudad.map(
+                                          (ciudad) => (
+                                            <option key={ciudad.m_nIdCiudad} value={ciudad.m_nIdCiudad}>
+                                              {
+                                                ciudad.m_sCiudad
+                                              }
+                                            </option>
+                                          )
+                                        )}
+                                      </select>
+                                      <i className="fa fa-arrow-down" />
+                                    </label>
+
+                                  </div>
+
+                                  <div className="col-sm-4 col-md-6 unit">
+                                    <label className="label">
+                                      Correo Electrónico
+                                  </label>
+                                    <div className="input">
+                                      <input
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="email"
+                                        required
+                                        value={state.correoRemitente}
+                                        readOnly={state.agregar == "Consultar"}
+                                        id="correoRemitente"
+                                      />
+                                    </div>
+                                  </div>
+
+                                  <div className="col-sm-4 col-md-6 unit">
+                                    <label className="label">
+                                      Teléfono
+                                  </label>
+                                    <div className="input">
+                                      <input
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="tel"
+                                        required
+                                        value={state.telefonoRemitente}
+                                        readOnly={state.agregar == "Consultar"}
+                                        id="telefonoRemitente"
+                                      />
+                                    </div>
+                                  </div>
+
+                                  <div className="col-sm-4 col-md-6 unit">
+                                    <label className="label">
+                                      Contacto
+                                  </label>
+                                    <div className="input">
+                                      <input
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="text"
+                                        required
+                                        value={state.contactoRemitente}
+                                        readOnly={state.agregar == "Consultar"}
+                                        id="contactoRemitente"
+                                      />
+                                    </div>
+                                  </div>
+
+                                  <div className="col-sm-12 col-md-6 unit">
+                                    <label className="label">
+                                      Destino
+                                </label>
+                                    <label className="input select">
+                                      <select
+                                        className="form-control"
+                                        required
+                                        value={state.ciudadOrigen}
+                                        readOnly={state.agregar == "Consultar"}
+                                        onChange={handleChange}
+                                        id="ciudadOrigen"
+                                      >
+                                        {dataCiudad.map(
+                                          (ciudad) => (
+                                            <option key={ciudad.m_nIdCiudad} value={ciudad.m_nIdCiudad}>
+                                              {
+                                                ciudad.m_sCiudad
+                                              }
+                                            </option>
+                                          )
+                                        )}
+                                      </select>
+                                      <i className="fa fa-arrow-down" />
+                                    </label>
+                                  </div>
+
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                          <div className="widget-container">
-                            <div className="widget-content">
-                              <div className="row">
+                          <div className="col-md-6">
+                            <div className="widget-header">
+                              <h2>Destinatario</h2>
+                            </div>
+                            <div className="widget-container">
+                              <div className="widget-content">
 
                                 <div className="col-sm-4 col-md-6 unit">
                                   <label className="label">
                                     Nombre
-                                  </label>
+                              </label>
                                   <div className="input">
                                     <input
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
                                       required
-                                      value={state.nombreRemitente}
-                                      id="nombreRemitente"
+                                      value={state.nombreDestinatario}
+                                      readOnly={state.agregar == "Consultar"}
+                                      id="nombreDestinatario"
                                     />
                                   </div>
-
                                 </div>
 
                                 <div className="col-sm-4 col-md-6 unit">
                                   <label className="label">
                                     RFC
-                                  </label>
+                                </label>
                                   <div className="input">
                                     <input
                                       onChange={handleChange}
@@ -1378,8 +1637,9 @@ function Embarque() {
                                       pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
                                       title="Favor de introducir un RFC válido."
                                       required
-                                      value={state.RFCRemitente}
-                                      id="RFCRemitente"
+                                      value={state.RFCDestinatario}
+                                      readOnly={state.agregar == "Consultar"}
+                                      id="RFCDestinatario"
                                     />
                                   </div>
                                 </div>
@@ -1387,15 +1647,16 @@ function Embarque() {
                                 <div className="col-sm-4 col-md-12 unit">
                                   <label className="label">
                                     Domicilio
-                                  </label>
+                                </label>
                                   <div className="input">
                                     <input
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
                                       required
-                                      value={state.domicilioRemitente}
-                                      id="domicilioRemitente"
+                                      value={state.domicilioDestinatario}
+                                      readOnly={state.agregar == "Consultar"}
+                                      id="domicilioDestinatario"
                                     />
                                   </div>
                                 </div>
@@ -1403,14 +1664,15 @@ function Embarque() {
                                 <div className="col-sm-4 col-md-6 unit">
                                   <label className="label">
                                     Código Postal
-                                  </label>
+                                </label>
                                   <label className="input select">
                                     <select
                                       className="form-control"
                                       required
-                                      value={state.codigoPostalRemitente}
+                                      value={state.codigoPostalDestinatario}
+                                      readOnly={state.agregar == "Consultar"}
                                       onChange={handleChange}
-                                      id="codigoPostalRemitente"
+                                      id="codigoPostalDestinatario"
                                     >
                                       {dataCodigoPostal.map(
                                         (codigoPostal) => (
@@ -1424,19 +1686,21 @@ function Embarque() {
                                     </select>
                                     <i className="fa fa-arrow-down" />
                                   </label>
+
                                 </div>
 
                                 <div className="col-sm-4 col-md-6 unit">
                                   <label className="label">
                                     Ciudad
-                                  </label>
+                                </label>
                                   <label className="input select">
                                     <select
                                       className="form-control"
                                       required
-                                      value={state.ciudadRemitente}
+                                      value={state.ciudadDestino}
+                                      readOnly={state.agregar == "Consultar"}
                                       onChange={handleChange}
-                                      id="ciudadRemitente"
+                                      id="ciudadDestinatario"
                                     >
                                       {dataCiudad.map(
                                         (ciudad) => (
@@ -1450,21 +1714,21 @@ function Embarque() {
                                     </select>
                                     <i className="fa fa-arrow-down" />
                                   </label>
-
                                 </div>
 
                                 <div className="col-sm-4 col-md-6 unit">
                                   <label className="label">
                                     Correo Electrónico
-                                  </label>
+                                </label>
                                   <div className="input">
                                     <input
                                       onChange={handleChange}
                                       className="form-control"
                                       type="email"
                                       required
-                                      value={state.correoRemitente}
-                                      id="correoRemitente"
+                                      value={state.correoDestinatario}
+                                      readOnly={state.agregar == "Consultar"}
+                                      id="correoDestinatario"
                                     />
                                   </div>
                                 </div>
@@ -1472,15 +1736,16 @@ function Embarque() {
                                 <div className="col-sm-4 col-md-6 unit">
                                   <label className="label">
                                     Teléfono
-                                  </label>
+                                </label>
                                   <div className="input">
                                     <input
                                       onChange={handleChange}
                                       className="form-control"
-                                      type="tel"
+                                      type="text"
                                       required
-                                      value={state.telefonoRemitente}
-                                      id="telefonoRemitente"
+                                      value={state.telefonoDestinatario}
+                                      readOnly={state.agregar == "Consultar"}
+                                      id="telefonoDestinatario"
                                     />
                                   </div>
                                 </div>
@@ -1488,30 +1753,33 @@ function Embarque() {
                                 <div className="col-sm-4 col-md-6 unit">
                                   <label className="label">
                                     Contacto
-                                  </label>
+                                </label>
                                   <div className="input">
                                     <input
+                                      required={true}
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
                                       required
-                                      value={state.contactoRemitente}
-                                      id="contactoRemitente"
+                                      value={state.contactoDestinatario}
+                                      readOnly={state.agregar == "Consultar"}
+                                      id="contactoDestinatario"
                                     />
                                   </div>
                                 </div>
 
                                 <div className="col-sm-12 col-md-6 unit">
                                   <label className="label">
-                                    Destino
+                                    Origen
                                 </label>
                                   <label className="input select">
                                     <select
                                       className="form-control"
                                       required
-                                      value={state.ciudadOrigen}
+                                      value={state.origenRemitente}
+                                      readOnly={state.agregar == "Consultar"}
                                       onChange={handleChange}
-                                      id="ciudadOrigen"
+                                      id="origenRemitente"
                                     >
                                       {dataCiudad.map(
                                         (ciudad) => (
@@ -1527,566 +1795,389 @@ function Embarque() {
                                   </label>
                                 </div>
 
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="widget-header">
-                            <h2>Destinatario</h2>
-                          </div>
-                          <div className="widget-container">
-                            <div className="widget-content">
-
-                              <div className="col-sm-4 col-md-6 unit">
-                                <label className="label">
-                                  Nombre
-                              </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    required
-                                    value={state.nombreDestinatario}
-                                    id="nombreDestinatario"
-                                  />
+                                <div className="col-sm-12 col-md-12 unit">
+                                  <label className="label">
+                                    Entrega en Diferente Domicilio
+                                </label>
+                                  <div className="input">
+                                    <input
+                                      onChange={handleEntregaCheckboxChange}
+                                      className="form-control"
+                                      type="checkbox"
+                                      checked={state.diferenteEntrega}
+                                      value={state.diferenteEntrega}
+                                      readOnly={state.agregar == "Consultar"}
+                                      id="diferenteEntrega"
+                                    />
+                                  </div>
                                 </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-6 unit">
-                                <label className="label">
-                                  RFC
-                                </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
-                                    title="Favor de introducir un RFC válido."
-                                    required
-                                    value={state.RFCDestinatario}
-                                    id="RFCDestinatario"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-12 unit">
-                                <label className="label">
-                                  Domicilio
-                                </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    required
-                                    value={state.domicilioDestinatario}
-                                    id="domicilioDestinatario"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-6 unit">
-                                <label className="label">
-                                  Código Postal
-                                </label>
-                                <label className="input select">
-                                  <select
-                                    className="form-control"
-                                    required
-                                    value={state.codigoPostalDestinatario}
-                                    onChange={handleChange}
-                                    id="codigoPostalDestinatario"
-                                  >
-                                    {dataCodigoPostal.map(
-                                      (codigoPostal) => (
-                                        <option key={codigoPostal.m_nIdCP} value={codigoPostal.m_nIdCP}>
-                                          {
-                                            codigoPostal.m_sCP
-                                          }
-                                        </option>
-                                      )
-                                    )}
-                                  </select>
-                                  <i className="fa fa-arrow-down" />
-                                </label>
 
                               </div>
-
-                              <div className="col-sm-4 col-md-6 unit">
-                                <label className="label">
-                                  Ciudad
-                                </label>
-                                <label className="input select">
-                                  <select
-                                    className="form-control"
-                                    required
-                                    value={state.ciudadDestino}
-                                    onChange={handleChange}
-                                    id="ciudadDestinatario"
-                                  >
-                                    {dataCiudad.map(
-                                      (ciudad) => (
-                                        <option key={ciudad.m_nIdCiudad} value={ciudad.m_nIdCiudad}>
-                                          {
-                                            ciudad.m_sCiudad
-                                          }
-                                        </option>
-                                      )
-                                    )}
-                                  </select>
-                                  <i className="fa fa-arrow-down" />
-                                </label>
-                              </div>
-
-                              <div className="col-sm-4 col-md-6 unit">
-                                <label className="label">
-                                  Correo Electrónico
-                                </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="email"
-                                    required
-                                    value={state.correoDestinatario}
-                                    id="correoDestinatario"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-6 unit">
-                                <label className="label">
-                                  Teléfono
-                                </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    required
-                                    value={state.telefonoDestinatario}
-                                    id="telefonoDestinatario"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-4 col-md-6 unit">
-                                <label className="label">
-                                  Contacto
-                                </label>
-                                <div className="input">
-                                  <input
-                                    required={true}
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    required
-                                    value={state.contactoDestinatario}
-                                    id="contactoDestinatario"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-12 col-md-6 unit">
-                                <label className="label">
-                                  Origen
-                                </label>
-                                <label className="input select">
-                                  <select
-                                    className="form-control"
-                                    required
-                                    value={state.origenRemitente}
-                                    onChange={handleChange}
-                                    id="origenRemitente"
-                                  >
-                                    {dataCiudad.map(
-                                      (ciudad) => (
-                                        <option key={ciudad.m_nIdCiudad} value={ciudad.m_nIdCiudad}>
-                                          {
-                                            ciudad.m_sCiudad
-                                          }
-                                        </option>
-                                      )
-                                    )}
-                                  </select>
-                                  <i className="fa fa-arrow-down" />
-                                </label>
-                              </div>
-
-                              <div className="col-sm-12 col-md-12 unit">
-                                <label className="label">
-                                  Entrega en Diferente Domicilio
-                                </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleEntregaCheckboxChange}
-                                    className="form-control"
-                                    type="checkbox"
-                                    checked={state.diferenteEntrega}
-                                    value={state.diferenteEntrega}
-                                    id="diferenteEntrega"
-                                  />
-                                </div>
-                              </div>
-
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
 
-                    {state.diferenteEntrega ?
-                      <div className="widget-wrap" id="detallesRecoleccion">
+                      {state.diferenteEntrega ?
+                        <div className="widget-wrap" id="detallesRecoleccion">
 
-                        {state.diferenteEntrega ?
-                          <div>
+                          {state.diferenteEntrega ?
+                            <div>
+                              <div className="widget-header">
+                                <h2>Detalles de la Entrega</h2>
+                              </div>
+                              <div className="widget-container">
+                                <div className="widget-content">
+                                  <div className="row">
+                                    <div className="col-md-12">
+
+                                      <div className="col-sm-4 col-md-4 unit">
+                                        <label className="label">
+                                          Código Postal
+                                    </label>
+                                        <label className="input select">
+                                          <select
+                                            className="form-control"
+                                            required
+                                            value={state.codigoPostalEntrega}
+                                            readOnly={state.agregar == "Consultar"}
+                                            onChange={handleChange}
+                                            id="codigoPostalEntrega"
+                                          >
+                                            {dataCodigoPostal.map(
+                                              (codigoPostal) => (
+                                                <option key={codigoPostal.m_nIdCP} value={codigoPostal.m_nIdCP}>
+                                                  {
+                                                    codigoPostal.m_sCP
+                                                  }
+                                                </option>
+                                              )
+                                            )}
+                                          </select>
+                                          <i className="fa fa-arrow-down" />
+                                        </label>
+                                      </div>
+
+                                      <div className="col-sm-4 col-md-4 unit">
+                                        <label className="label">
+                                          Ciudad
+                                    </label>
+                                        <label className="input select">
+                                          <select
+                                            className="form-control"
+                                            required
+                                            value={state.ciudadEntrega}
+                                            readOnly={state.agregar == "Consultar"}
+                                            onChange={handleChange}
+                                            id="ciudadEntrega"
+                                          >
+                                            {dataCiudad.map(
+                                              (ciudad) => (
+                                                <option key={ciudad.m_nIdCiudad} value={ciudad.m_nIdCiudad}>
+                                                  {
+                                                    ciudad.m_sCiudad
+                                                  }
+                                                </option>
+                                              )
+                                            )}
+                                          </select>
+                                          <i className="fa fa-arrow-down" />
+                                        </label>
+                                      </div>
+
+                                      <div className="col-sm-4 col-md-4 unit">
+                                        <label className="label">
+                                          Zona
+                                      </label>
+                                        <div className="input">
+                                          <input
+                                            onChange={handleChange}
+                                            className="form-control"
+                                            type="text"
+                                            required
+                                            value={state.zonaEntrega}
+                                            readOnly={state.agregar == "Consultar"}
+                                            id="zonaEntrega"
+                                          />
+                                        </div>
+                                      </div>
+
+                                      <div className="col-sm-4 col-md-4 unit">
+                                        <label className="label">
+                                          Domicilio
+                                      </label>
+                                        <div className="input">
+                                          <input
+                                            onChange={handleChange}
+                                            className="form-control"
+                                            type="text"
+                                            required
+                                            value={state.domicilioEntrega}
+                                            readOnly={state.agregar == "Consultar"}
+                                            id="domicilioEntrega"
+                                          />
+                                        </div>
+                                      </div>
+
+                                      <div className="col-sm-4 col-md-4 unit">
+                                        <label className="label">
+                                          Entrega En
+                                      </label>
+                                        <div className="input">
+                                          <input
+                                            onChange={handleChange}
+                                            className="form-control"
+                                            type="text"
+                                            required
+                                            value={state.entregaEn}
+                                            readOnly={state.agregar == "Consultar"}
+                                            id="entregaEn"
+                                          />
+                                        </div>
+                                      </div>
+
+                                      <div className="col-sm-4 col-md-6 unit">
+                                        <label className="label">
+                                          Datos Adicionales para la Entrega
+                                      </label>
+                                        <div className="input">
+                                          <input
+                                            onChange={handleChange}
+                                            className="form-control"
+                                            type="text"
+                                            required
+                                            value={state.datosAdicionalesEntrega}
+                                            readOnly={state.agregar == "Consultar"}
+                                            id="datosAdicionalesEntrega"
+                                          />
+                                        </div>
+                                      </div>
+
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            : <div></div>
+                          }
+
+                        </div>
+                        : <div></div>
+                      }
+
+                      <div className="widget-wrap" id="detallesOperacion">
+                        <div className="row">
+
+                          <div className="col-md-12">
                             <div className="widget-header">
-                              <h2>Detalles de la Entrega</h2>
+                              <h2>Detalles de la Operación</h2>
                             </div>
                             <div className="widget-container">
                               <div className="widget-content">
                                 <div className="row">
-                                  <div className="col-md-12">
 
-                                    <div className="col-sm-4 col-md-4 unit">
-                                      <label className="label">
-                                        Código Postal
+                                  <div className="col-sm-4 col-md-4 unit">
+                                    <label className="label">
+                                      Operador
+                                  </label>
+                                    <label className="input select">
+                                      <select
+                                        className="form-control"
+                                        required
+                                        value={state.operador}
+                                        readOnly={state.agregar == "Consultar"}
+                                        onChange={handleChange}
+                                        id="operador"
+                                      >
+                                        {dataOperador.map(
+                                          (operador) => (
+                                            <option key={operador.m_nIdOperador} value={operador.m_nIdOperador}>
+                                              {
+                                                operador.m_sNombreCompleto
+                                              }
+                                            </option>
+                                          )
+                                        )}
+                                      </select>
+                                      <i className="fa fa-arrow-down" />
                                     </label>
-                                      <label className="input select">
-                                        <select
-                                          className="form-control"
-                                          required
-                                          value={state.codigoPostalEntrega}
-                                          onChange={handleChange}
-                                          id="codigoPostalEntrega"
-                                        >
-                                          {dataCodigoPostal.map(
-                                            (codigoPostal) => (
-                                              <option key={codigoPostal.m_nIdCP} value={codigoPostal.m_nIdCP}>
-                                                {
-                                                  codigoPostal.m_sCP
-                                                }
-                                              </option>
-                                            )
-                                          )}
-                                        </select>
-                                        <i className="fa fa-arrow-down" />
-                                      </label>
-                                    </div>
-
-                                    <div className="col-sm-4 col-md-4 unit">
-                                      <label className="label">
-                                        Ciudad
-                                    </label>
-                                      <label className="input select">
-                                        <select
-                                          className="form-control"
-                                          required
-                                          value={state.ciudadEntrega}
-                                          onChange={handleChange}
-                                          id="ciudadEntrega"
-                                        >
-                                          {dataCiudad.map(
-                                            (ciudad) => (
-                                              <option key={ciudad.m_nIdCiudad} value={ciudad.m_nIdCiudad}>
-                                                {
-                                                  ciudad.m_sCiudad
-                                                }
-                                              </option>
-                                            )
-                                          )}
-                                        </select>
-                                        <i className="fa fa-arrow-down" />
-                                      </label>
-                                    </div>
-
-                                    <div className="col-sm-4 col-md-4 unit">
-                                      <label className="label">
-                                        Zona
-                                      </label>
-                                      <div className="input">
-                                        <input
-                                          onChange={handleChange}
-                                          className="form-control"
-                                          type="text"
-                                          required
-                                          value={state.zonaEntrega}
-                                          id="zonaEntrega"
-                                        />
-                                      </div>
-                                    </div>
-
-                                    <div className="col-sm-4 col-md-4 unit">
-                                      <label className="label">
-                                        Domicilio
-                                      </label>
-                                      <div className="input">
-                                        <input
-                                          onChange={handleChange}
-                                          className="form-control"
-                                          type="text"
-                                          required
-                                          value={state.domicilioEntrega}
-                                          id="domicilioEntrega"
-                                        />
-                                      </div>
-                                    </div>
-
-                                    <div className="col-sm-4 col-md-4 unit">
-                                      <label className="label">
-                                        Entrega En
-                                      </label>
-                                      <div className="input">
-                                        <input
-                                          onChange={handleChange}
-                                          className="form-control"
-                                          type="text"
-                                          required
-                                          value={state.entregaEn}
-                                          id="entregaEn"
-                                        />
-                                      </div>
-                                    </div>
-
-                                    <div className="col-sm-4 col-md-6 unit">
-                                      <label className="label">
-                                        Datos Adicionales para la Entrega
-                                      </label>
-                                      <div className="input">
-                                        <input
-                                          onChange={handleChange}
-                                          className="form-control"
-                                          type="text"
-                                          required
-                                          value={state.datosAdicionalesEntrega}
-                                          id="datosAdicionalesEntrega"
-                                        />
-                                      </div>
-                                    </div>
-
                                   </div>
-                                </div>  
+
+                                  <div className="col-sm-4 col-md-4 unit">
+                                    <label className="label">
+                                      Tipo Unidad
+                                  </label>
+                                    <label className="input select">
+                                      <select
+                                        className="form-control"
+                                        required
+                                        value={state.tipoUnidad}
+                                        readOnly={state.agregar == "Consultar"}
+                                        onChange={handleSelectChange}
+                                        id="tipoUnidad"
+                                      >
+                                        {dataTipoUnidad.map(
+                                          (tipoUnidad) => (
+                                            <option key={tipoUnidad.m_nIdTipoUnidad} value={tipoUnidad.m_nIdTipoUnidad}>
+                                              {
+                                                tipoUnidad.m_sTipoUnidad
+                                              }
+                                            </option>
+                                          )
+                                        )}
+                                      </select>
+                                      <i className="fa fa-arrow-down" />
+                                    </label>
+                                  </div>
+
+                                  <div className="col-sm-4 col-md-4 unit">
+                                    <label className="label">
+                                      Unidad
+                                  </label>
+                                    <label className="input select">
+                                      <select
+                                        className="form-control"
+                                        required
+                                        value={state.idUnidad}
+                                        readOnly={state.agregar == "Consultar"}
+                                        onChange={handleChange}
+                                        id="idUnidad"
+                                      >
+                                        {dataUnidad.map(
+                                          (unidad) => (
+                                            <option key={unidad.m_nIdUnidad} value={unidad.m_nIdUnidad}>
+                                              {
+                                                unidad.m_sDescripcion
+                                              }
+                                            </option>
+                                          )
+                                        )}
+                                      </select>
+                                      <i className="fa fa-arrow-down" />
+                                    </label>
+                                  </div>
+
+                                </div>
                               </div>
                             </div>
                           </div>
-                          : <div></div>
-                        }
-
-                      </div>
-                      : <div></div>
-                    }
-
-                    <div className="widget-wrap" id="detallesOperacion">
-                      <div className="row">
-
-                        <div className="col-md-12">
-                          <div className="widget-header">
-                            <h2>Detalles de la Operación</h2>
-                          </div>
-                          <div className="widget-container">
-                            <div className="widget-content">
-                              <div className="row">
-
-                                <div className="col-sm-4 col-md-4 unit">
-                                  <label className="label">
-                                    Operador
-                                  </label>
-                                  <label className="input select">
-                                    <select
-                                      className="form-control"
-                                      required
-                                      value={state.operador}
-                                      onChange={handleChange}
-                                      id="operador"
-                                    >
-                                      {dataOperador.map(
-                                        (operador) => (
-                                          <option key={operador.m_nIdOperador} value={operador.m_nIdOperador}>
-                                            {
-                                              operador.m_sNombreCompleto
-                                            }
-                                          </option>
-                                        )
-                                      )}
-                                    </select>
-                                    <i className="fa fa-arrow-down" />
-                                  </label>
-                                </div>
-
-                                <div className="col-sm-4 col-md-4 unit">
-                                  <label className="label">
-                                    Tipo Unidad
-                                  </label>
-                                  <label className="input select">
-                                    <select
-                                      className="form-control"
-                                      required
-                                      value={state.tipoUnidad}
-                                      onChange={handleSelectChange}
-                                      id="tipoUnidad"
-                                    >
-                                      {dataTipoUnidad.map(
-                                        (tipoUnidad) => (
-                                          <option key={tipoUnidad.m_nIdTipoUnidad} value={tipoUnidad.m_nIdTipoUnidad}>
-                                            {
-                                              tipoUnidad.m_sTipoUnidad
-                                            }
-                                          </option>
-                                        )
-                                      )}
-                                    </select>
-                                    <i className="fa fa-arrow-down" />
-                                  </label>
-                                </div>
-
-                                <div className="col-sm-4 col-md-4 unit">
-                                  <label className="label">
-                                    Unidad
-                                  </label>
-                                  <label className="input select">
-                                    <select
-                                      className="form-control"
-                                      required
-                                      value={state.idUnidad}
-                                      onChange={handleChange}
-                                      id="idUnidad"
-                                    >
-                                      {dataUnidad.map(
-                                        (unidad) => (
-                                          <option key={unidad.m_nIdUnidad} value={unidad.m_nIdUnidad}>
-                                            {
-                                              unidad.m_sDescripcion
-                                            }
-                                          </option>
-                                        )
-                                      )}
-                                    </select>
-                                    <i className="fa fa-arrow-down" />
-                                  </label>
-                                </div>
-
-                              </div>
+                          <div className="col-md-6">
+                            <div className="widget-header">
+                              <h2>Salida para la Entrega</h2>
                             </div>
-                          </div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="widget-header">
-                            <h2>Salida para la Entrega</h2>
-                          </div>
-                          <div className="widget-container">
-                            <div className="widget-content">
+                            <div className="widget-container">
+                              <div className="widget-content">
 
-                              <div className="col-md-12">
-                                <label className="label">
-                                  Fecha y Hora
+                                <div className="col-md-12">
+                                  <label className="label">
+                                    Fecha y Hora
                                 </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="datetime-local"
-                                    required
-                                    value={state.fechaHoraSalida}
-                                    id="fechaHoraSalida"
-                                  />
+                                  <div className="input">
+                                    <input
+                                      onChange={handleChange}
+                                      className="form-control"
+                                      type="datetime-local"
+                                      required
+                                      value={state.fechaHoraSalida}
+                                      readOnly={state.agregar == "Consultar"}
+                                      id="fechaHoraSalida"
+                                    />
+                                  </div>
                                 </div>
-                              </div>
 
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="widget-header">
-                            <h2>Llegada de la Entrega</h2>
-                          </div>
-                          <div className="widget-container">
-                            <div className="widget-content">
+                          <div className="col-md-6">
+                            <div className="widget-header">
+                              <h2>Llegada de la Entrega</h2>
+                            </div>
+                            <div className="widget-container">
+                              <div className="widget-content">
 
-                              <div className="col-md-12">
-                                <label className="label">
-                                  Fecha y Hora
+                                <div className="col-md-12">
+                                  <label className="label">
+                                    Fecha y Hora
                                 </label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="datetime-local"
-                                    required
-                                    value={state.fechaHoraLlegada}
-                                    id="fechaHoraLlegada"
-                                  />
+                                  <div className="input">
+                                    <input
+                                      onChange={handleChange}
+                                      className="form-control"
+                                      type="datetime-local"
+                                      required
+                                      value={state.fechaHoraLlegada}
+                                      readOnly={state.agregar == "Consultar"}
+                                      id="fechaHoraLlegada"
+                                    />
+                                  </div>
                                 </div>
+
                               </div>
-
                             </div>
-                          </div>
 
+                          </div>
                         </div>
                       </div>
+
                     </div>
 
-                  </div>
 
-
-                  <div className="widget-wrap col-md-5" id="paquetesSobres">
-                    <div className="widget-header">
-                      <h2>Número de Paquetes</h2>
-                    </div>
-                    <div className="widget-container">
-                      <div className="widget-content">
-                        <div className="row">
-                          <div className="col-md-12">
-                            <form className="j-forms">
-                              <div className="form-content">
-                                <a
-                                  className="btn"
-                                  style={{ margin: "10px" }}
-                                  onClick={() => addPaquete()}
-                                >
-                                  <i className="zmdi zmdi-plus"></i> Agregar Paquete
+                    <div className="widget-wrap col-md-5" id="paquetesSobres">
+                      <div className="widget-header">
+                        <h2>Número de Paquetes</h2>
+                      </div>
+                      <div className="widget-container">
+                        <div className="widget-content">
+                          <div className="row">
+                            <div className="col-md-12">
+                              <form className="j-forms">
+                                <div className="form-content">
+                                  <a
+                                    className="btn"
+                                    style={{ margin: "10px" }}
+                                    onClick={() => addPaquete()}
+                                  >
+                                    <i className="zmdi zmdi-plus"></i> Agregar Paquete
                             </a>
 
-                                <Carousel
-                                  className={classes.paqueteCarrusel}
-                                  widgets={[IndicatorDots, Buttons]}
-                                  frames={framesPaquete}
-                                ></Carousel>
-                              </div>
-                            </form>
+                                  <Carousel
+                                    className={classes.paqueteCarrusel}
+                                    widgets={[IndicatorDots, Buttons]}
+                                    frames={framesPaquete}
+                                  ></Carousel>
+                                </div>
+                              </form>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
 
-                    <div className="widget-header">
-                      <h2>Número de Sobres</h2>
-                    </div>
-                    <div className="widget-container">
-                      <div className="widget-content">
-                        <div className="row">
-                          <div className="col-md-12">
-                            <form className="j-forms">
-                              <div className="form-content">
-                                <a
-                                  className="btn"
-                                  style={{ margin: "10px" }}
-                                  onClick={() => addSobre()}
-                                >
-                                  <i className="zmdi zmdi-plus"></i> Agregar Sobre</a>
+                      <div className="widget-header">
+                        <h2>Número de Sobres</h2>
+                      </div>
+                      <div className="widget-container">
+                        <div className="widget-content">
+                          <div className="row">
+                            <div className="col-md-12">
+                              <form className="j-forms">
+                                <div className="form-content">
+                                  <a
+                                    className="btn"
+                                    style={{ margin: "10px" }}
+                                    onClick={() => addSobre()}
+                                  >
+                                    <i className="zmdi zmdi-plus"></i> Agregar Sobre</a>
 
-                                <Carousel
-                                  className={classes.sobreCarrusel}
-                                  widgets={[IndicatorDots, Buttons]}
-                                  frames={framesSobre}
-                                ></Carousel>
-                              </div>
-                            </form>
+                                  <Carousel
+                                    className={classes.sobreCarrusel}
+                                    widgets={[IndicatorDots, Buttons]}
+                                    frames={framesSobre}
+                                  ></Carousel>
+                                </div>
+                              </form>
+                            </div>
                           </div>
                         </div>
-                      </div>
                       </div>
                     </div>
                   </div>
