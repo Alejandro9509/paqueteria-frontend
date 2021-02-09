@@ -345,7 +345,7 @@ function Caseta() {
               <div className="col-md-6 col-sm-6">
                 <ul className="list-page-breadcrumb">
                   <li>
-                    <a href="/Catalogos">
+                    <a href="/Catalogos" className="color-mapeo">
                       Configuración <i className="zmdi zmdi-chevron-right" />
                     </a>
                   </li>
