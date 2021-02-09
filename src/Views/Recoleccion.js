@@ -13,6 +13,7 @@ import * as XLSX from "xlsx";
 import { render } from 'react-dom';
 import useModal from 'react-hooks-use-modal';
 import IconButton from '@material-ui/core/IconButton';
+import SearchIcon from '@material-ui/icons/Search';
 import PageviewIcon from '@material-ui/icons/Pageview';
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
@@ -55,7 +56,8 @@ function Recoleccion() {
   const [state, setState] = React.useState({
     showPopUp: false,
     identificadorModal: "",
-    DerechoBorrar: 133,
+    tipoModal: 0,
+    DerechoBorrar:133,
     agregar: "Agregar",
     idRecoleccion: 0,
     fechaInicial: "",
@@ -141,7 +143,7 @@ function Recoleccion() {
   const [Modal, open, close, isOpen] = useModal("root", {
     preventScroll: true,
   });
-
+  
   const handleAceptar = (e) => {
     e.preventDefault();
 
@@ -198,11 +200,11 @@ function Recoleccion() {
       "m_nNoPaquetes": state.paquetes.length,
       "m_parrSobres": state.sobres,
       "m_nNoSobres": state.sobres.length,
-      "m_nIdOperador": state.operador,
-      "m_nIdUnidad": state.unidad,
-      "m_nIdRemolqueLlegadaRecoleccion": state.tipoUnidad,
-      "m_nCreadoPor": state.CreadoPor,
-      "m_nModificadoPor": state.ModificadoPor
+      "m_nIdOperador": state.operador.m_nIdOperador,
+      "m_nIdUnidad": state.unidad.m_nIdUnidad,
+      "m_nIdRemolqueLlegadaRecoleccion": state.tipoUnidad.m_nIdTipoUnidad,
+      "m_nCreadoPor":state.CreadoPor,
+      "m_nModificadoPor":state.ModificadoPor
 
     }
     console.log(params)
@@ -243,6 +245,7 @@ function Recoleccion() {
       [state.identificadorModal]: id
     });
     console.log(id)
+    console.log(state.identificadorModal)
   }
 
   function addPaquete() {
@@ -603,6 +606,82 @@ function Recoleccion() {
     },
   ]);
 
+  const columnsCiudades = React.useMemo(() => [
+    {
+      Name: "Codigo",
+      accessor: "m_nCodigo",
+    },
+    {
+      Name: "Ciudad",
+      accessor: "m_sCiudad",
+    },
+    {
+      Name: "Abreviacion",
+      accessor: "m_sAbreviacion",
+    },
+    {
+      Name: "Estado",
+      accessor: "m_nIdEstado",
+    }
+  ]);
+
+  const columnsOperadores = React.useMemo(() => [
+    {
+      Name: "Numero Operador",
+      accessor: "m_nNumeroOperador",
+    },
+    {
+      Name: "Nombre",
+      accessor: "m_sNombreCompleto",
+    },
+    {
+      Name: "Sucursal",
+      accessor: "m_nIdSucursal",
+    },
+    {
+      Name: "Activo",
+      accessor: "m_nIdEstado",
+    }
+  ]);
+
+  const columnsTipoUnidades = React.useMemo(() => [
+    {
+      Name: "Tipo de unidad",
+      accessor: "m_nIdTipoUnidad",
+    },
+    {
+      Name: "Identificador",
+      accessor: "m_nIdentificador",
+    },
+    {
+      Name: "Nomenclatura",
+      accessor: "m_sNomenclaturaSCT",
+    },
+    {
+      Name: "Estatus",
+      accessor: "m_bActivo",
+    }
+  ]);
+
+  const columnsUnidades = React.useMemo(() => [
+    {
+      Name: "Descripcion",
+      accessor: "m_sDescripcion",
+    },
+    {
+      Name: "Codigo",
+      accessor: "m_sCodigo",
+    },
+    {
+      Name: "Tipo de unidad",
+      accessor: "m_nIdTipoUnidad",
+    },
+    {
+      Name: "Estatus",
+      accessor: "m_bActivo",
+    }
+  ]);
+
   useEffect((value) => {
     if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
       alert("Es necesario iniciar sesion para acceder a este proceso");
@@ -832,7 +911,274 @@ function Recoleccion() {
     );
   }
 
-  function TableCodigoPostal({ columns, data }) {
+  function TableCodigoPostal({ columns, data, select }) {
+    const defaultColumn = React.useMemo(
+      () => ({
+        // Default Filter UI
+        Filter: DefaultColumnFilter,
+      }),
+      []
+    );
+
+    const {
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      rows,
+      prepareRow,
+      state,
+      preGlobalFilteredRows,
+      setGlobalFilter,
+    } = useTable(
+      {
+        columns,
+        data,
+        defaultColumn,
+      },
+      useFilters,
+      useGlobalFilter,
+      useSortBy
+    );
+
+    return (
+      <div className="col-md-12" style={{maxHeight: "300px", overflow:"auto"}}>
+        <table className="table" {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                <th>Acciones</th>
+                {headerGroup.headers.map(column => (
+                  // Add the sorting props to control sorting. For this example
+                  // we can add them into the header props
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render("Name")}
+                    {/* Add a sort direction indicator */}
+                    <span>
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <i className="fa fa-caret-up" />
+                        ) : (
+                          <i className="fa fa-caret-down" />
+                        )
+                      ) : (
+                        ""
+                      )}
+                    </span>
+                    <div>
+                      {column.canFilter ? column.render("Filter") : null}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr style={{backgroundColor: row.original.m_nIdCP === select ? "orange" : "white"}}  {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)} onDoubleClick={close}>
+                    <td>
+                      <div>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                      </div>
+                    </td>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+  function TableCiudades({ columns, data, select }) {
+    const defaultColumn = React.useMemo(
+      () => ({
+        // Default Filter UI
+        Filter: DefaultColumnFilter,
+      }),
+      []
+    );
+
+    const {
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      rows,
+      prepareRow,
+      state,
+      preGlobalFilteredRows,
+      setGlobalFilter,
+    } = useTable(
+      {
+        columns,
+        data,
+        defaultColumn,
+      },
+      useFilters,
+      useGlobalFilter,
+      useSortBy
+    );
+
+    return (
+      <div className="col-md-12" style={{maxHeight: "300px", overflow:"auto"}}>
+        <table className="table" {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                <th>Acciones</th>
+                {headerGroup.headers.map(column => (
+                  // Add the sorting props to control sorting. For this example
+                  // we can add them into the header props
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render("Name")}
+                    {/* Add a sort direction indicator */}
+                    <span>
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <i className="fa fa-caret-up" />
+                        ) : (
+                          <i className="fa fa-caret-down" />
+                        )
+                      ) : (
+                        ""
+                      )}
+                    </span>
+                    <div>
+                      {column.canFilter ? column.render("Filter") : null}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr style={{backgroundColor: row.original.m_nIdCiudad === select ? "orange" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                    <td>
+                      <div>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                      </div>
+                    </td>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+  function TableOperadores({ columns, data, select }) {
+    const defaultColumn = React.useMemo(
+      () => ({
+        // Default Filter UI
+        Filter: DefaultColumnFilter,
+      }),
+      []
+    );
+
+    const {
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      rows,
+      prepareRow,
+      state,
+      preGlobalFilteredRows,
+      setGlobalFilter,
+    } = useTable(
+      {
+        columns,
+        data,
+        defaultColumn,
+      },
+      useFilters,
+      useGlobalFilter,
+      useSortBy
+    );
+
+    return (
+      <div className="col-md-12" style={{maxHeight: "300px", overflow:"auto"}}>
+        <table className="table" {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                <th>Acciones</th>
+                {headerGroup.headers.map(column => (
+                  // Add the sorting props to control sorting. For this example
+                  // we can add them into the header props
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render("Name")}
+                    {/* Add a sort direction indicator */}
+                    <span>
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <i className="fa fa-caret-up" />
+                        ) : (
+                          <i className="fa fa-caret-down" />
+                        )
+                      ) : (
+                        ""
+                      )}
+                    </span>
+                    <div>
+                      {column.canFilter ? column.render("Filter") : null}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr style={{backgroundColor: row.original.m_nIdOperador === select ? "orange" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                    <td>
+                      <div>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                      </div>
+                    </td>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+  function TableTipoUnidad({ columns, data, select }) {
     const defaultColumn = React.useMemo(
       () => ({
         // Default Filter UI
@@ -898,7 +1244,96 @@ function Recoleccion() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                  <tr style={{backgroundColor: row.original.m_nIdTipoUnidad === select ? "orange" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                    <td>
+                      <div>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                      </div>
+                    </td>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+  function TableUnidad({ columns, data, select }) {
+    const defaultColumn = React.useMemo(
+      () => ({
+        // Default Filter UI
+        Filter: DefaultColumnFilter,
+      }),
+      []
+    );
+
+    const {
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      rows,
+      prepareRow,
+      state,
+      preGlobalFilteredRows,
+      setGlobalFilter,
+    } = useTable(
+      {
+        columns,
+        data,
+        defaultColumn,
+      },
+      useFilters,
+      useGlobalFilter,
+      useSortBy
+    );
+
+    return (
+      <div className="col-md-12" style={{maxHeight: "300px", overflow:"auto"}} >
+        <table className="table" {...getTableProps()} >
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                <th>Acciones</th>
+                {headerGroup.headers.map(column => (
+                  // Add the sorting props to control sorting. For this example
+                  // we can add them into the header props
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render("Name")}
+                    {/* Add a sort direction indicator */}
+                    <span>
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <i className="fa fa-caret-up" />
+                        ) : (
+                          <i className="fa fa-caret-down" />
+                        )
+                      ) : (
+                        ""
+                      )}
+                    </span>
+                    <div>
+                      {column.canFilter ? column.render("Filter") : null}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr style={{backgroundColor: row.original.m_nIdUnidad === select ? "orange" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
                     <td>
                       <div>
                         <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
@@ -1167,6 +1602,44 @@ function Recoleccion() {
 
   return (
     <div>
+      <Modal style={{height:"400px"}}>  
+      {state.tipoModal == 0 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        {dataCodigoPostal.length != 0 ? <TableCodigoPostal select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP} columns={columnsCP} data={dataCodigoPostal} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       <a onClick={close}>Cerrar</a>
+       <a href="/Ciudades">Agregar</a>
+    </div>
+      }
+      {state.tipoModal == 1 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        {dataCiudad.length != 0 ? <TableCiudades select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCiudad} columns={columnsCiudades} data={dataCiudad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       <a onClick={close}>Cerrar</a>
+       <a href="/Ciudades">Agregar</a>
+    </div>
+      }
+      {state.tipoModal == 2 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        {dataOperador.length != 0 ? <TableOperadores select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdOperador} columns={columnsOperadores} data={dataOperador} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       <a onClick={close}>Cerrar</a>
+       <a href="/Operadores">Agregar</a>
+    </div>
+      }
+      {state.tipoModal == 3 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        {dataTipoUnidad.length != 0 ? <TableTipoUnidad select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdTipoUnidad} columns={columnsTipoUnidades} data={dataTipoUnidad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       <a onClick={close}>Cerrar</a>
+       <a href="/TipoUnidad">Agregar</a>
+    </div>
+      }
+      {state.tipoModal == 4 && 
+      <div className="row" style={{maxHeight: "400px !important", overflow:"auto",backgroundColor: '#FFFFFF'}} >
+        {dataUnidad.length != 0 ? <TableUnidad select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdUnidad} columns={columnsUnidades} data={dataUnidad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       <a onClick={close}>Cerrar</a>
+       <a href="/Unidades">Agregar</a>
+    </div>
+      }
+  </Modal>
+
       <header className="topbar clearfix">
         <Cabecera />
       </header>
@@ -1883,7 +2356,7 @@ function Recoleccion() {
 
                                   <div className="col-sm-4 col-md-6 unit" >
                                     <label className="label">Código Postal</label>
-                                    <div className="input">
+                                    <div className="input" >
                                       <Autocomplete
                                         freeSolo
                                         onChange={(event, newValue) =>
@@ -1910,17 +2383,21 @@ function Recoleccion() {
                                                 ...params.InputProps,
                                                 style: { height: 24 },
                                                 type: "search",
-                                                endAdornment: <InputAdornment position="end"> <IconButton onClick={() => { open(); setState({ ...state, identificadorModal: "codigoPostalDestinatario" }) }}>
-                                                  <PageviewIcon style={{ color: "#F9A03E", fontSize: 32 }} />
-                                                </IconButton>  </InputAdornment>
+                                                value: state.codigoPostalRemitente,
+                                                 endAdornment: 
+                                                <InputAdornment position="end">
+                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => { setState({...state, identificadorModal: "codigoPostalRemitente", tipoModal: 0});open(); } }>
+                                                    <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
+                                                 </IconButton> 
+                                                </InputAdornment> 
                                               }}
                                             />
                                           </div>
-                                        )}
+                                        )}                                        
                                       />
                                     </div>
                                   </div>
-
+{/* --------------------------------------- Ciudad ------------------------------------------------- */}
                                   <div className="col-sm-4 col-md-6 unit">
                                     <label className="label">Ciudad</label>
                                     <label className="input select">
