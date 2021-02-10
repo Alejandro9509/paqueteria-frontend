@@ -1299,7 +1299,7 @@ function Embarque() {
                                   required
                                   onChange={handleChange}
                                   value={state.estatusEmbarque}
-                                  readOnly={state.agregar == "Consultar"}
+                                  disabled={state.agregar == "Consultar"}
                                   id="estatusEmbarque"
                                 >
                                   {dataEstatusEmbarque.map(
@@ -1325,7 +1325,7 @@ function Embarque() {
                                   className="form-control"
                                   required
                                   value={state.moneda}
-                                  readOnly={state.agregar == "Consultar"}
+                                  disabled={state.agregar == "Consultar"}
                                   onChange={handleChange}
                                   id="moneda"
                                 >
@@ -1372,7 +1372,7 @@ function Embarque() {
                                   className="form-control"
                                   required
                                   value={state.tipoCobro}
-                                  readOnly={state.agregar == "Consultar"}
+                                  disabled={state.agregar == "Consultar"}
                                   onChange={handleChange}
                                   id="tipoCobro"
                                 >
