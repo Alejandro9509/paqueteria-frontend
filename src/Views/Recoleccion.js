@@ -1792,7 +1792,7 @@ function Recoleccion() {
                     <div className="row">
                       <div
                         className={
-                          "col-md-2-5 col-sm-2 step " +
+                          "col-sm-3 col-md-2-5 col-lg-2-5 step " +
                           (stepActive == 1 && "active-step")
                         }
                         onClick={() => openSection(1)}
@@ -1804,7 +1804,7 @@ function Recoleccion() {
                       </div>
                       <div
                         className={
-                          "col-md-2-5 col-sm-2 step " +
+                          "col-sm-3 col-md-2-5 col-lg-2-5 step " +
                           (stepActive == 2 && "active-step")
                         }
                         onClick={() => openSection(2)}
@@ -1816,7 +1816,7 @@ function Recoleccion() {
                       </div>
                       <div
                         className={
-                          "col-md-2-5 col-sm-2 step " +
+                          "col-sm-3 col-md-2-5 col-lg-2-5 step " +
                           (stepActive == 3 && "active-step")
                         }
                         onClick={() => openSection(3)}
@@ -1829,7 +1829,7 @@ function Recoleccion() {
 
                       <div
                         className={
-                          "col-md-2-5 col-sm-2 step " +
+                          "col-sm-3 col-md-2-5 col-lg-2-5 step " +
                           (stepActive == 4 && "active-step")
                         }
                         onClick={() => openSection(4)}
@@ -1841,7 +1841,7 @@ function Recoleccion() {
                       </div>
                       <div
                         className={
-                          "col-md-2-5 col-sm-2 step " +
+                          "col-sm-3 col-md-2-5 col-lg-2-5 step" +
                           (stepActive == 5 && "active-step")
                         }
                         onClick={() => openSection(5)}
@@ -1862,7 +1862,7 @@ function Recoleccion() {
                       <div className="widget-content">
                         <div className="row">
                           <div className="col-md-12">
-                            <div className="col-sm-4 col-md-2-5 unit">
+                            <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                               <label className="label">Sucursal</label>
                               <label className="input select">
                                 <select
@@ -1887,7 +1887,7 @@ function Recoleccion() {
                               </label>
                             </div>
 
-                            <div className="col-sm-4 col-md-2-5 unit">
+                            <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                               <label className="label">Folio Recolección</label>
                               <div className="input">
                                 <input
@@ -1901,7 +1901,7 @@ function Recoleccion() {
                               </div>
                             </div>
 
-                            <div className="col-sm-4 col-md-2-5 unit">
+                            <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                               <label className="label">Folio Embarque</label>
                               <div className="input">
                                 <input
@@ -1915,7 +1915,7 @@ function Recoleccion() {
                               </div>
                             </div>
 
-                            <div className="col-sm-4 col-md-2-5 unit">
+                            <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                               <label className="label">Folio Guía</label>
                               <div className="input">
                                 <input
@@ -1929,7 +1929,7 @@ function Recoleccion() {
                               </div>
                             </div>
 
-                            <div className="col-sm-4 col-md-2-5 unit">
+                            <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                               <label className="label">Folio Informe</label>
                               <div className="input">
                                 <input
@@ -1943,7 +1943,7 @@ function Recoleccion() {
                               </div>
                             </div>
 
-                            <div className="col-sm-4 col-md-2-5 unit">
+                            <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                               <label className="label">Fecha / Hora</label>
                               <div className="input">
                                 <input
@@ -1958,7 +1958,7 @@ function Recoleccion() {
                               </div>
                             </div>
 
-                            <div className="col-sm-4 col-md-2-5 unit">
+                            <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                               <label className="label">
                                 Estatus de la Recolección
                               </label>
@@ -1984,7 +1984,7 @@ function Recoleccion() {
                               </label>
                             </div>
 
-                            <div className="col-sm-4 col-md-2-5 unit">
+                            <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                               <label className="label">Moneda</label>
                               <label className="input select">
                                 <select
@@ -2008,7 +2008,7 @@ function Recoleccion() {
                               </label>
                             </div>
 
-                            <div className="col-sm-4 col-md-2-5 unit">
+                            <div className="col-sm-6 col-md-2-5 col-lg-2-5  unit">
                               <label className="label">Tipo de Cambio</label>
                               <div className="input">
                                 <input
@@ -2025,7 +2025,7 @@ function Recoleccion() {
                               </div>
                             </div>
 
-                            <div className="col-sm-4 col-md-2-5 unit">
+                            <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                               <label className="label">Tipo Cobro</label>
                               <label className="input select">
                                 <select
@@ -2057,8 +2057,8 @@ function Recoleccion() {
 
 
                     <div className="row">
-                      <div className="col-md-7">
-                        <div className="widget-wrap" id="remitenteDestinatario">
+                      <div className="col-sm-7 col-md-7">
+                        <div className="widget-wrap " id="remitenteDestinatario">
                           <div className="row">
                             <div className="col-md-6">
                               <div className="widget-header">
@@ -2068,7 +2068,7 @@ function Recoleccion() {
                                 <div className="widget-content">
                                   <div className="row">
                                     {/* --------------------------------------- Nombre -------------------------------------- */}
-                                    <div className="col-sm-4 col-md-12 unit">
+                                    <div className="col-sm-12 col-md-12  unit">
                                       <label className="label">
                                         Nombre
                                   </label>
@@ -2085,7 +2085,7 @@ function Recoleccion() {
                                       </div>
                                     </div>
                                     {/* --------------------------------------- RFC -------------------------------------- */}
-                                    <div className="col-sm-4 col-md-12 unit">
+                                    <div className="col-sm-12 col-md-8 unit">
                                       <label className="label">
                                         RFC
                                   </label>
@@ -2104,7 +2104,7 @@ function Recoleccion() {
                                       </div>
                                     </div>
                                     {/* --------------------------------------- Domicilio -------------------------------------- */}
-                                    <div className="col-sm-4 col-md-12 unit">
+                                    <div className="col-sm-12 col-md-12 unit">
                                       <label className="label">Domicilio</label>
                                       <div className="input">
                                         <input
@@ -2119,52 +2119,49 @@ function Recoleccion() {
                                       </div>
                                     </div>
                                     {/* --------------------------------------- AutocompleteCPRemitente -------------------------------------- */}
-                                    <div className="col-sm-4 col-md-6 unit" >
-                                      <label className="label">Código Postal</label>
-                                      <div className="input">
-                                        <Autocomplete
-                                          freeSolo
-                                          onChange={(event, newValue) =>
-                                            setState({
-                                              ...state,
-                                              codigoPostalRemitente: newValue,
-                                            })
-                                          }
-                                          value={state.codigoPostalRemitente}
-                                          readOnly={state.agregar == "Consultar"}
-                                          id="codigoPostalRemitente"
-                                          disableClearable
-                                          forcePopupIcon={false}
-                                          options={dataCodigoPostal}
-                                          getOptionLabel={(option) =>
-                                            option.m_sCP
-                                          }
-                                          variant="outlined"
-                                          style={{ borderWidth: "1px", borderColor: "#dddddd", borderStyle: "solid", borderRadius: "5px", width: "124px" }}
-                                          renderInput={(params) => (
-                                            <div>
-                                              <TextField
-                                                {...params}
-                                                InputProps={{
-                                                  ...params.InputProps,
-                                                  style: { height: 24 },
-                                                  type: "search",
-                                                  value: state.codigoPostalRemitente,
-                                                  readOnly: state.agregar == "Consultar",
-                                                  endAdornment:
-                                                    <InputAdornment position="end">
-                                                      <IconButton padding="0px" onClick={() => { open(); setState({ ...state, identificadorModal: "codigoPostalRemitente" }) }}>
-                                                        <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
-                                                      </IconButton>
-                                                    </InputAdornment>
-                                                }}
-                                              />
-                                            </div>
-                                          )}
-                                        />
-
-                                      </div>
+                                    <div className="col-sm-12 col-md-8 unit" >
+                                    <label className="label">Código Postal</label>
+                                    <div className="input" >
+                                      <Autocomplete
+                                        freeSolo
+                                        onChange={(event, newValue) =>
+                                          setState({
+                                            ...state,
+                                            codigoPostalRemitente: newValue,
+                                          })
+                                        }
+                                        value={state.codigoPostalRemitente}
+                                        readOnly={state.agregar == "Consultar"}
+                                        id="codigoPostalRemitente"
+                                        disableClearable
+                                        options={dataCodigoPostal}
+                                        getOptionLabel={(option) =>
+                                          option.m_sCP
+                                        }
+                                        variant="outlined"
+                                        style={{ borderWidth: "1px", borderColor: "#dddddd", borderStyle: "solid", borderRadius: "5px" }}
+                                        renderInput={(params) => (
+                                          <div>
+                                            <TextField
+                                              {...params}
+                                              InputProps={{
+                                                ...params.InputProps,
+                                                style: { height: 24 },
+                                                type: "search",
+                                                value: state.codigoPostalRemitente,
+                                                 endAdornment: 
+                                                <InputAdornment position="end">
+                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => { setState({...state, identificadorModal: "codigoPostalRemitente", tipoModal: 0});open(); } }>
+                                                    <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
+                                                 </IconButton> 
+                                                </InputAdornment> 
+                                              }}
+                                            />
+                                          </div>
+                                        )}                                        
+                                      />
                                     </div>
+                                  </div>
                                     <Modal>
                                       <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
                                         {dataCodigoPostal.length != 0 ? <TableCodigoPostal columns={columnsCP} data={dataCodigoPostal} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
@@ -2174,7 +2171,7 @@ function Recoleccion() {
                                     </Modal>
 
                                     {/* --------------------------------------- Ciudad ------------------------------------------------- */}
-                                    <div className="col-sm-4 col-md-6 unit">
+                                    <div className="col-sm-12 col-md-12 col-lg-12 unit">
                                       <label className="label">Ciudad</label>
                                       <label className="input select">
                                         <select
@@ -2198,7 +2195,7 @@ function Recoleccion() {
                                       </label>
                                     </div>
                                     {/* --------------------------------------- Correo ------------------------------------------------- */}
-                                    <div className="col-sm-4 col-md-12 unit">
+                                    <div className="col-sm-12 col-md-12 unit">
                                       <label className="label">
                                         Correo Electrónico
                                     </label>
@@ -2215,7 +2212,7 @@ function Recoleccion() {
                                       </div>
                                     </div>
                                     {/* --------------------------------------- Telefono ------------------------------------------------- */}
-                                    <div className="col-sm-4 col-md-12 unit">
+                                    <div className="col-sm-12 col-md-12 unit">
                                       <label className="label">
                                         Teléfono
                                   </label>
@@ -2234,7 +2231,7 @@ function Recoleccion() {
                                       </div>
                                     </div>
                                     {/* --------------------------------------- Contacto ------------------------------------------------- */}
-                                    <div className="col-sm-4 col-md-12 unit">
+                                    <div className="col-sm-12 col-md-12 unit">
                                       <label className="label">
                                         Contacto
                                   </label>
@@ -2305,7 +2302,7 @@ function Recoleccion() {
                               </div>
                               <div className="widget-container">
                                 <div className="widget-content">
-                                  <div className="col-sm-4 col-md-6    unit">
+                                  <div className="col-sm-12 col-md-12    unit">
                                     <label className="label">Nombre</label>
                                     <div className="input">
                                       <input
@@ -2320,7 +2317,7 @@ function Recoleccion() {
                                     </div>
                                   </div>
 
-                                  <div className="col-sm-4 col-md-6 unit">
+                                  <div className="col-sm-12 col-md-8 unit">
                                     <label className="label">RFC</label>
                                     <div className="input">
                                       <input
@@ -2337,7 +2334,7 @@ function Recoleccion() {
                                     </div>
                                   </div>
 
-                                  <div className="col-sm-4 col-md-12 unit">
+                                  <div className="col-sm-12 col-md-12 unit">
                                     <label className="label">Domicilio</label>
                                     <div className="input">
                                       <input
@@ -2352,7 +2349,7 @@ function Recoleccion() {
                                     </div>
                                   </div>
 
-                                  <div className="col-sm-4 col-md-6 unit" >
+                                  <div className="col-sm-12 col-md-8  unit" >
                                     <label className="label">Código Postal</label>
                                     <div className="input" >
                                       <Autocomplete
@@ -2396,7 +2393,7 @@ function Recoleccion() {
                                     </div>
                                   </div>
 {/* --------------------------------------- Ciudad ------------------------------------------------- */}
-                                  <div className="col-sm-4 col-md-6 unit">
+                                  <div className="col-sm-12 col-md-12  unit">
                                     <label className="label">Ciudad</label>
                                     <label className="input select">
                                       <select
@@ -2420,7 +2417,7 @@ function Recoleccion() {
                                     </label>
                                   </div>
 
-                                  <div className="col-sm-4 col-md-12 unit">
+                                  <div className="col-sm-12 col-md-12 unit">
                                     <label className="label">
                                       Correo Electrónico
                                   </label>
@@ -2437,7 +2434,7 @@ function Recoleccion() {
                                     </div>
                                   </div>
 
-                                  <div className="col-sm-4 col-md-12 unit">
+                                  <div className="col-sm-12 col-md-12 unit">
                                     <label className="label">
                                       Teléfono
                                 </label>
@@ -2454,7 +2451,7 @@ function Recoleccion() {
                                     </div>
                                   </div>
 
-                                  <div className="col-sm-4 col-md-6 unit">
+                                  <div className="col-sm-12 col-md-12 unit">
                                     <label className="label">Contacto</label>
                                     <div className="input">
                                       <input
@@ -2469,7 +2466,7 @@ function Recoleccion() {
                                     </div>
                                   </div>
 
-                                  <div className="col-sm-12 col-md-6 unit">
+                                  <div className="col-sm-12 col-md-12  unit">
                                     <label className="label">Destino</label>
                                     <label className="input select">
                                       <select
@@ -2493,7 +2490,7 @@ function Recoleccion() {
                                     </label>
                                   </div>
 
-                                  <div className="col-sm-12 col-md-12 unit">
+                                  <div className="col-sm-12 col-md-12  unit">
                                     <label className="label">
                                       Entrega en Diferente Domicilio
                                   </label>
@@ -2526,7 +2523,7 @@ function Recoleccion() {
                                   <div className="widget-content">
                                     <div className="row">
                                       <div className="col-md-12">
-                                        <div className="col-sm-4 col-md-4 unit">
+                                      <div className="col-sm-6 col-md-4  unit" >
                                           <label className="label">
                                             Fecha y Hora
                                         </label>
@@ -2543,7 +2540,7 @@ function Recoleccion() {
                                           </div>
                                         </div>
 
-                                        <div className="col-sm-4 col-md-5 unit" >
+                                        <div className="col-sm-6 col-md-4  unit" >
                                           <label className="label">Código Postal</label>
                                           <div className="input">
                                             <Autocomplete
@@ -2565,12 +2562,12 @@ function Recoleccion() {
                                               variant="outlined"
                                               style={{ borderWidth: "1px", borderColor: "#dddddd", borderStyle: "solid", borderRadius: "5px" }}
                                               renderInput={(params) => (
-                                                <div>
                                                   <TextField
                                                     {...params}
                                                     InputProps={{
                                                       ...params.InputProps,
-                                                      style: { height: 24 },
+                                                      disableUnderline: true,
+                                                      style: { height: 21 },
                                                       type: "search",
                                                       readOnly: state.agregar == "Consultar",
                                                       endAdornment: <InputAdornment position="end"> <IconButton onClick={() => { open(); setState({ ...state, identificadorModal: "codigoPostalRecoleccion" }) }}>
@@ -2578,13 +2575,12 @@ function Recoleccion() {
                                                       </IconButton>  </InputAdornment>
                                                     }}
                                                   />
-                                                </div>
                                               )}
                                             />
                                           </div>
                                         </div>
 
-                                        <div className="col-sm-4 col-md-4 unit">
+                                        <div className="col-sm-6 col-md-4  unit" >
                                           <label className="label">Ciudad</label>
                                           <label className="input select">
                                             <select
@@ -2608,7 +2604,7 @@ function Recoleccion() {
                                           </label>
                                         </div>
 
-                                        <div className="col-sm-4 col-md-4 unit">
+                                        <div className="col-sm-6 col-md-4 unit" >
                                           <label className="label">Zona</label>
                                           <label className="input select">
                                             <select
@@ -2632,7 +2628,7 @@ function Recoleccion() {
                                           </label>
                                         </div>
 
-                                        <div className="col-sm-4 col-md-4 unit">
+                                        <div className="col-sm-6 col-md-6  unit" >
                                           <label className="label">
                                             Domicilio
                                         </label>
@@ -2649,7 +2645,7 @@ function Recoleccion() {
                                           </div>
                                         </div>
 
-                                        <div className="col-sm-4 col-md-4 unit">
+                                        <div className="col-sm-12 col-md-6  unit" >
                                           <label className="label">
                                             Recoger En
                                         </label>
@@ -2666,7 +2662,7 @@ function Recoleccion() {
                                           </div>
                                         </div>
 
-                                        <div className="col-sm-4 col-md-4 unit">
+                                        <div className="col-sm-12 col-md-6  unit" >
                                           <label className="label">
                                             Datos Adicionales para la Recolección
                                         </label>
@@ -2704,7 +2700,7 @@ function Recoleccion() {
                                     <div className="row">
                                       <div className="col-md-12">
 
-                                        <div className="col-sm-4 col-md-4 unit" >
+                                        <div className="col-sm-6 col-md-4  unit" >
                                           <label className="label">Código Postal</label>
                                           <div className="input">
                                             <Autocomplete
@@ -2731,7 +2727,8 @@ function Recoleccion() {
                                                     {...params}
                                                     InputProps={{
                                                       ...params.InputProps,
-                                                      style: { height: 24 },
+                                                      disableUnderline: true,
+                                                      style: { height: 21 },
                                                       readOnly: state.agregar == "Consultar",
                                                       type: "search",
                                                       endAdornment: <InputAdornment position="end"> <IconButton onClick={() => { open(); setState({ ...state, identificadorModal: "codigoPostalEntrega" }) }}>
@@ -2745,7 +2742,7 @@ function Recoleccion() {
                                           </div>
                                         </div>
 
-                                        <div className="col-sm-4 col-md-4 unit">
+                                        <div className="col-sm-6 col-md-4  unit" >
                                           <label className="label">Ciudad</label>
                                           <label className="input select">
                                             <select
@@ -2769,7 +2766,7 @@ function Recoleccion() {
                                           </label>
                                         </div>
 
-                                        <div className="col-sm-4 col-md-4 unit">
+                                        <div className="col-sm-6 col-md-4 unit" >
                                           <label className="label">Zona</label>
                                           <label className="input select">
                                             <select
@@ -2793,7 +2790,7 @@ function Recoleccion() {
                                           </label>
                                         </div>
 
-                                        <div className="col-sm-4 col-md-4 unit">
+                                        <div className="col-sm-6 col-md-6 col-lg-6 unit" >
                                           <label className="label">
                                             Domicilio
                                         </label>
@@ -2809,7 +2806,7 @@ function Recoleccion() {
                                           </div>
                                         </div>
 
-                                        <div className="col-sm-4 col-md-4 unit">
+                                        <div className="col-sm-12 col-md-6 col-lg-6 unit" >
                                           <label className="label">
                                             Entrega En
                                         </label>
@@ -2825,7 +2822,7 @@ function Recoleccion() {
                                           </div>
                                         </div>
 
-                                        <div className="col-sm-4 col-md-4 unit">
+                                        <div className="col-sm-12 col-md-6 col-lg-6 unit" >
                                           <label className="label ">
                                             Datos Adicionales para la Entrega
                                         </label>
@@ -2991,8 +2988,7 @@ function Recoleccion() {
                       </div>
 
 
-                      <div className="col-ms-12 col-md-5">
-                        <div className="widget-wrap " id="paquetesSobres">
+                        <div className="widget-wrap col-sm-5 col-md-5 " id="paquetesSobres">
                           <div className="widget-header">
                             <h2>Número de Paquetes</h2>
                           </div>
@@ -3054,7 +3050,6 @@ function Recoleccion() {
 
                           </div>
                         </div>
-                      </div>
                     </div>
 
                     <div className="form-footer" className="col-md-12">
