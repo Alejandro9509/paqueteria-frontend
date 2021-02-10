@@ -16,17 +16,6 @@ h2 {
     width: 70% !important;
 }
 
-  .color_icono{
-    fill: #707070 !important;
-    stroke-width: 0% !important;
-  }
-
-  .color_icono:hover{
-    fill: #F9A03E !important;
-    stroke: #F9A03E !important;
-    stroke-width: 0% !important;
-  }
-
 .boton-de-catalogos {
     height: 72px;
     width: 72px;
@@ -62,4 +51,12 @@ h2 {
 .divider {
     width: 5px;
     display: inline-block;
+}
+
+.color-mapeo {
+  color: #F9A03E !important;
+}
+
+.color-mapeo:hover{
+  color: #707070 !important;
 }
