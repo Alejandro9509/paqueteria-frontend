@@ -27,6 +27,7 @@ import {
 } from "react-table";
 import $ from "jquery";
 import { remove_array_element } from "../Util/Util";
+import { useHistory } from 'react-router-dom';
 window.jQuery = window.$ = $;
 
 const useStyles = makeStyles({
@@ -144,6 +145,8 @@ function Recoleccion() {
   const [Modal, open, close, isOpen] = useModal("root", {
     preventScroll: true,
   });
+  
+  const history = useHistory()
 
   const handleAceptar = (e) => {
     e.preventDefault();
@@ -961,65 +964,20 @@ function Recoleccion() {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-              prepareRow(row);
-              return (
-                <tr
-                  style={{
-                    backgroundColor:
-                      row.original.m_nIdCP === select ? "orange" : "white",
-                  }}
-                  {...row.getRowProps()}
-                  onClick={handleSelectCP.bind(this, row.original)}
-                  onDoubleClick={close}
-                >
-                  <td>
-                    <div>
-                      <a
-                        href="#Agregar"
-                        role="tab"
-                        data-toggle="tab"
-                        onClick={() =>
-                          handleShowModificar(row.original.m_nIdRecoleccion)
-                        }
-                        className="btn btn-default"
-                      >
-                        <i
-                          className="fa fa-pencil-square-o"
-                          style={{ color: "#F9A03E" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i
-                          className="zmdi zmdi-delete"
-                          style={{ color: "#F30B0B" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                      </a>
-                    </div>
-                  </td>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr style={{backgroundColor: row.original.m_nIdCP === select ? "orange" : "white"}}  {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)} onDoubleClick={close}>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
           </tbody>
         </table>
       </div>
@@ -1064,8 +1022,7 @@ function Recoleccion() {
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
-                {headerGroup.headers.map((column) => (
+                {headerGroup.headers.map(column => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
                   <th {...column.getHeaderProps(column.getSortByToggleProps())}>
@@ -1091,64 +1048,20 @@ function Recoleccion() {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-              prepareRow(row);
-              return (
-                <tr
-                  style={{
-                    backgroundColor:
-                      row.original.m_nIdCiudad === select ? "orange" : "white",
-                  }}
-                  {...row.getRowProps()}
-                  onClick={handleSelectCP.bind(this, row.original)}
-                >
-                  <td>
-                    <div>
-                      <a
-                        href="#Agregar"
-                        role="tab"
-                        data-toggle="tab"
-                        onClick={() =>
-                          handleShowModificar(row.original.m_nIdRecoleccion)
-                        }
-                        className="btn btn-default"
-                      >
-                        <i
-                          className="fa fa-pencil-square-o"
-                          style={{ color: "#F9A03E" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i
-                          className="zmdi zmdi-delete"
-                          style={{ color: "#F30B0B" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                      </a>
-                    </div>
-                  </td>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr style={{backgroundColor: row.original.m_nIdCiudad === select ? "orange" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
           </tbody>
         </table>
       </div>
@@ -1193,8 +1106,7 @@ function Recoleccion() {
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
-                {headerGroup.headers.map((column) => (
+                {headerGroup.headers.map(column => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
                   <th {...column.getHeaderProps(column.getSortByToggleProps())}>
@@ -1220,66 +1132,20 @@ function Recoleccion() {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-              prepareRow(row);
-              return (
-                <tr
-                  style={{
-                    backgroundColor:
-                      row.original.m_nIdOperador === select
-                        ? "orange"
-                        : "white",
-                  }}
-                  {...row.getRowProps()}
-                  onClick={handleSelectCP.bind(this, row.original)}
-                >
-                  <td>
-                    <div>
-                      <a
-                        href="#Agregar"
-                        role="tab"
-                        data-toggle="tab"
-                        onClick={() =>
-                          handleShowModificar(row.original.m_nIdRecoleccion)
-                        }
-                        className="btn btn-default"
-                      >
-                        <i
-                          className="fa fa-pencil-square-o"
-                          style={{ color: "#F9A03E" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i
-                          className="zmdi zmdi-delete"
-                          style={{ color: "#F30B0B" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                      </a>
-                    </div>
-                  </td>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr style={{backgroundColor: row.original.m_nIdOperador === select ? "orange" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
           </tbody>
         </table>
       </div>
@@ -1321,8 +1187,7 @@ function Recoleccion() {
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
-                {headerGroup.headers.map((column) => (
+                {headerGroup.headers.map(column => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
                   <th {...column.getHeaderProps(column.getSortByToggleProps())}>
@@ -1348,66 +1213,20 @@ function Recoleccion() {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-              prepareRow(row);
-              return (
-                <tr
-                  style={{
-                    backgroundColor:
-                      row.original.m_nIdTipoUnidad === select
-                        ? "orange"
-                        : "white",
-                  }}
-                  {...row.getRowProps()}
-                  onClick={handleSelectCP.bind(this, row.original)}
-                >
-                  <td>
-                    <div>
-                      <a
-                        href="#Agregar"
-                        role="tab"
-                        data-toggle="tab"
-                        onClick={() =>
-                          handleShowModificar(row.original.m_nIdRecoleccion)
-                        }
-                        className="btn btn-default"
-                      >
-                        <i
-                          className="fa fa-pencil-square-o"
-                          style={{ color: "#F9A03E" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i
-                          className="zmdi zmdi-delete"
-                          style={{ color: "#F30B0B" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                      </a>
-                    </div>
-                  </td>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr style={{backgroundColor: row.original.m_nIdTipoUnidad === select ? "orange" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
           </tbody>
         </table>
       </div>
@@ -1452,8 +1271,7 @@ function Recoleccion() {
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
-                {headerGroup.headers.map((column) => (
+                {headerGroup.headers.map(column => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
                   <th {...column.getHeaderProps(column.getSortByToggleProps())}>
@@ -1479,64 +1297,20 @@ function Recoleccion() {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-              prepareRow(row);
-              return (
-                <tr
-                  style={{
-                    backgroundColor:
-                      row.original.m_nIdUnidad === select ? "orange" : "white",
-                  }}
-                  {...row.getRowProps()}
-                  onClick={handleSelectCP.bind(this, row.original)}
-                >
-                  <td>
-                    <div>
-                      <a
-                        href="#Agregar"
-                        role="tab"
-                        data-toggle="tab"
-                        onClick={() =>
-                          handleShowModificar(row.original.m_nIdRecoleccion)
-                        }
-                        className="btn btn-default"
-                      >
-                        <i
-                          className="fa fa-pencil-square-o"
-                          style={{ color: "#F9A03E" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i
-                          className="zmdi zmdi-delete"
-                          style={{ color: "#F30B0B" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                      </a>
-                    </div>
-                  </td>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr style={{backgroundColor: row.original.m_nIdUnidad === select ? "orange" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
           </tbody>
         </table>
       </div>
@@ -1789,110 +1563,45 @@ function Recoleccion() {
 
   return (
     <div>
-      <Modal style={{ height: "400px" }}>
-        {state.tipoModal == 0 && (
-          <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
-            {dataCodigoPostal.length != 0 ? (
-              <TableCodigoPostal
-                select={
-                  state[state.identificadorModal] &&
-                  state[state.identificadorModal].m_nIdCP
-                }
-                columns={columnsCP}
-                data={dataCodigoPostal}
-                identificadorModal={state.identificadorModal}
-              />
-            ) : (
-              <div>No se encontró ningún registro</div>
-            )}
-            <a onClick={close}>Cerrar</a>
-            <a href="/Ciudades">Agregar</a>
-          </div>
-        )}
-        {state.tipoModal == 1 && (
-          <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
-            {dataCiudad.length != 0 ? (
-              <TableCiudades
-                select={
-                  state[state.identificadorModal] &&
-                  state[state.identificadorModal].m_nIdCiudad
-                }
-                columns={columnsCiudades}
-                data={dataCiudad}
-                identificadorModal={state.identificadorModal}
-              />
-            ) : (
-              <div>No se encontró ningún registro</div>
-            )}
-            <a onClick={close}>Cerrar</a>
-            <a href="/Ciudades">Agregar</a>
-          </div>
-        )}
-        {state.tipoModal == 2 && (
-          <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
-            {dataOperador.length != 0 ? (
-              <TableOperadores
-                select={
-                  state[state.identificadorModal] &&
-                  state[state.identificadorModal].m_nIdOperador
-                }
-                columns={columnsOperadores}
-                data={dataOperador}
-                identificadorModal={state.identificadorModal}
-              />
-            ) : (
-              <div>No se encontró ningún registro</div>
-            )}
-            <a onClick={close}>Cerrar</a>
-            <a href="/Operadores">Agregar</a>
-          </div>
-        )}
-        {state.tipoModal == 3 && (
-          <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
-            {dataTipoUnidad.length != 0 ? (
-              <TableTipoUnidad
-                select={
-                  state[state.identificadorModal] &&
-                  state[state.identificadorModal].m_nIdTipoUnidad
-                }
-                columns={columnsTipoUnidades}
-                data={dataTipoUnidad}
-                identificadorModal={state.identificadorModal}
-              />
-            ) : (
-              <div>No se encontró ningún registro</div>
-            )}
-            <a onClick={close}>Cerrar</a>
-            <a href="/TipoUnidad">Agregar</a>
-          </div>
-        )}
-        {state.tipoModal == 4 && (
-          <div
-            className="row"
-            style={{
-              maxHeight: "400px !important",
-              overflow: "auto",
-              backgroundColor: "#FFFFFF",
-            }}
-          >
-            {dataUnidad.length != 0 ? (
-              <TableUnidad
-                select={
-                  state[state.identificadorModal] &&
-                  state[state.identificadorModal].m_nIdUnidad
-                }
-                columns={columnsUnidades}
-                data={dataUnidad}
-                identificadorModal={state.identificadorModal}
-              />
-            ) : (
-              <div>No se encontró ningún registro</div>
-            )}
-            <a onClick={close}>Cerrar</a>
-            <a href="/Unidades">Agregar</a>
-          </div>
-        )}
-      </Modal>
+      <Modal style={{height:"400px"}}>  
+      {state.tipoModal == 0 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        {dataCodigoPostal.length != 0 ? <TableCodigoPostal select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP} columns={columnsCP} data={dataCodigoPostal} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       <br></br>
+       <br></br>
+       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => {history.push("/Ciudades")}} className="btn btn-primary primary-btn">Agregar</button>
+    </div>
+      }
+      {state.tipoModal == 1 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        {dataCiudad.length != 0 ? <TableCiudades select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCiudad} columns={columnsCiudades} data={dataCiudad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => {history.push("/Ciudades")}} className="btn btn-primary primary-btn">Agregar</button>
+    </div>
+      }
+      {state.tipoModal == 2 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        {dataOperador.length != 0 ? <TableOperadores select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdOperador} columns={columnsOperadores} data={dataOperador} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => {history.push("/Operadores")}} className="btn btn-primary primary-btn">Agregar</button>
+    </div>
+      }
+      {state.tipoModal == 3 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        {dataTipoUnidad.length != 0 ? <TableTipoUnidad select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdTipoUnidad} columns={columnsTipoUnidades} data={dataTipoUnidad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => {history.push("/TipoUnidad")}} className="btn btn-primary primary-btn">Agregar</button>
+    </div>
+      }
+      {state.tipoModal == 4 && 
+      <div className="row" style={{maxHeight: "400px !important", overflow:"auto",backgroundColor: '#FFFFFF'}} >
+        {dataUnidad.length != 0 ? <TableUnidad select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdUnidad} columns={columnsUnidades} data={dataUnidad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => {history.push("/Unidades")}} className="btn btn-primary primary-btn">Agregar</button>
+    </div>
+      }
+  </Modal>
 
       <header className="topbar clearfix">
         <Cabecera />
