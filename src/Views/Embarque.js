@@ -12,6 +12,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useTable, useFilters, useGlobalFilter, useSortBy } from 'react-table'
 import $ from 'jquery';
 import { remove_array_element } from "../Util/Util";
+import IconButton from '@material-ui/core/IconButton';
+import PageviewIcon from '@material-ui/icons/Pageview';
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import TextField from "@material-ui/core/TextField";
+import InputAdornment from '@material-ui/core/InputAdornment';
+import useModal from 'react-hooks-use-modal';
+import { useHistory } from 'react-router-dom';
 window.jQuery = window.$ = $;
 
 const styles = {
@@ -40,6 +47,8 @@ function Embarque() {
   const [state, setState] = React.useState({
     showPopUp: false,
     DerechoBorrar: 139,
+    identificadorModal: "",
+    tipoModal: 0,
     agregar: "Agregar",
     idEmbarque: 0,
     fechaInicial: "",
@@ -119,7 +128,11 @@ function Embarque() {
   })
   const [fileUploaded, setFileUploaded] = React.useState([])
   const [stepActive, setStepActive] = React.useState(1);
+  const [Modal, open, close, isOpen] = useModal("root", {
+    preventScroll: true,
+  });
 
+  const history = useHistory()
 
   const handleAceptar = (e) => {
     e.preventDefault()
@@ -475,6 +488,15 @@ function Embarque() {
     getAllUnidades(event.target.value);
   }
 
+  function handleSelectDatos(id, cp) {
+    setState({
+      ...state,
+      [state.identificadorModal] : id
+    });
+    console.log(id)
+    console.log(state.identificadorModal)
+  }
+
   const columns = React.useMemo(() => [
     {
       Name: "Folio",
@@ -502,6 +524,97 @@ function Embarque() {
       accessor: "m_nFolioInforme",
     }
 
+  ]);
+  
+  const columnsCP = React.useMemo(() => [
+    {
+      Name: "Codigo",
+      accessor: "m_sCP",
+    },
+    {
+      Name: "Estado",
+      accessor: "m_sEstado",
+    },
+    {
+      Name: "Ciudad",
+      accessor: "m_sCiudad",
+    },
+  ]);
+
+  const columnsCiudades = React.useMemo(() => [
+    {
+      Name: "Codigo",
+      accessor: "m_nCodigo",
+    },
+    {
+      Name: "Ciudad",
+      accessor: "m_sCiudad",
+    },
+    {
+      Name: "Abreviacion",
+      accessor: "m_sAbreviacion",
+    },
+    {
+      Name: "Estado",
+      accessor: "m_nIdEstado",
+    }
+  ]);
+
+  const columnsOperadores = React.useMemo(() => [
+    {
+      Name: "Numero Operador",
+      accessor: "m_nNumeroOperador",
+    },
+    {
+      Name: "Nombre",
+      accessor: "m_sNombreCompleto",
+    },
+    {
+      Name: "Sucursal",
+      accessor: "m_nIdSucursal",
+    },
+    {
+      Name: "Activo",
+      accessor: "m_nIdEstado",
+    }
+  ]);
+
+  const columnsTipoUnidades = React.useMemo(() => [
+    {
+      Name: "Tipo de unidad",
+      accessor: "m_nIdTipoUnidad",
+    },
+    {
+      Name: "Identificador",
+      accessor: "m_nIdentificador",
+    },
+    {
+      Name: "Nomenclatura",
+      accessor: "m_sNomenclaturaSCT",
+    },
+    {
+      Name: "Estatus",
+      accessor: "m_bActivo",
+    }
+  ]);
+
+  const columnsUnidades = React.useMemo(() => [
+    {
+      Name: "Descripcion",
+      accessor: "m_sDescripcion",
+    },
+    {
+      Name: "Codigo",
+      accessor: "m_sCodigo",
+    },
+    {
+      Name: "Tipo de unidad",
+      accessor: "m_nIdTipoUnidad",
+    },
+    {
+      Name: "Estatus",
+      accessor: "m_bActivo",
+    }
   ]);
 
   useEffect(value => {
@@ -703,6 +816,411 @@ function Embarque() {
         </table>
       </div>
     )
+  }
+
+  function TableCodigoPostal({ columns, data, select }) {
+    const defaultColumn = React.useMemo(
+      () => ({
+        // Default Filter UI
+        Filter: DefaultColumnFilter,
+      }),
+      []
+    );
+
+    const {
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      rows,
+      prepareRow,
+      state,
+      preGlobalFilteredRows,
+      setGlobalFilter,
+    } = useTable(
+      {
+        columns,
+        data,
+        defaultColumn,
+      },
+      useFilters,
+      useGlobalFilter,
+      useSortBy
+    );
+
+    return (
+      <div className="col-md-12" style={{maxHeight: "300px", overflow:"auto"}}>
+        <table className="table" {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map(column => (
+                  // Add the sorting props to control sorting. For this example
+                  // we can add them into the header props
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render("Name")}
+                    {/* Add a sort direction indicator */}
+                    <span>
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <i className="fa fa-caret-up" />
+                        ) : (
+                          <i className="fa fa-caret-down" />
+                        )
+                      ) : (
+                        ""
+                      )}
+                    </span>
+                    <div>
+                      {column.canFilter ? column.render("Filter") : null}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr style={{backgroundColor: row.original.m_nIdCP === select ? "orange" : "white"}}  {...row.getRowProps()} onClick={handleSelectDatos.bind(this, row.original)} onDoubleClick={close}>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+  function TableCiudades({ columns, data, select }) {
+    const defaultColumn = React.useMemo(
+      () => ({
+        // Default Filter UI
+        Filter: DefaultColumnFilter,
+      }),
+      []
+    );
+
+    const {
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      rows,
+      prepareRow,
+      state,
+      preGlobalFilteredRows,
+      setGlobalFilter,
+    } = useTable(
+      {
+        columns,
+        data,
+        defaultColumn,
+      },
+      useFilters,
+      useGlobalFilter,
+      useSortBy
+    );
+
+    return (
+      <div className="col-md-12" style={{maxHeight: "300px", overflow:"auto"}}>
+        <table className="table" {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map(column => (
+                  // Add the sorting props to control sorting. For this example
+                  // we can add them into the header props
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render("Name")}
+                    {/* Add a sort direction indicator */}
+                    <span>
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <i className="fa fa-caret-up" />
+                        ) : (
+                          <i className="fa fa-caret-down" />
+                        )
+                      ) : (
+                        ""
+                      )}
+                    </span>
+                    <div>
+                      {column.canFilter ? column.render("Filter") : null}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr style={{backgroundColor: row.original.m_nIdCiudad === select ? "orange" : "white"}} {...row.getRowProps()} onClick={handleSelectDatos.bind(this, row.original)}>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+  function TableOperadores({ columns, data, select }) {
+    const defaultColumn = React.useMemo(
+      () => ({
+        // Default Filter UI
+        Filter: DefaultColumnFilter,
+      }),
+      []
+    );
+
+    const {
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      rows,
+      prepareRow,
+      state,
+      preGlobalFilteredRows,
+      setGlobalFilter,
+    } = useTable(
+      {
+        columns,
+        data,
+        defaultColumn,
+      },
+      useFilters,
+      useGlobalFilter,
+      useSortBy
+    );
+
+    return (
+      <div className="col-md-12" style={{maxHeight: "300px", overflow:"auto"}}>
+        <table className="table" {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map(column => (
+                  // Add the sorting props to control sorting. For this example
+                  // we can add them into the header props
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render("Name")}
+                    {/* Add a sort direction indicator */}
+                    <span>
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <i className="fa fa-caret-up" />
+                        ) : (
+                          <i className="fa fa-caret-down" />
+                        )
+                      ) : (
+                        ""
+                      )}
+                    </span>
+                    <div>
+                      {column.canFilter ? column.render("Filter") : null}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr style={{backgroundColor: row.original.m_nIdOperador === select ? "orange" : "white"}} {...row.getRowProps()} onClick={handleSelectDatos.bind(this, row.original)}>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+  function TableTipoUnidad({ columns, data, select }) {
+    const defaultColumn = React.useMemo(
+      () => ({
+        // Default Filter UI
+        Filter: DefaultColumnFilter,
+      }),
+      []
+    );
+
+    const {
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      rows,
+      prepareRow,
+      state,
+      preGlobalFilteredRows,
+      setGlobalFilter,
+    } = useTable(
+      {
+        columns,
+        data,
+        defaultColumn,
+      },
+      useFilters,
+      useGlobalFilter,
+      useSortBy
+    );
+
+    return (
+      <div className="col-md-12">
+        <table className="table" {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map(column => (
+                  // Add the sorting props to control sorting. For this example
+                  // we can add them into the header props
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render("Name")}
+                    {/* Add a sort direction indicator */}
+                    <span>
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <i className="fa fa-caret-up" />
+                        ) : (
+                          <i className="fa fa-caret-down" />
+                        )
+                      ) : (
+                        ""
+                      )}
+                    </span>
+                    <div>
+                      {column.canFilter ? column.render("Filter") : null}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr style={{backgroundColor: row.original.m_nIdTipoUnidad === select ? "orange" : "white"}} {...row.getRowProps()} onClick={handleSelectDatos.bind(this, row.original)}>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+  function TableUnidad({ columns, data, select }) {
+    const defaultColumn = React.useMemo(
+      () => ({
+        // Default Filter UI
+        Filter: DefaultColumnFilter,
+      }),
+      []
+    );
+
+    const {
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      rows,
+      prepareRow,
+      state,
+      preGlobalFilteredRows,
+      setGlobalFilter,
+    } = useTable(
+      {
+        columns,
+        data,
+        defaultColumn,
+      },
+      useFilters,
+      useGlobalFilter,
+      useSortBy
+    );
+
+    return (
+      <div className="col-md-12" style={{maxHeight: "300px", overflow:"auto"}} >
+        <table className="table" {...getTableProps()} >
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map(column => (
+                  // Add the sorting props to control sorting. For this example
+                  // we can add them into the header props
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render("Name")}
+                    {/* Add a sort direction indicator */}
+                    <span>
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <i className="fa fa-caret-up" />
+                        ) : (
+                          <i className="fa fa-caret-down" />
+                        )
+                      ) : (
+                        ""
+                      )}
+                    </span>
+                    <div>
+                      {column.canFilter ? column.render("Filter") : null}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr style={{backgroundColor: row.original.m_nIdUnidad === select ? "orange" : "white"}} {...row.getRowProps()} onClick={handleSelectDatos.bind(this, row.original)}>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
+          </tbody>
+        </table>
+      </div>
+    );
   }
 
   function openSection(index) {
@@ -940,6 +1458,47 @@ function Embarque() {
 
   return (
     <div>
+
+<Modal style={{height:"400px"}}>  
+      {state.tipoModal == 0 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        {dataCodigoPostal.length != 0 ? <TableCodigoPostal select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP} columns={columnsCP} data={dataCodigoPostal} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       <br></br>
+       <br></br>
+       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => {history.push("/Ciudades")}} className="btn btn-primary primary-btn">Agregar</button>
+    </div>
+      }
+      {state.tipoModal == 1 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        {dataCiudad.length != 0 ? <TableCiudades select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCiudad} columns={columnsCiudades} data={dataCiudad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => {history.push("/Ciudades")}} className="btn btn-primary primary-btn">Agregar</button>
+    </div>
+      }
+      {state.tipoModal == 2 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        {dataOperador.length != 0 ? <TableOperadores select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdOperador} columns={columnsOperadores} data={dataOperador} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => {history.push("/Operadores")}} className="btn btn-primary primary-btn">Agregar</button>
+    </div>
+      }
+      {state.tipoModal == 3 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        {dataTipoUnidad.length != 0 ? <TableTipoUnidad select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdTipoUnidad} columns={columnsTipoUnidades} data={dataTipoUnidad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => {history.push("/TipoUnidad")}} className="btn btn-primary primary-btn">Agregar</button>
+    </div>
+      }
+      {state.tipoModal == 4 && 
+      <div className="row" style={{maxHeight: "400px !important", overflow:"auto",backgroundColor: '#FFFFFF'}} >
+        {dataUnidad.length != 0 ? <TableUnidad select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdUnidad} columns={columnsUnidades} data={dataUnidad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => {history.push("/Unidades")}} className="btn btn-primary primary-btn">Agregar</button>
+    </div>
+      }
+  </Modal>
+
 
       <header className="topbar clearfix">
         <Cabecera />
@@ -1190,7 +1749,7 @@ function Embarque() {
                                   required
                                   onChange={handleChange}
                                   value={state.idSucursalAgregar}
-                                  readOnly={state.agregar == "Consultar"}
+                                  disabled={state.agregar == "Consultar"}
                                   id="idSucursalAgregar"
                                   disabled="disabled"
                                 >
@@ -1283,7 +1842,7 @@ function Embarque() {
                                   className="form-control"
                                   required
                                   value={state.fechaHoraCreacion}
-                                  readOnly={state.agregar == "Consultar"}
+                                  disabled={state.agregar == "Consultar"}
                                   id="fechaHoraCreacion"
                                 />
                               </div>
@@ -1357,7 +1916,7 @@ function Embarque() {
                                   step="0.01"
                                   required
                                   value={state.tipoCambio}
-                                  readOnly={state.agregar == "Consultar"}
+                                  disabled={state.agregar == "Consultar"}
                                   id="tipoCambio"
                                 />
                               </div>
@@ -1421,7 +1980,7 @@ function Embarque() {
                                         type="text"
                                         required
                                         value={state.nombreRemitente}
-                                        readOnly={state.agregar == "Consultar"}
+                                        disabled={state.agregar == "Consultar"}
                                         id="nombreRemitente"
                                       />
                                     </div>
@@ -1441,7 +2000,7 @@ function Embarque() {
                                         title="Favor de introducir un RFC válido."
                                         required
                                         value={state.RFCRemitente}
-                                        readOnly={state.agregar == "Consultar"}
+                                        disabled={state.agregar == "Consultar"}
                                         id="RFCRemitente"
                                       />
                                     </div>
@@ -1458,7 +2017,7 @@ function Embarque() {
                                         type="text"
                                         required
                                         value={state.domicilioRemitente}
-                                        readOnly={state.agregar == "Consultar"}
+                                        disabled={state.agregar == "Consultar"}
                                         id="domicilioRemitente"
                                       />
                                     </div>
@@ -1468,55 +2027,95 @@ function Embarque() {
                                     <label className="label">
                                       Código Postal
                                   </label>
-                                    <label className="input select">
-                                      <select
-                                        className="form-control"
-                                        required
+                                  <div className="input" >
+                                      <Autocomplete
+                                        freeSolo
+                                        onChange={(event, newValue) =>
+                                          setState({
+                                            ...state,
+                                            codigoPostalRemitente: newValue,
+                                          })
+                                        }
                                         value={state.codigoPostalRemitente}
-                                        readOnly={state.agregar == "Consultar"}
-                                        onChange={handleChange}
+                                        disabled={state.agregar == "Consultar"}
                                         id="codigoPostalRemitente"
-                                      >
-                                        {dataCodigoPostal.map(
-                                          (codigoPostal) => (
-                                            <option key={codigoPostal.m_nIdCP} value={codigoPostal.m_nIdCP}>
-                                              {
-                                                codigoPostal.m_sCP
-                                              }
-                                            </option>
-                                          )
-                                        )}
-                                      </select>
-                                      <i className="fa fa-arrow-down" />
-                                    </label>
+                                        disableClearable
+                                        forcePopupIcon={false}
+                                        options={dataCodigoPostal}
+                                        getOptionLabel={(option) =>
+                                          option.m_sCP
+                                        }
+                                        variant="outlined"
+                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle: "solid",borderRadius: "5px", width: "124px"}}
+                                        renderInput={(params) => (
+                                          <div>
+                                            <TextField
+                                              {...params}
+                                              InputProps={{
+                                                ...params.InputProps,
+                                                style: { height: 24},
+                                                type: "search",
+                                                value: state.codigoPostalRemitente,
+                                                disabled: state.agregar == "Consultar",
+                                                 endAdornment: 
+                                                <InputAdornment position="end">
+                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => { setState({...state, identificadorModal: "codigoPostalRemitente", tipoModal: 0});open(); } }>
+                                                    <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
+                                                 </IconButton> 
+                                                </InputAdornment> 
+                                              }}
+                                            />                                                                                       
+                                          </div>
+                                        )}                                        
+                                      />
+                                    </div>
                                   </div>
 
                                   <div className="col-sm-4 col-md-6 unit">
                                     <label className="label">
                                       Ciudad
                                   </label>
-                                    <label className="input select">
-                                      <select
-                                        className="form-control"
-                                        required
+                                  <div className="input">
+                                      <Autocomplete
+                                        freeSolo
+                                        onChange={(event, newValue) =>
+                                          setState({
+                                            ...state,
+                                            ciudadRemitente: newValue,
+                                          })
+                                        }
                                         value={state.ciudadRemitente}
-                                        readOnly={state.agregar == "Consultar"}
-                                        onChange={handleChange}
                                         id="ciudadRemitente"
-                                      >
-                                        {dataCiudad.map(
-                                          (ciudad) => (
-                                            <option key={ciudad.m_nIdCiudad} value={ciudad.m_nIdCiudad}>
-                                              {
-                                                ciudad.m_sCiudad
-                                              }
-                                            </option>
-                                          )
-                                        )}
-                                      </select>
-                                      <i className="fa fa-arrow-down" />
-                                    </label>
-
+                                        disableClearable
+                                        forcePopupIcon={false}
+                                        options={dataCiudad}
+                                        getOptionLabel={(option) =>
+                                          option.m_sCiudad
+                                        }
+                                        variant="outlined"
+                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle: "solid",borderRadius: "5px"}}
+                                        renderInput={(params) => (
+                                          <div>
+                                            <TextField
+                                              {...params}
+                                              InputProps={{
+                                                ...params.InputProps,
+                                                style: { height: 24},
+                                                type: "search",
+                                                value: state.ciudadRemitente,
+                                                disabled: state.agregar == "Consultar",
+                                                 endAdornment: 
+                                                <InputAdornment position="end">
+                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {open(); setState({...state, identificadorModal: "ciudadRemitente", tipoModal: 1})} }>
+                                                    <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
+                                                 </IconButton> 
+                                                </InputAdornment> 
+                                              }}
+                                            />                                                                                       
+                                          </div>
+                                        )}                                        
+                                                       />
+                                    </div>
                                   </div>
 
                                   <div className="col-sm-4 col-md-6 unit">
@@ -1530,7 +2129,7 @@ function Embarque() {
                                         type="email"
                                         required
                                         value={state.correoRemitente}
-                                        readOnly={state.agregar == "Consultar"}
+                                        disabled={state.agregar == "Consultar"}
                                         id="correoRemitente"
                                       />
                                     </div>
@@ -1547,7 +2146,7 @@ function Embarque() {
                                         type="tel"
                                         required
                                         value={state.telefonoRemitente}
-                                        readOnly={state.agregar == "Consultar"}
+                                        disabled={state.agregar == "Consultar"}
                                         id="telefonoRemitente"
                                       />
                                     </div>
@@ -1564,7 +2163,7 @@ function Embarque() {
                                         type="text"
                                         required
                                         value={state.contactoRemitente}
-                                        readOnly={state.agregar == "Consultar"}
+                                        disabled={state.agregar == "Consultar"}
                                         id="contactoRemitente"
                                       />
                                     </div>
@@ -1574,27 +2173,49 @@ function Embarque() {
                                     <label className="label">
                                       Destino
                                 </label>
-                                    <label className="input select">
-                                      <select
-                                        className="form-control"
-                                        required
+                                <div className="input">
+                                      <Autocomplete
+                                        freeSolo
+                                        onChange={(event, newValue) =>
+                                          setState({
+                                            ...state,
+                                            ciudadOrigen: newValue,
+                                          })
+                                        }
                                         value={state.ciudadOrigen}
-                                        readOnly={state.agregar == "Consultar"}
-                                        onChange={handleChange}
+                                        disabled={state.agregar == "Consultar"}
                                         id="ciudadOrigen"
-                                      >
-                                        {dataCiudad.map(
-                                          (ciudad) => (
-                                            <option key={ciudad.m_nIdCiudad} value={ciudad.m_nIdCiudad}>
-                                              {
-                                                ciudad.m_sCiudad
-                                              }
-                                            </option>
-                                          )
-                                        )}
-                                      </select>
-                                      <i className="fa fa-arrow-down" />
-                                    </label>
+                                        disableClearable
+                                        forcePopupIcon={false}
+                                        options={dataCiudad}
+                                        getOptionLabel={(option) =>
+                                          option.m_sCiudad
+                                        }
+                                        variant="outlined"
+                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle: "solid",borderRadius: "5px"}}
+                                        renderInput={(params) => (
+                                          <div>
+                                            <TextField
+                                              {...params}
+                                              InputProps={{
+                                                ...params.InputProps,
+                                                style: { height: 24},
+                                                type: "search",
+                                                value: state.ciudadRemitente,
+                                                disabled: state.agregar == "Consultar",
+                                                 endAdornment: 
+                                                <InputAdornment position="end">
+                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {open(); setState({...state, identificadorModal: "ciudadOrigen", tipoModal: 1})} }>
+                                                    <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
+                                                 </IconButton> 
+                                                </InputAdornment> 
+                                              }}
+                                            />                                                                                       
+                                          </div>
+                                        )}                                        
+                                                       />
+                                    </div>
+
                                   </div>
 
                                 </div>
@@ -1619,7 +2240,7 @@ function Embarque() {
                                       type="text"
                                       required
                                       value={state.nombreDestinatario}
-                                      readOnly={state.agregar == "Consultar"}
+                                      disabled={state.agregar == "Consultar"}
                                       id="nombreDestinatario"
                                     />
                                   </div>
@@ -1638,7 +2259,7 @@ function Embarque() {
                                       title="Favor de introducir un RFC válido."
                                       required
                                       value={state.RFCDestinatario}
-                                      readOnly={state.agregar == "Consultar"}
+                                      disabled={state.agregar == "Consultar"}
                                       id="RFCDestinatario"
                                     />
                                   </div>
@@ -1655,7 +2276,7 @@ function Embarque() {
                                       type="text"
                                       required
                                       value={state.domicilioDestinatario}
-                                      readOnly={state.agregar == "Consultar"}
+                                      disabled={state.agregar == "Consultar"}
                                       id="domicilioDestinatario"
                                     />
                                   </div>
@@ -1665,55 +2286,96 @@ function Embarque() {
                                   <label className="label">
                                     Código Postal
                                 </label>
-                                  <label className="input select">
-                                    <select
-                                      className="form-control"
-                                      required
-                                      value={state.codigoPostalDestinatario}
-                                      readOnly={state.agregar == "Consultar"}
-                                      onChange={handleChange}
-                                      id="codigoPostalDestinatario"
-                                    >
-                                      {dataCodigoPostal.map(
-                                        (codigoPostal) => (
-                                          <option key={codigoPostal.m_nIdCP} value={codigoPostal.m_nIdCP}>
-                                            {
-                                              codigoPostal.m_sCP
-                                            }
-                                          </option>
-                                        )
-                                      )}
-                                    </select>
-                                    <i className="fa fa-arrow-down" />
-                                  </label>
-
+                                <div className="input" >
+                                      <Autocomplete
+                                        freeSolo
+                                        onChange={(event, newValue) =>
+                                          setState({
+                                            ...state,
+                                            codigoPostalRemitente: newValue,
+                                          })
+                                        }
+                                        value={state.codigoPostalDestinatario}
+                                        disabled={state.agregar == "Consultar"}
+                                        id="codigoPostalDestinatario"
+                                        disableClearable
+                                        forcePopupIcon={false}
+                                        options={dataCodigoPostal}
+                                        getOptionLabel={(option) =>
+                                          option.m_sCP
+                                        }
+                                        variant="outlined"
+                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle: "solid",borderRadius: "5px", width: "124px"}}
+                                        renderInput={(params) => (
+                                          <div>
+                                            <TextField
+                                              {...params}
+                                              InputProps={{
+                                                ...params.InputProps,
+                                                style: { height: 24},
+                                                type: "search",
+                                                value: state.codigoPostalDestinatario,
+                                                disabled: state.agregar == "Consultar",
+                                                 endAdornment: 
+                                                <InputAdornment position="end">
+                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => { setState({...state, identificadorModal: "codigoPostalDestinatario", tipoModal: 0});open(); } }>
+                                                    <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
+                                                 </IconButton> 
+                                                </InputAdornment> 
+                                              }}
+                                            />                                                                                       
+                                          </div>
+                                        )}                                        
+                                      />
+                                    </div>
                                 </div>
 
                                 <div className="col-sm-4 col-md-6 unit">
                                   <label className="label">
                                     Ciudad
                                 </label>
-                                  <label className="input select">
-                                    <select
-                                      className="form-control"
-                                      required
-                                      value={state.ciudadDestino}
-                                      readOnly={state.agregar == "Consultar"}
-                                      onChange={handleChange}
-                                      id="ciudadDestinatario"
-                                    >
-                                      {dataCiudad.map(
-                                        (ciudad) => (
-                                          <option key={ciudad.m_nIdCiudad} value={ciudad.m_nIdCiudad}>
-                                            {
-                                              ciudad.m_sCiudad
-                                            }
-                                          </option>
-                                        )
-                                      )}
-                                    </select>
-                                    <i className="fa fa-arrow-down" />
-                                  </label>
+                                <div className="input">
+                                      <Autocomplete
+                                        freeSolo
+                                        onChange={(event, newValue) =>
+                                          setState({
+                                            ...state,
+                                            ciudadDestinatario: newValue,
+                                          })
+                                        }
+                                        value={state.ciudadDestinatario}
+                                        disabled={state.agregar == "Consultar"}
+                                        id="ciudadDestinatario"
+                                        disableClearable
+                                        forcePopupIcon={false}
+                                        options={dataCiudad}
+                                        getOptionLabel={(option) =>
+                                          option.m_sCiudad
+                                        }
+                                        variant="outlined"
+                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle: "solid",borderRadius: "5px"}}
+                                        renderInput={(params) => (
+                                          <div>
+                                            <TextField
+                                              {...params}
+                                              InputProps={{
+                                                ...params.InputProps,
+                                                style: { height: 24},
+                                                type: "search",
+                                                value: state.ciudadDestinatario,
+                                                disabled: state.agregar == "Consultar",
+                                                 endAdornment: 
+                                                <InputAdornment position="end">
+                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {open(); setState({...state, identificadorModal: "ciudadDestinatario", tipoModal: 1})} }>
+                                                    <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
+                                                 </IconButton> 
+                                                </InputAdornment> 
+                                              }}
+                                            />                                                                                       
+                                          </div>
+                                        )}                                        
+                                                       />
+                                    </div>
                                 </div>
 
                                 <div className="col-sm-4 col-md-6 unit">
@@ -1727,7 +2389,7 @@ function Embarque() {
                                       type="email"
                                       required
                                       value={state.correoDestinatario}
-                                      readOnly={state.agregar == "Consultar"}
+                                      disabled={state.agregar == "Consultar"}
                                       id="correoDestinatario"
                                     />
                                   </div>
@@ -1744,7 +2406,7 @@ function Embarque() {
                                       type="text"
                                       required
                                       value={state.telefonoDestinatario}
-                                      readOnly={state.agregar == "Consultar"}
+                                      disabled={state.agregar == "Consultar"}
                                       id="telefonoDestinatario"
                                     />
                                   </div>
@@ -1762,7 +2424,7 @@ function Embarque() {
                                       type="text"
                                       required
                                       value={state.contactoDestinatario}
-                                      readOnly={state.agregar == "Consultar"}
+                                      disabled={state.agregar == "Consultar"}
                                       id="contactoDestinatario"
                                     />
                                   </div>
@@ -1772,27 +2434,48 @@ function Embarque() {
                                   <label className="label">
                                     Origen
                                 </label>
-                                  <label className="input select">
-                                    <select
-                                      className="form-control"
-                                      required
-                                      value={state.origenRemitente}
-                                      readOnly={state.agregar == "Consultar"}
-                                      onChange={handleChange}
-                                      id="origenRemitente"
-                                    >
-                                      {dataCiudad.map(
-                                        (ciudad) => (
-                                          <option key={ciudad.m_nIdCiudad} value={ciudad.m_nIdCiudad}>
-                                            {
-                                              ciudad.m_sCiudad
-                                            }
-                                          </option>
-                                        )
-                                      )}
-                                    </select>
-                                    <i className="fa fa-arrow-down" />
-                                  </label>
+                                <div className="input">
+                                      <Autocomplete
+                                        freeSolo
+                                        onChange={(event, newValue) =>
+                                          setState({
+                                            ...state,
+                                            origenRemitente: newValue,
+                                          })
+                                        }
+                                        value={state.origenRemitente}
+                                        disabled={state.agregar == "Consultar"}
+                                        id="origenRemitente"
+                                        disableClearable
+                                        forcePopupIcon={false}
+                                        options={dataCiudad}
+                                        getOptionLabel={(option) =>
+                                          option.m_sCiudad
+                                        }
+                                        variant="outlined"
+                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle: "solid",borderRadius: "5px"}}
+                                        renderInput={(params) => (
+                                          <div>
+                                            <TextField
+                                              {...params}
+                                              InputProps={{
+                                                ...params.InputProps,
+                                                style: { height: 24},
+                                                type: "search",
+                                                value: state.origenRemitente,
+                                                disabled: state.agregar == "Consultar",
+                                                 endAdornment: 
+                                                <InputAdornment position="end">
+                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {open(); setState({...state, identificadorModal: "origenRemitente", tipoModal: 1})} }>
+                                                    <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
+                                                 </IconButton> 
+                                                </InputAdornment> 
+                                              }}
+                                            />                                                                                       
+                                          </div>
+                                        )}                                        
+                                                       />
+                                    </div>
                                 </div>
 
                                 <div className="col-sm-12 col-md-12 unit">
@@ -1806,7 +2489,7 @@ function Embarque() {
                                       type="checkbox"
                                       checked={state.diferenteEntrega}
                                       value={state.diferenteEntrega}
-                                      readOnly={state.agregar == "Consultar"}
+                                      disabled={state.agregar == "Consultar"}
                                       id="diferenteEntrega"
                                     />
                                   </div>
@@ -1840,7 +2523,7 @@ function Embarque() {
                                             className="form-control"
                                             required
                                             value={state.codigoPostalEntrega}
-                                            readOnly={state.agregar == "Consultar"}
+                                            disabled={state.agregar == "Consultar"}
                                             onChange={handleChange}
                                             id="codigoPostalEntrega"
                                           >
@@ -1867,7 +2550,7 @@ function Embarque() {
                                             className="form-control"
                                             required
                                             value={state.ciudadEntrega}
-                                            readOnly={state.agregar == "Consultar"}
+                                            disabled={state.agregar == "Consultar"}
                                             onChange={handleChange}
                                             id="ciudadEntrega"
                                           >
@@ -1896,7 +2579,7 @@ function Embarque() {
                                             type="text"
                                             required
                                             value={state.zonaEntrega}
-                                            readOnly={state.agregar == "Consultar"}
+                                            disabled={state.agregar == "Consultar"}
                                             id="zonaEntrega"
                                           />
                                         </div>
@@ -1913,7 +2596,7 @@ function Embarque() {
                                             type="text"
                                             required
                                             value={state.domicilioEntrega}
-                                            readOnly={state.agregar == "Consultar"}
+                                            disabled={state.agregar == "Consultar"}
                                             id="domicilioEntrega"
                                           />
                                         </div>
@@ -1930,7 +2613,7 @@ function Embarque() {
                                             type="text"
                                             required
                                             value={state.entregaEn}
-                                            readOnly={state.agregar == "Consultar"}
+                                            disabled={state.agregar == "Consultar"}
                                             id="entregaEn"
                                           />
                                         </div>
@@ -1947,7 +2630,7 @@ function Embarque() {
                                             type="text"
                                             required
                                             value={state.datosAdicionalesEntrega}
-                                            readOnly={state.agregar == "Consultar"}
+                                            disabled={state.agregar == "Consultar"}
                                             id="datosAdicionalesEntrega"
                                           />
                                         </div>
@@ -1980,81 +2663,144 @@ function Embarque() {
                                     <label className="label">
                                       Operador
                                   </label>
-                                    <label className="input select">
-                                      <select
-                                        className="form-control"
-                                        required
-                                        value={state.operador}
-                                        readOnly={state.agregar == "Consultar"}
-                                        onChange={handleChange}
-                                        id="operador"
-                                      >
-                                        {dataOperador.map(
-                                          (operador) => (
-                                            <option key={operador.m_nIdOperador} value={operador.m_nIdOperador}>
-                                              {
-                                                operador.m_sNombreCompleto
-                                              }
-                                            </option>
-                                          )
-                                        )}
-                                      </select>
-                                      <i className="fa fa-arrow-down" />
-                                    </label>
+                                  <div className="input">
+                                      <Autocomplete
+                                        freeSolo
+                                        onChange={(event, newValue) =>
+                                          setState({
+                                            ...state,
+                                            idOperador: newValue,
+                                          })
+                                        }
+                                        value={state.idOperador}
+                                        disabled={state.agregar == "Consultar"}
+                                        id="idOperador"
+                                        disableClearable
+                                        forcePopupIcon={false}
+                                        options={dataOperador}
+                                        getOptionLabel={(option) =>
+                                          option.m_sNombreCompleto
+                                        }
+                                        variant="outlined"
+                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle: "solid",borderRadius: "5px"}}
+                                        renderInput={(params) => (
+                                          <div>
+                                            <TextField
+                                              {...params}
+                                              InputProps={{
+                                                ...params.InputProps,
+                                                style: { height: 24},
+                                                type: "search",
+                                                value: state.idOperador,
+                                                disabled: state.agregar == "Consultar",
+                                                 endAdornment: 
+                                                <InputAdornment position="end">
+                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {setState({...state, identificadorModal: "idOperador", tipoModal: 2}); open();} }>
+                                                    <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
+                                                 </IconButton> 
+                                                </InputAdornment> 
+                                              }}
+                                            />                                                                                       
+                                          </div>
+                                        )}                                        
+                                                       />
+                                    </div>
                                   </div>
 
                                   <div className="col-sm-4 col-md-4 unit">
                                     <label className="label">
                                       Tipo Unidad
                                   </label>
-                                    <label className="input select">
-                                      <select
-                                        className="form-control"
-                                        required
-                                        value={state.tipoUnidad}
-                                        readOnly={state.agregar == "Consultar"}
-                                        onChange={handleSelectChange}
-                                        id="tipoUnidad"
-                                      >
-                                        {dataTipoUnidad.map(
-                                          (tipoUnidad) => (
-                                            <option key={tipoUnidad.m_nIdTipoUnidad} value={tipoUnidad.m_nIdTipoUnidad}>
-                                              {
-                                                tipoUnidad.m_sTipoUnidad
-                                              }
-                                            </option>
-                                          )
-                                        )}
-                                      </select>
-                                      <i className="fa fa-arrow-down" />
-                                    </label>
+                                  <div className="input">
+                                      <Autocomplete
+                                        freeSolo
+                                        onChange={(event, newValue) =>
+                                          setState({
+                                            ...state,
+                                            idTipoUnidad: newValue,
+                                          })
+                                        }
+                                        value={state.idTipoUnidad}
+                                        disabled={state.agregar == "Consultar"}
+                                        id="idTipoUnidad"
+                                        disableClearable
+                                        forcePopupIcon={false}
+                                        options={dataTipoUnidad}
+                                        getOptionLabel={(option) =>
+                                          option.m_sTipoUnidad
+                                        }
+                                        variant="outlined"
+                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle: "solid",borderRadius: "5px"}}
+                                        renderInput={(params) => (
+                                          <div>
+                                            <TextField
+                                              {...params}
+                                              InputProps={{
+                                                ...params.InputProps,
+                                                style: { height: 24},
+                                                type: "search",
+                                                value: state.idTipoUnidad,
+                                                disabled: state.agregar == "Consultar",
+                                                 endAdornment: 
+                                                <InputAdornment position="end">
+                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {open(); setState({...state, identificadorModal: "idTipoUnidad", tipoModal: 3})} }>
+                                                    <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
+                                                 </IconButton> 
+                                                </InputAdornment> 
+                                              }}
+                                            />                                                                                       
+                                          </div>
+                                        )}                                        
+                                                       />
+                                    </div>
                                   </div>
 
                                   <div className="col-sm-4 col-md-4 unit">
                                     <label className="label">
                                       Unidad
                                   </label>
-                                    <label className="input select">
-                                      <select
-                                        className="form-control"
-                                        required
+                                  <div className="input">
+                                      <Autocomplete
+                                        freeSolo
+                                        onChange={(event, newValue) =>
+                                          setState({
+                                            ...state,
+                                            idUnidad: newValue,
+                                          })
+                                        }
                                         value={state.idUnidad}
-                                        readOnly={state.agregar == "Consultar"}
-                                        onChange={handleChange}
+                                        disabled={state.agregar == "Consultar"}
                                         id="idUnidad"
-                                      >
-                                        {dataUnidad.map(
-                                          (unidad) => (
-                                            <option key={unidad.m_nIdUnidad} value={unidad.m_nIdUnidad}>
-                                              {
-                                                unidad.m_sDescripcion
-                                              }
-                                            </option>
-                                          )
-                                        )}
-                                      </select>
-                                      <i className="fa fa-arrow-down" />
-                                    </label>
+                                        disableClearable
+                                        forcePopupIcon={false}
+                                        options={dataUnidad}
+                                        getOptionLabel={(option) =>
+                                          option.m_sDescripcion
+                                        }
+                                        variant="outlined"
+                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle: "solid",borderRadius: "5px"}}
+                                        renderInput={(params) => (
+                                          <div>
+                                            <TextField
+                                              {...params}
+                                              InputProps={{
+                                                ...params.InputProps,
+                                                style: { height: 24},
+                                                type: "search",
+                                                value: state.idUnidad,
+                                                disabled: state.agregar == "Consultar",
+                                                 endAdornment: 
+                                                <InputAdornment position="end">
+                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {open(); setState({...state, identificadorModal: "idUnidad", tipoModal: 4})} }>
+                                                    <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
+                                                 </IconButton> 
+                                                </InputAdornment> 
+                                              }}
+                                            />                                                                                       
+                                          </div>
+                                        )}                                        
+                                                       />
+                                    </div>
                                   </div>
 
                                 </div>
@@ -2079,7 +2825,7 @@ function Embarque() {
                                       type="datetime-local"
                                       required
                                       value={state.fechaHoraSalida}
-                                      readOnly={state.agregar == "Consultar"}
+                                      disabled={state.agregar == "Consultar"}
                                       id="fechaHoraSalida"
                                     />
                                   </div>
@@ -2106,7 +2852,7 @@ function Embarque() {
                                       type="datetime-local"
                                       required
                                       value={state.fechaHoraLlegada}
-                                      readOnly={state.agregar == "Consultar"}
+                                      disabled={state.agregar == "Consultar"}
                                       id="fechaHoraLlegada"
                                     />
                                   </div>
