@@ -494,7 +494,7 @@ function App(props) {
               <div className="col-md-6 col-sm-6">
                 <ul className="list-page-breadcrumb">
                   <li>
-                    <a href="/Catalogos">
+                    <a href="/Catalogos" className="color-mapeo">
                       Catálogos <i className="zmdi zmdi-chevron-right" />
                     </a>
                   </li>
