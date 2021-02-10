@@ -9,12 +9,7 @@ import Carousel from "re-carousel";
 import IndicatorDots from "../Util/Dots";
 import Buttons from "../Util/CarruselButtons";
 import { makeStyles } from "@material-ui/core/styles";
-import useModal from "react-hooks-use-modal";
-import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
-import PageviewIcon from "@material-ui/icons/Pageview";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import {
   useTable,
@@ -25,6 +20,12 @@ import {
 } from "react-table";
 import $ from "jquery";
 import { remove_array_element } from "../Util/Util";
+import IconButton from '@material-ui/core/IconButton';
+import PageviewIcon from '@material-ui/icons/Pageview';
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import TextField from "@material-ui/core/TextField";
+import useModal from 'react-hooks-use-modal';
+import { useHistory } from 'react-router-dom';
 window.jQuery = window.$ = $;
 
 const styles = {
@@ -53,6 +54,8 @@ function Embarque() {
   const [state, setState] = React.useState({
     showPopUp: false,
     DerechoBorrar: 139,
+    identificadorModal: "",
+    tipoModal: 0,
     agregar: "Agregar",
     idEmbarque: 0,
     fechaInicial: "",
@@ -73,25 +76,25 @@ function Embarque() {
     RFCRemitente: "",
     domicilioRemitente: "",
     codigoPostalRemitente: {},
-    ciudadRemitente: 0,
+    ciudadRemitente: {},
     correoRemitente: "",
     telefonoRemitente: "",
     contactoRemitente: "",
-    origenRemitente: 0,
+    origenRemitente: {},
     nombreDestinatario: "",
     RFCDestinatario: "",
     domicilioDestinatario: "",
     codigoPostalDestinatario: {},
-    ciudadDestinatario: 0,
+    ciudadDestinatario: {},
     correoDestinatario: "",
     telefonoDestinatario: "",
     contactoDestinatario: "",
-    destinoDestinatario: 0,
-    ciudadRemitente: 0,
-    ciudadOrigen: 0,
+    destinoDestinatario: {},
+    ciudadRemitente: {},
+    ciudadOrigen: {},
     fechaEntrega: "",
     horaEntrega: "",
-    codigoPostalEntrega: "",
+    codigoPostalEntrega: {},
     ciudadEntrega: "",
     zonaEntrega: "",
     domicilioEntrega: "",
@@ -102,11 +105,11 @@ function Embarque() {
     fechaHoraSalida: "",
     fechaHoraLlegada: "",
     diferenteEntrega: true,
-    operador: 0,
-    tipoUnidad: 0,
+    idOperador: {},
+    idTipoUnidad: {},
     CreadoPor: localStorage.getItem("UsuarioId"),
     ModificadoPor: localStorage.getItem("UsuarioId"),
-    idUnidad: 0,
+    idUnidad: {},
     paquetes: [
       {
         m_xPeso: "",
@@ -136,6 +139,7 @@ function Embarque() {
     preventScroll: true,
   });
 
+  const history = useHistory()
 
   const handleAceptar = (e) => {
     e.preventDefault()
@@ -336,8 +340,10 @@ function Embarque() {
         nombreRemitente: respuesta.data.m_sNOmbreRemitente,
         RFCRemitente: respuesta.data.m_sRFCRemitente,
         domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-        codigoPostalRemitente: dataCodigoPostal[0].m_nIdCP,
-        ciudadRemitente: dataCiudad[0].m_nIdCiudad, //respuesta.data.m_nCiudadRemitente,
+        codigoPostalRemitente: dataCodigoPostal.find( (o) => o.m_nIdCP == respuesta.data.m_nIdCodigoPostalRemitente),
+        ciudadRemitente: dataCiudad.find(
+          (o) => o.m_nIdCiudad == respuesta.data.m_nCiudadRemitente
+        ),
         correoRemitente: respuesta.data.m_sCorreoRemitente,
         telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
         contactoRemitente: respuesta.data.m_sContactoRemitente,
@@ -499,6 +505,15 @@ function Embarque() {
     getAllUnidades(event.target.value);
   }
 
+  function handleSelectDatos(id, cp) {
+    setState({
+      ...state,
+      [state.identificadorModal] : id
+    });
+    console.log(id)
+    console.log(state.identificadorModal)
+  }
+
   const columns = React.useMemo(() => [
     {
       Name: "Folio",
@@ -527,7 +542,13 @@ function Embarque() {
     }
 
   ]);
+  
+ 
 
+  
+
+
+  
   const columnsCP = React.useMemo(() => [
     {
       Name: "Codigo",
@@ -1805,6 +1826,47 @@ function Embarque() {
         )}
       </Modal>
 
+<Modal style={{height:"400px"}}>  
+      {state.tipoModal == 0 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        {dataCodigoPostal.length != 0 ? <TableCodigoPostal select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP} columns={columnsCP} data={dataCodigoPostal} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       <br></br>
+       <br></br>
+       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => {history.push("/Ciudades")}} className="btn btn-primary primary-btn">Agregar</button>
+    </div>
+      }
+      {state.tipoModal == 1 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        {dataCiudad.length != 0 ? <TableCiudades select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCiudad} columns={columnsCiudades} data={dataCiudad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => {history.push("/Ciudades")}} className="btn btn-primary primary-btn">Agregar</button>
+    </div>
+      }
+      {state.tipoModal == 2 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        {dataOperador.length != 0 ? <TableOperadores select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdOperador} columns={columnsOperadores} data={dataOperador} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => {history.push("/Operadores")}} className="btn btn-primary primary-btn">Agregar</button>
+    </div>
+      }
+      {state.tipoModal == 3 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        {dataTipoUnidad.length != 0 ? <TableTipoUnidad select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdTipoUnidad} columns={columnsTipoUnidades} data={dataTipoUnidad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => {history.push("/TipoUnidad")}} className="btn btn-primary primary-btn">Agregar</button>
+    </div>
+      }
+      {state.tipoModal == 4 && 
+      <div className="row" style={{maxHeight: "400px !important", overflow:"auto",backgroundColor: '#FFFFFF'}} >
+        {dataUnidad.length != 0 ? <TableUnidad select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdUnidad} columns={columnsUnidades} data={dataUnidad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => {history.push("/Unidades")}} className="btn btn-primary primary-btn">Agregar</button>
+    </div>
+      }
+  </Modal>
+
+
       <header className="topbar clearfix">
         <Cabecera />
       </header>
@@ -2054,7 +2116,7 @@ function Embarque() {
                                   required
                                   onChange={handleChange}
                                   value={state.idSucursalAgregar}
-                                  readOnly={state.agregar == "Consultar"}
+                                  disabled={state.agregar == "Consultar"}
                                   id="idSucursalAgregar"
                                   disabled="disabled"
                                 >
@@ -2147,7 +2209,7 @@ function Embarque() {
                                   className="form-control"
                                   required
                                   value={state.fechaHoraCreacion}
-                                  readOnly={state.agregar == "Consultar"}
+                                  disabled={state.agregar == "Consultar"}
                                   id="fechaHoraCreacion"
                                 />
                               </div>
@@ -2163,7 +2225,7 @@ function Embarque() {
                                   required
                                   onChange={handleChange}
                                   value={state.estatusEmbarque}
-                                  readOnly={state.agregar == "Consultar"}
+                                  disabled={state.agregar == "Consultar"}
                                   id="estatusEmbarque"
                                 >
                                   {dataEstatusEmbarque.map(
@@ -2189,7 +2251,7 @@ function Embarque() {
                                   className="form-control"
                                   required
                                   value={state.moneda}
-                                  readOnly={state.agregar == "Consultar"}
+                                  disabled={state.agregar == "Consultar"}
                                   onChange={handleChange}
                                   id="moneda"
                                 >
@@ -2221,7 +2283,7 @@ function Embarque() {
                                   step="0.01"
                                   required
                                   value={state.tipoCambio}
-                                  readOnly={state.agregar == "Consultar"}
+                                  disabled={state.agregar == "Consultar"}
                                   id="tipoCambio"
                                 />
                               </div>
@@ -2236,7 +2298,7 @@ function Embarque() {
                                   className="form-control"
                                   required
                                   value={state.tipoCobro}
-                                  readOnly={state.agregar == "Consultar"}
+                                  disabled={state.agregar == "Consultar"}
                                   onChange={handleChange}
                                   id="tipoCobro"
                                 >
@@ -2285,7 +2347,7 @@ function Embarque() {
                                         type="text"
                                         required
                                         value={state.nombreRemitente}
-                                        readOnly={state.agregar == "Consultar"}
+                                        disabled={state.agregar == "Consultar"}
                                         id="nombreRemitente"
                                       />
                                     </div>
@@ -2305,7 +2367,7 @@ function Embarque() {
                                         title="Favor de introducir un RFC válido."
                                         required
                                         value={state.RFCRemitente}
-                                        readOnly={state.agregar == "Consultar"}
+                                        disabled={state.agregar == "Consultar"}
                                         id="RFCRemitente"
                                       />
                                     </div>
@@ -2322,7 +2384,7 @@ function Embarque() {
                                         type="text"
                                         required
                                         value={state.domicilioRemitente}
-                                        readOnly={state.agregar == "Consultar"}
+                                        disabled={state.agregar == "Consultar"}
                                         id="domicilioRemitente"
                                       />
                                     </div>
@@ -2409,28 +2471,47 @@ function Embarque() {
                                     <label className="label">
                                       Ciudad
                                   </label>
-                                    <label className="input select">
-                                      <select
-                                        className="form-control"
-                                        required
+                                  <div className="input">
+                                      <Autocomplete
+                                        freeSolo
+                                        onChange={(event, newValue) =>
+                                          setState({
+                                            ...state,
+                                            ciudadRemitente: newValue,
+                                          })
+                                        }
                                         value={state.ciudadRemitente}
-                                        readOnly={state.agregar == "Consultar"}
-                                        onChange={handleChange}
                                         id="ciudadRemitente"
-                                      >
-                                        {dataCiudad.map(
-                                          (ciudad) => (
-                                            <option key={ciudad.m_nIdCiudad} value={ciudad.m_nIdCiudad}>
-                                              {
-                                                ciudad.m_sCiudad
-                                              }
-                                            </option>
-                                          )
-                                        )}
-                                      </select>
-                                      <i className="fa fa-arrow-down" />
-                                    </label>
-
+                                        disableClearable
+                                        forcePopupIcon={false}
+                                        options={dataCiudad}
+                                        getOptionLabel={(option) =>
+                                          option.m_sCiudad
+                                        }
+                                        variant="outlined"
+                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle: "solid",borderRadius: "5px"}}
+                                        renderInput={(params) => (
+                                          <div>
+                                            <TextField
+                                              {...params}
+                                              InputProps={{
+                                                ...params.InputProps,
+                                                style: { height: 24},
+                                                type: "search",
+                                                value: state.ciudadRemitente,
+                                                disabled: state.agregar == "Consultar",
+                                                 endAdornment: 
+                                                <InputAdornment position="end">
+                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {open(); setState({...state, identificadorModal: "ciudadRemitente", tipoModal: 1})} }>
+                                                    <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
+                                                 </IconButton> 
+                                                </InputAdornment> 
+                                              }}
+                                            />                                                                                       
+                                          </div>
+                                        )}                                        
+                                                       />
+                                    </div>
                                   </div>
 
                                   <div className="col-sm-12 col-md-12 unit">
@@ -2444,7 +2525,7 @@ function Embarque() {
                                         type="email"
                                         required
                                         value={state.correoRemitente}
-                                        readOnly={state.agregar == "Consultar"}
+                                        disabled={state.agregar == "Consultar"}
                                         id="correoRemitente"
                                       />
                                     </div>
@@ -2461,7 +2542,7 @@ function Embarque() {
                                         type="tel"
                                         required
                                         value={state.telefonoRemitente}
-                                        readOnly={state.agregar == "Consultar"}
+                                        disabled={state.agregar == "Consultar"}
                                         id="telefonoRemitente"
                                       />
                                     </div>
@@ -2478,7 +2559,7 @@ function Embarque() {
                                         type="text"
                                         required
                                         value={state.contactoRemitente}
-                                        readOnly={state.agregar == "Consultar"}
+                                        disabled={state.agregar == "Consultar"}
                                         id="contactoRemitente"
                                       />
                                     </div>
@@ -2581,7 +2662,7 @@ function Embarque() {
                                       type="text"
                                       required
                                       value={state.nombreDestinatario}
-                                      readOnly={state.agregar == "Consultar"}
+                                      disabled={state.agregar == "Consultar"}
                                       id="nombreDestinatario"
                                     />
                                   </div>
@@ -2600,7 +2681,7 @@ function Embarque() {
                                       title="Favor de introducir un RFC válido."
                                       required
                                       value={state.RFCDestinatario}
-                                      readOnly={state.agregar == "Consultar"}
+                                      disabled={state.agregar == "Consultar"}
                                       id="RFCDestinatario"
                                     />
                                   </div>
@@ -2617,7 +2698,7 @@ function Embarque() {
                                       type="text"
                                       required
                                       value={state.domicilioDestinatario}
-                                      readOnly={state.agregar == "Consultar"}
+                                      disabled={state.agregar == "Consultar"}
                                       id="domicilioDestinatario"
                                     />
                                   </div>
@@ -2694,27 +2775,48 @@ function Embarque() {
                                   <label className="label">
                                     Ciudad
                                 </label>
-                                  <label className="input select">
-                                    <select
-                                      className="form-control"
-                                      required
-                                      value={state.ciudadDestino}
-                                      readOnly={state.agregar == "Consultar"}
-                                      onChange={handleChange}
-                                      id="ciudadDestinatario"
-                                    >
-                                      {dataCiudad.map(
-                                        (ciudad) => (
-                                          <option key={ciudad.m_nIdCiudad} value={ciudad.m_nIdCiudad}>
-                                            {
-                                              ciudad.m_sCiudad
-                                            }
-                                          </option>
-                                        )
-                                      )}
-                                    </select>
-                                    <i className="fa fa-arrow-down" />
-                                  </label>
+                                <div className="input">
+                                      <Autocomplete
+                                        freeSolo
+                                        onChange={(event, newValue) =>
+                                          setState({
+                                            ...state,
+                                            ciudadDestinatario: newValue,
+                                          })
+                                        }
+                                        value={state.ciudadDestinatario}
+                                        disabled={state.agregar == "Consultar"}
+                                        id="ciudadDestinatario"
+                                        disableClearable
+                                        forcePopupIcon={false}
+                                        options={dataCiudad}
+                                        getOptionLabel={(option) =>
+                                          option.m_sCiudad
+                                        }
+                                        variant="outlined"
+                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle: "solid",borderRadius: "5px"}}
+                                        renderInput={(params) => (
+                                          <div>
+                                            <TextField
+                                              {...params}
+                                              InputProps={{
+                                                ...params.InputProps,
+                                                style: { height: 24},
+                                                type: "search",
+                                                value: state.ciudadDestinatario,
+                                                disabled: state.agregar == "Consultar",
+                                                 endAdornment: 
+                                                <InputAdornment position="end">
+                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {open(); setState({...state, identificadorModal: "ciudadDestinatario", tipoModal: 1})} }>
+                                                    <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
+                                                 </IconButton> 
+                                                </InputAdornment> 
+                                              }}
+                                            />                                                                                       
+                                          </div>
+                                        )}                                        
+                                                       />
+                                    </div>
                                 </div>
 
                                 <div className="col-sm-12 col-md-12 unit">
@@ -2728,7 +2830,7 @@ function Embarque() {
                                       type="email"
                                       required
                                       value={state.correoDestinatario}
-                                      readOnly={state.agregar == "Consultar"}
+                                      disabled={state.agregar == "Consultar"}
                                       id="correoDestinatario"
                                     />
                                   </div>
@@ -2745,7 +2847,7 @@ function Embarque() {
                                       type="text"
                                       required
                                       value={state.telefonoDestinatario}
-                                      readOnly={state.agregar == "Consultar"}
+                                      disabled={state.agregar == "Consultar"}
                                       id="telefonoDestinatario"
                                     />
                                   </div>
@@ -2763,7 +2865,7 @@ function Embarque() {
                                       type="text"
                                       required
                                       value={state.contactoDestinatario}
-                                      readOnly={state.agregar == "Consultar"}
+                                      disabled={state.agregar == "Consultar"}
                                       id="contactoDestinatario"
                                     />
                                   </div>
@@ -2856,7 +2958,7 @@ function Embarque() {
                                       type="checkbox"
                                       checked={state.diferenteEntrega}
                                       value={state.diferenteEntrega}
-                                      readOnly={state.agregar == "Consultar"}
+                                      disabled={state.agregar == "Consultar"}
                                       id="diferenteEntrega"
                                     />
                                   </div>
@@ -2960,7 +3062,7 @@ function Embarque() {
                                             className="form-control"
                                             required
                                             value={state.ciudadEntrega}
-                                            readOnly={state.agregar == "Consultar"}
+                                            disabled={state.agregar == "Consultar"}
                                             onChange={handleChange}
                                             id="ciudadEntrega"
                                           >
@@ -2989,7 +3091,7 @@ function Embarque() {
                                             type="text"
                                             required
                                             value={state.zonaEntrega}
-                                            readOnly={state.agregar == "Consultar"}
+                                            disabled={state.agregar == "Consultar"}
                                             id="zonaEntrega"
                                           />
                                         </div>
@@ -3006,7 +3108,7 @@ function Embarque() {
                                             type="text"
                                             required
                                             value={state.domicilioEntrega}
-                                            readOnly={state.agregar == "Consultar"}
+                                            disabled={state.agregar == "Consultar"}
                                             id="domicilioEntrega"
                                           />
                                         </div>
@@ -3023,7 +3125,7 @@ function Embarque() {
                                             type="text"
                                             required
                                             value={state.entregaEn}
-                                            readOnly={state.agregar == "Consultar"}
+                                            disabled={state.agregar == "Consultar"}
                                             id="entregaEn"
                                           />
                                         </div>
@@ -3040,7 +3142,7 @@ function Embarque() {
                                             type="text"
                                             required
                                             value={state.datosAdicionalesEntrega}
-                                            readOnly={state.agregar == "Consultar"}
+                                            disabled={state.agregar == "Consultar"}
                                             id="datosAdicionalesEntrega"
                                           />
                                         </div>
@@ -3316,7 +3418,7 @@ function Embarque() {
                                       type="datetime-local"
                                       required
                                       value={state.fechaHoraSalida}
-                                      readOnly={state.agregar == "Consultar"}
+                                      disabled={state.agregar == "Consultar"}
                                       id="fechaHoraSalida"
                                     />
                                   </div>
@@ -3343,7 +3445,7 @@ function Embarque() {
                                       type="datetime-local"
                                       required
                                       value={state.fechaHoraLlegada}
-                                      readOnly={state.agregar == "Consultar"}
+                                      disabled={state.agregar == "Consultar"}
                                       id="fechaHoraLlegada"
                                     />
                                   </div>
