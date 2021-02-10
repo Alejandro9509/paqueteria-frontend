@@ -202,7 +202,7 @@ function Recoleccion() {
       "m_nNoSobres": state.sobres.length,
       "m_nIdOperador": state.operador.m_nIdOperador,
       "m_nIdUnidad": state.unidad.m_nIdUnidad,
-      "m_nIdRemolqueLlegadaRecoleccion": state.tipoUnidad.m_nIdTipoUnidad,
+      "m_nIdRemolque": state.tipoUnidad.m_nIdTipoUnidad,
       "m_nCreadoPor":state.CreadoPor,
       "m_nModificadoPor":state.ModificadoPor
 
@@ -341,31 +341,32 @@ function Recoleccion() {
         nombreRemitente: respuesta.data.m_sNombreRemitente,
         RFCRemitente: respuesta.data.m_sRFCRemitente,
         domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-        codigoPostalRemitente: respuesta.data.m_sIdCodigoPostalRemitente,
-        ciudadRemitente: respuesta.data.m_nIdCiudadRemitente,
+        codigoPostalRemitente: dataCodigoPostal.find(o => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalRemitente),
+        ciudadRemitente: dataCiudad.find(o => o.m_nIdCiudad == respuesta.data.m_nIdCiudadRemitente),
         correoRemitente: respuesta.data.m_sCorreoRemitente,
         telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
         contactoRemitente: respuesta.data.m_sContactoRemitente,
-        origenRemitente: respuesta.data.m_nIdCiudadOrigen,
+        origenRemitente: dataCiudad.find(o => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
         nombreDestinatario: respuesta.data.m_sNombreDestinatario,
         RFCDestinatario: respuesta.data.m_sRFCDestinatario,
         domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-        codigoPostalDestinatario: respuesta.data.m_sIdCodigoPostalDestinatario,
-        ciudadDestinatario: respuesta.data.m_nIdCiudadDestinatario,
+        tipoUnidad: dataTipoUnidad.find(o => o.m_nIdTipoUnidad == respuesta.data.m_nIdUnidad),
+        unidad: dataUnidad.find(o => o.m_nIdUnidad == respuesta.data.m_nIdRemolque),
+        operador: dataOperador.find(o => o.m_nIdOperador == respuesta.data.m_nIdOperador),
+        codigoPostalDestinatario: dataCodigoPostal.find(o => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalDestinatario),
+        ciudadDestinatario: dataCiudad.find(o => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestinatario),
         correoDestinatario: respuesta.data.m_sCorreoDestinatario,
         telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
         contactoDestinatario: respuesta.data.m_sContactoDestinatario,
-        destinoDestinatario: respuesta.data.m_nIdCiudadDestino,
-        ciudadRemitente: respuesta.data.m_nIdCiudadRemitente,
-        ciudadDestinatario: respuesta.data.m_nIdCiudadDestinatario,
-        codigoPostalRecoleccion: respuesta.data.m_sIdCodigoPostalRemitente,
+        destinoDestinatario: dataCiudad.find(o => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
+        codigoPostalRecoleccion: dataCodigoPostal.find(o => o.m_nIdCP == respuesta.data.m_nIdCPDetalleRecoleccion),
         ciudadRecoleccion: respuesta.data.m_nIdCiudadDetalleRecoleccion,
         zonaRecoleccion: respuesta.data.m_nIdZonaDetalleRecoleccion,
         domicilioRecoleccion: respuesta.data.m_sDomicilioDetalleRecoleccion,
         recogerEn: respuesta.data.m_sRecogerEnDetalleRecoleccion,
         datosAdicionalesRecoleccion:
           respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
-        codigoPostalEntrega: respuesta.data.m_sIdCodigoPostalRemitente,
+        codigoPostalEntrega: dataCodigoPostal.find(o => o.m_nIdCP == respuesta.data.m_nIdCPDetalleEntrega),
         ciudadEntrega: respuesta.data.m_nIdCiudadDetalleEntrega,
         zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
         domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
@@ -389,6 +390,8 @@ function Recoleccion() {
         cantidadDePaquetes: respuesta.data.m_parrPaquetes.length,
         cantidadDeSobres: respuesta.data.m_parrSobres.length,
       });
+      console.log("cpRemitente:")
+      console.log(state.codigoPostalRemitente)
     });
   }
 
@@ -404,9 +407,9 @@ function Recoleccion() {
       folioInforme: "",
       fechaHoraCreacion: "",
       estatusRecoleccion: 0,
-      moneda: dataTipoMoneda[0].m_nIdMoneda,
+      moneda: 0,
       tipoCambio: "",
-      tipoCobro: dataTipoCobro[0].m_nIdTipoCobro,
+      tipoCobro: 0,
       nombreRemitente: "",
       RFCRemitente: "",
       domicilioRemitente: "",
@@ -1920,6 +1923,9 @@ function Recoleccion() {
                                   onChange={handleChange}
                                   id="moneda"
                                 >
+                                  <option value="0">
+                                Seleccionar
+                            </option>
                                   {dataTipoMoneda.map((moneda) => (
                                     <option
                                       key={moneda.m_nIdMoneda}
@@ -1958,7 +1964,9 @@ function Recoleccion() {
                                   value={state.tipoCobro}
                                   onChange={handleChange}
                                   id="tipoCobro"
-                                >
+                                ><option value="0">
+                                Seleccionar
+                            </option>
                                   {dataTipoCobro.map((tipoCobro) => (
                                     <option
                                       key={tipoCobro.m_nIdTipoCobro}
@@ -2043,6 +2051,7 @@ function Recoleccion() {
                                     <label className="label">Código Postal</label>
                                     <div className="input" >
                                       <Autocomplete
+                                        value={state.codigoPostalRemitente}
                                         freeSolo
                                         onChange={(event, newValue) =>
                                           setState({
@@ -2050,7 +2059,6 @@ function Recoleccion() {
                                             codigoPostalRemitente: newValue,
                                           })
                                         }
-                                        value={state.codigoPostalRemitente}
                                         id="codigoPostalRemitente"
                                         disableClearable
                                         forcePopupIcon={false}
@@ -2068,7 +2076,7 @@ function Recoleccion() {
                                                 ...params.InputProps,
                                                 style: { height: 24},
                                                 type: "search",
-                                                value: state.codigoPostalRemitente,
+                                                disableUnderline: true,
                                                  endAdornment: 
                                                 <InputAdornment position="end">
                                                   <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => { setState({...state, identificadorModal: "codigoPostalRemitente", tipoModal: 0});open(); } }>
@@ -2186,6 +2194,7 @@ function Recoleccion() {
                                                 style: { height: 24},
                                                 type: "search",
                                                 value: state.origenRemitente,
+                                                disableUnderline: true,
                                                  endAdornment: 
                                                 <InputAdornment position="end">
                                                   <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {open(); setState({...state, identificadorModal: "origenRemitente", tipoModal: 1})} }>
@@ -2299,6 +2308,7 @@ function Recoleccion() {
                                                 ...params.InputProps,
                                                 style: { height: 24},
                                                 type: "search",
+                                                disableUnderline: true,
                                                  endAdornment:  <InputAdornment position="end"> <IconButton style={{paddingRight: "0px"}} onClick={() => {setState({...state, identificadorModal: "codigoPostalDestinatario", tipoModal: 0});  open();} }>
                                                  <PageviewIcon style={{ color: "#F9A03E", fontSize: 32 }} />
                                                  </IconButton>  </InputAdornment> 
@@ -2413,6 +2423,7 @@ function Recoleccion() {
                                                 style: { height: 24},
                                                 type: "search",
                                                 value: state.origenRemitente,
+                                                disableUnderline: true,
                                                  endAdornment: 
                                                 <InputAdornment position="end">
                                                   <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {setState({...state, identificadorModal: "destinoDestinatario", tipoModal: 1}); open();} }>
@@ -2504,6 +2515,7 @@ function Recoleccion() {
                                                 ...params.InputProps,
                                                 style: { height: 24},
                                                 type: "search",
+                                                disableUnderline: true,
                                                  endAdornment:  <InputAdornment position="end"> <IconButton style={{paddingRight: "0px"}} onClick={() => {setState({...state, identificadorModal: "codigoPostalRecoleccion", tipoModal: 0}); open();} }>
                                                  <PageviewIcon style={{ color: "#F9A03E", fontSize: 32 }} />
                                                  </IconButton>  </InputAdornment> 
@@ -2657,6 +2669,7 @@ function Recoleccion() {
                                                 ...params.InputProps,
                                                 style: { height: 24},
                                                 type: "search",
+                                                disableUnderline: true,
                                                  endAdornment:  <InputAdornment position="end"> <IconButton style={{paddingRight: "0px"}} onClick={() => {setState({...state, identificadorModal: "codigoPostalEntrega", tipoModal: 0}); open();} }>
                                                  <PageviewIcon style={{ color: "#F9A03E", fontSize: 32 }} />
                                                  </IconButton>  </InputAdornment> 
@@ -2812,7 +2825,7 @@ function Recoleccion() {
                                                 ...params.InputProps,
                                                 style: { height: 24},
                                                 type: "search",
-                                                value: state.operador,
+                                                disableUnderline: true,
                                                  endAdornment: 
                                                 <InputAdornment position="end">
                                                   <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {setState({...state, identificadorModal: "operador", tipoModal: 2}); open();} }>
@@ -2857,6 +2870,7 @@ function Recoleccion() {
                                                 style: { height: 24},
                                                 type: "search",
                                                 value: state.tipoUnidad,
+                                                disableUnderline: true,
                                                  endAdornment: 
                                                 <InputAdornment position="end">
                                                   <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {open(); setState({...state, identificadorModal: "tipoUnidad", tipoModal: 3})} }>
@@ -2900,6 +2914,7 @@ function Recoleccion() {
                                                 ...params.InputProps,
                                                 style: { height: 24},
                                                 type: "search",
+                                                disableUnderline: true,
                                                  endAdornment: 
                                                 <InputAdornment position="end">
                                                   <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {open(); setState({...state, identificadorModal: "unidad", tipoModal: 4})} }>
