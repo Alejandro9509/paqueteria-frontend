@@ -2323,36 +2323,7 @@ function handleImprmir2()
                                     )}
                                   </select>
                                 </div>
-
-                                <div className="col-sm-4 col-md-2-5 unit">
-                                  <label className="label">
-                                    Moneda
-                          </label>
-                                  <select
-                                    className="form-control"
-                                    required
-                                    onChange={event => (cargaEmbarqueMoneda(event.target.value))}
-                                    id="idMoneda"
-                                    read="true"
-                                    value={state.idMoneda}
-                                    disabled={state.agregar == "Consultar"}
-                                  >
-                                    <option value="0">
-                                      Seleccionar
-                            </option>
-                                    {dataMoneda.map(
-                                      (moneda) => (
-                                        <option key={moneda.m_nIdMoneda} value={moneda.m_nIdMoneda}>
-                                          {
-                                            moneda.m_sMoneda
-                                          }
-                                        </option>
-                                      )
-                                    )}
-                                  </select>
-                                </div>
-
-                                <div className="col-sm-4 col-md-2-5 unit">
+  <div className="col-sm-4 col-md-2-5 unit">
                                   <label className="label">
                                     Folio Guia
                           </label>
@@ -2368,7 +2339,6 @@ function handleImprmir2()
                                     />
                                   </div>
                                 </div>
-
                                 <div className="col-sm-4 col-md-2-5 unit">
                                   <label className="label">
                                     Folio Embarque
@@ -2399,24 +2369,6 @@ function handleImprmir2()
                                 </div>
                                 <div className="col-sm-4 col-md-2-5 unit">
                                   <label className="label">
-                                    Tracking
-                          </label>
-                                  <div className="input">
-                                    <input
-                                      onChange={handleChange}
-                                      className="form-control"
-                                      type="text"
-                                      placeholder={state.tracking}
-                                      readOnly={state.agregar == "Consultar"}
-                                      id="tracking"
-                                      disabled="disabled"
-                                    />
-                                  </div>
-                                </div>
-
-
-                                <div className="col-sm-4 col-md-2-5 unit">
-                                  <label className="label">
                                     Folio Informe
                           </label>
                                   <div className="input">
@@ -2427,6 +2379,22 @@ function handleImprmir2()
                                       placeholder={state.folioInforme}
                                       readOnly={state.agregar == "Consultar"}
                                       id="folioInforme"
+                                      disabled="disabled"
+                                    />
+                                  </div>
+                                </div>
+                                <div className="col-sm-4 col-md-2-5 unit">
+                                  <label className="label">
+                                    Tracking
+                          </label>
+                                  <div className="input">
+                                    <input
+                                      onChange={handleChange}
+                                      className="form-control"
+                                      type="text"
+                                      placeholder={state.tracking}
+                                      readOnly={state.agregar == "Consultar"}
+                                      id="tracking"
                                       disabled="disabled"
                                     />
                                   </div>
@@ -2448,7 +2416,6 @@ function handleImprmir2()
                                     />
                                   </div>
                                 </div>
-
                                 <div className="col-sm-4 col-md-2-5 unit">
                                   <label className="label">
                                     Estatus de la Guia
@@ -2478,6 +2445,39 @@ function handleImprmir2()
 
                                 </div>
 
+
+
+                                <div className="col-sm-4 col-md-2-5 unit">
+                                  <label className="label">
+                                    Moneda
+                          </label>
+                                  <select
+                                    className="form-control"
+                                    required
+                                    onChange={event => (cargaEmbarqueMoneda(event.target.value))}
+                                    id="idMoneda"
+                                    read="true"
+                                    value={state.idMoneda}
+                                    disabled={state.agregar == "Consultar"}
+                                  >
+                                    <option value="0">
+                                      Seleccionar
+                            </option>
+                                    {dataMoneda.map(
+                                      (moneda) => (
+                                        <option key={moneda.m_nIdMoneda} value={moneda.m_nIdMoneda}>
+                                          {
+                                            moneda.m_sMoneda
+                                          }
+                                        </option>
+                                      )
+                                    )}
+                                  </select>
+                                </div>
+
+                              
+                         
+     
                                 <div className="col-sm-4 col-md-2-5 unit">
                                   <label className="label">
                                     Tipo de Cambio
