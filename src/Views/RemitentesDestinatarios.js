@@ -9,11 +9,17 @@ import { FormControl, Input, InputLabel } from "@material-ui/core";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import $ from "jquery";
-import { useTable, useFilters, useSortBy } from "react-table";
-import TextField from "@material-ui/core/TextField";
+import { useTable, useFilters,useGlobalFilter, useSortBy } from "react-table";
+import useModal from "react-hooks-use-modal";
+import IconButton from "@material-ui/core/IconButton";
+import SearchIcon from "@material-ui/icons/Search";
+import PageviewIcon from "@material-ui/icons/Pageview";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import TextField from "@material-ui/core/TextField";
+import InputAdornment from "@material-ui/core/InputAdornment";
 import ExportCSV from "../Components/Template/Export";
 import ExportPDF from "../Components/Template/ExportPDF";
+import { useHistory } from 'react-router-dom';
 
 window.jQuery = window.$ = $;
 const headers = {
@@ -24,11 +30,15 @@ function App(props) {
   const [dataEstado, setDataEstado] = React.useState([]);
   const [data, setData] = React.useState([]);
   const [dataClientes, setDataClientes] = React.useState([]);
-  const [dataCP, setDataCP] = React.useState([]);
+  const [dataCodigoPostal, setDataCodigoPostal] = React.useState([]);
+  const [Modal, open, close, isOpen] = useModal("root", {
+    preventScroll: true,
+  });
 
   const [state, setState] = React.useState({
     idRemitenteDestinatario: 0,
     idCliente: {},
+    cliente:{},
     numero: 0,
     nombre: "",
     rfc: "",
@@ -42,7 +52,7 @@ function App(props) {
     municipio: "",
     idPais: 0,
     idEstado: 0,
-    codigoPostal: 0,
+    codigoPostal: {},
     creadoPor: localStorage.getItem("UsuarioId") ,
     creadoEl: "",
     modificadoPor: localStorage.getItem("UsuarioId") ,
@@ -60,6 +70,8 @@ function App(props) {
       ...state,
       idRemitenteDestinatario: 0,
       idCliente: {},
+      cliente: dataClientes[0],
+
       numero: 0,
       nombre: "",
       rfc: "",
@@ -93,12 +105,21 @@ function App(props) {
     });
   }
 
+  function handleSelectCP(id, cp) {
+    setState({
+      ...state,
+      [state.identificadorModal]: id,
+    });
+    console.log(id);
+    console.log(state.identificadorModal);
+  }
+
   function getAllCodigosPostales() {
     const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta);
 
-      setDataCP(respuesta.data);
+      setDataCodigoPostal(respuesta.data);
     });
   }
 
@@ -126,10 +147,13 @@ function App(props) {
     });
   };
 
+  const history = useHistory()
+
+
   const handleAceptar = (e) => {
     e.preventDefault();
     var params = {
-      IdCliente: state.idCliente.m_nIdCliente,
+      IdCliente: state.cliente.m_nIdCliente,
       Numero: state.numero,
       Nombre: state.nombre,
       RFC: state.rfc,
@@ -143,6 +167,7 @@ function App(props) {
       IdEstado: state.idEstado,
       CreadoPor: state.creadoPor,
       CreadoEl: state.creadoEl,
+
       ModificadoPor: state.modificadoPor,
       ModificadoEl: state.modificadoEl,
       Contacto: state.contacto,
@@ -224,7 +249,9 @@ function App(props) {
         ...state,
         agregar: "Modificar",
         idRemitenteDestinatario: row.original.m_nIdRemitenteDestinatario,
-        idCliente: respuesta.data.m_nIdCliente,
+        cliente: dataClientes.find(
+          (o) => o.m_nIdCliente == respuesta.data.m_nIdCliente
+        ),
         numero: respuesta.data.m_nNumero,
         nombre: respuesta.data.m_sNombre,
         rfc: respuesta.data.m_sRFC,
@@ -272,6 +299,49 @@ function App(props) {
     },
   ]);
 
+  const columnsCP = React.useMemo(() => [
+    {
+      Name: "Codigo",
+      accessor: "m_sCP",
+    },
+    {
+      Name: "Estado",
+      accessor: "m_sEstado",
+    },
+    {
+      Name: "Ciudad",
+      accessor: "m_sCiudad",
+    },
+  ]);
+
+  const columnsCliente = React.useMemo(() => [
+    {
+      Name: "Núm. Cliente",
+      accessor: "m_nNumeroCliente",
+    },
+    {
+      Name: "Tipo Cliente",
+      accessor: "m_nTipoCliente",
+    },
+    {
+      Name: "RFC",
+      accessor: "m_sRFC",
+    },
+    {
+      Name: "Nombre",
+      accessor: "m_sNombreFiscal",
+    },
+
+    {
+      Name: "Nombre Corto",
+      accessor: "m_sNombreCorto",
+    },
+    {
+      Name: "m_sNombreSucursal",
+      accessor: "m_sNombreSucursal",
+    },
+  ]);
+
   const headers = {
     "Content-Type": "application/json",
     //    'access-control-allow-origin': '*'
@@ -301,6 +371,91 @@ function App(props) {
       [event.target.id]: event.target.value,
     });
   };
+
+  function TableCodigoPostal({ columns, data, select }) {
+    const defaultColumn = React.useMemo(
+      () => ({
+        // Default Filter UI
+        Filter: DefaultColumnFilter,
+      }),
+      []
+    );
+
+    const {
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      rows,
+      prepareRow,
+      state,
+      preGlobalFilteredRows,
+      setGlobalFilter,
+    } = useTable(
+      {
+        columns,
+        data,
+        defaultColumn,
+      },
+      useFilters,
+      useGlobalFilter,
+      useSortBy
+    );
+
+    return (
+      <div
+        className="col-md-12"
+        style={{ maxHeight: "300px", overflow: "auto" }}
+      >
+        <table className="table" {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                <th>Acciones</th>
+                {headerGroup.headers.map((column) => (
+                  // Add the sorting props to control sorting. For this example
+                  // we can add them into the header props
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render("Name")}
+                    {/* Add a sort direction indicator */}
+                    <span>
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <i className="fa fa-caret-up" />
+                        ) : (
+                          <i className="fa fa-caret-down" />
+                        )
+                      ) : (
+                        ""
+                      )}
+                    </span>
+                    <div>
+                      {column.canFilter ? column.render("Filter") : null}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr style={{backgroundColor: row.original.m_nIdCP === select ? "orange" : "white"}}  {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)} onDoubleClick={close}>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
 
   function Table({ columns, data }) {
     const defaultColumn = React.useMemo(
@@ -414,6 +569,91 @@ function App(props) {
     );
   }
 
+  function TableClientes({ columns, data, select }) {
+    const defaultColumn = React.useMemo(
+      () => ({
+        // Default Filter UI
+        Filter: DefaultColumnFilter,
+      }),
+      []
+    );
+
+    const {
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      rows,
+      prepareRow,
+      state,
+      preGlobalFilteredRows,
+      setGlobalFilter,
+    } = useTable(
+      {
+        columns,
+        data,
+        defaultColumn,
+      },
+      useFilters,
+      useGlobalFilter,
+      useSortBy
+    );
+
+    return (
+      <div
+        className="col-md-12"
+        style={{ maxHeight: "300px", overflow: "auto" }}
+      >
+        <table className="table" {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                <th>Acciones</th>
+                {headerGroup.headers.map((column) => (
+                  // Add the sorting props to control sorting. For this example
+                  // we can add them into the header props
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render("Name")}
+                    {/* Add a sort direction indicator */}
+                    <span>
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <i className="fa fa-caret-up" />
+                        ) : (
+                          <i className="fa fa-caret-down" />
+                        )
+                      ) : (
+                        ""
+                      )}
+                    </span>
+                    <div>
+                      {column.canFilter ? column.render("Filter") : null}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr style={{backgroundColor: row.original.m_nIdCP === select ? "orange" : "white"}}  {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)} onDoubleClick={close}>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
   useEffect((value) => {
     if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
     {
@@ -475,6 +715,33 @@ function App(props) {
 
   return (
     <div>
+  <Modal style={{height:"400px"}}>  
+      {state.tipoModal == 0 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        {dataClientes.length != 0 ? <TableClientes select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCliente} columns={columnsCliente} data={dataClientes} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       <br></br>
+       <br></br>
+       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => {history.push("/Clientes")}} className="btn btn-primary primary-btn">Agregar</button>
+    </div>
+      }
+     
+      {state.tipoModal == 1 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        {dataCodigoPostal.length != 0 ? <TableCodigoPostal select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP} columns={columnsCP} data={dataCodigoPostal} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       <br></br>
+       <br></br>
+       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => {history.push("/Ciudades")}} className="btn btn-primary primary-btn">Agregar</button>
+    </div>
+}
+    
+  </Modal>
+
+
+
+
+
       <header className="topbar clearfix">
         <Cabecera />
       </header>
@@ -617,34 +884,80 @@ function App(props) {
                                     </div>
                                   </div>
                                   <div className="col-sm-6 col-md-2-5 unit">
-                                    <label className="label">Cliente</label>
-                                    {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
-                                    <Autocomplete
-                                      freeSolo
-                                      onChange={(event, newValue) =>
-                                        setState({
-                                          ...state,
-                                          idCliente: newValue,
-                                        })
-                                      }
-                                      value={state.idCliente}
-                                      id="idCliente"
-                                      disableClearable
-                                      getOptionLabel={(option) =>
-                                        option.m_sNombreFiscal
-                                      }
-                                      options={dataClientes}
-                                      renderInput={(params) => (
-                                        <TextField
-                                          {...params}
-                                          InputProps={{
-                                            ...params.InputProps,
-                                            type: "search",
-                                            value: state.idCliente,
-                                          }}
-                                        />
-                                      )}
-                                    />{" "}
+                                  <label className="label">
+                                      Código Postal
+                                    </label>
+                                    <div className="input">
+                                      <Autocomplete
+                                        value={state.cliente}
+                                        freeSolo
+                                        onChange={(event, newValue) =>
+                                          setState({
+                                            ...state,
+                                            cliente: newValue,
+                                          })
+                                        }
+                                        id="cliente"
+                                        disableClearable
+                                        forcePopupIcon={false}
+                                        options={dataClientes}
+                                        getOptionLabel={(option) =>
+                                          option.m_sNombreFiscal
+                                        }
+                                        variant="outlined"
+                                        style={{
+                                          borderWidth: "1px",
+                                          borderColor: "#dddddd",
+                                          borderStyle: "solid",
+                                          borderRadius: "5px",
+                                          
+                                        }}
+                                        renderInput={(params) => (
+                                          <div>
+                                            <TextField
+                                              {...params}
+                                              InputProps={{
+                                                ...params.InputProps,
+                                                style: { height: 21 },
+                                                type: "search",
+                                                disableUnderline: true,
+                                                endAdornment: (
+                                                  <InputAdornment position="end">
+                                                    <IconButton
+                                                      padding="0px"
+                                                      style={{
+                                                        paddingRight: "0px",
+                                                      }}
+                                                      onClick={() => {
+                                                        setState({
+                                                          ...state,
+                                                          identificadorModal:
+                                                            "cliente",
+                                                          tipoModal: 0,
+                                                        });
+                                                        open();
+                                                      }}
+                                                    >
+                                                      <PageviewIcon
+                                                        style={{
+                                                          color: "#F9A03E",
+                                                          fontSize: 32,
+                                                          paddingInlineEnd: 0,
+                                                          paddingRight: 0,
+                                                          paddingBlockEnd: 0,
+                                                          paddingLeft: 0,
+                                                          paddingBlock: 0,
+                                                        }}
+                                                      />
+                                                    </IconButton>
+                                                  </InputAdornment>
+                                                ),
+                                              }}
+                                            />
+                                          </div>
+                                        )}
+                                      />
+                                    </div>
                                   </div>
                                   <div className="col-sm-12 col-md-2-5 unit">
                                     <label className="label">Estatus</label>
@@ -707,33 +1020,79 @@ function App(props) {
                                     </label>
                                   </div>
                                   <div class="col-md-4 unit">
-                                    <label className="label">C.P</label>
+                                  <label className="label">
+                                      Código Postal
+                                    </label>
                                     <div className="input">
                                       <Autocomplete
+                                        value={state.codigoPostalRemitente}
                                         freeSolo
                                         onChange={(event, newValue) =>
                                           setState({
                                             ...state,
-                                            codigoPostal: newValue,
+                                            codigoPostalRemitente: newValue,
                                           })
                                         }
-                                        value={state.codigoPostal}
-                                        id="codigoPostal"
+                                        id="codigoPostalRemitente"
                                         disableClearable
-                                        options={dataCP}
+                                        forcePopupIcon={false}
+                                        options={dataCodigoPostal}
                                         getOptionLabel={(option) =>
                                           option.m_sCP
                                         }
+                                        variant="outlined"
+                                        style={{
+                                          borderWidth: "1px",
+                                          borderColor: "#dddddd",
+                                          borderStyle: "solid",
+                                          borderRadius: "5px",
+                                          
+                                        }}
                                         renderInput={(params) => (
-                                          <TextField
-                                            {...params}
-                                            InputProps={{
-                                              ...params.InputProps,
-                                              type: "search",
-                                            }}
-                                          />
+                                          <div>
+                                            <TextField
+                                              {...params}
+                                              InputProps={{
+                                                ...params.InputProps,
+                                                style: { height: 21 },
+                                                type: "search",
+                                                disableUnderline: true,
+                                                endAdornment: (
+                                                  <InputAdornment position="end">
+                                                    <IconButton
+                                                      padding="0px"
+                                                      style={{
+                                                        paddingRight: "0px",
+                                                      }}
+                                                      onClick={() => {
+                                                        setState({
+                                                          ...state,
+                                                          identificadorModal:
+                                                            "codigoPostalRemitente",
+                                                          tipoModal: 1,
+                                                        });
+                                                        open();
+                                                      }}
+                                                    >
+                                                      <PageviewIcon
+                                                        style={{
+                                                          color: "#F9A03E",
+                                                          fontSize: 32,
+                                                          paddingInlineEnd: 0,
+                                                          paddingRight: 0,
+                                                          paddingBlockEnd: 0,
+                                                          paddingLeft: 0,
+                                                          paddingBlock: 0,
+                                                        }}
+                                                      />
+                                                    </IconButton>
+                                                  </InputAdornment>
+                                                ),
+                                              }}
+                                            />
+                                          </div>
                                         )}
-                                      />{" "}
+                                      />
                                     </div>
                                   </div>
                                   <div className="col-md-4 unit">
