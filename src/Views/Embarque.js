@@ -32,7 +32,7 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 function Embarque() {
-
+  var today = new Date();
   const classes = useStyles();
   const [data, setData] = React.useState([])
   const [dataSucursal, setDataSucursal] = React.useState([]);
@@ -60,7 +60,7 @@ function Embarque() {
     folioEmbarque: "",
     folioGuía: "",
     folioInforme: "",
-    fechaHoraCreacion: "",
+    fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
     estatusEmbarque: 0,
     moneda: 0,
     tipoCambio: "",
@@ -419,6 +419,7 @@ function Embarque() {
   }
 
   function handleShowAgregar() {
+    var today = new Date();
     setState({
       ...state,
       agregar: "Agregar",
@@ -428,7 +429,7 @@ function Embarque() {
       folioEmbarque: "",
       folioGuía: "",
       folioInforme: "",
-      fechaHoraCreacion: "",
+      fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
       moneda: dataTipoMoneda[0].m_nIdMoneda,
       tipoCambio: "",
       tipoCobro: dataTipoCobro[0].m_nIdTipoCobro,
@@ -1840,11 +1841,9 @@ function Embarque() {
                               <div className="input">
                                 <input
                                   onChange={handleChange}
-                                  type="datetime-local"
                                   className="form-control"
-                                  required
                                   value={state.fechaHoraCreacion}
-                                  disabled={state.agregar == "Consultar"}
+                                  disabled="disabled"
                                   id="fechaHoraCreacion"
                                 />
                               </div>

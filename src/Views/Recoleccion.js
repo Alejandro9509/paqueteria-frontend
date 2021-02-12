@@ -421,6 +421,7 @@ function Recoleccion() {
   }
 
   function handleShowAgregar() {
+    var today = new Date();
     setState({
       ...state,
       agregar: "Agregar",
@@ -430,7 +431,7 @@ function Recoleccion() {
       folioEmbarque: "",
       folioGuía: "",
       folioInforme: "",
-      fechaHoraCreacion: "",
+      fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
       estatusRecoleccion: 0,
       moneda: 0,
       tipoCambio: "",
@@ -1915,10 +1916,10 @@ function Recoleccion() {
                               <div className="input">
                                 <input
                                   onChange={handleChange}
-                                  type="datetime-local"
                                   required
                                   value={state.fechaHoraCreacion}
                                   className="form-control"
+                                  disabled="disabled"
                                   id="fechaHoraCreacion"
                                 />
                               </div>
