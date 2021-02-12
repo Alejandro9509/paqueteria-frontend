@@ -210,6 +210,7 @@ function Recoleccion() {
       m_nModificadoPor: state.ModificadoPor,
     };
     console.log(params);
+    debugger;
     if (state.idRecoleccion != 0) {
       const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Modificar/${state.idRecoleccion}`;
       axios

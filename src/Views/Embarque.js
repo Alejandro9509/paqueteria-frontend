@@ -152,17 +152,17 @@ function Embarque() {
       "m_sNOmbreRemitente": state.nombreRemitente,
       "m_sRFCRemitente": state.RFCRemitente,
       "m_sDomicilioRemitente": state.domicilioRemitente,
-      "m_nIdCodigoPostalRemitente": state.codigoPostalRemitente,
-      "m_nCiudadRemitente": state.ciudadRemitente,
+      "m_nIdCodigoPostalRemitente": state.codigoPostalRemitente.m_nIdCP,
+      "m_nCiudadRemitente": state.ciudadRemitente.m_nIdCiudad,
       "m_sCorreoRemitente": state.correoRemitente,
       "m_sTelefonoRemitente": state.telefonoRemitente,
       "m_sContactoRemitente": state.contactoRemitente,
-      "m_nIdCiudadOrigen": state.ciudadOrigen,
+      "m_nIdCiudadOrigen": state.ciudadOrigen.m_nIdCiudad,
       "m_sNombreDestinatario": state.nombreDestinatario,
       "m_sRFCDestinatario": state.RFCDestinatario,
       "m_sDomicilioDestinatario": state.domicilioDestinatario,
       "m_nIdCodigoPostalDestinatario": state.codigoPostalDestinatario,
-      "m_nIdCIudadDestinatario": state.ciudadDestinatario,
+      "m_nIdCIudadDestinatario": state.ciudadDestinatario.m_nIdCiudad,
       "m_sCorreoDestinatario": state.correoDestinatario,
       "m_sTelefonoDestinatario": state.telefonoDestinatario,
       "m_sContactoDestinatario": state.contactoDestinatario,
@@ -171,8 +171,8 @@ function Embarque() {
       "m_tHoraEntrega": "",
       "m_nNoPaquetes": state.paquetes.length,
       "m_nNoSobres": state.sobres.length,
-      "m_nIdOperador": state.idOperador,
-      "m_nIdUnidad": state.idUnidad,
+      "m_nIdOperador": state.idOperador.m_nIdOperador,
+      "m_nIdUnidad": state.idUnidad.m_nIdUnidad,
       "m_dFechaSalida": state.fechaHoraSalida.split("T")[0],
       "m_tHoraSalida": state.fechaHoraSalida.split("T")[1],
       "FechaLlegada": state.fechaHoraLlegada.split("T")[0],
@@ -193,9 +193,10 @@ function Embarque() {
 
     }
     console.log(params)
+    debugger;
     if (state.idEmbarque != 0) {
       const url = `${process.env.REACT_APP_API_URL}/Embarques/Modificar/${state.idEmbarque}`;
-      axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+      axios.put(url, Object.assign({}, params), { headers2 }).then(respuesta => {
         alert(respuesta.data)
         getAllData()
       }).catch(err => {
@@ -492,6 +493,7 @@ function Embarque() {
   }
 
   function handleSelectDatos(id, cp) {
+    debugger;
     setState({
       ...state,
       [state.identificadorModal] : id
@@ -712,8 +714,12 @@ function Embarque() {
   }
 
   const headers = {
+    'Content-Type': 'application/json'
+  }
+  const headers2 = {
     'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
+     'Access-Control-Allow-Origin': '*',
+     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
   }
 
   function conDatos() {
