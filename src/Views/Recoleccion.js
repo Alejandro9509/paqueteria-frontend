@@ -1644,10 +1644,10 @@ function Recoleccion() {
             </li>
             
             <li>
-              <ExportCSV csvData={data} fileName="Departamento_Listado" />
+              <ExportCSV csvData={data} fileName="Recoleccion_Listado" />
             </li>
             <li>
-              <ExportPDF data={data} column={columns} fileName="Departamento" />
+              <ExportPDF data={data} column={columns} fileName="Recoleccion" />
             </li>
           </ul>
 
