@@ -111,7 +111,7 @@ function Recoleccion() {
     diferenteRecoleccion: true,
     diferenteEntrega: true,
     operador: 0,
-    tipoUnidad: 0,
+    tipoUnidad: {},
     unidad: 0,
     CreadoPor:localStorage.getItem("UsuarioId")  ,
     ModificadoPor:localStorage.getItem("UsuarioId")  ,
@@ -176,8 +176,8 @@ function Recoleccion() {
       "m_sTelefonoDestinatario": state.telefonoDestinatario,
       "m_sContactoRemitente": state.contactoRemitente,
       "m_sContactoDestinatario": state.contactoDestinatario,
-      "m_nIdCiudadOrigen": state.ciudadRemitente,
-      "m_nIdCiudadDestino": state.ciudadDestinatario,
+      "m_nIdCiudadOrigen": state.origenRemitente.m_nIdCiudad,
+      "m_nIdCiudadDestino": state.destinoDestinatario.m_nIdCiudad,
       "m_dFechaDetalleRecoleccion": state.fechaRecoleccion.split("T")[0],
       "m_tHoraDetalleRecoleccion": state.fechaRecoleccion.split("T")[1],
       "m_nIdCPDetalleRecoleccion": state.codigoPostalRecoleccion.m_nIdCP,
@@ -201,8 +201,8 @@ function Recoleccion() {
       "m_parrSobres": state.sobres,
       "m_nNoSobres": state.sobres.length,
       "m_nIdOperador": state.operador.m_nIdOperador,
-      "m_nIdUnidad": state.unidad.m_nIdUnidad,
-      "m_nIdRemolque": state.tipoUnidad.m_nIdTipoUnidad,
+      "m_nIdUnidad": state.tipoUnidad.m_nIdTipoUnidad,
+      "m_nIdRemolque": state.unidad.m_nIdUnidad,
       "m_nCreadoPor":state.CreadoPor,
       "m_nModificadoPor":state.ModificadoPor
 
@@ -390,8 +390,8 @@ function Recoleccion() {
         cantidadDePaquetes: respuesta.data.m_parrPaquetes.length,
         cantidadDeSobres: respuesta.data.m_parrSobres.length,
       });
-      console.log("cpRemitente:")
-      console.log(state.codigoPostalRemitente)
+      console.log("tipoUnidad:")
+      console.log(dataTipoUnidad)
     });
   }
 
@@ -908,7 +908,7 @@ function Recoleccion() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr style={{backgroundColor: row.original.m_nIdCP === select ? "orange" : "white"}}  {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)} onDoubleClick={close}>
+                  <tr style={{backgroundColor: row.original.m_nIdCP === select ? "#FCC88F" : "white"}}  {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)} onDoubleClick={close}>
                     <td>
                       <div>
                         <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
@@ -997,7 +997,7 @@ function Recoleccion() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr style={{backgroundColor: row.original.m_nIdCiudad === select ? "orange" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                  <tr style={{backgroundColor: row.original.m_nIdCiudad === select ? "#FCC88F" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
                     <td>
                       <div>
                         <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
@@ -1086,7 +1086,7 @@ function Recoleccion() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr style={{backgroundColor: row.original.m_nIdOperador === select ? "orange" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                  <tr style={{backgroundColor: row.original.m_nIdOperador === select ? "#FCC88F" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
                     <td>
                       <div>
                         <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
@@ -1175,7 +1175,7 @@ function Recoleccion() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr style={{backgroundColor: row.original.m_nIdTipoUnidad === select ? "orange" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                  <tr style={{backgroundColor: row.original.m_nIdTipoUnidad === select ? "#FCC88F" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
                     <td>
                       <div>
                         <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
@@ -1264,7 +1264,7 @@ function Recoleccion() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr style={{backgroundColor: row.original.m_nIdUnidad === select ? "orange" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                  <tr style={{backgroundColor: row.original.m_nIdUnidad === select ? "#FCC88F" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
                     <td>
                       <div>
                         <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
@@ -2869,7 +2869,6 @@ function Recoleccion() {
                                                 ...params.InputProps,
                                                 style: { height: 24},
                                                 type: "search",
-                                                value: state.tipoUnidad,
                                                 disableUnderline: true,
                                                  endAdornment: 
                                                 <InputAdornment position="end">
