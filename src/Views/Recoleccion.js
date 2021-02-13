@@ -1642,11 +1642,7 @@ function Recoleccion() {
                 <i className="fa fa-plus-circle" /> {state.agregar}
               </a>
             </li>
-            <li>
-              <a data-toggle="tab" href="#Importar">
-                <i className="fa fa-upload" /> Importar
-              </a>
-            </li>
+            
             <li>
               <ExportCSV csvData={data} fileName="Departamento_Listado" />
             </li>
@@ -3335,7 +3331,9 @@ function Recoleccion() {
                       </div>
                     </div>
                   </div>
-
+                  <div id="Importar" className="tab-pane fade  d-none">
+                       </div>
+                                             
                   <div className="form-footer" className="col-md-12">
                     <button
                       href="#Listado"
@@ -3353,52 +3351,7 @@ function Recoleccion() {
                     </button>
                   </div>
 
-                  <div id="Importar" className="tab-pane fade">
-                    <div className="widget-wrap">
-                      <div className="widget-content">
-                        <div className="row">
-                          <div className="col-md-12">
-                            <form className="j-forms">
-                              <div className="form-content">
-                                <div className="col-sm-12 col-md-12 unit">
-                                  <label className="label">Importar</label>
-                                  <div className="input">
-                                    <input
-                                      onChange={handleUpload}
-                                      className="form-control"
-                                      type="file"
-                                      id="importar"
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                              <br></br>
-                              <div
-                                className="form-footer"
-                                className="col-md-12"
-                              >
-                                <button
-                                  data-layout="topCenter"
-                                  data-type="information"
-                                  className="btn btn-secondary secondary-btn"
-                                >
-                                  {" "}
-                                  Cancelar
-                                </button>
-                                <button
-                                  onClick={handleAceptar}
-                                  className="btn btn-primary primary-btn"
-                                >
-                                  Aceptar
-                                </button>
-                              </div>
-                            </form>
-                          </div>
-                        </div>
-                      </div>{" "}
-                    </div>
-                  </div>
-                </div>
+                 </div>
               </form>
             </div>
           </div>
