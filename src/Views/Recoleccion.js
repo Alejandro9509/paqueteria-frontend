@@ -10,14 +10,14 @@ import IndicatorDots from "../Util/Dots";
 import Buttons from "../Util/CarruselButtons";
 import { makeStyles } from "@material-ui/core/styles";
 import * as XLSX from "xlsx";
-import { render } from 'react-dom';
-import useModal from 'react-hooks-use-modal';
-import IconButton from '@material-ui/core/IconButton';
-import SearchIcon from '@material-ui/icons/Search';
-import PageviewIcon from '@material-ui/icons/Pageview';
+import { render } from "react-dom";
+import useModal from "react-hooks-use-modal";
+import IconButton from "@material-ui/core/IconButton";
+import SearchIcon from "@material-ui/icons/Search";
+import PageviewIcon from "@material-ui/icons/Pageview";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
-import InputAdornment from '@material-ui/core/InputAdornment';
+import InputAdornment from "@material-ui/core/InputAdornment";
 import {
   useTable,
   useFilters,
@@ -27,19 +27,21 @@ import {
 } from "react-table";
 import $ from "jquery";
 import { remove_array_element } from "../Util/Util";
+import { useHistory } from 'react-router-dom';
 window.jQuery = window.$ = $;
 
 const useStyles = makeStyles({
   myComponent: {
     "& .MuiIconButton-root": {
-      padding: 0
-    }
-  },paqueteCarrusel: {
+      padding: 0,
+    },
+  },
+  paqueteCarrusel: {
     height: "400px !important",
   },
   sobreCarrusel: {
-    height: "150px !important"
-  }
+    height: "150px !important",
+  },
 });
 function Recoleccion() {
   const classes = useStyles();
@@ -57,7 +59,7 @@ function Recoleccion() {
     showPopUp: false,
     identificadorModal: "",
     tipoModal: 0,
-    DerechoBorrar:133,
+    DerechoBorrar: 133,
     agregar: "Agregar",
     idRecoleccion: 0,
     fechaInicial: "",
@@ -113,8 +115,8 @@ function Recoleccion() {
     operador: 0,
     tipoUnidad: {},
     unidad: 0,
-    CreadoPor:localStorage.getItem("UsuarioId")  ,
-    ModificadoPor:localStorage.getItem("UsuarioId")  ,
+    CreadoPor: localStorage.getItem("UsuarioId"),
+    ModificadoPor: localStorage.getItem("UsuarioId"),
     paquetes: [
       {
         m_rPeso: "",
@@ -144,6 +146,8 @@ function Recoleccion() {
     preventScroll: true,
   });
   
+  const history = useHistory()
+
   const handleAceptar = (e) => {
     e.preventDefault();
 
@@ -237,15 +241,13 @@ function Recoleccion() {
     }
   };
 
-  
-
   function handleSelectCP(id, cp) {
     setState({
       ...state,
-      [state.identificadorModal] : id
+      [state.identificadorModal]: id,
     });
-    console.log(id)
-    console.log(state.identificadorModal)
+    console.log(id);
+    console.log(state.identificadorModal);
   }
 
   function addPaquete() {
@@ -292,29 +294,32 @@ function Recoleccion() {
   function handleEliminar(id) {
     var derecho;
     const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-    axios.get(urlDelete, { headers }).then(respuesta => {
-      //alert(respuesta.data)
-
-      derecho = respuesta.data;
-      if (derecho == false)
-      {
-        alert ("El usuario no tiene derechos para realizar el proceso");
-        return; 
-      }
-      
-    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Eliminar/` + id;
     axios
-      .delete(url, { headers })
+      .get(urlDelete, { headers })
       .then((respuesta) => {
-        alert(respuesta.data);
-        getAllData();
+        //alert(respuesta.data)
+
+        derecho = respuesta.data;
+        if (derecho == false) {
+          alert("El usuario no tiene derechos para realizar el proceso");
+          return;
+        }
+
+        const url =
+          `${process.env.REACT_APP_API_URL}/Recoleccion/Eliminar/` + id;
+        axios
+          .delete(url, { headers })
+          .then((respuesta) => {
+            alert(respuesta.data);
+            getAllData();
+          })
+          .catch((err) => {
+            alert(err);
+          });
       })
       .catch((err) => {
         alert(err);
       });
-	}).catch(err => {
-      alert(err)
-    });
   }
 
   function handleShowModificar(id) {
@@ -341,32 +346,54 @@ function Recoleccion() {
         nombreRemitente: respuesta.data.m_sNombreRemitente,
         RFCRemitente: respuesta.data.m_sRFCRemitente,
         domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-        codigoPostalRemitente: dataCodigoPostal.find(o => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalRemitente),
-        ciudadRemitente: dataCiudad.find(o => o.m_nIdCiudad == respuesta.data.m_nIdCiudadRemitente),
+        codigoPostalRemitente: dataCodigoPostal.find(
+          (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalRemitente
+        ),
+        ciudadRemitente: dataCiudad.find(
+          (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadRemitente
+        ),
         correoRemitente: respuesta.data.m_sCorreoRemitente,
         telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
         contactoRemitente: respuesta.data.m_sContactoRemitente,
-        origenRemitente: dataCiudad.find(o => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
+        origenRemitente: dataCiudad.find(
+          (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen
+        ),
         nombreDestinatario: respuesta.data.m_sNombreDestinatario,
         RFCDestinatario: respuesta.data.m_sRFCDestinatario,
         domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-        tipoUnidad: dataTipoUnidad.find(o => o.m_nIdTipoUnidad == respuesta.data.m_nIdUnidad),
-        unidad: dataUnidad.find(o => o.m_nIdUnidad == respuesta.data.m_nIdRemolque),
-        operador: dataOperador.find(o => o.m_nIdOperador == respuesta.data.m_nIdOperador),
-        codigoPostalDestinatario: dataCodigoPostal.find(o => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalDestinatario),
-        ciudadDestinatario: dataCiudad.find(o => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestinatario),
+        tipoUnidad: dataTipoUnidad.find(
+          (o) => o.m_nIdTipoUnidad == respuesta.data.m_nIdUnidad
+        ),
+        unidad: dataUnidad.find(
+          (o) => o.m_nIdUnidad == respuesta.data.m_nIdRemolque
+        ),
+        operador: dataOperador.find(
+          (o) => o.m_nIdOperador == respuesta.data.m_nIdOperador
+        ),
+        codigoPostalDestinatario: dataCodigoPostal.find(
+          (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalDestinatario
+        ),
+        ciudadDestinatario: dataCiudad.find(
+          (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestinatario
+        ),
         correoDestinatario: respuesta.data.m_sCorreoDestinatario,
         telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
         contactoDestinatario: respuesta.data.m_sContactoDestinatario,
-        destinoDestinatario: dataCiudad.find(o => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
-        codigoPostalRecoleccion: dataCodigoPostal.find(o => o.m_nIdCP == respuesta.data.m_nIdCPDetalleRecoleccion),
+        destinoDestinatario: dataCiudad.find(
+          (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino
+        ),
+        codigoPostalRecoleccion: dataCodigoPostal.find(
+          (o) => o.m_nIdCP == respuesta.data.m_nIdCPDetalleRecoleccion
+        ),
         ciudadRecoleccion: respuesta.data.m_nIdCiudadDetalleRecoleccion,
         zonaRecoleccion: respuesta.data.m_nIdZonaDetalleRecoleccion,
         domicilioRecoleccion: respuesta.data.m_sDomicilioDetalleRecoleccion,
         recogerEn: respuesta.data.m_sRecogerEnDetalleRecoleccion,
         datosAdicionalesRecoleccion:
           respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
-        codigoPostalEntrega: dataCodigoPostal.find(o => o.m_nIdCP == respuesta.data.m_nIdCPDetalleEntrega),
+        codigoPostalEntrega: dataCodigoPostal.find(
+          (o) => o.m_nIdCP == respuesta.data.m_nIdCPDetalleEntrega
+        ),
         ciudadEntrega: respuesta.data.m_nIdCiudadDetalleEntrega,
         zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
         domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
@@ -396,16 +423,17 @@ function Recoleccion() {
   }
 
   function handleShowAgregar() {
+    var today = new Date();
     setState({
       ...state,
       agregar: "Agregar",
       showPopUp: true,
-      
+
       folioRecoleccion: "",
       folioEmbarque: "",
       folioGuía: "",
       folioInforme: "",
-      fechaHoraCreacion: "",
+      fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
       estatusRecoleccion: 0,
       moneda: 0,
       tipoCambio: "",
@@ -552,7 +580,7 @@ function Recoleccion() {
     {
       Name: "Estado",
       accessor: "m_nIdEstado",
-    }
+    },
   ]);
 
   const columnsOperadores = React.useMemo(() => [
@@ -571,7 +599,7 @@ function Recoleccion() {
     {
       Name: "Activo",
       accessor: "m_nIdEstado",
-    }
+    },
   ]);
 
   const columnsTipoUnidades = React.useMemo(() => [
@@ -590,7 +618,7 @@ function Recoleccion() {
     {
       Name: "Estatus",
       accessor: "m_bActivo",
-    }
+    },
   ]);
 
   const columnsUnidades = React.useMemo(() => [
@@ -609,12 +637,14 @@ function Recoleccion() {
     {
       Name: "Estatus",
       accessor: "m_bActivo",
-    }
+    },
   ]);
 
   useEffect((value) => {
-    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
-    {
+    if (
+      localStorage.getItem("UsuarioId") === null ||
+      localStorage.getItem("UsuarioId") <= 0
+    ) {
       alert("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
@@ -789,7 +819,7 @@ function Recoleccion() {
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
                 <th>Acciones</th>
-                {headerGroup.headers.map(column => (
+                {headerGroup.headers.map((column) => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
                   <th {...column.getHeaderProps(column.getSortByToggleProps())}>
@@ -815,27 +845,57 @@ function Recoleccion() {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map(
-              (row, i) => {
-                prepareRow(row);
-                return (
-                  <tr {...row.getRowProps()}>
-                    <td>
-                      <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
-                      </div>
-                    </td>
-                    {row.cells.map(cell => {
-                      return (
-                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                      )
-                    })}
-                  </tr>
-                )
-              }
-            )}
+            {rows.map((row, i) => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()}>
+                  <td>
+                    <div>
+                      <a
+                        href="#Agregar"
+                        role="tab"
+                        data-toggle="tab"
+                        onClick={() =>
+                          handleShowModificar(row.original.m_nIdRecoleccion)
+                        }
+                        className="btn btn-default btn-sm"
+                      >
+                        <i
+                          className="fa fa-pencil-square-o"
+                          style={{ color: "#F9A03E" }}
+                        />
+                      </a>
+                      <a
+                        href="#"
+                        className="btn btn-default btn-sm"
+                        onClick={() =>
+                          handleEliminar(row.original.m_nIdRecoleccion)
+                        }
+                      >
+                        <i
+                          className="zmdi zmdi-delete"
+                          style={{ color: "#F30B0B" }}
+                        />
+                      </a>
+                      <a
+                        href="#"
+                        className="btn btn-default btn-sm"
+                        onClick={() =>
+                          handleEliminar(row.original.m_nIdRecoleccion)
+                        }
+                      >
+                        <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
+                      </a>
+                    </div>
+                  </td>
+                  {row.cells.map((cell) => {
+                    return (
+                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -872,13 +932,16 @@ function Recoleccion() {
     );
 
     return (
-      <div className="col-md-12" style={{maxHeight: "300px", overflow:"auto"}}>
+      <div
+        className="col-md-12"
+        style={{ maxHeight: "300px", overflow: "auto" }}
+      >
         <table className="table" {...getTableProps()}>
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
                 <th>Acciones</th>
-                {headerGroup.headers.map(column => (
+                {headerGroup.headers.map((column) => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
                   <th {...column.getHeaderProps(column.getSortByToggleProps())}>
@@ -961,12 +1024,14 @@ function Recoleccion() {
     );
 
     return (
-      <div className="col-md-12" style={{maxHeight: "300px", overflow:"auto"}}>
+      <div
+        className="col-md-12"
+        style={{ maxHeight: "300px", overflow: "auto" }}
+      >
         <table className="table" {...getTableProps()}>
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
                 {headerGroup.headers.map(column => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -1050,12 +1115,14 @@ function Recoleccion() {
     );
 
     return (
-      <div className="col-md-12" style={{maxHeight: "300px", overflow:"auto"}}>
+      <div
+        className="col-md-12"
+        style={{ maxHeight: "300px", overflow: "auto" }}
+      >
         <table className="table" {...getTableProps()}>
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
                 {headerGroup.headers.map(column => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -1144,7 +1211,6 @@ function Recoleccion() {
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
                 {headerGroup.headers.map(column => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -1228,12 +1294,14 @@ function Recoleccion() {
     );
 
     return (
-      <div className="col-md-12" style={{maxHeight: "300px", overflow:"auto"}} >
-        <table className="table" {...getTableProps()} >
+      <div
+        className="col-md-12"
+        style={{ maxHeight: "300px", overflow: "auto" }}
+      >
+        <table className="table" {...getTableProps()}>
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
                 {headerGroup.headers.map(column => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -1537,36 +1605,38 @@ function Recoleccion() {
       {state.tipoModal == 0 && 
       <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
         {dataCodigoPostal.length != 0 ? <TableCodigoPostal select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP} columns={columnsCP} data={dataCodigoPostal} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-       <a onClick={close}>Cerrar</a>
-       <a href="/Ciudades">Agregar</a>
+       <br></br>
+       <br></br>
+       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => {history.push("/Ciudades")}} className="btn btn-primary primary-btn">Agregar</button>
     </div>
       }
       {state.tipoModal == 1 && 
       <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
         {dataCiudad.length != 0 ? <TableCiudades select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCiudad} columns={columnsCiudades} data={dataCiudad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-       <a onClick={close}>Cerrar</a>
-       <a href="/Ciudades">Agregar</a>
+       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => {history.push("/Ciudades")}} className="btn btn-primary primary-btn">Agregar</button>
     </div>
       }
       {state.tipoModal == 2 && 
       <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
         {dataOperador.length != 0 ? <TableOperadores select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdOperador} columns={columnsOperadores} data={dataOperador} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-       <a onClick={close}>Cerrar</a>
-       <a href="/Operadores">Agregar</a>
+       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => {history.push("/Operadores")}} className="btn btn-primary primary-btn">Agregar</button>
     </div>
       }
       {state.tipoModal == 3 && 
       <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
         {dataTipoUnidad.length != 0 ? <TableTipoUnidad select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdTipoUnidad} columns={columnsTipoUnidades} data={dataTipoUnidad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-       <a onClick={close}>Cerrar</a>
-       <a href="/TipoUnidad">Agregar</a>
+       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => {history.push("/TipoUnidad")}} className="btn btn-primary primary-btn">Agregar</button>
     </div>
       }
       {state.tipoModal == 4 && 
       <div className="row" style={{maxHeight: "400px !important", overflow:"auto",backgroundColor: '#FFFFFF'}} >
         {dataUnidad.length != 0 ? <TableUnidad select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdUnidad} columns={columnsUnidades} data={dataUnidad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-       <a onClick={close}>Cerrar</a>
-       <a href="/Unidades">Agregar</a>
+       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => {history.push("/Unidades")}} className="btn btn-primary primary-btn">Agregar</button>
     </div>
       }
   </Modal>
@@ -1608,20 +1678,20 @@ function Recoleccion() {
                 <i className="fa fa-plus-circle" /> {state.agregar}
               </a>
             </li>
+            
             <li>
-              <a data-toggle="tab" href="#Importar">
-                <i className="fa fa-upload" /> Importar
-              </a>
+              <ExportCSV csvData={data} fileName="Recoleccion_Listado" />
             </li>
             <li>
-              <ExportCSV csvData={data} fileName="Departamento_Listado" />
-            </li>
-            <li>
-              <ExportPDF data={data} column={columns} fileName="Departamento" />
+              <ExportPDF data={data} column={columns} fileName="Recoleccion" />
             </li>
           </ul>
 
-          <div className="row" className="tab-content" style={{paddingLeft: "-15px"}}>
+          <div
+            className="row"
+            className="tab-content"
+            style={{ paddingLeft: "-15px" }}
+          >
             <div id="Listado" className="tab-pane fade in active">
               <div className="widget-wrap">
                 <div className="widget-content">
@@ -1655,7 +1725,6 @@ function Recoleccion() {
                               required
                               onChange={handleChange}
                               id="sucursal"
-
                             >
                               <option value="0">Todas</option>
                               {dataSucursal.map((sucursal) => (
@@ -1724,7 +1793,7 @@ function Recoleccion() {
                     <div className="row">
                       <div
                         className={
-                          "col-md-2-5 col-sm-2 step " +
+                          "col-sm-3 col-md-2-5 col-lg-2-5 step " +
                           (stepActive == 1 && "active-step")
                         }
                         onClick={() => openSection(1)}
@@ -1736,7 +1805,7 @@ function Recoleccion() {
                       </div>
                       <div
                         className={
-                          "col-md-2-5 col-sm-2 step " +
+                          "col-sm-3 col-md-2-5 col-lg-2-5 step " +
                           (stepActive == 2 && "active-step")
                         }
                         onClick={() => openSection(2)}
@@ -1748,7 +1817,7 @@ function Recoleccion() {
                       </div>
                       <div
                         className={
-                          "col-md-2-5 col-sm-2 step " +
+                          "col-sm-3 col-md-2-5 col-lg-2-5 step " +
                           (stepActive == 3 && "active-step")
                         }
                         onClick={() => openSection(3)}
@@ -1761,7 +1830,7 @@ function Recoleccion() {
 
                       <div
                         className={
-                          "col-md-2-5 col-sm-2 step " +
+                          "col-sm-3 col-md-2-5 col-lg-2-5 step " +
                           (stepActive == 4 && "active-step")
                         }
                         onClick={() => openSection(4)}
@@ -1773,7 +1842,7 @@ function Recoleccion() {
                       </div>
                       <div
                         className={
-                          "col-md-2-5 col-sm-2 step " +
+                          "col-sm-3 col-md-2-5 col-lg-2-5 step" +
                           (stepActive == 5 && "active-step")
                         }
                         onClick={() => openSection(5)}
@@ -1794,7 +1863,8 @@ function Recoleccion() {
                       <div className="widget-content">
                         <div className="row">
                           <div className="col-md-12">
-                            <div className="col-sm-4 col-md-2-5 unit">
+                            <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                              {" "}
                               <label className="label">Sucursal</label>
                               <label className="input select">
                                 <select
@@ -1818,7 +1888,7 @@ function Recoleccion() {
                               </label>
                             </div>
 
-                            <div className="col-sm-4 col-md-2-5 unit">
+                            <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                               <label className="label">Folio Recolección</label>
                               <div className="input">
                                 <input
@@ -1832,7 +1902,7 @@ function Recoleccion() {
                               </div>
                             </div>
 
-                            <div className="col-sm-4 col-md-2-5 unit">
+                            <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                               <label className="label">Folio Embarque</label>
                               <div className="input">
                                 <input
@@ -1846,7 +1916,7 @@ function Recoleccion() {
                               </div>
                             </div>
 
-                            <div className="col-sm-4 col-md-2-5 unit">
+                            <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                               <label className="label">Folio Guía</label>
                               <div className="input">
                                 <input
@@ -1860,7 +1930,7 @@ function Recoleccion() {
                               </div>
                             </div>
 
-                            <div className="col-sm-4 col-md-2-5 unit">
+                            <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                               <label className="label">Folio Informe</label>
                               <div className="input">
                                 <input
@@ -1874,21 +1944,21 @@ function Recoleccion() {
                               </div>
                             </div>
 
-                            <div className="col-sm-4 col-md-2-5 unit">
+                            <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                               <label className="label">Fecha / Hora</label>
                               <div className="input">
                                 <input
                                   onChange={handleChange}
-                                  type="datetime-local"
                                   required
                                   value={state.fechaHoraCreacion}
                                   className="form-control"
+                                  disabled="disabled"
                                   id="fechaHoraCreacion"
                                 />
                               </div>
                             </div>
 
-                            <div className="col-sm-4 col-md-2-5 unit">
+                            <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                               <label className="label">
                                 Estatus de la Recolección
                               </label>
@@ -1913,7 +1983,7 @@ function Recoleccion() {
                               </label>
                             </div>
 
-                            <div className="col-sm-4 col-md-2-5 unit">
+                            <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                               <label className="label">Moneda</label>
                               <label className="input select">
                                 <select
@@ -1923,9 +1993,7 @@ function Recoleccion() {
                                   onChange={handleChange}
                                   id="moneda"
                                 >
-                                  <option value="0">
-                                Seleccionar
-                            </option>
+                                  <option value="0">Seleccionar</option>
                                   {dataTipoMoneda.map((moneda) => (
                                     <option
                                       key={moneda.m_nIdMoneda}
@@ -1939,7 +2007,7 @@ function Recoleccion() {
                               </label>
                             </div>
 
-                            <div className="col-sm-4 col-md-2-5 unit">
+                            <div className="col-sm-6 col-md-2-5 col-lg-2-5  unit">
                               <label className="label">Tipo de Cambio</label>
                               <div className="input">
                                 <input
@@ -1955,7 +2023,7 @@ function Recoleccion() {
                               </div>
                             </div>
 
-                            <div className="col-sm-4 col-md-2-5 unit">
+                            <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                               <label className="label">Tipo Cobro</label>
                               <label className="input select">
                                 <select
@@ -1964,9 +2032,8 @@ function Recoleccion() {
                                   value={state.tipoCobro}
                                   onChange={handleChange}
                                   id="tipoCobro"
-                                ><option value="0">
-                                Seleccionar
-                            </option>
+                                >
+                                  <option value="0">Seleccionar</option>
                                   {dataTipoCobro.map((tipoCobro) => (
                                     <option
                                       key={tipoCobro.m_nIdTipoCobro}
@@ -1984,8 +2051,6 @@ function Recoleccion() {
                       </div>
                     </div>
                   </div>
-<div className="row">
-
 
                   <div className="row">
                     <div className="col-md-7">
@@ -1998,11 +2063,9 @@ function Recoleccion() {
                             <div className="widget-container">
                               <div className="widget-content">
                                 <div className="row">
-{/* --------------------------------------- Nombre -------------------------------------- */}
-                                  <div className="col-sm-4 col-md-12 unit">
-                                    <label className="label">
-                                      Nombre
-                                  </label>
+                                  {/* --------------------------------------- Nombre -------------------------------------- */}
+                                  <div className="col-sm-12 col-md-12  unit">
+                                    <label className="label">Nombre</label>
                                     <div className="input">
                                       <input
                                         onChange={handleChange}
@@ -2014,11 +2077,10 @@ function Recoleccion() {
                                       />
                                     </div>
                                   </div>
-{/* --------------------------------------- RFC -------------------------------------- */}
-                                  <div className="col-sm-4 col-md-12 unit">
-                                    <label className="label">
-                                      RFC
-                                  </label>
+                                  {/* --------------------------------------- RFC -------------------------------------- */}
+                                  <div className="col-sm-12 col-md-8 unit">
+                                    {" "}
+                                    <label className="label">RFC</label>
                                     <div className="input">
                                       <input
                                         onChange={handleChange}
@@ -2032,8 +2094,8 @@ function Recoleccion() {
                                       />
                                     </div>
                                   </div>
-{/* --------------------------------------- Domicilio -------------------------------------- */}
-                                  <div className="col-sm-4 col-md-12 unit">
+                                  {/* --------------------------------------- Domicilio -------------------------------------- */}
+                                  <div className="col-sm-12 col-md-12 unit">
                                     <label className="label">Domicilio</label>
                                     <div className="input">
                                       <input
@@ -2046,10 +2108,12 @@ function Recoleccion() {
                                       />
                                     </div>
                                   </div>
-{/* --------------------------------------- AutocompleteCPRemitente -------------------------------------- */}
-                                  <div className="col-sm-4 col-md-6 unit" >
-                                    <label className="label">Código Postal</label>
-                                    <div className="input" >
+                                  {/* --------------------------------------- AutocompleteCPRemitente -------------------------------------- */}
+                                  <div className="col-sm-12 col-md-8 unit" >
+                                    <label className="label">
+                                      Código Postal
+                                    </label>
+                                    <div className="input">
                                       <Autocomplete
                                         value={state.codigoPostalRemitente}
                                         freeSolo
@@ -2067,31 +2131,62 @@ function Recoleccion() {
                                           option.m_sCP
                                         }
                                         variant="outlined"
-                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle: "solid",borderRadius: "5px", width: "124px"}}
+                                        style={{
+                                          borderWidth: "1px",
+                                          borderColor: "#dddddd",
+                                          borderStyle: "solid",
+                                          borderRadius: "5px",
+                                          
+                                        }}
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
-                                                style: { height: 24},
+                                                style: { height: 21 },
                                                 type: "search",
                                                 disableUnderline: true,
-                                                 endAdornment: 
-                                                <InputAdornment position="end">
-                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => { setState({...state, identificadorModal: "codigoPostalRemitente", tipoModal: 0});open(); } }>
-                                                    <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
-                                                 </IconButton> 
-                                                </InputAdornment> 
+                                                endAdornment: (
+                                                  <InputAdornment position="end">
+                                                    <IconButton
+                                                      padding="0px"
+                                                      style={{
+                                                        paddingRight: "0px",
+                                                      }}
+                                                      onClick={() => {
+                                                        setState({
+                                                          ...state,
+                                                          identificadorModal:
+                                                            "codigoPostalRemitente",
+                                                          tipoModal: 0,
+                                                        });
+                                                        open();
+                                                      }}
+                                                    >
+                                                      <PageviewIcon
+                                                        style={{
+                                                          color: "#F9A03E",
+                                                          fontSize: 32,
+                                                          paddingInlineEnd: 0,
+                                                          paddingRight: 0,
+                                                          paddingBlockEnd: 0,
+                                                          paddingLeft: 0,
+                                                          paddingBlock: 0,
+                                                        }}
+                                                      />
+                                                    </IconButton>
+                                                  </InputAdornment>
+                                                ),
                                               }}
-                                            />                                                                                       
+                                            />
                                           </div>
-                                        )}                                        
+                                        )}
                                       />
                                     </div>
                                   </div>
-{/* --------------------------------------- Ciudad ------------------------------------------------- */}
-                                  <div className="col-sm-4 col-md-6 unit">
+                                  {/* --------------------------------------- Ciudad ------------------------------------------------- */}
+                                  <div className="col-sm-12 col-md-12 col-lg-12 unit">
                                     <label className="label">Ciudad</label>
                                     <label className="input select">
                                       <select
@@ -2113,8 +2208,8 @@ function Recoleccion() {
                                       <i className="fa fa-arrow-down" />
                                     </label>
                                   </div>
-{/* --------------------------------------- Correo ------------------------------------------------- */}
-                                  <div className="col-sm-4 col-md-12 unit">
+                                  {/* --------------------------------------- Correo ------------------------------------------------- */}
+                                  <div className="col-sm-12 col-md-12 unit">
                                     <label className="label">
                                       Correo Electrónico
                                     </label>
@@ -2129,11 +2224,9 @@ function Recoleccion() {
                                       />
                                     </div>
                                   </div>
-{/* --------------------------------------- Telefono ------------------------------------------------- */}
-                                  <div className="col-sm-4 col-md-12 unit">
-                                    <label className="label">
-                                      Teléfono
-                                  </label>
+                                  {/* --------------------------------------- Telefono ------------------------------------------------- */}
+                                  <div className="col-sm-12 col-md-12 unit">
+                                    <label className="label">Teléfono</label>
                                     <div className="input">
                                       <input
                                         onChange={handleChange}
@@ -2147,11 +2240,9 @@ function Recoleccion() {
                                       />
                                     </div>
                                   </div>
-{/* --------------------------------------- Contacto ------------------------------------------------- */}
-                                  <div className="col-sm-4 col-md-12 unit">
-                                    <label className="label">
-                                      Contacto
-                                  </label>
+                                  {/* --------------------------------------- Contacto ------------------------------------------------- */}
+                                  <div className="col-sm-12 col-md-12 unit">
+                                    <label className="label">Contacto</label>
                                     <div className="input">
                                       <input
                                         onChange={handleChange}
@@ -2163,8 +2254,8 @@ function Recoleccion() {
                                       />
                                     </div>
                                   </div>
-{/* --------------------------------------- Origen ------------------------------------------------- */}
-                                  <div className="col-sm-4 col-md-12 unit" >
+                                  {/* --------------------------------------- Origen ------------------------------------------------- */}
+                                  <div className="col-sm-12 col-md-12 unit">
                                     <label className="label">Origen</label>
                                     <div className="input">
                                       <Autocomplete
@@ -2184,31 +2275,61 @@ function Recoleccion() {
                                           option.m_sCiudad
                                         }
                                         variant="outlined"
-                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle: "solid",borderRadius: "5px"}}
+                                        style={{
+                                          borderWidth: "1px",
+                                          borderColor: "#dddddd",
+                                          borderStyle: "solid",
+                                          borderRadius: "5px",
+                                        }}
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
-                                                style: { height: 24},
+                                                style: { height: 21 },
                                                 type: "search",
                                                 value: state.origenRemitente,
                                                 disableUnderline: true,
-                                                 endAdornment: 
-                                                <InputAdornment position="end">
-                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {open(); setState({...state, identificadorModal: "origenRemitente", tipoModal: 1})} }>
-                                                    <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
-                                                 </IconButton> 
-                                                </InputAdornment> 
+                                                endAdornment: (
+                                                  <InputAdornment position="end">
+                                                    <IconButton
+                                                      padding="0px"
+                                                      style={{
+                                                        paddingRight: "0px",
+                                                      }}
+                                                      onClick={() => {
+                                                        open();
+                                                        setState({
+                                                          ...state,
+                                                          identificadorModal:
+                                                            "origenRemitente",
+                                                          tipoModal: 1,
+                                                        });
+                                                      }}
+                                                    >
+                                                      <PageviewIcon
+                                                        style={{
+                                                          color: "#F9A03E",
+                                                          fontSize: 32,
+                                                          paddingInlineEnd: 0,
+                                                          paddingRight: 0,
+                                                          paddingBlockEnd: 0,
+                                                          paddingLeft: 0,
+                                                          paddingBlock: 0,
+                                                        }}
+                                                      />
+                                                    </IconButton>
+                                                  </InputAdornment>
+                                                ),
                                               }}
-                                            />                                                                                       
+                                            />
                                           </div>
-                                        )}                                        
-                                                       />
+                                        )}
+                                      />
                                     </div>
                                   </div>
-{/* --------------------------------------- RecoleccionDD ------------------------------------------------- */}
+                                  {/* --------------------------------------- RecoleccionDD ------------------------------------------------- */}
                                   <div className="col-sm-12 col-md-12 unit">
                                     <label className="label">
                                       Recolección en Diferente Domicilio
@@ -2236,7 +2357,7 @@ function Recoleccion() {
                             </div>
                             <div className="widget-container">
                               <div className="widget-content">
-                                <div className="col-sm-4 col-md-6    unit">
+                              <div className="col-sm-12 col-md-12    unit">
                                   <label className="label">Nombre</label>
                                   <div className="input">
                                     <input
@@ -2250,7 +2371,7 @@ function Recoleccion() {
                                   </div>
                                 </div>
 
-                                <div className="col-sm-4 col-md-6 unit">
+                                <div className="col-sm-12 col-md-8 unit">
                                   <label className="label">RFC</label>
                                   <div className="input">
                                     <input
@@ -2266,7 +2387,7 @@ function Recoleccion() {
                                   </div>
                                 </div>
 
-                                <div className="col-sm-4 col-md-12 unit">
+                                <div className="col-sm-12 col-md-12 unit">
                                   <label className="label">Domicilio</label>
                                   <div className="input">
                                     <input
@@ -2279,51 +2400,73 @@ function Recoleccion() {
                                     />
                                   </div>
                                 </div>
-
-                                <div className="col-sm-4 col-md-6 unit" >
-                                    <label className="label">Código Postal</label>
-                                    <div className="input">
-                                      <Autocomplete
-                                        freeSolo
-                                        onChange={(event, newValue) =>
-                                          setState({
-                                            ...state,
-                                            codigoPostalDestinatario: newValue,
-                                          })
-                                        }
-                                        value={state.codigoPostalDestinatario}
-                                        id="codigoPostalDestinatario"
-                                        disableClearable
-                                        options={dataCodigoPostal}
-                                        getOptionLabel={(option) =>
-                                          option.m_sCP
-                                        }
-                                        variant="outlined"
-                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle:"solid",borderRadius: "5px"}}
-                                        renderInput={(params) => (
-                                          <div>
-                                            <TextField
-                                              {...params}
-                                              InputProps={{
-                                                ...params.InputProps,
-                                                style: { height: 24},
-                                                type: "search",
-                                                disableUnderline: true,
-                                                 endAdornment:  <InputAdornment position="end"> <IconButton style={{paddingRight: "0px"}} onClick={() => {setState({...state, identificadorModal: "codigoPostalDestinatario", tipoModal: 0});  open();} }>
-                                                 <PageviewIcon style={{ color: "#F9A03E", fontSize: 32 }} />
-                                                 </IconButton>  </InputAdornment> 
-                                              }}
-                                            />                                                                                       
-                                          </div>
-                                        )}                                        
-                                      />
-                                    </div>
+                                <div className="col-sm-12 col-md-8 unit" >
+                                  <label className="label">Código Postal</label>
+                                  <div className="input">
+                                    <Autocomplete
+                                      freeSolo
+                                      onChange={(event, newValue) =>
+                                        setState({
+                                          ...state,
+                                          codigoPostalDestinatario: newValue,
+                                        })
+                                      }
+                                      value={state.codigoPostalDestinatario}
+                                      id="codigoPostalDestinatario"
+                                      disableClearable
+                                      options={dataCodigoPostal}
+                                      getOptionLabel={(option) => option.m_sCP}
+                                      variant="outlined"
+                                      style={{
+                                        borderWidth: "1px",
+                                        borderColor: "#dddddd",
+                                        borderStyle: "solid",
+                                        borderRadius: "5px",
+                                      }}
+                                      renderInput={(params) => (
+                                        <div>
+                                          <TextField
+                                            {...params}
+                                            InputProps={{
+                                              ...params.InputProps,
+                                              style: { height: 21 },
+                                              type: "search",
+                                              disableUnderline: true,
+                                              endAdornment: (
+                                                <InputAdornment position="end">
+                                                  {" "}
+                                                  <IconButton
+                                                    style={{
+                                                      paddingRight: "0px",
+                                                    }}
+                                                    onClick={() => {
+                                                      setState({
+                                                        ...state,
+                                                        identificadorModal:
+                                                          "codigoPostalDestinatario",
+                                                        tipoModal: 0,
+                                                      });
+                                                      open();
+                                                    }}
+                                                  >
+                                                    <PageviewIcon
+                                                      style={{
+                                                        color: "#F9A03E",
+                                                        fontSize: 32,
+                                                      }}
+                                                    />
+                                                  </IconButton>{" "}
+                                                </InputAdornment>
+                                              ),
+                                            }}
+                                          />
+                                        </div>
+                                      )}
+                                    />
                                   </div>
-                        
-                             
+                                </div>
 
-
-                                <div className="col-sm-4 col-md-6 unit">
+                                <div className="col-sm-12 col-md-12  unit">
                                   <label className="label">Ciudad</label>
                                   <label className="input select">
                                     <select
@@ -2346,7 +2489,7 @@ function Recoleccion() {
                                   </label>
                                 </div>
 
-                                <div className="col-sm-4 col-md-12 unit">
+                                <div className="col-sm-12 col-md-12 unit">
                                   <label className="label">
                                     Correo Electrónico
                                   </label>
@@ -2362,10 +2505,8 @@ function Recoleccion() {
                                   </div>
                                 </div>
 
-                                <div className="col-sm-4 col-md-12 unit">
-                                  <label className="label">
-                                    Teléfono
-                                </label>
+                                <div className="col-sm-12 col-md-12 unit">
+                                  <label className="label">Teléfono</label>
                                   <div className="input">
                                     <input
                                       onChange={handleChange}
@@ -2378,7 +2519,7 @@ function Recoleccion() {
                                   </div>
                                 </div>
 
-                                <div className="col-sm-4 col-md-12 unit">
+                                <div className="col-sm-12 col-md-12 unit">
                                   <label className="label">Contacto</label>
                                   <div className="input">
                                     <input
@@ -2392,54 +2533,82 @@ function Recoleccion() {
                                   </div>
                                 </div>
 
-
-                                <div className="col-sm-4 col-md-12 unit" >
-                                    <label className="label">Destino</label>
-                                    <div className="input">
-                                      <Autocomplete
-                                        freeSolo
-                                        onChange={(event, newValue) =>
-                                          setState({
-                                            ...state,
-                                            destinoDestinatario: newValue,
-                                          })
-                                        }
-                                        value={state.destinoDestinatario}
-                                        id="destinoDestinatario"
-                                        disableClearable
-                                        forcePopupIcon={false}
-                                        options={dataCiudad}
-                                        getOptionLabel={(option) =>
-                                          option.m_sCiudad
-                                        }
-                                        variant="outlined"
-                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle: "solid",borderRadius: "5px"}}
-                                        renderInput={(params) => (
-                                          <div>
-                                            <TextField
-                                              {...params}
-                                              InputProps={{
-                                                ...params.InputProps,
-                                                style: { height: 24},
-                                                type: "search",
-                                                value: state.origenRemitente,
-                                                disableUnderline: true,
-                                                 endAdornment: 
+                                <div className="col-sm-12 col-md-12  unit">
+                                  <label className="label">Destino</label>
+                                  <div className="input">
+                                    <Autocomplete
+                                      freeSolo
+                                      onChange={(event, newValue) =>
+                                        setState({
+                                          ...state,
+                                          destinoDestinatario: newValue,
+                                        })
+                                      }
+                                      value={state.destinoDestinatario}
+                                      id="destinoDestinatario"
+                                      disableClearable
+                                      forcePopupIcon={false}
+                                      options={dataCiudad}
+                                      getOptionLabel={(option) =>
+                                        option.m_sCiudad
+                                      }
+                                      variant="outlined"
+                                      style={{
+                                        borderWidth: "1px",
+                                        borderColor: "#dddddd",
+                                        borderStyle: "solid",
+                                        borderRadius: "5px",
+                                      }}
+                                      renderInput={(params) => (
+                                        <div>
+                                          <TextField
+                                            {...params}
+                                            InputProps={{
+                                              ...params.InputProps,
+                                              style: { height: 21 },
+                                              type: "search",
+                                              value: state.origenRemitente,
+                                              disableUnderline: true,
+                                              endAdornment: (
                                                 <InputAdornment position="end">
-                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {setState({...state, identificadorModal: "destinoDestinatario", tipoModal: 1}); open();} }>
-                                                    <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
-                                                 </IconButton> 
-                                                </InputAdornment> 
-                                              }}
-                                            />                                                                                       
-                                          </div>
-                                        )}                                        
-                                                       />
-                                    </div>
+                                                  <IconButton
+                                                    padding="0px"
+                                                    style={{
+                                                      paddingRight: "0px",
+                                                    }}
+                                                    onClick={() => {
+                                                      setState({
+                                                        ...state,
+                                                        identificadorModal:
+                                                          "destinoDestinatario",
+                                                        tipoModal: 1,
+                                                      });
+                                                      open();
+                                                    }}
+                                                  >
+                                                    <PageviewIcon
+                                                      style={{
+                                                        color: "#F9A03E",
+                                                        fontSize: 32,
+                                                        paddingInlineEnd: 0,
+                                                        paddingRight: 0,
+                                                        paddingBlockEnd: 0,
+                                                        paddingLeft: 0,
+                                                        paddingBlock: 0,
+                                                      }}
+                                                    />
+                                                  </IconButton>
+                                                </InputAdornment>
+                                              ),
+                                            }}
+                                          />
+                                        </div>
+                                      )}
+                                    />
                                   </div>
+                                </div>
 
-                                
-                                <div className="col-sm-12 col-md-12 unit">
+                                <div className="col-sm-12 col-md-12  unit">
                                   <label className="label">
                                     Entrega en Diferente Domicilio
                                   </label>
@@ -2471,7 +2640,7 @@ function Recoleccion() {
                                 <div className="widget-content">
                                   <div className="row">
                                     <div className="col-md-12">
-                                      <div className="col-sm-4 col-md-4 unit">
+                                    <div className="col-sm-6 col-md-4  unit" >
                                         <label className="label">
                                           Fecha y Hora
                                         </label>
@@ -2487,47 +2656,79 @@ function Recoleccion() {
                                         </div>
                                       </div>
 
-                                      <div className="col-sm-4 col-md-5 unit" >
-                                    <label className="label">Código Postal</label>
-                                    <div className="input">
-                                      <Autocomplete
-                                        freeSolo
-                                        onChange={(event, newValue) =>
-                                          setState({
-                                            ...state,
-                                            codigoPostalRecoleccion: newValue,
-                                          })
-                                        }
-                                        value={state.codigoPostalRecoleccion}
-                                        id="codigoPostalRecoleccion"
-                                        disableClearable
-                                        options={dataCodigoPostal}
-                                        getOptionLabel={(option) =>
-                                          option.m_sCP
-                                        }
-                                        variant="outlined"
-                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle:"solid",borderRadius: "5px"}}
-                                        renderInput={(params) => (
-                                          <div>
-                                            <TextField
-                                              {...params}
-                                              InputProps={{
-                                                ...params.InputProps,
-                                                style: { height: 24},
-                                                type: "search",
-                                                disableUnderline: true,
-                                                 endAdornment:  <InputAdornment position="end"> <IconButton style={{paddingRight: "0px"}} onClick={() => {setState({...state, identificadorModal: "codigoPostalRecoleccion", tipoModal: 0}); open();} }>
-                                                 <PageviewIcon style={{ color: "#F9A03E", fontSize: 32 }} />
-                                                 </IconButton>  </InputAdornment> 
-                                              }}
-                                            />                                                                                       
-                                          </div>
-                                        )}                                        
-                                      />
-                                    </div>
-                                  </div>
-                          
-                                      <div className="col-sm-4 col-md-4 unit">
+                                      <div className="col-sm-6 col-md-4  unit" >
+                                        <label className="label">
+                                          Código Postal
+                                        </label>
+                                        <div className="input">
+                                          <Autocomplete
+                                            freeSolo
+                                            onChange={(event, newValue) =>
+                                              setState({
+                                                ...state,
+                                                codigoPostalRecoleccion: newValue,
+                                              })
+                                            }
+                                            value={
+                                              state.codigoPostalRecoleccion
+                                            }
+                                            id="codigoPostalRecoleccion"
+                                            disableClearable
+                                            options={dataCodigoPostal}
+                                            getOptionLabel={(option) =>
+                                              option.m_sCP
+                                            }
+                                            variant="outlined"
+                                            style={{
+                                              borderWidth: "1px",
+                                              borderColor: "#dddddd",
+                                              borderStyle: "solid",
+                                              borderRadius: "5px",
+                                            }}
+                                            renderInput={(params) => (
+                                              <div>
+                                                <TextField
+                                                  {...params}
+                                                  InputProps={{
+                                                    ...params.InputProps,
+                                                    style: { height: 21 },
+                                                    type: "search",
+                                                    disableUnderline: true,
+                                                    endAdornment: (
+                                                      <InputAdornment position="end">
+                                                        {" "}
+                                                        <IconButton
+                                                          style={{
+                                                            paddingRight: "0px",
+                                                          }}
+                                                          onClick={() => {
+                                                            setState({
+                                                              ...state,
+                                                              identificadorModal:
+                                                                "codigoPostalRecoleccion",
+                                                              tipoModal: 0,
+                                                            });
+                                                            open();
+                                                          }}
+                                                        >
+                                                          <PageviewIcon
+                                                            style={{
+                                                              color: "#F9A03E",
+                                                              fontSize: 32,
+                                                            }}
+                                                          />
+                                                        </IconButton>{" "}
+                                                      </InputAdornment>
+                                                    ),
+                                                  }}
+                                                />
+                                              </div>
+                                            )}
+                                          />
+                                        </div>
+                                      </div>
+
+                                      <div className="col-sm-6 col-md-4  unit" >
                                         <label className="label">Ciudad</label>
                                         <label className="input select">
                                           <select
@@ -2550,7 +2751,7 @@ function Recoleccion() {
                                         </label>
                                       </div>
 
-                                      <div className="col-sm-4 col-md-4 unit">
+                                      <div className="col-sm-6 col-md-4 unit" >
                                         <label className="label">Zona</label>
                                         <label className="input select">
                                           <select
@@ -2573,7 +2774,7 @@ function Recoleccion() {
                                         </label>
                                       </div>
 
-                                      <div className="col-sm-4 col-md-4 unit">
+                                      <div className="col-sm-6 col-md-6  unit" >
                                         <label className="label">
                                           Domicilio
                                         </label>
@@ -2589,7 +2790,7 @@ function Recoleccion() {
                                         </div>
                                       </div>
 
-                                      <div className="col-sm-4 col-md-4 unit">
+                                      <div className="col-sm-12 col-md-6  unit" >
                                         <label className="label">
                                           Recoger En
                                         </label>
@@ -2605,7 +2806,7 @@ function Recoleccion() {
                                         </div>
                                       </div>
 
-                                      <div className="col-sm-4 col-md-4 unit">
+                                      <div className="col-sm-12 col-md-6  unit" >
                                         <label className="label">
                                           Datos Adicionales para la Recolección
                                         </label>
@@ -2640,48 +2841,77 @@ function Recoleccion() {
                                 <div className="widget-content">
                                   <div className="row">
                                     <div className="col-md-12">
+                                    <div className="col-sm-6 col-md-4  unit" >
+                                        <label className="label">
+                                          Código Postal
+                                        </label>
+                                        <div className="input">
+                                          <Autocomplete
+                                            freeSolo
+                                            onChange={(event, newValue) =>
+                                              setState({
+                                                ...state,
+                                                codigoPostalEntrega: newValue,
+                                              })
+                                            }
+                                            value={state.codigoPostalEntrega}
+                                            id="codigoPostalEntrega"
+                                            disableClearable
+                                            options={dataCodigoPostal}
+                                            getOptionLabel={(option) =>
+                                              option.m_sCP
+                                            }
+                                            variant="outlined"
+                                            style={{
+                                              borderWidth: "1px",
+                                              borderColor: "#dddddd",
+                                              borderStyle: "solid",
+                                              borderRadius: "5px",
+                                            }}
+                                            renderInput={(params) => (
+                                              <div>
+                                                <TextField
+                                                  {...params}
+                                                  InputProps={{
+                                                    ...params.InputProps,
+                                                    style: { height: 21 },
+                                                    type: "search",
+                                                    disableUnderline: true,
+                                                    endAdornment: (
+                                                      <InputAdornment position="end">
+                                                        {" "}
+                                                        <IconButton
+                                                          style={{
+                                                            paddingRight: "0px",
+                                                          }}
+                                                          onClick={() => {
+                                                            setState({
+                                                              ...state,
+                                                              identificadorModal:
+                                                                "codigoPostalEntrega",
+                                                              tipoModal: 0,
+                                                            });
+                                                            open();
+                                                          }}
+                                                        >
+                                                          <PageviewIcon
+                                                            style={{
+                                                              color: "#F9A03E",
+                                                              fontSize: 32,
+                                                            }}
+                                                          />
+                                                        </IconButton>{" "}
+                                                      </InputAdornment>
+                                                    ),
+                                                  }}
+                                                />
+                                              </div>
+                                            )}
+                                          />
+                                        </div>
+                                      </div>
 
-                            <div className="col-sm-4 col-md-4 unit" >
-                                    <label className="label">Código Postal</label>
-                                    <div className="input">
-                                      <Autocomplete
-                                        freeSolo
-                                        onChange={(event, newValue) =>
-                                          setState({
-                                            ...state,
-                                            codigoPostalEntrega: newValue,
-                                          })
-                                        }
-                                        value={state.codigoPostalEntrega}
-                                        id="codigoPostalEntrega"
-                                        disableClearable
-                                        options={dataCodigoPostal}
-                                        getOptionLabel={(option) =>
-                                          option.m_sCP
-                                        }
-                                        variant="outlined"
-                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle:"solid",borderRadius: "5px"}}
-                                        renderInput={(params) => (
-                                          <div>
-                                            <TextField
-                                              {...params}
-                                              InputProps={{
-                                                ...params.InputProps,
-                                                style: { height: 24},
-                                                type: "search",
-                                                disableUnderline: true,
-                                                 endAdornment:  <InputAdornment position="end"> <IconButton style={{paddingRight: "0px"}} onClick={() => {setState({...state, identificadorModal: "codigoPostalEntrega", tipoModal: 0}); open();} }>
-                                                 <PageviewIcon style={{ color: "#F9A03E", fontSize: 32 }} />
-                                                 </IconButton>  </InputAdornment> 
-                                              }}
-                                            />                                                                                       
-                                          </div>
-                                        )}                                        
-                                      />
-                                    </div>
-                                  </div>
-                         
-                                      <div className="col-sm-4 col-md-4 unit">
+                                      <div className="col-sm-6 col-md-4  unit" >
                                         <label className="label">Ciudad</label>
                                         <label className="input select">
                                           <select
@@ -2704,7 +2934,7 @@ function Recoleccion() {
                                         </label>
                                       </div>
 
-                                      <div className="col-sm-4 col-md-4 unit">
+                                      <div className="col-sm-6 col-md-4 unit" >
                                         <label className="label">Zona</label>
                                         <label className="input select">
                                           <select
@@ -2727,7 +2957,7 @@ function Recoleccion() {
                                         </label>
                                       </div>
 
-                                      <div className="col-sm-4 col-md-4 unit">
+                                      <div className="col-sm-6 col-md-6 col-lg-6 unit" >
                                         <label className="label">
                                           Domicilio
                                         </label>
@@ -2742,7 +2972,7 @@ function Recoleccion() {
                                         </div>
                                       </div>
 
-                                      <div className="col-sm-4 col-md-4 unit">
+                                      <div className="col-sm-12 col-md-6 col-lg-6 unit" >
                                         <label className="label">
                                           Entrega En
                                         </label>
@@ -2757,7 +2987,7 @@ function Recoleccion() {
                                         </div>
                                       </div>
 
-                                      <div className="col-sm-4 col-md-4 unit">
+                                      <div className="col-sm-12 col-md-6 col-lg-6 unit" >
                                         <label className="label ">
                                           Datos Adicionales para la Entrega
                                         </label>
@@ -2795,8 +3025,8 @@ function Recoleccion() {
                             <div className="widget-container">
                               <div className="widget-content">
                                 <div className="row">
-{/* --------------------------------------- Operador ------------------------------------------------- */}
-<div className="col-sm-4 col-md-4 unit" >
+                                  {/* --------------------------------------- Operador ------------------------------------------------- */}
+                                  <div className="col-sm-4 col-md-4 unit">
                                     <label className="label">Operador</label>
                                     <div className="input">
                                       <Autocomplete
@@ -2816,32 +3046,64 @@ function Recoleccion() {
                                           option.m_sNombreCompleto
                                         }
                                         variant="outlined"
-                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle: "solid",borderRadius: "5px"}}
+                                        style={{
+                                          borderWidth: "1px",
+                                          borderColor: "#dddddd",
+                                          borderStyle: "solid",
+                                          borderRadius: "5px",
+                                        }}
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
-                                                style: { height: 24},
+                                                style: { height: 21 },
                                                 type: "search",
                                                 disableUnderline: true,
-                                                 endAdornment: 
-                                                <InputAdornment position="end">
-                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {setState({...state, identificadorModal: "operador", tipoModal: 2}); open();} }>
-                                                    <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
-                                                 </IconButton> 
-                                                </InputAdornment> 
+                                                endAdornment: (
+                                                  <InputAdornment position="end">
+                                                    <IconButton
+                                                      padding="0px"
+                                                      style={{
+                                                        paddingRight: "0px",
+                                                      }}
+                                                      onClick={() => {
+                                                        setState({
+                                                          ...state,
+                                                          identificadorModal:
+                                                            "operador",
+                                                          tipoModal: 2,
+                                                        });
+                                                        open();
+                                                      }}
+                                                    >
+                                                      <PageviewIcon
+                                                        style={{
+                                                          color: "#F9A03E",
+                                                          fontSize: 32,
+                                                          paddingInlineEnd: 0,
+                                                          paddingRight: 0,
+                                                          paddingBlockEnd: 0,
+                                                          paddingLeft: 0,
+                                                          paddingBlock: 0,
+                                                        }}
+                                                      />
+                                                    </IconButton>
+                                                  </InputAdornment>
+                                                ),
                                               }}
-                                            />                                                                                       
+                                            />
                                           </div>
-                                        )}                                        
-                                                       />
+                                        )}
+                                      />
                                     </div>
                                   </div>
-{/* --------------------------------------- TipoUnidad ------------------------------------------------- */}
-<div className="col-sm-4 col-md-4 unit" >
-                                    <label className="label">Tipo de Unidad</label>
+                                  {/* --------------------------------------- TipoUnidad ------------------------------------------------- */}
+                                  <div className="col-sm-4 col-md-4 unit">
+                                    <label className="label">
+                                      Tipo de Unidad
+                                    </label>
                                     <div className="input">
                                       <Autocomplete
                                         freeSolo
@@ -2860,31 +3122,61 @@ function Recoleccion() {
                                           option.m_sTipoUnidad
                                         }
                                         variant="outlined"
-                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle: "solid",borderRadius: "5px"}}
+                                        style={{
+                                          borderWidth: "1px",
+                                          borderColor: "#dddddd",
+                                          borderStyle: "solid",
+                                          borderRadius: "5px",
+                                        }}
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
-                                                style: { height: 24},
+                                                style: { height: 21 },
                                                 type: "search",
                                                 disableUnderline: true,
-                                                 endAdornment: 
-                                                <InputAdornment position="end">
-                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {open(); setState({...state, identificadorModal: "tipoUnidad", tipoModal: 3})} }>
-                                                    <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
-                                                 </IconButton> 
-                                                </InputAdornment> 
+                                                endAdornment: (
+                                                  <InputAdornment position="end">
+                                                    <IconButton
+                                                      padding="0px"
+                                                      style={{
+                                                        paddingRight: "0px",
+                                                      }}
+                                                      onClick={() => {
+                                                        open();
+                                                        setState({
+                                                          ...state,
+                                                          identificadorModal:
+                                                            "tipoUnidad",
+                                                          tipoModal: 3,
+                                                        });
+                                                      }}
+                                                    >
+                                                      <PageviewIcon
+                                                        style={{
+                                                          color: "#F9A03E",
+                                                          fontSize: 32,
+                                                          paddingInlineEnd: 0,
+                                                          paddingRight: 0,
+                                                          paddingBlockEnd: 0,
+                                                          paddingLeft: 0,
+                                                          paddingBlock: 0,
+                                                        }}
+                                                      />
+                                                    </IconButton>
+                                                  </InputAdornment>
+                                                ),
                                               }}
-                                            />                                                                                       
+                                            />
                                           </div>
-                                        )}                                        
-                                                       />
+                                        )}
+                                      />
                                     </div>
                                   </div>
-{/* --------------------------------------- Unidad ------------------------------------------------- */}
-<div className="col-sm-4 col-md-4 unit" >
+                                  {/* --------------------------------------- Unidad ------------------------------------------------- */}
+                                  <div className="col-sm-4 col-md-4 unit">
                                     <label className="label">Unidad</label>
                                     <div className="input">
                                       <Autocomplete
@@ -2904,27 +3196,57 @@ function Recoleccion() {
                                           option.m_sDescripcion
                                         }
                                         variant="outlined"
-                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle: "solid",borderRadius: "5px"}}
+                                        style={{
+                                          borderWidth: "1px",
+                                          borderColor: "#dddddd",
+                                          borderStyle: "solid",
+                                          borderRadius: "5px",
+                                        }}
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
-                                                style: { height: 24},
+                                                style: { height: 21 },
                                                 type: "search",
                                                 disableUnderline: true,
-                                                 endAdornment: 
-                                                <InputAdornment position="end">
-                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {open(); setState({...state, identificadorModal: "unidad", tipoModal: 4})} }>
-                                                    <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
-                                                 </IconButton> 
-                                                </InputAdornment> 
+                                                endAdornment: (
+                                                  <InputAdornment position="end">
+                                                    <IconButton
+                                                      padding="0px"
+                                                      style={{
+                                                        paddingRight: "0px",
+                                                      }}
+                                                      onClick={() => {
+                                                        open();
+                                                        setState({
+                                                          ...state,
+                                                          identificadorModal:
+                                                            "unidad",
+                                                          tipoModal: 4,
+                                                        });
+                                                      }}
+                                                    >
+                                                      <PageviewIcon
+                                                        style={{
+                                                          color: "#F9A03E",
+                                                          fontSize: 32,
+                                                          paddingInlineEnd: 0,
+                                                          paddingRight: 0,
+                                                          paddingBlockEnd: 0,
+                                                          paddingLeft: 0,
+                                                          paddingBlock: 0,
+                                                        }}
+                                                      />
+                                                    </IconButton>
+                                                  </InputAdornment>
+                                                ),
                                               }}
-                                            />                                                                                       
+                                            />
                                           </div>
-                                        )}                                        
-                                                       />
+                                        )}
+                                      />
                                     </div>
                                   </div>
                                 </div>
@@ -2979,73 +3301,74 @@ function Recoleccion() {
                       </div>
                     </div>
 
+                    <div
+                      className="widget-wrap col-sm-5 col-md-5 "
+                      id="paquetesSobres"
+                    >
+                      {" "}
+                      <div className="widget-header">
+                        <h2>Número de Paquetes</h2>
+                      </div>
+                      <div className="widget-container">
+                        <div className="widget-content">
+                          <div className="row">
+                            <div className="col-md-12">
+                              <form className="j-forms">
+                                <div className="form-content">
+                                  <a
+                                    className="btn"
+                                    style={{ margin: "10px" }}
+                                    onClick={() => addPaquete()}
+                                  >
+                                    <i className="zmdi zmdi-plus"></i> Agregar
+                                    Paquete
+                                  </a>
 
-                    <div className="col-ms-12 col-md-5">
-                      <div className="widget-wrap " id="paquetesSobres">
-                        <div className="widget-header">
-                          <h2>Número de Paquetes</h2>
-                        </div>
-                        <div className="widget-container">
-                          <div className="widget-content">
-                            <div className="row">
-                              <div className="col-md-12">
-                                <form className="j-forms">
-                                  <div className="form-content">
-                                    <a
-                                      className="btn"
-                                      style={{ margin: "10px" }}
-                                      onClick={() => addPaquete()}
-                                    >
-                                      <i className="zmdi zmdi-plus"></i> Agregar
-                                      Paquete
-                                    </a>
-
-                                    <Carousel
-                                      className={classes.paqueteCarrusel}
-                                      widgets={[IndicatorDots, Buttons]}
-                                      frames={framesPaquete}
-                                    ></Carousel>
-                                  </div>
-                                </form>
-                              </div>
+                                  <Carousel
+                                    className={classes.paqueteCarrusel}
+                                    widgets={[IndicatorDots, Buttons]}
+                                    frames={framesPaquete}
+                                  ></Carousel>
+                                </div>
+                              </form>
                             </div>
                           </div>
                         </div>
+                      </div>
+                      <div className="widget-header">
+                        <h2>Número de Sobres</h2>
+                      </div>
+                      <div className="widget-container">
+                        <div className="widget-content">
+                          <div className="row">
+                            <div className="col-md-12">
+                              <form className="j-forms">
+                                <div className="form-content">
+                                  <a
+                                    className="btn"
+                                    style={{ margin: "10px" }}
+                                    onClick={() => addSobre()}
+                                  >
+                                    <i className="zmdi zmdi-plus"></i> Agregar
+                                    Sobre
+                                  </a>
 
-                        <div className="widget-header">
-                          <h2>Número de Sobres</h2>
-                        </div>
-                        <div className="widget-container">
-                          <div className="widget-content">
-                            <div className="row">
-                              <div className="col-md-12">
-                                <form className="j-forms">
-                                  <div className="form-content">
-                                    <a
-                                      className="btn"
-                                      style={{ margin: "10px" }}
-                                      onClick={() => addSobre()}
-                                    >
-                                      <i className="zmdi zmdi-plus"></i> Agregar
-                                      Sobre
-                                    </a>
-
-                                    <Carousel
-                                      className={classes.sobreCarrusel}
-                                      widgets={[IndicatorDots, Buttons]}
-                                      frames={framesSobre}
-                                    ></Carousel>
-                                  </div>
-                                </form>
-                              </div>
+                                  <Carousel
+                                    className={classes.sobreCarrusel}
+                                    widgets={[IndicatorDots, Buttons]}
+                                    frames={framesSobre}
+                                  ></Carousel>
+                                </div>
+                              </form>
                             </div>
                           </div>
-                          
                         </div>
-                    </div>
+                      </div>
                     </div>
                   </div>
-
+                  <div id="Importar" className="tab-pane fade  d-none">
+                       </div>
+                                             
                   <div className="form-footer" className="col-md-12">
                     <button
                       href="#Listado"
@@ -3062,49 +3385,8 @@ function Recoleccion() {
                       Aceptar
                     </button>
                   </div>
-                </div>
 
-                <div id="Importar" className="tab-pane fade">
-                  <div className="widget-wrap">
-                    <div className="widget-content">
-                      <div className="row">
-                        <div className="col-md-12">
-                          <form className="j-forms">
-                            <div className="form-content">
-                              <div className="col-sm-12 col-md-12 unit">
-                                <label className="label">Importar</label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleUpload}
-                                    className="form-control"
-                                    type="file"
-                                    id="importar"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                            <br></br>
-                            <div className="form-footer" className="col-md-12">
-                              <button
-                                data-layout="topCenter"
-                                data-type="information"
-                                className="btn btn-secondary secondary-btn"
-                              >
-                                {" "}
-                                Cancelar
-                              </button>
-                              <button
-                                onClick={handleAceptar}
-                                className="btn btn-primary primary-btn"
-                              >
-                                Aceptar
-                              </button>
-                            </div>
-                          </form>
-                        </div>
-                      </div></div> </div>
-                    </div>
-                </div>
+                 </div>
               </form>
             </div>
           </div>

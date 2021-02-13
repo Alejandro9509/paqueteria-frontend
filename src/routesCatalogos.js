@@ -11,6 +11,7 @@ import RutasPage from './Views/Rutas';
 import TipoServicioPage from './Views/TiposServicio';
 import EstatusUnidadPage from './Views/EstatusUnidad';
 import TipoCobroPage from './Views/TipoCobro';
+import TiposViaje from './Views/TipoViaje'
 import CasetaPage from './Views/Caseta';
 import GrupoClientePage from './Views/GrupoCliente';
 import GrupoUnidadPage from './Views/GrupoUnidades';
@@ -117,10 +118,10 @@ const catalogRoutes = [
     component: EmbalajesPage,
   },
   {
-    path: "/Embalajes",
+    path: "/TiposViaje",
     name: "Tipos Viaje",
     icon: TViajeIcon,
-    component: EmbalajesPage,
+    component: TiposViaje,
   },
   {
     path: "/Embalajes",
