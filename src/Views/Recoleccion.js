@@ -113,7 +113,7 @@ function Recoleccion() {
     diferenteRecoleccion: true,
     diferenteEntrega: true,
     operador: 0,
-    tipoUnidad: 0,
+    tipoUnidad: {},
     unidad: 0,
     CreadoPor: localStorage.getItem("UsuarioId"),
     ModificadoPor: localStorage.getItem("UsuarioId"),
@@ -152,65 +152,66 @@ function Recoleccion() {
     e.preventDefault();
 
     var params = {
-      m_nIdRecoleccion: state.idRecoleccion,
-      m_nIdSucursal: state.idSucursalAgregar,
-      m_nIdEstatusRecoleccion: state.estatusRecoleccion,
-      m_nIdEmbarque: state.folioEmbarque,
-      m_nIdGuia: state.folioGuía,
-      m_nIdInforme: state.folioInforme,
-      m_dFecha: state.fechaHoraCreacion.split("T")[0],
-      m_tHora: state.fechaHoraCreacion.split("T")[1],
-      m_nMoneda: state.moneda,
-      m_rTipoCambio: state.tipoCambio,
-      m_nIdTipoDeCobro: state.tipoCobro,
-      m_sNombreRemitente: state.nombreRemitente,
-      m_sNombreDestinatario: state.nombreDestinatario,
-      m_sRFCRemitente: state.RFCRemitente,
-      m_sRFCDestinatario: state.RFCDestinatario,
-      m_sDomicilioRemitente: state.domicilioRemitente,
-      m_sDomicilioDestinatario: state.domicilioDestinatario,
-      m_sIdCodigoPostalRemitente: state.codigoPostalRemitente.m_nIdCP,
-      m_sIdCodigoPostalDestinatario: state.codigoPostalDestinatario.m_nIdCP,
-      m_nIdCiudadRemitente: state.ciudadRemitente,
-      m_nIdCiudadDestinatario: state.ciudadDestinatario,
-      m_sCorreoRemitente: state.correoRemitente,
-      m_sCorreoDestinatario: state.correoDestinatario,
-      m_sTelefonoRemitente: state.telefonoRemitente,
-      m_sTelefonoDestinatario: state.telefonoDestinatario,
-      m_sContactoRemitente: state.contactoRemitente,
-      m_sContactoDestinatario: state.contactoDestinatario,
-      m_nIdCiudadOrigen: state.ciudadRemitente,
-      m_nIdCiudadDestino: state.ciudadDestinatario,
-      m_dFechaDetalleRecoleccion: state.fechaRecoleccion.split("T")[0],
-      m_tHoraDetalleRecoleccion: state.fechaRecoleccion.split("T")[1],
-      m_nIdCPDetalleRecoleccion: state.codigoPostalRecoleccion.m_nIdCP,
-      m_nIdCiudadDetalleRecoleccion: state.ciudadRecoleccion,
-      m_nIdZonaDetalleRecoleccion: state.zonaRecoleccion,
-      m_sDomicilioDetalleRecoleccion: state.domicilioRecoleccion,
-      m_sRecogerEnDetalleRecoleccion: state.recogerEn,
-      m_sDatosAdicionalesDetalleRecoleccion: state.datosAdicionalesRecoleccion,
-      m_nIdCPDetalleEntrega: state.codigoPostalEntrega.m_nIdCP,
-      m_nIdCiudadDetalleEntrega: state.ciudadEntrega,
-      m_nIdZonaDetalleEntrega: state.zonaEntrega,
-      m_sDomicilioDetalleEntrega: state.domicilioEntrega,
-      m_sEntregarEnDetalleEntrega: state.entregaEn,
-      m_sDatosAdicionalesDetalleEntrega: state.datosAdicionalesEntrega,
-      m_dFechaSalida: state.fechaHoraSalida.split("T")[0],
-      m_dFechaLlegada: state.fechaHoraLlegada.split("T")[0],
-      m_tHoraSalida: state.fechaHoraSalida.split("T")[1],
-      m_tHoraLlegada: state.fechaHoraLlegada.split("T")[1],
-      m_parrPaquetes: state.paquetes,
-      m_nNoPaquetes: state.paquetes.length,
-      m_parrSobres: state.sobres,
-      m_nNoSobres: state.sobres.length,
-      m_nIdOperador: state.operador.m_nIdOperador,
-      m_nIdUnidad: state.unidad.m_nIdUnidad,
-      m_nIdRemolque: state.tipoUnidad.m_nIdTipoUnidad,
-      m_nCreadoPor: state.CreadoPor,
-      m_nModificadoPor: state.ModificadoPor,
-    };
-    console.log(params);
-    debugger;
+
+      "m_nIdRecoleccion": state.idRecoleccion,
+      "m_nIdSucursal": state.idSucursalAgregar,
+      "m_nIdEstatusRecoleccion": state.estatusRecoleccion,
+      "m_nIdEmbarque": state.folioEmbarque,
+      "m_nIdGuia": state.folioGuía,
+      "m_nIdInforme": state.folioInforme,
+      "m_dFecha": state.fechaHoraCreacion.split("T")[0],
+      "m_tHora": state.fechaHoraCreacion.split("T")[1],
+      "m_nMoneda": state.moneda,
+      "m_rTipoCambio": state.tipoCambio,
+      "m_nIdTipoDeCobro": state.tipoCobro,
+      "m_sNombreRemitente": state.nombreRemitente,
+      "m_sNombreDestinatario": state.nombreDestinatario,
+      "m_sRFCRemitente": state.RFCRemitente,
+      "m_sRFCDestinatario": state.RFCDestinatario,
+      "m_sDomicilioRemitente": state.domicilioRemitente,
+      "m_sDomicilioDestinatario": state.domicilioDestinatario,
+      "m_sIdCodigoPostalRemitente": state.codigoPostalRemitente.m_nIdCP,
+      "m_sIdCodigoPostalDestinatario": state.codigoPostalDestinatario.m_nIdCP,
+      "m_nIdCiudadRemitente": state.ciudadRemitente,
+      "m_nIdCiudadDestinatario": state.ciudadDestinatario,
+      "m_sCorreoRemitente": state.correoRemitente,
+      "m_sCorreoDestinatario": state.correoDestinatario,
+      "m_sTelefonoRemitente": state.telefonoRemitente,
+      "m_sTelefonoDestinatario": state.telefonoDestinatario,
+      "m_sContactoRemitente": state.contactoRemitente,
+      "m_sContactoDestinatario": state.contactoDestinatario,
+      "m_nIdCiudadOrigen": state.origenRemitente.m_nIdCiudad,
+      "m_nIdCiudadDestino": state.destinoDestinatario.m_nIdCiudad,
+      "m_dFechaDetalleRecoleccion": state.fechaRecoleccion.split("T")[0],
+      "m_tHoraDetalleRecoleccion": state.fechaRecoleccion.split("T")[1],
+      "m_nIdCPDetalleRecoleccion": state.codigoPostalRecoleccion.m_nIdCP,
+      "m_nIdCiudadDetalleRecoleccion": state.ciudadRecoleccion,
+      "m_nIdZonaDetalleRecoleccion": state.zonaRecoleccion,
+      "m_sDomicilioDetalleRecoleccion": state.domicilioRecoleccion,
+      "m_sRecogerEnDetalleRecoleccion": state.recogerEn,
+      "m_sDatosAdicionalesDetalleRecoleccion": state.datosAdicionalesRecoleccion,
+      "m_nIdCPDetalleEntrega": state.codigoPostalEntrega.m_nIdCP,
+      "m_nIdCiudadDetalleEntrega": state.ciudadEntrega,
+      "m_nIdZonaDetalleEntrega": state.zonaEntrega,
+      "m_sDomicilioDetalleEntrega": state.domicilioEntrega,
+      "m_sEntregarEnDetalleEntrega": state.entregaEn,
+      "m_sDatosAdicionalesDetalleEntrega": state.datosAdicionalesEntrega,
+      "m_dFechaSalida": state.fechaHoraSalida.split("T")[0],
+      "m_dFechaLlegada": state.fechaHoraLlegada.split("T")[0],
+      "m_tHoraSalida": state.fechaHoraSalida.split("T")[1],
+      "m_tHoraLlegada": state.fechaHoraLlegada.split("T")[1],
+      "m_parrPaquetes": state.paquetes,
+      "m_nNoPaquetes": state.paquetes.length,
+      "m_parrSobres": state.sobres,
+      "m_nNoSobres": state.sobres.length,
+      "m_nIdOperador": state.operador.m_nIdOperador,
+      "m_nIdUnidad": state.tipoUnidad.m_nIdTipoUnidad,
+      "m_nIdRemolque": state.unidad.m_nIdUnidad,
+      "m_nCreadoPor":state.CreadoPor,
+      "m_nModificadoPor":state.ModificadoPor
+
+    }
+    console.log(params)
     if (state.idRecoleccion != 0) {
       const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Modificar/${state.idRecoleccion}`;
       axios
@@ -416,8 +417,8 @@ function Recoleccion() {
         cantidadDePaquetes: respuesta.data.m_parrPaquetes.length,
         cantidadDeSobres: respuesta.data.m_parrSobres.length,
       });
-      console.log("cpRemitente:");
-      console.log(state.codigoPostalRemitente);
+      console.log("tipoUnidad:")
+      console.log(dataTipoUnidad)
     });
   }
 
@@ -970,7 +971,14 @@ function Recoleccion() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr style={{backgroundColor: row.original.m_nIdCP === select ? "orange" : "white"}}  {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)} onDoubleClick={close}>
+                  <tr style={{backgroundColor: row.original.m_nIdCP === select ? "#FCC88F" : "white"}}  {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)} onDoubleClick={close}>
+                    <td>
+                      <div>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                      </div>
+                    </td>
                     {row.cells.map(cell => {
                       return (
                         <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
@@ -1054,7 +1062,14 @@ function Recoleccion() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr style={{backgroundColor: row.original.m_nIdCiudad === select ? "orange" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                  <tr style={{backgroundColor: row.original.m_nIdCiudad === select ? "#FCC88F" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                    <td>
+                      <div>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                      </div>
+                    </td>
                     {row.cells.map(cell => {
                       return (
                         <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
@@ -1138,7 +1153,14 @@ function Recoleccion() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr style={{backgroundColor: row.original.m_nIdOperador === select ? "orange" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                  <tr style={{backgroundColor: row.original.m_nIdOperador === select ? "#FCC88F" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                    <td>
+                      <div>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                      </div>
+                    </td>
                     {row.cells.map(cell => {
                       return (
                         <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
@@ -1219,7 +1241,14 @@ function Recoleccion() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr style={{backgroundColor: row.original.m_nIdTipoUnidad === select ? "orange" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                  <tr style={{backgroundColor: row.original.m_nIdTipoUnidad === select ? "#FCC88F" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                    <td>
+                      <div>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                      </div>
+                    </td>
                     {row.cells.map(cell => {
                       return (
                         <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
@@ -1303,7 +1332,14 @@ function Recoleccion() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr style={{backgroundColor: row.original.m_nIdUnidad === select ? "orange" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                  <tr style={{backgroundColor: row.original.m_nIdUnidad === select ? "#FCC88F" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                    <td>
+                      <div>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                      </div>
+                    </td>
                     {row.cells.map(cell => {
                       return (
                         <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
@@ -3100,7 +3136,6 @@ function Recoleccion() {
                                                 ...params.InputProps,
                                                 style: { height: 21 },
                                                 type: "search",
-                                                value: state.tipoUnidad,
                                                 disableUnderline: true,
                                                 endAdornment: (
                                                   <InputAdornment position="end">

@@ -1,6 +1,5 @@
 import React, { useEffect, useState, setData, useMemo, Component } from "react";
 
-import axios from "axios";
 import {
   ButtonBase,
   Checkbox,
@@ -17,12 +16,26 @@ import {
 } from "@material-ui/core";
 
 import DataTable from "react-data-table-component";
-import Cabecera from "../Components/Template/Cabecera";
-import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import $ from "jquery";
-import { useTable, useFilters, useSortBy } from "react-table";
+import { useTable, useFilters, useSortBy, useGlobalFilter } from "react-table";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import InputAdornment from '@material-ui/core/InputAdornment';
+import PageviewIcon from '@material-ui/icons/Pageview';
+import useModal from 'react-hooks-use-modal';
+import axios from "axios";
+import Cabecera from "../Components/Template/Cabecera";
+import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
+import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
+import ExportCSV from "../Components/Template/Export";
+import ExportPDF from "../Components/Template/ExportPDF";
+import Carousel from "re-carousel";
+import IndicatorDots from "../Util/Dots";
+import Buttons from "../Util/CarruselButtons";
+import { makeStyles } from "@material-ui/core/styles";
+import * as XLSX from "xlsx";
+import { render } from 'react-dom';
+import SearchIcon from '@material-ui/icons/Search';
 
 window.jQuery = window.$ = $;
 const headers = {
@@ -32,13 +45,17 @@ const headers = {
 function Informes(props) {
   const [stepActive, setStepActive] = React.useState(1);
   const [data, setData] = React.useState([]);
-
+  const [Modal, open, close, isOpen] = useModal("root", {
+    preventScroll: true,
+  });
+  const [dataTipoUnidad, setDataTipoUnidad] = React.useState([]);
   const [dataSucursal, setDataSucursal] = React.useState([]);
   const [dataEstatusInformes, setEstatusInformes] = React.useState([]);
   const [dataOperadores, setDataOperadores] = React.useState([]);
   const [dataOrigenes, setDataOrigenes] = React.useState([]);
   const [dataUnidades, setDataUnidades] = React.useState([]);
   const [dataGuias, setDataGuias] = React.useState([]);
+  const [dataViajes, setDataViajes] = React.useState([]);
   const [guias, setGuias] = React.useState([
     {
       folio: "FE-100",
@@ -74,6 +91,23 @@ function Informes(props) {
     },
   ]);
 
+  
+  function handleSelectCP(id, cp) {
+    setState({
+      ...state,
+      [state.identificadorModal] : id
+    });
+    console.log(id)
+    console.log(state.identificadorModal)
+  }
+
+  function handleSelectViaje() {
+    state.ruta2 = state.viaje.m_sRuta
+    state.operador2 = state.viaje.m_sNombreCompletoOperador
+    state.unidad2 = state.viaje.m_sTipoUnidad
+    state.remolque2 = state.viaje.m_sDescripcionUnidad
+  }
+
   const columns = React.useMemo(() => [
     {
       Name: "Folio/Serie",
@@ -104,6 +138,98 @@ function Informes(props) {
       accessor: "m_sCodigoUnidad",
     },
   ]);
+
+  const columnsCP = React.useMemo(() => [
+    {
+      Name: "Codigo",
+      accessor: "m_sCP",
+    },
+    {
+      Name: "Estado",
+      accessor: "m_sEstado",
+    },
+    {
+      Name: "Ciudad",
+      accessor: "m_sCiudad",
+    },
+  ]);
+
+  const columnsCiudades = React.useMemo(() => [
+    {
+      Name: "Codigo",
+      accessor: "m_nCodigo",
+    },
+    {
+      Name: "Ciudad",
+      accessor: "m_sCiudad",
+    },
+    {
+      Name: "Abreviacion",
+      accessor: "m_sAbreviacion",
+    },
+    {
+      Name: "Estado",
+      accessor: "m_nIdEstado",
+    }
+  ]);
+
+  const columnsOperadores = React.useMemo(() => [
+    {
+      Name: "Numero Operador",
+      accessor: "m_nNumeroOperador",
+    },
+    {
+      Name: "Nombre",
+      accessor: "m_sNombreCompleto",
+    },
+    {
+      Name: "Sucursal",
+      accessor: "m_nIdSucursal",
+    },
+    {
+      Name: "Activo",
+      accessor: "m_nIdEstado",
+    }
+  ]);
+
+  const columnsTipoUnidades = React.useMemo(() => [
+    {
+      Name: "Tipo de unidad",
+      accessor: "m_nIdTipoUnidad",
+    },
+    {
+      Name: "Identificador",
+      accessor: "m_nIdentificador",
+    },
+    {
+      Name: "Nomenclatura",
+      accessor: "m_sNomenclaturaSCT",
+    },
+    {
+      Name: "Estatus",
+      accessor: "m_bActivo",
+    }
+  ]);
+
+  const columnsUnidades = React.useMemo(() => [
+    {
+      Name: "Descripcion",
+      accessor: "m_sDescripcion",
+    },
+    {
+      Name: "Codigo",
+      accessor: "m_sCodigo",
+    },
+    {
+      Name: "Tipo de unidad",
+      accessor: "m_nIdTipoUnidad",
+    },
+    {
+      Name: "Estatus",
+      accessor: "m_bActivo",
+    }
+  ]);
+
 
   function DefaultColumnFilter({
     column: { filterValue, preFilteredRows, setFilter },
@@ -227,8 +353,461 @@ function Informes(props) {
     );
   }
 
+  function TableOperadores({ columns, data, select }) {
+    const defaultColumn = React.useMemo(
+      () => ({
+        // Default Filter UI
+        Filter: DefaultColumnFilter,
+      }),
+      []
+    );
+
+    const {
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      rows,
+      prepareRow,
+      state,
+      preGlobalFilteredRows,
+      setGlobalFilter,
+    } = useTable(
+      {
+        columns,
+        data,
+        defaultColumn,
+      },
+      useFilters,
+      useGlobalFilter,
+      useSortBy
+    );
+
+    return (
+      <div className="col-md-12" style={{maxHeight: "300px", overflow:"auto"}}>
+        <table className="table" {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                <th>Acciones</th>
+                {headerGroup.headers.map(column => (
+                  // Add the sorting props to control sorting. For this example
+                  // we can add them into the header props
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render("Name")}
+                    {/* Add a sort direction indicator */}
+                    <span>
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <i className="fa fa-caret-up" />
+                        ) : (
+                          <i className="fa fa-caret-down" />
+                        )
+                      ) : (
+                        ""
+                      )}
+                    </span>
+                    <div>
+                      {column.canFilter ? column.render("Filter") : null}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr style={{backgroundColor: row.original.m_nIdOperador === select ? "#FCC88F" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                    <td>
+                      <div>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                      </div>
+                    </td>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+  function TableCiudades({ columns, data, select }) {
+    const defaultColumn = React.useMemo(
+      () => ({
+        // Default Filter UI
+        Filter: DefaultColumnFilter,
+      }),
+      []
+    );
+
+    const {
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      rows,
+      prepareRow,
+      state,
+      preGlobalFilteredRows,
+      setGlobalFilter,
+    } = useTable(
+      {
+        columns,
+        data,
+        defaultColumn,
+      },
+      useFilters,
+      useGlobalFilter,
+      useSortBy
+    );
+
+    return (
+      <div className="col-md-12" style={{maxHeight: "300px", overflow:"auto"}}>
+        <table className="table" {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                <th>Acciones</th>
+                {headerGroup.headers.map(column => (
+                  // Add the sorting props to control sorting. For this example
+                  // we can add them into the header props
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render("Name")}
+                    {/* Add a sort direction indicator */}
+                    <span>
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <i className="fa fa-caret-up" />
+                        ) : (
+                          <i className="fa fa-caret-down" />
+                        )
+                      ) : (
+                        ""
+                      )}
+                    </span>
+                    <div>
+                      {column.canFilter ? column.render("Filter") : null}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr style={{backgroundColor: row.original.m_nIdCiudad === select ? "#FCC88F" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                    <td>
+                      <div>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                      </div>
+                    </td>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+  function TableOperadores({ columns, data, select }) {
+    const defaultColumn = React.useMemo(
+      () => ({
+        // Default Filter UI
+        Filter: DefaultColumnFilter,
+      }),
+      []
+    );
+
+    const {
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      rows,
+      prepareRow,
+      state,
+      preGlobalFilteredRows,
+      setGlobalFilter,
+    } = useTable(
+      {
+        columns,
+        data,
+        defaultColumn,
+      },
+      useFilters,
+      useGlobalFilter,
+      useSortBy
+    );
+
+    return (
+      <div className="col-md-12" style={{maxHeight: "300px", overflow:"auto"}}>
+        <table className="table" {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                <th>Acciones</th>
+                {headerGroup.headers.map(column => (
+                  // Add the sorting props to control sorting. For this example
+                  // we can add them into the header props
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render("Name")}
+                    {/* Add a sort direction indicator */}
+                    <span>
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <i className="fa fa-caret-up" />
+                        ) : (
+                          <i className="fa fa-caret-down" />
+                        )
+                      ) : (
+                        ""
+                      )}
+                    </span>
+                    <div>
+                      {column.canFilter ? column.render("Filter") : null}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr style={{backgroundColor: row.original.m_nIdOperador === select ? "#FCC88F" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                    <td>
+                      <div>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                      </div>
+                    </td>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+  function TableTipoUnidad({ columns, data, select }) {
+    const defaultColumn = React.useMemo(
+      () => ({
+        // Default Filter UI
+        Filter: DefaultColumnFilter,
+      }),
+      []
+    );
+
+    const {
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      rows,
+      prepareRow,
+      state,
+      preGlobalFilteredRows,
+      setGlobalFilter,
+    } = useTable(
+      {
+        columns,
+        data,
+        defaultColumn,
+      },
+      useFilters,
+      useGlobalFilter,
+      useSortBy
+    );
+
+    return (
+      <div className="col-md-12">
+        <table className="table" {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                <th>Acciones</th>
+                {headerGroup.headers.map(column => (
+                  // Add the sorting props to control sorting. For this example
+                  // we can add them into the header props
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render("Name")}
+                    {/* Add a sort direction indicator */}
+                    <span>
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <i className="fa fa-caret-up" />
+                        ) : (
+                          <i className="fa fa-caret-down" />
+                        )
+                      ) : (
+                        ""
+                      )}
+                    </span>
+                    <div>
+                      {column.canFilter ? column.render("Filter") : null}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr style={{backgroundColor: row.original.m_nIdTipoUnidad === select ? "#FCC88F" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                    <td>
+                      <div>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                      </div>
+                    </td>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+  function TableUnidad({ columns, data, select }) {
+    const defaultColumn = React.useMemo(
+      () => ({
+        // Default Filter UI
+        Filter: DefaultColumnFilter,
+      }),
+      []
+    );
+
+    const {
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      rows,
+      prepareRow,
+      state,
+      preGlobalFilteredRows,
+      setGlobalFilter,
+    } = useTable(
+      {
+        columns,
+        data,
+        defaultColumn,
+      },
+      useFilters,
+      useGlobalFilter,
+      useSortBy
+    );
+
+    return (
+      <div className="col-md-12" style={{maxHeight: "300px", overflow:"auto"}} >
+        <table className="table" {...getTableProps()} >
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                <th>Acciones</th>
+                {headerGroup.headers.map(column => (
+                  // Add the sorting props to control sorting. For this example
+                  // we can add them into the header props
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render("Name")}
+                    {/* Add a sort direction indicator */}
+                    <span>
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <i className="fa fa-caret-up" />
+                        ) : (
+                          <i className="fa fa-caret-down" />
+                        )
+                      ) : (
+                        ""
+                      )}
+                    </span>
+                    <div>
+                      {column.canFilter ? column.render("Filter") : null}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr style={{backgroundColor: row.original.m_nIdUnidad === select ? "#FCC88F" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                    <td>
+                      <div>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                      </div>
+                    </td>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+
   const [state, setState] = React.useState({
     showPopUp: false,
+    identificadorModal: "",
+    ruta2: "",
+    operador2: "",
+    unidad2: "",
+    remolque2: "",
+    viaje: {},
+    tipoModal: 0,
     IdInforme: 0,
     FolioInforme: 0,
     Fecha: "",
@@ -238,8 +817,9 @@ function Informes(props) {
     IdViaje: 0,
     IdSucursalEmisora: 0,
     IdSucursalReceptora: 0,
-    IdOperador: 0,
-    IdUnidad: 0,
+    IdOperador: {},
+    IdUnidad: {},
+    IdTipoUnidad: {},
     IdRemolque: 0,
     IdCiudadDestino: 0,
     IdCiudadOrigen: 0,
@@ -271,8 +851,6 @@ function Informes(props) {
   };
 
   function getAllGuiasFrom() {
-    console.log(state.IdCiudadOrigen);
-    console.log(state.IdCiudadDestino);
     const url =
       `${process.env.REACT_APP_API_URL}/Guia/GetListadoPendientes/` +
       state.IdCiudadOrigen.m_nIdCiudad +
@@ -290,6 +868,14 @@ function Informes(props) {
       console.log(respuesta);
 
       setDataOrigenes(respuesta.data);
+    });
+  }
+
+  function getAllTipoUnidad() {
+    const url = `${process.env.REACT_APP_API_URL}/TiposUnidades/GetListado`;
+    axios.get(url, { headers }).then((respuesta) => {
+      setDataTipoUnidad(respuesta.data);
+      getAllUnidades(respuesta.data[0].m_nIdTipoUnidad);
     });
   }
 
@@ -325,6 +911,17 @@ function Informes(props) {
     });
   }
 
+  function getAllViajesOrigenDestino(origen, destino) {
+    const url = `http://localhost/Informes/GetViajes/`+origen+`/`+destino;
+    axios.get(url, { headers }).then((respuesta) => {
+      console.log("servicio viajes");
+      console.log(origen);
+      console.log(destino);
+      console.log(respuesta.data);
+      setDataViajes(respuesta.data);
+    });
+  }
+
   function handleShowAgregar() {
     setState({
       ...state,
@@ -334,6 +931,8 @@ function Informes(props) {
       Codigo: 0,
       GrupoUnidad: "",
       Color: "",
+      IdOperador: 0
+
     });
   }
 
@@ -383,15 +982,6 @@ function Informes(props) {
     });
     //Aqui hacer la peticion
     //No se que peticion tienes que hacer, aqui lo haces
-  };
-
-  const handleChangeDestinoChange = (event) => {
-    console.log(state.IdCiudadDestino);
-    setState({
-      ...state,
-      idDestino: event.target.value,
-    });
-    getAllGuiasFrom();
   };
 
   const columns2 = React.useMemo(() => [
@@ -464,8 +1054,8 @@ function Informes(props) {
     getAllEstatusInformes();
     getAllSucursales();
     getAllOperadores();
-    getAllUnidades();
     getAllCiudades();
+    getAllTipoUnidad();
   }, []);
 
   function getAllData() {
@@ -539,6 +1129,39 @@ function Informes(props) {
 
   return (
     <div>
+
+<Modal style={{height:"400px"}}>  
+      {state.tipoModal == 1 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        {dataOrigenes.length != 0 ? <TableCiudades select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCiudad} columns={columnsCiudades} data={dataOrigenes} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       <a onClick={close}>Cerrar</a>
+       <a href="/Ciudades">Agregar</a>
+    </div>
+      }
+      {state.tipoModal == 2 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        {dataOperadores.length != 0 ? <TableOperadores select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdOperador} columns={columnsOperadores} data={dataOperadores} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       <a onClick={close}>Cerrar</a>
+       <a href="/Operadores">Agregar</a>
+    </div>
+      }
+      {state.tipoModal == 3 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        {dataTipoUnidad.length != 0 ? <TableTipoUnidad select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdTipoUnidad} columns={columnsTipoUnidades} data={dataTipoUnidad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       <a onClick={close}>Cerrar</a>
+       <a href="/TipoUnidad">Agregar</a>
+    </div>
+      }
+      {state.tipoModal == 4 && 
+      <div className="row" style={{maxHeight: "400px !important", overflow:"auto",backgroundColor: '#FFFFFF'}} >
+        {dataUnidades.length != 0 ? <TableUnidad select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdUnidad} columns={columnsUnidades} data={dataUnidades} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       <a onClick={close}>Cerrar</a>
+       <a href="/Unidades">Agregar</a>
+    </div>
+      }
+  </Modal>
+
+
       <header className="topbar clearfix">
         <Cabecera />
       </header>
@@ -896,87 +1519,91 @@ function Informes(props) {
                                                         Operador
                                                       </label>
                                                       {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
-                                                      <Autocomplete
-                                                        freeSolo
-                                                        onChange={(
-                                                          event,
-                                                          newValue
-                                                        ) =>
-                                                          setState({
-                                                            ...state,
-                                                            idOperador: newValue,
-                                                          })
-                                                        }
-                                                        placeholder={
-                                                          state.idOperador
-                                                        }
-                                                        id="idOperador"
-                                                        disableClearable
-                                                        getOptionLabel={(
-                                                          option
-                                                        ) =>
-                                                          option.m_sNombreCompleto
-                                                        }
-                                                        options={dataOperadores}
-                                                        renderInput={(
-                                                          params
-                                                        ) => (
-                                                          <TextField
-                                                            {...params}
-                                                            InputProps={{
-                                                              ...params.InputProps,
-                                                              type: "search",
-                                                            }}
-                                                          />
-                                                        )}
-                                                      />{" "}
-                                                    </div>
-                                                  </div>
-
-                                                  {/*****************************************Unidad*************************************************/}
+                                      <Autocomplete
+                                        freeSolo
+                                        value={state.IdOperador}
+                                        onChange={(event, newValue) =>
+                                          setState({
+                                            ...state,
+                                            IdOperador: newValue,
+                                          })
+                                        }
+                                        id="IdOperador"
+                                        disableClearable
+                                        forcePopupIcon={false}
+                                        options={dataOperadores}
+                                        getOptionLabel={(option) =>
+                                          option.m_sNombreCompleto
+                                        }
+                                        variant="outlined"
+                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle: "solid",borderRadius: "5px"}}
+                                        renderInput={(params) => (
+                                          <div>
+                                            <TextField
+                                              {...params}
+                                              InputProps={{
+                                                ...params.InputProps,
+                                                style: { height: 24},
+                                                type: "search",
+                                                disableUnderline: true,
+                                                 endAdornment: 
+                                                <InputAdornment position="end">
+                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {setState({...state, identificadorModal: "IdOperador", tipoModal: 2}); open();} }>
+                                                    <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
+                                                 </IconButton> 
+                                                </InputAdornment> 
+                                              }}
+                                            />                                                                                       
+                                          </div>
+                                        )}                                        
+                                      />
+                                      </div>
+                                      </div>
+          {/*****************************************tipo Unidad*************************************************/}
                                                   <div className="row">
                                                     <div className="col-sm-12 col-md-6 unit">
-                                                      <label className="label">
-                                                        Unidad
-                                                      </label>
-                                                      {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
-                                                      <Autocomplete
-                                                        freeSolo
-                                                        onChange={(
-                                                          event,
-                                                          newValue
-                                                        ) =>
-                                                          setState({
-                                                            ...state,
-                                                            idUnidad: newValue,
-                                                          })
-                                                        }
-                                                        placeholder={
-                                                          state.idUnidad
-                                                        }
-                                                        id="idUnidad"
-                                                        disableClearable
-                                                        getOptionLabel={(
-                                                          option
-                                                        ) =>
-                                                          option.m_sCodigo +
-                                                          " " +
-                                                          option.m_sDescripcion
-                                                        }
-                                                        options={dataUnidades}
-                                                        renderInput={(
-                                                          params
-                                                        ) => (
-                                                          <TextField
-                                                            {...params}
-                                                            InputProps={{
-                                                              ...params.InputProps,
-                                                              type: "search",
-                                                            }}
-                                                          />
-                                                        )}
-                                                      />{" "}
-                                                    </div>
+                                                    <label className="label">Tipo de Unidad</label>
+                                    <div className="input">
+                                      <Autocomplete
+                                        freeSolo
+                                        onChange={(event, newValue) =>
+                                          setState({
+                                            ...state,
+                                            IdTipoUnidad: newValue,
+                                          })
+                                        }
+                                        value={state.IdTipoUnidad}
+                                        id="IdTipoUnidad"
+                                        disableClearable
+                                        forcePopupIcon={false}
+                                        options={dataTipoUnidad}
+                                        getOptionLabel={(option) =>
+                                          option.m_sTipoUnidad
+                                        }
+                                        variant="outlined"
+                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle: "solid",borderRadius: "5px"}}
+                                        renderInput={(params) => (
+                                          <div>
+                                            <TextField
+                                              {...params}
+                                              InputProps={{
+                                                ...params.InputProps,
+                                                style: { height: 24},
+                                                type: "search",
+                                                disableUnderline: true,
+                                                 endAdornment: 
+                                                <InputAdornment position="end">
+                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {open(); setState({...state, identificadorModal: "IdTipoUnidad", tipoModal: 3})} }>
+                                                    <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
+                                                 </IconButton> 
+                                                </InputAdornment> 
+                                              }}
+                                            />                                                                                       
+                                          </div>
+                                        )}                                        
+                                                       />
+                                    </div>
+                                    </div>
 
                                                     {/*****************************************Placa Int*************************************************/}
                                                     <div className="col-sm-12 col-md-2 unit">
@@ -993,21 +1620,53 @@ function Informes(props) {
                                                     </div>
                                                   </div>
 
-                                                  {/*****************************************Remolque*************************************************/}
+                {/*****************************************Remolque*************************************************/}
                                                   <div className="row">
                                                     <div className="col-sm-12 col-md-6 unit">
                                                       <label className="label">
                                                         Remolque
                                                       </label>
                                                       <div className="input">
-                                                        <input
-                                                          className="form-control"
-                                                          type="text"
-                                                          id="Remolque"
-                                                        />
-                                                      </div>
-                                                    </div>
-
+                                      <Autocomplete
+                                        freeSolo
+                                        value={state.IdUnidad}
+                                        onChange={(event, newValue) =>
+                                          setState({
+                                            ...state,
+                                            IdUnidad: newValue,
+                                          })
+                                        }
+                                        id="IdUnidad"
+                                        disableClearable
+                                        forcePopupIcon={false}
+                                        options={dataUnidades}
+                                        getOptionLabel={(option) =>
+                                          option.m_sDescripcion
+                                        }
+                                        variant="outlined"
+                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle: "solid",borderRadius: "5px"}}
+                                        renderInput={(params) => (
+                                          <div>
+                                            <TextField
+                                              {...params}
+                                              InputProps={{
+                                                ...params.InputProps,
+                                                style: { height: 24},
+                                                type: "search",
+                                                disableUnderline: true,
+                                                 endAdornment: 
+                                                <InputAdornment position="end">
+                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {open(); setState({...state, identificadorModal: "IdUnidad", tipoModal: 4})} }>
+                                                    <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
+                                                 </IconButton> 
+                                                </InputAdornment> 
+                                              }}
+                                            />                                                                                       
+                                          </div>
+                                        )}                                        
+                                                       />
+                                    </div>
+                                  </div>
                                                     {/*****************************************Placa Int*************************************************/}
                                                     <div className="col-sm-12 col-md-2 unit">
                                                       <label className="label">
@@ -1023,87 +1682,102 @@ function Informes(props) {
                                                     </div>
                                                   </div>
 
-                                                  {/*****************************************Origen*************************************************/}
+          {/*****************************************Origen*************************************************/}
                                                   <div className="row">
                                                     <div className="col-sm-12 col-md-6 unit">
                                                       <label className="label">
                                                         Origen
                                                       </label>
-                                                      {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
-                                                      <Autocomplete
-                                                        freeSolo
-                                                        onChange={(
-                                                          event,
-                                                          newValue
-                                                        ) =>
-                                                          setState({
-                                                            ...state,
-                                                            IdCiudadOrigen: newValue,
-                                                          })
-                                                        }
-                                                        placeholder={
-                                                          state.idOrigen
-                                                        }
-                                                        id="idOrigen"
-                                                        disableClearable
-                                                        getOptionLabel={(
-                                                          option
-                                                        ) => option.m_sCiudad}
-                                                        options={dataOrigenes}
-                                                        renderInput={(
-                                                          params
-                                                        ) => (
-                                                          <TextField
-                                                            {...params}
-                                                            InputProps={{
-                                                              ...params.InputProps,
-                                                              type: "search",
-                                                            }}
-                                                          />
-                                                        )}
-                                                      />{" "}
-                                                    </div>
-                                                    {/*****************************************Destino*************************************************/}
+                                                      <div className="input">
+                                      <Autocomplete
+                                        freeSolo
+                                        onChange={(event, newValue) =>
+                                          setState({
+                                            ...state,
+                                            IdCiudadOrigen: newValue,
+                                          })
+                                        }
+                                        value={state.IdCiudadOrigen}
+                                        id="IdCiudadOrigen"
+                                        disableClearable
+                                        forcePopupIcon={false}
+                                        options={dataOrigenes}
+                                        getOptionLabel={(option) =>
+                                          option.m_sCiudad
+                                        }
+                                        variant="outlined"
+                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle: "solid",borderRadius: "5px"}}
+                                        renderInput={(params) => (
+                                          <div>
+                                            <TextField
+                                              {...params}
+                                              InputProps={{
+                                                ...params.InputProps,
+                                                style: { height: 24},
+                                                type: "search",
+                                                disableUnderline: true,
+                                                 endAdornment: 
+                                                <InputAdornment position="end">
+                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {open(); setState({...state, identificadorModal: "IdCiudadOrigen", tipoModal: 1})} }>
+                                                    <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
+                                                 </IconButton> 
+                                                </InputAdornment> 
+                                              }}
+                                            />                                                                                       
+                                          </div>
+                                        )}                                        
+                                                       />
+                                    </div>
+                                  </div>
+ {/*****************************************Destino*************************************************/}
                                                     <div className="col-sm-12 col-md-6 unit">
                                                       <label className="label">
                                                         Destino
                                                       </label>
-                                                      {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
-                                                      <Autocomplete
-                                                        freeSolo
-                                                        onChange={
-                                                          ((event, newValue) =>
-                                                            setState({
-                                                              ...state,
-                                                              IdCiudadDestino: newValue,
-                                                            }),
-                                                          handleChangeDestinoChange)
-                                                        }
-                                                        placeholder={
-                                                          state.idDestino
-                                                        }
-                                                        id="idDestino"
-                                                        disableClearable
-                                                        getOptionLabel={(
-                                                          option
-                                                        ) => option.m_sCiudad}
-                                                        options={dataOrigenes}
-                                                        renderInput={(
-                                                          params
-                                                        ) => (
-                                                          <TextField
-                                                            {...params}
-                                                            InputProps={{
-                                                              ...params.InputProps,
-                                                              type: "search",
-                                                            }}
-                                                          />
-                                                        )}
-                                                      />{" "}
-                                                    </div>
-                                                  </div>
-
-                                                  {/*****************************************Ruta*************************************************/}
+                                                      <div className="input">
+                                      <Autocomplete
+                                        freeSolo
+                                        onChange={(event, newValue) =>
+                                          setState({
+                                            ...state,
+                                            IdCiudadDestino: newValue,
+                                          })
+                                        }
+                                        onSelect={() => {getAllGuiasFrom(); getAllViajesOrigenDestino(state.IdCiudadOrigen.m_nIdCiudad, state.IdCiudadDestino.m_nIdCiudad)}}
+                                        value={state.IdCiudadDestino}
+                                        id="IdCiudadDestino"
+                                        disableClearable
+                                        forcePopupIcon={false}
+                                        options={dataOrigenes}
+                                        getOptionLabel={(option) =>
+                                          option.m_sCiudad
+                                        }
+                                        variant="outlined"
+                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle: "solid",borderRadius: "5px"}}
+                                        renderInput={(params) => (
+                                          <div>
+                                            <TextField
+                                              {...params}
+                                              InputProps={{
+                                                ...params.InputProps,
+                                                style: { height: 24},
+                                                type: "search",
+                                                disableUnderline: true,
+                                                 endAdornment: 
+                                                <InputAdornment position="end">
+                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {open(); setState({...state, identificadorModal: "IdCiudadDestino", tipoModal: 1}); getAllViajesOrigenDestino(state.IdCiudadOrigen.m_nIdCiudad, state.IdCiudadDestino.m_nIdCiudad); getAllGuiasFrom()} }>
+                                                    <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
+                                                 </IconButton> 
+                                                </InputAdornment> 
+                                              }}
+                                            />                                                                                       
+                                          </div>
+                                        )}                                        
+                                                       />
+                                    </div>
+                                  </div>
+                                  </div>
+{/*****************************************Ruta*************************************************/}
                                                   <div className="row">
                                                     <div className="col-sm-12 col-md-6 unit">
                                                       <label className="label">
@@ -1171,20 +1845,41 @@ function Informes(props) {
                                                 noValidate
                                               >
                                                 <div className="form-content">
-                                                  {/*****************************************Viaje*************************************************/}
+                              {/*****************************************Viaje*************************************************/}
                                                   <div className="row">
                                                     <div className="col-sm-12 col-md-6 unit">
                                                       <label className="label">
                                                         Viaje
                                                       </label>
-                                                      <div className="input">
-                                                        <input
+                                                      <label className="input select">
+                                                        <select
                                                           className="form-control"
-                                                          type="text"
-                                                          id="Viaje"
-                                                        />
+                                                          required
+                                                          id="viaje"
+                                                          onSelect={handleSelectViaje()}>
+                                                          <option value="0">
+                                                            Seleccionar
+                                                          </option>
+                                                          {dataViajes.map(
+                                                            (viaje) => (
+                                                                   <option
+                                                                key={
+                                                                  viaje.m_nIdViaje
+                                                                }
+                                                                value={
+                                                                  viaje.m_nIdViaje
+                                                                }
+                                                              >
+                                                                {
+                                                                  viaje.m_sFolioViaje
+                                                                }
+                                                                  </option>
+                                                            )
+                                                          )}
+                                                        </select>
+                                                      </label>
                                                       </div>
-                                                    </div>
+                                                   
 
                                                     {/*****************************************Ruta2*************************************************/}
                                                     <div className="col-sm-12 col-md-6 unit">
@@ -1195,7 +1890,8 @@ function Informes(props) {
                                                         <input
                                                           className="form-control"
                                                           type="text"
-                                                          id="Ruta2"
+                                                          value={state.ruta2}
+                                                          id="ruta2"
                                                         />
                                                       </div>
                                                     </div>
@@ -1211,7 +1907,8 @@ function Informes(props) {
                                                         <input
                                                           className="form-control"
                                                           type="text"
-                                                          id="Operador2"
+                                                          value={state.operador2}
+                                                          id="operador2"
                                                         />
                                                       </div>
                                                     </div>
@@ -1225,7 +1922,8 @@ function Informes(props) {
                                                         <input
                                                           className="form-control"
                                                           type="text"
-                                                          id="Unidad2"
+                                                          value={state.unidad2}
+                                                          id="unidad2"
                                                         />
                                                       </div>
                                                     </div>
@@ -1241,7 +1939,8 @@ function Informes(props) {
                                                         <input
                                                           className="form-control"
                                                           type="text"
-                                                          id="Remolque2"
+                                                          value={state.remolque2}
+                                                          id="remolque2"
                                                         />
                                                       </div>
                                                     </div>
