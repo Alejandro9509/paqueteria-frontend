@@ -80,7 +80,7 @@ function Embarque() {
     correoRemitente: "",
     telefonoRemitente: "",
     contactoRemitente: "",
-    origenRemitente: {},
+    ciudadDestino: {},
     nombreDestinatario: "",
     RFCDestinatario: "",
     domicilioDestinatario: "",
@@ -89,13 +89,12 @@ function Embarque() {
     correoDestinatario: "",
     telefonoDestinatario: "",
     contactoDestinatario: "",
-    destinoDestinatario: {},
     ciudadRemitente: {},
     ciudadOrigen: {},
     fechaEntrega: "",
     horaEntrega: "",
     codigoPostalEntrega: {},
-    ciudadEntrega: "",
+    ciudadEntrega: {},
     zonaEntrega: "",
     domicilioEntrega: "",
     entregaEn: "",
@@ -159,33 +158,33 @@ function Embarque() {
       "m_sNOmbreRemitente": state.nombreRemitente,
       "m_sRFCRemitente": state.RFCRemitente,
       "m_sDomicilioRemitente": state.domicilioRemitente,
-      "m_nIdCodigoPostalRemitente": state.codigoPostalRemitente,
-      "m_nCiudadRemitente": state.ciudadRemitente,
+      "m_nIdCodigoPostalRemitente": state.codigoPostalRemitente.m_nIdCP,
+      "m_nCiudadRemitente": state.ciudadRemitente.m_nIdCiudad,
       "m_sCorreoRemitente": state.correoRemitente,
       "m_sTelefonoRemitente": state.telefonoRemitente,
       "m_sContactoRemitente": state.contactoRemitente,
-      "m_nIdCiudadOrigen": state.ciudadOrigen,
+      "m_nIdCiudadOrigen": state.ciudadOrigen.m_nIdCiudad,
       "m_sNombreDestinatario": state.nombreDestinatario,
       "m_sRFCDestinatario": state.RFCDestinatario,
       "m_sDomicilioDestinatario": state.domicilioDestinatario,
-      "m_nIdCodigoPostalDestinatario": state.codigoPostalDestinatario,
-      "m_nIdCIudadDestinatario": state.ciudadDestinatario,
+      "m_nIdCodigoPostalDestinatario": state.codigoPostalDestinatario.m_nIdCP,
+      "m_nIdCIudadDestinatario": state.ciudadDestinatario.m_nIdCiudad,
       "m_sCorreoDestinatario": state.correoDestinatario,
       "m_sTelefonoDestinatario": state.telefonoDestinatario,
       "m_sContactoDestinatario": state.contactoDestinatario,
-      "m_nIdCiudadDestino": state.ciudadDestino,
+      "m_nIdCiudadDestino": state.ciudadDestino.m_nIdCiudad,
       "m_dFechaEntrega": "",
       "m_tHoraEntrega": "",
       "m_nNoPaquetes": state.paquetes.length,
       "m_nNoSobres": state.sobres.length,
-      "m_nIdOperador": state.idOperador,
-      "m_nIdUnidad": state.idUnidad,
+      "m_nIdOperador": state.idOperador.m_nIdOperador,
+      "m_nIdUnidad": state.idUnidad.m_nIdUnidad,
       "m_dFechaSalida": state.fechaHoraSalida.split("T")[0],
       "m_tHoraSalida": state.fechaHoraSalida.split("T")[1],
       "FechaLlegada": state.fechaHoraLlegada.split("T")[0],
       "HoraLlegada": state.fechaHoraLlegada.split("T")[1],
-      "CodigoPostalEntrega": state.codigoPostalEntrega,
-      "IdCiudadEntrega": state.ciudadEntrega,
+      "CodigoPostalEntrega": state.codigoPostalEntrega.m_nIdCP,
+      "IdCiudadEntrega": state.ciudadEntrega.m_nIdCiudad,
       "IdZonaEntrega": state.zonaEntrega,
       "DomicilioEntrega": state.domicilioEntrega,
       "EntregarEn": state.entregaEn,
@@ -234,17 +233,17 @@ function Embarque() {
   function addPaquete() {
     const { paquetes } = state;
     paquetes.push({
-      peso: "",
-      largo: "",
-      ancho: "",
-      alto: "",
-      volumen: "",
-      peso: "",
-      tipoEmbalaje: "",
-      valorDeclarado: "",
-      descripcionPaquete: "",
+      m_xPeso: "",
+      m_xLargo: "",
+      m_xAncho: "",
+      m_xAlto: "",
+      m_xVolumen: "",
+      m_nIdTIpoEmpaque: "",
+      m_cValorDeclarado: "",
+      m_sDescripcion: "",
       ctd: "",
-      observacionesPaquete: "",
+      m_nTipo: 2,
+      m_sObservaciones: "",
     });
     console.log(paquetes);
     setState({ ...state, paquetes: paquetes });
@@ -326,51 +325,58 @@ function Embarque() {
         agregar: "Modificar",
         idEmbarque: id,
         showPopUp: true,
-        idEntrega: 0,
         idSucursalAgregar: respuesta.data.IdSucursal,
         folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
         folioEmbarque: respuesta.data.m_nFolioEmbarque,
         folioGuía: respuesta.data.m_nFolioGuia,
         folioInforme: respuesta.data.m_nFolioInforme,
         fechaHoraCreacion: respuesta.data.m_dFecha + "T" + respuesta.data.m_tHora.split(":")[0] + ":" + respuesta.data.m_tHora.split(":")[1],
-        moneda: dataTipoMoneda[0].m_nIdMoneda,
+        moneda: respuesta.data.m_nIdMoneda,
         tipoCambio: respuesta.data.m_cTIpoCambio,
-        tipoCobro: dataTipoCobro[0].m_nIdTipoCobro,
-        estatusEmbarque: dataEstatusEmbarque[0].m_nIdEstatusEmbarque,
+        tipoCobro: respuesta.data.m_nIdTIpoCobro,
+        estatusEmbarque: respuesta.data.m_nIdEstatusEmbarque,
         nombreRemitente: respuesta.data.m_sNOmbreRemitente,
         RFCRemitente: respuesta.data.m_sRFCRemitente,
         domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-        codigoPostalRemitente: dataCodigoPostal.find( (o) => o.m_nIdCP == respuesta.data.m_nIdCodigoPostalRemitente),
+        codigoPostalRemitente: dataCodigoPostal.find(o => o.m_nIdCP == respuesta.data.m_nIdCodigoPostalRemitente),
         ciudadRemitente: dataCiudad.find(
-          (o) => o.m_nIdCiudad == respuesta.data.m_nCiudadRemitente
+          (o) => o.m_nIdCiudad == respuesta.data.m_nCiudadRemitente,
         ),
         correoRemitente: respuesta.data.m_sCorreoRemitente,
         telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
         contactoRemitente: respuesta.data.m_sContactoRemitente,
-        origenRemitente: dataCiudad[0].m_nIdCiudad,
-        ciudadOrigen: dataCiudad[0].m_nIdCiudad,
+        ciudadOrigen: dataCiudad.find(
+          (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen,
+        ),
+
         nombreDestinatario: respuesta.data.m_sNombreDestinatario,
         RFCDestinatario: respuesta.data.m_sRFCDestinatario,
         domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-        codigoPostalDestinatario: dataCodigoPostal[0].m_nIdCP,
-        ciudadDestinatario: dataCiudad[0].m_nIdCiudad,
+        codigoPostalDestinatario: dataCodigoPostal.find(o => o.m_nIdCP == respuesta.data.m_nIdCodigoPostalDestinatario),
+        ciudadDestinatario: dataCiudad.find(
+          (o) => o.m_nIdCiudad == respuesta.data.m_nIdCIudadDestinatario,
+        ),
         correoDestinatario: respuesta.data.m_sCorreoDestinatario,
         telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
         contactoDestinatario: respuesta.data.m_sContactoDestinatario,
-        destinoDestinatario: dataCiudad[0].m_nIdCiudad,
-        ciudadRemitente: dataCiudad[0].m_nIdCiudad,
-        ciudadDestinatario: dataCiudad[0].m_nIdCiudad,
-        fechaEntrega: respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
-        codigoPostalEntrega: dataCodigoPostal[0].m_nIdCP,
-        ciudadEntrega: dataCiudad[0].m_nIdCiudad,
-        fechaHoraSalida: respuesta.data.m_dFechaSalida + "T" + respuesta.data.m_tHoraSalida,
-        fechaHoraLlegada: respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,
-        idOperador: dataOperador[0].m_nIdOperador,
-        idTipoUnidad: dataTipoUnidad[0].m_nIdTipoUnidad,
+
+        ciudadDestino: dataCiudad.find(
+          (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen,
+        ),
         zonaEntrega: respuesta.data.IdZonaEntrega,
         domicilioEntrega: respuesta.data.DomicilioEntrega,
         entregaEn: respuesta.data.EntregarEn,
         datosAdicionalesEntrega: respuesta.data.DatosAdicionalesis,
+        fechaEntrega: respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
+        codigoPostalEntrega: dataCodigoPostal.find(o => o.m_nIdCP == respuesta.data.CodigoPostalEntrega),
+        ciudadEntrega: dataCiudad.find(
+          (o) => o.m_nIdCiudad == respuesta.data.IdCiudadEntrega,
+        ),
+        fechaHoraSalida: respuesta.data.m_dFechaSalida + "T" + respuesta.data.m_tHoraSalida,
+        fechaHoraLlegada: respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,
+        idOperador: dataOperador.find(o => o.m_nIdOperador == respuesta.data.m_nIdOperador),
+        idTipoUnidad: dataTipoUnidad.find(o => o.m_sTipoUnidad == (dataUnidad.find(o => o.m_nIdUnidad == respuesta.data.m_nIdUnidad)).m_sTipoUnidad),
+        idUnidad: dataUnidad.find(o => o.m_nIdUnidad == respuesta.data.m_nIdUnidad),
         paquetes: respuesta.data.m_arrPaquetes
       })
     });
@@ -385,45 +391,54 @@ function Embarque() {
         agregar: "Consultar",
         idEmbarque: id,
         showPopUp: true,
-        idEntrega: 0,
         idSucursalAgregar: respuesta.data.IdSucursal,
         folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
         folioEmbarque: respuesta.data.m_nFolioEmbarque,
         folioGuía: respuesta.data.m_nFolioGuia,
         folioInforme: respuesta.data.m_nFolioInforme,
         fechaHoraCreacion: respuesta.data.m_dFecha + "T" + respuesta.data.m_tHora.split(":")[0] + ":" + respuesta.data.m_tHora.split(":")[1],
-        moneda: dataTipoMoneda[0].m_nIdMoneda,
+        moneda: respuesta.data.m_nIdMoneda,
         tipoCambio: respuesta.data.m_cTIpoCambio,
-        tipoCobro: dataTipoCobro[0].m_nIdTipoCobro,
-        estatusEmbarque: dataEstatusEmbarque[0].m_nIdEstatusEmbarque,
+        tipoCobro: respuesta.data.m_nIdTIpoCobro,
+        estatusEmbarque: respuesta.data.m_nIdEstatusEmbarque,
         nombreRemitente: respuesta.data.m_sNOmbreRemitente,
         RFCRemitente: respuesta.data.m_sRFCRemitente,
         domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-        codigoPostalRemitente: dataCodigoPostal[0].m_nIdCP,
-        ciudadRemitente: dataCiudad[0].m_nIdCiudad, //respuesta.data.m_nCiudadRemitente,
+        codigoPostalRemitente: dataCodigoPostal.find(o => o.m_nIdCP == respuesta.data.m_nIdCodigoPostalRemitente),
+        ciudadRemitente: dataCiudad.find(
+          (o) => o.m_nIdCiudad == respuesta.data.m_nCiudadRemitente,
+        ),
         correoRemitente: respuesta.data.m_sCorreoRemitente,
         telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
         contactoRemitente: respuesta.data.m_sContactoRemitente,
-        origenRemitente: dataCiudad[0].m_nIdCiudad,
-        ciudadOrigen: dataCiudad[0].m_nIdCiudad,
+        ciudadOrigen: dataCiudad.find(
+          (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen,
+        ),
+
         nombreDestinatario: respuesta.data.m_sNombreDestinatario,
         RFCDestinatario: respuesta.data.m_sRFCDestinatario,
         domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-        codigoPostalDestinatario: dataCodigoPostal[0].m_nIdCP,
-        ciudadDestinatario: dataCiudad[0].m_nIdCiudad,
+        codigoPostalDestinatario: dataCodigoPostal.find(o => o.m_nIdCP == respuesta.data.m_nIdCodigoPostalDestinatario),
+        ciudadDestinatario: dataCiudad.find(
+          (o) => o.m_nIdCiudad == respuesta.data.m_nIdCIudadDestinatario,
+        ),
         correoDestinatario: respuesta.data.m_sCorreoDestinatario,
         telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
         contactoDestinatario: respuesta.data.m_sContactoDestinatario,
-        destinoDestinatario: dataCiudad[0].m_nIdCiudad,
-        ciudadRemitente: dataCiudad[0].m_nIdCiudad,
-        ciudadDestinatario: dataCiudad[0].m_nIdCiudad,
+
+        ciudadDestino: dataCiudad.find(
+          (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen,
+        ),
         fechaEntrega: respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
-        codigoPostalEntrega: dataCodigoPostal[0].m_nIdCP,
-        ciudadEntrega: dataCiudad[0].m_nIdCiudad,
+        codigoPostalEntrega: dataCodigoPostal.find(o => o.m_nIdCP == respuesta.data.CodigoPostalEntrega),
+        ciudadEntrega: dataCiudad.find(
+          (o) => o.m_nIdCiudad == respuesta.data.IdCiudadEntrega,
+        ),
         fechaHoraSalida: respuesta.data.m_dFechaSalida + "T" + respuesta.data.m_tHoraSalida,
         fechaHoraLlegada: respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,
-        idOperador: dataOperador[0].m_nIdOperador,
-        idTipoUnidad: dataTipoUnidad[0].m_nIdTipoUnidad,
+        idOperador: dataOperador.find(o => o.m_nIdOperador == respuesta.data.m_nIdOperador),
+        idTipoUnidad: dataTipoUnidad.find(o => o.m_sTipoUnidad == (dataUnidad.find(o => o.m_nIdUnidad == respuesta.data.m_nIdUnidad)).m_sTipoUnidad),
+        idUnidad: dataUnidad.find(o => o.m_nIdUnidad == respuesta.data.m_nIdUnidad),
         zonaEntrega: respuesta.data.IdZonaEntrega,
         domicilioEntrega: respuesta.data.DomicilioEntrega,
         entregaEn: respuesta.data.EntregarEn,
@@ -438,7 +453,7 @@ function Embarque() {
       ...state,
       agregar: "Agregar",
       showPopUp: true,
-      idEntrega: 0,
+      idEmbarque: 0,
       folioRecoleccion: "",
       folioEmbarque: "",
       folioGuía: "",
@@ -451,35 +466,35 @@ function Embarque() {
       nombreRemitente: "",
       RFCRemitente: "",
       domicilioRemitente: "",
-      codigoPostalRemitente: dataCodigoPostal[0].m_nIdCP,
-      ciudadRemitente: "",
+      codigoPostalRemitente: {},
+      ciudadRemitente: {},
       correoRemitente: "",
       telefonoRemitente: "",
       contactoRemitente: "",
-      origenRemitente: dataCiudad[0].m_nIdCiudad,
-      ciudadOrigen: dataCiudad[0].m_nIdCiudad,
+      ciudadDestino: {},
+      ciudadOrigen: {},
       nombreDestinatario: "",
       RFCDestinatario: "",
       domicilioDestinatario: "",
-      codigoPostalDestinatario: dataCodigoPostal[0].m_nIdCP,
-      ciudadDestinatario: dataCiudad[0].m_nIdCiudad,
+      codigoPostalDestinatario: {},
+      ciudadDestinatario: {},
       correoDestinatario: "",
       telefonoDestinatario: "",
       contactoDestinatario: "",
-      destinoDestinatario: dataCiudad[0].m_nIdCiudad,
-      ciudadRemitente: dataCiudad[0].m_nIdCiudad,
-      ciudadDestinatario: dataCiudad[0].m_nIdCiudad,
+      ciudadDestinatario: {},
       fechaEntrega: "",
       horaEntrega: "",
-      codigoPostalEntrega: dataCodigoPostal[0].m_nIdCP,
-      ciudadEntrega: dataCiudad[0].m_nIdCiudad,
-      idOperador: dataOperador[0].m_nIdOperador,
-      idTipoUnidad: dataTipoUnidad[0].m_nIdTipoUnidad,
-      idUnidad: dataUnidad[0].m_nIdUnidad,
+      codigoPostalEntrega: {},
+      ciudadEntrega: {},
+      idOperador: {},
+      idTipoUnidad: {},
+      idUnidad: {},
       zonaEntrega: "",
       domicilioEntrega: "",
       entregaEn: "",
       datosAdicionalesEntrega: "",
+      fechaHoraSalida: "",
+      fechaHoraLlegada: "",
       cantidadDePaquetes: 0,
       cantidadDeSobres: 0,
     })
@@ -508,7 +523,7 @@ function Embarque() {
   function handleSelectDatos(id, cp) {
     setState({
       ...state,
-      [state.identificadorModal] : id
+      [state.identificadorModal]: id
     });
     console.log(id)
     console.log(state.identificadorModal)
@@ -542,13 +557,6 @@ function Embarque() {
     }
 
   ]);
-  
- 
-
-  
-
-
-  
   const columnsCP = React.useMemo(() => [
     {
       Name: "Codigo",
@@ -721,10 +729,8 @@ function Embarque() {
   }
 
   function getAllUnidades(id) {
-    console.log(id)
     const url = `${process.env.REACT_APP_API_URL}/Unidades/ByTipoUnidad/${id}`;
     axios.get(url, { headers }).then((respuesta) => {
-      console.log(respuesta.data)
       setDataUnidad(respuesta.data);
     });
     console.log(dataUnidad)
@@ -890,11 +896,11 @@ function Embarque() {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                          <i className="fa fa-caret-down" />
-                        )
+                            <i className="fa fa-caret-down" />
+                          )
                       ) : (
-                        ""
-                      )}
+                          ""
+                        )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -905,65 +911,20 @@ function Embarque() {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-              prepareRow(row);
-              return (
-                <tr
-                  style={{
-                    backgroundColor:
-                      row.original.m_nIdCP === select ? "orange" : "white",
-                  }}
-                  {...row.getRowProps()}
-                  onClick={handleSelectCP.bind(this, row.original)}
-                  onDoubleClick={close}
-                >
-                  <td>
-                    <div>
-                      <a
-                        href="#Agregar"
-                        role="tab"
-                        data-toggle="tab"
-                        onClick={() =>
-                          handleShowModificar(row.original.m_nIdRecoleccion)
-                        }
-                        className="btn btn-default"
-                      >
-                        <i
-                          className="fa fa-pencil-square-o"
-                          style={{ color: "#F9A03E" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i
-                          className="zmdi zmdi-delete"
-                          style={{ color: "#F30B0B" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                      </a>
-                    </div>
-                  </td>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr style={{ backgroundColor: row.original.m_nIdCP === select ? "orange" : "white" }}  {...row.getRowProps()} onClick={handleSelectDatos.bind(this, row.original)} onDoubleClick={close}>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
           </tbody>
         </table>
       </div>
@@ -1021,11 +982,11 @@ function Embarque() {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                          <i className="fa fa-caret-down" />
-                        )
+                            <i className="fa fa-caret-down" />
+                          )
                       ) : (
-                        ""
-                      )}
+                          ""
+                        )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -1036,64 +997,20 @@ function Embarque() {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-              prepareRow(row);
-              return (
-                <tr
-                  style={{
-                    backgroundColor:
-                      row.original.m_nIdCiudad === select ? "orange" : "white",
-                  }}
-                  {...row.getRowProps()}
-                  onClick={handleSelectCP.bind(this, row.original)}
-                >
-                  <td>
-                    <div>
-                      <a
-                        href="#Agregar"
-                        role="tab"
-                        data-toggle="tab"
-                        onClick={() =>
-                          handleShowModificar(row.original.m_nIdRecoleccion)
-                        }
-                        className="btn btn-default"
-                      >
-                        <i
-                          className="fa fa-pencil-square-o"
-                          style={{ color: "#F9A03E" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i
-                          className="zmdi zmdi-delete"
-                          style={{ color: "#F30B0B" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                      </a>
-                    </div>
-                  </td>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr style={{ backgroundColor: row.original.m_nIdCiudad === select ? "orange" : "white" }} {...row.getRowProps()} onClick={handleSelectDatos.bind(this, row.original)}>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
           </tbody>
         </table>
       </div>
@@ -1150,11 +1067,11 @@ function Embarque() {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                          <i className="fa fa-caret-down" />
-                        )
+                            <i className="fa fa-caret-down" />
+                          )
                       ) : (
-                        ""
-                      )}
+                          ""
+                        )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -1165,66 +1082,20 @@ function Embarque() {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-              prepareRow(row);
-              return (
-                <tr
-                  style={{
-                    backgroundColor:
-                      row.original.m_nIdOperador === select
-                        ? "orange"
-                        : "white",
-                  }}
-                  {...row.getRowProps()}
-                  onClick={handleSelectCP.bind(this, row.original)}
-                >
-                  <td>
-                    <div>
-                      <a
-                        href="#Agregar"
-                        role="tab"
-                        data-toggle="tab"
-                        onClick={() =>
-                          handleShowModificar(row.original.m_nIdRecoleccion)
-                        }
-                        className="btn btn-default"
-                      >
-                        <i
-                          className="fa fa-pencil-square-o"
-                          style={{ color: "#F9A03E" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i
-                          className="zmdi zmdi-delete"
-                          style={{ color: "#F30B0B" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                      </a>
-                    </div>
-                  </td>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr style={{ backgroundColor: row.original.m_nIdOperador === select ? "orange" : "white" }} {...row.getRowProps()} onClick={handleSelectDatos.bind(this, row.original)}>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
           </tbody>
         </table>
       </div>
@@ -1277,11 +1148,11 @@ function Embarque() {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                          <i className="fa fa-caret-down" />
-                        )
+                            <i className="fa fa-caret-down" />
+                          )
                       ) : (
-                        ""
-                      )}
+                          ""
+                        )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -1292,66 +1163,20 @@ function Embarque() {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-              prepareRow(row);
-              return (
-                <tr
-                  style={{
-                    backgroundColor:
-                      row.original.m_nIdTipoUnidad === select
-                        ? "orange"
-                        : "white",
-                  }}
-                  {...row.getRowProps()}
-                  onClick={handleSelectCP.bind(this, row.original)}
-                >
-                  <td>
-                    <div>
-                      <a
-                        href="#Agregar"
-                        role="tab"
-                        data-toggle="tab"
-                        onClick={() =>
-                          handleShowModificar(row.original.m_nIdRecoleccion)
-                        }
-                        className="btn btn-default"
-                      >
-                        <i
-                          className="fa fa-pencil-square-o"
-                          style={{ color: "#F9A03E" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i
-                          className="zmdi zmdi-delete"
-                          style={{ color: "#F30B0B" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                      </a>
-                    </div>
-                  </td>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr style={{ backgroundColor: row.original.m_nIdTipoUnidad === select ? "orange" : "white" }} {...row.getRowProps()} onClick={handleSelectDatos.bind(this, row.original)}>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
           </tbody>
         </table>
       </div>
@@ -1408,11 +1233,11 @@ function Embarque() {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                          <i className="fa fa-caret-down" />
-                        )
+                            <i className="fa fa-caret-down" />
+                          )
                       ) : (
-                        ""
-                      )}
+                          ""
+                        )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -1423,64 +1248,20 @@ function Embarque() {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-              prepareRow(row);
-              return (
-                <tr
-                  style={{
-                    backgroundColor:
-                      row.original.m_nIdUnidad === select ? "orange" : "white",
-                  }}
-                  {...row.getRowProps()}
-                  onClick={handleSelectCP.bind(this, row.original)}
-                >
-                  <td>
-                    <div>
-                      <a
-                        href="#Agregar"
-                        role="tab"
-                        data-toggle="tab"
-                        onClick={() =>
-                          handleShowModificar(row.original.m_nIdRecoleccion)
-                        }
-                        className="btn btn-default"
-                      >
-                        <i
-                          className="fa fa-pencil-square-o"
-                          style={{ color: "#F9A03E" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i
-                          className="zmdi zmdi-delete"
-                          style={{ color: "#F30B0B" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                      </a>
-                    </div>
-                  </td>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr style={{ backgroundColor: row.original.m_nIdUnidad === select ? "orange" : "white" }} {...row.getRowProps()} onClick={handleSelectDatos.bind(this, row.original)}>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
           </tbody>
         </table>
       </div>
@@ -1660,7 +1441,7 @@ function Embarque() {
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
-              value={state.paquetes[index].Ctd}
+              value={state.paquetes[index].ctd}
               placeholder="Ctd"
               name="ctd"
             />
@@ -1826,45 +1607,45 @@ function Embarque() {
         )}
       </Modal>
 
-<Modal style={{height:"400px"}}>  
-      {state.tipoModal == 0 && 
-      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-        {dataCodigoPostal.length != 0 ? <TableCodigoPostal select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP} columns={columnsCP} data={dataCodigoPostal} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-       <br></br>
-       <br></br>
-       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
-       <button onClick={() => {history.push("/Ciudades")}} className="btn btn-primary primary-btn">Agregar</button>
-    </div>
-      }
-      {state.tipoModal == 1 && 
-      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-        {dataCiudad.length != 0 ? <TableCiudades select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCiudad} columns={columnsCiudades} data={dataCiudad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
-       <button onClick={() => {history.push("/Ciudades")}} className="btn btn-primary primary-btn">Agregar</button>
-    </div>
-      }
-      {state.tipoModal == 2 && 
-      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-        {dataOperador.length != 0 ? <TableOperadores select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdOperador} columns={columnsOperadores} data={dataOperador} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
-       <button onClick={() => {history.push("/Operadores")}} className="btn btn-primary primary-btn">Agregar</button>
-    </div>
-      }
-      {state.tipoModal == 3 && 
-      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-        {dataTipoUnidad.length != 0 ? <TableTipoUnidad select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdTipoUnidad} columns={columnsTipoUnidades} data={dataTipoUnidad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
-       <button onClick={() => {history.push("/TipoUnidad")}} className="btn btn-primary primary-btn">Agregar</button>
-    </div>
-      }
-      {state.tipoModal == 4 && 
-      <div className="row" style={{maxHeight: "400px !important", overflow:"auto",backgroundColor: '#FFFFFF'}} >
-        {dataUnidad.length != 0 ? <TableUnidad select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdUnidad} columns={columnsUnidades} data={dataUnidad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
-       <button onClick={() => {history.push("/Unidades")}} className="btn btn-primary primary-btn">Agregar</button>
-    </div>
-      }
-  </Modal>
+      <Modal style={{ height: "400px" }}>
+        {state.tipoModal == 0 &&
+          <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+            {dataCodigoPostal.length != 0 ? <TableCodigoPostal select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP} columns={columnsCP} data={dataCodigoPostal} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
+            <br></br>
+            <br></br>
+            <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+            <button onClick={() => { history.push("/Ciudades") }} className="btn btn-primary primary-btn">Agregar</button>
+          </div>
+        }
+        {state.tipoModal == 1 &&
+          <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+            {dataCiudad.length != 0 ? <TableCiudades select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCiudad} columns={columnsCiudades} data={dataCiudad} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
+            <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+            <button onClick={() => { history.push("/Ciudades") }} className="btn btn-primary primary-btn">Agregar</button>
+          </div>
+        }
+        {state.tipoModal == 2 &&
+          <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+            {dataOperador.length != 0 ? <TableOperadores select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdOperador} columns={columnsOperadores} data={dataOperador} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
+            <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+            <button onClick={() => { history.push("/Operadores") }} className="btn btn-primary primary-btn">Agregar</button>
+          </div>
+        }
+        {state.tipoModal == 3 &&
+          <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+            {dataTipoUnidad.length != 0 ? <TableTipoUnidad select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdTipoUnidad} columns={columnsTipoUnidades} data={dataTipoUnidad} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
+            <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+            <button onClick={() => { history.push("/TipoUnidad") }} className="btn btn-primary primary-btn">Agregar</button>
+          </div>
+        }
+        {state.tipoModal == 4 &&
+          <div className="row" style={{ maxHeight: "400px !important", overflow: "auto", backgroundColor: '#FFFFFF' }} >
+            {dataUnidad.length != 0 ? <TableUnidad select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdUnidad} columns={columnsUnidades} data={dataUnidad} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
+            <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+            <button onClick={() => { history.push("/Unidades") }} className="btn btn-primary primary-btn">Agregar</button>
+          </div>
+        }
+      </Modal>
 
 
       <header className="topbar clearfix">
@@ -2471,7 +2252,7 @@ function Embarque() {
                                     <label className="label">
                                       Ciudad
                                   </label>
-                                  <div className="input">
+                                    <div className="input">
                                       <Autocomplete
                                         freeSolo
                                         onChange={(event, newValue) =>
@@ -2489,28 +2270,27 @@ function Embarque() {
                                           option.m_sCiudad
                                         }
                                         variant="outlined"
-                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle: "solid",borderRadius: "5px"}}
+                                        style={{ borderWidth: "1px", borderColor: "#dddddd", borderStyle: "solid", borderRadius: "5px" }}
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
-                                                style: { height: 24},
+                                                style: { height: 24 },
                                                 type: "search",
-                                                value: state.ciudadRemitente,
                                                 disabled: state.agregar == "Consultar",
-                                                 endAdornment: 
-                                                <InputAdornment position="end">
-                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {open(); setState({...state, identificadorModal: "ciudadRemitente", tipoModal: 1})} }>
-                                                    <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
-                                                 </IconButton> 
-                                                </InputAdornment> 
+                                                endAdornment:
+                                                  <InputAdornment position="end">
+                                                    <IconButton padding="0px" style={{ paddingRight: "0px" }} onClick={() => { open(); setState({ ...state, identificadorModal: "ciudadRemitente", tipoModal: 1 }) }}>
+                                                      <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
+                                                    </IconButton>
+                                                  </InputAdornment>
                                               }}
-                                            />                                                                                       
+                                            />
                                           </div>
-                                        )}                                        
-                                                       />
+                                        )}
+                                      />
                                     </div>
                                   </div>
 
@@ -2565,8 +2345,10 @@ function Embarque() {
                                     </div>
                                   </div>
 
-                                  <div className="col-sm-12 col-md-12 unit">
-                                  <label className="label">Origen</label>
+                                  <div className="col-sm-12 col-md-6 unit">
+                                    <label className="label">
+                                      Origen
+                                </label>
                                     <div className="input">
                                       <Autocomplete
                                         freeSolo
@@ -2704,9 +2486,11 @@ function Embarque() {
                                   </div>
                                 </div>
 
-                                <div className="col-sm-12 col-md-8 unit" >
-                                <label className="label">Código Postal</label>
-                                  <div className="input">
+                                <div className="col-sm-4 col-md-6 unit">
+                                  <label className="label">
+                                    Código Postal
+                                </label>
+                                  <div className="input" >
                                     <Autocomplete
                                       freeSolo
                                       onChange={(event, newValue) =>
@@ -2768,55 +2552,53 @@ function Embarque() {
                                       )}
                                     />
                                   </div>
-
                                 </div>
 
                                 <div className="col-sm-12 col-md-12  unit">
                                   <label className="label">
                                     Ciudad
                                 </label>
-                                <div className="input">
-                                      <Autocomplete
-                                        freeSolo
-                                        onChange={(event, newValue) =>
-                                          setState({
-                                            ...state,
-                                            ciudadDestinatario: newValue,
-                                          })
-                                        }
-                                        value={state.ciudadDestinatario}
-                                        disabled={state.agregar == "Consultar"}
-                                        id="ciudadDestinatario"
-                                        disableClearable
-                                        forcePopupIcon={false}
-                                        options={dataCiudad}
-                                        getOptionLabel={(option) =>
-                                          option.m_sCiudad
-                                        }
-                                        variant="outlined"
-                                        style={{borderWidth: "1px",borderColor:"#dddddd", borderStyle: "solid",borderRadius: "5px"}}
-                                        renderInput={(params) => (
-                                          <div>
-                                            <TextField
-                                              {...params}
-                                              InputProps={{
-                                                ...params.InputProps,
-                                                style: { height: 24},
-                                                type: "search",
-                                                value: state.ciudadDestinatario,
-                                                disabled: state.agregar == "Consultar",
-                                                 endAdornment: 
+                                  <div className="input">
+                                    <Autocomplete
+                                      freeSolo
+                                      onChange={(event, newValue) =>
+                                        setState({
+                                          ...state,
+                                          ciudadDestinatario: newValue,
+                                        })
+                                      }
+                                      value={state.ciudadDestinatario}
+                                      disabled={state.agregar == "Consultar"}
+                                      id="ciudadDestinatario"
+                                      disableClearable
+                                      forcePopupIcon={false}
+                                      options={dataCiudad}
+                                      getOptionLabel={(option) =>
+                                        option.m_sCiudad
+                                      }
+                                      variant="outlined"
+                                      style={{ borderWidth: "1px", borderColor: "#dddddd", borderStyle: "solid", borderRadius: "5px" }}
+                                      renderInput={(params) => (
+                                        <div>
+                                          <TextField
+                                            {...params}
+                                            InputProps={{
+                                              ...params.InputProps,
+                                              style: { height: 24 },
+                                              type: "search",
+                                              disabled: state.agregar == "Consultar",
+                                              endAdornment:
                                                 <InputAdornment position="end">
-                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {open(); setState({...state, identificadorModal: "ciudadDestinatario", tipoModal: 1})} }>
+                                                  <IconButton padding="0px" style={{ paddingRight: "0px" }} onClick={() => { open(); setState({ ...state, identificadorModal: "ciudadDestinatario", tipoModal: 1 }) }}>
                                                     <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
-                                                 </IconButton> 
-                                                </InputAdornment> 
-                                              }}
-                                            />                                                                                       
-                                          </div>
-                                        )}                                        
-                                                       />
-                                    </div>
+                                                  </IconButton>
+                                                </InputAdornment>
+                                            }}
+                                          />
+                                        </div>
+                                      )}
+                                    />
+                                  </div>
                                 </div>
 
                                 <div className="col-sm-12 col-md-12 unit">
@@ -2871,19 +2653,22 @@ function Embarque() {
                                   </div>
                                 </div>
 
-                                <div className="col-sm-12 col-md-12  unit">
-                                <label className="label">Destino</label>
+                                <div className="col-sm-12 col-md-6 unit">
+                                  <label className="label">
+                                    Destino
+                                </label>
                                   <div className="input">
                                     <Autocomplete
                                       freeSolo
                                       onChange={(event, newValue) =>
                                         setState({
                                           ...state,
-                                          destinoDestinatario: newValue,
+                                          ciudadDestino: newValue,
                                         })
                                       }
-                                      value={state.destinoDestinatario}
-                                      id="destinoDestinatario"
+                                      value={state.ciudadDestino}
+                                      disabled={state.agregar == "Consultar"}
+                                      id="ciudadDestino"
                                       disableClearable
                                       forcePopupIcon={false}
                                       options={dataCiudad}
@@ -2997,8 +2782,10 @@ function Embarque() {
                                               })
                                             }
                                             value={state.codigoPostalEntrega}
+                                            disabled={state.agregar == "Consultar"}
                                             id="codigoPostalEntrega"
                                             disableClearable
+                                            forcePopupIcon={false}
                                             options={dataCodigoPostal}
                                             getOptionLabel={(option) =>
                                               option.m_sCP
@@ -3057,27 +2844,47 @@ function Embarque() {
                                         <label className="label">
                                           Ciudad
                                     </label>
-                                        <label className="input select">
-                                          <select
-                                            className="form-control"
-                                            required
+                                        <div className="input">
+                                          <Autocomplete
+                                            freeSolo
+                                            onChange={(event, newValue) =>
+                                              setState({
+                                                ...state,
+                                                ciudadEntrega: newValue,
+                                              })
+                                            }
                                             value={state.ciudadEntrega}
                                             disabled={state.agregar == "Consultar"}
-                                            onChange={handleChange}
                                             id="ciudadEntrega"
-                                          >
-                                            {dataCiudad.map(
-                                              (ciudad) => (
-                                                <option key={ciudad.m_nIdCiudad} value={ciudad.m_nIdCiudad}>
-                                                  {
-                                                    ciudad.m_sCiudad
-                                                  }
-                                                </option>
-                                              )
+                                            disableClearable
+                                            forcePopupIcon={false}
+                                            options={dataCiudad}
+                                            getOptionLabel={(option) =>
+                                              option.m_sCiudad
+                                            }
+                                            variant="outlined"
+                                            style={{ borderWidth: "1px", borderColor: "#dddddd", borderStyle: "solid", borderRadius: "5px" }}
+                                            renderInput={(params) => (
+                                              <div>
+                                                <TextField
+                                                  {...params}
+                                                  InputProps={{
+                                                    ...params.InputProps,
+                                                    style: { height: 24 },
+                                                    type: "search",
+                                                    disabled: state.agregar == "Consultar",
+                                                    endAdornment:
+                                                      <InputAdornment position="end">
+                                                        <IconButton padding="0px" style={{ paddingRight: "0px" }} onClick={() => { open(); setState({ ...state, identificadorModal: "ciudadEntrega", tipoModal: 1 }) }}>
+                                                          <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
+                                                        </IconButton>
+                                                      </InputAdornment>
+                                                  }}
+                                                />
+                                              </div>
                                             )}
-                                          </select>
-                                          <i className="fa fa-arrow-down" />
-                                        </label>
+                                          />
+                                        </div>
                                       </div>
 
                                       <div className="col-sm-6 col-md-4 unit" >
@@ -3097,7 +2904,7 @@ function Embarque() {
                                         </div>
                                       </div>
 
-                                      <div className="col-sm-6 col-md-6  unit" >
+                                      <div className="col-sm-4 col-md-12 unit">
                                         <label className="label">
                                           Domicilio
                                       </label>
@@ -3131,7 +2938,7 @@ function Embarque() {
                                         </div>
                                       </div>
 
-                                      <div className="col-sm-12 col-md-6  unit" >
+                                      <div className="col-sm-4 col-md-8 unit">
                                         <label className="label">
                                           Datos Adicionales para la Entrega
                                       </label>
@@ -3171,8 +2978,10 @@ function Embarque() {
                               <div className="widget-content">
                                 <div className="row">
 
-                                <div className="col-sm-4 col-md-4 unit">
-                                  <label className="label">Operador</label>
+                                  <div className="col-sm-4 col-md-4 unit">
+                                    <label className="label">
+                                      Operador
+                                  </label>
                                     <div className="input">
                                       <Autocomplete
                                         freeSolo
@@ -3246,9 +3055,9 @@ function Embarque() {
                                   </div>
 
                                   <div className="col-sm-4 col-md-4 unit">
-                                  <label className="label">
-                                      Tipo de Unidad
-                                    </label>
+                                    <label className="label">
+                                      Tipo Unidad
+                                  </label>
                                     <div className="input">
                                       <Autocomplete
                                         freeSolo
@@ -3323,7 +3132,9 @@ function Embarque() {
                                   </div>
 
                                   <div className="col-sm-4 col-md-4 unit">
-                                  <label className="label">Unidad</label>
+                                    <label className="label">
+                                      Unidad
+                                  </label>
                                     <div className="input">
                                       <Autocomplete
                                         freeSolo
