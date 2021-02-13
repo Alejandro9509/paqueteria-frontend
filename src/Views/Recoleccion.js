@@ -210,6 +210,7 @@ function Recoleccion() {
       m_nModificadoPor: state.ModificadoPor,
     };
     console.log(params);
+    debugger;
     if (state.idRecoleccion != 0) {
       const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Modificar/${state.idRecoleccion}`;
       axios
@@ -421,6 +422,7 @@ function Recoleccion() {
   }
 
   function handleShowAgregar() {
+    var today = new Date();
     setState({
       ...state,
       agregar: "Agregar",
@@ -430,7 +432,7 @@ function Recoleccion() {
       folioEmbarque: "",
       folioGuía: "",
       folioInforme: "",
-      fechaHoraCreacion: "",
+      fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
       estatusRecoleccion: 0,
       moneda: 0,
       tipoCambio: "",
@@ -1640,16 +1642,12 @@ function Recoleccion() {
                 <i className="fa fa-plus-circle" /> {state.agregar}
               </a>
             </li>
+            
             <li>
-              <a data-toggle="tab" href="#Importar">
-                <i className="fa fa-upload" /> Importar
-              </a>
+              <ExportCSV csvData={data} fileName="Recoleccion_Listado" />
             </li>
             <li>
-              <ExportCSV csvData={data} fileName="Departamento_Listado" />
-            </li>
-            <li>
-              <ExportPDF data={data} column={columns} fileName="Departamento" />
+              <ExportPDF data={data} column={columns} fileName="Recoleccion" />
             </li>
           </ul>
 
@@ -1915,10 +1913,10 @@ function Recoleccion() {
                               <div className="input">
                                 <input
                                   onChange={handleChange}
-                                  type="datetime-local"
                                   required
                                   value={state.fechaHoraCreacion}
                                   className="form-control"
+                                  disabled="disabled"
                                   id="fechaHoraCreacion"
                                 />
                               </div>
@@ -3333,7 +3331,9 @@ function Recoleccion() {
                       </div>
                     </div>
                   </div>
-
+                  <div id="Importar" className="tab-pane fade  d-none">
+                       </div>
+                                             
                   <div className="form-footer" className="col-md-12">
                     <button
                       href="#Listado"
@@ -3351,52 +3351,7 @@ function Recoleccion() {
                     </button>
                   </div>
 
-                  <div id="Importar" className="tab-pane fade">
-                    <div className="widget-wrap">
-                      <div className="widget-content">
-                        <div className="row">
-                          <div className="col-md-12">
-                            <form className="j-forms">
-                              <div className="form-content">
-                                <div className="col-sm-12 col-md-12 unit">
-                                  <label className="label">Importar</label>
-                                  <div className="input">
-                                    <input
-                                      onChange={handleUpload}
-                                      className="form-control"
-                                      type="file"
-                                      id="importar"
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                              <br></br>
-                              <div
-                                className="form-footer"
-                                className="col-md-12"
-                              >
-                                <button
-                                  data-layout="topCenter"
-                                  data-type="information"
-                                  className="btn btn-secondary secondary-btn"
-                                >
-                                  {" "}
-                                  Cancelar
-                                </button>
-                                <button
-                                  onClick={handleAceptar}
-                                  className="btn btn-primary primary-btn"
-                                >
-                                  Aceptar
-                                </button>
-                              </div>
-                            </form>
-                          </div>
-                        </div>
-                      </div>{" "}
-                    </div>
-                  </div>
-                </div>
+                 </div>
               </form>
             </div>
           </div>

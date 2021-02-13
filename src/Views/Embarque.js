@@ -39,7 +39,7 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 function Embarque() {
-
+  var today = new Date();
   const classes = useStyles();
   const [data, setData] = React.useState([])
   const [dataSucursal, setDataSucursal] = React.useState([]);
@@ -67,7 +67,7 @@ function Embarque() {
     folioEmbarque: "",
     folioGuía: "",
     folioInforme: "",
-    fechaHoraCreacion: "",
+    fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
     estatusEmbarque: 0,
     moneda: 0,
     tipoCambio: "",
@@ -199,9 +199,10 @@ function Embarque() {
 
     }
     console.log(params)
+    debugger;
     if (state.idEmbarque != 0) {
       const url = `${process.env.REACT_APP_API_URL}/Embarques/Modificar/${state.idEmbarque}`;
-      axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+      axios.put(url, Object.assign({}, params), { headers2 }).then(respuesta => {
         alert(respuesta.data)
         getAllData()
       }).catch(err => {
@@ -449,6 +450,7 @@ function Embarque() {
   }
 
   function handleShowAgregar() {
+    var today = new Date();
     setState({
       ...state,
       agregar: "Agregar",
@@ -458,7 +460,7 @@ function Embarque() {
       folioEmbarque: "",
       folioGuía: "",
       folioInforme: "",
-      fechaHoraCreacion: "",
+      fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
       moneda: dataTipoMoneda[0].m_nIdMoneda,
       tipoCambio: "",
       tipoCobro: dataTipoCobro[0].m_nIdTipoCobro,
@@ -521,6 +523,7 @@ function Embarque() {
   }
 
   function handleSelectDatos(id, cp) {
+    debugger;
     setState({
       ...state,
       [state.identificadorModal]: id
@@ -737,8 +740,12 @@ function Embarque() {
   }
 
   const headers = {
+    'Content-Type': 'application/json'
+  }
+  const headers2 = {
     'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
+     'Access-Control-Allow-Origin': '*',
+     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
   }
 
   function conDatos() {
@@ -1686,17 +1693,12 @@ function Embarque() {
               <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
                 <i className="fa fa-plus-circle" /> {state.agregar}
               </a>
+            </li>            
+            <li>
+              <ExportCSV csvData={data} fileName="Embarque_Listado" />
             </li>
             <li>
-              <a data-toggle="tab" href="#Importar">
-                <i className="fa fa-upload" /> Importar
-            </a>
-            </li>
-            <li>
-              <ExportCSV csvData={data} fileName="Departamento_Listado" />
-            </li>
-            <li>
-              <ExportPDF data={data} column={columns} fileName="Departamento" />
+              <ExportPDF data={data} column={columns} fileName="Embarque" />
             </li>
           </ul>
 
@@ -1986,11 +1988,9 @@ function Embarque() {
                               <div className="input">
                                 <input
                                   onChange={handleChange}
-                                  type="datetime-local"
                                   className="form-control"
-                                  required
                                   value={state.fechaHoraCreacion}
-                                  disabled={state.agregar == "Consultar"}
+                                  disabled="disabled"
                                   id="fechaHoraCreacion"
                                 />
                               </div>
