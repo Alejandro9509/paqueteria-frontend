@@ -4,7 +4,7 @@ import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import BasicTable from "./BasicTable";
-import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy } from 'react-table'
+import { useTable, useFilters, useAsyncDebounce, useSortBy } from 'react-table'
 
 function Sucursal() {
 
@@ -107,9 +107,9 @@ function Sucursal() {
     });  
   }
 
-  function handleShowModificar(row) {
-    console.log(row.original.m_nIdSucursal)
-    const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetById/` + row.original.m_nIdSucursal;
+  function handleShowModificar(id) {
+    console.log(id)
+    const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetById/` + id;
     axios.get(url, { headers }).then(respuesta => {
       console.log(respuesta.data)
       setState({
@@ -243,33 +243,6 @@ function Sucursal() {
     //    'access-control-allow-origin': '*'
   }
 
-  function GlobalFilter({
-    preGlobalFilteredRows,
-    globalFilter,
-    setGlobalFilter,
-  }) {
-    const count = preGlobalFilteredRows.length
-    const [value, setValue] = React.useState(globalFilter)
-    const onChange = useAsyncDebounce(value => {
-      setGlobalFilter(value || undefined)
-    }, 200)
-
-    return (
-      <span>
-        Buscar:{' '}
-        <input
-          className="form-control"
-          value={value || ""}
-          onChange={e => {
-            setValue(e.target.value);
-            onChange(e.target.value);
-          }}
-          placeholder={`${count} registros...`}
-        />
-      </span>
-    )
-  }
-
   function DefaultColumnFilter({
     column: { filterValue, preFilteredRows, setFilter },
   }) {
@@ -304,8 +277,6 @@ function Sucursal() {
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -313,17 +284,11 @@ function Sucursal() {
         defaultColumn
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     )
 
     return (
       <div className="col-md-12">
-        <GlobalFilter
-          preGlobalFilteredRows={preGlobalFilteredRows}
-          globalFilter={state.globalFilter}
-          setGlobalFilter={setGlobalFilter}
-        />
         <table className="table" {...getTableProps()}>
           <thead>
             {headerGroups.map(headerGroup => (
@@ -356,8 +321,8 @@ function Sucursal() {
                   <tr {...row.getRowProps()}>
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdSucursal))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdSucursal))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{color:"#F9A03E"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdSucursal))} className="btn btn-default btn-sm"><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                         <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdSucursal))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                       </div>
                     </td>

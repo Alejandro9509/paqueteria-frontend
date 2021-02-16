@@ -4,7 +4,7 @@ import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import * as XLSX from 'xlsx';
-import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy } from 'react-table'
+import { useTable, useFilters, useAsyncDebounce, useSortBy } from 'react-table'
 
 function GrupoUnidades() {
 
@@ -221,33 +221,6 @@ function GrupoUnidades() {
     //    'access-control-allow-origin': '*'
   }
 
-  function GlobalFilter({
-    preGlobalFilteredRows,
-    globalFilter,
-    setGlobalFilter,
-  }) {
-    const count = preGlobalFilteredRows.length
-    const [value, setValue] = React.useState(globalFilter)
-    const onChange = useAsyncDebounce(value => {
-      setGlobalFilter(value || undefined)
-    }, 200)
-
-    return (
-      <span>
-        Buscar:{' '}
-        <input
-          className="form-control"
-          value={value || ""}
-          onChange={e => {
-            setValue(e.target.value);
-            onChange(e.target.value);
-          }}
-          placeholder={`${count} registros...`}
-        />
-      </span>
-    )
-  }
-
   function DefaultColumnFilter({
     column: { filterValue, preFilteredRows, setFilter },
   }) {
@@ -282,8 +255,6 @@ function GrupoUnidades() {
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -291,7 +262,6 @@ function GrupoUnidades() {
         defaultColumn
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     )
 
@@ -304,15 +274,6 @@ function GrupoUnidades() {
 
         {/*AQUI MODIFICAS LO QUE NECESITES*/}
 
-
-
-
-
-        <GlobalFilter
-          preGlobalFilteredRows={preGlobalFilteredRows}
-          globalFilter={state.globalFilter}
-          setGlobalFilter={setGlobalFilter}
-        />
         <table className="table" {...getTableProps()}>
           <thead>
             {headerGroups.map(headerGroup => (

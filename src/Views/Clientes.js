@@ -256,25 +256,27 @@ function App(props) {
                         role="tab"
                         data-toggle="tab"
                         onClick={() =>
-                          handleShowModificar(row.original.m_nIdUnidad)
+                          handleShowModificar(row.original.m_nIdCliente)
                         }
                         className="btn btn-default  btn-sm"
                       >
                         <i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} />
                       </a>
                       <a
-                        href="#"
+                        href="#Agregar"
+                        role="tab"
+                        data-toggle="tab"
                         className="btn btn-default btn-sm"
-                        onClick={() => handleEliminar(row.original.m_nIdUnidad)}
+                        onClick={() => handleShowModificar(row.original.m_nIdCliente)}
                       >
-                        <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
+                        <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
                       </a>
                       <a
                         href="#"
                         className="btn btn-default btn-sm"
-                        onClick={() => handleEliminar(row.original.m_nIdUnidad)}
+                        onClick={() => handleEliminar(row.original.m_nIdCliente)}
                       >
-                        <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
+                        <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
                       </a>
                     </div>
                   </td>
@@ -456,7 +458,7 @@ function App(props) {
 
   function getAllGruposClientes() {
     const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/GetListado`;
-    axios.get(url, { headers }).then((respuesta) => {});
+    axios.get(url, { headers }).then((respuesta) => { });
   }
 
   const handleChangeActivoCheckboxChange = (event) => {
@@ -872,234 +874,234 @@ function App(props) {
                     <div className="widget-container">
                       <div className="widget-content">
 
-                      <div className="row">
-                                      <div className="col-md-12">
-                                        <div className="form-content">
-                                        <div className="col-sm-4 col-md-2-5 unit">
-                              <label className="label">Número de Cliente</label>
-                              <div className="input">
-                                <input
-                                  onChange={handleChange}
-                                  onBlur={handleChangeCodigo}
-                                  className="form-control"
-                                  type="text"
-                                  value={state.numeroCliente}
-                                  id="numeroCliente"
-                                  name="numeroCliente"
-                                  required
-                                />
-                              </div>
-                            </div>
-                            <div className="col-sm-4 col-md-2-5 unit">
-                                    <label className="label">
-                                      RFC
-                                  </label>
-                                    <div className="input">
-                                      <input
-                                        onChange={handleChange}
-                                        className="form-control"
-                                        type="text"
-                                        pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
-                                        title="Favor de introducir un RFC válido."
-                                        required
-                                        value={state.rfc}
-                                        id="RFCRemitente"
-                                      />
-                                    </div>
-                                  </div>
-                                  <div className="col-sm-4 col-md-2-5 unit">
-                              <label className="label">Nombre Fiscal</label>
-                              <div className="input">
-                                <input
-                                  onChange={handleChange}
-                                  className="form-control"
-                                  type="text"
-                                  value={state.nombreFiscal}
-                                  id="nombreFiscal"
-                                  name="nombreFiscal"
-                                  required
-                                  native
-                                />
-                              </div>
-                            </div>
-                            <div className="col-sm-4 col-md-2-5 unit">
-                              <label className="label">Nombre Corto</label>
-                              <div className="input">
-                                <input
-                                  onChange={handleChange}
-                                  className="form-control"
-                                  type="text"
-                                  value={state.nombreCorto}
-                                  id="nombreCorto"
-                                  name="nombreCorto"
-                                  required
-                                  native
-                                />
-                              </div>
-                            </div>
-
-                            <div className="col-sm-4 col-md-2-5 unit">
-                              <label className="label">Tipo de Cliente</label>
-                              <label className="input select">
-                                <select
-                                  onChange={handleChange}
-                                  className="form-control"
-                                  value={state.tipoCliente}
-                                  required
-                                  native
-                                  name="tipoCliente"
-                                  id="tipoCliente"
-                                >
-                                  <option value="">Tipo de Cliente</option>
-                                  <option value="1">Nacional</option>
-                                  <option value="2">Extranjero</option>
-                                </select>
-                                <i></i>
-                              </label>
-                            </div>
-
-                            <div className="col-sm-4 col-md-2-5 unit">
-                              <label className="label">&nbsp; </label>
-                              <label className="input select">
-                                <select
-                                  onChange={handleChange}
-                                  value={state.idSucursal}
-                                  id="idSucursal"
-                                  native
-                                  className="form-control"
-                                  name="idSucursal"
-                                  required
-                                >
-                                  <option value="">Sucursal</option>
-
-                                  {dataSucursales.map((sucursal) => (
-                                    <option value={sucursal.m_nIdSucursal}>
-                                      {sucursal.m_sSucursal}
-                                    </option>
-                                  ))}
-                                </select>
-                                <i></i>
-                              </label>
-                            </div>
-                            <div className="col-sm-4 col-md-2-5  unit">
-                              <label className="label">&nbsp; </label>
-                              <label className="input select">
-                                <select
-                                  onChange={handleChange}
-                                  value={state.idMoneda}
-                                  id="idMoneda"
-                                  native
-                                  className="form-control"
-                                  name="idMoneda"
-                                  required
-                                >
-                                  <option value="">Moneda</option>
-                                  <option value="1">Pesos</option>
-                                  <option value="2">Dolares</option>
-                                </select>
-                                <i></i>
-                              </label>
-                            </div>
-                            <div className="col-sm-4 col-md-2-5 unit">
-                              <label className="label">&nbsp; </label>
-                              <label className="input select">
-                                <select
-                                  onChange={handleChange}
-                                  value={state.idImpuestoTransladado}
-                                  id="idImpuestoTransladado"
-                                  native
-                                  className="form-control"
-                                  name="idImpuestoTransladado"
-                                  required
-                                >
-                                  <option value="">IVA</option>
-
-                                  {dataImpuesto.map((impuesto) => (
-                                    <option value={impuesto.m_nIdImpuesto}>
-                                      {impuesto.m_sImpuesto}
-                                    </option>
-                                  ))}
-                                </select>
-                                <i></i>
-                              </label>
-                            </div>
-                            <div className="col-sm-4 col-md-2-5 unit">
-                              <label className="label">Grupo</label>
-                              <Autocomplete
-                                freeSolo
-                                onChange={(event, newValue) =>
-                                  setState({
-                                    ...state,
-                                    idGrupoCliente: newValue,
-                                  })
-                                }
-                                value={state.idGrupoCliente}
-                                id="idGrupoCliente"
-                                disableClearable
-                                getOptionLabel={(option) => option.m_sGrupo}
-                                options={dataGrupoClientes}
-                                renderInput={(params) => (
-                                  <TextField
-                                    {...params}
-                                    InputProps={{
-                                      ...params.InputProps,
-                                      type: "search",
-                                      value: state.idGrupoCliente,
-                                    }}
-                                  />
-                                )}
-                              />{" "}
-                            </div>
-                            
-
-                                          </div>
-                                          </div>
-</div>
-<div className="unit">
-                              <div className="inline-group">
-                                <label className="checkbox">
+                        <div className="row">
+                          <div className="col-md-12">
+                            <div className="form-content">
+                              <div className="col-sm-4 col-md-2-5 unit">
+                                <label className="label">Número de Cliente</label>
+                                <div className="input">
                                   <input
-                                    onChange={handleChangeActivoCheckboxChange}
-                                    native
-                                    name="activo"
-                                    type="checkbox"
-                                    value={state.activo}
-                                    id="activo"
+                                    onChange={handleChange}
+                                    onBlur={handleChangeCodigo}
+                                    className="form-control"
+                                    type="text"
+                                    value={state.numeroCliente}
+                                    id="numeroCliente"
+                                    name="numeroCliente"
+                                    required
                                   />
-                                  <i />
+                                </div>
+                              </div>
+                              <div className="col-sm-4 col-md-2-5 unit">
+                                <label className="label">
+                                  RFC
+                                  </label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="text"
+                                    pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
+                                    title="Favor de introducir un RFC válido."
+                                    required
+                                    value={state.rfc}
+                                    id="RFCRemitente"
+                                  />
+                                </div>
+                              </div>
+                              <div className="col-sm-4 col-md-2-5 unit">
+                                <label className="label">Nombre Fiscal</label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="text"
+                                    value={state.nombreFiscal}
+                                    id="nombreFiscal"
+                                    name="nombreFiscal"
+                                    required
+                                    native
+                                  />
+                                </div>
+                              </div>
+                              <div className="col-sm-4 col-md-2-5 unit">
+                                <label className="label">Nombre Corto</label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="text"
+                                    value={state.nombreCorto}
+                                    id="nombreCorto"
+                                    name="nombreCorto"
+                                    required
+                                    native
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="col-sm-4 col-md-2-5 unit">
+                                <label className="label">Tipo de Cliente</label>
+                                <label className="input select">
+                                  <select
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    value={state.tipoCliente}
+                                    required
+                                    native
+                                    name="tipoCliente"
+                                    id="tipoCliente"
+                                  >
+                                    <option value="">Tipo de Cliente</option>
+                                    <option value="1">Nacional</option>
+                                    <option value="2">Extranjero</option>
+                                  </select>
+                                  <i></i>
+                                </label>
+                              </div>
+
+                              <div className="col-sm-4 col-md-2-5 unit">
+                                <label className="label">&nbsp; </label>
+                                <label className="input select">
+                                  <select
+                                    onChange={handleChange}
+                                    value={state.idSucursal}
+                                    id="idSucursal"
+                                    native
+                                    className="form-control"
+                                    name="idSucursal"
+                                    required
+                                  >
+                                    <option value="">Sucursal</option>
+
+                                    {dataSucursales.map((sucursal) => (
+                                      <option value={sucursal.m_nIdSucursal}>
+                                        {sucursal.m_sSucursal}
+                                      </option>
+                                    ))}
+                                  </select>
+                                  <i></i>
+                                </label>
+                              </div>
+                              <div className="col-sm-4 col-md-2-5  unit">
+                                <label className="label">&nbsp; </label>
+                                <label className="input select">
+                                  <select
+                                    onChange={handleChange}
+                                    value={state.idMoneda}
+                                    id="idMoneda"
+                                    native
+                                    className="form-control"
+                                    name="idMoneda"
+                                    required
+                                  >
+                                    <option value="">Moneda</option>
+                                    <option value="1">Pesos</option>
+                                    <option value="2">Dolares</option>
+                                  </select>
+                                  <i></i>
+                                </label>
+                              </div>
+                              <div className="col-sm-4 col-md-2-5 unit">
+                                <label className="label">&nbsp; </label>
+                                <label className="input select">
+                                  <select
+                                    onChange={handleChange}
+                                    value={state.idImpuestoTransladado}
+                                    id="idImpuestoTransladado"
+                                    native
+                                    className="form-control"
+                                    name="idImpuestoTransladado"
+                                    required
+                                  >
+                                    <option value="">IVA</option>
+
+                                    {dataImpuesto.map((impuesto) => (
+                                      <option value={impuesto.m_nIdImpuesto}>
+                                        {impuesto.m_sImpuesto}
+                                      </option>
+                                    ))}
+                                  </select>
+                                  <i></i>
+                                </label>
+                              </div>
+                              <div className="col-sm-4 col-md-2-5 unit">
+                                <label className="label">Grupo</label>
+                                <Autocomplete
+                                  freeSolo
+                                  onChange={(event, newValue) =>
+                                    setState({
+                                      ...state,
+                                      idGrupoCliente: newValue,
+                                    })
+                                  }
+                                  value={state.idGrupoCliente}
+                                  id="idGrupoCliente"
+                                  disableClearable
+                                  getOptionLabel={(option) => option.m_sGrupo}
+                                  options={dataGrupoClientes}
+                                  renderInput={(params) => (
+                                    <TextField
+                                      {...params}
+                                      InputProps={{
+                                        ...params.InputProps,
+                                        type: "search",
+                                        value: state.idGrupoCliente,
+                                      }}
+                                    />
+                                  )}
+                                />{" "}
+                              </div>
+
+
+                            </div>
+                          </div>
+                        </div>
+                        <div className="unit">
+                          <div className="inline-group">
+                            <label className="checkbox">
+                              <input
+                                onChange={handleChangeActivoCheckboxChange}
+                                native
+                                name="activo"
+                                type="checkbox"
+                                value={state.activo}
+                                id="activo"
+                              />
+                              <i />
                                   Activa
                                 </label>
-                                <label className="checkbox">
-                                  <input
-                                    onChange={handleChangeRentadaCheckboxChange}
-                                    native
-                                    name="operadorLogistico"
-                                    type="checkbox"
-                                    id="operadorLogistico"
-                                    value={state.operadorLogistico}
-                                  />
-                                  <i />
+                            <label className="checkbox">
+                              <input
+                                onChange={handleChangeRentadaCheckboxChange}
+                                native
+                                name="operadorLogistico"
+                                type="checkbox"
+                                id="operadorLogistico"
+                                value={state.operadorLogistico}
+                              />
+                              <i />
                                   Operador Lógistico
                                 </label>
 
-                                <label className="label">{}</label>
-                                <label className="checkbox">
-                                  <input
-                                    onChange={handleChangeActivoCheckboxChange}
-                                    native
-                                    name="aplicarDetalleMaterialesCadaViajeXML"
-                                    type="checkbox"
-                                    value={
-                                      state.aplicarDetalleMaterialesCadaViajeXML
-                                    }
-                                    id="aplicarDetalleMaterialesCadaViajeXML"
-                                  />
-                                  <i />
+                            <label className="label">{ }</label>
+                            <label className="checkbox">
+                              <input
+                                onChange={handleChangeActivoCheckboxChange}
+                                native
+                                name="aplicarDetalleMaterialesCadaViajeXML"
+                                type="checkbox"
+                                value={
+                                  state.aplicarDetalleMaterialesCadaViajeXML
+                                }
+                                id="aplicarDetalleMaterialesCadaViajeXML"
+                              />
+                              <i />
                                   Aplicar en el XML de factura, el detalle por
                                   Viaje
                                 </label>
-                              </div>
-                            </div>
+                          </div>
+                        </div>
 
 
 
@@ -1788,7 +1790,7 @@ function App(props) {
                                             <div className="unit">
                                               <div className="inline-group">
                                                 <label className="label">
-                                                  {}
+                                                  { }
                                                 </label>
                                                 <label className="checkbox">
                                                   <input
@@ -1813,7 +1815,7 @@ function App(props) {
                                             <div className="unit">
                                               <div className="inline-group">
                                                 <label className="label">
-                                                  {}
+                                                  { }
                                                 </label>
                                                 <label className="checkbox">
                                                   <input
@@ -1839,7 +1841,7 @@ function App(props) {
                                             <div className="unit">
                                               <div className="inline-group">
                                                 <label className="label">
-                                                  {}
+                                                  { }
                                                 </label>
                                                 <label className="checkbox">
                                                   <input

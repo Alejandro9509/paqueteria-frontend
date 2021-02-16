@@ -191,25 +191,27 @@ function Informes(props) {
                         role="tab"
                         data-toggle="tab"
                         onClick={() =>
-                          handleShowModificar(row.original.m_nIdUnidad)
+                          handleShowModificar(row.original.m_nIdInforme)
                         }
                         className="btn btn-default btn-sm"
                       >
                         <i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} />
                       </a>
                       <a
-                        href="#"
+                        href="#Agregar"
+                        role="tab"
+                        data-toggle="tab"
                         className="btn btn-default btn-sm"
-                        onClick={() => handleEliminar(row.original.m_nIdUnidad)}
+                        onClick={() => handleShowModificar(row.original.m_nIdInforme)}
                       >
-                        <i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} />
+                        <i className="fa fa-eye" style={{color:"#F9A03E"}} />
                       </a>
                       <a
                         href="#"
                         className="btn btn-default btn-sm"
-                        onClick={() => handleEliminar(row.original.m_nIdUnidad)}
+                        onClick={() => handleEliminar(row.original.m_nIdInforme)}
                       >
-                        <i className="fa fa-eye" style={{color:"#F9A03E"}} />
+                        <i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} />
                       </a>
                     </div>
                   </td>
@@ -393,65 +395,6 @@ function Informes(props) {
     });
     getAllGuiasFrom();
   };
-
-  const columns2 = React.useMemo(() => [
-    {
-      Name: "Folio/Serie",
-      accessor: "m_nFolioInforme",
-    },
-    {
-      Name: "Fecha",
-      accessor: "m_dFecha",
-    },
-    {
-      Name: "Hora Elaboración",
-      accessor: "m_tHora",
-    },
-    {
-      Name: "Viaje",
-      accessor: "m_nIdViaje",
-    },
-    {
-      Name: "Oficina Emisora",
-      accessor: "m_nIdSucursalEmisora",
-    },
-    {
-      Name: "Oficina Receptora",
-      accessor: "m_nIdSucursalReceptora",
-    },
-    {
-      Name: "Operador",
-      accessor: "m_nIdOperador",
-    },
-    {
-      Name: "Unidad",
-      accessor: "m_nIdUnidad",
-    },
-    {
-      Name: "Remolque",
-      accessor: "m_nIdRemolque",
-    },
-    {
-      Name: "Origen",
-      accessor: "m_nIdCiudadOrigen",
-    },
-    {
-      Name: "Destino",
-      accessor: "m_nIdCiudadDestino",
-    },
-    {
-      Name: "Ruta",
-      accessor: "m_nIdRuta",
-    },
-    {
-      Name: "Cancelado",
-      accessor: "m_nIdEstatusInforme",
-    },
-    {
-      Name: "Usuario que cancela",
-      accessor: "m_nModificadoPor",
-    },
-  ]);
 
   useEffect((value) => {
     if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)

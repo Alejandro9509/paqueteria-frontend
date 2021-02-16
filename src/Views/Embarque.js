@@ -9,7 +9,7 @@ import Carousel from "re-carousel";
 import IndicatorDots from "../Util/Dots";
 import Buttons from "../Util/CarruselButtons";
 import { makeStyles } from "@material-ui/core/styles";
-import { useTable, useFilters, useGlobalFilter, useSortBy } from 'react-table'
+import { useTable, useFilters, useSortBy } from 'react-table'
 import $ from 'jquery';
 import { remove_array_element } from "../Util/Util";
 import IconButton from '@material-ui/core/IconButton';
@@ -52,7 +52,7 @@ function Embarque() {
     agregar: "Agregar",
     idEmbarque: 0,
     fechaInicial: "",
-    fechaIcinial2: "",
+    fechaFinal: "",
     sucursalListado: 0,
     estatusListado: 0,
     idSucursalAgregar: localStorage.getItem("Sucursal"),
@@ -361,7 +361,7 @@ function Embarque() {
         fechaHoraSalida: respuesta.data.m_dFechaSalida + "T" + respuesta.data.m_tHoraSalida,
         fechaHoraLlegada: respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,
         idOperador: dataOperador.find(o => o.m_nIdOperador == respuesta.data.m_nIdOperador),
-        idTipoUnidad: dataTipoUnidad.find(o => o.m_sTipoUnidad == (dataUnidad.find(o => o.m_nIdUnidad == respuesta.data.m_nIdUnidad)).m_sTipoUnidad),
+        idTipoUnidad: dataTipoUnidad.find(o => o.m_nIdTipoUnidad == (dataUnidad.find(o => o.m_nIdUnidad == respuesta.data.m_nIdUnidad)).m_nIdTipoUnidad),
         idUnidad: dataUnidad.find(o => o.m_nIdUnidad == respuesta.data.m_nIdUnidad),
         paquetes: respuesta.data.m_arrPaquetes
       })
@@ -773,8 +773,6 @@ function Embarque() {
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -782,7 +780,6 @@ function Embarque() {
         defaultColumn
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     )
 
@@ -856,8 +853,6 @@ function Embarque() {
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -865,7 +860,6 @@ function Embarque() {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
@@ -937,8 +931,6 @@ function Embarque() {
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -946,7 +938,6 @@ function Embarque() {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
@@ -1018,8 +1009,6 @@ function Embarque() {
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -1027,7 +1016,6 @@ function Embarque() {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
@@ -1099,8 +1087,6 @@ function Embarque() {
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -1108,7 +1094,6 @@ function Embarque() {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
@@ -1180,8 +1165,6 @@ function Embarque() {
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -1189,7 +1172,6 @@ function Embarque() {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
@@ -1586,22 +1568,26 @@ function Embarque() {
                             Fecha Inicial
                         </label>
                           <div className="input">
-                            <input type="date" className="form-control" />
-                          </div>
-                        </div>
-
-                        <div className="col-sm-6 col-md-3 unit">
-                          <label className="label">
-                            Fecha Inicial
-                        </label>
-                          <div className="input">
-                            <input
+                          <input
                               type="date"
                               className="form-control"
                               onChange={handleChange}
                               id="fechaInicial"
                             />
+                          </div>
+                        </div>
 
+                        <div className="col-sm-6 col-md-3 unit">
+                          <label className="label">
+                            Fecha Final
+                        </label>
+                          <div className="input">
+                          <input
+                              type="date"
+                              className="form-control"
+                              onChange={handleChange}
+                              id="fechaFinal"
+                            />
                           </div>
                         </div>
 

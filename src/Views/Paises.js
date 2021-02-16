@@ -3,7 +3,7 @@ import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import { useTable, useFilters, useGlobalFilter, useSortBy } from 'react-table';
+import { useTable, useFilters, useSortBy } from 'react-table';
 import { makeStyles } from "@material-ui/core/styles";
 
 const styles = {
@@ -329,7 +329,6 @@ function PaisesEstado() {
         defaultColumn
       },
       useFilters,
-      useGlobalFilter,
       useSortBy,
     )
 
@@ -369,7 +368,8 @@ function PaisesEstado() {
                     className={state.idPais === row.original.m_nIdPais ? classes.seleccionado : classes.noSeleccionado}>
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarPais(row.original.m_nIdPais))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarPais(row.original.m_nIdPais))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{color:"#F9A03E"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarPais(row.original.m_nIdPais))} className="btn btn-default btn-sm"><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                         <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminarPais(row.original.m_nIdPais))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
                       </div>
                     </td>
@@ -411,7 +411,6 @@ function PaisesEstado() {
         defaultColumn
       },
       useFilters,
-      useGlobalFilter,
       useSortBy,
     )
 
@@ -450,8 +449,8 @@ function PaisesEstado() {
                     <td>
                       <div>
                         <a href="#AgregarEstado" role="tab" data-toggle="tab" onClick={() => (handleShowModificarEstado(row.original.m_nIdEstado))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#AgregarEstado" role="tab" data-toggle="tab" className="btn btn-default btn-sm btn-sm" onClick={() => (handleShowModificarEstado(row.original.m_nIdEstado))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                         <a href="#" className="btn btn-default btn-sm btn-sm" onClick={() => (handleEliminarEstado(row.original.m_nIdEstado))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm btn-sm" onClick={() => (handleEliminarEstado(row.original.m_nIdEstado))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
