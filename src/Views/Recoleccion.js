@@ -112,7 +112,7 @@ function Recoleccion() {
     diferenteRecoleccion: true,
     diferenteEntrega: true,
     operador: 0,
-    tipoUnidad: 0,
+    tipoUnidad: {},
     unidad: 0,
     CreadoPor: localStorage.getItem("UsuarioId"),
     ModificadoPor: localStorage.getItem("UsuarioId"),
@@ -153,65 +153,66 @@ function Recoleccion() {
     e.preventDefault();
 
     var params = {
-      m_nIdRecoleccion: state.idRecoleccion,
-      m_nIdSucursal: state.idSucursalAgregar,
-      m_nIdEstatusRecoleccion: state.estatusRecoleccion,
-      m_nIdEmbarque: state.folioEmbarque,
-      m_nIdGuia: state.folioGuía,
-      m_nIdInforme: state.folioInforme,
-      m_dFecha: state.fechaHoraCreacion.split("T")[0],
-      m_tHora: state.fechaHoraCreacion.split("T")[1],
-      m_nMoneda: state.moneda,
-      m_rTipoCambio: state.tipoCambio,
-      m_nIdTipoDeCobro: state.tipoCobro,
-      m_sNombreRemitente: state.nombreRemitente,
-      m_sNombreDestinatario: state.nombreDestinatario,
-      m_sRFCRemitente: state.RFCRemitente,
-      m_sRFCDestinatario: state.RFCDestinatario,
-      m_sDomicilioRemitente: state.domicilioRemitente,
-      m_sDomicilioDestinatario: state.domicilioDestinatario,
-      m_sIdCodigoPostalRemitente: state.codigoPostalRemitente.m_nIdCP,
-      m_sIdCodigoPostalDestinatario: state.codigoPostalDestinatario.m_nIdCP,
-      m_nIdCiudadRemitente: state.ciudadRemitente,
-      m_nIdCiudadDestinatario: state.ciudadDestinatario,
-      m_sCorreoRemitente: state.correoRemitente,
-      m_sCorreoDestinatario: state.correoDestinatario,
-      m_sTelefonoRemitente: state.telefonoRemitente,
-      m_sTelefonoDestinatario: state.telefonoDestinatario,
-      m_sContactoRemitente: state.contactoRemitente,
-      m_sContactoDestinatario: state.contactoDestinatario,
-      m_nIdCiudadOrigen: state.ciudadRemitente,
-      m_nIdCiudadDestino: state.ciudadDestinatario,
-      m_dFechaDetalleRecoleccion: state.fechaRecoleccion.split("T")[0],
-      m_tHoraDetalleRecoleccion: state.fechaRecoleccion.split("T")[1],
-      m_nIdCPDetalleRecoleccion: state.codigoPostalRecoleccion.m_nIdCP,
-      m_nIdCiudadDetalleRecoleccion: state.ciudadRecoleccion,
-      m_nIdZonaDetalleRecoleccion: state.zonaRecoleccion,
-      m_sDomicilioDetalleRecoleccion: state.domicilioRecoleccion,
-      m_sRecogerEnDetalleRecoleccion: state.recogerEn,
-      m_sDatosAdicionalesDetalleRecoleccion: state.datosAdicionalesRecoleccion,
-      m_nIdCPDetalleEntrega: state.codigoPostalEntrega.m_nIdCP,
-      m_nIdCiudadDetalleEntrega: state.ciudadEntrega,
-      m_nIdZonaDetalleEntrega: state.zonaEntrega,
-      m_sDomicilioDetalleEntrega: state.domicilioEntrega,
-      m_sEntregarEnDetalleEntrega: state.entregaEn,
-      m_sDatosAdicionalesDetalleEntrega: state.datosAdicionalesEntrega,
-      m_dFechaSalida: state.fechaHoraSalida.split("T")[0],
-      m_dFechaLlegada: state.fechaHoraLlegada.split("T")[0],
-      m_tHoraSalida: state.fechaHoraSalida.split("T")[1],
-      m_tHoraLlegada: state.fechaHoraLlegada.split("T")[1],
-      m_parrPaquetes: state.paquetes,
-      m_nNoPaquetes: state.paquetes.length,
-      m_parrSobres: state.sobres,
-      m_nNoSobres: state.sobres.length,
-      m_nIdOperador: state.operador.m_nIdOperador,
-      m_nIdUnidad: state.unidad.m_nIdUnidad,
-      m_nIdRemolque: state.tipoUnidad.m_nIdTipoUnidad,
-      m_nCreadoPor: state.CreadoPor,
-      m_nModificadoPor: state.ModificadoPor,
-    };
-    console.log(params);
-    debugger;
+
+      "m_nIdRecoleccion": state.idRecoleccion,
+      "m_nIdSucursal": state.idSucursalAgregar,
+      "m_nIdEstatusRecoleccion": state.estatusRecoleccion,
+      "m_nIdEmbarque": state.folioEmbarque,
+      "m_nIdGuia": state.folioGuía,
+      "m_nIdInforme": state.folioInforme,
+      "m_dFecha": state.fechaHoraCreacion.split("T")[0],
+      "m_tHora": state.fechaHoraCreacion.split("T")[1],
+      "m_nMoneda": state.moneda,
+      "m_rTipoCambio": state.tipoCambio,
+      "m_nIdTipoDeCobro": state.tipoCobro,
+      "m_sNombreRemitente": state.nombreRemitente,
+      "m_sNombreDestinatario": state.nombreDestinatario,
+      "m_sRFCRemitente": state.RFCRemitente,
+      "m_sRFCDestinatario": state.RFCDestinatario,
+      "m_sDomicilioRemitente": state.domicilioRemitente,
+      "m_sDomicilioDestinatario": state.domicilioDestinatario,
+      "m_sIdCodigoPostalRemitente": state.codigoPostalRemitente.m_nIdCP,
+      "m_sIdCodigoPostalDestinatario": state.codigoPostalDestinatario.m_nIdCP,
+      "m_nIdCiudadRemitente": state.ciudadRemitente,
+      "m_nIdCiudadDestinatario": state.ciudadDestinatario,
+      "m_sCorreoRemitente": state.correoRemitente,
+      "m_sCorreoDestinatario": state.correoDestinatario,
+      "m_sTelefonoRemitente": state.telefonoRemitente,
+      "m_sTelefonoDestinatario": state.telefonoDestinatario,
+      "m_sContactoRemitente": state.contactoRemitente,
+      "m_sContactoDestinatario": state.contactoDestinatario,
+      "m_nIdCiudadOrigen": state.origenRemitente.m_nIdCiudad,
+      "m_nIdCiudadDestino": state.destinoDestinatario.m_nIdCiudad,
+      "m_dFechaDetalleRecoleccion": state.fechaRecoleccion.split("T")[0],
+      "m_tHoraDetalleRecoleccion": state.fechaRecoleccion.split("T")[1],
+      "m_nIdCPDetalleRecoleccion": state.codigoPostalRecoleccion.m_nIdCP,
+      "m_nIdCiudadDetalleRecoleccion": state.ciudadRecoleccion,
+      "m_nIdZonaDetalleRecoleccion": state.zonaRecoleccion,
+      "m_sDomicilioDetalleRecoleccion": state.domicilioRecoleccion,
+      "m_sRecogerEnDetalleRecoleccion": state.recogerEn,
+      "m_sDatosAdicionalesDetalleRecoleccion": state.datosAdicionalesRecoleccion,
+      "m_nIdCPDetalleEntrega": state.codigoPostalEntrega.m_nIdCP,
+      "m_nIdCiudadDetalleEntrega": state.ciudadEntrega,
+      "m_nIdZonaDetalleEntrega": state.zonaEntrega,
+      "m_sDomicilioDetalleEntrega": state.domicilioEntrega,
+      "m_sEntregarEnDetalleEntrega": state.entregaEn,
+      "m_sDatosAdicionalesDetalleEntrega": state.datosAdicionalesEntrega,
+      "m_dFechaSalida": state.fechaHoraSalida.split("T")[0],
+      "m_dFechaLlegada": state.fechaHoraLlegada.split("T")[0],
+      "m_tHoraSalida": state.fechaHoraSalida.split("T")[1],
+      "m_tHoraLlegada": state.fechaHoraLlegada.split("T")[1],
+      "m_parrPaquetes": state.paquetes,
+      "m_nNoPaquetes": state.paquetes.length,
+      "m_parrSobres": state.sobres,
+      "m_nNoSobres": state.sobres.length,
+      "m_nIdOperador": state.operador.m_nIdOperador,
+      "m_nIdUnidad": state.tipoUnidad.m_nIdTipoUnidad,
+      "m_nIdRemolque": state.unidad.m_nIdUnidad,
+      "m_nCreadoPor":state.CreadoPor,
+      "m_nModificadoPor":state.ModificadoPor
+
+    }
+    console.log(params)
     if (state.idRecoleccion != 0) {
       const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Modificar/${state.idRecoleccion}`;
       axios
@@ -523,8 +524,8 @@ function Recoleccion() {
         cantidadDePaquetes: respuesta.data.m_parrPaquetes.length,
         cantidadDeSobres: respuesta.data.m_parrSobres.length,
       });
-      console.log("cpRemitente:");
-      console.log(state.codigoPostalRemitente);
+      console.log("tipoUnidad:")
+      console.log(dataTipoUnidad)
     });
   }
 
@@ -1786,16 +1787,12 @@ function Recoleccion() {
                 <i className="fa fa-plus-circle" /> {state.agregar}
               </a>
             </li>
+            
             <li>
-              <a data-toggle="tab" href="#Importar">
-                <i className="fa fa-upload" /> Importar
-              </a>
+              <ExportCSV csvData={data} fileName="Recoleccion_Listado" />
             </li>
             <li>
-              <ExportCSV csvData={data} fileName="Departamento_Listado" />
-            </li>
-            <li>
-              <ExportPDF data={data} column={columns} fileName="Departamento" />
+              <ExportPDF data={data} column={columns} fileName="Recoleccion" />
             </li>
           </ul>
 
@@ -3514,7 +3511,9 @@ function Recoleccion() {
                       </div>
                     </div>
                   </div>
-
+                  <div id="Importar" className="tab-pane fade  d-none">
+                       </div>
+                                             
                   <div className="form-footer" className="col-md-12">
                     <button
                       href="#Listado"
@@ -3532,52 +3531,7 @@ function Recoleccion() {
                     </button>
                   </div>
 
-                  <div id="Importar" className="tab-pane fade">
-                    <div className="widget-wrap">
-                      <div className="widget-content">
-                        <div className="row">
-                          <div className="col-md-12">
-                            <form className="j-forms">
-                              <div className="form-content">
-                                <div className="col-sm-12 col-md-12 unit">
-                                  <label className="label">Importar</label>
-                                  <div className="input">
-                                    <input
-                                      onChange={handleUpload}
-                                      className="form-control"
-                                      type="file"
-                                      id="importar"
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                              <br></br>
-                              <div
-                                className="form-footer"
-                                className="col-md-12"
-                              >
-                                <button
-                                  data-layout="topCenter"
-                                  data-type="information"
-                                  className="btn btn-secondary secondary-btn"
-                                >
-                                  {" "}
-                                  Cancelar
-                                </button>
-                                <button
-                                  onClick={handleAceptar}
-                                  className="btn btn-primary primary-btn"
-                                >
-                                  Aceptar
-                                </button>
-                              </div>
-                            </form>
-                          </div>
-                        </div>
-                      </div>{" "}
-                    </div>
-                  </div>
-                </div>
+                 </div>
               </form>
             </div>
           </div>
