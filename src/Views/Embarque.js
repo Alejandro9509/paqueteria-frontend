@@ -51,6 +51,8 @@ function Embarque() {
   const [dataOperador, setDataOperador] = React.useState([]);
   const [dataTipoUnidad, setDataTipoUnidad] = React.useState([]);
   const [dataUnidad, setDataUnidad] = React.useState([]);
+  const [dataRemitenteDestinatario, setDataRemitenteDestinatario] = React.useState([]);
+
   const [state, setState] = React.useState({
     showPopUp: false,
     DerechoBorrar: 139,
@@ -72,7 +74,7 @@ function Embarque() {
     moneda: 0,
     tipoCambio: "",
     tipoCobro: 0,
-    nombreRemitente: "",
+    nombreRemitente: {},
     RFCRemitente: "",
     domicilioRemitente: "",
     codigoPostalRemitente: {},
@@ -82,7 +84,7 @@ function Embarque() {
     contactoRemitente: "",
     ciudadDestino: {},
     nombreDestinatario: "",
-    RFCDestinatario: "",
+    RFCDestinatario: {},
     domicilioDestinatario: "",
     codigoPostalDestinatario: {},
     ciudadDestinatario: {},
@@ -139,6 +141,26 @@ function Embarque() {
   });
 
   const history = useHistory()
+  
+  function handleSelectRemitente() {
+    state.RFCRemitente = state.nombreRemitente.m_sRFC
+    state.domicilioRemitente = state.nombreRemitente.m_sNombreCompletoOperador
+    state.codigoPostalRemitente = state.nombreRemitente.m_sCodigoPostal
+    state.correoRemitente = state.nombreRemitente.m_sCorreoElectronico
+    state.telefonoRemitente = state.nombreRemitente.m_sTelefono
+    state.contactoRemitente = state.nombreRemitente.m_sContacto
+
+  }
+  function handleSelectDestinatario() {
+    state.RFCDestinatario = state.nombreDestinatario.m_sRFC
+    state.domicilioDestinatario = state.nombreDestinatario.m_sNombreCompletoOperador
+    state.codigoPostalDestinatario= state.nombreDestinatario.m_sCodigoPostal
+    state.correoDestinatario= state.nombreDestinatario.m_sCorreoElectronico
+    state.telefonoDestinatario = state.nombreDestinatario.m_sTelefono
+    state.contactoDestinatario = state.nombreDestinatario.m_sContacto
+
+  }
+
 
   const handleAceptar = (e) => {
     e.preventDefault()
@@ -560,6 +582,28 @@ function Embarque() {
     }
 
   ]);
+  const columnsRemitenteDestinatarios = React.useMemo(() => [
+    {
+      Name: "Número",
+      accessor: "m_nNumero",
+    },
+    {
+      Name: "RFC",
+      accessor: "m_sRFC",
+    },
+    {
+      Name: "Remitente-Destinatario",
+      accessor: "m_sNombre",
+    },
+    {
+      Name: "Núm.Cliente",
+      accessor: "m_nNumeroCliente",
+    },
+    {
+      Name: "Cliente",
+      accessor: "m_sNombreFiscal",
+    },
+  ]);
   const columnsCP = React.useMemo(() => [
     {
       Name: "Codigo",
@@ -665,6 +709,7 @@ function Embarque() {
     getAllCodigosPostales();
     getAllOperadores();
     getAllTipoUnidad();
+    getAllRemitentesDestinatarios();
   }, []);
 
   function getAllData() {
@@ -674,6 +719,12 @@ function Embarque() {
     });
   };
 
+  function getAllRemitentesDestinatarios() {
+    const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/GetListado`;
+    axios.get(url, { headers }).then((respuesta) => {
+      setDataRemitenteDestinatario(respuesta.data);
+    });
+  }
   function getAllSucursales() {
     const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
@@ -852,6 +903,99 @@ function Embarque() {
       </div>
     )
   }
+
+  
+  function TableRemitentesDestinatarios({ columns, data, select }) {
+    const defaultColumn = React.useMemo(
+      () => ({
+        // Default Filter UI
+        Filter: DefaultColumnFilter,
+      }),
+      []
+    );
+
+    const {
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      rows,
+      prepareRow,
+      state,
+      preGlobalFilteredRows,
+      setGlobalFilter,
+    } = useTable(
+      {
+        columns,
+        data,
+        defaultColumn,
+      },
+      useFilters,
+      useGlobalFilter,
+      useSortBy
+    );
+
+    return (
+      <div
+        className="col-md-12"
+        style={{ maxHeight: "300px", overflow: "auto" }}
+      >
+        <table className="table" {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map(column => (
+                  // Add the sorting props to control sorting. For this example
+                  // we can add them into the header props
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render("Name")}
+                    {/* Add a sort direction indicator */}
+                    <span>
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <i className="fa fa-caret-up" />
+                        ) : (
+                          <i className="fa fa-caret-down" />
+                        )
+                      ) : (
+                        ""
+                      )}
+                    </span>
+                    <div>
+                      {column.canFilter ? column.render("Filter") : null}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr style={{backgroundColor: row.original.m_nIdUnidad === select ? "#FCC88F" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                    <td>
+                      <div>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                      </div>
+                    </td>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
 
   function TableCodigoPostal({ columns, data, select }) {
     const defaultColumn = React.useMemo(
@@ -1612,6 +1756,13 @@ function Embarque() {
             <a href="/Unidades">Agregar</a>
           </div>
         )}
+          {state.tipoModal == 5 && 
+      <div className="row" style={{maxHeight: "400px !important", overflow:"auto",backgroundColor: '#FFFFFF'}} >
+        {dataRemitenteDestinatario.length != 0 ? <TableRemitentesDestinatarios select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdRemitenteDestinatario} columns={columnsRemitenteDestinatarios} data={dataRemitenteDestinatario} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => {history.push("/Unidades")}} className="btn btn-primary primary-btn">Agregar</button>
+    </div>
+      }
       </Modal>
 
       <Modal style={{ height: "400px" }}>
@@ -2121,15 +2272,77 @@ function Embarque() {
                                     <label className="label">
                                       Nombre
                                   </label>
-                                    <div className="input">
-                                      <input
-                                        onChange={handleChange}
-                                        className="form-control"
-                                        type="text"
-                                        required
-                                        value={state.nombreRemitente}
-                                        disabled={state.agregar == "Consultar"}
+                                  <div className="input">
+                                      <Autocomplete
+                                   
+                                   onSelect={handleSelectRemitente()}                                       
+                                   value={state.nombreRemitente}
+                                        freeSolo
+                                        onChange={(event, newValue) =>
+                                          setState({
+                                            ...state,
+                                            nombreRemitente: newValue,
+                                          })
+                                        }
                                         id="nombreRemitente"
+                                        disableClearable
+                                        forcePopupIcon={false}
+                                        options={dataRemitenteDestinatario}
+                                        getOptionLabel={(option) =>
+                                          option.m_sNombreFiscal
+                                        }
+                                        variant="outlined"
+                                        style={{
+                                          borderWidth: "1px",
+                                          borderColor: "#dddddd",
+                                          borderStyle: "solid",
+                                          borderRadius: "5px",
+                                          
+                                        }}
+                                        renderInput={(params) => (
+                                          <div>
+                                            <TextField
+                                              {...params}
+                                              InputProps={{
+                                                ...params.InputProps,
+                                                style: { height: 21 },
+                                                type: "search",
+                                                disableUnderline: true,
+                                                endAdornment: (
+                                                  <InputAdornment position="end">
+                                                    <IconButton
+                                                      padding="0px"
+                                                      style={{
+                                                        paddingRight: "0px",
+                                                      }}
+                                                      onClick={() => {
+                                                        setState({
+                                                          ...state,
+                                                          identificadorModal:
+                                                            "nombreRemitente",
+                                                          tipoModal: 5,
+                                                        });
+                                                        open();
+                                                      }}
+                                                    >
+                                                      <PageviewIcon
+                                                        style={{
+                                                          color: "#F9A03E",
+                                                          fontSize: 32,
+                                                          paddingInlineEnd: 0,
+                                                          paddingRight: 0,
+                                                          paddingBlockEnd: 0,
+                                                          paddingLeft: 0,
+                                                          paddingBlock: 0,
+                                                        }}
+                                                      />
+                                                    </IconButton>
+                                                  </InputAdornment>
+                                                ),
+                                              }}
+                                            />
+                                          </div>
+                                        )}
                                       />
                                     </div>
 
@@ -2437,17 +2650,78 @@ function Embarque() {
                                   <label className="label">
                                     Nombre
                               </label>
-                                  <div className="input">
-                                    <input
-                                      onChange={handleChange}
-                                      className="form-control"
-                                      type="text"
-                                      required
-                                      value={state.nombreDestinatario}
-                                      disabled={state.agregar == "Consultar"}
-                                      id="nombreDestinatario"
-                                    />
-                                  </div>
+                              <div className="input">
+                                      <Autocomplete
+                                      onSelect={handleSelectDestinatario()}    
+                                        value={state.nombreDestinatario}
+                                        freeSolo
+                                        onChange={(event, newValue) =>
+                                          setState({
+                                            ...state,
+                                            nombreDestinatario: newValue,
+                                          })
+                                        }
+                                        id="nombreRemitente"
+                                        disableClearable
+                                        forcePopupIcon={false}
+                                        options={dataRemitenteDestinatario}
+                                        getOptionLabel={(option) =>
+                                          option.m_sNombreFiscal
+                                        }
+                                        variant="outlined"
+                                        style={{
+                                          borderWidth: "1px",
+                                          borderColor: "#dddddd",
+                                          borderStyle: "solid",
+                                          borderRadius: "5px",
+                                          
+                                        }}
+                                        renderInput={(params) => (
+                                          <div>
+                                            <TextField
+                                              {...params}
+                                              InputProps={{
+                                                ...params.InputProps,
+                                                style: { height: 21 },
+                                                type: "search",
+                                                disableUnderline: true,
+                                                endAdornment: (
+                                                  <InputAdornment position="end">
+                                                    <IconButton
+                                                      padding="0px"
+                                                      style={{
+                                                        paddingRight: "0px",
+                                                      }}
+                                                      onClick={() => {
+                                                        setState({
+                                                          ...state,
+                                                          identificadorModal:
+                                                            "nombreDestinatario",
+                                                          tipoModal: 5,
+                                                        });
+                                                        open();
+                                                      }}
+                                                    >
+                                                      <PageviewIcon
+                                                        style={{
+                                                          color: "#F9A03E",
+                                                          fontSize: 32,
+                                                          paddingInlineEnd: 0,
+                                                          paddingRight: 0,
+                                                          paddingBlockEnd: 0,
+                                                          paddingLeft: 0,
+                                                          paddingBlock: 0,
+                                                        }}
+                                                      />
+                                                    </IconButton>
+                                                  </InputAdornment>
+                                                ),
+                                              }}
+                                            />
+                                          </div>
+                                        )}
+                                      />
+                                    </div>
                                 </div>
 
                                 <div className="col-sm-12 col-md-8 unit">
