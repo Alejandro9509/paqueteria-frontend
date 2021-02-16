@@ -3,7 +3,7 @@ import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import { useTable, useFilters, useGlobalFilter, useRowSelect, useSortBy } from 'react-table'
+import { useTable, useFilters, useSortBy } from 'react-table'
 import { makeStyles } from "@material-ui/core/styles";
 import { Breadcrumbs, Link, Typography } from '@material-ui/core';
 
@@ -371,7 +371,6 @@ function CiudadesCodigoPostal() {
         defaultColumn
       },
       useFilters,
-      useGlobalFilter,
       useSortBy,
     )
 
@@ -454,7 +453,6 @@ function CiudadesCodigoPostal() {
         defaultColumn
       },
       useFilters,
-      useGlobalFilter,
       useSortBy,
     )
 
@@ -493,8 +491,8 @@ function CiudadesCodigoPostal() {
                     <td>
                       <div>
                         <a href="#AgregarCP" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowModificarCodigoPostal(row.original.m_nIdCP))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminarCodigoPostal(row.original.m_nIdCP))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
                         <a href="#AgregarCP" role="tab" data-toggle="tab"  className="btn btn-default btn-sm" onClick={() => (handleConsultarCodigoPostal(row.original.m_nIdCP))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminarCodigoPostal(row.original.m_nIdCP))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {

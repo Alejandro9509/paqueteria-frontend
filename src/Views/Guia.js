@@ -11,7 +11,7 @@ import IndicatorDots from "../Util/Dots";
 import Buttons from "../Util/CarruselButtons";
 import { makeStyles } from "@material-ui/core/styles";
 import * as XLSX from 'xlsx';
-import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy } from 'react-table'
+import { useTable, useFilters, useAsyncDebounce, useSortBy } from 'react-table'
 import $ from 'jquery';
 import { remove_array_element } from "../Util/Util";
 import Barra from "../Util/jquery-barcode"
@@ -45,13 +45,15 @@ function Guia() {
     showPopUp: false,
     idGuia: 0,
     agregar: "Agregar",
+    fechaInicial: "",
+    fechaFinal: "",
     sucursal: "",
     folioRecoleccion: "",
     folioEmbarque: "",
     folioGuía: "",
     folioInforme: "",
     fecha: "",
-    DerechoBorrar:145,
+    DerechoBorrar: 145,
     estatus: "",
     paquetesI: [{
       CiudadOrigen: "",
@@ -450,27 +452,26 @@ function Guia() {
 
   function handleEliminar(id) {
     var derecho;
-    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.creadoPor}/${state.DerechoBorrar}/3` ;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.creadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
       //alert(respuesta.data)
 
       derecho = respuesta.data;
-      if (derecho == false)
-      {
-        alert ("El usuario no tiene derechos para realizar el proceso");
-        return; 
+      if (derecho == false) {
+        alert("El usuario no tiene derechos para realizar el proceso");
+        return;
       }
-      
-    const url = `${process.env.REACT_APP_API_URL}/Guia/Eliminar/` + id;
-    axios.delete(url, { headers }).then(respuesta => {
-      alert(respuesta.data)
-      //console.log(respuesta)
-      if (respuesta.data.indexOf("fracaso:") <= 0)
-        getAllData()
-    }).catch(function (err) {
-      console.log(err.data)
-    });
-	}).catch(err => {
+
+      const url = `${process.env.REACT_APP_API_URL}/Guia/Eliminar/` + id;
+      axios.delete(url, { headers }).then(respuesta => {
+        alert(respuesta.data)
+        //console.log(respuesta)
+        if (respuesta.data.indexOf("fracaso:") <= 0)
+          getAllData()
+      }).catch(function (err) {
+        console.log(err.data)
+      });
+    }).catch(err => {
       alert(err)
     });
   }
@@ -490,10 +491,10 @@ function Guia() {
       setState({
         ...state,
         agregar: "Modificar",
-        showPopUp: true,       
-        IdEmbarque: respuesta.data.m_nIdEmbarque,        
-        folioGuía:respuesta.data.m_nFolioGuia,
-        folioRecoleccion:respuesta.data.m_nFolioRecoleccion,
+        showPopUp: true,
+        IdEmbarque: respuesta.data.m_nIdEmbarque,
+        folioGuía: respuesta.data.m_nFolioGuia,
+        folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
         folioInforme: respuesta.data.m_nFolioInforme,
         idGuia: respuesta.data.m_nIdGuia,
         fecha: respuesta.data.m_dFecha,
@@ -505,11 +506,11 @@ function Guia() {
         idTipoCobro: respuesta.data.m_nIdTIpoCobro,
         arrClsDetalle: respuesta.data.m_arrClsDetalle,
         tracking: respuesta.data.m_nTracking,
-        arClsGuiaConceptos:respuesta.data.m_arClsGuiaConceptos,
-        creadoEl:respuesta.data.m_dCreadoEl,
-        idSucursal:respuesta.data.IdSucursal      
+        arClsGuiaConceptos: respuesta.data.m_arClsGuiaConceptos,
+        creadoEl: respuesta.data.m_dCreadoEl,
+        idSucursal: respuesta.data.IdSucursal
 
-              });
+      });
       //handleEmbarque (respuesta.data.m_nIdEmbarque)
       // alert(state.idMoneda)
     }).catch(function (err) {
@@ -530,10 +531,10 @@ function Guia() {
       setState({
         ...state,
         agregar: "Consultar",
-        showPopUp: true,       
-        IdEmbarque: respuesta.data.m_nIdEmbarque,        
-        folioGuía:respuesta.data.m_nFolioGuia,
-        folioRecoleccion:respuesta.data.m_nFolioRecoleccion,
+        showPopUp: true,
+        IdEmbarque: respuesta.data.m_nIdEmbarque,
+        folioGuía: respuesta.data.m_nFolioGuia,
+        folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
         folioInforme: respuesta.data.m_nFolioInforme,
         idGuia: respuesta.data.m_nIdGuia,
         fecha: respuesta.data.m_dFecha,
@@ -545,10 +546,10 @@ function Guia() {
         idTipoCobro: respuesta.data.m_nIdTIpoCobro,
         arrClsDetalle: respuesta.data.m_arrClsDetalle,
         tracking: respuesta.data.m_nTracking,
-        arClsGuiaConceptos:respuesta.data.m_arClsGuiaConceptos,
-        creadoEl:respuesta.data.m_dCreadoEl,
-        idSucursal:respuesta.data.IdSucursal      
-              });
+        arClsGuiaConceptos: respuesta.data.m_arClsGuiaConceptos,
+        creadoEl: respuesta.data.m_dCreadoEl,
+        idSucursal: respuesta.data.IdSucursal
+      });
       //handleEmbarque (respuesta.data.m_nIdEmbarque)
       // alert(state.idMoneda)
     }).catch(function (err) {
@@ -773,8 +774,7 @@ function handleImprmir2()
   ]);
 
   useEffect(value => {
-    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
-    {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
       alert("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
@@ -1240,34 +1240,6 @@ function handleImprmir2()
     'Content-Type': 'application/json'
   }
 
-  function GlobalFilter({
-    preGlobalFilteredRows,
-    globalFilter,
-    setGlobalFilter,
-  }) {
-    const count = preGlobalFilteredRows.length
-    const [value, setValue] = React.useState(globalFilter)
-    const onChange = useAsyncDebounce(value => {
-      setGlobalFilter(value || undefined)
-    }, 200)
-
-
-    return (
-      <span>
-        Buscar:{' '}
-        <input
-          className="form-control"
-          value={value || ""}
-          onChange={e => {
-            setValue(e.target.value);
-            onChange(e.target.value);
-          }}
-          placeholder={`${count} registros...`}
-        />
-      </span>
-    )
-  }
-
   function DefaultColumnFilter({
     column: { filterValue, preFilteredRows, setFilter },
   }) {
@@ -1302,8 +1274,6 @@ function handleImprmir2()
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -1311,7 +1281,6 @@ function handleImprmir2()
         defaultColumn
       },
       useFilters,
-      useGlobalFilter,
       useSortBy,
     )
 
@@ -1351,9 +1320,9 @@ function handleImprmir2()
                   <tr {...row.getRowProps()}>
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdGuia))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
-                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdGuia))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdGuia))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdGuia))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdGuia))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdGuia))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -2139,16 +2108,32 @@ function handleImprmir2()
                             Fecha Inicial
                         </label>
                           <div className="input-group date addon-datepicker">
-                            <input type="text" className="form-control" /><span className="input-group-addon"><i className="fa fa-calendar" /></span>
+                            <input
+                              type="date"
+                              className="form-control"
+                              onChange={handleChange}
+                              id="fechaInicial"
+                            />
+                            <span className="input-group-addon">
+                              <i className="fa fa-calendar" />
+                            </span>
                           </div>
                         </div>
 
                         <div className="col-sm-6 col-md-3 unit">
                           <label className="label">
-                            Fecha Inicial
+                            Fecha Final
                         </label>
                           <div className="input-group date addon-datepicker">
-                            <input type="text" className="form-control" /><span className="input-group-addon"><i className="fa fa-calendar" /></span>
+                            <input
+                              type="date"
+                              className="form-control"
+                              onChange={handleChange}
+                              id="fechaFinal"
+                            />
+                            <span className="input-group-addon">
+                              <i className="fa fa-calendar" />
+                            </span>
                           </div>
                         </div>
 
@@ -2199,96 +2184,96 @@ function handleImprmir2()
             <div id="Agregar" className="tab-pane fade">
               <form className="j-forms">
                 <div className="form-content">
-                   
+
                   <div
-                            className="wizard-breadcrumb number-style"
-                            style={{
-                              position: "sticky",
-                              top: "150px",
-                              padding: "5px",
-                              backgroundColor: "white",
-                              zIndex: 100,
-                              marginBottom: "10px"
-                            }}
-                          >
+                    className="wizard-breadcrumb number-style"
+                    style={{
+                      position: "sticky",
+                      top: "150px",
+                      padding: "5px",
+                      backgroundColor: "white",
+                      zIndex: 100,
+                      marginBottom: "10px"
+                    }}
+                  >
 
 
 
-                            
-                            <div className="row">
-                              <div
-                                className={
-                                  "col-md-2-5 col-sm-3 step " +
-                                  (stepActive == 1 && "active-step")
-                                }
-                                onClick={() => openSection(1)}
-                              >
-                                <div className={"steps"}>
-                                  <span className={"step-number"}>1</span>
-                                  <p>Información General</p>
-                                </div>
-                              </div>
-                              <div
-                                className={
-                                  "col-md-2-5 col-sm-3 step " +
-                                  (stepActive == 2 && "active-step")
-                                }
-                                onClick={() => openSection(2)}
-                              >
-                                <div className="steps">
-                                  <span className="step-number">2</span>
-                                  <p>Remitentes / Destinatario</p>
-                                </div>
-                              </div>
-                              <div
-                                className={
-                                  "col-md-2-5 col-sm-3 step " +
-                                  (stepActive == 3 && "active-step")
-                                }
-                                onClick={() => openSection(3)}
-                              >
-                                <div className="steps">
-                                  <span className="step-number">3</span>
-                                  <p>Detalles de la Recolección</p>
-                                </div>
-                              </div>
 
-                              <div
-                                className={
-                                  "col-md-2-5 col-sm-2 step " +
-                                  (stepActive == 4 && "active-step")
-                                }
-                                onClick={() => openSection(4)}
-                              >
-                                <div className="steps">
-                                  <span className="step-number">4</span>
-                                  <p>Detalle de Facturación</p>
-                                </div>
-                              </div>
-                              <div
-                                className={
-                                  "col-md-2-5 col-sm-2 step " +
-                                  (stepActive == 5 && "active-step")
-                                }
-                                onClick={() => openSection(5)}
-                              >
-                                <div className="steps">
-                                  <span className="step-number">5</span>
-                                  <p>Conceptos de Facturación</p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
+                    <div className="row">
+                      <div
+                        className={
+                          "col-md-2-5 col-sm-3 step " +
+                          (stepActive == 1 && "active-step")
+                        }
+                        onClick={() => openSection(1)}
+                      >
+                        <div className={"steps"}>
+                          <span className={"step-number"}>1</span>
+                          <p>Información General</p>
+                        </div>
+                      </div>
+                      <div
+                        className={
+                          "col-md-2-5 col-sm-3 step " +
+                          (stepActive == 2 && "active-step")
+                        }
+                        onClick={() => openSection(2)}
+                      >
+                        <div className="steps">
+                          <span className="step-number">2</span>
+                          <p>Remitentes / Destinatario</p>
+                        </div>
+                      </div>
+                      <div
+                        className={
+                          "col-md-2-5 col-sm-3 step " +
+                          (stepActive == 3 && "active-step")
+                        }
+                        onClick={() => openSection(3)}
+                      >
+                        <div className="steps">
+                          <span className="step-number">3</span>
+                          <p>Detalles de la Recolección</p>
+                        </div>
+                      </div>
+
+                      <div
+                        className={
+                          "col-md-2-5 col-sm-2 step " +
+                          (stepActive == 4 && "active-step")
+                        }
+                        onClick={() => openSection(4)}
+                      >
+                        <div className="steps">
+                          <span className="step-number">4</span>
+                          <p>Detalle de Facturación</p>
+                        </div>
+                      </div>
+                      <div
+                        className={
+                          "col-md-2-5 col-sm-2 step " +
+                          (stepActive == 5 && "active-step")
+                        }
+                        onClick={() => openSection(5)}
+                      >
+                        <div className="steps">
+                          <span className="step-number">5</span>
+                          <p>Conceptos de Facturación</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
 
-                 
+
 
                   <div className="widget-wrap" id="informacionGeneral">
                     <div className="widget-header">
                       <h2>Información General</h2>
                     </div>
 
-                    
+
                     <div className="widget-container">
                       <div className="widget-content">
                         <div className="row">
@@ -2323,7 +2308,7 @@ function handleImprmir2()
                                     )}
                                   </select>
                                 </div>
-  <div className="col-sm-4 col-md-2-5 unit">
+                                <div className="col-sm-4 col-md-2-5 unit">
                                   <label className="label">
                                     Folio Guia
                           </label>
@@ -2475,9 +2460,9 @@ function handleImprmir2()
                                   </select>
                                 </div>
 
-                              
-                         
-     
+
+
+
                                 <div className="col-sm-4 col-md-2-5 unit">
                                   <label className="label">
                                     Tipo de Cambio
@@ -3040,21 +3025,21 @@ function handleImprmir2()
                               </div>
                             </form>
                           </div>
-                          
+
                           <div className="form-footer" className="col-md-12">
 
-<button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
->
-  Cancelar</button>
-<button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
-</div>
+                            <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
+                            >
+                              Cancelar</button>
+                            <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
+                          </div>
 
                         </div>
 
-                        
-                        
-                        
-                        </div></div>
+
+
+
+                      </div></div>
 
                   </div>
 

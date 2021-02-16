@@ -130,13 +130,13 @@ function App(props) {
                         <i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} />
                       </a>
                       <a
-                        href="#"
+                        href="#Agregar"
+                        role="tab"
+                        data-toggle="tab"
+                        onClick={() => handleShowModificar(row)}
                         className="btn btn-default btn-sm"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdOperador)
-                        }
                       >
-                        <i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} />
+                        <i className="fa fa-eye" style={{color:"#F9A03E"}} />
                       </a>
                       <a
                         href="#"
@@ -145,7 +145,7 @@ function App(props) {
                           handleEliminar(row.original.m_nIdOperador)
                         }
                       >
-                        <i className="fa fa-eye" style={{color:"#F9A03E"}} />
+                        <i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} />
                       </a>
                     </div>
                   </td>
@@ -470,17 +470,17 @@ function App(props) {
     console.log(event.target.name + " " + state.activo);
   };
 
-  function handleShowModificar(row) {
-    console.log(row.original.m_nIdOperador);
+  function handleShowModificar(id) {
+    console.log(id);
     const url =
       `${process.env.REACT_APP_API_URL}/Operador/GetById/` +
-      row.original.m_nIdOperador;
+      id;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
       setState({
         ...state,
         agregar: "Modificar",
-        IdOperador: row.original.m_nIdOperador,
+        IdOperador: id,
         NumeroOperador: respuesta.data.m_nNumeroOperador,
         Activo: respuesta.data.m_bActivo,
         Nombre: respuesta.data.m_sNombre,
