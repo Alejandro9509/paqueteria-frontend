@@ -16,6 +16,17 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import { DisplayMapClass } from "./DisplayMapClass";
 
 
+import Noty from 'noty';
+
+function showSuccess(mensaje){
+  new Noty({
+    type:"information",
+    layout:"topCenter",
+    text: mensaje,
+    timeout:"3000"
+  }).show()
+}
+
 
 window.jQuery = window.$ = $;
 const headers = {

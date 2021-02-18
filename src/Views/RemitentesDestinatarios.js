@@ -21,6 +21,17 @@ import ExportCSV from "../Components/Template/Export";
 import ExportPDF from "../Components/Template/ExportPDF";
 import { useHistory } from 'react-router-dom';
 
+import Noty from 'noty';
+
+function showSuccess(mensaje){
+  new Noty({
+    type:"information",
+    layout:"topCenter",
+    text: mensaje,
+    timeout:"3000"
+  }).show()
+}
+
 window.jQuery = window.$ = $;
 const headers = {
   "Content-Type": "application/json",
@@ -129,7 +140,7 @@ function App(props) {
       state.numero;
     axios.get(url, { headers }).then((respuesta) => {
       if (respuesta.data != "") {
-        alert(respuesta.data.m_sMensaje);
+        showSuccess(respuesta.data.m_sMensaje);
         console.log(respuesta.data);
         setState({
           ...state,
@@ -184,26 +195,26 @@ function App(props) {
       axios
         .put(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
-          alert(respuesta.data);
+          showSuccess(respuesta.data);
           getAllDataRemDes();
           //window.location.reload();
         })
         .catch((err) => {
           console.log(err);
-          alert("err");
+          showSuccess("err");
         });
     } else {
       const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/Agregar`;
       axios
         .post(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
-          alert(respuesta.data);
+          showSuccess(respuesta.data);
           getAllDataRemDes();
           //window.location.reload();
         })
         .catch((err) => {
           console.log(err);
-          alert(err);
+          showSuccess(err);
         });
     }
   };
@@ -212,12 +223,12 @@ function App(props) {
     var derecho;
     const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.creadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
-      //alert(respuesta.data)
+      //showSuccess(respuesta.data)
 
       derecho = respuesta.data;
       if (derecho == false)
       {
-        alert ("El usuario no tiene derechos para realizar el proceso");
+        showSuccess ("El usuario no tiene derechos para realizar el proceso");
         return; 
       }
       
@@ -226,14 +237,14 @@ function App(props) {
   axios
     .delete(url, { headers })
     .then((respuesta) => {
-      alert(respuesta.data);
+      showSuccess(respuesta.data);
       getAllDataRemDes();
     })
     .catch((err) => {
-      alert(err);
+      showSuccess(err);
     });
 	}).catch(err => {
-      alert(err)
+    showSuccess(err)
     });
   }
 
@@ -540,7 +551,7 @@ function App(props) {
                           )
                         }
                       >
-                        <i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} />
+                        <i className="fa fa-eye" style={{color:"#F9A03E"}} /> 
                       </a>
                       <a
                         href="#"
@@ -551,7 +562,7 @@ function App(props) {
                           )
                         }
                       >
-                        <i className="fa fa-eye" style={{color:"#F9A03E"}} />
+                        <i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} />
                       </a>
                     </div>
                   </td>
@@ -657,7 +668,7 @@ function App(props) {
   useEffect((value) => {
     if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
     {
-      alert("Es necesario iniciar sesion para acceder a este proceso");
+      showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
     }

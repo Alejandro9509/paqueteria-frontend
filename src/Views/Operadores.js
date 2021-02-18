@@ -12,14 +12,39 @@ import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda"
 import { useTable, useFilters, useSortBy } from "react-table";
 import ExportCSV from "../Components/Template/Export";
 import ExportPDF from "../Components/Template/ExportPDF";
+import { makeStyles } from "@material-ui/core/styles";
 
 import $ from "jquery";
+
+import Noty from 'noty';
+
+function showSuccess(mensaje){
+  new Noty({
+    type:"information",
+    layout:"topCenter",
+    text: mensaje,
+    timeout:"3000"
+  }).show()
+}
+
+const styles = {
+  seleccionado: {
+    backgroundColor: "#688ad9",
+  },
+  noSeleccionado: {
+    backgroundColor: "#FFFFFF",
+  }
+};
+const useStyles = makeStyles(styles);
+
 window.jQuery = window.$ = $;
 const headers = {
   "Content-Type": "application/json",
 };
 
-function App(props) {
+function Operadores(props) {
+  const classes = useStyles();
+
   const columns = React.useMemo(() => [
     {
       Name: "Código",
@@ -117,17 +142,28 @@ function App(props) {
             {rows.map((row, i) => {
               prepareRow(row);
               return (
-                <tr {...row.getRowProps()}>
+                <tr {...row.getRowProps()}
+                onClick={handleSelectRow.bind(this, row.original.m_nIdOperador)}
+                className={state.IdOperador === row.original.m_nIdOperador ? classes.seleccionado : classes.noSeleccionado}>
                   <td>
                     <div>
                       <a
                         href="#Agregar"
                         role="tab"
                         data-toggle="tab"
-                        onClick={() => handleShowModificar(row)}
+                        onClick={() => handleShowModificar(row.original.m_nIdOperador)}
                         className="btn btn-default btn-sm"
                       >
                         <i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} />
+                      </a>
+                      <a
+                        href="#Agregar"
+                        role="tab"
+                        data-toggle="tab"
+                        onClick={() => handleShowModificar(row.original.m_nIdOperador)}
+                        className="btn btn-default btn-sm"
+                      >
+                        <i className="fa fa-eye" style={{color:"#F9A03E"}} />
                       </a>
                       <a
                         href="#"
@@ -137,15 +173,6 @@ function App(props) {
                         }
                       >
                         <i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdOperador)
-                        }
-                      >
-                        <i className="fa fa-eye" style={{color:"#F9A03E"}} />
                       </a>
                     </div>
                   </td>
@@ -374,26 +401,26 @@ function App(props) {
         .put(url, Object.assign({}, params), { headers })
 
         .then((respuesta) => {
-          alert(respuesta.data);
+          showSuccess(respuesta.data);
 
           getAllOperadores();
         })
         .catch((err) => {
           console.log(err);
-          alert("err");
+          showSuccess("err");
         });
     } else {
       const url = `${process.env.REACT_APP_API_URL}/Operador/Agregar`;
       axios
         .post(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
-          alert(respuesta.data);
+          showSuccess(respuesta.data);
           getAllOperadores();
           //window.location.reload();
         })
         .catch((err) => {
           console.log(err);
-          alert(err);
+          showSuccess(err);
         });
     }
   };
@@ -410,7 +437,7 @@ function App(props) {
   useEffect((value) => {
     if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
     {
-      alert("Es necesario iniciar sesion para acceder a este proceso");
+      showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("configuracion");
       return;
     }
@@ -436,6 +463,7 @@ function App(props) {
     });
     console.log(event.target.name + " " + state.AppMisViajes);
   };
+
   const handleChangeAppPaqueteria = (event) => {
     setState({
       ...state,
@@ -444,9 +472,6 @@ function App(props) {
     console.log(event.target.name + " " + state.AppPaqueteria);
   };
 
-
-
-
   const handleChangeLicenciaA = (event) => {
     setState({
       ...state,
@@ -454,6 +479,7 @@ function App(props) {
     });
     console.log(event.target.name + " " + state.activo);
   };
+
   const handleChangeLicenciaB = (event) => {
     setState({
       ...state,
@@ -470,17 +496,17 @@ function App(props) {
     console.log(event.target.name + " " + state.activo);
   };
 
-  function handleShowModificar(row) {
-    console.log(row.original.m_nIdOperador);
+  function handleShowModificar(id) {
+    console.log(id);
     const url =
       `${process.env.REACT_APP_API_URL}/Operador/GetById/` +
-      row.original.m_nIdOperador;
+      id;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
       setState({
         ...state,
         agregar: "Modificar",
-        IdOperador: row.original.m_nIdOperador,
+        IdOperador: id,
         NumeroOperador: respuesta.data.m_nNumeroOperador,
         Activo: respuesta.data.m_bActivo,
         Nombre: respuesta.data.m_sNombre,
@@ -560,6 +586,7 @@ function App(props) {
       setDataDepartamento(respuesta.data);
     });
   }
+
   function getAllPuestos() {
     const url = `${process.env.REACT_APP_API_URL}/Puesto/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
@@ -589,12 +616,12 @@ function App(props) {
     var derecho;
     const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
-      //alert(respuesta.data)
+      //showSuccess(respuesta.data)
 
       derecho = respuesta.data;
       if (derecho == false)
       {
-        alert ("El usuario no tiene derechos para realizar el proceso");
+        showSuccess ("El usuario no tiene derechos para realizar el proceso");
         return; 
       }
     const url = `${process.env.REACT_APP_API_URL}/Operador/Eliminar/` + id;
@@ -604,10 +631,10 @@ function App(props) {
         console.log(respuesta);
         getAllOperadores();
       }).catch(err => {
-        alert(err)
+        showSuccess(err)
       });
     }).catch(err => {
-        alert(err)
+      showSuccess(err)
       });
   }
 
@@ -618,6 +645,13 @@ function App(props) {
       [event.target.name]: event.target.value,
     });
   };
+
+  function handleSelectRow(id, event) {
+    setState({
+      ...state,
+      IdOperador: id
+    });
+  }
 
   const handleChangeNombreCompleto = (event) => {
     console.log(event.target.name + " : " + event.target.value);
@@ -726,7 +760,7 @@ function App(props) {
   useEffect((value) => {
     if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
     {
-      alert("Es necesario iniciar sesion para acceder a este proceso");
+      showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
     }
@@ -768,28 +802,6 @@ function App(props) {
         </div>
 
         <div className="container-fluid">
-          <div className="page-header filled full-block light">
-            <div className="row">
-              <div className="col-md-6 col-sm-6">
-                <h2>Operadores</h2>
-              </div>
-              <div className="col-md-6 col-sm-6">
-                <ul className="list-page-breadcrumb">
-                  <li>
-                    <a href="#">
-                      Home <i className="zmdi zmdi-chevron-right" />
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      Layout <i className="zmdi zmdi-chevron-right" />
-                    </a>
-                  </li>
-                  <li className="active-page"> Dashboard</li>
-                </ul>
-              </div>
-            </div>
-          </div>
 
           <ul className="nav navStatica nav-tabs">
             <li className="active">
@@ -2532,4 +2544,4 @@ function App(props) {
   );
 }
 
-export default App;
+export default Operadores;

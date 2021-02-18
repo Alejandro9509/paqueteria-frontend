@@ -26,6 +26,18 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import useModal from 'react-hooks-use-modal';
 import { useHistory } from 'react-router-dom';
+
+import Noty from 'noty';
+
+function showSuccess(mensaje){
+  new Noty({
+    type:"information",
+    layout:"topCenter",
+    text: mensaje,
+    timeout:"3000"
+  }).show()
+}
+
 window.jQuery = window.$ = $;
 
 const styles = {
@@ -34,6 +46,12 @@ const styles = {
   },
   sobreCarrusel: {
     height: "150px !important"
+  },
+  seleccionado: {
+    backgroundColor: "#688ad9",
+  },
+  noSeleccionado: {
+    backgroundColor: "#FFFFFF",
   }
 };
 const useStyles = makeStyles(styles);
@@ -61,7 +79,7 @@ function Embarque() {
     agregar: "Agregar",
     idEmbarque: 0,
     fechaInicial: "",
-    fechaIcinial2: "",
+    fechaFinal: "",
     sucursalListado: 0,
     estatusListado: 0,
     idSucursalAgregar: localStorage.getItem("Sucursal"),
@@ -225,21 +243,21 @@ function Embarque() {
     if (state.idEmbarque != 0) {
       const url = `${process.env.REACT_APP_API_URL}/Embarques/Modificar/${state.idEmbarque}`;
       axios.put(url, Object.assign({}, params), { headers2 }).then(respuesta => {
-        alert(respuesta.data)
+        showSuccess(respuesta.data)
         getAllData()
       }).catch(err => {
         console.log(err)
-        alert("err")
+        showSuccess("err")
       });
     } else {
       const url = `${process.env.REACT_APP_API_URL}/Embarques/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
-        alert(respuesta.data)
+        showSuccess(respuesta.data)
         console.log(respuesta.data)
         getAllData()
       }).catch(err => {
         console.log(err)
-        alert(err)
+        showSuccess(err)
       });
     }
 
@@ -319,23 +337,23 @@ function Embarque() {
     var derecho;
     const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
-      //alert(respuesta.data)
+      //showSuccess(respuesta.data)
 
       derecho = respuesta.data;
       if (derecho == false) {
-        alert("El usuario no tiene derechos para realizar el proceso");
+        showSuccess("El usuario no tiene derechos para realizar el proceso");
         return;
       }
 
       const url = `${process.env.REACT_APP_API_URL}/Embarques/Eliminar/${id}`;
       axios.delete(url, { headers }).then(respuesta => {
-        alert(respuesta.data)
+        showSuccess(respuesta.data)
         getAllData()
       }).catch(err => {
-        alert(err)
+        showSuccess(err)
       });
     }).catch(err => {
-      alert(err)
+      showSuccess(err)
     });
   }
 
@@ -398,7 +416,7 @@ function Embarque() {
         fechaHoraSalida: respuesta.data.m_dFechaSalida + "T" + respuesta.data.m_tHoraSalida,
         fechaHoraLlegada: respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,
         idOperador: dataOperador.find(o => o.m_nIdOperador == respuesta.data.m_nIdOperador),
-        idTipoUnidad: dataTipoUnidad.find(o => o.m_sTipoUnidad == (dataUnidad.find(o => o.m_nIdUnidad == respuesta.data.m_nIdUnidad)).m_sTipoUnidad),
+        idTipoUnidad: dataTipoUnidad.find(o => o.m_nIdTipoUnidad == (dataUnidad.find(o => o.m_nIdUnidad == respuesta.data.m_nIdUnidad)).m_nIdTipoUnidad),
         idUnidad: dataUnidad.find(o => o.m_nIdUnidad == respuesta.data.m_nIdUnidad),
         paquetes: respuesta.data.m_arrPaquetes
       })
@@ -553,6 +571,14 @@ function Embarque() {
     console.log(state.identificadorModal)
   }
 
+  function handleSelectRow(id, event) {
+    setState({
+      ...state,
+      idEmbarque: id
+    });
+  }
+
+
   const columns = React.useMemo(() => [
     {
       Name: "Folio",
@@ -695,7 +721,7 @@ function Embarque() {
   ]);
   useEffect(value => {
     if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
-      alert("Es necesario iniciar sesion para acceder a este proceso");
+      showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
     }
@@ -835,9 +861,6 @@ function Embarque() {
       headerGroups,
       rows,
       prepareRow,
-      state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -845,7 +868,6 @@ function Embarque() {
         defaultColumn
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     )
 
@@ -880,7 +902,9 @@ function Embarque() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr {...row.getRowProps()}>
+                  <tr {...row.getRowProps()}
+                  onClick={handleSelectRow.bind(this, row.original.m_nIdEmbarque)}
+                  className={state.idEmbarque === row.original.m_nIdEmbarque ? classes.seleccionado : classes.noSeleccionado}>
                     <td>
                       <div>
                         <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdEmbarque))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
@@ -920,8 +944,6 @@ function Embarque() {
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -929,7 +951,6 @@ function Embarque() {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
@@ -1098,8 +1119,6 @@ function Embarque() {
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -1107,7 +1126,6 @@ function Embarque() {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
@@ -1183,8 +1201,6 @@ function Embarque() {
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -1192,7 +1208,6 @@ function Embarque() {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
@@ -1267,8 +1282,6 @@ function Embarque() {
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -1276,7 +1289,6 @@ function Embarque() {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
@@ -1349,8 +1361,6 @@ function Embarque() {
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -1358,7 +1368,6 @@ function Embarque() {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
@@ -1864,22 +1873,26 @@ function Embarque() {
                             Fecha Inicial
                         </label>
                           <div className="input">
-                            <input type="date" className="form-control" />
-                          </div>
-                        </div>
-
-                        <div className="col-sm-6 col-md-3 unit">
-                          <label className="label">
-                            Fecha Inicial
-                        </label>
-                          <div className="input">
-                            <input
+                          <input
                               type="date"
                               className="form-control"
                               onChange={handleChange}
                               id="fechaInicial"
                             />
+                          </div>
+                        </div>
 
+                        <div className="col-sm-6 col-md-3 unit">
+                          <label className="label">
+                            Fecha Final
+                        </label>
+                          <div className="input">
+                          <input
+                              type="date"
+                              className="form-control"
+                              onChange={handleChange}
+                              id="fechaFinal"
+                            />
                           </div>
                         </div>
 

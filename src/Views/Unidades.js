@@ -18,6 +18,18 @@ import $ from "jquery";
 import { remove_array_element } from "../Util/Util";
 
 import { SettingsEthernet } from "@material-ui/icons";
+
+import Noty from 'noty';
+
+function showSuccess(mensaje){
+  new Noty({
+    type:"information",
+    layout:"topCenter",
+    text: mensaje,
+    timeout:"3000"
+  }).show()
+}
+
 window.jQuery = window.$ = $;
 const headers = {
   "Content-Type": "application/json",
@@ -152,18 +164,22 @@ function App(props) {
                         <i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} />
                       </a>
                       <a
-                        href="#"
+                        href="#Agregar"
+                        role="tab"
+                        data-toggle="tab"
+                        onClick={() =>
+                          handleShowModificar(row.original.m_nIdUnidad)
+                        }
                         className="btn btn-default btn-sm"
-                        onClick={() => handleEliminar(row.original.m_nIdUnidad)}
                       >
-                        <i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} />
+                        <i className="fa fa-eye" style={{color:"#F9A03E"}} />
                       </a>
                       <a
                         href="#"
                         className="btn btn-default btn-sm"
                         onClick={() => handleEliminar(row.original.m_nIdUnidad)}
                       >
-                        <i className="fa fa-eye" style={{color:"#F9A03E"}} />
+                        <i className="zmdi zmdi-delete" style={{color:"#F30B0B"}} />
                       </a>
                     </div>
                   </td>
@@ -489,7 +505,7 @@ function App(props) {
   useEffect((value) => {
     if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
     {
-      alert("Es necesario iniciar sesion para acceder a este proceso");
+      showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
     }
@@ -581,7 +597,7 @@ function App(props) {
         getAllUnidades();
       })
       .catch((err) => {
-        alert(err);
+        showSuccess(err);
       });
   }
 
@@ -600,7 +616,7 @@ function App(props) {
 
       if (respuesta.data != "") {
 
-        alert(respuesta.data.m_sMensaje);
+        showSuccess(respuesta.data.m_sMensaje);
         console.log(respuesta.data);
         setState({
           ...state,
@@ -611,7 +627,7 @@ function App(props) {
     })
 
       .catch((err) => {
-        alert(err);
+        showSuccess(err);
       });
   };
 
@@ -734,25 +750,25 @@ function App(props) {
         .put(url, Object.assign({}, params), { headers })
 
         .then((respuesta) => {
-          alert(respuesta.data);
+          showSuccess(respuesta.data);
           getAllUnidades();
         })
         .catch((err) => {
           console.log(err);
-          alert("err");
+          showSuccess("err");
         });
     } else {
       const url = `${process.env.REACT_APP_API_URL}/Unidad/Agregar`;
       axios
         .post(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
-          alert(respuesta.data);
+          showSuccess(respuesta.data);
           getAllUnidades();
           //window.location.reload();
         })
         .catch((err) => {
           console.log(err);
-          alert(err);
+          showSuccess(err);
         });
     }
   };

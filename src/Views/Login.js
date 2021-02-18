@@ -6,6 +6,18 @@ import {
 } from "@material-ui/core";
 import $ from 'jquery';
 import { sha512 } from "../Util/Sha";
+
+import Noty from 'noty';
+
+function showSuccess(mensaje){
+  new Noty({
+    type:"information",
+    layout:"topCenter",
+    text: mensaje,
+    timeout:"3000"
+  }).show()
+}
+
 const headers = {
   'Content-Type': 'application/json'
 }
@@ -40,10 +52,10 @@ function login(){
       }
       else
       {
-        alert(respuesta.data);
+        showSuccess(respuesta.data);
       }
       }catch{
-        alert(respuesta.data);
+        showSuccess(respuesta.data);
       }
     });
   

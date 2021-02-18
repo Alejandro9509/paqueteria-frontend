@@ -11,10 +11,21 @@ import IndicatorDots from "../Util/Dots";
 import Buttons from "../Util/CarruselButtons";
 import { makeStyles } from "@material-ui/core/styles";
 import * as XLSX from 'xlsx';
-import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy } from 'react-table'
+import { useTable, useFilters, useAsyncDebounce, useSortBy } from 'react-table'
 import $ from 'jquery';
 import { remove_array_element } from "../Util/Util";
 import Barra from "../Util/jquery-barcode"
+
+import Noty from 'noty';
+
+function showSuccess(mensaje){
+  new Noty({
+    type:"information",
+    layout:"topCenter",
+    text: mensaje,
+    timeout:"3000"
+  }).show()
+}
 
 
 window.jQuery = window.$ = $;
@@ -22,22 +33,23 @@ const styles = {
   paqueteCarrusel: {
     height: "300px !important",
   },
-
-};
-const styles2 = {
   conceptoCarrusel: {
     height: "220px !important",
   },
+  seleccionado: {
+    backgroundColor: "#688ad9",
+  },
+  noSeleccionado: {
+    backgroundColor: "#FFFFFF",
+  }
 };
-const useStyles = makeStyles(styles);
 
-const useStyles2 = makeStyles(styles2);
+const useStyles = makeStyles(styles);
 
 function Guia() {
   var React = require('react');
   var QRCode = require('qrcode.react');
   const classes = useStyles();
-  const classes2 = useStyles2();
   localStorage.getItem("UsuarioId");
 
   const [data, setData] = React.useState([])
@@ -45,13 +57,15 @@ function Guia() {
     showPopUp: false,
     idGuia: 0,
     agregar: "Agregar",
+    fechaInicial: "",
+    fechaFinal: "",
     sucursal: "",
     folioRecoleccion: "",
     folioEmbarque: "",
     folioGuía: "",
     folioInforme: "",
     fecha: "",
-    DerechoBorrar:145,
+    DerechoBorrar: 145,
     estatus: "",
     paquetesI: [{
       CiudadOrigen: "",
@@ -174,7 +188,7 @@ function Guia() {
   })
 
   function cargaDiv(indice, valor) {
-    //	alert(indice);
+    //	showSuccess(indice);
     $("#idBarra" + indice).barcode(valor, "code128");
   }
 
@@ -308,17 +322,17 @@ function Guia() {
     if (state.idGuia != 0) {
       const url = `${process.env.REACT_APP_API_URL}/Guia/Modificar/` + state.idGuia;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
-        alert(respuesta.data)
+        showSuccess(respuesta.data)
         getAllData()
       }).catch(err => {
         console.log(err)
-        alert(err)
+        showSuccess(err)
       });
     } else {
       const url = `${process.env.REACT_APP_API_URL}/Guia/Agregar`;
       debugger;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
-        alert(respuesta.data)
+        showSuccess(respuesta.data)
         //window.location.reload();
         var resp = respuesta.data;
         debugger;
@@ -326,14 +340,14 @@ function Guia() {
         getImpresion(vGuia);
       }).catch(err => {
         console.log(err)
-        alert(err)
+        showSuccess(err)
       });
     }
 
   }
 
   async function getImpresion(id) {
-    //alert (state.nGuiaId);		
+    //showSuccess (state.nGuiaId);		
     //if (state.muestraPaquetes === true) return;		
     const url = `${process.env.REACT_APP_API_URL}/Guia/GetImpresion/` + id;
     await axios.get(url, { headers }).then(respuesta => {
@@ -450,28 +464,27 @@ function Guia() {
 
   function handleEliminar(id) {
     var derecho;
-    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.creadoPor}/${state.DerechoBorrar}/3` ;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.creadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
-      //alert(respuesta.data)
+      //showSuccess(respuesta.data)
 
       derecho = respuesta.data;
-      if (derecho == false)
-      {
-        alert ("El usuario no tiene derechos para realizar el proceso");
-        return; 
+      if (derecho == false) {
+        showSuccess("El usuario no tiene derechos para realizar el proceso");
+        return;
       }
-      
-    const url = `${process.env.REACT_APP_API_URL}/Guia/Eliminar/` + id;
-    axios.delete(url, { headers }).then(respuesta => {
-      alert(respuesta.data)
-      //console.log(respuesta)
-      if (respuesta.data.indexOf("fracaso:") <= 0)
-        getAllData()
-    }).catch(function (err) {
-      console.log(err.data)
-    });
-	}).catch(err => {
-      alert(err)
+
+      const url = `${process.env.REACT_APP_API_URL}/Guia/Eliminar/` + id;
+      axios.delete(url, { headers }).then(respuesta => {
+        showSuccess(respuesta.data)
+        //console.log(respuesta)
+        if (respuesta.data.indexOf("fracaso:") <= 0)
+          getAllData()
+      }).catch(function (err) {
+        console.log(err.data)
+      });
+    }).catch(err => {
+      showSuccess(err)
     });
   }
 
@@ -490,10 +503,10 @@ function Guia() {
       setState({
         ...state,
         agregar: "Modificar",
-        showPopUp: true,       
-        IdEmbarque: respuesta.data.m_nIdEmbarque,        
-        folioGuía:respuesta.data.m_nFolioGuia,
-        folioRecoleccion:respuesta.data.m_nFolioRecoleccion,
+        showPopUp: true,
+        IdEmbarque: respuesta.data.m_nIdEmbarque,
+        folioGuía: respuesta.data.m_nFolioGuia,
+        folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
         folioInforme: respuesta.data.m_nFolioInforme,
         idGuia: respuesta.data.m_nIdGuia,
         fecha: respuesta.data.m_dFecha,
@@ -505,13 +518,13 @@ function Guia() {
         idTipoCobro: respuesta.data.m_nIdTIpoCobro,
         arrClsDetalle: respuesta.data.m_arrClsDetalle,
         tracking: respuesta.data.m_nTracking,
-        arClsGuiaConceptos:respuesta.data.m_arClsGuiaConceptos,
-        creadoEl:respuesta.data.m_dCreadoEl,
-        idSucursal:respuesta.data.IdSucursal      
+        arClsGuiaConceptos: respuesta.data.m_arClsGuiaConceptos,
+        creadoEl: respuesta.data.m_dCreadoEl,
+        idSucursal: respuesta.data.IdSucursal
 
-              });
+      });
       //handleEmbarque (respuesta.data.m_nIdEmbarque)
-      // alert(state.idMoneda)
+      // showSuccess(state.idMoneda)
     }).catch(function (err) {
       console.log(err.data)
     });
@@ -530,10 +543,10 @@ function Guia() {
       setState({
         ...state,
         agregar: "Consultar",
-        showPopUp: true,       
-        IdEmbarque: respuesta.data.m_nIdEmbarque,        
-        folioGuía:respuesta.data.m_nFolioGuia,
-        folioRecoleccion:respuesta.data.m_nFolioRecoleccion,
+        showPopUp: true,
+        IdEmbarque: respuesta.data.m_nIdEmbarque,
+        folioGuía: respuesta.data.m_nFolioGuia,
+        folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
         folioInforme: respuesta.data.m_nFolioInforme,
         idGuia: respuesta.data.m_nIdGuia,
         fecha: respuesta.data.m_dFecha,
@@ -545,12 +558,12 @@ function Guia() {
         idTipoCobro: respuesta.data.m_nIdTIpoCobro,
         arrClsDetalle: respuesta.data.m_arrClsDetalle,
         tracking: respuesta.data.m_nTracking,
-        arClsGuiaConceptos:respuesta.data.m_arClsGuiaConceptos,
-        creadoEl:respuesta.data.m_dCreadoEl,
-        idSucursal:respuesta.data.IdSucursal      
-              });
+        arClsGuiaConceptos: respuesta.data.m_arClsGuiaConceptos,
+        creadoEl: respuesta.data.m_dCreadoEl,
+        idSucursal: respuesta.data.IdSucursal
+      });
       //handleEmbarque (respuesta.data.m_nIdEmbarque)
-      // alert(state.idMoneda)
+      // showSuccess(state.idMoneda)
     }).catch(function (err) {
       console.log(err.data)
     });
@@ -694,6 +707,13 @@ function handleImprmir2()
     });
   };
 
+  function handleSelectRow(id, event) {
+    setState({
+      ...state,
+      idGuia: id
+    });
+  }
+
   const handleChangePaquete = (event, index) => {
 
     var { paquetes } = state
@@ -707,8 +727,8 @@ function handleImprmir2()
 
     var { conceptos } = state
     conceptos[index][event.target.name] = event.target.value
-    //alert(event.target.name);
-    //alert(conceptos[index][event.target.name])
+    //showSuccess(event.target.name);
+    //showSuccess(conceptos[index][event.target.name])
     setState({
       ...state,
       conceptos: conceptos
@@ -773,9 +793,8 @@ function handleImprmir2()
   ]);
 
   useEffect(value => {
-    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
-    {
-      alert("Es necesario iniciar sesion para acceder a este proceso");
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
+      showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
     }
@@ -883,12 +902,12 @@ function handleImprmir2()
   };
 
   async function cargaEmbarqueSucursal(valor) {
-    //alert(valor);
+    //showSuccess(valor);
     setState({
       ...state,
       idSucursal: valor
     });
-    //alert (state.idSucursal +"-" +state.idMoneda);
+    //showSuccess (state.idSucursal +"-" +state.idMoneda);
 
     if (valor == "" || valor == "0") return;
     if (state.idMoneda == "" || state.idMoneda == "0") return;
@@ -899,7 +918,7 @@ function handleImprmir2()
     });
   };
   function cargaEmbarqueModificar(valorSucursal, valorMoneda, valorGuia) {
-    //alert(valorSucursal + "-" + valorMoneda)
+    //showSuccess(valorSucursal + "-" + valorMoneda)
     const url = `${process.env.REACT_APP_API_URL}/Embarques/GetBySucursalMoneda/` + valorSucursal + "/" + valorMoneda + "/" + valorGuia;
     axios.get(url, { headers }).then(respuesta => {
       //console.log(respuesta);
@@ -907,12 +926,12 @@ function handleImprmir2()
     });
   };
   async function cargaEmbarqueMoneda(valor) {
-    //alert(valor);
+    //showSuccess(valor);
     setState({
       ...state,
       idMoneda: valor
     });
-    //alert (state.idSucursal +"-" +state.idMoneda);
+    //showSuccess (state.idSucursal +"-" +state.idMoneda);
 
     if (state.idSucursal === "" || state.idSucursal === "0") return;
     if (valor === "" || valor === "0") return;
@@ -925,7 +944,7 @@ function handleImprmir2()
 
   function handleEmbarque2(embarque) {
     const url = `${process.env.REACT_APP_API_URL}/Embarques/GetById/` + embarque;
-    //alert(embarque);
+    //showSuccess(embarque);
     axios.get(url, { headers }).then(respuesta => {
       setState({
         ...state,
@@ -971,7 +990,7 @@ function handleImprmir2()
       }
       sobresTemp.splice(0, 1);
       console.log(respuesta.data);
-      //alert(respuesta.data.m_nIdEmbarque);
+      //showSuccess(respuesta.data.m_nIdEmbarque);
       //setDataEmbarque(respuesta.data)
       setState({
         ...state,
@@ -1005,7 +1024,7 @@ function handleImprmir2()
   };
   function handleEmbarque(embarque) {
     const url = `${process.env.REACT_APP_API_URL}/Embarques/GetById/` + embarque;
-    //alert(embarque);
+    //showSuccess(embarque);
     axios.get(url, { headers }).then(respuesta => {
       setState({
         ...state,
@@ -1052,7 +1071,7 @@ function handleImprmir2()
         });
       }
       sobresTemp.splice(0, 1);
-      //alert(respuesta.data.m_nIdEmbarque);
+      //showSuccess(respuesta.data.m_nIdEmbarque);
       //setDataEmbarque(respuesta.data)
       setState({
         ...state,
@@ -1240,34 +1259,6 @@ function handleImprmir2()
     'Content-Type': 'application/json'
   }
 
-  function GlobalFilter({
-    preGlobalFilteredRows,
-    globalFilter,
-    setGlobalFilter,
-  }) {
-    const count = preGlobalFilteredRows.length
-    const [value, setValue] = React.useState(globalFilter)
-    const onChange = useAsyncDebounce(value => {
-      setGlobalFilter(value || undefined)
-    }, 200)
-
-
-    return (
-      <span>
-        Buscar:{' '}
-        <input
-          className="form-control"
-          value={value || ""}
-          onChange={e => {
-            setValue(e.target.value);
-            onChange(e.target.value);
-          }}
-          placeholder={`${count} registros...`}
-        />
-      </span>
-    )
-  }
-
   function DefaultColumnFilter({
     column: { filterValue, preFilteredRows, setFilter },
   }) {
@@ -1301,9 +1292,6 @@ function handleImprmir2()
       headerGroups,
       rows,
       prepareRow,
-      state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -1311,7 +1299,6 @@ function handleImprmir2()
         defaultColumn
       },
       useFilters,
-      useGlobalFilter,
       useSortBy,
     )
 
@@ -1348,12 +1335,15 @@ function handleImprmir2()
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr {...row.getRowProps()}>
+                  <tr {...row.getRowProps()}
+                  onClick={handleSelectRow.bind(this, row.original.m_nIdGuia)}
+                  className={state.idGuia === row.original.m_nIdGuia ? classes.seleccionado : classes.noSeleccionado}>
+
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdGuia))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
-                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdGuia))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdGuia))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdGuia))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdGuia))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdGuia))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -2139,16 +2129,32 @@ function handleImprmir2()
                             Fecha Inicial
                         </label>
                           <div className="input-group date addon-datepicker">
-                            <input type="text" className="form-control" /><span className="input-group-addon"><i className="fa fa-calendar" /></span>
+                            <input
+                              type="date"
+                              className="form-control"
+                              onChange={handleChange}
+                              id="fechaInicial"
+                            />
+                            <span className="input-group-addon">
+                              <i className="fa fa-calendar" />
+                            </span>
                           </div>
                         </div>
 
                         <div className="col-sm-6 col-md-3 unit">
                           <label className="label">
-                            Fecha Inicial
+                            Fecha Final
                         </label>
                           <div className="input-group date addon-datepicker">
-                            <input type="text" className="form-control" /><span className="input-group-addon"><i className="fa fa-calendar" /></span>
+                            <input
+                              type="date"
+                              className="form-control"
+                              onChange={handleChange}
+                              id="fechaFinal"
+                            />
+                            <span className="input-group-addon">
+                              <i className="fa fa-calendar" />
+                            </span>
                           </div>
                         </div>
 
@@ -2199,96 +2205,96 @@ function handleImprmir2()
             <div id="Agregar" className="tab-pane fade">
               <form className="j-forms">
                 <div className="form-content">
-                   
+
                   <div
-                            className="wizard-breadcrumb number-style"
-                            style={{
-                              position: "sticky",
-                              top: "150px",
-                              padding: "5px",
-                              backgroundColor: "white",
-                              zIndex: 100,
-                              marginBottom: "10px"
-                            }}
-                          >
+                    className="wizard-breadcrumb number-style"
+                    style={{
+                      position: "sticky",
+                      top: "150px",
+                      padding: "5px",
+                      backgroundColor: "white",
+                      zIndex: 100,
+                      marginBottom: "10px"
+                    }}
+                  >
 
 
 
-                            
-                            <div className="row">
-                              <div
-                                className={
-                                  "col-md-2-5 col-sm-3 step " +
-                                  (stepActive == 1 && "active-step")
-                                }
-                                onClick={() => openSection(1)}
-                              >
-                                <div className={"steps"}>
-                                  <span className={"step-number"}>1</span>
-                                  <p>Información General</p>
-                                </div>
-                              </div>
-                              <div
-                                className={
-                                  "col-md-2-5 col-sm-3 step " +
-                                  (stepActive == 2 && "active-step")
-                                }
-                                onClick={() => openSection(2)}
-                              >
-                                <div className="steps">
-                                  <span className="step-number">2</span>
-                                  <p>Remitentes / Destinatario</p>
-                                </div>
-                              </div>
-                              <div
-                                className={
-                                  "col-md-2-5 col-sm-3 step " +
-                                  (stepActive == 3 && "active-step")
-                                }
-                                onClick={() => openSection(3)}
-                              >
-                                <div className="steps">
-                                  <span className="step-number">3</span>
-                                  <p>Detalles de la Recolección</p>
-                                </div>
-                              </div>
 
-                              <div
-                                className={
-                                  "col-md-2-5 col-sm-2 step " +
-                                  (stepActive == 4 && "active-step")
-                                }
-                                onClick={() => openSection(4)}
-                              >
-                                <div className="steps">
-                                  <span className="step-number">4</span>
-                                  <p>Detalle de Facturación</p>
-                                </div>
-                              </div>
-                              <div
-                                className={
-                                  "col-md-2-5 col-sm-2 step " +
-                                  (stepActive == 5 && "active-step")
-                                }
-                                onClick={() => openSection(5)}
-                              >
-                                <div className="steps">
-                                  <span className="step-number">5</span>
-                                  <p>Conceptos de Facturación</p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
+                    <div className="row">
+                      <div
+                        className={
+                          "col-md-2-5 col-sm-3 step " +
+                          (stepActive == 1 && "active-step")
+                        }
+                        onClick={() => openSection(1)}
+                      >
+                        <div className={"steps"}>
+                          <span className={"step-number"}>1</span>
+                          <p>Información General</p>
+                        </div>
+                      </div>
+                      <div
+                        className={
+                          "col-md-2-5 col-sm-3 step " +
+                          (stepActive == 2 && "active-step")
+                        }
+                        onClick={() => openSection(2)}
+                      >
+                        <div className="steps">
+                          <span className="step-number">2</span>
+                          <p>Remitentes / Destinatario</p>
+                        </div>
+                      </div>
+                      <div
+                        className={
+                          "col-md-2-5 col-sm-3 step " +
+                          (stepActive == 3 && "active-step")
+                        }
+                        onClick={() => openSection(3)}
+                      >
+                        <div className="steps">
+                          <span className="step-number">3</span>
+                          <p>Detalles de la Recolección</p>
+                        </div>
+                      </div>
+
+                      <div
+                        className={
+                          "col-md-2-5 col-sm-2 step " +
+                          (stepActive == 4 && "active-step")
+                        }
+                        onClick={() => openSection(4)}
+                      >
+                        <div className="steps">
+                          <span className="step-number">4</span>
+                          <p>Detalle de Facturación</p>
+                        </div>
+                      </div>
+                      <div
+                        className={
+                          "col-md-2-5 col-sm-2 step " +
+                          (stepActive == 5 && "active-step")
+                        }
+                        onClick={() => openSection(5)}
+                      >
+                        <div className="steps">
+                          <span className="step-number">5</span>
+                          <p>Conceptos de Facturación</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
 
-                 
+
 
                   <div className="widget-wrap" id="informacionGeneral">
                     <div className="widget-header">
                       <h2>Información General</h2>
                     </div>
 
-                    
+
                     <div className="widget-container">
                       <div className="widget-content">
                         <div className="row">
@@ -2323,7 +2329,7 @@ function handleImprmir2()
                                     )}
                                   </select>
                                 </div>
-  <div className="col-sm-4 col-md-2-5 unit">
+                                <div className="col-sm-4 col-md-2-5 unit">
                                   <label className="label">
                                     Folio Guia
                           </label>
@@ -2475,9 +2481,9 @@ function handleImprmir2()
                                   </select>
                                 </div>
 
-                              
-                         
-     
+
+
+
                                 <div className="col-sm-4 col-md-2-5 unit">
                                   <label className="label">
                                     Tipo de Cambio
@@ -3032,7 +3038,7 @@ function handleImprmir2()
 
                                 <div style={{ padding: "20px" }}>
                                   <Carousel
-                                    className={classes2.conceptoCarrusel}
+                                    className={classes.conceptoCarrusel}
                                     widgets={[IndicatorDots, Buttons]}
                                     frames={framesConcepto}
                                   ></Carousel>
@@ -3040,21 +3046,21 @@ function handleImprmir2()
                               </div>
                             </form>
                           </div>
-                          
+
                           <div className="form-footer" className="col-md-12">
 
-<button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
->
-  Cancelar</button>
-<button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
-</div>
+                            <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
+                            >
+                              Cancelar</button>
+                            <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
+                          </div>
 
                         </div>
 
-                        
-                        
-                        
-                        </div></div>
+
+
+
+                      </div></div>
 
                   </div>
 

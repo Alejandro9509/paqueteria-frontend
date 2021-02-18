@@ -37,12 +37,35 @@ import * as XLSX from "xlsx";
 import { render } from 'react-dom';
 import SearchIcon from '@material-ui/icons/Search';
 
+import Noty from 'noty';
+
+function showSuccess(mensaje){
+  new Noty({
+    type:"information",
+    layout:"topCenter",
+    text: mensaje,
+    timeout:"3000"
+  }).show()
+}
+
+const styles = {
+  seleccionado: {
+    backgroundColor: "#688ad9",
+  },
+  noSeleccionado: {
+    backgroundColor: "#FFFFFF",
+  }
+};
+const useStyles = makeStyles(styles);
+
 window.jQuery = window.$ = $;
 const headers = {
   "Content-Type": "application/json",
 };
 
 function Informes(props) {
+
+  const classes = useStyles();
   const [stepActive, setStepActive] = React.useState(1);
   const [data, setData] = React.useState([]);
   const [Modal, open, close, isOpen] = useModal("root", {
@@ -309,7 +332,10 @@ function Informes(props) {
             {rows.map((row, i) => {
               prepareRow(row);
               return (
-                <tr {...row.getRowProps()}>
+                <tr {...row.getRowProps()}
+                onClick={handleSelectRow.bind(this, row.original.m_nIdUnidad)}
+                className={state.IdInforme === row.original.m_nIdUnidad ? classes.seleccionado : classes.noSeleccionado}>
+
                   <td>
                     <div>
                       <a
@@ -771,27 +797,49 @@ function Informes(props) {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map(
-              (row, i) => {
-                prepareRow(row);
-                return (
-                  <tr style={{backgroundColor: row.original.m_nIdUnidad === select ? "#FCC88F" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
-                    <td>
-                      <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
-                      </div>
-                    </td>
-                    {row.cells.map(cell => {
-                      return (
-                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                      )
-                    })}
-                  </tr>
-                )
-              }
-            )}
+            {rows.map((row, i) => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()}>
+                  <td>
+                    <div>
+                      <a
+                        href="#Agregar"
+                        role="tab"
+                        data-toggle="tab"
+                        onClick={() =>
+                          handleShowModificar(row.original.m_nIdInforme)
+                        }
+                        className="btn btn-default btn-sm"
+                      >
+                        <i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} />
+                      </a>
+                      <a
+                        href="#Agregar"
+                        role="tab"
+                        data-toggle="tab"
+                        className="btn btn-default btn-sm"
+                        onClick={() => handleShowModificar(row.original.m_nIdInforme)}
+                      >
+                        <i className="fa fa-eye" style={{color:"#F9A03E"}} />
+                      </a>
+                      <a
+                        href="#"
+                        className="btn btn-default btn-sm"
+                        onClick={() => handleEliminar(row.original.m_nIdInforme)}
+                      >
+                        <i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} />
+                      </a>
+                    </div>
+                  </td>
+                  {row.cells.map((cell) => {
+                    return (
+                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -849,6 +897,15 @@ function Informes(props) {
     console.log(newGuia);
     setDataGuias(newGuia);
   };
+
+
+  function handleSelectRow(id, event) {
+    setState({
+      ...state,
+      IdInforme: id
+    });
+  }
+
 
   function getAllGuiasFrom() {
     const url =
@@ -951,12 +1008,12 @@ function Informes(props) {
     var derecho;
     const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
-      //alert(respuesta.data)
+      //showSuccess(respuesta.data)
 
       derecho = respuesta.data;
       if (derecho == false)
       {
-        alert ("El usuario no tiene derechos para realizar el proceso");
+        showSuccess ("El usuario no tiene derechos para realizar el proceso");
         return; 
       }
       
@@ -967,10 +1024,10 @@ function Informes(props) {
         console.log(respuesta);
       })
       .catch((err) => {
-        alert(err);
+        showSuccess(err);
       });
 	}).catch(err => {
-      alert(err)
+    showSuccess(err)
     });
   }
   const handleChangeOrigenChange = (event) => {
@@ -984,69 +1041,19 @@ function Informes(props) {
     //No se que peticion tienes que hacer, aqui lo haces
   };
 
-  const columns2 = React.useMemo(() => [
-    {
-      Name: "Folio/Serie",
-      accessor: "m_nFolioInforme",
-    },
-    {
-      Name: "Fecha",
-      accessor: "m_dFecha",
-    },
-    {
-      Name: "Hora Elaboración",
-      accessor: "m_tHora",
-    },
-    {
-      Name: "Viaje",
-      accessor: "m_nIdViaje",
-    },
-    {
-      Name: "Oficina Emisora",
-      accessor: "m_nIdSucursalEmisora",
-    },
-    {
-      Name: "Oficina Receptora",
-      accessor: "m_nIdSucursalReceptora",
-    },
-    {
-      Name: "Operador",
-      accessor: "m_nIdOperador",
-    },
-    {
-      Name: "Unidad",
-      accessor: "m_nIdUnidad",
-    },
-    {
-      Name: "Remolque",
-      accessor: "m_nIdRemolque",
-    },
-    {
-      Name: "Origen",
-      accessor: "m_nIdCiudadOrigen",
-    },
-    {
-      Name: "Destino",
-      accessor: "m_nIdCiudadDestino",
-    },
-    {
-      Name: "Ruta",
-      accessor: "m_nIdRuta",
-    },
-    {
-      Name: "Cancelado",
-      accessor: "m_nIdEstatusInforme",
-    },
-    {
-      Name: "Usuario que cancela",
-      accessor: "m_nModificadoPor",
-    },
-  ]);
+  const handleChangeDestinoChange = (event) => {
+    console.log(state.IdCiudadDestino);
+    setState({
+      ...state,
+      idDestino: event.target.value,
+    });
+    getAllGuiasFrom();
+  };
 
   useEffect((value) => {
     if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
     {
-      alert("Es necesario iniciar sesion para acceder a este proceso");
+      showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
     }

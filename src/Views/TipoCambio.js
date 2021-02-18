@@ -3,7 +3,18 @@ import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import { useTable, useFilters, useGlobalFilter, useSortBy } from 'react-table'
+import { useTable, useFilters, useSortBy } from 'react-table'
+
+import Noty from 'noty';
+
+function showSuccess(mensaje){
+  new Noty({
+    type:"information",
+    layout:"topCenter",
+    text: mensaje,
+    timeout:"3000"
+  }).show()
+}
 
 function TipoCambio() {
 
@@ -32,20 +43,20 @@ function TipoCambio() {
     if (state.idTipoCambio != 0) {
       const url = `${process.env.REACT_APP_API_URL}/TipoCambio/Modificar/` + state.idTipoCambio;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
-        alert(respuesta.data)
+        showSuccess(respuesta.data)
         getAllData();
       }).catch(err => {
         console.log(err)
-        alert("err")
+        showSuccess("err")
       });
     } else {
       const url = `${process.env.REACT_APP_API_URL}/TipoCambio/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
-        alert(respuesta.data)
+        showSuccess(respuesta.data)
         getAllData();
       }).catch(err => {
         console.log(err)
-        alert(err)
+        showSuccess(err)
       });
     }
 
@@ -55,23 +66,23 @@ function TipoCambio() {
     var derecho;
     const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
-      //alert(respuesta.data)
+      //showSuccess(respuesta.data)
 
       derecho = respuesta.data;
       if (derecho == false)
       {
-        alert ("El usuario no tiene derechos para realizar el proceso");
+        showSuccess ("El usuario no tiene derechos para realizar el proceso");
         return; 
       }
       const url = `${process.env.REACT_APP_API_URL}/TipoCambio/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
-      alert(respuesta)
+      showSuccess(respuesta)
       getAllData();
     }).catch(err => {
-      alert(err)
+      showSuccess(err)
     });
 	}).catch(err => {
-      alert(err)
+    showSuccess(err)
     });
     
   }
@@ -123,7 +134,7 @@ function TipoCambio() {
   useEffect(value => {
     if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
     {
-      alert("Es necesario iniciar sesion para acceder a este proceso");
+      showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
     }
@@ -182,7 +193,6 @@ function TipoCambio() {
         defaultColumn
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     )
 
@@ -221,8 +231,8 @@ function TipoCambio() {
                     <td>
                       <div>
                         <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdTipoCambio))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdTipoCambio))} className="btn btn-default btn-sm"><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                         <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdTipoCambio))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdTipoCambio))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {

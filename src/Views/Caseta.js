@@ -3,11 +3,33 @@ import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy } from 'react-table'
+import { useTable, useFilters, useSortBy } from 'react-table'
+import { makeStyles } from "@material-ui/core/styles";
+
+import Noty from 'noty';
+
+function showSuccess(mensaje){
+  new Noty({
+    type:"information",
+    layout:"topCenter",
+    text: mensaje,
+    timeout:"3000"
+  }).show()
+}
+
+const styles = {
+  seleccionado: {
+    backgroundColor: "#688ad9",
+  },
+  noSeleccionado: {
+    backgroundColor: "#FFFFFF",
+  }
+};
+const useStyles = makeStyles(styles);
 
 function Caseta() {
 
-
+  const classes = useStyles();
   const [data, setData] = React.useState([])
   const [state, setState] = React.useState({
     idCaseta: 0,
@@ -49,21 +71,21 @@ function Caseta() {
     if (state.idCaseta != 0) {
       const url = `${process.env.REACT_APP_API_URL}/Casetas/Modificar/` + state.idCaseta;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
-        alert(respuesta.data)
+        showSuccess(respuesta.data)
         getAllData()
       }).catch(err => {
         console.log(err)
-        alert("err")
+        showSuccess("err")
       });
     } else {
       const url = `${process.env.REACT_APP_API_URL}/Casetas/Agregar`;
-      //alert(state.CreadoPor);
+      //showSuccess(state.CreadoPor);
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
-        alert(respuesta.data)
+        showSuccess(respuesta.data)
         getAllData()
       }).catch(err => {
         console.log(err)
-        alert(err)
+        showSuccess(err)
       });
     }
 
@@ -74,22 +96,22 @@ function Caseta() {
     debugger;
     const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
-      //alert(respuesta.data)
+      //showSuccess(respuesta.data)
 
       derecho = respuesta.data;
       if (derecho == false) {
-        alert("El usuario no tiene derechos para realizar el proceso");
+        showSuccess("El usuario no tiene derechos para realizar el proceso");
         return;
       }
       const url = `${process.env.REACT_APP_API_URL}/Casetas/Eliminar/` + id;
       axios.delete(url, { headers }).then(respuesta => {
-        alert(respuesta.data)
+        showSuccess(respuesta.data)
         getAllData()
       }).catch(err => {
-        alert(err)
+        showSuccess(err)
       });
     }).catch(err => {
-      alert(err)
+      showSuccess(err)
     });
 
 
@@ -166,6 +188,13 @@ function Caseta() {
       [event.target.id]: event.target.value
     });
   };
+  
+  function handleSelectRow(id, event) {
+    setState({
+      ...state,
+      idCaseta: id
+    });
+  }
 
   const columns = React.useMemo(() => [
     {
@@ -202,7 +231,7 @@ function Caseta() {
 
   useEffect(value => {
     if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
-      alert("Es necesario iniciar sesion para acceder a este proceso");
+      showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
     }
@@ -261,7 +290,6 @@ function Caseta() {
         defaultColumn
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     )
 
@@ -296,7 +324,9 @@ function Caseta() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr {...row.getRowProps()}>
+                  <tr {...row.getRowProps()}
+                  onClick={handleSelectRow.bind(this, row.original.m_nIdCaseta)}
+                  className={state.idCaseta === row.original.m_nIdCaseta ? classes.seleccionado : classes.noSeleccionado}>
                     <td>
                       <div>
                         <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowModificar(row.original.m_nIdCaseta))}><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>

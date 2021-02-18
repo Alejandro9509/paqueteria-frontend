@@ -25,13 +25,24 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import {
   useTable,
   useFilters,
-  useGlobalFilter,
   useAsyncDebounce,
   useSortBy,
 } from "react-table";
 import $ from "jquery";
 import { remove_array_element } from "../Util/Util";
 import { useHistory } from 'react-router-dom';
+
+import Noty from 'noty';
+
+function showSuccess(mensaje){
+  new Noty({
+    type:"information",
+    layout:"topCenter",
+    text: mensaje,
+    timeout:"3000"
+  }).show()
+}
+
 window.jQuery = window.$ = $;
 
 const useStyles = makeStyles({
@@ -44,7 +55,7 @@ const useStyles = makeStyles({
     height: "400px !important",
   },
   sobreCarrusel: {
-    height: "150px !important",
+    height: "175px !important",
   },
 });
 function Recoleccion() {
@@ -70,7 +81,7 @@ function Recoleccion() {
     agregar: "Agregar",
     idRecoleccion: 0,
     fechaInicial: "",
-    fechaIcinial2: "",
+    fechaFinal: "",
     sucursalListado: 0,
     estatusListado: 0,
     idSucursalAgregar: localStorage.getItem("Sucursal"),
@@ -124,6 +135,8 @@ function Recoleccion() {
     unidad: 0,
     CreadoPor: localStorage.getItem("UsuarioId"),
     ModificadoPor: localStorage.getItem("UsuarioId"),
+    mismoPaquete: false,
+    mismoSobre: false,
     paquetes: [
       {
         m_rPeso: "",
@@ -152,7 +165,7 @@ function Recoleccion() {
   const [Modal, open, close, isOpen] = useModal("root", {
     preventScroll: true,
   });
-  
+
   const history = useHistory()
 
 
@@ -245,12 +258,12 @@ function Recoleccion() {
       axios
         .put(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
-          alert(respuesta.data);
+          showSuccess(respuesta.data);
           getAllData();
         })
         .catch((err) => {
           console.log(err);
-          alert("err");
+          showSuccess("err");
         });
     } else {
       debugger;
@@ -259,12 +272,12 @@ function Recoleccion() {
         .post(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
           console.log(respuesta.data);
-          alert(respuesta.data);
+          showSuccess(respuesta.data);
           getAllData();
         })
         .catch((err) => {
           console.log(err);
-          alert(err);
+          showSuccess(err);
         });
     }
   };
@@ -278,20 +291,25 @@ function Recoleccion() {
     console.log(state.identificadorModal);
   }
 
-  function addPaquete() {
+  function addPaquete(index) {
     const { paquetes } = state;
-    paquetes.push({
-      m_rPeso: "",
-      m_rLargo: "",
-      m_rAncho: "",
-      m_rAlto: "",
-      m_rVolumen: "",
-      m_nIdTipoEmbalaje: "",
-      m_cyValorDeclarado: "",
-      m_sDescripcion: "",
-      m_nCantidad: "",
-      m_sObservaciones: "",
-    });
+    if (state.mismoPaquete) {
+      var paquete = paquetes[index]
+      paquetes.push(paquete)
+    } else {
+      paquetes.push({
+        m_rPeso: "",
+        m_rLargo: "",
+        m_rAncho: "",
+        m_rAlto: "",
+        m_rVolumen: "",
+        m_nIdTipoEmbalaje: "",
+        m_cyValorDeclarado: "",
+        m_sDescripcion: "",
+        m_nCantidad: "",
+        m_sObservaciones: "",
+      });
+    }
     console.log(paquetes);
     setState({ ...state, paquetes: paquetes });
   }
@@ -303,11 +321,16 @@ function Recoleccion() {
     setState({ ...state, paquetes: paquetes });
   }
 
-  function addSobre() {
+  function addSobre(index) {
     const { sobres } = state;
-    sobres.push({
-      descripcion: "",
-    });
+    if (state.mismoSobre) {
+      var sobre = sobres[index]
+      sobres.push(sobre)
+    } else {
+      sobres.push({
+        descripcion: "",
+      });
+    }
     console.log(sobres);
     setState({ ...state, sobres: sobres });
   }
@@ -325,11 +348,11 @@ function Recoleccion() {
     axios
       .get(urlDelete, { headers })
       .then((respuesta) => {
-        //alert(respuesta.data)
+        //showSuccess(respuesta.data)
 
         derecho = respuesta.data;
         if (derecho == false) {
-          alert("El usuario no tiene derechos para realizar el proceso");
+          showSuccess("El usuario no tiene derechos para realizar el proceso");
           return;
         }
 
@@ -338,15 +361,15 @@ function Recoleccion() {
         axios
           .delete(url, { headers })
           .then((respuesta) => {
-            alert(respuesta.data);
+            showSuccess(respuesta.data);
             getAllData();
           })
           .catch((err) => {
-            alert(err);
+            showSuccess(err);
           });
       })
       .catch((err) => {
-        alert(err);
+        showSuccess(err);
       });
   }
 
@@ -389,11 +412,107 @@ function Recoleccion() {
         nombreDestinatario: respuesta.data.m_sNombreDestinatario,
         RFCDestinatario: respuesta.data.m_sRFCDestinatario,
         domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-        tipoUnidad: dataTipoUnidad.find(
-          (o) => o.m_nIdTipoUnidad == respuesta.data.m_nIdUnidad
-        ),
+        tipoUnidad: dataTipoUnidad.find(o => o.m_nIdTipoUnidad == (dataUnidad.find(o => o.m_nIdUnidad == respuesta.data.m_nIdUnidad)).m_nIdTipoUnidad),
         unidad: dataUnidad.find(
-          (o) => o.m_nIdUnidad == respuesta.data.m_nIdRemolque
+          (o) => o.m_nIdUnidad == respuesta.data.m_nIdUnidad
+        ),
+        operador: dataOperador.find(
+          (o) => o.m_nIdOperador == respuesta.data.m_nIdOperador
+        ),
+        codigoPostalDestinatario: dataCodigoPostal.find(
+          (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalDestinatario
+        ),
+        ciudadDestinatario: dataCiudad.find(
+          (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestinatario
+        ),
+        correoDestinatario: respuesta.data.m_sCorreoDestinatario,
+        telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
+        contactoDestinatario: respuesta.data.m_sContactoDestinatario,
+        destinoDestinatario: dataCiudad.find(
+          (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino
+        ),
+        codigoPostalRecoleccion: dataCodigoPostal.find(
+          (o) => o.m_nIdCP == respuesta.data.m_nIdCPDetalleRecoleccion
+        ),
+        ciudadRecoleccion: respuesta.data.m_nIdCiudadDetalleRecoleccion,
+        zonaRecoleccion: respuesta.data.m_nIdZonaDetalleRecoleccion,
+        domicilioRecoleccion: respuesta.data.m_sDomicilioDetalleRecoleccion,
+        recogerEn: respuesta.data.m_sRecogerEnDetalleRecoleccion,
+        datosAdicionalesRecoleccion:
+          respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
+        codigoPostalEntrega: dataCodigoPostal.find(
+          (o) => o.m_nIdCP == respuesta.data.m_nIdCPDetalleEntrega
+        ),
+        ciudadEntrega: respuesta.data.m_nIdCiudadDetalleEntrega,
+        zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
+        domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
+        entregaEn: respuesta.data.m_sEntregarEnDetalleEntrega,
+        datosAdicionalesEntrega:
+          respuesta.data.m_sDatosAdicionalesDetalleEntrega,
+        fechaHoraSalida:
+          respuesta.data.m_dFechaElaboracionSalidaRecoleccion +
+          "T" +
+          respuesta.data.m_tHoraElaboracionSalidaRecoleccion.slice(0, 5),
+        fechaHoraLlegada:
+          respuesta.data.m_dFechaElaboracionLlegadaRecoleccion +
+          "T" +
+          respuesta.data.m_tHoraElaboracionLlegadaRecoleccion.slice(0, 5),
+        fechaRecoleccion:
+          respuesta.data.m_dFechaDetalleRecoleccion +
+          "T" +
+          respuesta.data.m_tHoraDetalleRecoleccion.slice(0, 5),
+        paquetes: respuesta.data.m_parrPaquetes,
+        sobres: respuesta.data.m_parrSobres,
+        cantidadDePaquetes: respuesta.data.m_parrPaquetes.length,
+        cantidadDeSobres: respuesta.data.m_parrSobres.length,
+      });
+      console.log("cpRemitente:");
+      console.log(state.codigoPostalRemitente);
+    });
+  }
+
+  function handleShowConsultar(id) {
+    console.log(id);
+    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetById/${id}`;
+    axios.get(url, { headers }).then((respuesta) => {
+      console.log(respuesta.data);
+      setState({
+        ...state,
+        agregar: "Consultar",
+        showPopUp: true,
+        idRecoleccion: id,
+        idSucursalAgregar: respuesta.data.m_nIdSucursal,
+        folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
+        folioEmbarque: respuesta.data.m_nIdEmbarque,
+        folioGuía: respuesta.data.m_nIdGuia,
+        folioInforme: respuesta.data.m_nIdInforme,
+        fechaHoraCreacion:
+          respuesta.data.m_dFecha + "T" + respuesta.data.m_tHora.slice(0, 5),
+        estatusRecoleccion: respuesta.data.m_nIdEstatusRecoleccion,
+        moneda: respuesta.data.m_nMoneda,
+        tipoCambio: respuesta.data.m_rTipoCambio,
+        tipoCobro: respuesta.data.m_nIdTipoDeCobro,
+        nombreRemitente: respuesta.data.m_sNombreRemitente,
+        RFCRemitente: respuesta.data.m_sRFCRemitente,
+        domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
+        codigoPostalRemitente: dataCodigoPostal.find(
+          (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalRemitente
+        ),
+        ciudadRemitente: dataCiudad.find(
+          (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadRemitente
+        ),
+        correoRemitente: respuesta.data.m_sCorreoRemitente,
+        telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
+        contactoRemitente: respuesta.data.m_sContactoRemitente,
+        origenRemitente: dataCiudad.find(
+          (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen
+        ),
+        nombreDestinatario: respuesta.data.m_sNombreDestinatario,
+        RFCDestinatario: respuesta.data.m_sRFCDestinatario,
+        domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
+        tipoUnidad: dataTipoUnidad.find(o => o.m_nIdTipoUnidad == (dataUnidad.find(o => o.m_nIdUnidad == respuesta.data.m_nIdUnidad)).m_nIdTipoUnidad),
+        unidad: dataUnidad.find(
+          (o) => o.m_nIdUnidad == respuesta.data.m_nIdUnidad
         ),
         operador: dataOperador.find(
           (o) => o.m_nIdOperador == respuesta.data.m_nIdOperador
@@ -696,7 +815,7 @@ function Recoleccion() {
       localStorage.getItem("UsuarioId") === null ||
       localStorage.getItem("UsuarioId") <= 0
     ) {
-      alert("Es necesario iniciar sesion para acceder a este proceso");
+      showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
     }
@@ -860,8 +979,7 @@ function Recoleccion() {
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
+
     } = useTable(
       {
         columns,
@@ -869,7 +987,6 @@ function Recoleccion() {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
@@ -891,11 +1008,11 @@ function Recoleccion() {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                          <i className="fa fa-caret-down" />
-                        )
+                            <i className="fa fa-caret-down" />
+                          )
                       ) : (
-                        ""
-                      )}
+                          ""
+                        )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -927,6 +1044,17 @@ function Recoleccion() {
                         />
                       </a>
                       <a
+                        href="#Agregar"
+                        role="tab"
+                        data-toggle="tab"
+                        className="btn btn-default btn-sm"
+                        onClick={() =>
+                          handleShowConsultar(row.original.m_nIdRecoleccion)
+                        }
+                      >
+                        <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
+                      </a>
+                      <a
                         href="#"
                         className="btn btn-default btn-sm"
                         onClick={() =>
@@ -937,15 +1065,6 @@ function Recoleccion() {
                           className="zmdi zmdi-delete"
                           style={{ color: "#F30B0B" }}
                         />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
                       </a>
                     </div>
                   </td>
@@ -979,8 +1098,6 @@ function Recoleccion() {
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -988,7 +1105,6 @@ function Recoleccion() {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
@@ -1013,11 +1129,11 @@ function Recoleccion() {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                          <i className="fa fa-caret-down" />
-                        )
+                            <i className="fa fa-caret-down" />
+                          )
                       ) : (
-                        ""
-                      )}
+                          ""
+                        )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -1032,14 +1148,7 @@ function Recoleccion() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr style={{backgroundColor: row.original.m_nIdCP === select ? "#FCC88F" : "white"}}  {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)} onDoubleClick={close}>
-                    <td>
-                      <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
-                      </div>
-                    </td>
+                  <tr style={{ backgroundColor: row.original.m_nIdCP === select ? "orange" : "white" }}  {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)} onDoubleClick={close}>
                     {row.cells.map(cell => {
                       return (
                         <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
@@ -1071,8 +1180,6 @@ function Recoleccion() {
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -1080,7 +1187,6 @@ function Recoleccion() {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
@@ -1104,11 +1210,11 @@ function Recoleccion() {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                          <i className="fa fa-caret-down" />
-                        )
+                            <i className="fa fa-caret-down" />
+                          )
                       ) : (
-                        ""
-                      )}
+                          ""
+                        )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -1123,14 +1229,7 @@ function Recoleccion() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr style={{backgroundColor: row.original.m_nIdCiudad === select ? "#FCC88F" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
-                    <td>
-                      <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
-                      </div>
-                    </td>
+                  <tr style={{ backgroundColor: row.original.m_nIdCiudad === select ? "orange" : "white" }} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
                     {row.cells.map(cell => {
                       return (
                         <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
@@ -1162,8 +1261,6 @@ function Recoleccion() {
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -1171,7 +1268,6 @@ function Recoleccion() {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
@@ -1195,11 +1291,11 @@ function Recoleccion() {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                          <i className="fa fa-caret-down" />
-                        )
+                            <i className="fa fa-caret-down" />
+                          )
                       ) : (
-                        ""
-                      )}
+                          ""
+                        )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -1214,14 +1310,7 @@ function Recoleccion() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr style={{backgroundColor: row.original.m_nIdOperador === select ? "#FCC88F" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
-                    <td>
-                      <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
-                      </div>
-                    </td>
+                  <tr style={{ backgroundColor: row.original.m_nIdOperador === select ? "orange" : "white" }} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
                     {row.cells.map(cell => {
                       return (
                         <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
@@ -1253,8 +1342,6 @@ function Recoleccion() {
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -1262,7 +1349,6 @@ function Recoleccion() {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
@@ -1283,11 +1369,11 @@ function Recoleccion() {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                          <i className="fa fa-caret-down" />
-                        )
+                            <i className="fa fa-caret-down" />
+                          )
                       ) : (
-                        ""
-                      )}
+                          ""
+                        )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -1302,14 +1388,7 @@ function Recoleccion() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr style={{backgroundColor: row.original.m_nIdTipoUnidad === select ? "#FCC88F" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
-                    <td>
-                      <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
-                      </div>
-                    </td>
+                  <tr style={{ backgroundColor: row.original.m_nIdTipoUnidad === select ? "orange" : "white" }} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
                     {row.cells.map(cell => {
                       return (
                         <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
@@ -1341,8 +1420,6 @@ function Recoleccion() {
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -1350,7 +1427,6 @@ function Recoleccion() {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
@@ -1374,11 +1450,11 @@ function Recoleccion() {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                          <i className="fa fa-caret-down" />
-                        )
+                            <i className="fa fa-caret-down" />
+                          )
                       ) : (
-                        ""
-                      )}
+                          ""
+                        )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -1393,14 +1469,7 @@ function Recoleccion() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr style={{backgroundColor: row.original.m_nIdUnidad === select ? "#FCC88F" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
-                    <td>
-                      <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
-                      </div>
-                    </td>
+                  <tr style={{ backgroundColor: row.original.m_nIdUnidad === select ? "orange" : "white" }} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
                     {row.cells.map(cell => {
                       return (
                         <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
@@ -1578,6 +1647,32 @@ function Recoleccion() {
   const framesPaquete = state.paquetes.map((p, index) => {
     return (
       <div key={`paquete${index}`}>
+
+        <div style={{ display: "flex"}}>
+          <a
+            className="btn"
+            style={{ margin: "10px" }}
+            onClick={() => addPaquete(index)}
+          >
+            <i className="zmdi zmdi-plus"></i>
+            Agregar Paquete
+          </a>
+          {state.agregar != "Consultar" ?
+            <span>
+              <label className="label">Mismo Paquete</label>
+              <div className="input">
+                <input
+                  onChange={handleChange}
+                  type="checkbox"
+                  required
+                  value={state.mismoPaquete}
+                  id="mismoPaquete"
+                />
+              </div>
+            </span>
+            : <span></span>}
+        </div>
+
         <div className="col-sm-4 col-md-2-5 unit">
           <label className="label">Peso</label>
           <div className="input">
@@ -1729,6 +1824,32 @@ function Recoleccion() {
   const framesSobre = state.sobres.map((p, index) => {
     return (
       <div key={`sobre${index}`}>
+
+        <div style={{ display: "flex", flexWrap: "wrap" }}>
+          <a
+            className="btn"
+            style={{ margin: "10px" }}
+            onClick={() => addSobre(index)}
+          >
+            <i className="zmdi zmdi-plus"></i>
+            Agregar Sobre
+          </a>
+          {state.agregar != "Consultar" ?
+            <span>
+              <label className="label">Mismo Sobre</label>
+              <div className="input">
+                <input
+                  onChange={handleChange}
+                  type="checkbox"
+                  required
+                  value={state.mismoSobre}
+                  id="mismoSobre"
+                />
+              </div>
+            </span>
+            : <span></span>}
+        </div>
+
         <div className="col-md-12 unit">
           <label className="label">Descripcion</label>
           <div className="input">
@@ -1860,18 +1981,23 @@ function Recoleccion() {
                       <div className="col-sm-6 col-md-3 unit">
                       <label className="label">Fecha Inicial</label>
                           <div className="input">
-                            <input type="date" className="form-control" />
-                          </div>
-                        </div>
-
-                        <div className="col-sm-6 col-md-3 unit">
-                          <label className="label">Fecha Inicial</label>
-                          <div className="input">
                             <input
                               type="date"
                               className="form-control"
                               onChange={handleChange}
                               id="fechaInicial"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="col-sm-6 col-md-3 unit">
+                          <label className="label">Fecha Final</label>
+                          <div className="input">
+                            <input
+                              type="date"
+                              className="form-control"
+                              onChange={handleChange}
+                              id="fechaFinal"
                             />
                           </div>
 
@@ -1931,8 +2057,8 @@ function Recoleccion() {
                     {conDatos() ? (
                       <Table columns={columns} data={data} />
                     ) : (
-                      <div>No se encontró ningún registro</div>
-                    )}
+                        <div>No se encontró ningún registro</div>
+                      )}
                   </div>
                 </div>
               </div>
@@ -2130,6 +2256,7 @@ function Recoleccion() {
                                   required
                                   value={state.estatus}
                                   onChange={handleChange}
+                                  disabled={state.agregar == "Consultar"}
                                   id="estatus"
                                 >
                                   {dataEstatusRecoleccion.map((estatus) => (
@@ -2153,6 +2280,7 @@ function Recoleccion() {
                                   required
                                   value={state.moneda}
                                   onChange={handleChange}
+                                  disabled={state.agregar == "Consultar"}
                                   id="moneda"
                                 >
                                   <option value="0">Seleccionar</option>
@@ -2180,6 +2308,7 @@ function Recoleccion() {
                                   step="0.01"
                                   required
                                   value={state.tipoCambio}
+                                  disabled={state.agregar == "Consultar"}
                                   id="tipoCambio"
                                 />
                               </div>
@@ -2192,6 +2321,7 @@ function Recoleccion() {
                                   className="form-control"
                                   required
                                   value={state.tipoCobro}
+                                  disabled={state.agregar == "Consultar"}
                                   onChange={handleChange}
                                   id="tipoCobro"
                                 >
@@ -2315,6 +2445,7 @@ function Recoleccion() {
                                         title="Favor de introducir un RFC válido."
                                         required
                                         value={state.RFCRemitente}
+                                        disabled={state.agregar == "Consultar"}
                                         id="RFCRemitente"
                                       />
                                     </div>
@@ -2329,6 +2460,7 @@ function Recoleccion() {
                                         type="text"
                                         required
                                         value={state.domicilioRemitente}
+                                        disabled={state.agregar == "Consultar"}
                                         id="domicilioRemitente"
                                       />
                                     </div>
@@ -2352,6 +2484,7 @@ function Recoleccion() {
                                         disableClearable
                                         forcePopupIcon={false}
                                         options={dataCodigoPostal}
+                                        disabled={state.agregar == "Consultar"}
                                         getOptionLabel={(option) =>
                                           option.m_sCP
                                         }
@@ -2361,7 +2494,7 @@ function Recoleccion() {
                                           borderColor: "#dddddd",
                                           borderStyle: "solid",
                                           borderRadius: "5px",
-                                          
+
                                         }}
                                         renderInput={(params) => (
                                           <div>
@@ -2372,6 +2505,7 @@ function Recoleccion() {
                                                 style: { height: 21 },
                                                 type: "search",
                                                 disableUnderline: true,
+                                                disabled: state.agregar == "Consultar",
                                                 endAdornment: (
                                                   <InputAdornment position="end">
                                                     <IconButton
@@ -2418,6 +2552,7 @@ function Recoleccion() {
                                         className="form-control"
                                         required
                                         value={state.ciudadRemitente}
+                                        disabled={state.agregar == "Consultar"}
                                         onChange={handleChange}
                                         id="ciudadRemitente"
                                       >
@@ -2445,6 +2580,7 @@ function Recoleccion() {
                                         type="email"
                                         required
                                         value={state.correoRemitente}
+                                        disabled={state.agregar == "Consultar"}
                                         id="correoRemitente"
                                       />
                                     </div>
@@ -2461,6 +2597,7 @@ function Recoleccion() {
                                         maxLength="10"
                                         required
                                         value={state.telefonoRemitente}
+                                        disabled={state.agregar == "Consultar"}
                                         id="telefonoRemitente"
                                       />
                                     </div>
@@ -2475,6 +2612,7 @@ function Recoleccion() {
                                         type="text"
                                         required
                                         value={state.contactoRemitente}
+                                        disabled={state.agregar == "Consultar"}
                                         id="contactoRemitente"
                                       />
                                     </div>
@@ -2492,6 +2630,7 @@ function Recoleccion() {
                                           })
                                         }
                                         value={state.origenRemitente}
+                                        disabled={state.agregar == "Consultar"}
                                         id="origenRemitente"
                                         disableClearable
                                         forcePopupIcon={false}
@@ -2515,6 +2654,7 @@ function Recoleccion() {
                                                 style: { height: 21 },
                                                 type: "search",
                                                 value: state.origenRemitente,
+                                                disabled: state.agregar == "Consultar",
                                                 disableUnderline: true,
                                                 endAdornment: (
                                                   <InputAdornment position="end">
@@ -2566,6 +2706,7 @@ function Recoleccion() {
                                         }
                                         className="form-control"
                                         value={state.diferenteRecoleccion}
+                                        disabled={state.agregar == "Consultar"}
                                         checked={state.diferenteRecoleccion}
                                         type="checkbox"
                                         id="diferenteRecoleccion"
@@ -2582,7 +2723,7 @@ function Recoleccion() {
                             </div>
                             <div className="widget-container">
                               <div className="widget-content">
-                              <div className="col-sm-12 col-md-12    unit">
+                                <div className="col-sm-12 col-md-12    unit">
                                   <label className="label">Nombre</label>
                                   <div className="input">
                                       <Autocomplete
@@ -2669,6 +2810,7 @@ function Recoleccion() {
                                       title="Favor de introducir un RFC válido."
                                       required
                                       value={state.RFCDestinatario}
+                                      disabled={state.agregar == "Consultar"}
                                       id="RFCDestinatario"
                                     />
                                   </div>
@@ -2683,6 +2825,7 @@ function Recoleccion() {
                                       type="text"
                                       required
                                       value={state.domicilioDestinatario}
+                                      disabled={state.agregar == "Consultar"}
                                       id="domicilioDestinatario"
                                     />
                                   </div>
@@ -2699,6 +2842,7 @@ function Recoleccion() {
                                         })
                                       }
                                       value={state.codigoPostalDestinatario}
+                                      disabled={state.agregar == "Consultar"}
                                       id="codigoPostalDestinatario"
                                       disableClearable
                                       options={dataCodigoPostal}
@@ -2719,6 +2863,7 @@ function Recoleccion() {
                                               style: { height: 21 },
                                               type: "search",
                                               disableUnderline: true,
+                                              disabled: state.agregar == "Consultar",
                                               endAdornment: (
                                                 <InputAdornment position="end">
                                                   {" "}
@@ -2760,6 +2905,7 @@ function Recoleccion() {
                                       className="form-control"
                                       required
                                       value={state.ciudadDestinatario}
+                                      disabled={state.agregar == "Consultar"}
                                       onChange={handleChange}
                                       id="ciudadDestinatario"
                                     >
@@ -2787,6 +2933,7 @@ function Recoleccion() {
                                       type="email"
                                       required
                                       value={state.correoDestinatario}
+                                      disabled={state.agregar == "Consultar"}
                                       id="correoDestinatario"
                                     />
                                   </div>
@@ -2801,6 +2948,7 @@ function Recoleccion() {
                                       type="text"
                                       required
                                       value={state.telefonoDestinatario}
+                                      disabled={state.agregar == "Consultar"}
                                       id="telefonoDestinatario"
                                     />
                                   </div>
@@ -2815,6 +2963,7 @@ function Recoleccion() {
                                       type="text"
                                       required
                                       value={state.contactoDestinatario}
+                                      disabled={state.agregar == "Consultar"}
                                       id="contactoDestinatario"
                                     />
                                   </div>
@@ -2832,6 +2981,7 @@ function Recoleccion() {
                                         })
                                       }
                                       value={state.destinoDestinatario}
+                                      disabled={state.agregar == "Consultar"}
                                       id="destinoDestinatario"
                                       disableClearable
                                       forcePopupIcon={false}
@@ -2855,6 +3005,7 @@ function Recoleccion() {
                                               style: { height: 21 },
                                               type: "search",
                                               value: state.origenRemitente,
+                                              disabled: state.agregar == "Consultar",
                                               disableUnderline: true,
                                               endAdornment: (
                                                 <InputAdornment position="end">
@@ -2904,6 +3055,7 @@ function Recoleccion() {
                                       onChange={handleEntregaCheckboxChange}
                                       className="form-control"
                                       value={state.diferenteEntrega}
+                                      disabled={state.agregar == "Consultar"}
                                       checked={state.diferenteEntrega}
                                       type="checkbox"
                                       id="diferenteEntrega"
@@ -2927,7 +3079,7 @@ function Recoleccion() {
                                 <div className="widget-content">
                                   <div className="row">
                                     <div className="col-md-12">
-                                    <div className="col-sm-6 col-md-4  unit" >
+                                      <div className="col-sm-6 col-md-4  unit" >
                                         <label className="label">
                                           Fecha y Hora
                                         </label>
@@ -2938,6 +3090,7 @@ function Recoleccion() {
                                             type="datetime-local"
                                             required
                                             value={state.fechaRecoleccion}
+                                            disabled={state.agregar == "Consultar"}
                                             id="fechaRecoleccion"
                                           />
                                         </div>
@@ -2962,6 +3115,7 @@ function Recoleccion() {
                                             id="codigoPostalRecoleccion"
                                             disableClearable
                                             options={dataCodigoPostal}
+                                            disabled={state.agregar == "Consultar"}
                                             getOptionLabel={(option) =>
                                               option.m_sCP
                                             }
@@ -2980,6 +3134,7 @@ function Recoleccion() {
                                                     ...params.InputProps,
                                                     style: { height: 21 },
                                                     type: "search",
+                                                    disabled: state.agregar == "Consultar",
                                                     disableUnderline: true,
                                                     endAdornment: (
                                                       <InputAdornment position="end">
@@ -3022,6 +3177,7 @@ function Recoleccion() {
                                             className="form-control"
                                             required
                                             value={state.ciudadRecoleccion}
+                                            disabled={state.agregar == "Consultar"}
                                             onChange={handleChange}
                                             id="ciudadRecoleccion"
                                           >
@@ -3045,6 +3201,7 @@ function Recoleccion() {
                                             className="form-control"
                                             required
                                             value={state.zonaRecoleccion}
+                                            disabled={state.agregar == "Consultar"}
                                             onChange={handleChange}
                                             id="zonaRecoleccion"
                                           >
@@ -3072,6 +3229,7 @@ function Recoleccion() {
                                             type="text"
                                             required
                                             value={state.domicilioRecoleccion}
+                                            disabled={state.agregar == "Consultar"}
                                             id="domicilioRecoleccion"
                                           />
                                         </div>
@@ -3088,6 +3246,7 @@ function Recoleccion() {
                                             type="text"
                                             required
                                             value={state.recogerEn}
+                                            disabled={state.agregar == "Consultar"}
                                             id="recogerEn"
                                           />
                                         </div>
@@ -3106,6 +3265,7 @@ function Recoleccion() {
                                             value={
                                               state.datosAdicionalesRecoleccion
                                             }
+                                            disabled={state.agregar == "Consultar"}
                                             id="datosAdicionalesRecoleccion"
                                           />
                                         </div>
@@ -3116,8 +3276,8 @@ function Recoleccion() {
                               </div>
                             </div>
                           ) : (
-                            <div></div>
-                          )}
+                              <div></div>
+                            )}
 
                           {state.diferenteEntrega ? (
                             <div>
@@ -3128,7 +3288,7 @@ function Recoleccion() {
                                 <div className="widget-content">
                                   <div className="row">
                                     <div className="col-md-12">
-                                    <div className="col-sm-6 col-md-4  unit" >
+                                      <div className="col-sm-6 col-md-4  unit" >
                                         <label className="label">
                                           Código Postal
                                         </label>
@@ -3145,6 +3305,7 @@ function Recoleccion() {
                                             id="codigoPostalEntrega"
                                             disableClearable
                                             options={dataCodigoPostal}
+                                            disabled={state.agregar == "Consultar"}
                                             getOptionLabel={(option) =>
                                               option.m_sCP
                                             }
@@ -3163,6 +3324,7 @@ function Recoleccion() {
                                                     ...params.InputProps,
                                                     style: { height: 21 },
                                                     type: "search",
+                                                    disabled: state.agregar == "Consultar",
                                                     disableUnderline: true,
                                                     endAdornment: (
                                                       <InputAdornment position="end">
@@ -3205,6 +3367,7 @@ function Recoleccion() {
                                             className="form-control"
                                             required
                                             value={state.ciudadEntrega}
+                                            disabled={state.agregar == "Consultar"}
                                             onChange={handleChange}
                                             id="ciudadEntrega"
                                           >
@@ -3228,6 +3391,7 @@ function Recoleccion() {
                                             className="form-control"
                                             required
                                             value={state.zonaEntrega}
+                                            disabled={state.agregar == "Consultar"}
                                             onChange={handleChange}
                                             id="zonaEntrega"
                                           >
@@ -3254,6 +3418,7 @@ function Recoleccion() {
                                             className="form-control"
                                             type="text"
                                             value={state.domicilioEntrega}
+                                            disabled={state.agregar == "Consultar"}
                                             id="domicilioEntrega"
                                           />
                                         </div>
@@ -3269,6 +3434,7 @@ function Recoleccion() {
                                             className="form-control"
                                             type="text"
                                             value={state.entregaEn}
+                                            disabled={state.agregar == "Consultar"}
                                             id="entregaEn"
                                           />
                                         </div>
@@ -3286,6 +3452,7 @@ function Recoleccion() {
                                             value={
                                               state.datosAdicionalesEntrega
                                             }
+                                            disabled={state.agregar == "Consultar"}
                                             id="datosAdicionalesEntrega"
                                           />
                                         </div>
@@ -3296,12 +3463,12 @@ function Recoleccion() {
                               </div>
                             </div>
                           ) : (
-                            <div></div>
-                          )}
+                              <div></div>
+                            )}
                         </div>
                       ) : (
-                        <div></div>
-                      )}
+                          <div></div>
+                        )}
 
                       <div className="widget-wrap" id="detallesOperacion">
                         <div className="row">
@@ -3329,6 +3496,7 @@ function Recoleccion() {
                                         disableClearable
                                         forcePopupIcon={false}
                                         options={dataOperador}
+                                        disabled={state.agregar == "Consultar"}
                                         getOptionLabel={(option) =>
                                           option.m_sNombreCompleto
                                         }
@@ -3347,6 +3515,7 @@ function Recoleccion() {
                                                 ...params.InputProps,
                                                 style: { height: 21 },
                                                 type: "search",
+                                                disabled: state.agregar == "Consultar",
                                                 disableUnderline: true,
                                                 endAdornment: (
                                                   <InputAdornment position="end">
@@ -3405,6 +3574,7 @@ function Recoleccion() {
                                         disableClearable
                                         forcePopupIcon={false}
                                         options={dataTipoUnidad}
+                                        disabled={state.agregar == "Consultar"}
                                         getOptionLabel={(option) =>
                                           option.m_sTipoUnidad
                                         }
@@ -3423,6 +3593,7 @@ function Recoleccion() {
                                                 ...params.InputProps,
                                                 style: { height: 21 },
                                                 type: "search",
+                                                disabled: state.agregar == "Consultar",
                                                 disableUnderline: true,
                                                 endAdornment: (
                                                   <InputAdornment position="end">
@@ -3479,6 +3650,8 @@ function Recoleccion() {
                                         disableClearable
                                         forcePopupIcon={false}
                                         options={dataUnidad}
+                                        value={state.unidad}
+                                        disabled={state.agregar == "Consultar"}
                                         getOptionLabel={(option) =>
                                           option.m_sDescripcion
                                         }
@@ -3497,6 +3670,7 @@ function Recoleccion() {
                                                 ...params.InputProps,
                                                 style: { height: 21 },
                                                 type: "search",
+                                                disabled: state.agregar == "Consultar",
                                                 disableUnderline: true,
                                                 endAdornment: (
                                                   <InputAdornment position="end">
@@ -3555,6 +3729,7 @@ function Recoleccion() {
                                       type="datetime-local"
                                       required
                                       value={state.fechaHoraSalida}
+                                      disabled={state.agregar == "Consultar"}
                                       id="fechaHoraSalida"
                                     />
                                   </div>
@@ -3577,6 +3752,7 @@ function Recoleccion() {
                                       type="datetime-local"
                                       required
                                       value={state.fechaHoraLlegada}
+                                      disabled={state.agregar == "Consultar"}
                                       id="fechaHoraLlegada"
                                     />
                                   </div>
@@ -3588,10 +3764,7 @@ function Recoleccion() {
                       </div>
                     </div>
 
-                    <div
-                      className="widget-wrap col-sm-5 col-md-5 "
-                      id="paquetesSobres"
-                    >
+                    <div className="widget-wrap col-sm-5 col-md-5 " id="paquetesSobres">
                       {" "}
                       <div className="widget-header">
                         <h2>Número de Paquetes</h2>
@@ -3602,15 +3775,6 @@ function Recoleccion() {
                             <div className="col-md-12">
                               <form className="j-forms">
                                 <div className="form-content">
-                                  <a
-                                    className="btn"
-                                    style={{ margin: "10px" }}
-                                    onClick={() => addPaquete()}
-                                  >
-                                    <i className="zmdi zmdi-plus"></i> Agregar
-                                    Paquete
-                                  </a>
-
                                   <Carousel
                                     className={classes.paqueteCarrusel}
                                     widgets={[IndicatorDots, Buttons]}
@@ -3631,15 +3795,6 @@ function Recoleccion() {
                             <div className="col-md-12">
                               <form className="j-forms">
                                 <div className="form-content">
-                                  <a
-                                    className="btn"
-                                    style={{ margin: "10px" }}
-                                    onClick={() => addSobre()}
-                                  >
-                                    <i className="zmdi zmdi-plus"></i> Agregar
-                                    Sobre
-                                  </a>
-
                                   <Carousel
                                     className={classes.sobreCarrusel}
                                     widgets={[IndicatorDots, Buttons]}

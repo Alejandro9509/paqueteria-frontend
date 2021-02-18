@@ -3,7 +3,18 @@ import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import { useTable, useFilters, useGlobalFilter, useSortBy } from 'react-table'
+import { useTable, useFilters, useSortBy } from 'react-table'
+
+import Noty from 'noty';
+
+function showSuccess(mensaje){
+  new Noty({
+    type:"information",
+    layout:"topCenter",
+    text: mensaje,
+    timeout:"3000"
+  }).show()
+}
 
 function TipoCobro() {
 
@@ -33,20 +44,20 @@ function TipoCobro() {
     if (state.idTipoCobro != 0) {
       const url = `${process.env.REACT_APP_API_URL}/TipoCobro/Modificar/` + state.idTipoCobro;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
-        alert(respuesta.data)
+        showSuccess(respuesta.data)
         getAllData();
       }).catch(err => {
         console.log(err)
-        alert("err")
+        showSuccess("err")
       });
     } else {
       const url = `${process.env.REACT_APP_API_URL}/TipoCobro/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
-        alert(respuesta.data)
+        showSuccess(respuesta.data)
         getAllData();
       }).catch(err => {
         console.log(err)
-        alert(err)
+        showSuccess(err)
       });
     }
 
@@ -56,24 +67,24 @@ function TipoCobro() {
     var derecho;
     const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
-      //alert(respuesta.data)
+      //showSuccess(respuesta.data)
 
       derecho = respuesta.data;
       if (derecho == false)
       {
-        alert ("El usuario no tiene derechos para realizar el proceso");
+        showSuccess ("El usuario no tiene derechos para realizar el proceso");
         return; 
       }
       
     const url = `${process.env.REACT_APP_API_URL}/TipoCobro/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
-      alert(respuesta)
+      showSuccess(respuesta)
       getAllData();
     }).catch(err => {
-      alert(err)
+      showSuccess(err)
     });
 	}).catch(err => {
-      alert(err)
+    showSuccess(err)
     });
   }
 
@@ -136,7 +147,7 @@ function TipoCobro() {
   useEffect(value => {
     if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
     {
-      alert("Es necesario iniciar sesion para acceder a este proceso");
+      showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
     }
@@ -195,7 +206,6 @@ function TipoCobro() {
         defaultColumn
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     )
 
@@ -233,9 +243,9 @@ function TipoCobro() {
                   <tr {...row.getRowProps()}>
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdTipoCobro))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdTipoCobro))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{color:"#F9A03E"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdTipoCobro))} className="btn btn-default btn-sm"><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                         <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdTipoCobro))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdTipoCobro))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -279,8 +289,8 @@ function TipoCobro() {
               <div className="col-md-6 col-sm-6">
                 <ul className="list-page-breadcrumb">
                   <li>
-                    <a href="/Configuracion" className="color-mapeo">
-                      Configuración <i className="zmdi zmdi-chevron-right" />
+                    <a href="/Catalogos" className="color-mapeo">
+                      Catálogos <i className="zmdi zmdi-chevron-right" />
                     </a>
                   </li>
                   <li className="active-page">Tipo de Cobro</li>

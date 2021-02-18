@@ -3,8 +3,19 @@ import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import { useTable, useFilters, useGlobalFilter, useSortBy } from 'react-table';
+import { useTable, useFilters, useSortBy } from 'react-table';
 import { makeStyles } from "@material-ui/core/styles";
+
+import Noty from 'noty';
+
+function showSuccess(mensaje){
+  new Noty({
+    type:"information",
+    layout:"topCenter",
+    text: mensaje,
+    timeout:"3000"
+  }).show()
+}
 
 const styles = {
   seleccionado: {
@@ -55,20 +66,20 @@ function PaisesEstado() {
     if (state.idPais != 0) {
       const url = `${process.env.REACT_APP_API_URL}/Pais/Modificar/` + state.idPais;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
-        alert(respuesta.data)
+        showSuccess(respuesta.data)
         getAllData();
       }).catch(err => {
         console.log(err)
-        alert("err")
+        showSuccess("err")
       });
     } else {
       const url = `${process.env.REACT_APP_API_URL}/Pais/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
-        alert(respuesta.data)
+        showSuccess(respuesta.data)
         getAllData();
       }).catch(err => {
         console.log(err)
-        alert(err)
+        showSuccess(err)
       });
     }
 
@@ -94,21 +105,21 @@ function PaisesEstado() {
     if (state.idEstado != 0) {
       const url = `${process.env.REACT_APP_API_URL}/Estado/Modificar/` + state.idEstado;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
-        alert(respuesta.data)
+        showSuccess(respuesta.data)
         getAllData();
       }).catch(err => {
         console.log(err)
-        alert("err")
+        showSuccess("err")
       });
     } else {
       const url = `${process.env.REACT_APP_API_URL}/Estado/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
-        alert(respuesta.data)
+        showSuccess(respuesta.data)
         console.log(respuesta.data)
         getAllData();
       }).catch(err => {
         console.log(err)
-        alert(err)
+        showSuccess(err)
       });
     }
 
@@ -119,23 +130,23 @@ function PaisesEstado() {
     debugger;
     const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
-      //alert(respuesta.data)
+      //showSuccess(respuesta.data)
 
       derecho = respuesta.data;
       if (derecho == false)
       {
-        alert ("El usuario no tiene derechos para realizar el proceso");
+        showSuccess ("El usuario no tiene derechos para realizar el proceso");
         return; 
       }
       const url = `${process.env.REACT_APP_API_URL}/Pais/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
-      alert(respuesta.data)
+      showSuccess(respuesta.data)
       getAllData();
     }).catch(err => {
-      alert(err)
+      showSuccess(err)
     });
 	}).catch(err => {
-      alert(err)
+    showSuccess(err)
     });
     
   }
@@ -143,10 +154,10 @@ function PaisesEstado() {
   function handleEliminarEstado(id) {
     const url = `${process.env.REACT_APP_API_URL}/Estado/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
-      alert(respuesta.data)
+      showSuccess(respuesta.data)
       getAllEstado(state.idPais)
     }).catch(err => {
-      alert(err)
+      showSuccess(err)
     });
   }
 
@@ -250,7 +261,7 @@ function PaisesEstado() {
   useEffect(value => {
     if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
     {
-      alert("Es necesario iniciar sesion para acceder a este proceso");
+      showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
     }
@@ -329,7 +340,6 @@ function PaisesEstado() {
         defaultColumn
       },
       useFilters,
-      useGlobalFilter,
       useSortBy,
     )
 
@@ -369,7 +379,8 @@ function PaisesEstado() {
                     className={state.idPais === row.original.m_nIdPais ? classes.seleccionado : classes.noSeleccionado}>
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarPais(row.original.m_nIdPais))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarPais(row.original.m_nIdPais))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{color:"#F9A03E"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarPais(row.original.m_nIdPais))} className="btn btn-default btn-sm"><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                         <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminarPais(row.original.m_nIdPais))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
                       </div>
                     </td>
@@ -411,7 +422,6 @@ function PaisesEstado() {
         defaultColumn
       },
       useFilters,
-      useGlobalFilter,
       useSortBy,
     )
 
@@ -450,8 +460,8 @@ function PaisesEstado() {
                     <td>
                       <div>
                         <a href="#AgregarEstado" role="tab" data-toggle="tab" onClick={() => (handleShowModificarEstado(row.original.m_nIdEstado))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#AgregarEstado" role="tab" data-toggle="tab" className="btn btn-default btn-sm btn-sm" onClick={() => (handleShowModificarEstado(row.original.m_nIdEstado))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                         <a href="#" className="btn btn-default btn-sm btn-sm" onClick={() => (handleEliminarEstado(row.original.m_nIdEstado))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm btn-sm" onClick={() => (handleEliminarEstado(row.original.m_nIdEstado))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {

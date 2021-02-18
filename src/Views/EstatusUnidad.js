@@ -5,10 +5,33 @@ import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda"
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import ExportCSV from '../Components/Template/Export';
 import ExportPDF from "../Components/Template/ExportPDF";
-import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy } from 'react-table'
+import { useTable, useFilters, useSortBy } from 'react-table'
+import { makeStyles } from "@material-ui/core/styles";
+
+import Noty from 'noty';
+
+function showSuccess(mensaje){
+  new Noty({
+    type:"information",
+    layout:"topCenter",
+    text: mensaje,
+    timeout:"3000"
+  }).show()
+}
+
+const styles = {
+  seleccionado: {
+    backgroundColor: "#688ad9",
+  },
+  noSeleccionado: {
+    backgroundColor: "#FFFFFF",
+  }
+};
+const useStyles = makeStyles(styles);
 
 function EstatusUnidad() {
 
+  const classes = useStyles();
   const [data, setData] = React.useState([])
   const dataEstatus = [{
     idEstatus: 1,
@@ -48,20 +71,20 @@ function EstatusUnidad() {
     if (state.idEstatusUnidad != 0) {
       const url = `${process.env.REACT_APP_API_URL}/EstatusUnidades/Modificar/` + state.idEstatusUnidad;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
-        alert(respuesta.data)
+        showSuccess(respuesta.data)
         getAllData();
       }).catch(err => {
         console.log(err)
-        alert("err")
+        showSuccess("err")
       });
     } else {
       const url = `${process.env.REACT_APP_API_URL}/EstatusUnidades/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
-        alert(respuesta.data)
+        showSuccess(respuesta.data)
         getAllData()
       }).catch(err => {
         console.log(err)
-        alert(err)
+        showSuccess(err)
       });
     }
 
@@ -71,24 +94,24 @@ function EstatusUnidad() {
     var derecho;
     const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
-      //alert(respuesta.data)
+      //showSuccess(respuesta.data)
 
       derecho = respuesta.data;
       if (derecho == false)
       {
-        alert ("El usuario no tiene derechos para realizar el proceso");
+        showSuccess ("El usuario no tiene derechos para realizar el proceso");
         return; 
       }
       
     const url = `${process.env.REACT_APP_API_URL}/EstatusUnidades/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
-      alert(respuesta)
+      showSuccess(respuesta)
       getAllData()
     }).catch(err => {
-      alert(err)
+      showSuccess(err)
     });
 	}).catch(err => {
-      alert(err)
+    showSuccess(err)
     });
   }
 
@@ -146,6 +169,13 @@ function EstatusUnidad() {
     });
   };
 
+  function handleSelectRow(id, event) {
+    setState({
+      ...state,
+      idEstatusUnidad: id
+    });
+  }
+
   const columns = React.useMemo(() => [
     {
       Name: "Abreviación",
@@ -172,7 +202,7 @@ function EstatusUnidad() {
   useEffect(value => {
     if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
     {
-      alert("Es necesario iniciar sesion para acceder a este proceso");
+      showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("configuracion");
       return;
     }
@@ -231,7 +261,6 @@ function EstatusUnidad() {
         defaultColumn
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     )
 
@@ -266,7 +295,9 @@ function EstatusUnidad() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr {...row.getRowProps()}>
+                  <tr {...row.getRowProps()}
+                  onClick={handleSelectRow.bind(this, row.original.m_nIdEstatusUnidad)}
+                  className={state.idEstatusUnidad === row.original.m_nIdEstatusUnidad ? classes.seleccionado : classes.noSeleccionado}>
                     <td>
                       <div>
                         <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowModificar(row.original.m_nIdEstatusUnidad))} ><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
@@ -451,8 +482,7 @@ function EstatusUnidad() {
                         </div>
                         <br></br>
                         <div className="form-footer" className="col-12 col-sm-12 col-md-10 unit">
-                          <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
-                          >
+                          <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn">
                             Cancelar</button>
                           <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                         </div>
