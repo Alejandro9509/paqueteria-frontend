@@ -10,9 +10,32 @@ import ExportCSV from '../Components/Template/Export';
 import ExportPDF from "../Components/Template/ExportPDF";
 import * as XLSX from 'xlsx';
 import { useTable, useFilters,useAsyncDebounce, useSortBy } from 'react-table'
+import { makeStyles } from "@material-ui/core/styles";
+
+import Noty from 'noty';
+
+function showSuccess(mensaje){
+  new Noty({
+    type:"information",
+    layout:"topCenter",
+    text: mensaje,
+    timeout:"3000"
+  }).show()
+}
+
+const styles = {
+  seleccionado: {
+    backgroundColor: "#688ad9",
+  },
+  noSeleccionado: {
+    backgroundColor: "#FFFFFF",
+  }
+};
+const useStyles = makeStyles(styles);
 
 function GrupoCliente() {
 
+  const classes = useStyles();
   const [data, setData] = React.useState([])
   const [state, setState] = React.useState({
     showPopUp: false,
@@ -42,20 +65,20 @@ function GrupoCliente() {
     if (state.idGrupoCliente != 0) {
       const url = `${process.env.REACT_APP_API_URL}/GruposClientes/Modificar/` + state.idGrupoCliente;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
-        alert(respuesta.data)
+        showSuccess(respuesta.data)
         getAllData();
       }).catch(err => {
         console.log(err)
-        alert("err")
+        showSuccess("err")
       });
     } else {
       const url = `${process.env.REACT_APP_API_URL}/GruposClientes/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
-        alert(respuesta.data)
+        showSuccess(respuesta.data)
         getAllData();
       }).catch(err => {
         console.log(err)
-        alert(err)
+        showSuccess(err)
       });
     }
 
@@ -65,12 +88,12 @@ function GrupoCliente() {
     var derecho;
     const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
-      //alert(respuesta.data)
+      //showSuccess(respuesta.data)
 
       derecho = respuesta.data;
       if (derecho == false)
       {
-        alert ("El usuario no tiene derechos para realizar el proceso");
+        showSuccess ("El usuario no tiene derechos para realizar el proceso");
         return; 
       }
       
@@ -79,10 +102,10 @@ function GrupoCliente() {
       console.log(respuesta);
       getAllData();
     }).catch(err => {
-      alert(err)
+      showSuccess(err)
     });
 	}).catch(err => {
-      alert(err)
+    showSuccess(err)
     });
   }
 
@@ -137,6 +160,13 @@ function GrupoCliente() {
     });
   };
 
+  function handleSelectRow(id, event) {
+    setState({
+      ...state,
+      idGrupoCliente: id
+    });
+  }
+
   const columns = React.useMemo(() => [
     {
       Name: "Código",
@@ -163,7 +193,7 @@ function GrupoCliente() {
   useEffect(value => {
     if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
     {
-      alert("Es necesario iniciar sesion para acceder a este proceso");
+      showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
     }
@@ -216,7 +246,6 @@ function GrupoCliente() {
       headerGroups,
       rows,
       prepareRow,
-      state,
     } = useTable(
       {
         columns,
@@ -258,7 +287,10 @@ function GrupoCliente() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr {...row.getRowProps()}>
+                  <tr {...row.getRowProps()}
+                  onClick={handleSelectRow.bind(this, row.original.m_nIdGrupoCliente)}
+                  className={state.idGrupoCliente === row.original.m_nIdGrupoCliente ? classes.seleccionado : classes.noSeleccionado}>
+
                     <td>
                       <div>
                         <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdGrupoCliente))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{color:"#F9A03E"}} /></a>

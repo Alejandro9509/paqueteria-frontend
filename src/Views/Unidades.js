@@ -18,6 +18,18 @@ import $ from "jquery";
 import { remove_array_element } from "../Util/Util";
 
 import { SettingsEthernet } from "@material-ui/icons";
+
+import Noty from 'noty';
+
+function showSuccess(mensaje){
+  new Noty({
+    type:"information",
+    layout:"topCenter",
+    text: mensaje,
+    timeout:"3000"
+  }).show()
+}
+
 window.jQuery = window.$ = $;
 const headers = {
   "Content-Type": "application/json",
@@ -493,7 +505,7 @@ function App(props) {
   useEffect((value) => {
     if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
     {
-      alert("Es necesario iniciar sesion para acceder a este proceso");
+      showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
     }
@@ -585,7 +597,7 @@ function App(props) {
         getAllUnidades();
       })
       .catch((err) => {
-        alert(err);
+        showSuccess(err);
       });
   }
 
@@ -604,7 +616,7 @@ function App(props) {
 
       if (respuesta.data != "") {
 
-        alert(respuesta.data.m_sMensaje);
+        showSuccess(respuesta.data.m_sMensaje);
         console.log(respuesta.data);
         setState({
           ...state,
@@ -615,7 +627,7 @@ function App(props) {
     })
 
       .catch((err) => {
-        alert(err);
+        showSuccess(err);
       });
   };
 
@@ -738,25 +750,25 @@ function App(props) {
         .put(url, Object.assign({}, params), { headers })
 
         .then((respuesta) => {
-          alert(respuesta.data);
+          showSuccess(respuesta.data);
           getAllUnidades();
         })
         .catch((err) => {
           console.log(err);
-          alert("err");
+          showSuccess("err");
         });
     } else {
       const url = `${process.env.REACT_APP_API_URL}/Unidad/Agregar`;
       axios
         .post(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
-          alert(respuesta.data);
+          showSuccess(respuesta.data);
           getAllUnidades();
           //window.location.reload();
         })
         .catch((err) => {
           console.log(err);
-          alert(err);
+          showSuccess(err);
         });
     }
   };

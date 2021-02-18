@@ -20,12 +20,38 @@ import $ from "jquery";
 import { remove_array_element } from "../Util/Util";
 
 import { SettingsEthernet } from "@material-ui/icons";
+import { makeStyles } from "@material-ui/core/styles";
+
+import Noty from 'noty';
+
+function showSuccess(mensaje){
+  new Noty({
+    type:"information",
+    layout:"topCenter",
+    text: mensaje,
+    timeout:"3000"
+  }).show()
+}
+
+const styles = {
+  seleccionado: {
+    backgroundColor: "#688ad9",
+  },
+  noSeleccionado: {
+    backgroundColor: "#FFFFFF",
+  }
+};
+const useStyles = makeStyles(styles);
+
 window.jQuery = window.$ = $;
 const headers = {
   "Content-Type": "application/json",
 };
 
-function App(props) {
+function Clientes(props) {
+
+  const classes = useStyles();
+
   const columns = React.useMemo(() => [
     {
       Name: "Núm. Cliente",
@@ -248,8 +274,10 @@ function App(props) {
             {rows.map((row, i) => {
               prepareRow(row);
               return (
-                <tr {...row.getRowProps()}>
-                  <td>
+                <tr {...row.getRowProps()}
+                onClick={handleSelectRow.bind(this, row.original.m_nIdCliente)}
+                className={state.idCliente === row.original.m_nIdCliente ? classes.seleccionado : classes.noSeleccionado}>
+                <td>
                     <div>
                       <a
                         href="#Agregar"
@@ -381,7 +409,7 @@ function App(props) {
 
   useEffect((value) => {
     if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
-      alert("Es necesario iniciar sesion para acceder a este proceso");
+      showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
     }
@@ -468,6 +496,7 @@ function App(props) {
     });
     console.log(event.target.name + " " + state.activo);
   };
+
   const handleChangeFormatoSelectCheckboxChange = (event) => {
     setState({
       ...state,
@@ -507,11 +536,11 @@ function App(props) {
     var derecho;
     const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.creadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
-      //alert(respuesta.data)
+      //showSuccess(respuesta.data)
 
       derecho = respuesta.data;
       if (derecho == false) {
-        alert("El usuario no tiene derechos para realizar el proceso");
+        showSuccess("El usuario no tiene derechos para realizar el proceso");
         return;
       }
 
@@ -522,10 +551,10 @@ function App(props) {
           console.log(respuesta);
         })
         .catch((err) => {
-          alert(err);
+          showSuccess(err);
         });
     }).catch(err => {
-      alert(err)
+      showSuccess(err)
     });
   }
 
@@ -545,7 +574,7 @@ function App(props) {
       .get(url, { headers })
       .then((respuesta) => {
         if (respuesta.data != "") {
-          alert(respuesta.data.m_sMensaje);
+          showSuccess(respuesta.data.m_sMensaje);
           console.log(respuesta.data);
           setState({
             ...state,
@@ -556,7 +585,7 @@ function App(props) {
       })
 
       .catch((err) => {
-        alert(err);
+        showSuccess(err);
       });
   };
 
@@ -579,6 +608,13 @@ function App(props) {
     });
   };
 
+  function handleSelectRow(id, event) {
+    setState({
+      ...state,
+      idCliente: id
+    });
+  }
+
   const handleAceptar = (e) => {
     e.preventDefault();
     var params = {};
@@ -591,25 +627,25 @@ function App(props) {
         .put(url, Object.assign({}, params), { headers })
 
         .then((respuesta) => {
-          alert(respuesta.data);
+          showSuccess(respuesta.data);
 
           window.location.reload();
         })
         .catch((err) => {
           console.log(err);
-          alert("err");
+          showSuccess("err");
         });
     } else {
       const url = `${process.env.REACT_APP_API_URL}/Unidad/Agregar`;
       axios
         .post(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
-          alert(respuesta.data);
+          showSuccess(respuesta.data);
           //window.location.reload();
         })
         .catch((err) => {
           console.log(err);
-          alert(err);
+          showSuccess(err);
         });
     }
   };
@@ -624,6 +660,7 @@ function App(props) {
     console.log(documentos);
     setState({ ...state, documentos: documentos });
   }
+
   function addFotosDoc() {
     const { fotosDocs } = state;
     fotosDocs.push({
@@ -2121,4 +2158,4 @@ function App(props) {
   );
 }
 
-export default App;
+export default Clientes;

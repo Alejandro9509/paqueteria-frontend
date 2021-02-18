@@ -7,6 +7,17 @@ import { useTable, useFilters, useSortBy } from 'react-table'
 import { makeStyles } from "@material-ui/core/styles";
 import { Breadcrumbs, Link, Typography } from '@material-ui/core';
 
+import Noty from 'noty';
+
+function showSuccess(mensaje){
+  new Noty({
+    type:"information",
+    layout:"topCenter",
+    text: mensaje,
+    timeout:"3000"
+  }).show()
+}
+
 const styles = {
   seleccionado: {
     backgroundColor: "#688ad9",
@@ -57,20 +68,20 @@ function CiudadesCodigoPostal() {
     if (state.idCiudad != 0) {
       const url = `${process.env.REACT_APP_API_URL}/Ciudades/Modificar/` + state.idCiudad;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
-        alert(respuesta.data)
+        showSuccess(respuesta.data)
         getAllData()
       }).catch(err => {
         console.log(err)
-        alert("err")
+        showSuccess("err")
       });
     } else {
       const url = `${process.env.REACT_APP_API_URL}/Ciudades/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
-        alert(respuesta.data)
+        showSuccess(respuesta.data)
         getAllData()
       }).catch(err => {
         console.log(err)
-        alert(err)
+        showSuccess(err)
       });
     }
 
@@ -91,19 +102,19 @@ function CiudadesCodigoPostal() {
     if (state.idCodigoPostal != 0) {
       const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/Modificar/` + state.idCodigoPostal;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
-        alert(respuesta.data)
+        showSuccess(respuesta.data)
         getAllData()
       }).catch(err => {
         console.log(err)
-        alert("err")
+        showSuccess("err")
       });
     } else {
       const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
-        alert(respuesta.data)
+        showSuccess(respuesta.data)
       }).catch(err => {
         console.log(err)
-        alert(err)
+        showSuccess(err)
       });
     }
 
@@ -112,10 +123,10 @@ function CiudadesCodigoPostal() {
   function handleEliminarCiudad(id) {
     const url = `${process.env.REACT_APP_API_URL}/Ciudades/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
-      alert(respuesta.data)
+      showSuccess(respuesta.data)
       getAllData();
     }).catch(err => {
-      alert(err)
+      showSuccess(err)
     });
   }
 
@@ -124,23 +135,23 @@ function CiudadesCodigoPostal() {
     debugger;
     const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
-      //alert(respuesta.data)
+      //showSuccess(respuesta.data)
 
       derecho = respuesta.data;
       if (derecho == false)
       {
-        alert ("El usuario no tiene derechos para realizar el proceso");
+        showSuccess ("El usuario no tiene derechos para realizar el proceso");
         return; 
       }
       const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/Eliminar/` + id;
     axios.delete(url, { headers }).then(respuesta => {
-      alert(respuesta.data)
+      showSuccess(respuesta.data)
       getAllCodigoPostal();
     }).catch(err => {
-      alert(err)
+      showSuccess(err)
     });
 	}).catch(err => {
-      alert(err)
+    showSuccess(err)
     });
     
   }
@@ -283,7 +294,7 @@ function CiudadesCodigoPostal() {
   useEffect(value => {
     if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
     {
-      alert("Es necesario iniciar sesion para acceder a este proceso");
+      showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
     }

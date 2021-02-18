@@ -37,12 +37,35 @@ import * as XLSX from "xlsx";
 import { render } from 'react-dom';
 import SearchIcon from '@material-ui/icons/Search';
 
+import Noty from 'noty';
+
+function showSuccess(mensaje){
+  new Noty({
+    type:"information",
+    layout:"topCenter",
+    text: mensaje,
+    timeout:"3000"
+  }).show()
+}
+
+const styles = {
+  seleccionado: {
+    backgroundColor: "#688ad9",
+  },
+  noSeleccionado: {
+    backgroundColor: "#FFFFFF",
+  }
+};
+const useStyles = makeStyles(styles);
+
 window.jQuery = window.$ = $;
 const headers = {
   "Content-Type": "application/json",
 };
 
 function Informes(props) {
+
+  const classes = useStyles();
   const [stepActive, setStepActive] = React.useState(1);
   const [data, setData] = React.useState([]);
   const [Modal, open, close, isOpen] = useModal("root", {
@@ -309,7 +332,10 @@ function Informes(props) {
             {rows.map((row, i) => {
               prepareRow(row);
               return (
-                <tr {...row.getRowProps()}>
+                <tr {...row.getRowProps()}
+                onClick={handleSelectRow.bind(this, row.original.m_nIdUnidad)}
+                className={state.IdInforme === row.original.m_nIdUnidad ? classes.seleccionado : classes.noSeleccionado}>
+
                   <td>
                     <div>
                       <a
@@ -872,6 +898,15 @@ function Informes(props) {
     setDataGuias(newGuia);
   };
 
+
+  function handleSelectRow(id, event) {
+    setState({
+      ...state,
+      IdInforme: id
+    });
+  }
+
+
   function getAllGuiasFrom() {
     const url =
       `${process.env.REACT_APP_API_URL}/Guia/GetListadoPendientes/` +
@@ -973,12 +1008,12 @@ function Informes(props) {
     var derecho;
     const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
-      //alert(respuesta.data)
+      //showSuccess(respuesta.data)
 
       derecho = respuesta.data;
       if (derecho == false)
       {
-        alert ("El usuario no tiene derechos para realizar el proceso");
+        showSuccess ("El usuario no tiene derechos para realizar el proceso");
         return; 
       }
       
@@ -989,10 +1024,10 @@ function Informes(props) {
         console.log(respuesta);
       })
       .catch((err) => {
-        alert(err);
+        showSuccess(err);
       });
 	}).catch(err => {
-      alert(err)
+    showSuccess(err)
     });
   }
   const handleChangeOrigenChange = (event) => {
@@ -1018,7 +1053,7 @@ function Informes(props) {
   useEffect((value) => {
     if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
     {
-      alert("Es necesario iniciar sesion para acceder a este proceso");
+      showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
     }

@@ -16,28 +16,40 @@ import $ from 'jquery';
 import { remove_array_element } from "../Util/Util";
 import Barra from "../Util/jquery-barcode"
 
+import Noty from 'noty';
+
+function showSuccess(mensaje){
+  new Noty({
+    type:"information",
+    layout:"topCenter",
+    text: mensaje,
+    timeout:"3000"
+  }).show()
+}
+
 
 window.jQuery = window.$ = $;
 const styles = {
   paqueteCarrusel: {
     height: "300px !important",
   },
-
-};
-const styles2 = {
   conceptoCarrusel: {
     height: "220px !important",
   },
+  seleccionado: {
+    backgroundColor: "#688ad9",
+  },
+  noSeleccionado: {
+    backgroundColor: "#FFFFFF",
+  }
 };
-const useStyles = makeStyles(styles);
 
-const useStyles2 = makeStyles(styles2);
+const useStyles = makeStyles(styles);
 
 function Guia() {
   var React = require('react');
   var QRCode = require('qrcode.react');
   const classes = useStyles();
-  const classes2 = useStyles2();
   localStorage.getItem("UsuarioId");
 
   const [data, setData] = React.useState([])
@@ -176,7 +188,7 @@ function Guia() {
   })
 
   function cargaDiv(indice, valor) {
-    //	alert(indice);
+    //	showSuccess(indice);
     $("#idBarra" + indice).barcode(valor, "code128");
   }
 
@@ -310,17 +322,17 @@ function Guia() {
     if (state.idGuia != 0) {
       const url = `${process.env.REACT_APP_API_URL}/Guia/Modificar/` + state.idGuia;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
-        alert(respuesta.data)
+        showSuccess(respuesta.data)
         getAllData()
       }).catch(err => {
         console.log(err)
-        alert(err)
+        showSuccess(err)
       });
     } else {
       const url = `${process.env.REACT_APP_API_URL}/Guia/Agregar`;
       debugger;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
-        alert(respuesta.data)
+        showSuccess(respuesta.data)
         //window.location.reload();
         var resp = respuesta.data;
         debugger;
@@ -328,14 +340,14 @@ function Guia() {
         getImpresion(vGuia);
       }).catch(err => {
         console.log(err)
-        alert(err)
+        showSuccess(err)
       });
     }
 
   }
 
   async function getImpresion(id) {
-    //alert (state.nGuiaId);		
+    //showSuccess (state.nGuiaId);		
     //if (state.muestraPaquetes === true) return;		
     const url = `${process.env.REACT_APP_API_URL}/Guia/GetImpresion/` + id;
     await axios.get(url, { headers }).then(respuesta => {
@@ -454,17 +466,17 @@ function Guia() {
     var derecho;
     const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.creadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
-      //alert(respuesta.data)
+      //showSuccess(respuesta.data)
 
       derecho = respuesta.data;
       if (derecho == false) {
-        alert("El usuario no tiene derechos para realizar el proceso");
+        showSuccess("El usuario no tiene derechos para realizar el proceso");
         return;
       }
 
       const url = `${process.env.REACT_APP_API_URL}/Guia/Eliminar/` + id;
       axios.delete(url, { headers }).then(respuesta => {
-        alert(respuesta.data)
+        showSuccess(respuesta.data)
         //console.log(respuesta)
         if (respuesta.data.indexOf("fracaso:") <= 0)
           getAllData()
@@ -472,7 +484,7 @@ function Guia() {
         console.log(err.data)
       });
     }).catch(err => {
-      alert(err)
+      showSuccess(err)
     });
   }
 
@@ -512,7 +524,7 @@ function Guia() {
 
       });
       //handleEmbarque (respuesta.data.m_nIdEmbarque)
-      // alert(state.idMoneda)
+      // showSuccess(state.idMoneda)
     }).catch(function (err) {
       console.log(err.data)
     });
@@ -551,7 +563,7 @@ function Guia() {
         idSucursal: respuesta.data.IdSucursal
       });
       //handleEmbarque (respuesta.data.m_nIdEmbarque)
-      // alert(state.idMoneda)
+      // showSuccess(state.idMoneda)
     }).catch(function (err) {
       console.log(err.data)
     });
@@ -695,6 +707,13 @@ function handleImprmir2()
     });
   };
 
+  function handleSelectRow(id, event) {
+    setState({
+      ...state,
+      idGuia: id
+    });
+  }
+
   const handleChangePaquete = (event, index) => {
 
     var { paquetes } = state
@@ -708,8 +727,8 @@ function handleImprmir2()
 
     var { conceptos } = state
     conceptos[index][event.target.name] = event.target.value
-    //alert(event.target.name);
-    //alert(conceptos[index][event.target.name])
+    //showSuccess(event.target.name);
+    //showSuccess(conceptos[index][event.target.name])
     setState({
       ...state,
       conceptos: conceptos
@@ -775,7 +794,7 @@ function handleImprmir2()
 
   useEffect(value => {
     if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
-      alert("Es necesario iniciar sesion para acceder a este proceso");
+      showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
     }
@@ -883,12 +902,12 @@ function handleImprmir2()
   };
 
   async function cargaEmbarqueSucursal(valor) {
-    //alert(valor);
+    //showSuccess(valor);
     setState({
       ...state,
       idSucursal: valor
     });
-    //alert (state.idSucursal +"-" +state.idMoneda);
+    //showSuccess (state.idSucursal +"-" +state.idMoneda);
 
     if (valor == "" || valor == "0") return;
     if (state.idMoneda == "" || state.idMoneda == "0") return;
@@ -899,7 +918,7 @@ function handleImprmir2()
     });
   };
   function cargaEmbarqueModificar(valorSucursal, valorMoneda, valorGuia) {
-    //alert(valorSucursal + "-" + valorMoneda)
+    //showSuccess(valorSucursal + "-" + valorMoneda)
     const url = `${process.env.REACT_APP_API_URL}/Embarques/GetBySucursalMoneda/` + valorSucursal + "/" + valorMoneda + "/" + valorGuia;
     axios.get(url, { headers }).then(respuesta => {
       //console.log(respuesta);
@@ -907,12 +926,12 @@ function handleImprmir2()
     });
   };
   async function cargaEmbarqueMoneda(valor) {
-    //alert(valor);
+    //showSuccess(valor);
     setState({
       ...state,
       idMoneda: valor
     });
-    //alert (state.idSucursal +"-" +state.idMoneda);
+    //showSuccess (state.idSucursal +"-" +state.idMoneda);
 
     if (state.idSucursal === "" || state.idSucursal === "0") return;
     if (valor === "" || valor === "0") return;
@@ -925,7 +944,7 @@ function handleImprmir2()
 
   function handleEmbarque2(embarque) {
     const url = `${process.env.REACT_APP_API_URL}/Embarques/GetById/` + embarque;
-    //alert(embarque);
+    //showSuccess(embarque);
     axios.get(url, { headers }).then(respuesta => {
       setState({
         ...state,
@@ -971,7 +990,7 @@ function handleImprmir2()
       }
       sobresTemp.splice(0, 1);
       console.log(respuesta.data);
-      //alert(respuesta.data.m_nIdEmbarque);
+      //showSuccess(respuesta.data.m_nIdEmbarque);
       //setDataEmbarque(respuesta.data)
       setState({
         ...state,
@@ -1005,7 +1024,7 @@ function handleImprmir2()
   };
   function handleEmbarque(embarque) {
     const url = `${process.env.REACT_APP_API_URL}/Embarques/GetById/` + embarque;
-    //alert(embarque);
+    //showSuccess(embarque);
     axios.get(url, { headers }).then(respuesta => {
       setState({
         ...state,
@@ -1052,7 +1071,7 @@ function handleImprmir2()
         });
       }
       sobresTemp.splice(0, 1);
-      //alert(respuesta.data.m_nIdEmbarque);
+      //showSuccess(respuesta.data.m_nIdEmbarque);
       //setDataEmbarque(respuesta.data)
       setState({
         ...state,
@@ -1273,7 +1292,6 @@ function handleImprmir2()
       headerGroups,
       rows,
       prepareRow,
-      state,
     } = useTable(
       {
         columns,
@@ -1317,7 +1335,10 @@ function handleImprmir2()
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr {...row.getRowProps()}>
+                  <tr {...row.getRowProps()}
+                  onClick={handleSelectRow.bind(this, row.original.m_nIdGuia)}
+                  className={state.idGuia === row.original.m_nIdGuia ? classes.seleccionado : classes.noSeleccionado}>
+
                     <td>
                       <div>
                         <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdGuia))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
@@ -3017,7 +3038,7 @@ function handleImprmir2()
 
                                 <div style={{ padding: "20px" }}>
                                   <Carousel
-                                    className={classes2.conceptoCarrusel}
+                                    className={classes.conceptoCarrusel}
                                     widgets={[IndicatorDots, Buttons]}
                                     frames={framesConcepto}
                                   ></Carousel>

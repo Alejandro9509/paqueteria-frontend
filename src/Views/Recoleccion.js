@@ -27,6 +27,18 @@ import {
 import $ from "jquery";
 import { remove_array_element } from "../Util/Util";
 import { useHistory } from 'react-router-dom';
+
+import Noty from 'noty';
+
+function showSuccess(mensaje){
+  new Noty({
+    type:"information",
+    layout:"topCenter",
+    text: mensaje,
+    timeout:"3000"
+  }).show()
+}
+
 window.jQuery = window.$ = $;
 
 const useStyles = makeStyles({
@@ -218,12 +230,12 @@ function Recoleccion() {
       axios
         .put(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
-          alert(respuesta.data);
+          showSuccess(respuesta.data);
           getAllData();
         })
         .catch((err) => {
           console.log(err);
-          alert("err");
+          showSuccess("err");
         });
     } else {
       debugger;
@@ -232,12 +244,12 @@ function Recoleccion() {
         .post(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
           console.log(respuesta.data);
-          alert(respuesta.data);
+          showSuccess(respuesta.data);
           getAllData();
         })
         .catch((err) => {
           console.log(err);
-          alert(err);
+          showSuccess(err);
         });
     }
   };
@@ -308,11 +320,11 @@ function Recoleccion() {
     axios
       .get(urlDelete, { headers })
       .then((respuesta) => {
-        //alert(respuesta.data)
+        //showSuccess(respuesta.data)
 
         derecho = respuesta.data;
         if (derecho == false) {
-          alert("El usuario no tiene derechos para realizar el proceso");
+          showSuccess("El usuario no tiene derechos para realizar el proceso");
           return;
         }
 
@@ -321,15 +333,15 @@ function Recoleccion() {
         axios
           .delete(url, { headers })
           .then((respuesta) => {
-            alert(respuesta.data);
+            showSuccess(respuesta.data);
             getAllData();
           })
           .catch((err) => {
-            alert(err);
+            showSuccess(err);
           });
       })
       .catch((err) => {
-        alert(err);
+        showSuccess(err);
       });
   }
 
@@ -752,7 +764,7 @@ function Recoleccion() {
       localStorage.getItem("UsuarioId") === null ||
       localStorage.getItem("UsuarioId") <= 0
     ) {
-      alert("Es necesario iniciar sesion para acceder a este proceso");
+      showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
     }

@@ -4,6 +4,18 @@ import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda"
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import axios from "axios";
 import $ from "jquery";
+
+import Noty from 'noty';
+
+function showSuccess(mensaje){
+  new Noty({
+    type:"information",
+    layout:"topCenter",
+    text: mensaje,
+    timeout:"3000"
+  }).show()
+}
+
 window.jQuery = window.$ = $;
 
 function Parametros() {
@@ -75,11 +87,11 @@ function Parametros() {
     console.log(params)
     const url = `${process.env.REACT_APP_API_URL}/Pais/Modificar/` + state.idPais;
     axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
-      alert(respuesta.data)
+      showSuccess(respuesta.data)
       window.location.reload();
     }).catch(err => {
       console.log(err)
-      alert("err")
+      showSuccess("err")
     });
   }
 
@@ -101,7 +113,7 @@ function Parametros() {
   useEffect(value => {
     if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
     {
-      alert("Es necesario iniciar sesion para acceder a este proceso");
+      showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
     }

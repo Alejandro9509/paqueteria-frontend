@@ -11,6 +11,8 @@ import {ACCESS_TOKEN} from './Constants';
 import dashboardRoutes from './routes'
 import catalogdRoutes from './routesCatalogos'
 import configuracionRoutes from './routesConfiguraciones'
+import "../node_modules/noty/lib/noty.css";  
+import "../node_modules/noty/lib/themes/mint.css"; 
 
 
 class App extends Component {
