@@ -19,6 +19,9 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 
 import InputAdornment from "@material-ui/core/InputAdornment";
+
+
+
 import {
   useTable,
   useFilters,
@@ -155,20 +158,20 @@ function Recoleccion() {
 
   function handleSelectRemitente() {
     state.RFCRemitente = state.nombreRemitente.m_sRFC
-    state.domicilioRemitente = state.nombreRemitente.m_sNombreCompletoOperador
-    state.codigoPostalRemitente = state.nombreRemitente.m_sCodigoPostal
-    state.correoRemitente = state.nombreRemitente.m_sCorreoElectronico
-    state.telefonoRemitente = state.nombreRemitente.m_sTelefono
-    state.contactoRemitente = state.nombreRemitente.m_sContacto
+    //state.domicilioRemitente = state.nombreRemitente.m_sNombreCompletoOperador
+    //state.codigoPostalRemitente = state.nombreRemitente.m_sCodigoPostal
+    //state.correoRemitente = state.nombreRemitente.m_sCorreoElectronico
+    //state.telefonoRemitente = state.nombreRemitente.m_sTelefono
+    //state.contactoRemitente = state.nombreRemitente.m_sContacto
 
   }
   function handleSelectDestinatario() {
     state.RFCDestinatario = state.nombreDestinatario.m_sRFC
-    state.domicilioDestinatario = state.nombreDestinatario.m_sNombreCompletoOperador
-    state.codigoPostalDestinatario= state.nombreDestinatario.m_sCodigoPostal
-    state.correoDestinatario= state.nombreDestinatario.m_sCorreoElectronico
-    state.telefonoDestinatario = state.nombreDestinatario.m_sTelefono
-    state.contactoDestinatario = state.nombreDestinatario.m_sContacto
+    //state.domicilioDestinatario = state.nombreDestinatario.m_sNombreCompletoOperador
+    //state.codigoPostalDestinatario= state.nombreDestinatario.m_sCodigoPostal
+    //state.correoDestinatario= state.nombreDestinatario.m_sCorreoElectronico
+    //state.telefonoDestinatario = state.nombreDestinatario.m_sTelefono
+    //state.contactoDestinatario = state.nombreDestinatario.m_sContacto
 
   }
 
@@ -1854,8 +1857,8 @@ function Recoleccion() {
                   <div>
                     <form className="j-forms">
                       <div className="form-content">
-                        <div className="col-sm-6 col-md-3 unit">
-                          <label className="label">Fecha Inicial</label>
+                      <div className="col-sm-6 col-md-3 unit">
+                      <label className="label">Fecha Inicial</label>
                           <div className="input">
                             <input type="date" className="form-control" />
                           </div>
@@ -1871,6 +1874,9 @@ function Recoleccion() {
                               id="fechaInicial"
                             />
                           </div>
+
+
+
                         </div>
 
                         <div className="col-sm-6 col-md-3 unit">

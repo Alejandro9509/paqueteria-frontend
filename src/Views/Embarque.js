@@ -144,20 +144,20 @@ function Embarque() {
   
   function handleSelectRemitente() {
     state.RFCRemitente = state.nombreRemitente.m_sRFC
-    state.domicilioRemitente = state.nombreRemitente.m_sNombreCompletoOperador
-    state.codigoPostalRemitente = state.nombreRemitente.m_sCodigoPostal
-    state.correoRemitente = state.nombreRemitente.m_sCorreoElectronico
-    state.telefonoRemitente = state.nombreRemitente.m_sTelefono
-    state.contactoRemitente = state.nombreRemitente.m_sContacto
+    //state.domicilioRemitente = state.nombreRemitente.m_sNombreCompletoOperador
+    //state.codigoPostalRemitente = state.nombreRemitente.m_sCodigoPostal
+    //state.correoRemitente = state.nombreRemitente.m_sCorreoElectronico
+    //state.telefonoRemitente = state.nombreRemitente.m_sTelefono
+    //state.contactoRemitente = state.nombreRemitente.m_sContacto
 
   }
   function handleSelectDestinatario() {
     state.RFCDestinatario = state.nombreDestinatario.m_sRFC
-    state.domicilioDestinatario = state.nombreDestinatario.m_sNombreCompletoOperador
-    state.codigoPostalDestinatario= state.nombreDestinatario.m_sCodigoPostal
-    state.correoDestinatario= state.nombreDestinatario.m_sCorreoElectronico
-    state.telefonoDestinatario = state.nombreDestinatario.m_sTelefono
-    state.contactoDestinatario = state.nombreDestinatario.m_sContacto
+    //state.domicilioDestinatario = state.nombreDestinatario.m_sNombreCompletoOperador
+    //state.codigoPostalDestinatario= state.nombreDestinatario.m_sCodigoPostal
+    //state.correoDestinatario= state.nombreDestinatario.m_sCorreoElectronico
+    //state.telefonoDestinatario = state.nombreDestinatario.m_sTelefono
+    //state.contactoDestinatario = state.nombreDestinatario.m_sContacto
 
   }
 
@@ -177,7 +177,7 @@ function Embarque() {
       "m_nIdMoneda": state.moneda,
       "m_cTIpoCambio": state.tipoCambio,
       "m_nIdTIpoCobro": state.tipoCobro,
-      "m_sNOmbreRemitente": state.nombreRemitente,
+      "m_sNOmbreRemitente": state.nombreRemitente.m_sNombreFiscal,
       "m_sRFCRemitente": state.RFCRemitente,
       "m_sDomicilioRemitente": state.domicilioRemitente,
       "m_nIdCodigoPostalRemitente": state.codigoPostalRemitente.m_nIdCP,
@@ -186,7 +186,7 @@ function Embarque() {
       "m_sTelefonoRemitente": state.telefonoRemitente,
       "m_sContactoRemitente": state.contactoRemitente,
       "m_nIdCiudadOrigen": state.ciudadOrigen.m_nIdCiudad,
-      "m_sNombreDestinatario": state.nombreDestinatario,
+      "m_sNombreDestinatario": state.nombreDestinatario.m_sNombreFiscal,
       "m_sRFCDestinatario": state.RFCDestinatario,
       "m_sDomicilioDestinatario": state.domicilioDestinatario,
       "m_nIdCodigoPostalDestinatario": state.codigoPostalDestinatario.m_nIdCP,
@@ -363,7 +363,7 @@ function Embarque() {
         domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
         codigoPostalRemitente: dataCodigoPostal.find(o => o.m_nIdCP == respuesta.data.m_nIdCodigoPostalRemitente),
         ciudadRemitente: dataCiudad.find(
-          (o) => o.m_nIdCiudad == respuesta.data.m_nCiudadRemitente,
+          (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadRemitente,
         ),
         correoRemitente: respuesta.data.m_sCorreoRemitente,
         telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
@@ -384,7 +384,7 @@ function Embarque() {
         contactoDestinatario: respuesta.data.m_sContactoDestinatario,
 
         ciudadDestino: dataCiudad.find(
-          (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen,
+          (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino,
         ),
         zonaEntrega: respuesta.data.IdZonaEntrega,
         domicilioEntrega: respuesta.data.DomicilioEntrega,
@@ -429,7 +429,7 @@ function Embarque() {
         domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
         codigoPostalRemitente: dataCodigoPostal.find(o => o.m_nIdCP == respuesta.data.m_nIdCodigoPostalRemitente),
         ciudadRemitente: dataCiudad.find(
-          (o) => o.m_nIdCiudad == respuesta.data.m_nCiudadRemitente,
+          (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadRemitente,
         ),
         correoRemitente: respuesta.data.m_sCorreoRemitente,
         telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
@@ -450,7 +450,7 @@ function Embarque() {
         contactoDestinatario: respuesta.data.m_sContactoDestinatario,
 
         ciudadDestino: dataCiudad.find(
-          (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen,
+          (o) => o.m_nIdCiudad == respuesta.data.m_nIdCIudadDestino,
         ),
         fechaEntrega: respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
         codigoPostalEntrega: dataCodigoPostal.find(o => o.m_nIdCP == respuesta.data.CodigoPostalEntrega),
@@ -490,7 +490,7 @@ function Embarque() {
       nombreRemitente: "",
       RFCRemitente: "",
       domicilioRemitente: "",
-      codigoPostalRemitente: {},
+      codigoPostalRemitente:  dataCodigoPostal[0],
       ciudadRemitente: {},
       correoRemitente: "",
       telefonoRemitente: "",
@@ -500,12 +500,11 @@ function Embarque() {
       nombreDestinatario: "",
       RFCDestinatario: "",
       domicilioDestinatario: "",
-      codigoPostalDestinatario: {},
-      ciudadDestinatario: {},
+      codigoPostalDestinatario:  dataCodigoPostal[0],
+      ciudadDestino: {},
       correoDestinatario: "",
       telefonoDestinatario: "",
       contactoDestinatario: "",
-      ciudadDestinatario: {},
       fechaEntrega: "",
       horaEntrega: "",
       codigoPostalEntrega: {},
@@ -2506,11 +2505,11 @@ function Embarque() {
                                       />
                                     </div>
                                   </div>
-
-                                  <div className="col-sm-12 col-md-12 unit">
+{}
+                               <div className="col-sm-12 col-md-12 unit">
                                     <label className="label">
                                       Correo Electrónico
-                                  </label>
+                                    </label>
                                     <div className="input">
                                       <input
                                         onChange={handleChange}
@@ -2518,12 +2517,11 @@ function Embarque() {
                                         type="email"
                                         required
                                         value={state.correoRemitente}
-                                        disabled={state.agregar == "Consultar"}
                                         id="correoRemitente"
                                       />
                                     </div>
                                   </div>
-
+{}
                                   <div className="col-sm-12 col-md-12 unit">
                                     <label className="label">
                                       Teléfono
@@ -2568,11 +2566,11 @@ function Embarque() {
                                         onChange={(event, newValue) =>
                                           setState({
                                             ...state,
-                                            origenRemitente: newValue,
+                                            ciudadOrigen: newValue,
                                           })
                                         }
-                                        value={state.origenRemitente}
-                                        id="origenRemitente"
+                                        value={state.ciudadOrigen}
+                                        id="ciudadOrigen"
                                         disableClearable
                                         forcePopupIcon={false}
                                         options={dataCiudad}
@@ -2594,7 +2592,7 @@ function Embarque() {
                                                 ...params.InputProps,
                                                 style: { height: 21 },
                                                 type: "search",
-                                                value: state.origenRemitente,
+                                                value: state.ciudadOrigen,
                                                 disableUnderline: true,
                                                 endAdornment: (
                                                   <InputAdornment position="end">
@@ -2608,7 +2606,7 @@ function Embarque() {
                                                         setState({
                                                           ...state,
                                                           identificadorModal:
-                                                            "origenRemitente",
+                                                            "ciudadOrigen",
                                                           tipoModal: 1,
                                                         });
                                                       }}
@@ -2838,12 +2836,12 @@ function Embarque() {
                                       onChange={(event, newValue) =>
                                         setState({
                                           ...state,
-                                          ciudadDestinatario: newValue,
+                                          ciudadDestino: newValue,
                                         })
                                       }
-                                      value={state.ciudadDestinatario}
+                                      value={state.ciudadDestino}
                                       disabled={state.agregar == "Consultar"}
-                                      id="ciudadDestinatario"
+                                      id="ciudadDestino"
                                       disableClearable
                                       forcePopupIcon={false}
                                       options={dataCiudad}
@@ -2863,7 +2861,7 @@ function Embarque() {
                                               disabled: state.agregar == "Consultar",
                                               endAdornment:
                                                 <InputAdornment position="end">
-                                                  <IconButton padding="0px" style={{ paddingRight: "0px" }} onClick={() => { open(); setState({ ...state, identificadorModal: "ciudadDestinatario", tipoModal: 1 }) }}>
+                                                  <IconButton padding="0px" style={{ paddingRight: "0px" }} onClick={() => { open(); setState({ ...state, identificadorModal: "ciudadDestino", tipoModal: 1 }) }}>
                                                     <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
                                                   </IconButton>
                                                 </InputAdornment>
@@ -2964,7 +2962,7 @@ function Embarque() {
                                               ...params.InputProps,
                                               style: { height: 21 },
                                               type: "search",
-                                              value: state.origenRemitente,
+                                              value: state.ciudadDestino,
                                               disableUnderline: true,
                                               endAdornment: (
                                                 <InputAdornment position="end">
@@ -2977,7 +2975,7 @@ function Embarque() {
                                                       setState({
                                                         ...state,
                                                         identificadorModal:
-                                                          "destinoDestinatario",
+                                                          "ciudadDestino",
                                                         tipoModal: 1,
                                                       });
                                                       open();
@@ -3415,11 +3413,11 @@ function Embarque() {
                                         onChange={(event, newValue) =>
                                           setState({
                                             ...state,
-                                            unidad: newValue,
+                                            idUnidad: newValue,
                                           })
                                         }
                                         value={state.unidad}
-                                        id="unidad"
+                                        id="idUnidad"
                                         disableClearable
                                         forcePopupIcon={false}
                                         options={dataUnidad}
@@ -3441,6 +3439,8 @@ function Embarque() {
                                                 ...params.InputProps,
                                                 style: { height: 21 },
                                                 type: "search",
+                                                value: state.idUnidad,
+
                                                 disableUnderline: true,
                                                 endAdornment: (
                                                   <InputAdornment position="end">
@@ -3454,7 +3454,7 @@ function Embarque() {
                                                         setState({
                                                           ...state,
                                                           identificadorModal:
-                                                            "unidad",
+                                                            "idUnidad",
                                                           tipoModal: 4,
                                                         });
                                                       }}
