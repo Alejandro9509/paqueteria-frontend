@@ -17,7 +17,7 @@ import {
 
 import DataTable from "react-data-table-component";
 import $ from "jquery";
-import { useTable, useFilters, useSortBy, useGlobalFilter } from "react-table";
+import { useTable, useFilters, useSortBy } from "react-table";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -395,8 +395,6 @@ function Informes(props) {
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -404,7 +402,6 @@ function Informes(props) {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
@@ -484,8 +481,6 @@ function Informes(props) {
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -493,7 +488,6 @@ function Informes(props) {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
@@ -573,8 +567,6 @@ function Informes(props) {
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -582,7 +574,6 @@ function Informes(props) {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
@@ -662,8 +653,6 @@ function Informes(props) {
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -671,7 +660,6 @@ function Informes(props) {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
@@ -751,8 +739,6 @@ function Informes(props) {
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -760,7 +746,6 @@ function Informes(props) {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 

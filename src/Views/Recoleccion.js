@@ -20,8 +20,6 @@ import TextField from "@material-ui/core/TextField";
 
 import InputAdornment from "@material-ui/core/InputAdornment";
 
-
-
 import {
   useTable,
   useFilters,
@@ -56,7 +54,12 @@ const useStyles = makeStyles({
   },
   sobreCarrusel: {
     height: "175px !important",
+  },  seleccionado: {
+    backgroundColor: "#688ad9",
   },
+  noSeleccionado: {
+    backgroundColor: "#FFFFFF",
+  }
 });
 function Recoleccion() {
   const classes = useStyles();
@@ -632,7 +635,13 @@ function Recoleccion() {
       [event.target.id]: event.target.value,
     });
   };
-
+  
+  function handleSelectRow(id, event) {
+    setState({
+      ...state,
+      idRecoleccion: id
+    });
+  }
   const handleChangePaquete = (event, index) => {
     var { paquetes } = state;
     paquetes[index][event.target.name] = event.target.value;
@@ -978,7 +987,6 @@ function Recoleccion() {
       headerGroups,
       rows,
       prepareRow,
-      state,
 
     } = useTable(
       {
@@ -1026,8 +1034,10 @@ function Recoleccion() {
             {rows.map((row, i) => {
               prepareRow(row);
               return (
-                <tr {...row.getRowProps()}>
-                  <td>
+                <tr {...row.getRowProps()}
+                onClick={handleSelectRow.bind(this, row.original.m_nIdRecoleccion)}
+                className={state.idRecoleccion === row.original.m_nIdRecoleccion ? classes.seleccionado : classes.noSeleccionado}>
+                <td>
                     <div>
                       <a
                         href="#Agregar"
@@ -1501,8 +1511,6 @@ function Recoleccion() {
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -1510,7 +1518,6 @@ function Recoleccion() {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 

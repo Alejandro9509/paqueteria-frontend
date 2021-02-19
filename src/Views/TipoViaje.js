@@ -6,6 +6,7 @@ import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import ExportCSV from '../Components/Template/Export';
 import ExportPDF from "../Components/Template/ExportPDF";
 import { useTable, useFilters, useSortBy } from 'react-table'
+import { makeStyles } from "@material-ui/core/styles";
 
 import Noty from 'noty';
 
@@ -18,8 +19,19 @@ function showSuccess(mensaje){
   }).show()
 }
 
+const styles = {
+  seleccionado: {
+    backgroundColor: "#688ad9",
+  },
+  noSeleccionado: {
+    backgroundColor: "#FFFFFF",
+  }
+};
+const useStyles = makeStyles(styles);
+
 function TipoViaje() {
 
+  const classes = useStyles();
   const [data, setData] = React.useState([])
 
   const [state, setState] = React.useState({
@@ -136,6 +148,13 @@ function TipoViaje() {
       [event.target.id]: event.target.value
     });
   };
+
+  function handleSelectRow(id, event) {
+    setState({
+      ...state,
+      idTipoViaje: id
+    });
+  }
 
   const columns = React.useMemo(() => [
     {
@@ -255,7 +274,9 @@ function TipoViaje() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr {...row.getRowProps()}>
+                  <tr {...row.getRowProps()}
+                  onClick={handleSelectRow.bind(this, row.original.m_nIdTipoViaje)}
+                  className={state.idTipoViaje === row.original.m_nIdTipoViaje ? classes.seleccionado : classes.noSeleccionado}>
                     <td>
                       <div>
                         <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowModificar(row.original.m_nIdTipoViaje))} ><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>

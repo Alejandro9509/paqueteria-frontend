@@ -14,7 +14,7 @@ import { useTable, useFilters, useSortBy } from "react-table";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { DisplayMapClass } from "./DisplayMapClass";
-
+import { makeStyles } from "@material-ui/core/styles";
 
 import Noty from 'noty';
 
@@ -27,17 +27,35 @@ function showSuccess(mensaje){
   }).show()
 }
 
+const styles = {
+  seleccionado: {
+    backgroundColor: "#688ad9",
+  },
+  noSeleccionado: {
+    backgroundColor: "#FFFFFF",
+  }
+};
+const useStyles = makeStyles(styles);
 
 window.jQuery = window.$ = $;
 const headers = {
   "Content-Type": "application/json",
 };
 
-function App(props) {
+function Rutas(props) {
+  const classes = useStyles();
+
   const [state, setState] = React.useState({
     height: window.innerHeight,
     showMap: false
   })
+
+  function handleSelectRow(id, event) {
+    setState({
+      ...state,
+      IdEmbalaje: id
+    });
+  }
 
   return (
     <div>
@@ -398,4 +416,4 @@ function App(props) {
   );
 }
 
-export default App;
+export default Rutas;

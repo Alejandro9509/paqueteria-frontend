@@ -14,7 +14,6 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import {
   useTable,
   useFilters,
-  useGlobalFilter,
   useAsyncDebounce,
   useSortBy,
 } from "react-table";
@@ -1033,8 +1032,6 @@ function Embarque() {
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -1042,7 +1039,6 @@ function Embarque() {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
