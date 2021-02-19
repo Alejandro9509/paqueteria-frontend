@@ -2,6 +2,10 @@ import React from "react";
 
 function Cabecera({ rutas }) {
 
+  function logout() {
+    localStorage.removeItem("accessToken");
+  }
+
   return (
     <div>
       {/*Topbar Left Branding With Logo Start*/}
@@ -15,6 +19,51 @@ function Cabecera({ rutas }) {
               </div>
             </li>
           </ul>
+        </div>
+      </div>
+      <div className="topbar-right pull-right iconic-aside-container">
+        <div className="clearfix">
+          <div className="user-profile-container">
+            <div className="user-profile clearfix">
+              <div className="admin-user-thumb">
+                <img src="images/avatar/jaman_01.jpg" alt="admin" />
+              </div>
+              <div className="admin-user-info">
+                <ul>
+                  <li>
+                    <a href="index.html">{localStorage.getItem("Usuario")}</a>
+                  </li>
+                  <li>
+                    <a href="index.html">{localStorage.getItem("Email")}</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div className="admin-bar">
+              <ul>
+                <li>
+                  <a href="login" onClick={() => logout()}>
+                    <i className="zmdi zmdi-power" />
+                  </a>
+                </li>
+                <li>
+                  <a href="index.html">
+                    <i className="zmdi zmdi-account" />
+                  </a>
+                </li>
+                <li>
+                  <a href="index.html">
+                    <i className="zmdi zmdi-key" />
+                  </a>
+                </li>
+                <li>
+                  <a href="index.html">
+                    <i className="zmdi zmdi-settings" />
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
       {/*Topbar Left Branding With Logo End*/}
