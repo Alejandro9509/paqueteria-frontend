@@ -1510,7 +1510,7 @@ function Recoleccion() {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
+      
       useSortBy
     );
 
