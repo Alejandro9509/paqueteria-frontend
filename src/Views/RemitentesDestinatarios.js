@@ -9,7 +9,7 @@ import { FormControl, Input, InputLabel } from "@material-ui/core";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import $ from "jquery";
-import { useTable, useFilters,useGlobalFilter, useSortBy } from "react-table";
+import { useTable, useFilters, useSortBy } from "react-table";
 import useModal from "react-hooks-use-modal";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
@@ -20,6 +20,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import ExportCSV from "../Components/Template/Export";
 import ExportPDF from "../Components/Template/ExportPDF";
 import { useHistory } from 'react-router-dom';
+import { makeStyles } from "@material-ui/core/styles";
 
 import Noty from 'noty';
 
@@ -32,11 +33,24 @@ function showSuccess(mensaje){
   }).show()
 }
 
+const styles = {
+  seleccionado: {
+    backgroundColor: "#688ad9",
+  },
+  noSeleccionado: {
+    backgroundColor: "#FFFFFF",
+  }
+};
+const useStyles = makeStyles(styles);
+
 window.jQuery = window.$ = $;
 const headers = {
   "Content-Type": "application/json",
 };
-function App(props) {
+function RemitenteDestinatario(props) {
+
+  const classes = useStyles();
+
   const [dataPais, setDataPais] = React.useState([]);
   const [dataEstado, setDataEstado] = React.useState([]);
   const [data, setData] = React.useState([]);
@@ -248,18 +262,17 @@ function App(props) {
     });
   }
 
-  function handleShowModificar(row) {
-    console.log(row.original.m_nIdRemitenteDestinatario);
+  function handleShowModificar(id) {
+    console.log(id);
     const url =
-      `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/GetById/` +
-      row.original.m_nIdRemitenteDestinatario;
+      `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/GetById/` + id;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
       getAllEstados(respuesta.data.m_nIdPais);
       setState({
         ...state,
         agregar: "Modificar",
-        idRemitenteDestinatario: row.original.m_nIdRemitenteDestinatario,
+        idRemitenteDestinatario: id,
         cliente: dataClientes.find(
           (o) => o.m_nIdCliente == respuesta.data.m_nIdCliente
         ),
@@ -382,6 +395,13 @@ function App(props) {
       [event.target.id]: event.target.value,
     });
   };
+  
+  function handleSelectRow(id, event) {
+    setState({
+      ...state,
+      idRemitenteDestinatario: id
+    });
+  }
 
   function TableCodigoPostal({ columns, data, select }) {
     const defaultColumn = React.useMemo(
@@ -399,8 +419,6 @@ function App(props) {
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -408,7 +426,6 @@ function App(props) {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
@@ -529,14 +546,16 @@ function App(props) {
             {rows.map((row, i) => {
               prepareRow(row);
               return (
-                <tr {...row.getRowProps()}>
-                  <td>
+                <tr {...row.getRowProps()}
+                onClick={handleSelectRow.bind(this, row.original.m_nIdRemitenteDestinatario)}
+                className={state.idRemitenteDestinatario === row.original.m_nIdRemitenteDestinatario ? classes.seleccionado : classes.noSeleccionado}>
+                <td>
                     <div>
                       <a
                         href="#Agregar"
                         role="tab"
                         data-toggle="tab"
-                        onClick={() => handleShowModificar(row)}
+                        onClick={() => handleShowModificar(row.original.m_nIdRemitenteDestinatario)}
                         className="btn btn-default btn-sm"
                       >
                         <i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} />
@@ -546,7 +565,7 @@ function App(props) {
                         href="#"
                         className="btn btn-default btn-sm"
                         onClick={() =>
-                          handleEliminar(
+                          handleShowAgregar(
                             row.original.m_nIdRemitenteDestinatario
                           )
                         }
@@ -596,8 +615,6 @@ function App(props) {
       rows,
       prepareRow,
       state,
-      preGlobalFilteredRows,
-      setGlobalFilter,
     } = useTable(
       {
         columns,
@@ -605,7 +622,6 @@ function App(props) {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
@@ -710,19 +726,6 @@ function App(props) {
     });
     console.log(dataEstado);
   }
-
-  const ruta = [
-    {
-      actual: false,
-      nombre: "Catálogos",
-      ruta: "/Catalogos",
-    },
-    {
-      actual: true,
-      nombre: "Remitente Destinatario",
-      ruta: "/RemitenteDestinatarios",
-    },
-  ];
 
   return (
     <div>
@@ -1294,4 +1297,4 @@ function App(props) {
   );
 }
 
-export default App;
+export default RemitenteDestinatario;

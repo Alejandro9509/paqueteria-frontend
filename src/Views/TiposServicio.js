@@ -5,6 +5,7 @@ import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda"
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import * as XLSX from 'xlsx';
 import { useTable, useFilters, useAsyncDebounce, useSortBy } from 'react-table'
+import { makeStyles } from "@material-ui/core/styles";
 
 import Noty from 'noty';
 
@@ -16,7 +17,20 @@ function showSuccess(mensaje){
     timeout:"3000"
   }).show()
 }
+
+const styles = {
+  seleccionado: {
+    backgroundColor: "#688ad9",
+  },
+  noSeleccionado: {
+    backgroundColor: "#FFFFFF",
+  }
+};
+const useStyles = makeStyles(styles);
+
 function TiposServicio() {
+
+  const classes = useStyles();
 
   const [data, setData] = React.useState([])
   const [state, setState] = React.useState({
@@ -131,6 +145,13 @@ function TiposServicio() {
       [event.target.id]: event.target.value
     });
   };
+
+  function handleSelectRow(id, event) {
+    setState({
+      ...state,
+      IdTipoServicio: id
+    });
+  }
 
   const columns2 = React.useMemo(() => [
     {
@@ -251,7 +272,6 @@ function TiposServicio() {
       headerGroups,
       rows,
       prepareRow,
-      state,
     } = useTable(
       {
         columns,
@@ -300,12 +320,14 @@ function TiposServicio() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr {...row.getRowProps()}>
+                  <tr {...row.getRowProps()}
+                  onClick={handleSelectRow.bind(this, row.original.m_nIdTipoServicio)}
+                  className={state.IdTipoServicio === row.original.m_nIdTipoServicio ? classes.seleccionado : classes.noSeleccionado}>
                     <td>
                       <div>
                         <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdTipoServicio))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{color:"#F9A03E"}} /></a>
                         <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdTipoServicio))} className="btn btn-default btn-sm"><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdTipoServicio))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdTipoServicio))}><i className="zmdi zmdi-delete" style={{color:"#F9A03E"}} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {

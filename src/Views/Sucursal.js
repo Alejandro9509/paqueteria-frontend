@@ -5,6 +5,7 @@ import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda"
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import BasicTable from "./BasicTable";
 import { useTable, useFilters, useAsyncDebounce, useSortBy } from 'react-table'
+import { makeStyles } from "@material-ui/core/styles";
 
 import Noty from 'noty';
 
@@ -17,8 +18,19 @@ function showSuccess(mensaje){
   }).show()
 }
 
+const styles = {
+  seleccionado: {
+    backgroundColor: "#688ad9",
+  },
+  noSeleccionado: {
+    backgroundColor: "#FFFFFF",
+  }
+};
+const useStyles = makeStyles(styles);
+
 function Sucursal() {
 
+  const classes = useStyles();
   const [data, setData] = React.useState([])
   const [dataPais, setDataPais] = React.useState([])
   const [dataEstado, setDataEstado] = React.useState([])
@@ -175,6 +187,12 @@ function Sucursal() {
     });
   };
 
+  function handleSelectRow(id, event) {
+    setState({
+      ...state,
+      idSucursal: id
+    });
+  }
   const handleSelectPais = event => {
     setState({
       ...state,
@@ -287,7 +305,6 @@ function Sucursal() {
       headerGroups,
       rows,
       prepareRow,
-      state,
     } = useTable(
       {
         columns,
@@ -329,7 +346,9 @@ function Sucursal() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr {...row.getRowProps()}>
+                  <tr {...row.getRowProps()}
+                  onClick={handleSelectRow.bind(this, row.original.m_nIdSucursal)}
+                  className={state.idSucursal === row.original.m_nIdSucursal ? classes.seleccionado : classes.noSeleccionado}>
                     <td>
                       <div>
                         <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdSucursal))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{color:"#F9A03E"}} /></a>

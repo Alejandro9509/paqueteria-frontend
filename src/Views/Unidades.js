@@ -18,6 +18,8 @@ import $ from "jquery";
 import { remove_array_element } from "../Util/Util";
 
 import { SettingsEthernet } from "@material-ui/icons";
+import { makeStyles } from "@material-ui/core/styles";
+
 
 import Noty from 'noty';
 
@@ -29,6 +31,16 @@ function showSuccess(mensaje){
     timeout:"3000"
   }).show()
 }
+
+const styles = {
+  seleccionado: {
+    backgroundColor: "#688ad9",
+  },
+  noSeleccionado: {
+    backgroundColor: "#FFFFFF",
+  }
+};
+const useStyles = makeStyles(styles);
 
 window.jQuery = window.$ = $;
 const headers = {
@@ -149,7 +161,10 @@ function App(props) {
             {rows.map((row, i) => {
               prepareRow(row);
               return (
-                <tr {...row.getRowProps()}>
+                <tr {...row.getRowProps()}
+                onClick={handleSelectRow.bind(this, row.original.m_nIdUnidad)}
+                className={state.idUnidad === row.original.m_nIdUnidad ? classes.seleccionado : classes.noSeleccionado}>
+
                   <td>
                     <div>
                       <a
@@ -197,6 +212,7 @@ function App(props) {
     );
   }
 
+  const classes = useStyles();
   const [data, setData] = React.useState([]);
 
   const [dataTiposUnidad, setDataTiposUnidad] = React.useState([]);
@@ -608,6 +624,13 @@ function App(props) {
       [event.target.name]: event.target.value,
     });
   };
+
+  function handleSelectRow(id, event) {
+    setState({
+      ...state,
+      idUnidad: id
+    });
+  }
 
   const handleChangeCodigo = (event) => {
     const url =

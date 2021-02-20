@@ -4,6 +4,7 @@ import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import { useTable, useFilters, useSortBy } from 'react-table'
+import { makeStyles } from "@material-ui/core/styles";
 
 import Noty from 'noty';
 
@@ -16,10 +17,20 @@ function showSuccess(mensaje){
   }).show()
 }
 
+const styles = {
+  seleccionado: {
+    backgroundColor: "#688ad9",
+  },
+  noSeleccionado: {
+    backgroundColor: "#FFFFFF",
+  }
+};
+const useStyles = makeStyles(styles);
+
 function TipoCobro() {
 
+  const classes = useStyles();
   const [data, setData] = React.useState([])
-
   const [state, setState] = React.useState({
     idTipoCobro: 0,
     codigo: "",
@@ -120,6 +131,13 @@ function TipoCobro() {
       [event.target.id]: event.target.value
     });
   };
+
+  function handleSelectRow(id, event) {
+    setState({
+      ...state,
+      idTipoCobro: id
+    });
+  }
 
   const columns = React.useMemo(() => [
     {
@@ -240,7 +258,9 @@ function TipoCobro() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr {...row.getRowProps()}>
+                  <tr {...row.getRowProps()}
+                  onClick={handleSelectRow.bind(this, row.original.m_nIdTipoCobro)}
+                  className={state.idTipoCobro === row.original.m_nIdTipoCobro ? classes.seleccionado : classes.noSeleccionado}>
                     <td>
                       <div>
                         <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdTipoCobro))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{color:"#F9A03E"}} /></a>
