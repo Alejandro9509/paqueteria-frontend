@@ -2845,12 +2845,12 @@ function Embarque() {
                                       onChange={(event, newValue) =>
                                         setState({
                                           ...state,
-                                          ciudadDestino: newValue,
+                                          ciudadDestinatario: newValue,
                                         })
                                       }
-                                      value={state.ciudadDestino}
+                                      value={state.ciudadDestinatario}
                                       disabled={state.agregar == "Consultar"}
-                                      id="ciudadDestino"
+                                      id="ciudadDestinatario"
                                       disableClearable
                                       forcePopupIcon={false}
                                       options={dataCiudad}
@@ -2870,7 +2870,7 @@ function Embarque() {
                                               disabled: state.agregar == "Consultar",
                                               endAdornment:
                                                 <InputAdornment position="end">
-                                                  <IconButton padding="0px" style={{ paddingRight: "0px" }} onClick={() => { open(); setState({ ...state, identificadorModal: "ciudadDestino", tipoModal: 1 }) }}>
+                                                  <IconButton padding="0px" style={{ paddingRight: "0px" }} onClick={() => { open(); setState({ ...state, identificadorModal: "ciudadDestinatario", tipoModal: 1 }) }}>
                                                     <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
                                                   </IconButton>
                                                 </InputAdornment>
