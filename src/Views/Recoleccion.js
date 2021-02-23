@@ -734,6 +734,18 @@ function Recoleccion() {
       Name: "Recoger En",
       accessor: "m_sRecogerEnDetalleRecoleccion",
     },
+    {
+      Name: "Operador",
+      accessor: "m_nIdOperador",
+    },
+    {
+      Name: "Unidad",
+      accessor: "m_nIdUnidad",
+    },
+    {
+      Name: "Remolque",
+      accessor: "m_nIdRemolque",
+    },
   ]);
 
   const columnsCP = React.useMemo(() => [
