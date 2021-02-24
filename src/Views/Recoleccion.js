@@ -301,7 +301,7 @@ function Recoleccion() {
   }
 
   function handleShowCancelar() {
-    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetById/${state.idRecoleccion}`;
+    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetCancelarById/${state.idRecoleccion}`;
     var today = new Date();
     axios.get(url, { headers }).then((respuesta) => {
       setState({
@@ -309,20 +309,24 @@ function Recoleccion() {
         folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
         sucursalCancelacion: dataSucursal.find(o => o.m_nIdSucursal == state.idSucursalAgregar).m_sSucursal,
         fechaCancelacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear(),
-        estatusRecoleccion: dataEstatusRecoleccion[0].m_sEstatus
-        //estatusRecoleccion: dataEstatusRecoleccion.find(o => o.m_nIdEstatusRecoleccion == respuesta.data.m_nIdEstatusRecoleccion).m_sEstatus
+        estatusRecoleccion: dataEstatusRecoleccion.find(o => o.m_nIdEstatusRecoleccion == respuesta.data.m_nIdEstatusRecoleccion).m_sEstatus,
+        motivoCancelacion: respuesta.data.m_sMotivoCancelacion
       })
-      console.log(dataEstatusRecoleccion)
-      //console.log(dataEstatusRecoleccion.find(o => o.m_nIdEstatusRecoleccion == respuesta.data.m_nIdEstatusRecoleccion))
+      console.log(respuesta.data)
+      if(respuesta.data.m_nSePuedeCancelar == 0)
+      showSuccess("Recolección no se puede cancelar")
     })
   }
 
-  function handleCancelar() {
-    showSuccess("Todavia no se implementa el servicio, vuelva mas tarde.")
-    //const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Cancelar/${state.idRecoleccion}`;
-    //axios.get(url, { headers }).then((respuesta) => {
-
-    //})
+  const handleCancelar = (e) => {
+    e.preventDefault();
+    var params = {
+      "motivoCancelacion": state.motivoCancelacion,
+    }
+    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Cancelar/${state.idRecoleccion}`;
+    axios.put(url, Object.assign({}, params), { headers }).then((respuesta) => {
+      showSuccess(respuesta.data)
+    })
   }
 
   function addPaquete(index) {
@@ -499,8 +503,6 @@ function Recoleccion() {
         cantidadDePaquetes: respuesta.data.m_parrPaquetes.length,
         cantidadDeSobres: respuesta.data.m_parrSobres.length,
       });
-      console.log("cpRemitente:");
-      console.log(state.codigoPostalRemitente);
     });
   }
 
@@ -731,6 +733,18 @@ function Recoleccion() {
     {
       Name: "Recoger En",
       accessor: "m_sRecogerEnDetalleRecoleccion",
+    },
+    {
+      Name: "Operador",
+      accessor: "m_nIdOperador",
+    },
+    {
+      Name: "Unidad",
+      accessor: "m_nIdUnidad",
+    },
+    {
+      Name: "Remolque",
+      accessor: "m_nIdRemolque",
     },
   ]);
 
@@ -1537,7 +1551,6 @@ function Recoleccion() {
       headerGroups,
       rows,
       prepareRow,
-      state,
     } = useTable(
       {
         columns,
@@ -1587,14 +1600,7 @@ function Recoleccion() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr style={{ backgroundColor: row.original.m_nIdUnidad === select ? "#FCC88F" : "white" }} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
-                    <td>
-                      <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                      </div>
-                    </td>
+                  <tr style={{ backgroundColor: row.original.m_nIdRemitenteDestinatario === select ? "#688ad9" : "white" }} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
                     {row.cells.map(cell => {
                       return (
                         <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
@@ -2022,6 +2028,7 @@ function Recoleccion() {
                             <input
                               type="date"
                               className="form-control"
+                              value={state.fechaInicial}
                               onChange={handleChange}
                               id="fechaInicial"
                             />
@@ -2034,6 +2041,7 @@ function Recoleccion() {
                             <input
                               type="date"
                               className="form-control"
+                              value={state.fechaFinal}
                               onChange={handleChange}
                               id="fechaFinal"
                             />
@@ -2049,6 +2057,7 @@ function Recoleccion() {
                             <select
                               className="form-control"
                               required
+                              value={state.sucursalListado}
                               onChange={handleChange}
                               id="sucursal"
                             >
@@ -2072,8 +2081,9 @@ function Recoleccion() {
                             <select
                               className="form-control"
                               required
+                              value={state.estatusListado}
                               onChange={handleChange}
-                              id="estatus"
+                              id="estatusListado"
                             >
                               <option value="0">Todos</option>
                               {dataEstatusRecoleccion.map((estatus) => (
@@ -2292,10 +2302,10 @@ function Recoleccion() {
                                 <select
                                   className="form-control"
                                   required
-                                  value={state.estatus}
+                                  value={state.estatusRecoleccion}
                                   onChange={handleChange}
                                   disabled={state.agregar == "Consultar"}
-                                  id="estatus"
+                                  id="estatusRecoleccion"
                                 >
                                   {dataEstatusRecoleccion.map((estatus) => (
                                     <option
@@ -3683,7 +3693,6 @@ function Recoleccion() {
                                             unidad: newValue,
                                           })
                                         }
-                                        value={state.unidad}
                                         id="unidad"
                                         disableClearable
                                         forcePopupIcon={false}
@@ -3846,8 +3855,6 @@ function Recoleccion() {
                       </div>
                     </div>
                   </div>
-                  <div id="Importar" className="tab-pane fade  d-none">
-                  </div>
 
                   <div className="form-footer" className="col-md-12">
                     <button
@@ -3870,7 +3877,7 @@ function Recoleccion() {
               </form>
             </div>
 
-            <div id="Cancelar" className="tab-pane fade in active">
+            <div id="Cancelar" className="tab-pane fade">
               <div className="widget-wrap">
                 <div className="widget-content">
                   <div className="row">
