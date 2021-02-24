@@ -158,6 +158,17 @@ function Embarque() {
   });
 
   const history = useHistory()
+
+  function handleSelectCodigoPostal() {
+    //state.ciudadEntrega = state.codigoPostalEntrega.m_nIdCiudad
+    
+ setState.ciudadEntrega= dataCiudad.find(
+      (o) => o.m_nIdCiudad == state.codigoPostalEntrega.m_nIdCiudad
+    )
+
+ 
+
+  }
   
   function handleSelectRemitente() {
     state.RFCRemitente = state.nombreRemitente.m_sRFC
@@ -3056,12 +3067,14 @@ function Embarque() {
                                         <div className="input">
                                           <Autocomplete
                                             freeSolo
+                                            onSelect={handleSelectCodigoPostal()}
                                             onChange={(event, newValue) =>
                                               setState({
                                                 ...state,
                                                 codigoPostalEntrega: newValue,
                                               })
                                             }
+
                                             value={state.codigoPostalEntrega}
                                             disabled={state.agregar == "Consultar"}
                                             id="codigoPostalEntrega"

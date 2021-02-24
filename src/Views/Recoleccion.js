@@ -178,6 +178,8 @@ function Recoleccion() {
 
   const history = useHistory()
 
+ 
+
   function handleSelectRemitente() {
     state.RFCRemitente = state.nombreRemitente.m_sRFC
     //state.domicilioRemitente = state.nombreRemitente.m_sNombreCompletoOperador
@@ -918,6 +920,7 @@ function Recoleccion() {
       setDataCodigoPostal(respuesta.data);
     });
   }
+
 
   function getAllRemitentesDestinatarios() {
     const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/GetListado`;
@@ -3333,6 +3336,7 @@ function Recoleccion() {
                                         <div className="input">
                                           <Autocomplete
                                             freeSolo
+
                                             onChange={(event, newValue) =>
                                               setState({
                                                 ...state,

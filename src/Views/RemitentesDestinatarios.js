@@ -130,6 +130,28 @@ function RemitenteDestinatario(props) {
     });
   }
 
+  function handleSelectCliente() {
+    state.rfc = state.cliente.m_sRFC
+    state.nombre= state.cliente.m_sNombreCorto
+    //state.domicilioRemitente = state.nombreRemitente.m_sNombreCompletoOperador
+    //state.codigoPostalRemitente = state.nombreRemitente.m_sCodigoPostal
+    //state.correoRemitente = state.nombreRemitente.m_sCorreoElectronico
+    //state.telefonoRemitente = state.nombreRemitente.m_sTelefono
+    //state.contactoRemitente = state.nombreRemitente.m_sContacto
+
+  }
+
+
+  function handleSelectCodigoPostal() {
+    
+   
+    state.idPais = state.codigoPostal.m_nIdPais
+    getAllEstados(state.idPais);
+    state.idEstado = state.codigoPostal.m_nIdEstado
+ 
+
+  }
+  
   function handleSelectCP(id, cp) {
     setState({
       ...state,
@@ -140,7 +162,7 @@ function RemitenteDestinatario(props) {
   }
 
   function getAllCodigosPostales() {
-    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/CodigoPostal/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta);
 
@@ -899,12 +921,13 @@ function RemitenteDestinatario(props) {
                                   </div>
                                   <div className="col-sm-6 col-md-2-5 unit">
                                   <label className="label">
-                                      Código Postal
+                                      Cliente
                                     </label>
                                     <div className="input">
                                       <Autocomplete
                                         value={state.cliente}
                                         freeSolo
+                                        onSelect={handleSelectCliente()}
                                         onChange={(event, newValue) =>
                                           setState({
                                             ...state,
@@ -1039,15 +1062,17 @@ function RemitenteDestinatario(props) {
                                     </label>
                                     <div className="input">
                                       <Autocomplete
-                                        value={state.codigoPostalRemitente}
+                                         onSelect={handleSelectCodigoPostal()}
+
+                                        value={state.codigoPostal}
                                         freeSolo
                                         onChange={(event, newValue) =>
                                           setState({
                                             ...state,
-                                            codigoPostalRemitente: newValue,
+                                            codigoPostal: newValue,
                                           })
                                         }
-                                        id="codigoPostalRemitente"
+                                        id="codigoPostal"
                                         disableClearable
                                         forcePopupIcon={false}
                                         options={dataCodigoPostal}
@@ -1082,7 +1107,7 @@ function RemitenteDestinatario(props) {
                                                         setState({
                                                           ...state,
                                                           identificadorModal:
-                                                            "codigoPostalRemitente",
+                                                            "codigoPostal",
                                                           tipoModal: 1,
                                                         });
                                                         open();
