@@ -9,7 +9,7 @@ import { FormControl, Input, InputLabel } from "@material-ui/core";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import $ from "jquery";
-import { useTable, useFilters,useGlobalFilter, useSortBy } from "react-table";
+import { useTable, useFilters, useGlobalFilter, useSortBy } from "react-table";
 import useModal from "react-hooks-use-modal";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
@@ -408,7 +408,6 @@ function App(props) {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
@@ -605,7 +604,6 @@ function App(props) {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 

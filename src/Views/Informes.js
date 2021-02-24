@@ -3,6 +3,9 @@ import React, { useEffect, useState, setData, useMemo, Component } from "react";
 import {
   ButtonBase,
   Checkbox,
+  Dialog,
+  DialogActions,
+  DialogContent,
   FormControl,
   Grid,
   IconButton,
@@ -17,7 +20,7 @@ import {
 
 import DataTable from "react-data-table-component";
 import $ from "jquery";
-import { useTable, useFilters, useSortBy, useGlobalFilter } from "react-table";
+import { useTable, useFilters, useSortBy } from "react-table";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -404,7 +407,6 @@ function Informes(props) {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
@@ -493,7 +495,6 @@ function Informes(props) {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
@@ -582,7 +583,6 @@ function Informes(props) {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
@@ -671,7 +671,6 @@ function Informes(props) {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
@@ -760,7 +759,6 @@ function Informes(props) {
         defaultColumn,
       },
       useFilters,
-      useGlobalFilter,
       useSortBy
     );
 
@@ -850,6 +848,7 @@ function Informes(props) {
   const [state, setState] = React.useState({
     showPopUp: false,
     identificadorModal: "",
+    openDialog: false,
     ruta2: "",
     operador2: "",
     unidad2: "",
@@ -1137,36 +1136,67 @@ function Informes(props) {
   return (
     <div>
 
-<Modal style={{height:"400px"}}>  
+<Dialog open={state.openDialog} onClose={() => setState({...state, openDialog: false})}> 
+        <DialogContent>
+       
       {state.tipoModal == 1 && 
       <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        <div align="right">
+        <button onClick={() => {history.push("/Ciudades")}} className="btn btn-primary primary-btn">Agregar</button>
+
+        </div>
+
         {dataOrigenes.length != 0 ? <TableCiudades select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCiudad} columns={columnsCiudades} data={dataOrigenes} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-       <a onClick={close}>Cerrar</a>
-       <a href="/Ciudades">Agregar</a>
+        <DialogActions>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
+       </DialogActions>
     </div>
       }
       {state.tipoModal == 2 && 
       <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        <div align="right">
+        <button onClick={() => {history.push("/Operadores")}} className="btn btn-primary primary-btn">Agregar</button>
+
+        </div>
+
         {dataOperadores.length != 0 ? <TableOperadores select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdOperador} columns={columnsOperadores} data={dataOperadores} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-       <a onClick={close}>Cerrar</a>
-       <a href="/Operadores">Agregar</a>
+        <DialogActions>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
+       </DialogActions>
     </div>
       }
       {state.tipoModal == 3 && 
       <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        <div align="right">
+        <button onClick={() => {history.push("/TipoUnidad")}} className="btn btn-primary primary-btn">Agregar</button>
+</div>
         {dataTipoUnidad.length != 0 ? <TableTipoUnidad select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdTipoUnidad} columns={columnsTipoUnidades} data={dataTipoUnidad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-       <a onClick={close}>Cerrar</a>
-       <a href="/TipoUnidad">Agregar</a>
+        <DialogActions>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
+       </DialogActions>
     </div>
       }
       {state.tipoModal == 4 && 
-      <div className="row" style={{maxHeight: "400px !important", overflow:"auto",backgroundColor: '#FFFFFF'}} >
-        {dataUnidades.length != 0 ? <TableUnidad select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdUnidad} columns={columnsUnidades} data={dataUnidades} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-       <a onClick={close}>Cerrar</a>
-       <a href="/Unidades">Agregar</a>
+      <div className="row" style={{backgroundColor: '#FFFFFF'}} >
+        <div align="right">
+        <button onClick={() => {history.push("/Unidades")}} className="btn btn-primary primary-btn">Agregar</button>
+
+        </div>
+
+        {dataUnidades.length != 0 ? <TableUnidad object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdUnidad} columns={columnsUnidades} data={dataUnidades} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+        <DialogActions>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
+       </DialogActions>
     </div>
       }
-  </Modal>
+       </DialogContent> 
+      
+  </Dialog>
+
 
 
       <header className="topbar clearfix">
@@ -1555,7 +1585,7 @@ function Informes(props) {
                                                 disableUnderline: true,
                                                  endAdornment: 
                                                 <InputAdornment position="end">
-                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {setState({...state, identificadorModal: "IdOperador", tipoModal: 2}); open();} }>
+                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {setState({...state, identificadorModal: "IdOperador", tipoModal: 2, openDialog: true}); } }>
                                                     <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
                                                  </IconButton> 
                                                 </InputAdornment> 
@@ -1600,7 +1630,7 @@ function Informes(props) {
                                                 disableUnderline: true,
                                                  endAdornment: 
                                                 <InputAdornment position="end">
-                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {open(); setState({...state, identificadorModal: "IdTipoUnidad", tipoModal: 3})} }>
+                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {setState({...state, identificadorModal: "IdTipoUnidad", tipoModal: 3, openDialog: true})} }>
                                                     <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
                                                  </IconButton> 
                                                 </InputAdornment> 
@@ -1663,7 +1693,7 @@ function Informes(props) {
                                                 disableUnderline: true,
                                                  endAdornment: 
                                                 <InputAdornment position="end">
-                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {open(); setState({...state, identificadorModal: "IdUnidad", tipoModal: 4})} }>
+                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => { setState({...state, identificadorModal: "IdUnidad", tipoModal: 4, openDialog: true})} }>
                                                     <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
                                                  </IconButton> 
                                                 </InputAdornment> 
@@ -1725,7 +1755,7 @@ function Informes(props) {
                                                 disableUnderline: true,
                                                  endAdornment: 
                                                 <InputAdornment position="end">
-                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {open(); setState({...state, identificadorModal: "IdCiudadOrigen", tipoModal: 1})} }>
+                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => { setState({...state, identificadorModal: "IdCiudadOrigen", tipoModal: 1, openDialog: true})} }>
                                                     <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
                                                  </IconButton> 
                                                 </InputAdornment> 
@@ -1772,7 +1802,7 @@ function Informes(props) {
                                                 disableUnderline: true,
                                                  endAdornment: 
                                                 <InputAdornment position="end">
-                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => {open(); setState({...state, identificadorModal: "IdCiudadDestino", tipoModal: 1}); getAllViajesOrigenDestino(state.IdCiudadOrigen.m_nIdCiudad, state.IdCiudadDestino.m_nIdCiudad); getAllGuiasFrom()} }>
+                                                  <IconButton padding="0px" style={{paddingRight: "0px"}} onClick={() => { setState({...state, identificadorModal: "IdCiudadDestino", tipoModal: 1, openDialog: true}); getAllViajesOrigenDestino(state.IdCiudadOrigen.m_nIdCiudad, state.IdCiudadDestino.m_nIdCiudad); getAllGuiasFrom()} }>
                                                     <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
                                                  </IconButton> 
                                                 </InputAdornment> 
