@@ -27,6 +27,7 @@ import useModal from 'react-hooks-use-modal';
 import { useHistory } from 'react-router-dom';
 
 import Noty from 'noty';
+import { Dialog, DialogActions, DialogContent } from "@material-ui/core";
 
 function showSuccess(mensaje){
   new Noty({
@@ -75,6 +76,7 @@ function Embarque() {
     DerechoBorrar: 139,
     identificadorModal: "",
     tipoModal: 0,
+    openDialog: false,
     agregar: "Agregar",
     idEmbarque: 0,
     fechaInicial: "",
@@ -1657,158 +1659,94 @@ function Embarque() {
 
   return (
     <div>
-        <Modal style={{ height: "400px" }}>
-        {state.tipoModal == 0 && (
-          <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
-            {dataCodigoPostal.length != 0 ? (
-              <TableCodigoPostal
-                select={
-                  state[state.identificadorModal] &&
-                  state[state.identificadorModal].m_nIdCP
-                }
-                columns={columnsCP}
-                data={dataCodigoPostal}
-                identificadorModal={state.identificadorModal}
-              />
-            ) : (
-              <div>No se encontró ningún registro</div>
-            )}
-            <a onClick={close}>Cerrar</a>
-            <a href="/Ciudades">Agregar</a>
-          </div>
-        )}
-        {state.tipoModal == 1 && (
-          <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
-            {dataCiudad.length != 0 ? (
-              <TableCiudades
-                select={
-                  state[state.identificadorModal] &&
-                  state[state.identificadorModal].m_nIdCiudad
-                }
-                columns={columnsCiudades}
-                data={dataCiudad}
-                identificadorModal={state.identificadorModal}
-              />
-            ) : (
-              <div>No se encontró ningún registro</div>
-            )}
-            <a onClick={close}>Cerrar</a>
-            <a href="/Ciudades">Agregar</a>
-          </div>
-        )}
-        {state.tipoModal == 2 && (
-          <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
-            {dataOperador.length != 0 ? (
-              <TableOperadores
-                select={
-                  state[state.identificadorModal] &&
-                  state[state.identificadorModal].m_nIdOperador
-                }
-                columns={columnsOperadores}
-                data={dataOperador}
-                identificadorModal={state.identificadorModal}
-              />
-            ) : (
-              <div>No se encontró ningún registro</div>
-            )}
-            <a onClick={close}>Cerrar</a>
-            <a href="/Operadores">Agregar</a>
-          </div>
-        )}
-        {state.tipoModal == 3 && (
-          <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
-            {dataTipoUnidad.length != 0 ? (
-              <TableTipoUnidad
-                select={
-                  state[state.identificadorModal] &&
-                  state[state.identificadorModal].m_nIdTipoUnidad
-                }
-                columns={columnsTipoUnidades}
-                data={dataTipoUnidad}
-                identificadorModal={state.identificadorModal}
-              />
-            ) : (
-              <div>No se encontró ningún registro</div>
-            )}
-            <a onClick={close}>Cerrar</a>
-            <a href="/TipoUnidad">Agregar</a>
-          </div>
-        )}
-        {state.tipoModal == 4 && (
-          <div
-            className="row"
-            style={{
-              maxHeight: "400px !important",
-              overflow: "auto",
-              backgroundColor: "#FFFFFF",
-            }}
-          >
-            {dataUnidad.length != 0 ? (
-              <TableUnidad
-                select={
-                  state[state.identificadorModal] &&
-                  state[state.identificadorModal].m_nIdUnidad
-                }
-                columns={columnsUnidades}
-                data={dataUnidad}
-                identificadorModal={state.identificadorModal}
-              />
-            ) : (
-              <div>No se encontró ningún registro</div>
-            )}
-            <a onClick={close}>Cerrar</a>
-            <a href="/Unidades">Agregar</a>
-          </div>
-        )}
-          {state.tipoModal == 5 && 
-      <div className="row" style={{maxHeight: "400px !important", overflow:"auto",backgroundColor: '#FFFFFF'}} >
-        {dataRemitenteDestinatario.length != 0 ? <TableRemitentesDestinatarios select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdRemitenteDestinatario} columns={columnsRemitenteDestinatarios} data={dataRemitenteDestinatario} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
-       <button onClick={() => {history.push("/Unidades")}} className="btn btn-primary primary-btn">Agregar</button>
+
+<Dialog open={state.openDialog} onClose={() => setState({...state, openDialog: false})}> 
+        <DialogContent>
+        {state.tipoModal == 0 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        <div align="right">
+        <button onClick={() => {history.push("/Ciudades")}} className="btn btn-primary primary-btn">Agregar</button>
+
+        </div>
+
+        {dataCodigoPostal.length != 0 ? <TableCodigoPostal object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP} columns={columnsCP} data={dataCodigoPostal} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       
+       <DialogActions style={{justifyContent:"left"}}>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
+       </DialogActions>
+ </div>
+      }
+      {state.tipoModal == 1 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        <div align="right">
+        <button onClick={() => {history.push("/Ciudades")}} className="btn btn-primary primary-btn">Agregar</button>
+
+        </div>
+
+        {dataCiudad.length != 0 ? <TableCiudades object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCiudad} columns={columnsCiudades} data={dataCiudad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+        <DialogActions style={{justifyContent:"left"}}>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
+       </DialogActions>
     </div>
       }
-      </Modal>
+      {state.tipoModal == 2 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        <div align="right">
+        <button onClick={() => {history.push("/Operadores")}} className="btn btn-primary primary-btn">Agregar</button>
 
-      <Modal style={{ height: "400px" }}>
-        {state.tipoModal == 0 &&
-          <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-            {dataCodigoPostal.length != 0 ? <TableCodigoPostal select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP} columns={columnsCP} data={dataCodigoPostal} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
-            <br></br>
-            <br></br>
-            <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
-            <button onClick={() => { history.push("/Ciudades") }} className="btn btn-primary primary-btn">Agregar</button>
-          </div>
-        }
-        {state.tipoModal == 1 &&
-          <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-            {dataCiudad.length != 0 ? <TableCiudades select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCiudad} columns={columnsCiudades} data={dataCiudad} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
-            <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
-            <button onClick={() => { history.push("/Ciudades") }} className="btn btn-primary primary-btn">Agregar</button>
-          </div>
-        }
-        {state.tipoModal == 2 &&
-          <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-            {dataOperador.length != 0 ? <TableOperadores select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdOperador} columns={columnsOperadores} data={dataOperador} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
-            <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
-            <button onClick={() => { history.push("/Operadores") }} className="btn btn-primary primary-btn">Agregar</button>
-          </div>
-        }
-        {state.tipoModal == 3 &&
-          <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-            {dataTipoUnidad.length != 0 ? <TableTipoUnidad select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdTipoUnidad} columns={columnsTipoUnidades} data={dataTipoUnidad} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
-            <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
-            <button onClick={() => { history.push("/TipoUnidad") }} className="btn btn-primary primary-btn">Agregar</button>
-          </div>
-        }
-        {state.tipoModal == 4 &&
-          <div className="row" style={{ maxHeight: "400px !important", overflow: "auto", backgroundColor: '#FFFFFF' }} >
-            {dataUnidad.length != 0 ? <TableUnidad select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdUnidad} columns={columnsUnidades} data={dataUnidad} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
-            <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
-            <button onClick={() => { history.push("/Unidades") }} className="btn btn-primary primary-btn">Agregar</button>
-          </div>
-        }
-      </Modal>
+        </div>
 
+        {dataOperador.length != 0 ? <TableOperadores object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdOperador} columns={columnsOperadores} data={dataOperador} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+        <DialogActions style={{justifyContent:"left"}}>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
+       </DialogActions>
+    </div>
+      }
+      {state.tipoModal == 3 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        <div align="right">
+        <button onClick={() => {history.push("/TipoUnidad")}} className="btn btn-primary primary-btn">Agregar</button>
+</div>
+        {dataTipoUnidad.length != 0 ? <TableTipoUnidad object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdTipoUnidad} columns={columnsTipoUnidades} data={dataTipoUnidad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+        <DialogActions style={{justifyContent:"left"}}>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
+       </DialogActions>
+    </div>
+      }
+      {state.tipoModal == 4 && 
+      <div className="row" style={{backgroundColor: '#FFFFFF'}} >
+        <div align="right">
+        <button onClick={() => {history.push("/Unidades")}} className="btn btn-primary primary-btn">Agregar</button>
+
+        </div>
+
+        {dataUnidad.length != 0 ? <TableUnidad object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdUnidad} columns={columnsUnidades} data={dataUnidad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+        <DialogActions style={{justifyContent:"left"}}>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
+       </DialogActions>
+    </div>
+      }
+       {state.tipoModal == 5 && 
+      <div className="row" style={{backgroundColor: '#FFFFFF'}} >
+        <div align="right">
+        <button onClick={() => {history.push("/Unidades")}} className="btn btn-primary primary-btn">Agregar</button>
+
+        </div>
+       
+        {dataRemitenteDestinatario.length != 0 ? <TableRemitentesDestinatarios object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdRemitenteDestinatario} columns={columnsRemitenteDestinatarios} data={dataRemitenteDestinatario} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+        <DialogActions style={{justifyContent:"left"}}>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
+       </DialogActions>
+    </div>
+      }</DialogContent> 
+      
+  </Dialog>
 
       <header className="topbar clearfix">
         <Cabecera />
@@ -2329,8 +2267,8 @@ function Embarque() {
                                                           identificadorModal:
                                                             "nombreRemitente",
                                                           tipoModal: 5,
+                                                        openDialog: true
                                                         });
-                                                        open();
                                                       }}
                                                     >
                                                       <PageviewIcon
@@ -2443,8 +2381,8 @@ function Embarque() {
                                                           identificadorModal:
                                                             "codigoPostalRemitente",
                                                           tipoModal: 0,
+                                                          openDialog: true
                                                         });
-                                                        open();
                                                       }}
                                                     >
                                                       <PageviewIcon
@@ -2503,7 +2441,7 @@ function Embarque() {
                                                 disabled: state.agregar == "Consultar",
                                                 endAdornment:
                                                   <InputAdornment position="end">
-                                                    <IconButton padding="0px" style={{ paddingRight: "0px" }} onClick={() => { open(); setState({ ...state, identificadorModal: "ciudadRemitente", tipoModal: 1 }) }}>
+                                                    <IconButton padding="0px" style={{ paddingRight: "0px" }} onClick={() => {  setState({ ...state, identificadorModal: "ciudadRemitente", tipoModal: 1, openDialog: true }) }}>
                                                       <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
                                                     </IconButton>
                                                   </InputAdornment>
@@ -2611,12 +2549,12 @@ function Embarque() {
                                                         paddingRight: "0px",
                                                       }}
                                                       onClick={() => {
-                                                        open();
                                                         setState({
                                                           ...state,
                                                           identificadorModal:
                                                             "ciudadOrigen",
                                                           tipoModal: 1,
+                                                          openDialog: true
                                                         });
                                                       }}
                                                     >
@@ -2705,8 +2643,8 @@ function Embarque() {
                                                           identificadorModal:
                                                             "nombreDestinatario",
                                                           tipoModal: 5,
+                                                          openDialog: true
                                                         });
-                                                        open();
                                                       }}
                                                     >
                                                       <PageviewIcon
@@ -2814,8 +2752,8 @@ function Embarque() {
                                                         identificadorModal:
                                                           "codigoPostalDestinatario",
                                                         tipoModal: 0,
+                                                        openDialog: true
                                                       });
-                                                      open();
                                                     }}
                                                   >
                                                     <PageviewIcon
@@ -2870,7 +2808,7 @@ function Embarque() {
                                               disabled: state.agregar == "Consultar",
                                               endAdornment:
                                                 <InputAdornment position="end">
-                                                  <IconButton padding="0px" style={{ paddingRight: "0px" }} onClick={() => { open(); setState({ ...state, identificadorModal: "ciudadDestinatario", tipoModal: 1 }) }}>
+                                                  <IconButton padding="0px" style={{ paddingRight: "0px" }} onClick={() => { setState({ ...state, identificadorModal: "ciudadDestino", tipoModal: 1, openDialog: true }) }}>
                                                     <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
                                                   </IconButton>
                                                 </InputAdornment>
@@ -2986,8 +2924,9 @@ function Embarque() {
                                                         identificadorModal:
                                                           "ciudadDestino",
                                                         tipoModal: 1,
+                                                        openDialog: true
+
                                                       });
-                                                      open();
                                                     }}
                                                   >
                                                     <PageviewIcon
@@ -3100,8 +3039,8 @@ function Embarque() {
                                                               identificadorModal:
                                                                 "codigoPostalEntrega",
                                                               tipoModal: 0,
+                                                              openDialog: true
                                                             });
-                                                            open();
                                                           }}
                                                         >
                                                           <PageviewIcon
@@ -3156,7 +3095,7 @@ function Embarque() {
                                                     disabled: state.agregar == "Consultar",
                                                     endAdornment:
                                                       <InputAdornment position="end">
-                                                        <IconButton padding="0px" style={{ paddingRight: "0px" }} onClick={() => { open(); setState({ ...state, identificadorModal: "ciudadEntrega", tipoModal: 1 }) }}>
+                                                        <IconButton padding="0px" style={{ paddingRight: "0px" }} onClick={() => {  setState({ ...state, identificadorModal: "ciudadEntrega", tipoModal: 1, openDialog: true }) }}>
                                                           <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
                                                         </IconButton>
                                                       </InputAdornment>
@@ -3309,8 +3248,8 @@ function Embarque() {
                                                           identificadorModal:
                                                             "idOperador",
                                                           tipoModal: 2,
+                                                          openDialog: true
                                                         });
-                                                        open();
                                                       }}
                                                     >
                                                       <PageviewIcon
@@ -3381,12 +3320,12 @@ function Embarque() {
                                                         paddingRight: "0px",
                                                       }}
                                                       onClick={() => {
-                                                        open();
                                                         setState({
                                                           ...state,
                                                           identificadorModal:
                                                             "tipoUnidad",
                                                           tipoModal: 3,
+                                                          openDialog: true
                                                         });
                                                       }}
                                                     >
@@ -3459,12 +3398,12 @@ function Embarque() {
                                                         paddingRight: "0px",
                                                       }}
                                                       onClick={() => {
-                                                        open();
                                                         setState({
                                                           ...state,
                                                           identificadorModal:
                                                             "idUnidad",
                                                           tipoModal: 4,
+                                                          openDialog: true
                                                         });
                                                       }}
                                                     >

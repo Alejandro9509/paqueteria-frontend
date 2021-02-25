@@ -132,7 +132,7 @@ function GrupoCliente() {
       console.log(respuesta.data)
       setState({
         ...state,
-        agregar: "Consaltar",
+        agregar: "Consultar",
         showPopUp: true,
         idGrupoCliente: id,
         codigoGrupo: respuesta.data.m_sCodigo,
@@ -350,12 +350,12 @@ function GrupoCliente() {
           </div>
 
           <ul className="nav navStatica nav-tabs">
-            <li className="active">
-              <a data-toggle="tab" href="#Listado">
+            <li className={(state.agregar != "Modificar" && state.agregar != "Consultar" ) ? "active": ""} aria-expanded={(state.agregar != "Modificar" && state.agregar != "Consultar" ) ? "true": "false"} >
+              <a data-toggle="tab" href="#Listado" onClick={() => setState({...state, agregar: "Agregar", showPopUp:false})}>
                 <i className="fa fa-list" /> Listado
             </a>
             </li>
-            <li>
+            <li className={(state.agregar == "Modificar" || state.agregar == "Consultar")  ? "active": ""} aria-expanded={(state.agregar == "Modificar" || state.agregar == "Consultar")  ? "true": "false"}>
               <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
                 <i className="fa fa-plus-circle" /> {state.agregar}
               </a>
