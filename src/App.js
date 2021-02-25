@@ -38,7 +38,7 @@ render(){
               {configuracionRoutes.map((r, key) => {
                   return (<Route exact key={key} path={r.path} component={r.component} />)
               })}
-            <Redirect from="/" to="/configuracion"/>
+            <Redirect from="/" to="/Configuracion"/>
           </Switch>
         ) : (
           <div className="app">

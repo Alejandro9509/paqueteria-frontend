@@ -31,6 +31,9 @@ import { remove_array_element } from "../Util/Util";
 import { useHistory } from 'react-router-dom';
 
 import Noty from 'noty';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
+
+let timer; 
 
 function showSuccess(mensaje) {
   new Noty({
@@ -80,7 +83,9 @@ function Recoleccion() {
   const [dataTipoUnidad, setDataTipoUnidad] = React.useState([]);
   const [dataUnidad, setDataUnidad] = React.useState([]);
   const [state, setState] = React.useState({
-    shouldOpenList: false,
+    shouldOpenList: false, 
+    showPopUp: false,
+    showDialog: false,
     identificadorModal: "",
     tipoModal: 0,
     DerechoBorrar: 133,
@@ -291,13 +296,25 @@ function Recoleccion() {
     }
   };
 
-  function handleSelectCP(id, cp) {
-    setState({
-      ...state,
-      [state.identificadorModal]: id,
-    });
-    console.log(id);
-    console.log(state.identificadorModal);
+  function handleSelectCP(id, dobleClick, e) {
+    clearTimeout(timer);
+        if (e.detail === 1) {
+            timer = setTimeout(() =>{
+              setState({
+                ...state,
+                [state.identificadorModal]: id,
+                openDialog: true
+              })
+            }, 200)
+        } else if (e.detail === 2) {
+          setState({
+            ...state,
+            [state.identificadorModal]: id,
+            openDialog: false
+          });
+        }
+    
+    console.log(dobleClick);
   }
 
   function handleShowCancelar() {
@@ -1133,7 +1150,7 @@ function Recoleccion() {
     );
   }
 
-  function TableCodigoPostal({ columns, data, select }) {
+  function TableCodigoPostal({ columns, data, select, object }) {
     const defaultColumn = React.useMemo(
       () => ({
         // Default Filter UI
@@ -1199,7 +1216,7 @@ function Recoleccion() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr style={{ backgroundColor: row.original.m_nIdCP === select ? "orange" : "white" }}  {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)} onDoubleClick={close}>
+                  <tr style={{ backgroundColor: row.original.m_nIdCP === select ? "orange" : "white" }}  {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original, false)} onDoubleClick={handleSelectCP.bind(this, row.original, true)}>
                     {row.cells.map(cell => {
                       return (
                         <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
@@ -1280,7 +1297,7 @@ function Recoleccion() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr style={{ backgroundColor: row.original.m_nIdCiudad === select ? "orange" : "white" }} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                  <tr style={{ backgroundColor: row.original.m_nIdCiudad === select ? "orange" : "white" }} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original,false)} onDoubleClick={handleSelectCP.bind(this, row.original, true)}>
                     {row.cells.map(cell => {
                       return (
                         <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
@@ -1361,7 +1378,7 @@ function Recoleccion() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr style={{ backgroundColor: row.original.m_nIdOperador === select ? "orange" : "white" }} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                  <tr style={{ backgroundColor: row.original.m_nIdOperador === select ? "orange" : "white" }} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original, false)} onDoubleClick={handleSelectCP.bind(this, row.original, true)}>
                     {row.cells.map(cell => {
                       return (
                         <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
@@ -1439,7 +1456,7 @@ function Recoleccion() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr style={{ backgroundColor: row.original.m_nIdTipoUnidad === select ? "orange" : "white" }} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                  <tr style={{ backgroundColor: row.original.m_nIdTipoUnidad === select ? "orange" : "white" }} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original, false)} onDoubleClick={handleSelectCP.bind(this, row.original, true)}>
                     {row.cells.map(cell => {
                       return (
                         <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
@@ -1520,7 +1537,7 @@ function Recoleccion() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr style={{ backgroundColor: row.original.m_nIdUnidad === select ? "orange" : "white" }} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                  <tr style={{ backgroundColor: row.original.m_nIdUnidad === select ? "orange" : "white" }} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.origina, false)} onDoubleClick={handleSelectCP.bind(this, row.original, true)}>
                     {row.cells.map(cell => {
                       return (
                         <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
@@ -1600,7 +1617,14 @@ function Recoleccion() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr style={{ backgroundColor: row.original.m_nIdRemitenteDestinatario === select ? "#688ad9" : "white" }} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                  <tr style={{backgroundColor: row.original.m_nIdRemitenteDestinatario === select ? "#FCC88F" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original, false)} onDoubleClick={handleSelectCP.bind(this, row.original, true)}>
+                    <td>
+                      <div>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                      </div>
+                    </td>
                     {row.cells.map(cell => {
                       return (
                         <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
@@ -1914,52 +1938,110 @@ function Recoleccion() {
 
   return (
     <div>
-      <Modal style={{ height: "400px" }}>
-        {state.tipoModal == 0 &&
-          <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-            {dataCodigoPostal.length != 0 ? <TableCodigoPostal select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP} columns={columnsCP} data={dataCodigoPostal} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
-            <br></br>
-            <br></br>
-            <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
-            <button onClick={() => { history.push("/Ciudades") }} className="btn btn-primary primary-btn">Agregar</button>
-          </div>
-        }
-        {state.tipoModal == 1 &&
-          <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-            {dataCiudad.length != 0 ? <TableCiudades select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCiudad} columns={columnsCiudades} data={dataCiudad} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
-            <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
-            <button onClick={() => { history.push("/Ciudades") }} className="btn btn-primary primary-btn">Agregar</button>
-          </div>
-        }
-        {state.tipoModal == 2 &&
-          <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-            {dataOperador.length != 0 ? <TableOperadores select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdOperador} columns={columnsOperadores} data={dataOperador} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
-            <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
-            <button onClick={() => { history.push("/Operadores") }} className="btn btn-primary primary-btn">Agregar</button>
-          </div>
-        }
-        {state.tipoModal == 3 &&
-          <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-            {dataTipoUnidad.length != 0 ? <TableTipoUnidad select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdTipoUnidad} columns={columnsTipoUnidades} data={dataTipoUnidad} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
-            <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
-            <button onClick={() => { history.push("/TipoUnidad") }} className="btn btn-primary primary-btn">Agregar</button>
-          </div>
-        }
-        {state.tipoModal == 4 &&
-          <div className="row" style={{ maxHeight: "400px !important", overflow: "auto", backgroundColor: '#FFFFFF' }} >
-            {dataUnidad.length != 0 ? <TableUnidad select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdUnidad} columns={columnsUnidades} data={dataUnidad} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
-            <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
-            <button onClick={() => { history.push("/Unidades") }} className="btn btn-primary primary-btn">Agregar</button>
-          </div>
-        }
-        {state.tipoModal == 5 &&
-          <div className="row" style={{ maxHeight: "400px !important", overflow: "auto", backgroundColor: '#FFFFFF' }} >
-            {dataRemitenteDestinatario.length != 0 ? <TableRemitentesDestinatarios select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdRemitenteDestinatario} columns={columnsRemitenteDestinatarios} data={dataRemitenteDestinatario} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
-            <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
-            <button onClick={() => { history.push("/Unidades") }} className="btn btn-primary primary-btn">Agregar</button>
-          </div>
-        }
-      </Modal>
+      <Dialog open={state.openDialog} onClose={() => setState({...state, openDialog: false})}> 
+        <DialogContent>
+        {state.tipoModal == 0 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        <div align="right">
+        <button onClick={() => {history.push("/Ciudades")}} className="btn btn-primary primary-btn">Agregar</button>
+
+        </div>
+
+        {dataCodigoPostal.length != 0 ? <TableCodigoPostal object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP} columns={columnsCP} data={dataCodigoPostal} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+        
+       <DialogActions style={{justifyContent:"left"}}>
+       
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
+       
+       </DialogActions>
+ </div>
+      }
+      {state.tipoModal == 1 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        <div align="right">
+        <button onClick={() => {history.push("/Ciudades")}} className="btn btn-primary primary-btn">Agregar</button>
+
+        </div>
+
+        {dataCiudad.length != 0 ? <TableCiudades object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCiudad} columns={columnsCiudades} data={dataCiudad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+        
+          
+        <DialogActions style={{justifyContent:"left"}}>
+        
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
+       
+       </DialogActions>
+    </div>
+      }
+      {state.tipoModal == 2 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        <div align="right">
+        <button onClick={() => {history.push("/Operadores")}} className="btn btn-primary primary-btn">Agregar</button>
+
+        </div>
+
+        {dataOperador.length != 0 ? <TableOperadores object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdOperador} columns={columnsOperadores} data={dataOperador} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+        
+        <DialogActions style={{justifyContent:"left"}}>
+       
+        <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
+       
+       </DialogActions>
+    </div>
+      }
+      {state.tipoModal == 3 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        <div align="right">
+        <button onClick={() => {history.push("/TipoUnidad")}} className="btn btn-primary primary-btn">Agregar</button>
+</div>
+        {dataTipoUnidad.length != 0 ? <TableTipoUnidad object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdTipoUnidad} columns={columnsTipoUnidades} data={dataTipoUnidad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+        
+        <DialogActions style={{justifyContent:"left"}}>
+        
+        <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
+       
+       </DialogActions>
+    </div>
+      }
+      {state.tipoModal == 4 && 
+      <div className="row" style={{backgroundColor: '#FFFFFF'}} >
+        <div align="right">
+        <button onClick={() => {history.push("/Unidades")}} className="btn btn-primary primary-btn">Agregar</button>
+
+        </div>
+
+        {dataUnidad.length != 0 ? <TableUnidad object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdUnidad} columns={columnsUnidades} data={dataUnidad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+        
+        <DialogActions style={{justifyContent:"left"}}>
+          <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
+       
+       </DialogActions>
+    </div>
+      }
+       {state.tipoModal == 5 && 
+      <div className="row" style={{backgroundColor: '#FFFFFF'}} >
+        <div align="right">
+        <button onClick={() => {history.push("/Unidades")}} className="btn btn-primary primary-btn">Agregar</button>
+
+        </div>
+       
+        {dataRemitenteDestinatario.length != 0 ? <TableRemitentesDestinatarios object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdRemitenteDestinatario} columns={columnsRemitenteDestinatarios} data={dataRemitenteDestinatario} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+        
+        <DialogActions style={{justifyContent:"left"}}>
+        
+        <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
+       
+       </DialogActions>
+    </div>
+      }</DialogContent> 
+      
+  </Dialog>
 
       <header className="topbar clearfix">
         <Cabecera />
@@ -2455,8 +2537,8 @@ function Recoleccion() {
                                                           identificadorModal:
                                                             "nombreRemitente",
                                                           tipoModal: 5,
+                                                          openDialog: true
                                                         });
-                                                        open();
                                                       }}
                                                     >
                                                       <PageviewIcon
@@ -2567,8 +2649,8 @@ function Recoleccion() {
                                                           identificadorModal:
                                                             "codigoPostalRemitente",
                                                           tipoModal: 0,
+                                                          openDialog: true
                                                         });
-                                                        open();
                                                       }}
                                                     >
                                                       <PageviewIcon
@@ -2712,12 +2794,12 @@ function Recoleccion() {
                                                         paddingRight: "0px",
                                                       }}
                                                       onClick={() => {
-                                                        open();
                                                         setState({
                                                           ...state,
                                                           identificadorModal:
                                                             "origenRemitente",
                                                           tipoModal: 1,
+                                                          openDialog: true
                                                         });
                                                       }}
                                                     >
@@ -2821,8 +2903,8 @@ function Recoleccion() {
                                                         identificadorModal:
                                                           "nombreDestinatario",
                                                         tipoModal: 5,
+                                                        openDialog: true
                                                       });
-                                                      open();
                                                     }}
                                                   >
                                                     <PageviewIcon
@@ -2834,6 +2916,16 @@ function Recoleccion() {
                                                         paddingBlockEnd: 0,
                                                         paddingLeft: 0,
                                                         paddingBlock: 0,
+                                                        paddingRight: "0px",
+                                                      }}
+                                                      onClick={() => {
+                                                        setState({
+                                                          ...state,
+                                                          identificadorModal:
+                                                            "nombreDestinatario",
+                                                          tipoModal: 5,
+                                                          openDialog: true
+                                                        });
                                                       }}
                                                     />
                                                   </IconButton>
@@ -2925,8 +3017,8 @@ function Recoleccion() {
                                                         identificadorModal:
                                                           "codigoPostalDestinatario",
                                                         tipoModal: 0,
+                                                        openDialog: true
                                                       });
-                                                      open();
                                                     }}
                                                   >
                                                     <PageviewIcon
@@ -3068,8 +3160,8 @@ function Recoleccion() {
                                                         identificadorModal:
                                                           "destinoDestinatario",
                                                         tipoModal: 1,
+                                                        openDialog: true
                                                       });
-                                                      open();
                                                     }}
                                                   >
                                                     <PageviewIcon
@@ -3197,8 +3289,8 @@ function Recoleccion() {
                                                               identificadorModal:
                                                                 "codigoPostalRecoleccion",
                                                               tipoModal: 0,
+                                                              openDialog: true
                                                             });
-                                                            open();
                                                           }}
                                                         >
                                                           <PageviewIcon
@@ -3387,8 +3479,8 @@ function Recoleccion() {
                                                               identificadorModal:
                                                                 "codigoPostalEntrega",
                                                               tipoModal: 0,
+                                                              openDialog: true
                                                             });
-                                                            open();
                                                           }}
                                                         >
                                                           <PageviewIcon
@@ -3578,8 +3670,8 @@ function Recoleccion() {
                                                           identificadorModal:
                                                             "operador",
                                                           tipoModal: 2,
+                                                          openDialog: true
                                                         });
-                                                        open();
                                                       }}
                                                     >
                                                       <PageviewIcon
@@ -3651,12 +3743,12 @@ function Recoleccion() {
                                                         paddingRight: "0px",
                                                       }}
                                                       onClick={() => {
-                                                        open();
                                                         setState({
                                                           ...state,
                                                           identificadorModal:
                                                             "tipoUnidad",
                                                           tipoModal: 3,
+                                                          openDialog: true
                                                         });
                                                       }}
                                                     >
@@ -3727,12 +3819,12 @@ function Recoleccion() {
                                                         paddingRight: "0px",
                                                       }}
                                                       onClick={() => {
-                                                        open();
                                                         setState({
                                                           ...state,
                                                           identificadorModal:
                                                             "unidad",
                                                           tipoModal: 4,
+                                                          openDialog: true
                                                         });
                                                       }}
                                                     >
