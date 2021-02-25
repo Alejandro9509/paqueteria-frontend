@@ -932,7 +932,7 @@ function RemitenteDestinatario(props) {
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
-                                                style: { height: 21 },
+                                                style: { height: "33px" },
                                                 type: "search",
                                                 disableUnderline: true,
                                                 endAdornment: (
@@ -1068,7 +1068,7 @@ function RemitenteDestinatario(props) {
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
-                                                style: { height: 21 },
+                                                style: { height: "33px" },
                                                 type: "search",
                                                 disableUnderline: true,
                                                 endAdornment: (

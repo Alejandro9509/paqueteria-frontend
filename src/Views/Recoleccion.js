@@ -2521,7 +2521,7 @@ function Recoleccion() {
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
-                                                style: { height: 21 },
+                                                style: { height: "33px" },
                                                 type: "search",
                                                 disableUnderline: true,
                                                 endAdornment: (
@@ -2632,7 +2632,7 @@ function Recoleccion() {
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
-                                                style: { height: 21 },
+                                                style: { height: "33px" },
                                                 type: "search",
                                                 disableUnderline: true,
                                                 disabled: state.agregar == "Consultar",
@@ -2781,7 +2781,7 @@ function Recoleccion() {
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
-                                                style: { height: 21 },
+                                                style: { height: "33px" },
                                                 type: "search",
                                                 value: state.origenRemitente,
                                                 disabled: state.agregar == "Consultar",
@@ -2887,7 +2887,7 @@ function Recoleccion() {
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
-                                              style: { height: 21 },
+                                              style: { height: "33px" },
                                               type: "search",
                                               disableUnderline: true,
                                               endAdornment: (
@@ -3000,7 +3000,7 @@ function Recoleccion() {
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
-                                              style: { height: 21 },
+                                              style: { height: "33px" },
                                               type: "search",
                                               disableUnderline: true,
                                               disabled: state.agregar == "Consultar",
@@ -3142,7 +3142,7 @@ function Recoleccion() {
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
-                                              style: { height: 21 },
+                                              style: { height: "33px" },
                                               type: "search",
                                               value: state.origenRemitente,
                                               disabled: state.agregar == "Consultar",
@@ -3272,7 +3272,7 @@ function Recoleccion() {
                                                   {...params}
                                                   InputProps={{
                                                     ...params.InputProps,
-                                                    style: { height: 21 },
+                                                    style: { height: "33px" },
                                                     type: "search",
                                                     disabled: state.agregar == "Consultar",
                                                     disableUnderline: true,
@@ -3462,7 +3462,7 @@ function Recoleccion() {
                                                   {...params}
                                                   InputProps={{
                                                     ...params.InputProps,
-                                                    style: { height: 21 },
+                                                    style: { height: "33px" },
                                                     type: "search",
                                                     disabled: state.agregar == "Consultar",
                                                     disableUnderline: true,
@@ -3653,7 +3653,7 @@ function Recoleccion() {
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
-                                                style: { height: 21 },
+                                                style: { height: "33px" },
                                                 type: "search",
                                                 disabled: state.agregar == "Consultar",
                                                 disableUnderline: true,
@@ -3731,7 +3731,7 @@ function Recoleccion() {
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
-                                                style: { height: 21 },
+                                                style: { height: "33px" },
                                                 type: "search",
                                                 disabled: state.agregar == "Consultar",
                                                 disableUnderline: true,
@@ -3807,7 +3807,7 @@ function Recoleccion() {
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
-                                                style: { height: 21 },
+                                                style: { height: "33px" },
                                                 type: "search",
                                                 disabled: state.agregar == "Consultar",
                                                 disableUnderline: true,
