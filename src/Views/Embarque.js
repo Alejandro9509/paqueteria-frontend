@@ -1674,7 +1674,7 @@ function Embarque() {
 
         {dataCodigoPostal.length != 0 ? <TableCodigoPostal object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP} columns={columnsCP} data={dataCodigoPostal} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
        
-       <DialogActions>
+       <DialogActions style={{justifyContent:"left"}}>
        <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
        <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
        </DialogActions>
@@ -1688,7 +1688,7 @@ function Embarque() {
         </div>
 
         {dataCiudad.length != 0 ? <TableCiudades object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCiudad} columns={columnsCiudades} data={dataCiudad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-        <DialogActions>
+        <DialogActions style={{justifyContent:"left"}}>
        <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
        <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
        </DialogActions>
@@ -1702,7 +1702,7 @@ function Embarque() {
         </div>
 
         {dataOperador.length != 0 ? <TableOperadores object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdOperador} columns={columnsOperadores} data={dataOperador} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-        <DialogActions>
+        <DialogActions style={{justifyContent:"left"}}>
        <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
        <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
        </DialogActions>
@@ -1714,7 +1714,7 @@ function Embarque() {
         <button onClick={() => {history.push("/TipoUnidad")}} className="btn btn-primary primary-btn">Agregar</button>
 </div>
         {dataTipoUnidad.length != 0 ? <TableTipoUnidad object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdTipoUnidad} columns={columnsTipoUnidades} data={dataTipoUnidad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-        <DialogActions>
+        <DialogActions style={{justifyContent:"left"}}>
        <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
        <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
        </DialogActions>
@@ -1728,7 +1728,7 @@ function Embarque() {
         </div>
 
         {dataUnidad.length != 0 ? <TableUnidad object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdUnidad} columns={columnsUnidades} data={dataUnidad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-        <DialogActions>
+        <DialogActions style={{justifyContent:"left"}}>
        <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
        <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
        </DialogActions>
@@ -1742,7 +1742,7 @@ function Embarque() {
         </div>
        
         {dataRemitenteDestinatario.length != 0 ? <TableRemitentesDestinatarios object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdRemitenteDestinatario} columns={columnsRemitenteDestinatarios} data={dataRemitenteDestinatario} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-        <DialogActions>
+        <DialogActions style={{justifyContent:"left"}}>
        <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
        <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
        </DialogActions>

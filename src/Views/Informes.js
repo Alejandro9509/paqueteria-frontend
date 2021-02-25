@@ -66,7 +66,7 @@ const headers = {
   "Content-Type": "application/json",
 };
 
-function Informes(props) {
+function Informes({history}) {
 
   const classes = useStyles();
   const [stepActive, setStepActive] = React.useState(1);
@@ -1147,7 +1147,7 @@ function Informes(props) {
         </div>
 
         {dataOrigenes.length != 0 ? <TableCiudades select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCiudad} columns={columnsCiudades} data={dataOrigenes} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-        <DialogActions>
+        <DialogActions style={{justifyContent:"left"}}>
        <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
        <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
        </DialogActions>
@@ -1161,7 +1161,7 @@ function Informes(props) {
         </div>
 
         {dataOperadores.length != 0 ? <TableOperadores select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdOperador} columns={columnsOperadores} data={dataOperadores} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-        <DialogActions>
+        <DialogActions style={{justifyContent:"left"}}>
        <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
        <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
        </DialogActions>
@@ -1173,7 +1173,7 @@ function Informes(props) {
         <button onClick={() => {history.push("/TipoUnidad")}} className="btn btn-primary primary-btn">Agregar</button>
 </div>
         {dataTipoUnidad.length != 0 ? <TableTipoUnidad select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdTipoUnidad} columns={columnsTipoUnidades} data={dataTipoUnidad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-        <DialogActions>
+        <DialogActions style={{justifyContent:"left"}}>
        <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
        <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
        </DialogActions>
@@ -1187,7 +1187,7 @@ function Informes(props) {
         </div>
 
         {dataUnidades.length != 0 ? <TableUnidad object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdUnidad} columns={columnsUnidades} data={dataUnidades} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-        <DialogActions>
+        <DialogActions style={{justifyContent:"left"}}>
        <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
        <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
        </DialogActions>
