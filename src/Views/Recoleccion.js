@@ -307,7 +307,7 @@ function Recoleccion() {
       setState({
         ...state,
         folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
-        sucursalCancelacion: dataSucursal.find(o => o.m_nIdSucursal == state.idSucursalAgregar).m_sSucursal,
+        sucursalCancelacion: dataSucursal.find(o => o.m_nIdSucursal == respuesta.data.m_nIdSucursal).m_sSucursal,
         fechaCancelacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear(),
         estatusRecoleccion: dataEstatusRecoleccion.find(o => o.m_nIdEstatusRecoleccion == respuesta.data.m_nIdEstatusRecoleccion).m_sEstatus,
         motivoCancelacion: respuesta.data.m_sMotivoCancelacion
@@ -3915,7 +3915,7 @@ function Recoleccion() {
                               </div>
 
                               <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                <label className="label">Sucursal</label>
+                                <label className="label">Fecha</label>
                                 <div className="input">
                                   <input
                                     onChange={handleChange}

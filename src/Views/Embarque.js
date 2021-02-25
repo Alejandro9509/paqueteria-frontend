@@ -28,12 +28,12 @@ import { useHistory } from 'react-router-dom';
 
 import Noty from 'noty';
 
-function showSuccess(mensaje){
+function showSuccess(mensaje) {
   new Noty({
-    type:"information",
-    layout:"topCenter",
+    type: "information",
+    layout: "topCenter",
     text: mensaje,
-    timeout:"3000"
+    timeout: "3000"
   }).show()
 }
 
@@ -51,6 +51,10 @@ const styles = {
   },
   noSeleccionado: {
     backgroundColor: "#FFFFFF",
+  },
+  disabled: {
+    pointerEvents: "none",
+    cursor: "default",
   }
 };
 const useStyles = makeStyles(styles);
@@ -149,6 +153,10 @@ function Embarque() {
         m_sDescripcion: ""
       }
     ],
+    motivoCancelacion: "",
+    fechaCancelacion: "",
+    sucursalCancelacion: "",
+    usuario: localStorage.getItem("Usuario"),
     height: window.innerHeight
   })
   const [fileUploaded, setFileUploaded] = React.useState([])
@@ -158,7 +166,7 @@ function Embarque() {
   });
 
   const history = useHistory()
-  
+
   function handleSelectRemitente() {
     state.RFCRemitente = state.nombreRemitente.m_sRFC
     //state.domicilioRemitente = state.nombreRemitente.m_sNombreCompletoOperador
@@ -270,6 +278,7 @@ function Embarque() {
     console.log(id);
     console.log(state.identificadorModal);
   }
+
   function addPaquete() {
     const { paquetes } = state;
     paquetes.push({
@@ -354,6 +363,35 @@ function Embarque() {
     }).catch(err => {
       showSuccess(err)
     });
+  }
+
+  const handleCancelar = (e) => {
+    e.preventDefault();
+    var params = {
+      "motivoCancelacion": state.motivoCancelacion,
+    }
+    const url = `${process.env.REACT_APP_API_URL}/Embarques/Cancelar/${state.idEmbarque}`;
+    axios.put(url, Object.assign({}, params), { headers }).then((respuesta) => {
+      console.log(respuesta.data)
+    })
+  }
+
+  function handleShowCancelar() {
+    const url = `${process.env.REACT_APP_API_URL}/Embarques/GetCancelarById/${state.idEmbarque}`;
+    var today = new Date();
+    axios.get(url, { headers }).then((respuesta) => {
+      console.log(respuesta.data.m_nSePuedeCancelar)
+      setState({
+        ...state,
+        folioRecoleccion: respuesta.data.m_nFolioEmbarque,
+        sucursalCancelacion: dataSucursal.find(o => o.m_nIdSucursal == respuesta.data.IdSucursal).m_sSucursal,
+        fechaCancelacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear(),
+        estatusEmbarque: dataEstatusEmbarque.find(o => o.m_nIdEstatusEmbarque == respuesta.data.m_nIdEstatusEmbarque).m_sEstatus,
+        motivoCancelacion: respuesta.data.m_sMotivoCancelacion
+      })
+      if(respuesta.data.m_nSePuedeCancelar == 0)
+      showSuccess("Embarque no se puede cancelar")
+    })
   }
 
   function handleShowModificar(id) {
@@ -507,7 +545,7 @@ function Embarque() {
       nombreRemitente: "",
       RFCRemitente: "",
       domicilioRemitente: "",
-      codigoPostalRemitente:  dataCodigoPostal[0],
+      codigoPostalRemitente: dataCodigoPostal[0],
       ciudadRemitente: {},
       correoRemitente: "",
       telefonoRemitente: "",
@@ -517,7 +555,7 @@ function Embarque() {
       nombreDestinatario: "",
       RFCDestinatario: "",
       domicilioDestinatario: "",
-      codigoPostalDestinatario:  dataCodigoPostal[0],
+      codigoPostalDestinatario: dataCodigoPostal[0],
       ciudadDestino: {},
       correoDestinatario: "",
       telefonoDestinatario: "",
@@ -819,8 +857,8 @@ function Embarque() {
   }
   const headers2 = {
     'Content-Type': 'application/json',
-     'Access-Control-Allow-Origin': '*',
-     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
   }
 
   function conDatos() {
@@ -902,8 +940,8 @@ function Embarque() {
                 prepareRow(row);
                 return (
                   <tr {...row.getRowProps()}
-                  onClick={handleSelectRow.bind(this, row.original.m_nIdEmbarque)}
-                  className={state.idEmbarque === row.original.m_nIdEmbarque ? classes.seleccionado : classes.noSeleccionado}>
+                    onClick={handleSelectRow.bind(this, row.original.m_nIdEmbarque)}
+                    className={state.idEmbarque === row.original.m_nIdEmbarque ? classes.seleccionado : classes.noSeleccionado}>
                     <td>
                       <div>
                         <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdEmbarque))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
@@ -926,7 +964,7 @@ function Embarque() {
     )
   }
 
-  
+
   function TableRemitentesDestinatarios({ columns, data, select }) {
     const defaultColumn = React.useMemo(
       () => ({
@@ -973,11 +1011,11 @@ function Embarque() {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                          <i className="fa fa-caret-down" />
-                        )
+                            <i className="fa fa-caret-down" />
+                          )
                       ) : (
-                        ""
-                      )}
+                          ""
+                        )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -992,12 +1030,12 @@ function Embarque() {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr style={{backgroundColor: row.original.m_nIdUnidad === select ? "#FCC88F" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                  <tr style={{ backgroundColor: row.original.m_nIdUnidad === select ? "#FCC88F" : "white" }} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -1098,7 +1136,7 @@ function Embarque() {
     );
   }
 
-  
+
   function TableCiudades({ columns, data, select }) {
     const defaultColumn = React.useMemo(
       () => ({
@@ -1657,7 +1695,7 @@ function Embarque() {
 
   return (
     <div>
-        <Modal style={{ height: "400px" }}>
+      <Modal style={{ height: "400px" }}>
         {state.tipoModal == 0 && (
           <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
             {dataCodigoPostal.length != 0 ? (
@@ -1671,8 +1709,8 @@ function Embarque() {
                 identificadorModal={state.identificadorModal}
               />
             ) : (
-              <div>No se encontró ningún registro</div>
-            )}
+                <div>No se encontró ningún registro</div>
+              )}
             <a onClick={close}>Cerrar</a>
             <a href="/Ciudades">Agregar</a>
           </div>
@@ -1690,8 +1728,8 @@ function Embarque() {
                 identificadorModal={state.identificadorModal}
               />
             ) : (
-              <div>No se encontró ningún registro</div>
-            )}
+                <div>No se encontró ningún registro</div>
+              )}
             <a onClick={close}>Cerrar</a>
             <a href="/Ciudades">Agregar</a>
           </div>
@@ -1709,8 +1747,8 @@ function Embarque() {
                 identificadorModal={state.identificadorModal}
               />
             ) : (
-              <div>No se encontró ningún registro</div>
-            )}
+                <div>No se encontró ningún registro</div>
+              )}
             <a onClick={close}>Cerrar</a>
             <a href="/Operadores">Agregar</a>
           </div>
@@ -1728,8 +1766,8 @@ function Embarque() {
                 identificadorModal={state.identificadorModal}
               />
             ) : (
-              <div>No se encontró ningún registro</div>
-            )}
+                <div>No se encontró ningún registro</div>
+              )}
             <a onClick={close}>Cerrar</a>
             <a href="/TipoUnidad">Agregar</a>
           </div>
@@ -1754,19 +1792,19 @@ function Embarque() {
                 identificadorModal={state.identificadorModal}
               />
             ) : (
-              <div>No se encontró ningún registro</div>
-            )}
+                <div>No se encontró ningún registro</div>
+              )}
             <a onClick={close}>Cerrar</a>
             <a href="/Unidades">Agregar</a>
           </div>
         )}
-          {state.tipoModal == 5 && 
-      <div className="row" style={{maxHeight: "400px !important", overflow:"auto",backgroundColor: '#FFFFFF'}} >
-        {dataRemitenteDestinatario.length != 0 ? <TableRemitentesDestinatarios select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdRemitenteDestinatario} columns={columnsRemitenteDestinatarios} data={dataRemitenteDestinatario} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
-       <button onClick={() => {history.push("/Unidades")}} className="btn btn-primary primary-btn">Agregar</button>
-    </div>
-      }
+        {state.tipoModal == 5 &&
+          <div className="row" style={{ maxHeight: "400px !important", overflow: "auto", backgroundColor: '#FFFFFF' }} >
+            {dataRemitenteDestinatario.length != 0 ? <TableRemitentesDestinatarios select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdRemitenteDestinatario} columns={columnsRemitenteDestinatarios} data={dataRemitenteDestinatario} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
+            <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+            <button onClick={() => { history.push("/Unidades") }} className="btn btn-primary primary-btn">Agregar</button>
+          </div>
+        }
       </Modal>
 
       <Modal style={{ height: "400px" }}>
@@ -1848,12 +1886,14 @@ function Embarque() {
               <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
                 <i className="fa fa-plus-circle" /> {state.agregar}
               </a>
-            </li>            
+            </li>
             <li>
               <ExportCSV csvData={data} fileName="Embarque_Listado" />
             </li>
             <li>
-              <ExportPDF data={data} column={columns} fileName="Embarque" />
+              <a data-toggle="tab" href="#Cancelar" onClick={handleShowCancelar} className={state.idEmbarque == 0 ? classes.disabled : ""}>
+                <i className="fa fa-times-circle" /> Cancelar
+              </a>
             </li>
           </ul>
 
@@ -1869,7 +1909,7 @@ function Embarque() {
                             Fecha Inicial
                         </label>
                           <div className="input">
-                          <input
+                            <input
                               type="date"
                               className="form-control"
                               onChange={handleChange}
@@ -1883,7 +1923,7 @@ function Embarque() {
                             Fecha Final
                         </label>
                           <div className="input">
-                          <input
+                            <input
                               type="date"
                               className="form-control"
                               onChange={handleChange}
@@ -2048,7 +2088,7 @@ function Embarque() {
                         <div className="row">
                           <div className="col-md-12">
 
-                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                            <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                               <label className="label">
                                 Sucursal
                           </label>
@@ -2276,15 +2316,15 @@ function Embarque() {
                               <div className="widget-content">
                                 <div className="row">
 
-                                <div className="col-sm-12 col-md-12  unit">
+                                  <div className="col-sm-12 col-md-12  unit">
                                     <label className="label">
                                       Nombre
                                   </label>
-                                  <div className="input">
+                                    <div className="input">
                                       <Autocomplete
-                                   
-                                   onSelect={handleSelectRemitente()}                                       
-                                   value={state.nombreRemitente}
+
+                                        onSelect={handleSelectRemitente()}
+                                        value={state.nombreRemitente}
                                         freeSolo
                                         onChange={(event, newValue) =>
                                           setState({
@@ -2305,7 +2345,7 @@ function Embarque() {
                                           borderColor: "#dddddd",
                                           borderStyle: "solid",
                                           borderRadius: "5px",
-                                          
+
                                         }}
                                         renderInput={(params) => (
                                           <div>
@@ -2393,7 +2433,7 @@ function Embarque() {
                                   </div>
 
                                   <div className="col-sm-12 col-md-8 unit" >
-                                  <label className="label">
+                                    <label className="label">
                                       Código Postal
                                     </label>
                                     <div className="input">
@@ -2419,7 +2459,7 @@ function Embarque() {
                                           borderColor: "#dddddd",
                                           borderStyle: "solid",
                                           borderRadius: "5px",
-                                          
+
                                         }}
                                         renderInput={(params) => (
                                           <div>
@@ -2514,8 +2554,8 @@ function Embarque() {
                                       />
                                     </div>
                                   </div>
-{}
-                               <div className="col-sm-12 col-md-12 unit">
+                                  { }
+                                  <div className="col-sm-12 col-md-12 unit">
                                     <label className="label">
                                       Correo Electrónico
                                     </label>
@@ -2530,7 +2570,7 @@ function Embarque() {
                                       />
                                     </div>
                                   </div>
-{}
+                                  { }
                                   <div className="col-sm-12 col-md-12 unit">
                                     <label className="label">
                                       Teléfono
@@ -2653,82 +2693,82 @@ function Embarque() {
                             <div className="widget-container">
                               <div className="widget-content">
 
-                              <div className="col-sm-12 col-md-12    unit">
+                                <div className="col-sm-12 col-md-12    unit">
                                   <label className="label">
                                     Nombre
                               </label>
-                              <div className="input">
-                                      <Autocomplete
-                                      onSelect={handleSelectDestinatario()}    
-                                        value={state.nombreDestinatario}
-                                        freeSolo
-                                        onChange={(event, newValue) =>
-                                          setState({
-                                            ...state,
-                                            nombreDestinatario: newValue,
-                                          })
-                                        }
-                                        id="nombreRemitente"
-                                        disableClearable
-                                        forcePopupIcon={false}
-                                        options={dataRemitenteDestinatario}
-                                        getOptionLabel={(option) =>
-                                          option.m_sNombreFiscal
-                                        }
-                                        variant="outlined"
-                                        style={{
-                                          borderWidth: "1px",
-                                          borderColor: "#dddddd",
-                                          borderStyle: "solid",
-                                          borderRadius: "5px",
-                                          
-                                        }}
-                                        renderInput={(params) => (
-                                          <div>
-                                            <TextField
-                                              {...params}
-                                              InputProps={{
-                                                ...params.InputProps,
-                                                style: { height: 21 },
-                                                type: "search",
-                                                disableUnderline: true,
-                                                endAdornment: (
-                                                  <InputAdornment position="end">
-                                                    <IconButton
-                                                      padding="0px"
+                                  <div className="input">
+                                    <Autocomplete
+                                      onSelect={handleSelectDestinatario()}
+                                      value={state.nombreDestinatario}
+                                      freeSolo
+                                      onChange={(event, newValue) =>
+                                        setState({
+                                          ...state,
+                                          nombreDestinatario: newValue,
+                                        })
+                                      }
+                                      id="nombreRemitente"
+                                      disableClearable
+                                      forcePopupIcon={false}
+                                      options={dataRemitenteDestinatario}
+                                      getOptionLabel={(option) =>
+                                        option.m_sNombreFiscal
+                                      }
+                                      variant="outlined"
+                                      style={{
+                                        borderWidth: "1px",
+                                        borderColor: "#dddddd",
+                                        borderStyle: "solid",
+                                        borderRadius: "5px",
+
+                                      }}
+                                      renderInput={(params) => (
+                                        <div>
+                                          <TextField
+                                            {...params}
+                                            InputProps={{
+                                              ...params.InputProps,
+                                              style: { height: 21 },
+                                              type: "search",
+                                              disableUnderline: true,
+                                              endAdornment: (
+                                                <InputAdornment position="end">
+                                                  <IconButton
+                                                    padding="0px"
+                                                    style={{
+                                                      paddingRight: "0px",
+                                                    }}
+                                                    onClick={() => {
+                                                      setState({
+                                                        ...state,
+                                                        identificadorModal:
+                                                          "nombreDestinatario",
+                                                        tipoModal: 5,
+                                                      });
+                                                      open();
+                                                    }}
+                                                  >
+                                                    <PageviewIcon
                                                       style={{
-                                                        paddingRight: "0px",
+                                                        color: "#F9A03E",
+                                                        fontSize: 32,
+                                                        paddingInlineEnd: 0,
+                                                        paddingRight: 0,
+                                                        paddingBlockEnd: 0,
+                                                        paddingLeft: 0,
+                                                        paddingBlock: 0,
                                                       }}
-                                                      onClick={() => {
-                                                        setState({
-                                                          ...state,
-                                                          identificadorModal:
-                                                            "nombreDestinatario",
-                                                          tipoModal: 5,
-                                                        });
-                                                        open();
-                                                      }}
-                                                    >
-                                                      <PageviewIcon
-                                                        style={{
-                                                          color: "#F9A03E",
-                                                          fontSize: 32,
-                                                          paddingInlineEnd: 0,
-                                                          paddingRight: 0,
-                                                          paddingBlockEnd: 0,
-                                                          paddingLeft: 0,
-                                                          paddingBlock: 0,
-                                                        }}
-                                                      />
-                                                    </IconButton>
-                                                  </InputAdornment>
-                                                ),
-                                              }}
-                                            />
-                                          </div>
-                                        )}
-                                      />
-                                    </div>
+                                                    />
+                                                  </IconButton>
+                                                </InputAdornment>
+                                              ),
+                                            }}
+                                          />
+                                        </div>
+                                      )}
+                                    />
+                                  </div>
                                 </div>
 
                                 <div className="col-sm-12 col-md-8 unit">
@@ -3010,7 +3050,7 @@ function Embarque() {
                                       )}
                                     />
                                   </div>
-                                
+
                                 </div>
 
                                 <div className="col-sm-12 col-md-12  unit">
@@ -3050,7 +3090,7 @@ function Embarque() {
                                     <div className="col-md-12">
 
                                       <div className="col-sm-4 col-md-4 unit">
-                                      <label className="label">
+                                        <label className="label">
                                           Código Postal
                                         </label>
                                         <div className="input">
@@ -3622,6 +3662,128 @@ function Embarque() {
                 </div>
               </form>
             </div>
+
+            <div id="Cancelar" className="tab-pane fade">
+              <div className="widget-wrap">
+                <div className="widget-content">
+                  <div className="row">
+                    <form className="j-forms" onSubmit={handleCancelar}>
+                      <div className="form-content">
+                        <div className="widget-wrap">
+                          <div className="widget-container">
+                            <div className="widget-content">
+                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                <label className="label">Folio Embarque</label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="text"
+                                    value={state.folioRecoleccion}
+                                    id="folioRecoleccion"
+                                    readOnly
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                <label className="label">Sucursal</label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="text"
+                                    value={state.sucursalCancelacion}
+                                    id="sucursalCancelacion"
+                                    readOnly
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                <label className="label">Fecha</label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="text"
+                                    value={state.fechaCancelacion}
+                                    id="fechaCancelacion"
+                                    readOnly
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                <label className="label">Usuario</label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="text"
+                                    value={state.usuario}
+                                    id="usuario"
+                                    readOnly
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                <label className="label">Estatus</label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="text"
+                                    value={state.estatusEmbarque}
+                                    id="estatusEmbarque"
+                                    readOnly
+                                  />
+                                </div>
+                              </div>
+
+
+                              <div className="col-sm-12 col-md-12 col-lg-12 unit">
+                                <label className="label">Motivo</label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="text"
+                                    value={state.motivoCancelacion}
+                                    id="motivoCancelacion"
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="form-footer" className="col-md-12">
+                                <button
+                                  href="#Listado"
+                                  role="tab"
+                                  data-toggle="tab"
+                                  className="btn btn-secondary secondary-btn"
+                                >
+                                  Cancelar
+                                </button>
+                                <button
+                                  type="submit"
+                                  className="btn btn-primary primary-btn"
+                                >
+                                  Aceptar
+                                </button>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
 
           </div>
         </div>
