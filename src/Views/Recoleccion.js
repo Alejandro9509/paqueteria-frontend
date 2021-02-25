@@ -2903,8 +2903,8 @@ function Recoleccion() {
                                                         identificadorModal:
                                                           "nombreDestinatario",
                                                         tipoModal: 5,
+                                                        openDialog: true
                                                       });
-                                                      open();
                                                     }}
                                                   >
                                                     <PageviewIcon
