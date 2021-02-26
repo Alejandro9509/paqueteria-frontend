@@ -339,6 +339,8 @@ function Recoleccion() {
     e.preventDefault();
     var params = {
       "motivoCancelacion": state.motivoCancelacion,
+      "usuarioCancelacion": localStorage.getItem("UsuarioId"),
+      "fechaCancelacion": state.fechaCancelacion
     }
     const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Cancelar/${state.idRecoleccion}`;
     axios.put(url, Object.assign({}, params), { headers }).then((respuesta) => {

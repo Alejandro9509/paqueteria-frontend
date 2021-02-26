@@ -371,6 +371,8 @@ function Embarque() {
     e.preventDefault();
     var params = {
       "motivoCancelacion": state.motivoCancelacion,
+      "usuarioCancelacion": localStorage.getItem("UsuarioId"),
+      "fechaCancelacion": state.fechaCancelacion
     }
     const url = `${process.env.REACT_APP_API_URL}/Embarques/Cancelar/${state.idEmbarque}`;
     axios.put(url, Object.assign({}, params), { headers }).then((respuesta) => {
@@ -1033,13 +1035,6 @@ function Embarque() {
                 prepareRow(row);
                 return (
                   <tr style={{ backgroundColor: row.original.m_nIdUnidad === select ? "#FCC88F" : "white" }} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
-                    <td>
-                      <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                      </div>
-                    </td>
                     {row.cells.map(cell => {
                       return (
                         <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
@@ -1091,7 +1086,6 @@ function Embarque() {
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
                 {headerGroup.headers.map((column) => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -1174,7 +1168,6 @@ function Embarque() {
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
                 {headerGroup.headers.map((column) => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -1256,7 +1249,6 @@ function Embarque() {
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
                 {headerGroup.headers.map((column) => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -1302,6 +1294,7 @@ function Embarque() {
       </div>
     );
   }
+
   function TableTipoUnidad({ columns, data, select }) {
     const defaultColumn = React.useMemo(
       () => ({
@@ -1334,7 +1327,6 @@ function Embarque() {
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
                 {headerGroup.headers.map((column) => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -1416,7 +1408,6 @@ function Embarque() {
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
                 {headerGroup.headers.map((column) => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -1462,6 +1453,7 @@ function Embarque() {
       </div>
     );
   }
+  
   function openSection(index) {
     // closeSeccions()
     var $section;
