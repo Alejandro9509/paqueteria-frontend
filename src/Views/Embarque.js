@@ -2283,7 +2283,7 @@ function Embarque() {
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
-                                                style: { height: 21 },
+                                                style: { height: "33px", fontSize: "14px" },
                                                 type: "search",
                                                 disableUnderline: true,
                                                 endAdornment: (
@@ -2397,7 +2397,7 @@ function Embarque() {
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
-                                                style: { height: 21 },
+                                                style: { height: "33px", fontSize: "14px" },
                                                 type: "search",
                                                 disableUnderline: true,
                                                 endAdornment: (
@@ -2569,7 +2569,7 @@ function Embarque() {
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
-                                                style: { height: 21 },
+                                                style: { height: "33px", fontSize: "14px" },
                                                 type: "search",
                                                 value: state.ciudadOrigen,
                                                 disableUnderline: true,
@@ -2659,7 +2659,7 @@ function Embarque() {
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
-                                              style: { height: 21 },
+                                              style: { height: "33px", fontSize: "14px" },
                                               type: "search",
                                               disableUnderline: true,
                                               endAdornment: (
@@ -2778,7 +2778,7 @@ function Embarque() {
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
-                                              style: { height: 21 },
+                                              style: { height: "33px", fontSize: "14px" },
                                               type: "search",
                                               disableUnderline: true,
                                               endAdornment: (
@@ -2949,7 +2949,7 @@ function Embarque() {
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
-                                              style: { height: 21 },
+                                              style: { height: "33px", fontSize: "14px" },
                                               type: "search",
                                               value: state.ciudadDestino,
                                               disableUnderline: true,
@@ -3065,7 +3065,7 @@ function Embarque() {
                                                   {...params}
                                                   InputProps={{
                                                     ...params.InputProps,
-                                                    style: { height: 21 },
+                                                    style: { height: "33px", fontSize: "14px" },
                                                     type: "search",
                                                     disableUnderline: true,
                                                     endAdornment: (
@@ -3274,7 +3274,7 @@ function Embarque() {
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
-                                                style: { height: 21 },
+                                                style: { height: "33px", fontSize: "14px" },
                                                 type: "search",
                                                 disableUnderline: true,
                                                 endAdornment: (
@@ -3350,7 +3350,7 @@ function Embarque() {
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
-                                                style: { height: 21 },
+                                                style: { height: "33px", fontSize: "14px" },
                                                 type: "search",
                                                 value: state.tipoUnidad,
                                                 disableUnderline: true,
@@ -3427,7 +3427,7 @@ function Embarque() {
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
-                                                style: { height: 21 },
+                                                style: { height: "33px", fontSize: "14px" },
                                                 type: "search",
                                                 value: state.idUnidad,
 
