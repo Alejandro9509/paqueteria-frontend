@@ -85,7 +85,7 @@
 .widget-wrap .widget-header p {
   margin-top: 6px;
   margin-bottom: 0px;
-  font-size: 12px;
+  font-size: 14px;
 }
 .widget-wrap .widget-container {
   margin-top: 30px;
@@ -271,7 +271,7 @@
 .stats-widget > .widget-header p {
   margin-top: 6px;
   margin-bottom: 0px;
-  font-size: 12px;
+  font-size: 14px;
 }
 .stats-widget .sparkline {
   margin-left: -30px;
@@ -351,7 +351,7 @@
 #area-chart-legend .legendLabel,
 #reatime-chart-legend .legendLabel,
 #pie-chart-legend .legendLabel {
-  font-size: 12px;
+  font-size: 14px;
   font-family: 'Open Sans', sans-serif;
   padding-left: 5px;
   padding-right: 10px;
@@ -440,7 +440,7 @@
   text-align: center;
 }
 .stats-meta ul li {
-  font-size: 12px;
+  font-size: 14px;
 }
 .stats-meta ul li a {
   display: inline-block;
@@ -503,7 +503,7 @@
 }
 .regional-map-stats .visit-progress-info {
   color: #888;
-  font-size: 12px;
+  font-size: 14px;
 }
 .regional-map-stats .visit-progress-info .v-more,
 .regional-map-stats .visit-progress-info .v-less {
@@ -632,7 +632,7 @@
   color: #F9A03E;
 }
 .recent-users-list .user-intro .users-info .u-location {
-  font-size: 12px;
+  font-size: 14px;
   color: #888;
   margin-top: 4px;
 }
@@ -654,10 +654,10 @@
   font-weight: 400;
   padding-right: 6px;
   text-transform: uppercase;
-  font-size: 12px;
+  font-size: 14px;
 }
 .recent-users-list .users-details ul li .label {
-  font-size: 12px;
+  font-size: 14px;
   color: #fff;
   text-transform: none;
 }
@@ -729,13 +729,13 @@
   color: #F9A03E;
 }
 .recent-comments-list .recent-comment-meta .comment-user-info .p-time {
-  font-size: 12px;
+  font-size: 14px;
 }
 .recent-comments-list .comment-text {
   padding: 0px 30px;
   margin-bottom: 25px;
   color: #666;
-  font-size: 12px;
+  font-size: 14px;
 }
 .recent-comments-list .comments-reply {
   width: 30px;
@@ -807,7 +807,7 @@
   cursor: pointer;
 }
 .widget-task-list .task-entry .task-details {
-  font-size: 12px;
+  font-size: 14px;
   padding-top: 3px;
   display: none;
   margin-left: 30px;
@@ -1033,7 +1033,7 @@
 }
 .dashboard-shortcut .apps-shortcut > li > a .apps-label {
   display: block;
-  font-size: 12px;
+  font-size: 14px;
 }
 .dashboard-shortcut .apps-shortcut > li > a .apps-noty {
   -webkit-border-radius: 3px;
@@ -1077,7 +1077,7 @@
   border-radius: 3px;
 }
 .jqstooltip * {
-  font-size: 12px !important;
+  font-size: 14px !important;
 }
 .spark-header {
   margin-top: 10px;
@@ -1150,7 +1150,7 @@
 .fc-day-grid-event {
   margin: 1px 2px 0 !important;
   padding: 4px 6px !important;
-  font-size: 12px !important;
+  font-size: 14px !important;
   font-weight: 400;
 }
 .calendar-toolbar {

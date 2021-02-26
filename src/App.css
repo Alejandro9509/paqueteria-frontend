@@ -39,6 +39,11 @@
 }
 
 
-.MuiAutocomplete-inputRoo {
+.MuiAutocomplete-inputRoot {
   height: 33px;
+  font-size: 14px;
+}
+
+h2 {
+  font-weight: bold !important;
 }
