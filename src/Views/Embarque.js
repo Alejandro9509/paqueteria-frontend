@@ -852,7 +852,7 @@ function Embarque() {
   }, []);
 
   function getAllData() {
-    const url = "http://localhost/Embarques/GetListado";
+    const url =  `${process.env.REACT_APP_API_URL}/Embarques/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setData(respuesta.data);
     });
