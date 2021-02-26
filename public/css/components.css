@@ -2333,7 +2333,7 @@ a.waves-effect .waves-ripple {
   height: 20px;
   position: absolute;
   pointer-events: none;
-  top: 1px;
+  top: 6px;
   right: 9px;
   width: 14px;
 }
