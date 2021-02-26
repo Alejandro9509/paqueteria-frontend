@@ -20,15 +20,17 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import useModal from "react-hooks-use-modal";
 import { useHistory } from "react-router-dom";
-import Noty from "noty";
+
+import Noty from 'noty';
+import { Dialog, DialogActions, DialogContent } from "@material-ui/core";
 
 function showSuccess(mensaje) {
   new Noty({
     type: "information",
     layout: "topCenter",
     text: mensaje,
-    timeout: "3000",
-  }).show();
+    timeout: "3000"
+  }).show()
 }
 
 window.jQuery = window.$ = $;
@@ -46,6 +48,10 @@ const styles = {
   noSeleccionado: {
     backgroundColor: "#FFFFFF",
   },
+  disabled: {
+    pointerEvents: "none",
+    cursor: "default",
+  }
 };
 const useStyles = makeStyles(styles);
 
@@ -74,6 +80,7 @@ function Embarque() {
     DerechoBorrar: 139,
     identificadorModal: "",
     tipoModal: 0,
+    openDialog: false,
     agregar: "Agregar",
     idEmbarque: 0,
     fechaInicial: "",
@@ -157,9 +164,13 @@ function Embarque() {
         m_sDescripcion: "",
       },
     ],
-    height: window.innerHeight,
-  });
-  const [fileUploaded, setFileUploaded] = React.useState([]);
+    motivoCancelacion: "",
+    fechaCancelacion: "",
+    sucursalCancelacion: "",
+    usuario: localStorage.getItem("Usuario"),
+    height: window.innerHeight
+  })
+  const [fileUploaded, setFileUploaded] = React.useState([])
   const [stepActive, setStepActive] = React.useState(1);
   const [Modal, open, close, isOpen] = useModal("root", {
     preventScroll: true,
@@ -285,6 +296,7 @@ function Embarque() {
     console.log(id);
     console.log(state.identificadorModal);
   }
+
   function addPaquete() {
     const { paquetes } = state;
     paquetes.push({
@@ -373,6 +385,37 @@ function Embarque() {
       .catch((err) => {
         showSuccess(err);
       });
+  }
+
+  const handleCancelar = (e) => {
+    e.preventDefault();
+    var params = {
+      "motivoCancelacion": state.motivoCancelacion,
+      "usuarioCancelacion": localStorage.getItem("UsuarioId"),
+      "fechaCancelacion": state.fechaCancelacion
+    }
+    const url = `${process.env.REACT_APP_API_URL}/Embarques/Cancelar/${state.idEmbarque}`;
+    axios.put(url, Object.assign({}, params), { headers }).then((respuesta) => {
+      console.log(respuesta.data)
+    })
+  }
+
+  function handleShowCancelar() {
+    const url = `${process.env.REACT_APP_API_URL}/Embarques/GetCancelarById/${state.idEmbarque}`;
+    var today = new Date();
+    axios.get(url, { headers }).then((respuesta) => {
+      console.log(respuesta.data.m_nSePuedeCancelar)
+      setState({
+        ...state,
+        folioRecoleccion: respuesta.data.m_nFolioEmbarque,
+        sucursalCancelacion: dataSucursal.find(o => o.m_nIdSucursal == respuesta.data.IdSucursal).m_sSucursal,
+        fechaCancelacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear(),
+        estatusEmbarque: dataEstatusEmbarque.find(o => o.m_nIdEstatusEmbarque == respuesta.data.m_nIdEstatusEmbarque).m_sEstatus,
+        motivoCancelacion: respuesta.data.m_sMotivoCancelacion
+      })
+      if(respuesta.data.m_nSePuedeCancelar == 0)
+      showSuccess("Embarque no se puede cancelar")
+    })
   }
 
   function handleShowModificar(id) {
@@ -940,10 +983,10 @@ function Embarque() {
     "Content-Type": "application/json",
   };
   const headers2 = {
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  };
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
+  }
 
   function conDatos() {
     return data.length != 0;
@@ -1035,70 +1078,29 @@ function Embarque() {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-              prepareRow(row);
-              return (
-                <tr
-                  {...row.getRowProps()}
-                  onClick={handleSelectRow.bind(
-                    this,
-                    row.original.m_nIdEmbarque
-                  )}
-                  className={
-                    state.idEmbarque === row.original.m_nIdEmbarque
-                      ? classes.seleccionado
-                      : classes.noSeleccionado
-                  }
-                >
-                  <td>
-                    <div>
-                      <a
-                        href="#Agregar"
-                        role="tab"
-                        data-toggle="tab"
-                        onClick={() =>
-                          handleShowModificar(row.original.m_nIdEmbarque)
-                        }
-                        className="btn btn-default btn-sm"
-                      >
-                        <i
-                          className="fa fa-pencil-square-o"
-                          style={{ color: "#F9A03E" }}
-                        />
-                      </a>
-                      <a
-                        href="#Agregar"
-                        role="tab"
-                        data-toggle="tab"
-                        className="btn btn-default btn-sm"
-                        onClick={() =>
-                          handleShowConsultar(row.original.m_nIdEmbarque)
-                        }
-                      >
-                        <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdEmbarque)
-                        }
-                      >
-                        <i
-                          className="zmdi zmdi-delete"
-                          style={{ color: "#F30B0B" }}
-                        />
-                      </a>
-                    </div>
-                  </td>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr {...row.getRowProps()}
+                    onClick={handleSelectRow.bind(this, row.original.m_nIdEmbarque)}
+                    className={state.idEmbarque === row.original.m_nIdEmbarque ? classes.seleccionado : classes.noSeleccionado}>
+                    <td>
+                      <div>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdEmbarque))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdEmbarque))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdEmbarque))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                      </div>
+                    </td>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
           </tbody>
         </table>
       </div>
@@ -1151,11 +1153,11 @@ function Embarque() {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                          <i className="fa fa-caret-down" />
-                        )
+                            <i className="fa fa-caret-down" />
+                          )
                       ) : (
-                        ""
-                      )}
+                          ""
+                        )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -1166,64 +1168,20 @@ function Embarque() {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-              prepareRow(row);
-              return (
-                <tr
-                  style={{
-                    backgroundColor:
-                      row.original.m_nIdUnidad === select ? "#FCC88F" : "white",
-                  }}
-                  {...row.getRowProps()}
-                  onClick={handleSelectCP.bind(this, row.original)}
-                >
-                  <td>
-                    <div>
-                      <a
-                        href="#Agregar"
-                        role="tab"
-                        data-toggle="tab"
-                        onClick={() =>
-                          handleShowModificar(row.original.m_nIdRecoleccion)
-                        }
-                        className="btn btn-default"
-                      >
-                        <i
-                          className="fa fa-pencil-square-o"
-                          style={{ color: "#F9A03E" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i
-                          className="zmdi zmdi-delete"
-                          style={{ color: "#F30B0B" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                      </a>
-                    </div>
-                  </td>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
+            {rows.map(
+              (row, i) => {
+                prepareRow(row);
+                return (
+                  <tr style={{ backgroundColor: row.original.m_nIdUnidad === select ? "#FCC88F" : "white" }} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)}>
+                    {row.cells.map(cell => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              }
+            )}
           </tbody>
         </table>
       </div>
@@ -1265,7 +1223,6 @@ function Embarque() {
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
                 {headerGroup.headers.map((column) => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -1353,7 +1310,6 @@ function Embarque() {
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
                 {headerGroup.headers.map((column) => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -1440,7 +1396,6 @@ function Embarque() {
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
                 {headerGroup.headers.map((column) => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -1493,6 +1448,7 @@ function Embarque() {
       </div>
     );
   }
+
   function TableTipoUnidad({ columns, data, select }) {
     const defaultColumn = React.useMemo(
       () => ({
@@ -1525,7 +1481,6 @@ function Embarque() {
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
                 {headerGroup.headers.map((column) => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -1614,7 +1569,6 @@ function Embarque() {
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
                 {headerGroup.headers.map((column) => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
@@ -1665,6 +1619,7 @@ function Embarque() {
       </div>
     );
   }
+  
   function openSection(index) {
     // closeSeccions()
     var $section;
@@ -1912,297 +1867,94 @@ function Embarque() {
 
   return (
     <div>
-      <Modal style={{ height: "400px" }}>
-        {state.tipoModal == 0 && (
-          <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
-            {dataCodigoPostal.length != 0 ? (
-              <TableCodigoPostal
-                select={
-                  state[state.identificadorModal] &&
-                  state[state.identificadorModal].m_nIdCP
-                }
-                columns={columnsCP}
-                data={dataCodigoPostal}
-                identificadorModal={state.identificadorModal}
-              />
-            ) : (
-              <div>No se encontró ningún registro</div>
-            )}
-            <a onClick={close}>Cerrar</a>
-            <a href="/Ciudades">Agregar</a>
-          </div>
-        )}
-        {state.tipoModal == 1 && (
-          <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
-            {dataCiudad.length != 0 ? (
-              <TableCiudades
-                select={
-                  state[state.identificadorModal] &&
-                  state[state.identificadorModal].m_nIdCiudad
-                }
-                columns={columnsCiudades}
-                data={dataCiudad}
-                identificadorModal={state.identificadorModal}
-              />
-            ) : (
-              <div>No se encontró ningún registro</div>
-            )}
-            <a onClick={close}>Cerrar</a>
-            <a href="/Ciudades">Agregar</a>
-          </div>
-        )}
-        {state.tipoModal == 2 && (
-          <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
-            {dataOperador.length != 0 ? (
-              <TableOperadores
-                select={
-                  state[state.identificadorModal] &&
-                  state[state.identificadorModal].m_nIdOperador
-                }
-                columns={columnsOperadores}
-                data={dataOperador}
-                identificadorModal={state.identificadorModal}
-              />
-            ) : (
-              <div>No se encontró ningún registro</div>
-            )}
-            <a onClick={close}>Cerrar</a>
-            <a href="/Operadores">Agregar</a>
-          </div>
-        )}
-        {state.tipoModal == 3 && (
-          <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
-            {dataTipoUnidad.length != 0 ? (
-              <TableTipoUnidad
-                select={
-                  state[state.identificadorModal] &&
-                  state[state.identificadorModal].m_nIdTipoUnidad
-                }
-                columns={columnsTipoUnidades}
-                data={dataTipoUnidad}
-                identificadorModal={state.identificadorModal}
-              />
-            ) : (
-              <div>No se encontró ningún registro</div>
-            )}
-            <a onClick={close}>Cerrar</a>
-            <a href="/TipoUnidad">Agregar</a>
-          </div>
-        )}
-        {state.tipoModal == 4 && (
-          <div
-            className="row"
-            style={{
-              maxHeight: "400px !important",
-              overflow: "auto",
-              backgroundColor: "#FFFFFF",
-            }}
-          >
-            {dataUnidad.length != 0 ? (
-              <TableUnidad
-                select={
-                  state[state.identificadorModal] &&
-                  state[state.identificadorModal].m_nIdUnidad
-                }
-                columns={columnsUnidades}
-                data={dataUnidad}
-                identificadorModal={state.identificadorModal}
-              />
-            ) : (
-              <div>No se encontró ningún registro</div>
-            )}
-            <a onClick={close}>Cerrar</a>
-            <a href="/Unidades">Agregar</a>
-          </div>
-        )}
-        {state.tipoModal == 5 && (
-          <div
-            className="row"
-            style={{
-              maxHeight: "400px !important",
-              overflow: "auto",
-              backgroundColor: "#FFFFFF",
-            }}
-          >
-            {dataRemitenteDestinatario.length != 0 ? (
-              <TableRemitentesDestinatarios
-                select={
-                  state[state.identificadorModal] &&
-                  state[state.identificadorModal].m_nIdRemitenteDestinatario
-                }
-                columns={columnsRemitenteDestinatarios}
-                data={dataRemitenteDestinatario}
-                identificadorModal={state.identificadorModal}
-              />
-            ) : (
-              <div>No se encontró ningún registro</div>
-            )}
-            <button onClick={close} className="btn btn-secondary secondary-btn">
-              Cerrar
-            </button>
-            <button
-              onClick={() => {
-                history.push("/Unidades");
-              }}
-              className="btn btn-primary primary-btn"
-            >
-              Agregar
-            </button>
-          </div>
-        )}
-      </Modal>
 
-      <Modal style={{ height: "400px" }}>
-        {state.tipoModal == 0 && (
-          <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
-            {dataCodigoPostal.length != 0 ? (
-              <TableCodigoPostal
-                select={
-                  state[state.identificadorModal] &&
-                  state[state.identificadorModal].m_nIdCP
-                }
-                columns={columnsCP}
-                data={dataCodigoPostal}
-                identificadorModal={state.identificadorModal}
-              />
-            ) : (
-              <div>No se encontró ningún registro</div>
-            )}
-            <br></br>
-            <br></br>
-            <button onClick={close} className="btn btn-secondary secondary-btn">
-              Cerrar
-            </button>
-            <button
-              onClick={() => {
-                history.push("/Ciudades");
-              }}
-              className="btn btn-primary primary-btn"
-            >
-              Agregar
-            </button>
-          </div>
-        )}
-        {state.tipoModal == 1 && (
-          <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
-            {dataCiudad.length != 0 ? (
-              <TableCiudades
-                select={
-                  state[state.identificadorModal] &&
-                  state[state.identificadorModal].m_nIdCiudad
-                }
-                columns={columnsCiudades}
-                data={dataCiudad}
-                identificadorModal={state.identificadorModal}
-              />
-            ) : (
-              <div>No se encontró ningún registro</div>
-            )}
-            <button onClick={close} className="btn btn-secondary secondary-btn">
-              Cerrar
-            </button>
-            <button
-              onClick={() => {
-                history.push("/Ciudades");
-              }}
-              className="btn btn-primary primary-btn"
-            >
-              Agregar
-            </button>
-          </div>
-        )}
-        {state.tipoModal == 2 && (
-          <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
-            {dataOperador.length != 0 ? (
-              <TableOperadores
-                select={
-                  state[state.identificadorModal] &&
-                  state[state.identificadorModal].m_nIdOperador
-                }
-                columns={columnsOperadores}
-                data={dataOperador}
-                identificadorModal={state.identificadorModal}
-              />
-            ) : (
-              <div>No se encontró ningún registro</div>
-            )}
-            <button onClick={close} className="btn btn-secondary secondary-btn">
-              Cerrar
-            </button>
-            <button
-              onClick={() => {
-                history.push("/Operadores");
-              }}
-              className="btn btn-primary primary-btn"
-            >
-              Agregar
-            </button>
-          </div>
-        )}
-        {state.tipoModal == 3 && (
-          <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
-            {dataTipoUnidad.length != 0 ? (
-              <TableTipoUnidad
-                select={
-                  state[state.identificadorModal] &&
-                  state[state.identificadorModal].m_nIdTipoUnidad
-                }
-                columns={columnsTipoUnidades}
-                data={dataTipoUnidad}
-                identificadorModal={state.identificadorModal}
-              />
-            ) : (
-              <div>No se encontró ningún registro</div>
-            )}
-            <button onClick={close} className="btn btn-secondary secondary-btn">
-              Cerrar
-            </button>
-            <button
-              onClick={() => {
-                history.push("/TipoUnidad");
-              }}
-              className="btn btn-primary primary-btn"
-            >
-              Agregar
-            </button>
-          </div>
-        )}
-        {state.tipoModal == 4 && (
-          <div
-            className="row"
-            style={{
-              maxHeight: "400px !important",
-              overflow: "auto",
-              backgroundColor: "#FFFFFF",
-            }}
-          >
-            {dataUnidad.length != 0 ? (
-              <TableUnidad
-                select={
-                  state[state.identificadorModal] &&
-                  state[state.identificadorModal].m_nIdUnidad
-                }
-                columns={columnsUnidades}
-                data={dataUnidad}
-                identificadorModal={state.identificadorModal}
-              />
-            ) : (
-              <div>No se encontró ningún registro</div>
-            )}
-            <button onClick={close} className="btn btn-secondary secondary-btn">
-              Cerrar
-            </button>
-            <button
-              onClick={() => {
-                history.push("/Unidades");
-              }}
-              className="btn btn-primary primary-btn"
-            >
-              Agregar
-            </button>
-          </div>
-        )}
-      </Modal>
+<Dialog open={state.openDialog} onClose={() => setState({...state, openDialog: false})}> 
+        <DialogContent>
+        {state.tipoModal == 0 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        <div align="right">
+        <button onClick={() => {history.push("/Ciudades")}} className="btn btn-primary primary-btn">Agregar</button>
+
+        </div>
+
+        {dataCodigoPostal.length != 0 ? <TableCodigoPostal object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP} columns={columnsCP} data={dataCodigoPostal} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+       
+       <DialogActions style={{justifyContent:"left"}}>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
+       </DialogActions>
+ </div>
+      }
+      {state.tipoModal == 1 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        <div align="right">
+        <button onClick={() => {history.push("/Ciudades")}} className="btn btn-primary primary-btn">Agregar</button>
+
+        </div>
+
+        {dataCiudad.length != 0 ? <TableCiudades object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCiudad} columns={columnsCiudades} data={dataCiudad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+        <DialogActions style={{justifyContent:"left"}}>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
+       </DialogActions>
+    </div>
+      }
+      {state.tipoModal == 2 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        <div align="right">
+        <button onClick={() => {history.push("/Operadores")}} className="btn btn-primary primary-btn">Agregar</button>
+
+        </div>
+
+        {dataOperador.length != 0 ? <TableOperadores object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdOperador} columns={columnsOperadores} data={dataOperador} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+        <DialogActions style={{justifyContent:"left"}}>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
+       </DialogActions>
+    </div>
+      }
+      {state.tipoModal == 3 && 
+      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+        <div align="right">
+        <button onClick={() => {history.push("/TipoUnidad")}} className="btn btn-primary primary-btn">Agregar</button>
+</div>
+        {dataTipoUnidad.length != 0 ? <TableTipoUnidad object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdTipoUnidad} columns={columnsTipoUnidades} data={dataTipoUnidad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+        <DialogActions style={{justifyContent:"left"}}>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
+       </DialogActions>
+    </div>
+      }
+      {state.tipoModal == 4 && 
+      <div className="row" style={{backgroundColor: '#FFFFFF'}} >
+        <div align="right">
+        <button onClick={() => {history.push("/Unidades")}} className="btn btn-primary primary-btn">Agregar</button>
+
+        </div>
+
+        {dataUnidad.length != 0 ? <TableUnidad object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdUnidad} columns={columnsUnidades} data={dataUnidad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+        <DialogActions style={{justifyContent:"left"}}>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
+       </DialogActions>
+    </div>
+      }
+       {state.tipoModal == 5 && 
+      <div className="row" style={{backgroundColor: '#FFFFFF'}} >
+        <div align="right">
+        <button onClick={() => {history.push("/Unidades")}} className="btn btn-primary primary-btn">Agregar</button>
+
+        </div>
+       
+        {dataRemitenteDestinatario.length != 0 ? <TableRemitentesDestinatarios object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdRemitenteDestinatario} columns={columnsRemitenteDestinatarios} data={dataRemitenteDestinatario} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
+        <DialogActions style={{justifyContent:"left"}}>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
+       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
+       </DialogActions>
+    </div>
+      }</DialogContent> 
+      
+  </Dialog>
 
       <header className="topbar clearfix">
         <Cabecera />
@@ -2245,7 +1997,9 @@ function Embarque() {
               <ExportCSV csvData={data} fileName="Embarque_Listado" />
             </li>
             <li>
-              <ExportPDF data={data} column={columns} fileName="Embarque" />
+              <a data-toggle="tab" href="#Cancelar" onClick={handleShowCancelar} className={state.idEmbarque == 0 ? classes.disabled : ""}>
+                <i className="fa fa-times-circle" /> Cancelar
+              </a>
             </li>
           </ul>
 
@@ -2426,8 +2180,11 @@ function Embarque() {
                       <div className="widget-content">
                         <div className="row">
                           <div className="col-md-12">
+
                             <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                              <label className="label">Sucursal</label>
+                              <label className="label">
+                                Sucursal
+                          </label>
                               <label className="input select">
                                 <select
                                   className="form-control"
@@ -2626,10 +2383,14 @@ function Embarque() {
                             <div className="widget-container">
                               <div className="widget-content">
                                 <div className="row">
+
                                   <div className="col-sm-12 col-md-12  unit">
-                                    <label className="label">Nombre</label>
+                                    <label className="label">
+                                      Nombre
+                                  </label>
                                     <div className="input">
                                       <Autocomplete
+
                                         onSelect={handleSelectRemitente()}
                                         value={state.nombreRemitente}
                                         freeSolo
@@ -2659,7 +2420,7 @@ function Embarque() {
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
-                                                style: { height: 21 },
+                                                style: { height: "33px", fontSize: "14px" },
                                                 type: "search",
                                                 disableUnderline: true,
                                                 endAdornment: (
@@ -2675,8 +2436,8 @@ function Embarque() {
                                                           identificadorModal:
                                                             "nombreRemitente",
                                                           tipoModal: 5,
+                                                        openDialog: true
                                                         });
-                                                        open();
                                                       }}
                                                     >
                                                       <PageviewIcon
@@ -2733,7 +2494,7 @@ function Embarque() {
                                     </div>
                                   </div>
 
-                                  <div className="col-sm-12 col-md-8 unit">
+                                  <div className="col-sm-12 col-md-8 unit" >
                                     <label className="label">
                                       Código Postal
                                     </label>
@@ -2767,7 +2528,7 @@ function Embarque() {
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
-                                                style: { height: 21 },
+                                                style: { height: "33px", fontSize: "14px" },
                                                 type: "search",
                                                 disableUnderline: true,
                                                 endAdornment: (
@@ -2783,8 +2544,8 @@ function Embarque() {
                                                           identificadorModal:
                                                             "codigoPostalRemitente",
                                                           tipoModal: 0,
+                                                          openDialog: true
                                                         });
-                                                        open();
                                                       }}
                                                     >
                                                       <PageviewIcon
@@ -2847,32 +2608,8 @@ function Embarque() {
                                                   state.agregar == "Consultar",
                                                 endAdornment: (
                                                   <InputAdornment position="end">
-                                                    <IconButton
-                                                      padding="0px"
-                                                      style={{
-                                                        paddingRight: "0px",
-                                                      }}
-                                                      onClick={() => {
-                                                        open();
-                                                        setState({
-                                                          ...state,
-                                                          identificadorModal:
-                                                            "ciudadRemitente",
-                                                          tipoModal: 1,
-                                                        });
-                                                      }}
-                                                    >
-                                                      <PageviewIcon
-                                                        style={{
-                                                          color: "#F9A03E",
-                                                          fontSize: 32,
-                                                          paddingInlineEnd: 0,
-                                                          paddingRight: 0,
-                                                          paddingBlockEnd: 0,
-                                                          paddingLeft: 0,
-                                                          paddingBlock: 0,
-                                                        }}
-                                                      />
+                                                    <IconButton padding="0px" style={{ paddingRight: "0px" }} onClick={() => {  setState({ ...state, identificadorModal: "ciudadRemitente", tipoModal: 1, openDialog: true }) }}>
+                                                      <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
                                                     </IconButton>
                                                   </InputAdornment>
                                                 ),
@@ -2883,7 +2620,7 @@ function Embarque() {
                                       />
                                     </div>
                                   </div>
-                                  {}
+                                  { }
                                   <div className="col-sm-12 col-md-12 unit">
                                     <label className="label">
                                       Correo Electrónico
@@ -2899,7 +2636,7 @@ function Embarque() {
                                       />
                                     </div>
                                   </div>
-                                  {}
+                                  { }
                                   <div className="col-sm-12 col-md-12 unit">
                                     <label className="label">Teléfono</label>
                                     <div className="input">
@@ -2962,7 +2699,7 @@ function Embarque() {
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
-                                                style: { height: 21 },
+                                                style: { height: "33px", fontSize: "14px" },
                                                 type: "search",
                                                 value: state.ciudadOrigen,
                                                 disableUnderline: true,
@@ -2974,12 +2711,12 @@ function Embarque() {
                                                         paddingRight: "0px",
                                                       }}
                                                       onClick={() => {
-                                                        open();
                                                         setState({
                                                           ...state,
                                                           identificadorModal:
                                                             "ciudadOrigen",
                                                           tipoModal: 1,
+                                                          openDialog: true
                                                         });
                                                       }}
                                                     >
@@ -3014,8 +2751,11 @@ function Embarque() {
                             </div>
                             <div className="widget-container">
                               <div className="widget-content">
+
                                 <div className="col-sm-12 col-md-12    unit">
-                                  <label className="label">Nombre</label>
+                                  <label className="label">
+                                    Nombre
+                              </label>
                                   <div className="input">
                                     <Autocomplete
                                       onSelect={handleSelectDestinatario()}
@@ -3047,7 +2787,7 @@ function Embarque() {
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
-                                              style: { height: 21 },
+                                              style: { height: "33px", fontSize: "14px" },
                                               type: "search",
                                               disableUnderline: true,
                                               endAdornment: (
@@ -3076,6 +2816,16 @@ function Embarque() {
                                                         paddingBlockEnd: 0,
                                                         paddingLeft: 0,
                                                         paddingBlock: 0,
+                                                        paddingRight: "0px",
+                                                      }}
+                                                      onClick={() => {
+                                                        setState({
+                                                          ...state,
+                                                          identificadorModal:
+                                                            "nombreDestinatario",
+                                                          tipoModal: 5,
+                                                          openDialog: true
+                                                        });
                                                       }}
                                                     />
                                                   </IconButton>
@@ -3150,7 +2900,7 @@ function Embarque() {
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
-                                              style: { height: 21 },
+                                              style: { height: "33px", fontSize: "14px" },
                                               type: "search",
                                               disableUnderline: true,
                                               endAdornment: (
@@ -3166,8 +2916,8 @@ function Embarque() {
                                                         identificadorModal:
                                                           "codigoPostalDestinatario",
                                                         tipoModal: 0,
+                                                        openDialog: true
                                                       });
-                                                      open();
                                                     }}
                                                   >
                                                     <PageviewIcon
@@ -3226,32 +2976,8 @@ function Embarque() {
                                                 state.agregar == "Consultar",
                                               endAdornment: (
                                                 <InputAdornment position="end">
-                                                  <IconButton
-                                                    padding="0px"
-                                                    style={{
-                                                      paddingRight: "0px",
-                                                    }}
-                                                    onClick={() => {
-                                                      open();
-                                                      setState({
-                                                        ...state,
-                                                        identificadorModal:
-                                                          "ciudadDestinatario",
-                                                        tipoModal: 1,
-                                                      });
-                                                    }}
-                                                  >
-                                                    <PageviewIcon
-                                                      style={{
-                                                        color: "#F9A03E",
-                                                        fontSize: 32,
-                                                        paddingInlineEnd: 0,
-                                                        paddingRight: 0,
-                                                        paddingBlockEnd: 0,
-                                                        paddingLeft: 0,
-                                                        paddingBlock: 0,
-                                                      }}
-                                                    />
+                                                  <IconButton padding="0px" style={{ paddingRight: "0px" }} onClick={() => { setState({ ...state, identificadorModal: "ciudadDestino", tipoModal: 1, openDialog: true }) }}>
+                                                    <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
                                                   </IconButton>
                                                 </InputAdornment>
                                               ),
@@ -3344,7 +3070,7 @@ function Embarque() {
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
-                                              style: { height: 21 },
+                                              style: { height: "33px", fontSize: "14px" },
                                               type: "search",
                                               value: state.ciudadDestino,
                                               disableUnderline: true,
@@ -3361,8 +3087,9 @@ function Embarque() {
                                                         identificadorModal:
                                                           "ciudadDestino",
                                                         tipoModal: 1,
+                                                        openDialog: true
+
                                                       });
-                                                      open();
                                                     }}
                                                   >
                                                     <PageviewIcon
@@ -3458,7 +3185,7 @@ function Embarque() {
                                                   {...params}
                                                   InputProps={{
                                                     ...params.InputProps,
-                                                    style: { height: 21 },
+                                                    style: { height: "33px", fontSize: "14px" },
                                                     type: "search",
                                                     disableUnderline: true,
                                                     endAdornment: (
@@ -3474,8 +3201,8 @@ function Embarque() {
                                                               identificadorModal:
                                                                 "codigoPostalEntrega",
                                                               tipoModal: 0,
+                                                              openDialog: true
                                                             });
-                                                            open();
                                                           }}
                                                         >
                                                           <PageviewIcon
@@ -3537,32 +3264,8 @@ function Embarque() {
                                                       "Consultar",
                                                     endAdornment: (
                                                       <InputAdornment position="end">
-                                                        <IconButton
-                                                          padding="0px"
-                                                          style={{
-                                                            paddingRight: "0px",
-                                                          }}
-                                                          onClick={() => {
-                                                            open();
-                                                            setState({
-                                                              ...state,
-                                                              identificadorModal:
-                                                                "ciudadEntrega",
-                                                              tipoModal: 1,
-                                                            });
-                                                          }}
-                                                        >
-                                                          <PageviewIcon
-                                                            style={{
-                                                              color: "#F9A03E",
-                                                              fontSize: 32,
-                                                              paddingInlineEnd: 0,
-                                                              paddingRight: 0,
-                                                              paddingBlockEnd: 0,
-                                                              paddingLeft: 0,
-                                                              paddingBlock: 0,
-                                                            }}
-                                                          />
+                                                        <IconButton padding="0px" style={{ paddingRight: "0px" }} onClick={() => {  setState({ ...state, identificadorModal: "ciudadEntrega", tipoModal: 1, openDialog: true }) }}>
+                                                          <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
                                                         </IconButton>
                                                       </InputAdornment>
                                                     ),
@@ -3703,7 +3406,7 @@ function Embarque() {
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
-                                                style: { height: 21 },
+                                                style: { height: "33px", fontSize: "14px" },
                                                 type: "search",
                                                 disableUnderline: true,
                                                 endAdornment: (
@@ -3719,8 +3422,8 @@ function Embarque() {
                                                           identificadorModal:
                                                             "idOperador",
                                                           tipoModal: 2,
+                                                          openDialog: true
                                                         });
-                                                        open();
                                                       }}
                                                     >
                                                       <PageviewIcon
@@ -3777,7 +3480,7 @@ function Embarque() {
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
-                                                style: { height: 21 },
+                                                style: { height: "33px", fontSize: "14px" },
                                                 type: "search",
                                                 value: state.tipoUnidad,
                                                 disableUnderline: true,
@@ -3789,12 +3492,12 @@ function Embarque() {
                                                         paddingRight: "0px",
                                                       }}
                                                       onClick={() => {
-                                                        open();
                                                         setState({
                                                           ...state,
                                                           identificadorModal:
                                                             "tipoUnidad",
                                                           tipoModal: 3,
+                                                          openDialog: true
                                                         });
                                                       }}
                                                     >
@@ -3852,7 +3555,7 @@ function Embarque() {
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
-                                                style: { height: 21 },
+                                                style: { height: "33px", fontSize: "14px" },
                                                 type: "search",
                                                 value: state.idUnidad,
 
@@ -3865,12 +3568,12 @@ function Embarque() {
                                                         paddingRight: "0px",
                                                       }}
                                                       onClick={() => {
-                                                        open();
                                                         setState({
                                                           ...state,
                                                           identificadorModal:
                                                             "idUnidad",
                                                           tipoModal: 4,
+                                                          openDialog: true
                                                         });
                                                       }}
                                                     >
@@ -4027,6 +3730,129 @@ function Embarque() {
                 </div>
               </form>
             </div>
+
+            <div id="Cancelar" className="tab-pane fade">
+              <div className="widget-wrap">
+                <div className="widget-content">
+                  <div className="row">
+                    <form className="j-forms" onSubmit={handleCancelar}>
+                      <div className="form-content">
+                        <div className="widget-wrap">
+                          <div className="widget-container">
+                            <div className="widget-content">
+                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                <label className="label">Folio Embarque</label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="text"
+                                    value={state.folioRecoleccion}
+                                    id="folioRecoleccion"
+                                    readOnly
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                <label className="label">Sucursal</label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="text"
+                                    value={state.sucursalCancelacion}
+                                    id="sucursalCancelacion"
+                                    readOnly
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                <label className="label">Fecha</label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="text"
+                                    value={state.fechaCancelacion}
+                                    id="fechaCancelacion"
+                                    readOnly
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                <label className="label">Usuario</label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="text"
+                                    value={state.usuario}
+                                    id="usuario"
+                                    readOnly
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                <label className="label">Estatus</label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="text"
+                                    value={state.estatusEmbarque}
+                                    id="estatusEmbarque"
+                                    readOnly
+                                  />
+                                </div>
+                              </div>
+
+
+                              <div className="col-sm-12 col-md-12 col-lg-12 unit">
+                                <label className="label">Motivo</label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="text"
+                                    value={state.motivoCancelacion}
+                                    id="motivoCancelacion"
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="form-footer" className="col-md-12">
+                                <button
+                                  href="#Listado"
+                                  role="tab"
+                                  data-toggle="tab"
+                                  className="btn btn-secondary secondary-btn"
+                                >
+                                  Cancelar
+                                </button>
+                                <button
+                                  type="submit"
+                                  className="btn btn-primary primary-btn"
+                                >
+                                  Aceptar
+                                </button>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+
           </div>
         </div>
       </section>

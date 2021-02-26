@@ -40,7 +40,7 @@ div.activity a:focus {
 div.activity span {
   display: block;
   margin-top: 3px;
-  font-size: 12px;
+  font-size: 14px;
   color: #666;
 }
 .ThemeNoty {
@@ -126,7 +126,7 @@ svg {
   background: rgba(0, 0, 0, 0.8);
   color: white;
   padding: 3px 10px;
-  font-size: 12px;
+  font-size: 14px;
 }
 .jvectormap-zoomin,
 .jvectormap-zoomout,
@@ -221,7 +221,7 @@ svg {
   vertical-align: middle;
 }
 .jvectormap-legend-tick-text {
-  font-size: 12px;
+  font-size: 14px;
 }
 .jvectormap-legend-cnt-h .jvectormap-legend-tick-text {
   text-align: center;

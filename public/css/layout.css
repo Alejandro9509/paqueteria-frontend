@@ -79,7 +79,7 @@
 }
 .topbar .topbar-logged-user .apps-shortcut > li > a .apps-label {
   display: block;
-  font-size: 12px;
+  font-size: 14px;
 }
 .topbar .topbar-logged-user .apps-shortcut > li > a .apps-noty {
   -webkit-border-radius: 3px;
@@ -536,7 +536,7 @@
 }
 .apps-dropdown .apps-shortcut > li > a .apps-label {
   display: block;
-  font-size: 12px;
+  font-size: 14px;
 }
 .apps-dropdown .apps-shortcut > li > a .apps-noty {
   -webkit-border-radius: 3px;
@@ -719,7 +719,7 @@
   background: #f9f9f9;
 }
 .notifications-dropdown .dropdown-menu .message-list-container > ul > li > a {
-  font-size: 12px;
+  font-size: 14px;
   color: #444444;
   text-decoration: none;
   padding: 15px;
@@ -754,7 +754,7 @@
   width: 100%;
   display: table;
   padding: 15px;
-  font-size: 12px;
+  font-size: 14px;
   color: #444444;
   background: #f9f9f9;
   text-decoration: none;
@@ -832,14 +832,14 @@
 .message-meta {
   font-weight: 500;
   font-style: italic;
-  font-size: 12px;
+  font-size: 14px;
 }
 .message-time {
   display: block;
   color: #999999;
 }
 .btn-link.btn-view-all {
-  font-size: 12px;
+  font-size: 14px;
   color: #444444;
   padding: 15px 20px;
   font-weight: 500;
@@ -1086,7 +1086,7 @@
 }
 .leftbar.material-leftbar .list-accordion .list-title .label {
   position: relative;
-  font-size: 12px;
+  font-size: 14px;
   top: -1px;
   font-weight: 500;
 }
@@ -1177,7 +1177,7 @@
 }
 .list-accordion .list-title .label {
   position: relative;
-  font-size: 12px;
+  font-size: 14px;
   top: -1px;
   font-weight: 500;
 }
@@ -1194,7 +1194,7 @@
   top: -1px;
   left: 4px;
   font-weight: 500;
-  font-size: 12px;
+  font-size: 14px;
 }
 .list-accordion li ul {
   display: none;
@@ -1868,7 +1868,7 @@
   background-color: #F9A03E;
   color: #fff;
   padding: 2px 6px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -1909,7 +1909,7 @@
   background-color: #F9A03E;
   color: #fff;
   padding: 2px 6px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -1936,7 +1936,7 @@
 }
 .label-list li {
   margin-bottom: 10px;
-  font-size: 12px;
+  font-size: 14px;
 }
 .label-list li a {
   display: block;
@@ -1957,7 +1957,7 @@
 }
 .add-more-label {
   display: block;
-  font-size: 12px;
+  font-size: 14px;
   margin-right: -15px;
   margin-left: -15px;
   padding: 6px 15px 6px 15px;
@@ -2013,7 +2013,7 @@
   background-color: #F9A03E;
   color: #fff;
   padding: 2px 6px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -2096,7 +2096,7 @@
 }
 .rightbar .popover .chat-user-info .chat-user-details ul li {
   list-style: none;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 18px;
   font-weight: 500;
   color: #666;
@@ -2139,7 +2139,7 @@
   background: #f9f9f9;
 }
 .rightbar .message-list-container > ul > li > a {
-  font-size: 12px;
+  font-size: 14px;
   color: #444444;
   text-decoration: none;
   padding: 15px;
@@ -2173,7 +2173,7 @@
   width: 100%;
   display: table;
   padding: 15px;
-  font-size: 12px;
+  font-size: 14px;
   color: #444444;
   background: #f9f9f9;
   text-decoration: none;
@@ -2206,7 +2206,7 @@
   border-bottom: #eee 1px solid;
 }
 .chat-user-container h3 {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   text-transform: uppercase;
   margin-top: 0px;
@@ -2272,13 +2272,13 @@
 }
 .chat-user-list > li .chat-u-info {
   padding-left: 12px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
 }
 .chat-user-list > li .chat-u-info cite {
   display: block;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 14px;
   font-style: normal;
   color: #868686;
 }
@@ -2466,7 +2466,7 @@
 .coversation-toolbar .active-conversation .chat-user-status ul li {
   list-style: none;
   line-height: normal;
-  font-size: 12px;
+  font-size: 14px;
 }
 .coversation-toolbar .conversation-action {
   width: 100px;
@@ -2853,7 +2853,7 @@
   padding-bottom: 10px;
 }
 .activities-list > li > div.activities-details .activities-post .new-file-lists li a {
-  font-size: 12px;
+  font-size: 14px;
   color: #666;
   display: block;
 }
@@ -2870,7 +2870,7 @@
   padding-bottom: 10px;
 }
 .activities-list > li > div.activities-details .activities-post .new-post-lists li a {
-  font-size: 12px;
+  font-size: 14px;
   color: #666;
   display: block;
   font-weight: 500;
@@ -2893,7 +2893,7 @@
 }
 .activities-list > li > div.activities-details .activities-post .new-comments-lists li a {
   color: #666;
-  font-size: 12px;
+  font-size: 14px;
   display: block;
   border-left: #eee 3px solid;
   padding-left: 15px;
@@ -2907,7 +2907,7 @@
   color: #F9A03E;
 }
 .activities-list > li > div.activities-details .activities-header {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   margin-top: 0px;
   margin-bottom: 0px;
@@ -2923,12 +2923,12 @@
 .activities-list > li > div.activities-details .activities-meta {
   margin-bottom: 0px;
   color: #888;
-  font-size: 12px;
+  font-size: 14px;
 }
 .activities-list > li > div.activities-details p {
   margin-bottom: 0px;
   color: #666;
-  font-size: 12px;
+  font-size: 14px;
 }
 .activities-load {
   border-top: #eee 1px solid;
@@ -2940,7 +2940,7 @@
   text-transform: uppercase;
   color: #444;
   font-weight: 500;
-  font-size: 12px;
+  font-size: 14px;
   background-color: #f9f9f9;
 }
 .activities-load a:hover,

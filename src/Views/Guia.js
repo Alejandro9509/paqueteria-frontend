@@ -18,12 +18,12 @@ import Barra from "../Util/jquery-barcode"
 
 import Noty from 'noty';
 
-function showSuccess(mensaje){
+function showSuccess(mensaje) {
   new Noty({
-    type:"information",
-    layout:"topCenter",
+    type: "information",
+    layout: "topCenter",
     text: mensaje,
-    timeout:"3000"
+    timeout: "3000"
   }).show()
 }
 
@@ -96,6 +96,7 @@ function Guia() {
     idEmbarque2: 0,
     hora: "",
     idEstatusGuia: 0,
+    estatusGuia: "",
     idMoneda: 0,
     tipoCambio: 0,
     idTipoCobro: 0,
@@ -250,6 +251,7 @@ function Guia() {
     idTipoServicio: 0,
     Descripcion: ""
   })
+
   const handleAceptar = (e) => {
     e.preventDefault()
     var params = {
@@ -400,6 +402,7 @@ function Guia() {
       $("#Imprimir").click();
     });
   };
+
   function addPaquete() {
     const { paquetes } = state;
     paquetes.push({
@@ -417,6 +420,7 @@ function Guia() {
     //console.log(paquetes);
     setState({ ...state, paquetes: paquetes });
   }
+
   function addSobre() {
     const { sobres } = state;
     sobres.push({
@@ -426,6 +430,7 @@ function Guia() {
     //console.log(sobres);
     setState({ ...state, sobres: sobres });
   }
+
   function addConcepto() {
     const { conceptos } = state;
     conceptos.push({
@@ -449,12 +454,14 @@ function Guia() {
     //console.log(sobres)
     setState({ ...state, sobres: sobres });
   }
+
   function removePaquete(index) {
     var { paquetes } = state;
     paquetes = remove_array_element(paquetes, index)
     //console.log(paquetes)
     setState({ ...state, paquetes: paquetes });
   }
+
   function removeConcepto(index) {
     var { conceptos } = state;
     conceptos = remove_array_element(conceptos, index)
@@ -572,6 +579,37 @@ function Guia() {
 
   }
 
+  function handleShowCancelar(){
+    const url = `${process.env.REACT_APP_API_URL}/Guia/GetById/${state.idGuia}`;
+    var today = new Date();
+    axios.get(url, { headers }).then((respuesta) => {
+      setState({
+        ...state,
+        usuarioCancela: respuesta.data.m_nUsuarioCancelacion != 0 ? respuesta.data.m_nUsuarioCancelacion : localStorage.getItem("Usuario"),
+        folioGuía: respuesta.data.m_nFolioGuia,
+        sucursalCancelacion: respuesta.data.m_sSucursal,
+        fechaCancelado: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear(),
+        estatusGuia: respuesta.data.m_sEstatusGuia,
+        motivoCancelacion: respuesta.data.m_sMotivoCancelacion
+      })
+      if(respuesta.data.m_nFolioInforme != 0)
+        showSuccess("Guía no se puede cancelar")
+    })
+  }
+
+  const handleCancelar = (e) => {
+    e.preventDefault();
+    var params = {
+      "motivoCancelacion": state.MotivoCancelacion,
+      "usuarioCancelacion": localStorage.getItem("UsuarioId"),
+      "fechaCancelacion": state.fechaCancelado
+    }
+    const url = `${process.env.REACT_APP_API_URL}/Guia/Cancelar/${state.idGuia}`;
+    axios.put(url, Object.assign({}, params), { headers }).then((respuesta) => {
+      console.log(respuesta.data)
+    })
+  }
+
   /*function handleImprmir()
   {
     
@@ -620,8 +658,6 @@ function handleImprmir2()
             }, margins
         );
   }*/
-
-
 
   function handleShowImprimir() {
     //getImpresion(38);
@@ -681,7 +717,6 @@ function handleImprmir2()
       arrClsDetalle: [],
       FechaCancelacion: "",
       usuarioCancelacion: 0,
-      MotivoCancelacion: "",
       entregarMismoDomicilio: false,
       fechaLlegada: "",
       horaLlegada: "",
@@ -723,6 +758,7 @@ function handleImprmir2()
       paquetes: paquetes
     });
   };
+
   const handleChangeConcepto = (event, index) => {
 
     var { conceptos } = state
@@ -844,18 +880,21 @@ function handleImprmir2()
       setDataSucursal(respuesta.data)
     });
   };
+
   async function getAllConceptos() {
     const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/GetListado`;
     await axios.get(url, { headers }).then(respuesta => {
       setDataConcepto(respuesta.data)
     });
   };
+
   async function getAllImpuestosRetiene() {
     const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetListadoByTipoImpuesto/2`;
     await axios.get(url, { headers }).then(respuesta => {
       setDataImpuestoRetiene(respuesta.data)
     });
   };
+
   async function getAllImpuestosTraslado() {
     const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetListadoByTipoImpuesto/1`;
     await axios.get(url, { headers }).then(respuesta => {
@@ -876,8 +915,6 @@ function handleImprmir2()
       setDataTipoCobro(respuesta.data)
     });
   };
-
-
 
   async function getAllDataTipoServicio() {
     const url = `${process.env.REACT_APP_API_URL}/TipoServicio/GetListado`;
@@ -917,6 +954,7 @@ function handleImprmir2()
       setDataEmbarque(respuesta.data)
     });
   };
+
   function cargaEmbarqueModificar(valorSucursal, valorMoneda, valorGuia) {
     //showSuccess(valorSucursal + "-" + valorMoneda)
     const url = `${process.env.REACT_APP_API_URL}/Embarques/GetBySucursalMoneda/` + valorSucursal + "/" + valorMoneda + "/" + valorGuia;
@@ -925,6 +963,7 @@ function handleImprmir2()
       setDataEmbarque(respuesta.data)
     });
   };
+
   async function cargaEmbarqueMoneda(valor) {
     //showSuccess(valor);
     setState({
@@ -1022,6 +1061,7 @@ function handleImprmir2()
 
     });
   };
+
   function handleEmbarque(embarque) {
     const url = `${process.env.REACT_APP_API_URL}/Embarques/GetById/` + embarque;
     //showSuccess(embarque);
@@ -1103,6 +1143,7 @@ function handleImprmir2()
 
     });
   };
+
   function calculaIva(conceptos, index, tipo) {
     if (tipo === 1)
       conceptos[index].ImporteIva = Number(conceptos[index].Importe) * (Number(conceptos[index].PorcentajeIva))
@@ -1336,8 +1377,8 @@ function handleImprmir2()
                 prepareRow(row);
                 return (
                   <tr {...row.getRowProps()}
-                  onClick={handleSelectRow.bind(this, row.original.m_nIdGuia)}
-                  className={state.idGuia === row.original.m_nIdGuia ? classes.seleccionado : classes.noSeleccionado}>
+                    onClick={handleSelectRow.bind(this, row.original.m_nIdGuia)}
+                    className={state.idGuia === row.original.m_nIdGuia ? classes.seleccionado : classes.noSeleccionado}>
 
                     <td>
                       <div>
@@ -1360,6 +1401,7 @@ function handleImprmir2()
       </div>
     )
   }
+
   function openSection(index) {
     closeSeccions()
     var $section;
@@ -1570,6 +1612,7 @@ function handleImprmir2()
       </div>
     );
   });
+
   const framesConcepto = state.conceptos.map((p, index) => {
     return (
       <div key={`concepto${index}`}>
@@ -1732,6 +1775,7 @@ function handleImprmir2()
       </div>
     );
   });
+
   const framesPaqueteImp = state.paquetesI.map((p, index) => {
     return (
       <div key={`paqueteI${index}`}>
@@ -2108,6 +2152,11 @@ function handleImprmir2()
               <a data-toggle="tab" href="#Importar">
                 <i className="fa fa-upload" /> Importar
             </a>
+            </li>
+            <li>
+              <a data-toggle="tab" href="#Cancelar" onClick={handleShowCancelar}>
+                <i className="fa fa-times-circle" /> Cancelar
+              </a>
             </li>
             <li>
               <ExportCSV csvData={data} fileName="Guia_Listado" />
@@ -3115,6 +3164,127 @@ function handleImprmir2()
               </div>
 
             </div>
+            <div id="Cancelar" className="tab-pane fade">
+              <div className="widget-wrap">
+                <div className="widget-content">
+                  <div className="row">
+                    <form className="j-forms" onSubmit={handleCancelar}>
+                      <div className="form-content">
+                        <div className="widget-wrap">
+                          <div className="widget-container">
+                            <div className="widget-content">
+                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                <label className="label">Folio Guía</label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="text"
+                                    value={state.folioGuía}
+                                    id="folioGuía"
+                                    readOnly
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                <label className="label">Sucursal</label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="text"
+                                    value={state.sucursalCancelacion}
+                                    id="sucursalCancelacion"
+                                    readOnly
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                <label className="label">Fecha</label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="text"
+                                    value={state.fechaCancelado}
+                                    id="fechaCancelado"
+                                    readOnly
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                <label className="label">Usuario</label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="text"
+                                    value={state.usuarioCancela}
+                                    id="usuarioCancela"
+                                    readOnly
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                <label className="label">Estatus</label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="text"
+                                    value={state.estatusGuia}
+                                    id="estatusGuia"
+                                    readOnly
+                                  />
+                                </div>
+                              </div>
+
+
+                              <div className="col-sm-12 col-md-12 col-lg-12 unit">
+                                <label className="label">Motivo</label>
+                                <div className="input">
+                                  <input
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="text"
+                                    value={state.MotivoCancelacion}
+                                    id="MotivoCancelacion"
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="form-footer" className="col-md-12">
+                                <button
+                                  href="#Listado"
+                                  role="tab"
+                                  data-toggle="tab"
+                                  className="btn btn-secondary secondary-btn"
+                                >
+                                  Cancelar
+                                </button>
+                                <button
+                                  type="submit"
+                                  className="btn btn-primary primary-btn"
+                                >
+                                  Aceptar
+                                </button>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
           </div>
         </div>
 
