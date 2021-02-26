@@ -75,7 +75,7 @@ function Recoleccion() {
   const [dataCiudad, setDataCiudad] = React.useState([]);
   const [dataCodigoPostal, setDataCodigoPostal] = React.useState([]);
   const [dataRemitenteDestinatario, setDataRemitenteDestinatario] = React.useState([]);
-
+  const [dataEmbalaje, setDataEmbalaje] = React.useState([]);
   const [dataOperador, setDataOperador] = React.useState([]);
   const [dataTipoUnidad, setDataTipoUnidad] = React.useState([]);
   const [dataUnidad, setDataUnidad] = React.useState([]);
@@ -177,6 +177,8 @@ function Recoleccion() {
   });
 
   const history = useHistory()
+
+ 
 
   function handleSelectRemitente() {
     state.RFCRemitente = state.nombreRemitente.m_sRFC
@@ -881,6 +883,8 @@ function Recoleccion() {
     getAllOperadores();
     getAllTipoUnidad();
     getAllRemitentesDestinatarios();
+    getAllEmbalajes();
+    
   }, []);
 
   function getAllData() {
@@ -891,6 +895,13 @@ function Recoleccion() {
     });
   }
 
+  
+  function getAllEmbalajes() {
+    const url = `${process.env.REACT_APP_API_URL}/Embalajes/GetListado`;
+    axios.get(url, { headers }).then((respuesta) => {
+      setDataEmbalaje(respuesta.data);
+    });
+  }
   function getAllSucursales() {
     const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
@@ -932,6 +943,7 @@ function Recoleccion() {
       setDataCodigoPostal(respuesta.data);
     });
   }
+
 
   function getAllRemitentesDestinatarios() {
     const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/GetListado`;
@@ -1721,7 +1733,7 @@ function Recoleccion() {
               className="form-control"
               type="text"
               value={state.paquetes[index].m_rPeso}
-              placeholder="Peso"
+              placeholder="kg"
               name="m_rPeso"
             />
           </div>
@@ -1735,7 +1747,7 @@ function Recoleccion() {
               className="form-control"
               type="text"
               value={state.paquetes[index].m_rLargo}
-              placeholder="Largo"
+              placeholder="mts"
               name="m_rLargo"
             />
           </div>
@@ -1749,7 +1761,7 @@ function Recoleccion() {
               className="form-control"
               type="text"
               value={state.paquetes[index].m_rAncho}
-              placeholder="Ancho"
+              placeholder="mts"
               name="m_rAncho"
             />
           </div>
@@ -1763,7 +1775,7 @@ function Recoleccion() {
               className="form-control"
               type="text"
               value={state.paquetes[index].m_rAlto}
-              placeholder="Alto"
+              placeholder="mts"
               name="m_rAlto"
             />
           </div>
@@ -1777,7 +1789,7 @@ function Recoleccion() {
               className="form-control"
               type="text"
               value={state.paquetes[index].m_rVolumen}
-              placeholder="Volumen"
+              placeholder="mts3"
               name="m_rVolumen"
             />
           </div>
@@ -1785,16 +1797,24 @@ function Recoleccion() {
 
         <div className="col-sm-4 col-md-6 unit">
           <label className="label">Tipo de Embalaje</label>
-          <div className="input">
-            <input
-              onChange={(event) => handleChangePaquete(event, index)}
+          <label className="input select">
+            <select
               className="form-control"
-              type="text"
-              value={state.paquetes[index].m_nIdTipoEmbalaje}
-              placeholder="Tipo de Embarje"
-              name="m_nIdTipoEmbalaje"
-            />
-          </div>
+             
+              value={state.paquetes[index].m_nIdTIpoEmpaque}
+              disabled={state.agregar == "Consultar"}
+              onChange={(event) => handleChangePaquete(event, index)}
+              id="m_nIdTIpoEmpaque"
+              name="m_nIdTIpoEmpaque"
+            >
+              {dataEmbalaje.map((embalaje) => (
+                <option key={embalaje.m_nIdEmbalaje} value={embalaje.m_nIdEmbalaje}>
+                  {embalaje.m_sNombre}
+                </option>
+              ))}
+            </select>
+            <i className="fa fa-arrow-down" />
+          </label>
         </div>
 
         <div className="col-sm-4 col-md-6 unit">
@@ -1805,7 +1825,7 @@ function Recoleccion() {
               className="form-control"
               type="text"
               value={state.paquetes[index].m_cyValorDeclarado}
-              placeholder="Valor Declarado"
+              placeholder="$"
               name="m_cyValorDeclarado"
             />
           </div>
@@ -3343,6 +3363,7 @@ function Recoleccion() {
                                         <div className="input">
                                           <Autocomplete
                                             freeSolo
+
                                             onChange={(event, newValue) =>
                                               setState({
                                                 ...state,
