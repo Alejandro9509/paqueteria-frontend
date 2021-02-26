@@ -1632,13 +1632,7 @@ function Recoleccion() {
                 prepareRow(row);
                 return (
                   <tr style={{backgroundColor: row.original.m_nIdRemitenteDestinatario === select ? "#FCC88F" : "white"}} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original, false)} onDoubleClick={handleSelectCP.bind(this, row.original, true)}>
-                    <td>
-                      <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdRecoleccion))} className="btn btn-default"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm m-user-delete" onClick={() => (handleEliminar(row.original.m_nIdRecoleccion))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
-                      </div>
-                    </td>
+                    
                     {row.cells.map(cell => {
                       return (
                         <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
