@@ -37,7 +37,7 @@ const styles = {
     height: "220px !important",
   },
   seleccionado: {
-    backgroundColor: "#688ad9",
+    backgroundColor: "#FCC88F",
   },
   noSeleccionado: {
     backgroundColor: "#FFFFFF",

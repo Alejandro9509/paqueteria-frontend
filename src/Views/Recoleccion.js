@@ -58,7 +58,7 @@ const useStyles = makeStyles({
   sobreCarrusel: {
     height: "175px !important",
   }, seleccionado: {
-    backgroundColor: "#688ad9",
+    backgroundColor: "#FCC88F",
   },
   noSeleccionado: {
     backgroundColor: "#FFFFFF",
