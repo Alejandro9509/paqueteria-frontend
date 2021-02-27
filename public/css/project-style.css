@@ -60,3 +60,36 @@ h2 {
 .color-mapeo:hover{
   color: #707070 !important;
 }
+
+.split {
+  height: 100%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+.left {
+  left: 0;
+  width: 70%;
+  background-color: #FFFFFF;
+}
+
+.right {
+  right: 0;
+  width: 30%;
+  background-color: #717171;
+}
+
+.centered {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.buttonCircle {
+  border-radius: 50%;
+}
