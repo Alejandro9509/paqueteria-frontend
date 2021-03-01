@@ -17401,8 +17401,6 @@ textarea.form-control {
 }
 .btn-primary:active {
   background-color: #F9A03E;
-  background-image: -webkit-radial-gradient(circle, #108180 10%, #F9A03E 11%);
-  background-image: radial-gradient(circle, #108180 10%, #F9A03E 11%);
   background-repeat: no-repeat;
   background-size: 1000%;
   -webkit-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
