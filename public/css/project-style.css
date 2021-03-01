@@ -67,13 +67,44 @@ h2 {
   z-index: 1;
   top: 0;
   overflow-x: hidden;
-  padding-top: 20px;
+  padding-top: 40px;
 }
 
 .left {
   left: 0;
   width: 70%;
-  background-color: #FFFFFF;
+  background-image: url(../images/Fondo.png);
+}
+
+.imagenes-login{
+  width: 20%;
+  height: auto;
+}
+
+.logo-paqueteria{
+  position: absolute;
+  top: 35%;
+  text-align: center;
+}
+
+.imagen-logo-paqueteria{
+  width: 85%;
+  height: auto;
+  margin: auto;
+}
+
+.caja-copyright{
+  position: absolute;
+  text-align: center;
+  top: 90%;
+}
+
+.copyright-texto {
+  text-align: center;
+  font-size: 16px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  margin: auto;
+  min-width: 70%;
 }
 
 .right {
@@ -83,13 +114,35 @@ h2 {
 }
 
 .centered {
-  position: relative;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
+  position: absolute;
+    top: 25%;
+    left: 0;
+    right: 0;
+    margin-top: -9px;
 }
 
-.buttonCircle {
+.circle-icon {
+  background: #F9A03E;
+  color: #FFFFFF;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
+  text-align: center;
+  line-height: 25px;
+  vertical-align: middle;
+  padding: 5px;
+}
+
+.social-media{
+  list-style-type: none;
+  position: relative;
+  float: left;
+  padding-top: 40px;
+  left: 40%;
+}
+.social-media-item{
+  position: relative;
+  left: -50%;
+  float: left;
+  padding-left: 10px;
 }

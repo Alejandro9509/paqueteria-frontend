@@ -6,6 +6,12 @@ import {
 } from "@material-ui/core";
 import $ from 'jquery';
 import { sha512 } from "../Util/Sha";
+import LogoGMTransportDIG from "../iconos/LogoGMTransportDIG.png"
+import ERP from "../iconos/erp.png"
+import Localizacion from "../iconos/Localizacion.png"
+import HombreCamion from "../iconos/HombreCamion.png"
+import AplicacionMovil from "../iconos/apps.png"
+import LogoPaqueteria from "../iconos/LogoPaqueteria.png"
 
 import Noty from 'noty';
 
@@ -62,141 +68,89 @@ function Login() {
   return (
     <section className="login-container" >
       <div className="split left">
-        <div className="col-md-4 col-md-offset-4 col-sm-4 col-sm-offset-4">
-          <div className="login-form-container">
-            <div className="row">
+        <div style={{ display: "inline-flex"}}>
+          <input type="image" className="imagenes-login" src={LogoGMTransportDIG} />
+          <input type="image" className="imagenes-login" src={ERP} />
+          <input type="image" className="imagenes-login" src={Localizacion} />
+          <input type="image" className="imagenes-login" src={HombreCamion} />
+          <input type="image" className="imagenes-login" src={AplicacionMovil} />
+        </div>
+        <div className="logo-paqueteria">
+          <img className="imagen-logo-paqueteria" src={LogoPaqueteria}></img>
+        </div>
+        <div className="caja-copyright">
+          <label className="copyright-texto">Copyright © 2012 Julián Gaxiola Montoya. Todos los derechos reservados.
+          Grupo GM Transport S.A. de C.V. Alhóndiga de granaditas #800, Col. Independencia,
+          Mexicali, Baja California, México, C.P. 21290
+        </label>
 
-              <div className="login-form-header">
-                <div className="logo">
-                  <a href="index.html" title="Admin Template"><img src="iconos/GM-naranja.png" width="230" height="58" alt="logo" /></a>
-                </div>
-              </div>
-              <div className="login-form-content">
-                {/* start login */}
-
-                <div className="unit">
-                  <div className="input login-input">
-                    <label className="icon-left" htmlFor="login">
-                      <i className="zmdi zmdi-account" />
-                    </label>
-                    <input className="form-control login-frm-input" type="text" id="rfc" name="rfc" placeholder="RFC" />
-                  </div>
-                </div>
-                <div className="unit">
-                  <div className="input login-input">
-                    <label className="icon-left" htmlFor="login">
-                      <i className="zmdi zmdi-account" />
-                    </label>
-                    <input className="form-control login-frm-input" type="text" id="usuario" name="usuario" placeholder="Usuario" />
-                  </div>
-                </div>
-                {/* end login */}
-                {/* start password */}
-                <div className="unit">
-                  <div className="input login-input">
-                    <label className="icon-left" htmlFor="Contraseña">
-                      <i className="zmdi zmdi-key" />
-                    </label>
-                    <input className="form-control login-frm-input" type="password" id="password" name="password" placeholder="Password" />
-                    <span className="hint">
-                      <a href="#" className="link">Olvidaste la contraseña?</a>
-                    </span>
-                  </div>
-                </div>
-                {/* end password */}
-                {/* start keep logged */}
-
-                {/* end keep logged */}
-                {/* start response from server */}
-                <div className="response" />
-                {/* end response from server */}
-              </div>
-              <div className="login-form-footer">
-                <button onClick={() => login()} className="btn-block btn btn-primary">Inicia Sesión</button>
-              </div>
-
-            </div>
-          </div>
         </div>
       </div>
 
       <div className="split right">
-        <div className="login-form-container">
-          <div className="row">
+        <div className="centered">
+          {/* start login */}
 
-            <div className="login-form-header">
-              <div className="logo">
-                <a href="index.html" title="Admin Template"><img src="iconos/GM-naranja.png" width="230" height="58" alt="logo" /></a>
-              </div>
+          <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 unit">
+            <div className="input login-input">
+              <label className="icon-left" htmlFor="rfc">
+                <i className="zmdi zmdi-account" />
+              </label>
+              <input className="form-control login-frm-input" type="text" id="rfc" name="rfc" placeholder="RFC" />
             </div>
-
-            <div className="login-form-content centered">
-              {/* start login */}
-
-              <div className="col-xs-11 col-sm-11 col-md-11 col-lg-11 unit">
-                <div className="input login-input">
-                  <label className="icon-left" htmlFor="login">
-                    <i className="zmdi zmdi-account" />
-                  </label>
-                  <input className="form-control login-frm-input" type="text" id="rfc" name="rfc" placeholder="RFC" />
-                </div>
-              </div>
-
-              <div className="col-xs-11 col-sm-11 col-md-11 col-lg-11 unit">
-                <div className="input login-input">
-                  <label className="icon-left" htmlFor="login">
-                    <i className="zmdi zmdi-account" />
-                  </label>
-                  <input className="form-control login-frm-input" type="text" id="usuario" name="usuario" placeholder="Usuario" />
-                </div>
-              </div>
-              {/* end login */}
-
-              {/* start password */}
-              <div className="col-xs-11 col-sm-11 col-md-11 col-lg-11 unit">
-                <div className="input login-input">
-                  <label className="icon-left" htmlFor="Contraseña">
-                    <i className="zmdi zmdi-key" />
-                  </label>
-                  <input className="form-control login-frm-input" type="password" id="password" name="password" placeholder="Password" />
-                  <span className="hint">
-                    <a href="#" className="link">Olvidaste la contraseña?</a>
-                  </span>
-                </div>
-              </div>
-              {/* end password */}
-
-              <div className="col-xs-11 col-sm-11 col-md-11 col-lg-11">
-                <button onClick={() => login()} className="btn-block btn btn-primary">Inicia Sesión</button>
-              </div>
-
-            </div>
-
           </div>
 
-          <div className="login-form-footer" style={{}}>
-            <button className="buttonCircle">
-              <a href="http://www.facebook.com/GMTransportOficial/" target="_blank">
-                <i className="fa fa-facebook" />
-              </a>
-            </button>
-            <button className="buttonCircle">
-              <a href=" https://www.instagram.com/grupogmtransport" target="_blank">
-                <i className="fa fa-instagram" />
-              </a>
-            </button>
-            <button className="buttonCircle">
-              <a href="http://bit.ly/paqueteriaGM" target="_blank">
-                <i className="fa fa-whatsapp" />
-              </a>
-            </button>
-            <button className="buttonCircle">
-              <a href="https://twitter.com/gmtransporterp?lang=es" target="_blank">
-                <i className="fa fa-twitter" />
-              </a>
-            </button>
+          <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 unit">
+            <div className="input login-input">
+              <label className="icon-left" htmlFor="usuario">
+                <i className="zmdi zmdi-account" />
+              </label>
+              <input className="form-control login-frm-input" type="text" id="usuario" name="usuario" placeholder="Usuario" />
+            </div>
           </div>
+          {/* end login */}
 
+          {/* start password */}
+          <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 unit">
+            <div className="input login-input">
+              <label className="icon-left" htmlFor="password">
+                <i className="zmdi zmdi-key" />
+              </label>
+              <input className="form-control login-frm-input" type="password" id="password" name="password" placeholder="Contraseña" />
+              <span className="hint">
+                <a href="#" className="link" style={{ color: "#FFFFFF" }}>Olvidaste la contraseña?</a>
+              </span>
+            </div>
+          </div>
+          {/* end password */}
+
+          <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <button onClick={() => login()} className="btn-block btn btn-primary">Inicia Sesión</button>
+          </div>
+          <div style={{ textAlign: "center" }}>
+            <ul className="social-media">
+              <li className="social-media-item">
+                <a href="http://www.facebook.com/GMTransportOficial/" target="_blank">
+                  <i className="fa fa-facebook circle-icon" />
+                </a>
+              </li>
+              <li className="social-media-item">
+                <a href=" https://www.instagram.com/grupogmtransport" target="_blank">
+                  <i className="fa fa-instagram circle-icon" />
+                </a>
+              </li>
+              <li className="social-media-item">
+                <a href="http://bit.ly/paqueteriaGM" target="_blank">
+                  <i className="fa fa-whatsapp circle-icon" />
+                </a>
+              </li>
+              <li className="social-media-item">
+                <a href="https://twitter.com/gmtransporterp?lang=es" target="_blank">
+                  <i className="fa fa-twitter circle-icon" />
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 
