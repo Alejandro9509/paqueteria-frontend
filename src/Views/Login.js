@@ -6,6 +6,12 @@ import {
 } from "@material-ui/core";
 import $ from 'jquery';
 import { sha512 } from "../Util/Sha";
+import LogoGMTransportDIG from "../iconos/LogoGMTransportDIG.png"
+import ERP from "../iconos/erp.png"
+import Localizacion from "../iconos/Localizacion.png"
+import HombreCamion from "../iconos/HombreCamion.png"
+import AplicacionMovil from "../iconos/apps.png"
+import LogoPaqueteria from "../iconos/LogoPaqueteria.png"
 
 import Noty from 'noty';
 
@@ -62,16 +68,23 @@ function Login() {
   return (
     <section className="login-container" >
       <div className="split left">
-        <input type="image" className="gm-boton"/>
-        <input type="image" src="iconos/Icono_logotipo.png"/>
-        <input type="image" src="iconos/erp.png"/>
-        <input type="image" src="iconos/Localizacion.png"/>
-        <input type="image" src="iconos/HombreCamion.png"/>
-        <input type="image" src="iconos/apps.png"/>
+        <div style={{ display: "inline-flex"}}>
+          <input type="image" className="imagenes-login" src={LogoGMTransportDIG} />
+          <input type="image" className="imagenes-login" src={ERP} />
+          <input type="image" className="imagenes-login" src={Localizacion} />
+          <input type="image" className="imagenes-login" src={HombreCamion} />
+          <input type="image" className="imagenes-login" src={AplicacionMovil} />
+        </div>
+        <div className="logo-paqueteria">
+          <img className="imagen-logo-paqueteria" src={LogoPaqueteria}></img>
+        </div>
+        <div className="caja-copyright">
+          <label className="copyright-texto">Copyright © 2012 Julián Gaxiola Montoya. Todos los derechos reservados.
+          Grupo GM Transport S.A. de C.V. Alhóndiga de granaditas #800, Col. Independencia,
+          Mexicali, Baja California, México, C.P. 21290
+        </label>
 
-        <label className="copyright-texto">Copyright © 2012 Julián Gaxiola Montoya. Todos los derechos reservados.
-           Grupo GM Transport S.A. de C.V. Alhóndiga de granaditas #800, Col. Independencia,
-            Mexicali, Baja California, México, C.P. 21290</label>
+        </div>
       </div>
 
       <div className="split right">
@@ -114,7 +127,7 @@ function Login() {
           <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <button onClick={() => login()} className="btn-block btn btn-primary">Inicia Sesión</button>
           </div>
-          <div style={{textAlign: "center"}}>
+          <div style={{ textAlign: "center" }}>
             <ul className="social-media">
               <li className="social-media-item">
                 <a href="http://www.facebook.com/GMTransportOficial/" target="_blank">

@@ -76,12 +76,35 @@ h2 {
   background-image: url(../images/Fondo.png);
 }
 
-.gm-boton{
-  background-image: url(../images/LogoGMTransportDIG.png);
+.imagenes-login{
+  width: 20%;
+  height: auto;
+}
+
+.logo-paqueteria{
+  position: absolute;
+  top: 35%;
+  text-align: center;
+}
+
+.imagen-logo-paqueteria{
+  width: 85%;
+  height: auto;
+  margin: auto;
+}
+
+.caja-copyright{
+  position: absolute;
+  text-align: center;
+  top: 90%;
 }
 
 .copyright-texto {
-  bottom: 0;
+  text-align: center;
+  font-size: 16px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  margin: auto;
+  min-width: 70%;
 }
 
 .right {
