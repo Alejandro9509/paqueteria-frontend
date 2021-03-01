@@ -73,7 +73,15 @@ h2 {
 .left {
   left: 0;
   width: 70%;
-  background-color: #FFFFFF;
+  background-image: url(../images/Fondo.png);
+}
+
+.gm-boton{
+  background-image: url(../images/LogoGMTransportDIG.png);
+}
+
+.copyright-texto {
+  bottom: 0;
 }
 
 .right {

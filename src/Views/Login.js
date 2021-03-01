@@ -62,7 +62,16 @@ function Login() {
   return (
     <section className="login-container" >
       <div className="split left">
+        <input type="image" className="gm-boton"/>
+        <input type="image" src="iconos/Icono_logotipo.png"/>
+        <input type="image" src="iconos/erp.png"/>
+        <input type="image" src="iconos/Localizacion.png"/>
+        <input type="image" src="iconos/HombreCamion.png"/>
+        <input type="image" src="iconos/apps.png"/>
 
+        <label className="copyright-texto">Copyright © 2012 Julián Gaxiola Montoya. Todos los derechos reservados.
+           Grupo GM Transport S.A. de C.V. Alhóndiga de granaditas #800, Col. Independencia,
+            Mexicali, Baja California, México, C.P. 21290</label>
       </div>
 
       <div className="split right">
