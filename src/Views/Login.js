@@ -35,7 +35,8 @@ function Login() {
     resData: ''
   })
 
-  function login() {
+  const login = (e) => {
+    e.preventDefault();
     const user = $("#usuario").val();
     const rfc = $("#rfc").val();
     const pass = sha512($("#password").val());
@@ -68,7 +69,7 @@ function Login() {
   return (
     <section className="login-container" >
       <div className="split left">
-        <div style={{ display: "inline-flex"}}>
+        <div style={{ display: "inline-flex" }}>
           <input type="image" className="imagenes-login" src={LogoGMTransportDIG} />
           <input type="image" className="imagenes-login" src={ERP} />
           <input type="image" className="imagenes-login" src={Localizacion} />
@@ -89,44 +90,48 @@ function Login() {
 
       <div className="split right">
         <div className="centered">
-          {/* start login */}
+          <form onSubmit={login}>
+            {/* start login */}
 
-          <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 unit">
-            <div className="input login-input">
-              <label className="icon-left" htmlFor="rfc">
-                <i className="zmdi zmdi-account" />
-              </label>
-              <input className="form-control login-frm-input" type="text" id="rfc" name="rfc" placeholder="RFC" />
+            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 unit">
+              <div className="input login-input">
+                <label className="icon-left" htmlFor="rfc">
+                  <i className="zmdi zmdi-account" />
+                </label>
+                <input className="form-control login-frm-input" type="text" id="rfc" name="rfc" placeholder="RFC"
+                  pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
+                  required title="Favor de introducir un RFC válido." />
+              </div>
             </div>
-          </div>
 
-          <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 unit">
-            <div className="input login-input">
-              <label className="icon-left" htmlFor="usuario">
-                <i className="zmdi zmdi-account" />
-              </label>
-              <input className="form-control login-frm-input" type="text" id="usuario" name="usuario" placeholder="Usuario" />
+            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 unit">
+              <div className="input login-input">
+                <label className="icon-left" htmlFor="usuario">
+                  <i className="zmdi zmdi-account" />
+                </label>
+                <input className="form-control login-frm-input" type="text" id="usuario" name="usuario" placeholder="Usuario" required/>
+              </div>
             </div>
-          </div>
-          {/* end login */}
+            {/* end login */}
 
-          {/* start password */}
-          <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 unit">
-            <div className="input login-input">
-              <label className="icon-left" htmlFor="password">
-                <i className="zmdi zmdi-key" />
-              </label>
-              <input className="form-control login-frm-input" type="password" id="password" name="password" placeholder="Contraseña" />
-              <span className="hint">
-                <a href="#" className="link" style={{ color: "#FFFFFF" }}>Olvidaste la contraseña?</a>
-              </span>
+            {/* start password */}
+            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 unit">
+              <div className="input login-input">
+                <label className="icon-left" htmlFor="password">
+                  <i className="zmdi zmdi-key" />
+                </label>
+                <input className="form-control login-frm-input" type="password" id="password" name="password" placeholder="Contraseña" required/>
+                <span className="hint">
+                  <a href="#" className="link" style={{ color: "#FFFFFF" }}>Olvidaste la contraseña?</a>
+                </span>
+              </div>
             </div>
-          </div>
-          {/* end password */}
+            {/* end password */}
 
-          <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <button onClick={() => login()} className="btn-block btn btn-primary">Inicia Sesión</button>
-          </div>
+            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <button type="submit" className="btn-block btn btn-primary">Inicia Sesión</button>
+            </div>
+          </form>
           <div style={{ textAlign: "center" }}>
             <ul className="social-media">
               <li className="social-media-item">
