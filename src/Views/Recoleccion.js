@@ -69,6 +69,7 @@ const useStyles = makeStyles({
   }
 });
 function Recoleccion() {
+  const today = new Date();
   const classes = useStyles();
   const [data, setData] = React.useState([]);
   const [dataSucursal, setDataSucursal] = React.useState([]);
@@ -92,7 +93,7 @@ function Recoleccion() {
     agregar: "Agregar",
     idRecoleccion: 0,
     fechaInicial: "0",
-    fechaFinal: "0",
+    fechaFinal: (today.getMonth() + 1) + "-" + today.getDate() + "-" + today.getFullYear() ,
     sucursalListado: 0,
     estatusListado: 0,
     idSucursalAgregar: localStorage.getItem("Sucursal"),
@@ -321,7 +322,6 @@ function Recoleccion() {
 
   function handleShowCancelar() {
     const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetCancelarById/${state.idRecoleccion}`;
-    var today = new Date();
     axios.get(url, { headers }).then((respuesta) => {
       setState({
         ...state,
@@ -625,7 +625,6 @@ function Recoleccion() {
   }
 
   function handleShowAgregar() {
-    var today = new Date();
     setState({
       ...state,
       agregar: "Agregar",

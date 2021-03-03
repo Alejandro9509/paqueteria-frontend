@@ -69,7 +69,7 @@ function Login() {
   return (
     <section className="login-container" >
       <div className="split left">
-        <div style={{ display: "inline-flex" }}>
+        <div style={{ display: "inline-flex", width: "100%" }}>
           <input type="image" className="imagenes-login" src={LogoGMTransportDIG} />
           <input type="image" className="imagenes-login" src={ERP} />
           <input type="image" className="imagenes-login" src={Localizacion} />
@@ -89,38 +89,44 @@ function Login() {
       </div>
 
       <div className="split right">
-        <div className="centered">
+        <div style={{marginLeft: "10%", marginTop: "20%"}}>
           <form onSubmit={login}>
             {/* start login */}
 
-            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 unit">
-              <div className="input login-input">
+            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" style={{ textAlign: "center" }}>
+              <label style={{ color: "#FFFFFF", fontSize: "3vw", textAlign: "center", marginLeft:"0%"}}>
+                Bienvenido
+              </label>
+            </div>
+
+            <div className="col-xs-11 col-sm-11 col-md-11 col-lg-11">
+              <div className="input login-input login-text">
                 <label className="icon-left" htmlFor="rfc">
                   <i className="zmdi zmdi-account" />
                 </label>
-                <input className="form-control login-frm-input" type="text" id="rfc" name="rfc" placeholder="RFC"
-                  pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
+                <input style={{ fontSize: "1vw" }} className="form-control login-frm-input" type="text" id="rfc" name="rfc" placeholder="RFC"
+                  pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[010])(0[1-9]|[10][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
                   required title="Favor de introducir un RFC válido." />
               </div>
             </div>
 
-            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 unit">
-              <div className="input login-input">
+            <div className="col-xs-11 col-sm-11 col-md-11 col-lg-11">
+              <div className="input login-input login-text">
                 <label className="icon-left" htmlFor="usuario">
                   <i className="zmdi zmdi-account" />
                 </label>
-                <input className="form-control login-frm-input" type="text" id="usuario" name="usuario" placeholder="Usuario" required/>
+                <input style={{ fontSize: "1vw" }} className="form-control login-frm-input" type="text" id="usuario" name="usuario" placeholder="Usuario" required />
               </div>
             </div>
             {/* end login */}
 
             {/* start password */}
-            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 unit">
-              <div className="input login-input">
+            <div className="col-xs-11 col-sm-11 col-md-11 col-lg-11">
+              <div className="input login-input login-text">
                 <label className="icon-left" htmlFor="password">
                   <i className="zmdi zmdi-key" />
                 </label>
-                <input className="form-control login-frm-input" type="password" id="password" name="password" placeholder="Contraseña" required/>
+                <input style={{ fontSize: "1vw" }} className="form-control login-frm-input" type="password" id="password" name="password" placeholder="Contraseña" required />
                 <span className="hint">
                   <a href="#" className="link" style={{ color: "#FFFFFF" }}>Olvidaste la contraseña?</a>
                 </span>
@@ -128,34 +134,43 @@ function Login() {
             </div>
             {/* end password */}
 
-            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-              <button type="submit" className="btn-block btn btn-primary">Inicia Sesión</button>
+            <div className="col-xs-11 col-sm-11 col-md-11 col-lg-11 login-text">
+              <button style={{ fontSize: "1vw" }} type="submit" className="btn-block btn btn-primary">Inicia Sesión</button>
             </div>
+
+            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" style={{ textAlign: "center" }}>
+              <label style={{ color: "#FFFFFF", fontSize: "1vw", textAlign: "center", marginLeft:"0%"}}>
+                Versión 1.0
+              </label>
+            </div>
+
+
           </form>
-          <div style={{ textAlign: "center" }}>
-            <ul className="social-media">
-              <li className="social-media-item">
-                <a href="http://www.facebook.com/GMTransportOficial/" target="_blank">
-                  <i className="fa fa-facebook circle-icon" />
-                </a>
-              </li>
-              <li className="social-media-item">
-                <a href=" https://www.instagram.com/grupogmtransport" target="_blank">
-                  <i className="fa fa-instagram circle-icon" />
-                </a>
-              </li>
-              <li className="social-media-item">
-                <a href="http://bit.ly/paqueteriaGM" target="_blank">
-                  <i className="fa fa-whatsapp circle-icon" />
-                </a>
-              </li>
-              <li className="social-media-item">
-                <a href="https://twitter.com/gmtransporterp?lang=es" target="_blank">
-                  <i className="fa fa-twitter circle-icon" />
-                </a>
-              </li>
-            </ul>
-          </div>
+
+        </div>
+        <div style={{ position: "absolute", bottom: "5px" }}>
+          <ul className="social-media">
+            <li className="social-media-item">
+              <a href="http://www.facebook.com/GMTransportOficial/" target="_blank">
+                <i className="fa fa-facebook circle-icon" />
+              </a>
+            </li>
+            <li className="social-media-item">
+              <a href=" https://www.instagram.com/grupogmtransport" target="_blank">
+                <i className="fa fa-instagram circle-icon" />
+              </a>
+            </li>
+            <li className="social-media-item">
+              <a href="http://bit.ly/paqueteriaGM" target="_blank">
+                <i className="fa fa-whatsapp circle-icon" />
+              </a>
+            </li>
+            <li className="social-media-item">
+              <a href="https://twitter.com/gmtransporterp?lang=es" target="_blank">
+                <i className="fa fa-twitter circle-icon" />
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
 
