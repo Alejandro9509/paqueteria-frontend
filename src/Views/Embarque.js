@@ -11,7 +11,7 @@ import Buttons from "../Util/CarruselButtons";
 import { makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import { useTable, useFilters, useAsyncDebounce, useSortBy,usePagination } from "react-table";
+import { ReactTable,useTable, useFilters, useAsyncDebounce, useSortBy,usePagination } from "react-table";
 import $ from "jquery";
 import { remove_array_element } from "../Util/Util";
 import IconButton from "@material-ui/core/IconButton";
@@ -713,6 +713,8 @@ function Embarque() {
     {
       Name: "Folio",
       accessor: "m_nFolioEmbarque",
+      
+     
     },
     {
       Name: "Fecha Elaboración",
@@ -1024,6 +1026,7 @@ function Embarque() {
       getTableBodyProps,
       pageOptions,
  page,
+ 
   state: { pageIndex, pageSize },
   gotoPage,
      previousPage,
@@ -1047,16 +1050,16 @@ function Embarque() {
 
     return (
       <div className="col-md-12">
-        <table className="table" {...getTableProps()}>
+        <table className="table" {...getTableProps()} className="tabla-listado" >
           <thead>
             {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
+              <tr {...headerGroup.getHeaderGroupProps()} >
                 <th>Acciones</th>
                 {headerGroup.headers.map((column) => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    {column.render("Name")}
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())} >
+                    {column.render("Name")}   
                     {/* Add a sort direction indicator */}
                     <span>
                       {column.isSorted ? (
@@ -1138,7 +1141,7 @@ function Embarque() {
         className="col-md-12"
         style={{ maxHeight: "300px", overflow: "auto" }}
       >
-        <table className="table" {...getTableProps()}>
+        <table className="table" {...getTableProps()} >
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>

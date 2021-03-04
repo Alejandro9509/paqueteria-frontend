@@ -2973,3 +2973,16 @@
 .loginBg {
   background-color: #717171;
   }
+
+  .tabla-listado {
+    display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+      max-width:1250px;
+      width: 100%;
+      table-layout: fixed;
+    
+  }
+
+  .tabla-listado td { min-width: 200px;
+   }
