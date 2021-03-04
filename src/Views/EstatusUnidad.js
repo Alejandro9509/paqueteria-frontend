@@ -21,7 +21,7 @@ function showSuccess(mensaje){
 
 const styles = {
   seleccionado: {
-    backgroundColor: "#688ad9",
+    backgroundColor: "#FCC88F",
   },
   noSeleccionado: {
     backgroundColor: "#FFFFFF",

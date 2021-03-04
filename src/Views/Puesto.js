@@ -19,7 +19,7 @@ function showSuccess(mensaje){
 
 const styles = {
   seleccionado: {
-    backgroundColor: "#688ad9",
+    backgroundColor: "#FCC88F",
   },
   noSeleccionado: {
     backgroundColor: "#FFFFFF",
@@ -140,7 +140,7 @@ function Puesto() {
   function handleSelectRow(id, event) {
     setState({
       ...state,
-      IdEmbalaje: id
+      puesto: id
     });
   }
 
@@ -178,9 +178,9 @@ function Puesto() {
     getAllData();
   }, []);
 
-  function getAllData() {
+  async function getAllData() {
     const url = `${process.env.REACT_APP_API_URL}/Puesto/GetListado`;
-    axios.get(url, { headers }).then(respuesta => {
+    await axios.get(url, { headers }).then(respuesta => {
       setData(respuesta.data)
     });
   };
