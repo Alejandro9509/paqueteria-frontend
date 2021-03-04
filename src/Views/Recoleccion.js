@@ -2181,6 +2181,12 @@ function Recoleccion() {
               </a>
             </li>
 
+            <li style={{float: "right"}}>
+              <a href="/Embarque/idRecoleccion=21">
+                Generar Embarque
+              </a>
+            </li>
+
             {/**<button className="topbar-right pull-right">Boton</button>*/}
           </ul>
 
