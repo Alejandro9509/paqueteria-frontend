@@ -89,66 +89,57 @@ function Login() {
       </div>
 
       <div className="split right">
-        <div style={{marginLeft: "10%", marginTop: "20%"}}>
+        <div style={{ marginLeft: "10%", marginTop: "20%" }}>
           <form onSubmit={login}>
             {/* start login */}
 
-            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" style={{ textAlign: "center" }}>
-              <label style={{ color: "#FFFFFF", fontSize: "3vw", textAlign: "center", marginLeft:"0%"}}>
+            <div className="col-xs-11 col-sm-11 col-md-11 col-lg-11" style={{ textAlign: "center", paddingTop:"30%" }}>
+              <label style={{ color: "#FFFFFF", fontSize: "3vw", textAlign: "center", marginLeft: "0%" }}>
                 Bienvenido
               </label>
             </div>
 
             <div className="col-xs-11 col-sm-11 col-md-11 col-lg-11">
-              <div className="input login-input login-text">
-                <label className="icon-left" htmlFor="rfc">
-                  <i className="zmdi zmdi-account" />
-                </label>
-                <input style={{ fontSize: "1vw" }} className="form-control login-frm-input" type="text" id="rfc" name="rfc" placeholder="RFC"
+              <div className="input login-text">
+                <input style={{ fontSize: "1vw", paddingLeft:"1vw" }} className="form-control login-frm-input" type="text" id="rfc" name="rfc" placeholder="RFC"
                   pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[010])(0[1-9]|[10][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
                   required title="Favor de introducir un RFC válido." />
               </div>
             </div>
 
             <div className="col-xs-11 col-sm-11 col-md-11 col-lg-11">
-              <div className="input login-input login-text">
-                <label className="icon-left" htmlFor="usuario">
-                  <i className="zmdi zmdi-account" />
-                </label>
-                <input style={{ fontSize: "1vw" }} className="form-control login-frm-input" type="text" id="usuario" name="usuario" placeholder="Usuario" required />
+              <div className="input login-text">
+                <input style={{ fontSize: "1vw", paddingLeft:"1vw" }} className="form-control login-frm-input" type="text" id="usuario" name="usuario" placeholder="Usuario" required />
               </div>
             </div>
             {/* end login */}
 
             {/* start password */}
             <div className="col-xs-11 col-sm-11 col-md-11 col-lg-11">
-              <div className="input login-input login-text">
-                <label className="icon-left" htmlFor="password">
-                  <i className="zmdi zmdi-key" />
-                </label>
-                <input style={{ fontSize: "1vw" }} className="form-control login-frm-input" type="password" id="password" name="password" placeholder="Contraseña" required />
-                <span className="hint">
-                  <a href="#" className="link" style={{ color: "#FFFFFF" }}>Olvidaste la contraseña?</a>
-                </span>
+              <div className="input login-text">
+                <input style={{ fontSize: "1vw", paddingLeft:"1vw" }} className="form-control login-frm-input" type="password" id="password" name="password" placeholder="Contraseña" required />
               </div>
             </div>
             {/* end password */}
 
             <div className="col-xs-11 col-sm-11 col-md-11 col-lg-11 login-text">
-              <button style={{ fontSize: "1vw" }} type="submit" className="btn-block btn btn-primary">Inicia Sesión</button>
+              <button style={{ fontSize: "1.3vw", paddingBottom: "0px", paddingTop: "0px", marginTop: "10%"}}
+                type="submit" className="btn-block btn btn-primary">Inicia Sesión</button>
+              <span className="hint">
+                <a href="#" className="link" style={{ color: "#FFFFFF" }}>Olvidaste la contraseña?</a>
+              </span>
             </div>
 
-            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" style={{ textAlign: "center" }}>
-              <label style={{ color: "#FFFFFF", fontSize: "1vw", textAlign: "center", marginLeft:"0%"}}>
+            <div className="col-xs-11 col-sm-11 col-md-11 col-lg-11" style={{ textAlign: "center" }}>
+              <label style={{ color: "#FFFFFF", fontSize: "1vw", textAlign: "center", marginLeft: "0%" }}>
                 Versión 1.0
               </label>
             </div>
 
-
           </form>
 
         </div>
-        <div style={{ position: "absolute", bottom: "5px" }}>
+        <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" style={{ position: "absolute", bottom: "5px" }}>
           <ul className="social-media">
             <li className="social-media-item">
               <a href="http://www.facebook.com/GMTransportOficial/" target="_blank">

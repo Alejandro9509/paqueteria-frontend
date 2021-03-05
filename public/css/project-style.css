@@ -72,11 +72,14 @@ h2 {
 
 .left {
   left: 0;
+  text-align: center;
   width: 75%;
   background-image: url(../images/Fondo.png);
 }
 
 .imagenes-login{
+  padding-left: 3%;
+  padding-right: 3%;
   width: 20%;
   height: auto;
 }
@@ -97,21 +100,24 @@ h2 {
 .caja-copyright{
   position: absolute;
   text-align: center;
+  left: 10%;
+  right: 30%;
+  width: 80%;
   top: 90%;
 }
 
 .copyright-texto {
   text-align: center;
-  font-size: 1.2vw;
+  font-size: 1.3vw;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   margin: auto;
-  min-width: 70%;
 }
 
 .login-text {
   font-size: 1.2vw;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   margin: auto;
+  padding-bottom: 8%;
 }
 
 .right {
@@ -131,12 +137,9 @@ h2 {
 
 .social-media{
   list-style-type: none;
-  position: relative;
-  margin: auto;
-  width: 100%;
-  float: left;
+  text-align: center;
+  padding-left: 15%;
   bottom: 10%;
-  left: 20%;
 }
 
 .circle-icon {
@@ -153,7 +156,7 @@ h2 {
 }
 
 .social-media-item{
-  position: relative;
   float: left;
-  padding-left: 15px;
+  padding-left: 5%;
+  padding-right: 5%;
 }
