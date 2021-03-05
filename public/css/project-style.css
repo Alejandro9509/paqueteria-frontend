@@ -72,6 +72,7 @@ h2 {
 
 .left {
   left: 0;
+  text-align: center;
   width: 75%;
   background-image: url(../images/Fondo.png);
 }
@@ -99,15 +100,17 @@ h2 {
 .caja-copyright{
   position: absolute;
   text-align: center;
+  left: 10%;
+  right: 30%;
+  width: 80%;
   top: 90%;
 }
 
 .copyright-texto {
   text-align: center;
-  font-size: 1.6vw;
+  font-size: 1.3vw;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   margin: auto;
-  min-width: 70%;
 }
 
 .login-text {

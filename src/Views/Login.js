@@ -93,7 +93,7 @@ function Login() {
           <form onSubmit={login}>
             {/* start login */}
 
-            <div className="col-xs-11 col-sm-11 col-md-11 col-lg-11" style={{ textAlign: "center" }}>
+            <div className="col-xs-11 col-sm-11 col-md-11 col-lg-11" style={{ textAlign: "center", paddingTop:"30%" }}>
               <label style={{ color: "#FFFFFF", fontSize: "3vw", textAlign: "center", marginLeft: "0%" }}>
                 Bienvenido
               </label>
@@ -101,9 +101,6 @@ function Login() {
 
             <div className="col-xs-11 col-sm-11 col-md-11 col-lg-11">
               <div className="input login-text">
-                <label className="icon-left" htmlFor="rfc">
-                  <i className="zmdi zmdi-account" />
-                </label>
                 <input style={{ fontSize: "1vw", paddingLeft:"1vw" }} className="form-control login-frm-input" type="text" id="rfc" name="rfc" placeholder="RFC"
                   pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[010])(0[1-9]|[10][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
                   required title="Favor de introducir un RFC válido." />
@@ -112,9 +109,6 @@ function Login() {
 
             <div className="col-xs-11 col-sm-11 col-md-11 col-lg-11">
               <div className="input login-text">
-                <label className="icon-left" htmlFor="usuario">
-                  <i className="zmdi zmdi-account" />
-                </label>
                 <input style={{ fontSize: "1vw", paddingLeft:"1vw" }} className="form-control login-frm-input" type="text" id="usuario" name="usuario" placeholder="Usuario" required />
               </div>
             </div>
@@ -123,9 +117,6 @@ function Login() {
             {/* start password */}
             <div className="col-xs-11 col-sm-11 col-md-11 col-lg-11">
               <div className="input login-text">
-                <label className="icon-left" htmlFor="password">
-                  <i className="zmdi zmdi-key" />
-                </label>
                 <input style={{ fontSize: "1vw", paddingLeft:"1vw" }} className="form-control login-frm-input" type="password" id="password" name="password" placeholder="Contraseña" required />
               </div>
             </div>
