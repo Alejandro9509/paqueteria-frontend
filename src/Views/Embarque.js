@@ -760,6 +760,7 @@ function Embarque() {
       </>
     );
   };
+
   const columns = React.useMemo(() => [
     {
       Name: "Folio",
@@ -813,6 +814,7 @@ function Embarque() {
       accessor: "m_sUsuarioqueCancela",
     },
   ]);
+
   const columnsRemitenteDestinatarios = React.useMemo(() => [
     {
       Name: "Número",
@@ -835,6 +837,7 @@ function Embarque() {
       accessor: "m_sNombreFiscal",
     },
   ]);
+
   const columnsCP = React.useMemo(() => [
     {
       Name: "Codigo",
@@ -925,6 +928,7 @@ function Embarque() {
       accessor: "m_bActivo",
     },
   ]);
+
   useEffect((value) => {
     if (
       localStorage.getItem("UsuarioId") === null ||
@@ -960,6 +964,7 @@ function Embarque() {
       setDataRemitenteDestinatario(respuesta.data);
     });
   }
+
   function getAllSucursales() {
     const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
@@ -1035,6 +1040,7 @@ function Embarque() {
   const headers = {
     "Content-Type": "application/json",
   };
+  
   const headers2 = {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',

@@ -2976,13 +2976,17 @@
 
   .tabla-listado {
     display: block;
-      overflow-x: auto;
-      white-space: nowrap;
-      max-width:1250px;
-      width: 100%;
-      table-layout: fixed;
-    
+    overflow-x: auto;
+    white-space: nowrap;
+    width: 100%;
+    table-layout:fixed;
+    margin: 0;
+    padding: 0;
   }
 
-  .tabla-listado td { min-width: 200px;
-   }
+  .tabla-listado td {
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    word-wrap: break-word;
+    min-width: 10vw;
+  }
