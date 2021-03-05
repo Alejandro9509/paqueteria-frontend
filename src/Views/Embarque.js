@@ -773,19 +773,19 @@ function Embarque() {
     },
     {
       Name: "Sucursal",
-      accessor: "IdSucursal",
+      accessor: "m_sSucursal",
     },
     {
       Name: "Estatus de la Orden",
-      accessor: "m_nIdEstatusEmbarque",
+      accessor: "m_sEstatusEmbarque",
     },
     {
       Name: "Origen",
-      accessor: "m_nIdCiudadOrigen",
+      accessor: "m_sCiudadOrigen",
     },
     {
       Name: "Destino",
-      accessor: "m_nIdCiudadDestino",
+      accessor: "m_sCiudadDestino",
     },
     {
       Name: "Folio Guía",
