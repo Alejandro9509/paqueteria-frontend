@@ -822,16 +822,21 @@ function Recoleccion() {
       accessor: "m_sRecogerEnDetalleRecoleccion",
     },
     {
+      Name: "Estatus",
+      accessor: "m_sEstatusRecoleccion",
+    },
+    {
       Name: "Operador",
-      accessor: "m_nIdOperador",
+      accessor: "m_sOperador",
     },
     {
       Name: "Unidad",
-      accessor: "m_nIdUnidad",
+      accessor: "m_sUnidad",
     },
+    
     {
       Name: "Remolque",
-      accessor: "m_nIdRemolque",
+      accessor: "m_sTipoRemolque",
     },
   ]);
 
