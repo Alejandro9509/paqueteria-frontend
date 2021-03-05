@@ -746,7 +746,6 @@ function Embarque() {
     });
   }
 
-
   const recolectaBol = ({ values }) => {
     return (
       <>
