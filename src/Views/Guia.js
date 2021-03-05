@@ -47,6 +47,7 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 function Guia() {
+  var today = new Date();
   var React = require('react');
   var QRCode = require('qrcode.react');
   const classes = useStyles();
@@ -58,7 +59,9 @@ function Guia() {
     idGuia: 0,
     agregar: "Agregar",
     fechaInicial: "",
-    fechaFinal: "",
+    fechaFinal: today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate(),
+    sucursalListado: 0,
+    estatusListado: 0,
     sucursal: "",
     folioRecoleccion: "",
     folioEmbarque: "",
@@ -66,7 +69,6 @@ function Guia() {
     folioInforme: "",
     fecha: "",
     DerechoBorrar: 145,
-    estatus: "",
     paquetesI: [{
       CiudadOrigen: "",
       Remitente: "",
@@ -579,9 +581,8 @@ function Guia() {
 
   }
 
-  function handleShowCancelar(){
+  function handleShowCancelar() {
     const url = `${process.env.REACT_APP_API_URL}/Guia/GetById/${state.idGuia}`;
-    var today = new Date();
     axios.get(url, { headers }).then((respuesta) => {
       setState({
         ...state,
@@ -592,7 +593,7 @@ function Guia() {
         estatusGuia: respuesta.data.m_sEstatusGuia,
         motivoCancelacion: respuesta.data.m_sMotivoCancelacion
       })
-      if(respuesta.data.m_nFolioInforme != 0)
+      if (respuesta.data.m_nFolioInforme != 0)
         showSuccess("Guía no se puede cancelar")
     })
   }
@@ -664,7 +665,6 @@ function handleImprmir2()
   }
 
   function handleShowAgregar() {
-    var today = new Date();
     setState({
       ...state,
       agregar: "Agregar",
@@ -676,7 +676,6 @@ function handleImprmir2()
       folioGuía: "",
       folioInforme: "",
       fecha: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
-      estatus: "",
       origen: "",
       destino: "",
       usuarioCancela: "",
@@ -742,6 +741,58 @@ function handleImprmir2()
     });
   };
 
+  const handleFechaInicialFiltro = async (event) => {
+    setState({
+      ...state,
+      fechaInicial: event.target.value,
+    })
+    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
+      event.target.value + "/" + state.fechaFinal + "/" + state.sucursalListado + "/" + state.estatusListado;
+    //await axios.get(url, { headers }).then(respuesta => {
+    //  setData(respuesta.data)
+    //})
+    console.log(url)
+  }
+
+  const handleFechaFinalFiltro = async (event) => {
+    setState({
+      ...state,
+      fechaFinal: event.target.value,
+    })
+    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
+      state.fechaInicial + "/" + event.target.value + "/" + state.sucursalListado + "/" + state.estatusListado;
+    //await axios.get(url, { headers }).then(respuesta => {
+    //  setData(respuesta.data)
+    //})
+    console.log(url)
+  }
+
+  const handleSucursalFiltro = async (event) => {
+    setState({
+      ...state,
+      sucursalListado: event.target.value,
+    })
+    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
+      state.fechaInicial + "/" + state.fechaFinal + "/" + event.target.value + "/" + state.estatusListado;
+    //await axios.get(url, { headers }).then(respuesta => {
+    //  setData(respuesta.data)
+    //})
+    console.log(url)
+  }
+
+  const handleEstatusFiltro = async (event) => {
+    setState({
+      ...state,
+      estatusListado: event.target.value,
+    })
+    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
+      state.fechaInicial + "/" + state.fechaFinal + "/" + state.sucursalListado + "/" + event.target.value;
+    //await axios.get(url, { headers }).then(respuesta => {
+    //  setData(respuesta.data)
+    //})
+    console.log(url)
+  }
+
   function handleSelectRow(id, event) {
     setState({
       ...state,
@@ -781,6 +832,7 @@ function handleImprmir2()
     });
     calculaIva(conceptos, index, 0);
   };
+
   const handleChangeSobre = (event, index) => {
 
     var { sobres } = state
@@ -2177,16 +2229,14 @@ function handleImprmir2()
                           <label className="label">
                             Fecha Inicial
                         </label>
-                          <div className="input-group date addon-datepicker">
+                          <div className="input">
                             <input
                               type="date"
                               className="form-control"
-                              onChange={handleChange}
+                              onChange={handleFechaInicialFiltro}
+                              value={state.fechaInicial}
                               id="fechaInicial"
                             />
-                            <span className="input-group-addon">
-                              <i className="fa fa-calendar" />
-                            </span>
                           </div>
                         </div>
 
@@ -2194,16 +2244,14 @@ function handleImprmir2()
                           <label className="label">
                             Fecha Final
                         </label>
-                          <div className="input-group date addon-datepicker">
+                          <div className="input">
                             <input
                               type="date"
                               className="form-control"
-                              onChange={handleChange}
+                              onChange={handleFechaFinalFiltro}
+                              value={state.fechaFinal}
                               id="fechaFinal"
                             />
-                            <span className="input-group-addon">
-                              <i className="fa fa-calendar" />
-                            </span>
                           </div>
                         </div>
 
@@ -2212,13 +2260,23 @@ function handleImprmir2()
                             Sucursal
                         </label>
                           <div className="input">
-                            <input
-                              onChange={handleChange}
+                            <select
                               className="form-control"
-                              type="select"
-                              placeholder={state.codigoDepartamento}
-                              id="codigoDepartamento"
-                            />
+                              required
+                              value={state.sucursalListado}
+                              onChange={handleSucursalFiltro}
+                              id="sucursalListado"
+                            >
+                              <option value="0">Todas</option>
+                              {dataSucursal.map((sucursal) => (
+                                <option
+                                  key={sucursal.m_nIdSucursal}
+                                  value={sucursal.m_nIdSucursal}
+                                >
+                                  {sucursal.m_sSucursal}
+                                </option>
+                              ))}
+                            </select>
                           </div>
                         </div>
 
@@ -2227,17 +2285,27 @@ function handleImprmir2()
                             Estatus
                         </label>
                           <div className="input">
-                            <select
-                              onChange={handleChange}
-                              className="form-control"
-                              type="calendar"
-                              placeholder={state.codigoDepartamento}
-                              disabled={state.agregar == "Consultar"}
-                              id="codigoDepartamento"
-                            />
+                            <label className="input select">
+                              <select
+                                className="form-control"
+                                required
+                                value={state.estatusListado}
+                                onChange={handleEstatusFiltro}
+                                id="estatusListado"
+                              >
+                                <option value="0">Todos</option>
+                                {dataEstatusGuia.map((estatus) => (
+                                  <option
+                                    key={estatus.m_nIdEstatusGuia}
+                                    value={estatus.m_nIdEstatusGuia}
+                                  >
+                                    {estatus.m_sEstatus}
+                                  </option>
+                                ))}
+                              </select>
+                            </label>
                           </div>
                         </div>
-
 
                       </div>
                     </form>

@@ -2226,8 +2226,6 @@ function Recoleccion() {
                             />
                           </div>
 
-
-
                         </div>
 
                         <div className="col-sm-6 col-md-3 unit">
@@ -2274,7 +2272,6 @@ function Recoleccion() {
                                 </option>
                               ))}
                             </select>
-                            <i></i>
                           </label>
                         </div>
                       </div>
