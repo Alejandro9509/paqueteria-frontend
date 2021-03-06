@@ -7,6 +7,7 @@
     <meta http-equiv='cache-control' content='no-cache'>
     <meta http-equiv='expires' content='0'>
     <meta http-equiv='pragma' content='no-cache'>
+    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
     
   <script
     type="text/javascript"
@@ -24,6 +25,14 @@
     type="text/javascript"
     src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"
   ></script>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+  integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+  crossorigin=""></script>
+  <script src="https://xserver2-america-test.cloud.ptvgroup.com/services/xroute-client.js"></script>
+  <script type="text/javascript" src="https://xserver2-america-test.cloud.ptvgroup.com/services/xlocate-client.js"></script>
+
+  <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
+<script src="https://unpkg.com/tangram/dist/tangram.min.js"></script>
     <meta charset="utf-8" />
     <meta
       name="description"
@@ -42,7 +51,12 @@
     <link type="text/css" rel="stylesheet" href="css/common.css">
     <link type="text/css" rel="stylesheet" href="css/responsive.css">
     <link type="text/css" rel="stylesheet" href="css/project-style.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" >
+    <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" >
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+   integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+   crossorigin=""/>
+    
 </head>
   </head>
   <body class="leftbar-view iconic-view" style="background-color:#E6E6E6;">
@@ -121,14 +135,10 @@
 <script crossorigin src="..."></script>
 
 
-<script
-type="text/javascript"
-src="https://js.api.here.com/v3/3.1/mapsjs-core.js"
-></script>
-<script
-type="text/javascript"
-src="https://js.api.here.com/v3/3.1/mapsjs-service.js"
-></script>
+<script src="https://js.api.here.com/v3/3.1/mapsjs-core.js"
+  type="text/javascript" charset="utf-8"></script>
+<script src="https://js.api.here.com/v3/3.1/mapsjs-service.js"
+  type="text/javascript" charset="utf-8"></script>
 <script
 type="text/javascript"
 src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"
@@ -138,7 +148,6 @@ type="text/javascript"
 src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"
 ></script>
 
-<script type="module" src="https://js.api.here.com/v3/3.1/mapsjs.bundle.js"></script>
 
 
 </html>
