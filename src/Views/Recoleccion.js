@@ -77,6 +77,8 @@ function Recoleccion() {
   const [dataTipoMoneda, setDataTipoMoneda] = React.useState([]);
   const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
   const [dataCiudad, setDataCiudad] = React.useState([]);
+  const [dataZona, setDataZona] = React.useState([]);
+
   const [dataCodigoPostal, setDataCodigoPostal] = React.useState([]);
   const [dataRemitenteDestinatario, setDataRemitenteDestinatario] = React.useState([]);
   const [dataEmbalaje, setDataEmbalaje] = React.useState([]);
@@ -128,13 +130,13 @@ function Recoleccion() {
     fechaRecoleccion: "",
     codigoPostalRecoleccion: 0,
     ciudadRecoleccion: 0,
-    zonaRecoleccion: "",
+    zonaRecoleccion: 0,
     domicilioRecoleccion: "",
     recogerEn: "",
     datosAdicionalesRecoleccion: "",
     codigoPostalEntrega: "",
     ciudadEntrega: 0,
-    zonaEntrega: "",
+    zonaEntrega: 0,
     domicilioEntrega: "",
     entregaEn: "",
     datosAdicionalesEntrega: "",
@@ -661,13 +663,13 @@ function Recoleccion() {
       fechaRecoleccion: "",
       codigoPostalRecoleccion: dataCodigoPostal[0],
       ciudadRecoleccion: dataCiudad[0].m_nIdCiudad,
-      zonaRecoleccion: "",
+      zonaRecoleccion: 0,
       domicilioRecoleccion: "",
       recogerEn: "",
       datosAdicionalesRecoleccion: "",
       codigoPostalEntrega: dataCodigoPostal[0],
       ciudadEntrega: dataCiudad[0].m_nIdCiudad,
-      zonaEntrega: "",
+      zonaEntrega: 0,
       domicilioEntrega: "",
       entregaEn: "",
       datosAdicionalesEntrega: "",
@@ -974,6 +976,7 @@ function Recoleccion() {
     getAllTipoUnidad();
     getAllRemitentesDestinatarios();
     getAllEmbalajes();
+    getAllZonas();
 
   }, []);
 
@@ -1026,6 +1029,13 @@ function Recoleccion() {
       setDataCiudad(respuesta.data);
     });
   }
+  function getAllZonas() {
+    const url = `${process.env.REACT_APP_API_URL}/Zonas/GetListado`;
+    axios.get(url, { headers }).then((respuesta) => {
+      setDataZona(respuesta.data);
+    });
+  }
+
 
   function getAllCodigosPostales() {
     const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
@@ -1900,8 +1910,8 @@ function Recoleccion() {
               value={state.paquetes[index].m_nIdTIpoEmpaque}
               disabled={state.agregar == "Consultar"}
               onChange={(event) => handleChangePaquete(event, index)}
-              id="m_nIdTIpoEmpaque"
-              name="m_nIdTIpoEmpaque"
+              id="m_nIdTipoEmbalaje"
+              name="m_nIdTipoEmbalaje"
             >
               {dataEmbalaje.map((embalaje) => (
                 <option key={embalaje.m_nIdEmbalaje} value={embalaje.m_nIdEmbalaje}>
@@ -3446,12 +3456,13 @@ function Recoleccion() {
                                             onChange={handleChange}
                                             id="zonaRecoleccion"
                                           >
-                                            {dataCiudad.map((ciudad) => (
+                                            <option value="">Selecciona</option>
+                                            {dataZona.map((zona) => (
                                               <option
-                                                key={ciudad.m_nIdCiudad}
-                                                value={ciudad.m_nIdCiudad}
+                                                key={zona.m_nIdZona}
+                                                value={zona.m_nIdZona}
                                               >
-                                                {ciudad.m_sCiudad}
+                                                {zona.m_sDescripcion}
                                               </option>
                                             ))}
                                           </select>
@@ -3637,12 +3648,14 @@ function Recoleccion() {
                                             onChange={handleChange}
                                             id="zonaEntrega"
                                           >
-                                            {dataCiudad.map((ciudad) => (
+                                                                                        <option value="">Selecciona</option>
+
+                                             {dataZona.map((zona) => (
                                               <option
-                                                key={ciudad.m_nIdCiudad}
-                                                value={ciudad.m_nIdCiudad}
+                                                key={zona.m_nIdZona}
+                                                value={zona.m_nIdZona}
                                               >
-                                                {ciudad.m_sCiudad}
+                                                {zona.m_sDescripcion}
                                               </option>
                                             ))}
                                           </select>
