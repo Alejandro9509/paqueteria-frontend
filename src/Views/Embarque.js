@@ -11,7 +11,7 @@ import Buttons from "../Util/CarruselButtons";
 import { makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import { ReactTable,useTable, useFilters, useAsyncDebounce, useSortBy,usePagination } from "react-table";
+import { ReactTable, useTable, useFilters, useAsyncDebounce, useSortBy, usePagination } from "react-table";
 import $ from "jquery";
 import { remove_array_element } from "../Util/Util";
 import IconButton from "@material-ui/core/IconButton";
@@ -83,8 +83,8 @@ function Embarque() {
     openDialog: false,
     agregar: "Agregar",
     idEmbarque: 0,
-    fechaInicial: "",
-    fechaFinal: "",
+    fechaInicial: "0",
+    fechaFinal: today.getDate() + "-" + (today.getMonth() + 1) + "-" + today.getFullYear(),
     sucursalListado: 0,
     estatusListado: 0,
     idSucursalAgregar: localStorage.getItem("Sucursal"),
@@ -413,8 +413,8 @@ function Embarque() {
         estatusEmbarque: dataEstatusEmbarque.find(o => o.m_nIdEstatusEmbarque == respuesta.data.m_nIdEstatusEmbarque).m_sEstatus,
         motivoCancelacion: respuesta.data.m_sMotivoCancelacion
       })
-      if(respuesta.data.m_nSePuedeCancelar == 0)
-      showSuccess("Embarque no se puede cancelar")
+      if (respuesta.data.m_nSePuedeCancelar == 0)
+        showSuccess("Embarque no se puede cancelar")
     })
   }
 
@@ -673,6 +673,58 @@ function Embarque() {
     });
   };
 
+  const handleFechaInicialFiltro = async (event) => {
+    setState({
+      ...state,
+      fechaInicial: event.target.value,
+    })
+    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
+      event.target.value + "/" + state.fechaFinal + "/" + state.sucursalListado + "/" + state.estatusListado;
+    //await axios.get(url, { headers }).then(respuesta => {
+    //  setData(respuesta.data)
+    //})
+    console.log(url)
+  }
+
+  const handleFechaFinalFiltro = async (event) => {
+    setState({
+      ...state,
+      fechaFinal: event.target.value,
+    })
+    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
+      state.fechaInicial + "/" + event.target.value + "/" + state.sucursalListado + "/" + state.estatusListado;
+    //await axios.get(url, { headers }).then(respuesta => {
+    //  setData(respuesta.data)
+    //})
+    console.log(url)
+  }
+
+  const handleSucursalFiltro = async (event) => {
+    setState({
+      ...state,
+      sucursalListado: event.target.value,
+    })
+    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
+      state.fechaInicial + "/" + state.fechaFinal + "/" + event.target.value + "/" + state.estatusListado;
+    //await axios.get(url, { headers }).then(respuesta => {
+    //  setData(respuesta.data)
+    //})
+    console.log(url)
+  }
+
+  const handleEstatusFiltro = async (event) => {
+    setState({
+      ...state,
+      estatusListado: event.target.value,
+    })
+    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
+      state.fechaInicial + "/" + state.fechaFinal + "/" + state.sucursalListado + "/" + event.target.value;
+    //await axios.get(url, { headers }).then(respuesta => {
+    //  setData(respuesta.data)
+    //})
+    console.log(url)
+  }
+
   const handleSelectChange = (event) => {
     getAllUnidades(event.target.value);
   };
@@ -694,13 +746,12 @@ function Embarque() {
     });
   }
 
-
   const recolectaBol = ({ values }) => {
     return (
       <>
         {values.map((rec, idx) => {
           return (
-          
+
             <span key={idx} className="badge">
               {"KHE"}
             </span>
@@ -709,12 +760,13 @@ function Embarque() {
       </>
     );
   };
+
   const columns = React.useMemo(() => [
     {
       Name: "Folio",
       accessor: "m_nFolioEmbarque",
-      
-     
+
+
     },
     {
       Name: "Fecha Elaboración",
@@ -746,8 +798,8 @@ function Embarque() {
     },
     {
       Name: "Es Recolecta",
-      accessor: "m_bEsRecolecta" ,
-     
+      accessor: "m_bEsRecolecta",
+
 
     },
     {
@@ -757,11 +809,12 @@ function Embarque() {
     {
       Name: "Cancelado",
       accessor: "m_dtFechaCancelado",
-    },  {
+    }, {
       Name: "Usuario que Cancela",
       accessor: "m_sUsuarioqueCancela",
     },
   ]);
+
   const columnsRemitenteDestinatarios = React.useMemo(() => [
     {
       Name: "Número",
@@ -784,6 +837,7 @@ function Embarque() {
       accessor: "m_sNombreFiscal",
     },
   ]);
+
   const columnsCP = React.useMemo(() => [
     {
       Name: "Codigo",
@@ -874,6 +928,7 @@ function Embarque() {
       accessor: "m_bActivo",
     },
   ]);
+
   useEffect((value) => {
     if (
       localStorage.getItem("UsuarioId") === null ||
@@ -897,7 +952,7 @@ function Embarque() {
   }, []);
 
   function getAllData() {
-    const url =  `${process.env.REACT_APP_API_URL}/Embarques/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL}/Embarques/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setData(respuesta.data);
     });
@@ -909,6 +964,7 @@ function Embarque() {
       setDataRemitenteDestinatario(respuesta.data);
     });
   }
+
   function getAllSucursales() {
     const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
@@ -984,6 +1040,7 @@ function Embarque() {
   const headers = {
     "Content-Type": "application/json",
   };
+  
   const headers2 = {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
@@ -1016,7 +1073,7 @@ function Embarque() {
       () => ({
         // Default Filter UI
         Filter: DefaultColumnFilter,
-        
+
       }),
       []
     );
@@ -1025,15 +1082,15 @@ function Embarque() {
       getTableProps,
       getTableBodyProps,
       pageOptions,
- page,
- 
-  state: { pageIndex, pageSize },
-  gotoPage,
-     previousPage,
-  nextPage,
- setPageSize,
-  canPreviousPage,
-  canNextPage,
+      page,
+
+      state: { pageIndex, pageSize },
+      gotoPage,
+      previousPage,
+      nextPage,
+      setPageSize,
+      canPreviousPage,
+      canNextPage,
       headerGroups,
       rows,
       prepareRow,
@@ -1059,7 +1116,7 @@ function Embarque() {
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
                   <th {...column.getHeaderProps(column.getSortByToggleProps())} >
-                    {column.render("Name")}   
+                    {column.render("Name")}
                     {/* Add a sort direction indicator */}
                     <span>
                       {column.isSorted ? (
@@ -1156,11 +1213,11 @@ function Embarque() {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                            <i className="fa fa-caret-down" />
-                          )
+                          <i className="fa fa-caret-down" />
+                        )
                       ) : (
-                          ""
-                        )}
+                        ""
+                      )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -1622,7 +1679,7 @@ function Embarque() {
       </div>
     );
   }
-  
+
   function openSection(index) {
     // closeSeccions()
     var $section;
@@ -1762,7 +1819,7 @@ function Embarque() {
           <label className="input select">
             <select
               className="form-control"
-             
+
               value={state.paquetes[index].m_nIdTIpoEmpaque}
               disabled={state.agregar == "Consultar"}
               onChange={(event) => handleChangePaquete(event, index)}
@@ -1871,93 +1928,93 @@ function Embarque() {
   return (
     <div>
 
-<Dialog open={state.openDialog} onClose={() => setState({...state, openDialog: false})}> 
+      <Dialog open={state.openDialog} onClose={() => setState({ ...state, openDialog: false })}>
         <DialogContent>
-        {state.tipoModal == 0 && 
-      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-        <div align="right">
-        <button onClick={() => {history.push("/Ciudades")}} className="btn btn-primary primary-btn">Agregar</button>
+          {state.tipoModal == 0 &&
+            <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+              <div align="right">
+                <button onClick={() => { history.push("/Ciudades") }} className="btn btn-primary primary-btn">Agregar</button>
 
-        </div>
+              </div>
 
-        {dataCodigoPostal.length != 0 ? <TableCodigoPostal object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP} columns={columnsCP} data={dataCodigoPostal} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-       
-       <DialogActions style={{justifyContent:"left"}}>
-       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
-       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
-       </DialogActions>
- </div>
-      }
-      {state.tipoModal == 1 && 
-      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-        <div align="right">
-        <button onClick={() => {history.push("/Ciudades")}} className="btn btn-primary primary-btn">Agregar</button>
+              {dataCodigoPostal.length != 0 ? <TableCodigoPostal object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP} columns={columnsCP} data={dataCodigoPostal} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
 
-        </div>
+              <DialogActions style={{ justifyContent: "left" }}>
+                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-secondary secondary-btn">Cerrar</button>
+                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-primary primary-btn">Aceptar</button>
+              </DialogActions>
+            </div>
+          }
+          {state.tipoModal == 1 &&
+            <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+              <div align="right">
+                <button onClick={() => { history.push("/Ciudades") }} className="btn btn-primary primary-btn">Agregar</button>
 
-        {dataCiudad.length != 0 ? <TableCiudades object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCiudad} columns={columnsCiudades} data={dataCiudad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-        <DialogActions style={{justifyContent:"left"}}>
-       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
-       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
-       </DialogActions>
-    </div>
-      }
-      {state.tipoModal == 2 && 
-      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-        <div align="right">
-        <button onClick={() => {history.push("/Operadores")}} className="btn btn-primary primary-btn">Agregar</button>
+              </div>
 
-        </div>
+              {dataCiudad.length != 0 ? <TableCiudades object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCiudad} columns={columnsCiudades} data={dataCiudad} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
+              <DialogActions style={{ justifyContent: "left" }}>
+                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-secondary secondary-btn">Cerrar</button>
+                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-primary primary-btn">Aceptar</button>
+              </DialogActions>
+            </div>
+          }
+          {state.tipoModal == 2 &&
+            <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+              <div align="right">
+                <button onClick={() => { history.push("/Operadores") }} className="btn btn-primary primary-btn">Agregar</button>
 
-        {dataOperador.length != 0 ? <TableOperadores object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdOperador} columns={columnsOperadores} data={dataOperador} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-        <DialogActions style={{justifyContent:"left"}}>
-       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
-       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
-       </DialogActions>
-    </div>
-      }
-      {state.tipoModal == 3 && 
-      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-        <div align="right">
-        <button onClick={() => {history.push("/TipoUnidad")}} className="btn btn-primary primary-btn">Agregar</button>
-</div>
-        {dataTipoUnidad.length != 0 ? <TableTipoUnidad object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdTipoUnidad} columns={columnsTipoUnidades} data={dataTipoUnidad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-        <DialogActions style={{justifyContent:"left"}}>
-       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
-       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
-       </DialogActions>
-    </div>
-      }
-      {state.tipoModal == 4 && 
-      <div className="row" style={{backgroundColor: '#FFFFFF'}} >
-        <div align="right">
-        <button onClick={() => {history.push("/Unidades")}} className="btn btn-primary primary-btn">Agregar</button>
+              </div>
 
-        </div>
+              {dataOperador.length != 0 ? <TableOperadores object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdOperador} columns={columnsOperadores} data={dataOperador} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
+              <DialogActions style={{ justifyContent: "left" }}>
+                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-secondary secondary-btn">Cerrar</button>
+                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-primary primary-btn">Aceptar</button>
+              </DialogActions>
+            </div>
+          }
+          {state.tipoModal == 3 &&
+            <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+              <div align="right">
+                <button onClick={() => { history.push("/TipoUnidad") }} className="btn btn-primary primary-btn">Agregar</button>
+              </div>
+              {dataTipoUnidad.length != 0 ? <TableTipoUnidad object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdTipoUnidad} columns={columnsTipoUnidades} data={dataTipoUnidad} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
+              <DialogActions style={{ justifyContent: "left" }}>
+                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-secondary secondary-btn">Cerrar</button>
+                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-primary primary-btn">Aceptar</button>
+              </DialogActions>
+            </div>
+          }
+          {state.tipoModal == 4 &&
+            <div className="row" style={{ backgroundColor: '#FFFFFF' }} >
+              <div align="right">
+                <button onClick={() => { history.push("/Unidades") }} className="btn btn-primary primary-btn">Agregar</button>
 
-        {dataUnidad.length != 0 ? <TableUnidad object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdUnidad} columns={columnsUnidades} data={dataUnidad} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-        <DialogActions style={{justifyContent:"left"}}>
-       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
-       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
-       </DialogActions>
-    </div>
-      }
-       {state.tipoModal == 5 && 
-      <div className="row" style={{backgroundColor: '#FFFFFF'}} >
-        <div align="right">
-        <button onClick={() => {history.push("/Unidades")}} className="btn btn-primary primary-btn">Agregar</button>
+              </div>
 
-        </div>
-       
-        {dataRemitenteDestinatario.length != 0 ? <TableRemitentesDestinatarios object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdRemitenteDestinatario} columns={columnsRemitenteDestinatarios} data={dataRemitenteDestinatario} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-        <DialogActions style={{justifyContent:"left"}}>
-       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-secondary secondary-btn">Cerrar</button>
-       <button onClick={() => setState({...state, openDialog: false})} className="btn btn-primary primary-btn">Aceptar</button>
-       </DialogActions>
-    </div>
-      }</DialogContent> 
-      
-  </Dialog>
+              {dataUnidad.length != 0 ? <TableUnidad object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdUnidad} columns={columnsUnidades} data={dataUnidad} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
+              <DialogActions style={{ justifyContent: "left" }}>
+                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-secondary secondary-btn">Cerrar</button>
+                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-primary primary-btn">Aceptar</button>
+              </DialogActions>
+            </div>
+          }
+          {state.tipoModal == 5 &&
+            <div className="row" style={{ backgroundColor: '#FFFFFF' }} >
+              <div align="right">
+                <button onClick={() => { history.push("/Unidades") }} className="btn btn-primary primary-btn">Agregar</button>
+
+              </div>
+
+              {dataRemitenteDestinatario.length != 0 ? <TableRemitentesDestinatarios object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdRemitenteDestinatario} columns={columnsRemitenteDestinatarios} data={dataRemitenteDestinatario} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
+              <DialogActions style={{ justifyContent: "left" }}>
+                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-secondary secondary-btn">Cerrar</button>
+                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-primary primary-btn">Aceptar</button>
+              </DialogActions>
+            </div>
+          }</DialogContent>
+
+      </Dialog>
 
       <header className="topbar clearfix">
         <Cabecera />
@@ -2019,7 +2076,8 @@ function Embarque() {
                             <input
                               type="date"
                               className="form-control"
-                              onChange={handleChange}
+                              onChange={handleFechaInicialFiltro}
+                              value={state.fechaInicial}
                               id="fechaInicial"
                             />
                           </div>
@@ -2031,7 +2089,8 @@ function Embarque() {
                             <input
                               type="date"
                               className="form-control"
-                              onChange={handleChange}
+                              onChange={handleFechaFinalFiltro}
+                              value={state.fechaFinal}
                               id="fechaFinal"
                             />
                           </div>
@@ -2043,8 +2102,9 @@ function Embarque() {
                             <select
                               className="form-control"
                               required
-                              onChange={handleChange}
-                              id="sucursal"
+                              onChange={handleSucursalFiltro}
+                              value={state.sucursalListado}
+                              id="sucursalListado"
                             >
                               <option value="0">Todas</option>
                               {dataSucursal.map((sucursal) => (
@@ -2066,7 +2126,8 @@ function Embarque() {
                             <select
                               className="form-control"
                               required
-                              onChange={handleChange}
+                              onChange={handleEstatusFiltro}
+                              value={state.estatusListado}
                               id="estatusListado"
                             >
                               <option value="0">Todos</option>
@@ -2439,7 +2500,7 @@ function Embarque() {
                                                           identificadorModal:
                                                             "nombreRemitente",
                                                           tipoModal: 5,
-                                                        openDialog: true
+                                                          openDialog: true
                                                         });
                                                       }}
                                                     >
@@ -2611,7 +2672,7 @@ function Embarque() {
                                                   state.agregar == "Consultar",
                                                 endAdornment: (
                                                   <InputAdornment position="end">
-                                                    <IconButton padding="0px" style={{ paddingRight: "0px" }} onClick={() => {  setState({ ...state, identificadorModal: "ciudadRemitente", tipoModal: 1, openDialog: true }) }}>
+                                                    <IconButton padding="0px" style={{ paddingRight: "0px" }} onClick={() => { setState({ ...state, identificadorModal: "ciudadRemitente", tipoModal: 1, openDialog: true }) }}>
                                                       <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
                                                     </IconButton>
                                                   </InputAdornment>
@@ -3267,7 +3328,7 @@ function Embarque() {
                                                       "Consultar",
                                                     endAdornment: (
                                                       <InputAdornment position="end">
-                                                        <IconButton padding="0px" style={{ paddingRight: "0px" }} onClick={() => {  setState({ ...state, identificadorModal: "ciudadEntrega", tipoModal: 1, openDialog: true }) }}>
+                                                        <IconButton padding="0px" style={{ paddingRight: "0px" }} onClick={() => { setState({ ...state, identificadorModal: "ciudadEntrega", tipoModal: 1, openDialog: true }) }}>
                                                           <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
                                                         </IconButton>
                                                       </InputAdornment>

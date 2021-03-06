@@ -10,7 +10,7 @@ import IndicatorDots from "../Util/Dots";
 import Buttons from "../Util/CarruselButtons";
 import { makeStyles } from "@material-ui/core/styles";
 import * as XLSX from "xlsx";
-import { render } from "react-dom";
+import { render, Redirect } from "react-dom";
 import useModal from "react-hooks-use-modal";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
@@ -95,7 +95,7 @@ function Recoleccion() {
     agregar: "Agregar",
     idRecoleccion: 0,
     fechaInicial: "0",
-    fechaFinal: (today.getMonth() + 1) + "-" + today.getDate() + "-" + today.getFullYear() ,
+    fechaFinal: (today.getMonth() + 1) + "-" + today.getDate() + "-" + today.getFullYear(),
     sucursalListado: 0,
     estatusListado: 0,
     idSucursalAgregar: localStorage.getItem("Sucursal"),
@@ -753,9 +753,9 @@ function Recoleccion() {
     })
     const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
       event.target.value + "/" + state.fechaFinal + "/" + state.sucursalListado + "/" + state.estatusListado;
-      await axios.get(url, { headers }).then(respuesta => {
-        setData(respuesta.data)
-      })
+    await axios.get(url, { headers }).then(respuesta => {
+      setData(respuesta.data)
+    })
   }
 
   const handleFechaFinalFiltro = async (event) => {
@@ -765,9 +765,9 @@ function Recoleccion() {
     })
     const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
       state.fechaInicial + "/" + event.target.value + "/" + state.sucursalListado + "/" + state.estatusListado;
-      await axios.get(url, { headers }).then(respuesta => {
-        setData(respuesta.data)
-      })
+    await axios.get(url, { headers }).then(respuesta => {
+      setData(respuesta.data)
+    })
   }
 
   const handleSucursalFiltro = async (event) => {
@@ -777,9 +777,9 @@ function Recoleccion() {
     })
     const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
       state.fechaInicial + "/" + state.fechaFinal + "/" + event.target.value + "/" + state.estatusListado;
-      await axios.get(url, { headers }).then(respuesta => {
-        setData(respuesta.data)
-      })
+    await axios.get(url, { headers }).then(respuesta => {
+      setData(respuesta.data)
+    })
   }
 
   const handleEstatusFiltro = async (event) => {
@@ -789,9 +789,9 @@ function Recoleccion() {
     })
     const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
       state.fechaInicial + "/" + state.fechaFinal + "/" + state.sucursalListado + "/" + event.target.value;
-      await axios.get(url, { headers }).then(respuesta => {
-        setData(respuesta.data)
-      })
+    await axios.get(url, { headers }).then(respuesta => {
+      setData(respuesta.data)
+    })
   }
 
   const handleSelectChange = (event) => {
@@ -1169,11 +1169,11 @@ function Recoleccion() {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                            <i className="fa fa-caret-down" />
-                          )
+                          <i className="fa fa-caret-down" />
+                        )
                       ) : (
-                          ""
-                        )}
+                        ""
+                      )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -1292,11 +1292,11 @@ function Recoleccion() {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                            <i className="fa fa-caret-down" />
-                          )
+                          <i className="fa fa-caret-down" />
+                        )
                       ) : (
-                          ""
-                        )}
+                        ""
+                      )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -1373,11 +1373,11 @@ function Recoleccion() {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                            <i className="fa fa-caret-down" />
-                          )
+                          <i className="fa fa-caret-down" />
+                        )
                       ) : (
-                          ""
-                        )}
+                        ""
+                      )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -1454,11 +1454,11 @@ function Recoleccion() {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                            <i className="fa fa-caret-down" />
-                          )
+                          <i className="fa fa-caret-down" />
+                        )
                       ) : (
-                          ""
-                        )}
+                        ""
+                      )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -1532,11 +1532,11 @@ function Recoleccion() {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                            <i className="fa fa-caret-down" />
-                          )
+                          <i className="fa fa-caret-down" />
+                        )
                       ) : (
-                          ""
-                        )}
+                        ""
+                      )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -1613,11 +1613,11 @@ function Recoleccion() {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                            <i className="fa fa-caret-down" />
-                          )
+                          <i className="fa fa-caret-down" />
+                        )
                       ) : (
-                          ""
-                        )}
+                        ""
+                      )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -1693,11 +1693,11 @@ function Recoleccion() {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                            <i className="fa fa-caret-down" />
-                          )
+                          <i className="fa fa-caret-down" />
+                        )
                       ) : (
-                          ""
-                        )}
+                        ""
+                      )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -2196,8 +2196,8 @@ function Recoleccion() {
               </a>
             </li>
 
-            <li style={{float: "right"}}>
-              <a href="/Embarque/idRecoleccion=21">
+            <li style={{ float: "right" }}>
+              <a href="/Embarque/idRecoleccion=21" className={state.idRecoleccion == 0 ? classes.disabled : ""}>
                 Generar Embarque
               </a>
             </li>
@@ -2240,8 +2240,6 @@ function Recoleccion() {
                               id="fechaFinal"
                             />
                           </div>
-
-
 
                         </div>
 
@@ -2289,7 +2287,6 @@ function Recoleccion() {
                                 </option>
                               ))}
                             </select>
-                            <i></i>
                           </label>
                         </div>
                       </div>
@@ -2299,8 +2296,8 @@ function Recoleccion() {
                     {conDatos() ? (
                       <Table columns={columns} data={data} />
                     ) : (
-                        <div>No se encontró ningún registro</div>
-                      )}
+                      <div>No se encontró ningún registro</div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -3528,8 +3525,8 @@ function Recoleccion() {
                               </div>
                             </div>
                           ) : (
-                              <div></div>
-                            )}
+                            <div></div>
+                          )}
 
                           {state.diferenteEntrega ? (
                             <div>
@@ -3718,12 +3715,12 @@ function Recoleccion() {
                               </div>
                             </div>
                           ) : (
-                              <div></div>
-                            )}
+                            <div></div>
+                          )}
                         </div>
                       ) : (
-                          <div></div>
-                        )}
+                        <div></div>
+                      )}
 
                       <div className="widget-wrap" id="detallesOperacion">
                         <div className="row">
