@@ -74,7 +74,11 @@ h2 {
   left: 0;
   text-align: center;
   width: 75%;
+  height: 100%;
   background-image: url(../images/Fondo.png);
+  background-repeat: repeat-y;
+  background-size: cover;
+  object-fit: fill;
 }
 
 .imagenes-login{
