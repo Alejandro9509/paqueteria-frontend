@@ -2979,14 +2979,14 @@
     overflow-x: auto;
     white-space: nowrap;
     width: 100%;
-    table-layout:fixed;
-    margin: 0;
-    padding: 0;
+    table-layout: fixed;
+    
   }
 
-  .tabla-listado td {
-    overflow: hidden; 
-    text-overflow: ellipsis; 
-    word-wrap: break-word;
-    min-width: 10vw;
-  }
+  .tabla-listado td th{ 
+    width: auto; 
+    overflow: auto; 
+    white-space:nowrap;
+    margin: 10%;
+    padding: 0.2%;
+   }

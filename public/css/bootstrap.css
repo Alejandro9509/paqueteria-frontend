@@ -194,12 +194,13 @@ optgroup {
   font-weight: bold;
 }
 table {
+  overflow: auto;
   border-collapse: collapse;
   border-spacing: 0;
 }
 td,
 th {
-  padding: 0;
+  padding: 0.4%;
 }
 /*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src/css/main.css */
 @media print {
