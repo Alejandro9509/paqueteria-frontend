@@ -1040,7 +1040,7 @@ function Embarque() {
   const headers = {
     "Content-Type": "application/json",
   };
-  
+
   const headers2 = {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
@@ -1146,7 +1146,7 @@ function Embarque() {
                     onClick={handleSelectRow.bind(this, row.original.m_nIdEmbarque)}
                     className={state.idEmbarque === row.original.m_nIdEmbarque ? classes.seleccionado : classes.noSeleccionado}>
                     <td>
-                      <div>
+                      <div style={{paddingRight: "20px"}}>
                         <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdEmbarque))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
                         <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdEmbarque))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
                         <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdEmbarque))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
@@ -2067,86 +2067,84 @@ function Embarque() {
             <div id="Listado" className="tab-pane fade in active">
               <div className="widget-wrap">
                 <div className="widget-content">
-                  <div>
-                    <form className="j-forms">
-                      <div className="form-content">
-                        <div className="col-sm-6 col-md-3 unit">
-                          <label className="label">Fecha Inicial</label>
-                          <div className="input">
-                            <input
-                              type="date"
-                              className="form-control"
-                              onChange={handleFechaInicialFiltro}
-                              value={state.fechaInicial}
-                              id="fechaInicial"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="col-sm-6 col-md-3 unit">
-                          <label className="label">Fecha Final</label>
-                          <div className="input">
-                            <input
-                              type="date"
-                              className="form-control"
-                              onChange={handleFechaFinalFiltro}
-                              value={state.fechaFinal}
-                              id="fechaFinal"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="col-sm-6 col-md-3 unit">
-                          <label className="label">Sucursal</label>
-                          <label className="input select">
-                            <select
-                              className="form-control"
-                              required
-                              onChange={handleSucursalFiltro}
-                              value={state.sucursalListado}
-                              id="sucursalListado"
-                            >
-                              <option value="0">Todas</option>
-                              {dataSucursal.map((sucursal) => (
-                                <option
-                                  key={sucursal.m_nIdSucursal}
-                                  value={sucursal.m_nIdSucursal}
-                                >
-                                  {sucursal.m_sSucursal}
-                                </option>
-                              ))}
-                            </select>
-                            <i></i>
-                          </label>
-                        </div>
-
-                        <div className="col-sm-6 col-md-3 unit">
-                          <label className="label">Estatus</label>
-                          <label className="input select">
-                            <select
-                              className="form-control"
-                              required
-                              onChange={handleEstatusFiltro}
-                              value={state.estatusListado}
-                              id="estatusListado"
-                            >
-                              <option value="0">Todos</option>
-                              {dataEstatusEmbarque.map((estatus) => (
-                                <option
-                                  key={estatus.m_nIdEstatusEmbarque}
-                                  value={estatus.m_nIdEstatusEmbarque}
-                                >
-                                  {estatus.m_sEstatus}
-                                </option>
-                              ))}
-                            </select>
-                            <i></i>
-                          </label>
+                  <form className="j-forms">
+                    <div className="form-content">
+                      <div className="col-sm-6 col-md-3 unit">
+                        <label className="label">Fecha Inicial</label>
+                        <div className="input">
+                          <input
+                            type="date"
+                            className="form-control"
+                            onChange={handleFechaInicialFiltro}
+                            value={state.fechaInicial}
+                            id="fechaInicial"
+                          />
                         </div>
                       </div>
-                    </form>
-                  </div>
-                  <div className="row">
+
+                      <div className="col-sm-6 col-md-3 unit">
+                        <label className="label">Fecha Final</label>
+                        <div className="input">
+                          <input
+                            type="date"
+                            className="form-control"
+                            onChange={handleFechaFinalFiltro}
+                            value={state.fechaFinal}
+                            id="fechaFinal"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-sm-6 col-md-3 unit">
+                        <label className="label">Sucursal</label>
+                        <label className="input select">
+                          <select
+                            className="form-control"
+                            required
+                            onChange={handleSucursalFiltro}
+                            value={state.sucursalListado}
+                            id="sucursalListado"
+                          >
+                            <option value="0">Todas</option>
+                            {dataSucursal.map((sucursal) => (
+                              <option
+                                key={sucursal.m_nIdSucursal}
+                                value={sucursal.m_nIdSucursal}
+                              >
+                                {sucursal.m_sSucursal}
+                              </option>
+                            ))}
+                          </select>
+                          <i></i>
+                        </label>
+                      </div>
+
+                      <div className="col-sm-6 col-md-3 unit">
+                        <label className="label">Estatus</label>
+                        <label className="input select">
+                          <select
+                            className="form-control"
+                            required
+                            onChange={handleEstatusFiltro}
+                            value={state.estatusListado}
+                            id="estatusListado"
+                          >
+                            <option value="0">Todos</option>
+                            {dataEstatusEmbarque.map((estatus) => (
+                              <option
+                                key={estatus.m_nIdEstatusEmbarque}
+                                value={estatus.m_nIdEstatusEmbarque}
+                              >
+                                {estatus.m_sEstatus}
+                              </option>
+                            ))}
+                          </select>
+                          <i></i>
+                        </label>
+                      </div>
+                    </div>
+                  </form>
+                  <div className="row caja-tabla">
                     {conDatos() ? (
                       <Table columns={columns} data={data} />
                     ) : (
