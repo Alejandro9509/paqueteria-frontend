@@ -833,7 +833,7 @@ function Recoleccion() {
       Name: "Unidad",
       accessor: "m_sUnidad",
     },
-    
+
     {
       Name: "Remolque",
       accessor: "m_sTipoRemolque",
@@ -2187,8 +2187,12 @@ function Recoleccion() {
             </li>
 
             <li style={{ float: "right" }}>
-              <a href="/Embarque/idRecoleccion=21" className={state.idRecoleccion == 0 ? classes.disabled : ""}>
-                Generar Embarque
+              <a className={state.idRecoleccion == 0 ? classes.disabled : ""}>
+                <Redirect push to={{
+                  pathname: '/Embarques',
+                  state: { state}
+                }}
+                />
               </a>
             </li>
 
