@@ -41,6 +41,10 @@ const styles = {
   },
   noSeleccionado: {
     backgroundColor: "#FFFFFF",
+  },
+  disabled: {
+    pointerEvents: "none",
+    cursor: "default",
   }
 };
 
@@ -746,11 +750,11 @@ function handleImprmir2()
       ...state,
       fechaInicial: event.target.value,
     })
-    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
+    const url = `${process.env.REACT_APP_API_URL}/Guias/GetByFiltro/` +
       event.target.value + "/" + state.fechaFinal + "/" + state.sucursalListado + "/" + state.estatusListado;
-    //await axios.get(url, { headers }).then(respuesta => {
-    //  setData(respuesta.data)
-    //})
+    await axios.get(url, { headers }).then(respuesta => {
+      setData(respuesta.data)
+    })
     console.log(url)
   }
 
@@ -759,7 +763,7 @@ function handleImprmir2()
       ...state,
       fechaFinal: event.target.value,
     })
-    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
+    const url = `${process.env.REACT_APP_API_URL}/Guias/GetByFiltro/` +
       state.fechaInicial + "/" + event.target.value + "/" + state.sucursalListado + "/" + state.estatusListado;
     //await axios.get(url, { headers }).then(respuesta => {
     //  setData(respuesta.data)
@@ -772,7 +776,7 @@ function handleImprmir2()
       ...state,
       sucursalListado: event.target.value,
     })
-    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
+    const url = `${process.env.REACT_APP_API_URL}/Guias/GetByFiltro/` +
       state.fechaInicial + "/" + state.fechaFinal + "/" + event.target.value + "/" + state.estatusListado;
     //await axios.get(url, { headers }).then(respuesta => {
     //  setData(respuesta.data)
@@ -785,7 +789,7 @@ function handleImprmir2()
       ...state,
       estatusListado: event.target.value,
     })
-    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
+    const url = `${process.env.REACT_APP_API_URL}/Guias/GetByFiltro/` +
       state.fechaInicial + "/" + state.fechaFinal + "/" + state.sucursalListado + "/" + event.target.value;
     //await axios.get(url, { headers }).then(respuesta => {
     //  setData(respuesta.data)
@@ -1520,7 +1524,7 @@ function handleImprmir2()
               value={state.paquetes[index].peso}
               placeholder="Peso"
               name="peso"
-              disabled="true"
+              disabled={true}
             />
           </div>
         </div>
@@ -1535,7 +1539,7 @@ function handleImprmir2()
               value={state.paquetes[index].largo}
               placeholder="Largo"
               name="largo"
-              disabled="true"
+              disabled={true}
             />
           </div>
         </div>
@@ -1550,7 +1554,7 @@ function handleImprmir2()
               value={state.paquetes[index].ancho}
               placeholder="Ancho"
               name="ancho"
-              disabled="true"
+              disabled={true}
             />
           </div>
         </div>
@@ -1565,7 +1569,7 @@ function handleImprmir2()
               value={state.paquetes[index].alto}
               placeholder="Alto"
               name="alto"
-              disabled="true"
+              disabled={true}
             />
           </div>
         </div>
@@ -1580,7 +1584,7 @@ function handleImprmir2()
               value={state.paquetes[index].volumen}
               placeholder="Volumen"
               name="volumen"
-              disabled="true"
+              disabled={true}
             />
           </div>
         </div>
@@ -1595,7 +1599,7 @@ function handleImprmir2()
               value={state.paquetes[index].tipoEmbalaje}
               placeholder="Tipo de Embarje"
               name="tipoEmbalaje"
-              disabled="true"
+              disabled={true}
             />
           </div>
         </div>
@@ -1610,7 +1614,7 @@ function handleImprmir2()
               value={state.paquetes[index].valorDeclarado}
               placeholder="Valor Declarado"
               name="valorDeclarado"
-              disabled="true"
+              disabled={true}
             />
           </div>
         </div>
@@ -1625,7 +1629,7 @@ function handleImprmir2()
               value={state.paquetes[index].descripcionPaquete}
               placeholder="Descripción"
               name="descripcionPaquete"
-              disabled="true"
+              disabled={true}
             />
           </div>
         </div>
@@ -1640,7 +1644,7 @@ function handleImprmir2()
               value={state.paquetes[index].Ctd}
               placeholder="Ctd"
               name="ctd"
-              disabled="true"
+              disabled={true}
             />
           </div>
         </div>
@@ -1655,7 +1659,7 @@ function handleImprmir2()
               value={state.paquetes[index].observacionesPaquete}
               placeholder="Observaciones"
               name="observacionesPaquete"
-              disabled="true"
+              disabled={true}
             />
           </div>
         </div>
@@ -1861,7 +1865,7 @@ function handleImprmir2()
                   <form className="j-forms">
                     <div className="form-content">
                       <div className="col-md-6">
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             Remitente
 											</label>
@@ -1875,7 +1879,7 @@ function handleImprmir2()
                             />
                           </div>
                         </div>
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             RFC
 											</label>
@@ -1889,7 +1893,7 @@ function handleImprmir2()
                             />
                           </div>
                         </div>
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             Dirección
 											</label>
@@ -1903,7 +1907,7 @@ function handleImprmir2()
                             />
                           </div>
                         </div>
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             Zona
 											</label>
@@ -1917,7 +1921,7 @@ function handleImprmir2()
                             />
                           </div>
                         </div>
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             CP
 											</label>
@@ -1931,7 +1935,7 @@ function handleImprmir2()
                             />
                           </div>
                         </div>
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             Ciudad
 											</label>
@@ -1945,7 +1949,7 @@ function handleImprmir2()
                             />
                           </div>
                         </div>
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             Teléfono
 											</label>
@@ -1963,7 +1967,7 @@ function handleImprmir2()
 
                       </div>
                       <div className="col-md-6">
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             Destinatario
 											</label>
@@ -1977,7 +1981,7 @@ function handleImprmir2()
                             />
                           </div>
                         </div>
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             RFC
 											</label>
@@ -1991,7 +1995,7 @@ function handleImprmir2()
                             />
                           </div>
                         </div>
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             Dirección
 											</label>
@@ -2005,7 +2009,7 @@ function handleImprmir2()
                             />
                           </div>
                         </div>
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             Zona
 											</label>
@@ -2019,7 +2023,7 @@ function handleImprmir2()
                             />
                           </div>
                         </div>
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             CP
 											</label>
@@ -2033,7 +2037,7 @@ function handleImprmir2()
                             />
                           </div>
                         </div>
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             Ciudad
 											</label>
@@ -2047,7 +2051,7 @@ function handleImprmir2()
                             />
                           </div>
                         </div>
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             Teléfono
 											</label>
@@ -2061,7 +2065,7 @@ function handleImprmir2()
                             />
                           </div>
                         </div>
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             Cantidad
 											</label>
@@ -2075,7 +2079,7 @@ function handleImprmir2()
                             />
                           </div>
                         </div>
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             Descripcion
 											</label>
@@ -2131,7 +2135,7 @@ function handleImprmir2()
               id="descripcionSobre"
               name="descripcionSobre"
               read="true"
-              disabled="true"
+              disabled={true}
               value={state.sobres[index].descripcionSobre}
             />
           </div>
@@ -2206,7 +2210,7 @@ function handleImprmir2()
             </a>
             </li>
             <li>
-              <a data-toggle="tab" href="#Cancelar" onClick={handleShowCancelar}>
+              <a data-toggle="tab" href="#Cancelar" onClick={handleShowCancelar} className={state.idGuia == 0 ? classes.disabled : ""}>
                 <i className="fa fa-times-circle" /> Cancelar
               </a>
             </li>
@@ -3113,7 +3117,7 @@ function handleImprmir2()
                                           className="form-control"
                                           type="text"
                                           placeholder={state.ValorDeclarado}
-                                          readonly={state.agregar == "Consultar"}
+                                          readOnly={state.agregar == "Consultar"}
                                           id="ValorDeclarado"
                                         />
                                       </div>

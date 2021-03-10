@@ -10,7 +10,6 @@ import IndicatorDots from "../Util/Dots";
 import Buttons from "../Util/CarruselButtons";
 import { makeStyles } from "@material-ui/core/styles";
 import * as XLSX from "xlsx";
-import { render, Redirect } from "react-dom";
 import useModal from "react-hooks-use-modal";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
@@ -28,7 +27,7 @@ import {
 } from "react-table";
 import $ from "jquery";
 import { remove_array_element } from "../Util/Util";
-import { useHistory } from 'react-router-dom';
+import { useHistory, Redirect } from 'react-router-dom';
 
 import Noty from 'noty';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
@@ -71,6 +70,7 @@ const useStyles = makeStyles({
 function Recoleccion() {
   const today = new Date();
   const classes = useStyles();
+  const [redirect, setRedirect] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [dataSucursal, setDataSucursal] = React.useState([]);
   const [dataEstatusRecoleccion, setEstatusRecoleccion] = React.useState([]);
@@ -329,7 +329,7 @@ function Recoleccion() {
         ...state,
         folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
         sucursalCancelacion: dataSucursal.find(o => o.m_nIdSucursal == respuesta.data.m_nIdSucursal).m_sSucursal,
-        fechaCancelacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear(),
+        fechaCancelacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
         estatusRecoleccion: dataEstatusRecoleccion.find(o => o.m_nIdEstatusRecoleccion == respuesta.data.m_nIdEstatusRecoleccion).m_sEstatus,
         motivoCancelacion: respuesta.data.m_sMotivoCancelacion
       })
@@ -454,7 +454,7 @@ function Recoleccion() {
         moneda: respuesta.data.m_nMoneda,
         tipoCambio: respuesta.data.m_rTipoCambio,
         tipoCobro: respuesta.data.m_nIdTipoDeCobro,
-        nombreRemitente: respuesta.data.m_sNombreRemitente,
+        nombreRemitente: dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente),
         RFCRemitente: respuesta.data.m_sRFCRemitente,
         domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
         codigoPostalRemitente: dataCodigoPostal.find(
@@ -469,7 +469,7 @@ function Recoleccion() {
         origenRemitente: dataCiudad.find(
           (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen
         ),
-        nombreDestinatario: respuesta.data.m_sNombreDestinatario,
+        nombreDestinatario: dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCDestinatario),
         RFCDestinatario: respuesta.data.m_sRFCDestinatario,
         domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
         tipoUnidad: dataTipoUnidad.find(o => o.m_nIdTipoUnidad == (dataUnidad.find(o => o.m_nIdUnidad == respuesta.data.m_nIdUnidad)).m_nIdTipoUnidad),
@@ -549,7 +549,7 @@ function Recoleccion() {
         moneda: respuesta.data.m_nMoneda,
         tipoCambio: respuesta.data.m_rTipoCambio,
         tipoCobro: respuesta.data.m_nIdTipoDeCobro,
-        nombreRemitente: respuesta.data.m_sNombreRemitente,
+        nombreRemitente: dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente),
         RFCRemitente: respuesta.data.m_sRFCRemitente,
         domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
         codigoPostalRemitente: dataCodigoPostal.find(
@@ -564,7 +564,7 @@ function Recoleccion() {
         origenRemitente: dataCiudad.find(
           (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen
         ),
-        nombreDestinatario: respuesta.data.m_sNombreDestinatario,
+        nombreDestinatario: dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCDestinatario),
         RFCDestinatario: respuesta.data.m_sRFCDestinatario,
         domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
         tipoUnidad: dataTipoUnidad.find(o => o.m_nIdTipoUnidad == (dataUnidad.find(o => o.m_nIdUnidad == respuesta.data.m_nIdUnidad)).m_nIdTipoUnidad),
@@ -830,12 +830,13 @@ function Recoleccion() {
     {
       Name: "Operador",
       accessor: "m_sOperador",
+      width: "200px"
     },
     {
       Name: "Unidad",
       accessor: "m_sUnidad",
     },
-    
+
     {
       Name: "Remolque",
       accessor: "m_sTipoRemolque",
@@ -1152,16 +1153,16 @@ function Recoleccion() {
     );
 
     return (
-      <div className="col-md-12">
-        <table className="table" {...getTableProps()}>
+      <div className="col-md-12" style={{ overflowX: "scroll" }}>
+        <table className="table" {...getTableProps()} className="tabla-listado">
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
+                <th style={{ verticalAlign: "top" }}>Acciones</th>
                 {headerGroup.headers.map((column) => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())} style={{ width: column.render("width") }}>
                     {column.render("Name")}
                     {/* Add a sort direction indicator */}
                     <span>
@@ -1805,6 +1806,7 @@ function Recoleccion() {
           <a
             className="btn"
             style={{ margin: "10px" }}
+            disabled={state.agregar == "Consultar"}
             onClick={() => addPaquete(index)}
           >
             <i className="zmdi zmdi-plus"></i>
@@ -1818,6 +1820,7 @@ function Recoleccion() {
                   onChange={handleChange}
                   type="checkbox"
                   required
+                  disabled={state.agregar == "Consultar"}
                   value={state.mismoPaquete}
                   id="mismoPaquete"
                 />
@@ -1835,6 +1838,7 @@ function Recoleccion() {
               type="text"
               value={state.paquetes[index].m_rPeso}
               required
+              disabled={state.agregar == "Consultar"}
               placeholder="kg"
               name="m_rPeso"
             />
@@ -1850,6 +1854,7 @@ function Recoleccion() {
               type="text"
               value={state.paquetes[index].m_rLargo}
               required
+              disabled={state.agregar == "Consultar"}
               placeholder="mts"
               name="m_rLargo"
             />
@@ -1865,6 +1870,7 @@ function Recoleccion() {
               type="text"
               value={state.paquetes[index].m_rAncho}
               required
+              disabled={state.agregar == "Consultar"}
               placeholder="mts"
               name="m_rAncho"
             />
@@ -1880,6 +1886,7 @@ function Recoleccion() {
               type="text"
               value={state.paquetes[index].m_rAlto}
               required
+              disabled={state.agregar == "Consultar"}
               placeholder="mts"
               name="m_rAlto"
             />
@@ -1895,6 +1902,7 @@ function Recoleccion() {
               type="text"
               value={state.paquetes[index].m_rVolumen}
               required
+              disabled={state.agregar == "Consultar"}
               placeholder="mts3"
               name="m_rVolumen"
             />
@@ -1932,6 +1940,7 @@ function Recoleccion() {
               type="text"
               value={state.paquetes[index].m_cyValorDeclarado}
               required
+              disabled={state.agregar == "Consultar"}
               placeholder="$"
               name="m_cyValorDeclarado"
             />
@@ -1947,6 +1956,7 @@ function Recoleccion() {
               type="text"
               value={state.paquetes[index].m_sDescripcion}
               required
+              disabled={state.agregar == "Consultar"}
               placeholder="Descripción"
               name="m_sDescripcion"
             />
@@ -1962,6 +1972,7 @@ function Recoleccion() {
               type="text"
               value={state.paquetes[index].m_nCantidad}
               required
+              disabled={state.agregar == "Consultar"}
               placeholder="Ctd"
               name="m_nCantidad"
             />
@@ -1977,13 +1988,14 @@ function Recoleccion() {
               type="text"
               value={state.paquetes[index].m_sObservaciones}
               required
+              disabled={state.agregar == "Consultar"}
               placeholder="Observaciones"
               name="m_sObservaciones"
             />
           </div>
         </div>
         {state.paquetes.length !== 1 && (
-          <a className="btn delete" onClick={() => removePaquete(index)}>
+          <a className="btn delete" disabled={state.agregar == "Consultar"} onClick={() => removePaquete(index)}>
             <i className="zmdi zmdi-delete"></i> Eliminar Paquete
           </a>
         )}
@@ -2000,6 +2012,7 @@ function Recoleccion() {
             className="btn"
             style={{ margin: "10px" }}
             onClick={() => addSobre(index)}
+            disabled={state.agregar == "Consultar"}
           >
             <i className="zmdi zmdi-plus"></i>
             Agregar Sobre
@@ -2028,19 +2041,31 @@ function Recoleccion() {
               className="form-control"
               type="text"
               value={state.sobres[index].m_sDescripcion}
+              required
+              disabled={state.agregar == "Consultar"}
               placeholder="Descripción"
               name="m_sDescripcion"
             />
           </div>
         </div>
         {state.sobres.length !== 1 && (
-          <a className="btn delete" onClick={() => removeSobre(index)}>
+          <a className="btn delete" disabled={state.agregar == "Consultar"} onClick={() => removeSobre(index)}>
             <i className="zmdi zmdi-delete"></i> Eliminar Sobre
           </a>
         )}
       </div>
     );
   });
+
+  if (redirect) {
+    return (
+      <Redirect push to={{
+        pathname: '/Embarque',
+        idRecoleccion: state.idRecoleccion,
+      }}
+      />
+    )
+  }
 
   return (
     <div>
@@ -2197,9 +2222,9 @@ function Recoleccion() {
             </li>
 
             <li style={{ float: "right" }}>
-              <a href="/Embarque/idRecoleccion=21" className={state.idRecoleccion == 0 ? classes.disabled : ""}>
-                Generar Embarque
-              </a>
+              <a data-toggle="tab" href="#" className={state.idRecoleccion == 0 ? classes.disabled : ""} style={{ textAlign: "right" }} onClick={() => setRedirect(true)}>
+                Generar embarque
+                            </a>
             </li>
 
             {/**<button className="topbar-right pull-right">Boton</button>*/}
@@ -2212,93 +2237,89 @@ function Recoleccion() {
           >
             <div id="Listado" className="tab-pane fade in active">
               <div className="widget-wrap">
-                <div className="widget-content">
-                  <div>
-                    <form className="j-forms">
-                      <div className="form-content">
-                        <div className="col-sm-6 col-md-3 unit">
-                          <label className="label">Fecha Inicial</label>
-                          <div className="input">
-                            <input
-                              type="date"
-                              className="form-control"
-                              value={state.fechaInicial}
-                              onChange={handleFechaInicialFiltro}
-                              id="fechaInicial"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="col-sm-6 col-md-3 unit">
-                          <label className="label">Fecha Final</label>
-                          <div className="input">
-                            <input
-                              type="date"
-                              className="form-control"
-                              value={state.fechaFinal}
-                              onChange={handleFechaFinalFiltro}
-                              id="fechaFinal"
-                            />
-                          </div>
-
-                        </div>
-
-                        <div className="col-sm-6 col-md-3 unit">
-                          <label className="label">Sucursal</label>
-                          <label className="input select">
-                            <select
-                              className="form-control"
-                              required
-                              value={state.sucursalListado}
-                              onChange={handleSucursalFiltro}
-                              id="sucursalListado"
-                            >
-                              <option value="0">Todas</option>
-                              {dataSucursal.map((sucursal) => (
-                                <option
-                                  key={sucursal.m_nIdSucursal}
-                                  value={sucursal.m_nIdSucursal}
-                                >
-                                  {sucursal.m_sSucursal}
-                                </option>
-                              ))}
-                            </select>
-                            <i></i>
-                          </label>
-                        </div>
-
-                        <div className="col-sm-6 col-md-3 unit">
-                          <label className="label">Estatus</label>
-                          <label className="input select">
-                            <select
-                              className="form-control"
-                              required
-                              value={state.estatusListado}
-                              onChange={handleEstatusFiltro}
-                              id="estatusListado"
-                            >
-                              <option value="0">Todos</option>
-                              {dataEstatusRecoleccion.map((estatus) => (
-                                <option
-                                  key={estatus.m_nIdEstatusRecoleccion}
-                                  value={estatus.m_nIdEstatusRecoleccion}
-                                >
-                                  {estatus.m_sEstatus}
-                                </option>
-                              ))}
-                            </select>
-                          </label>
-                        </div>
+                <form className="j-forms">
+                  <div className="form-content">
+                    <div className="col-sm-6 col-md-3 unit">
+                      <label className="label">Fecha Inicial</label>
+                      <div className="input">
+                        <input
+                          type="date"
+                          className="form-control"
+                          value={state.fechaInicial}
+                          onChange={handleFechaInicialFiltro}
+                          id="fechaInicial"
+                        />
                       </div>
-                    </form>
+                    </div>
+
+                    <div className="col-sm-6 col-md-3 unit">
+                      <label className="label">Fecha Final</label>
+                      <div className="input">
+                        <input
+                          type="date"
+                          className="form-control"
+                          value={state.fechaFinal}
+                          onChange={handleFechaFinalFiltro}
+                          id="fechaFinal"
+                        />
+                      </div>
+
+                    </div>
+
+                    <div className="col-sm-6 col-md-3 unit">
+                      <label className="label">Sucursal</label>
+                      <label className="input select">
+                        <select
+                          className="form-control"
+                          required
+                          value={state.sucursalListado}
+                          onChange={handleSucursalFiltro}
+                          id="sucursalListado"
+                        >
+                          <option value="0">Todas</option>
+                          {dataSucursal.map((sucursal) => (
+                            <option
+                              key={sucursal.m_nIdSucursal}
+                              value={sucursal.m_nIdSucursal}
+                            >
+                              {sucursal.m_sSucursal}
+                            </option>
+                          ))}
+                        </select>
+                        <i></i>
+                      </label>
+                    </div>
+
+                    <div className="col-sm-6 col-md-3 unit">
+                      <label className="label">Estatus</label>
+                      <label className="input select">
+                        <select
+                          className="form-control"
+                          required
+                          value={state.estatusListado}
+                          onChange={handleEstatusFiltro}
+                          id="estatusListado"
+                        >
+                          <option value="0">Todos</option>
+                          {dataEstatusRecoleccion.map((estatus) => (
+                            <option
+                              key={estatus.m_nIdEstatusRecoleccion}
+                              value={estatus.m_nIdEstatusRecoleccion}
+                            >
+                              {estatus.m_sEstatus}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                    </div>
                   </div>
-                  <div className="row">
-                    {conDatos() ? (
-                      <Table columns={columns} data={data} />
-                    ) : (
-                      <div>No se encontró ningún registro</div>
-                    )}
-                  </div>
+                </form>
+                <div className="row">
+                  {conDatos() ? (
+                    <Table columns={columns} data={data} />
+                  ) : (
+                    <div>No se encontró ningún registro</div>
+                  )}
                 </div>
               </div>
             </div>
@@ -2601,6 +2622,7 @@ function Recoleccion() {
 
                                         onSelect={handleSelectRemitente()}
                                         value={state.nombreRemitente}
+                                        disabled={state.agregar == "Consultar"}
                                         freeSolo
                                         onChange={(event, newValue) =>
                                           setState({
@@ -2639,6 +2661,7 @@ function Recoleccion() {
                                                       style={{
                                                         paddingRight: "0px",
                                                       }}
+                                                      disabled={state.agregar == "Consultar"}
                                                       onClick={() => {
                                                         setState({
                                                           ...state,
@@ -2751,6 +2774,7 @@ function Recoleccion() {
                                                       style={{
                                                         paddingRight: "0px",
                                                       }}
+                                                      disabled={state.agregar == "Consultar"}
                                                       onClick={() => {
                                                         setState({
                                                           ...state,
@@ -2901,6 +2925,7 @@ function Recoleccion() {
                                                       style={{
                                                         paddingRight: "0px",
                                                       }}
+                                                      disabled={state.agregar == "Consultar"}
                                                       onClick={() => {
                                                         setState({
                                                           ...state,
@@ -2967,6 +2992,7 @@ function Recoleccion() {
                                     <Autocomplete
                                       onSelect={handleSelectDestinatario()}
                                       value={state.nombreDestinatario}
+                                      disabled={state.agregar == "Consultar"}
                                       freeSolo
                                       onChange={(event, newValue) =>
                                         setState({
@@ -3005,6 +3031,7 @@ function Recoleccion() {
                                                     style={{
                                                       paddingRight: "0px",
                                                     }}
+                                                    disabled={state.agregar == "Consultar"}
                                                     onClick={() => {
                                                       setState({
                                                         ...state,
@@ -3119,6 +3146,7 @@ function Recoleccion() {
                                                     style={{
                                                       paddingRight: "0px",
                                                     }}
+                                                    disabled={state.agregar == "Consultar"}
                                                     onClick={() => {
                                                       setState({
                                                         ...state,
@@ -3262,6 +3290,7 @@ function Recoleccion() {
                                                     style={{
                                                       paddingRight: "0px",
                                                     }}
+                                                    disabled={state.agregar == "Consultar"}
                                                     onClick={() => {
                                                       setState({
                                                         ...state,
@@ -3391,6 +3420,7 @@ function Recoleccion() {
                                                           style={{
                                                             paddingRight: "0px",
                                                           }}
+                                                          disabled={state.agregar == "Consultar"}
                                                           onClick={() => {
                                                             setState({
                                                               ...state,
@@ -3583,6 +3613,7 @@ function Recoleccion() {
                                                           style={{
                                                             paddingRight: "0px",
                                                           }}
+                                                          disabled={state.agregar == "Consultar"}
                                                           onClick={() => {
                                                             setState({
                                                               ...state,
@@ -3776,6 +3807,7 @@ function Recoleccion() {
                                                       style={{
                                                         paddingRight: "0px",
                                                       }}
+                                                      disabled={state.agregar == "Consultar"}
                                                       onClick={() => {
                                                         setState({
                                                           ...state,
@@ -3854,6 +3886,7 @@ function Recoleccion() {
                                                       style={{
                                                         paddingRight: "0px",
                                                       }}
+                                                      disabled={state.agregar == "Consultar"}
                                                       onClick={() => {
                                                         setState({
                                                           ...state,
@@ -3930,6 +3963,7 @@ function Recoleccion() {
                                                       style={{
                                                         paddingRight: "0px",
                                                       }}
+                                                      disabled={state.agregar == "Consultar"}
                                                       onClick={() => {
                                                         setState({
                                                           ...state,
@@ -4072,6 +4106,7 @@ function Recoleccion() {
                     <button
                       type="submit"
                       className="btn btn-primary primary-btn"
+                      disabled={state.agregar == "Consultar"}
                     >
                       Aceptar
                     </button>
