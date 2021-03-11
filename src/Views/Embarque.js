@@ -186,7 +186,7 @@ function Embarque(props) {
   }
 
   function handleSelectRemitente() {
-    if(state.nombreRemitente != undefined){
+    if (state.nombreRemitente != undefined) {
       state.RFCRemitente = state.nombreRemitente.m_sRFC;
     }
     //state.domicilioRemitente = state.nombreRemitente.m_sNombreCompletoOperador
@@ -196,7 +196,7 @@ function Embarque(props) {
     //state.contactoRemitente = state.nombreRemitente.m_sContacto
   }
   function handleSelectDestinatario() {
-    if(state.nombreDestinatario != undefined){
+    if (state.nombreDestinatario != undefined) {
       state.RFCDestinatario = state.nombreDestinatario.m_sRFC;
     }
     //state.domicilioDestinatario = state.nombreDestinatario.m_sNombreCompletoOperador
@@ -270,7 +270,7 @@ function Embarque(props) {
         .put(url, Object.assign({}, params), { headers2 })
         .then((respuesta) => {
           showSuccess(respuesta.data);
-          getAllData();
+          getAllEmbarque();
         })
         .catch((err) => {
           console.log(err);
@@ -283,7 +283,7 @@ function Embarque(props) {
         .then((respuesta) => {
           showSuccess(respuesta.data);
           console.log(respuesta.data);
-          getAllData();
+          getAllEmbarque();
         })
         .catch((err) => {
           console.log(err);
@@ -380,7 +380,7 @@ function Embarque(props) {
           .delete(url, { headers })
           .then((respuesta) => {
             showSuccess(respuesta.data);
-            getAllData();
+            getAllEmbarque();
           })
           .catch((err) => {
             showSuccess(err);
@@ -925,7 +925,100 @@ function Embarque(props) {
     },
   ]);
 
-  useEffect( async (value) => {
+  useEffect(async (value) => {
+    getAllData().then( async() => {
+      console.log(props.location.idRecoleccion)
+      if (props.location.idRecoleccion != undefined) {
+        const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetById/${props.location.idRecoleccion}`;
+        await axios.get(url, { headers }).then((respuesta) => {
+          setState({
+            ...state,
+            idEmbarque: 0,
+            idSucursalAgregar: respuesta.data.m_nIdSucursal,
+            folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
+            folioEmbarque: respuesta.data.m_nFolioEmbarque,
+            folioGuía: respuesta.data.m_nFolioGuia,
+            folioInforme: respuesta.data.m_nFolioInforme,
+            fechaHoraCreacion:
+              today.getDate() +
+              "/" +
+              (today.getMonth() + 1) +
+              "/" +
+              today.getFullYear() +
+              " " +
+              today.getHours() +
+              ":" +
+              today.getMinutes(),
+            moneda: respuesta.data.m_nMoneda,
+            tipoCambio: respuesta.data.m_rTipoCambio,
+            tipoCobro: respuesta.data.m_nIdTipoDeCobro,
+            estatusEmbarque: respuesta.data.m_nIdEstatusEmbarque,
+            nombreRemitente: dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente),
+            RFCRemitente: respuesta.data.m_sRFCRemitente,
+            domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
+            codigoPostalRemitente: dataCodigoPostal.find(
+              (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalRemitente
+            ),
+            ciudadRemitente: dataCiudad.find(
+              (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadRemitente
+            ),
+            correoRemitente: respuesta.data.m_sCorreoRemitente,
+            telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
+            contactoRemitente: respuesta.data.m_sContactoRemitente,
+            ciudadOrigen: dataCiudad.find(
+              (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen
+            ),
+
+            nombreDestinatario: dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCDestinatario),
+            RFCDestinatario: respuesta.data.m_sRFCDestinatario,
+            domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
+            codigoPostalDestinatario: dataCodigoPostal.find(
+              (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalDestinatario
+            ),
+            ciudadDestinatario: dataCiudad.find(
+              (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestinatario
+            ),
+            correoDestinatario: respuesta.data.m_sCorreoDestinatario,
+            telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
+            contactoDestinatario: respuesta.data.m_sContactoDestinatario,
+
+            ciudadDestino: dataCiudad.find(
+              (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino
+            ),
+            zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
+            domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
+            entregaEn: respuesta.data.m_sEntregarEnDetalleEntrega,
+            datosAdicionalesEntrega: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
+            fechaEntrega:
+              respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
+            codigoPostalEntrega: dataCodigoPostal.find(
+              (o) => o.m_nIdCP == respuesta.data.m_nIdCPDetalleEntrega
+            ),
+            ciudadEntrega: dataCiudad.find(
+              (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDetalleEntrega
+            ),
+            fechaHoraSalida:
+              respuesta.data.m_dFechaSalida + "T" + respuesta.data.m_tHoraSalida,
+            fechaHoraLlegada:
+              respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,
+            idOperador: dataOperador.find(
+              (o) => o.m_nIdOperador == respuesta.data.m_nIdOperador
+            ),
+            idTipoUnidad: dataTipoUnidad.find(
+              (o) =>
+                o.m_nIdTipoUnidad ==
+                dataUnidad.find((o) => o.m_nIdUnidad == respuesta.data.m_nIdUnidad)
+                  .m_nIdUnidad
+            ),
+            idUnidad: dataUnidad.find(
+              (o) => o.m_nIdUnidad == respuesta.data.m_nIdUnidad
+            ),
+            paquetes: respuesta.data.m_parrPaquetes,
+          });
+          console.log(dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente))
+        });
+      }
+    })
     if (
       localStorage.getItem("UsuarioId") === null ||
       localStorage.getItem("UsuarioId") <= 0
@@ -934,7 +1027,10 @@ function Embarque(props) {
       window.location.replace("login");
       return;
     }
-    getAllData();
+  }, []);
+
+  async function getAllData() {
+    getAllEmbarque();
     getAllSucursales();
     getAllEstatusEmbarque();
     getAllTipoCobro();
@@ -945,100 +1041,9 @@ function Embarque(props) {
     getAllTipoUnidad();
     getAllRemitentesDestinatarios();
     getAllEmbalajes();
-    console.log(props.location.idRecoleccion)
-    if (props.location.idRecoleccion != undefined) {
-      const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetById/${props.location.idRecoleccion}`;
-      await axios.get(url, { headers }).then((respuesta) => {
-        setState({
-          ...state,
-          idEmbarque: 0,
-          idSucursalAgregar: respuesta.data.m_nIdSucursal,
-          folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
-          folioEmbarque: respuesta.data.m_nFolioEmbarque,
-          folioGuía: respuesta.data.m_nFolioGuia,
-          folioInforme: respuesta.data.m_nFolioInforme,
-          fechaHoraCreacion:
-            today.getDate() +
-            "/" +
-            (today.getMonth() + 1) +
-            "/" +
-            today.getFullYear() +
-            " " +
-            today.getHours() +
-            ":" +
-            today.getMinutes(),
-          moneda: respuesta.data.m_nMoneda,
-          tipoCambio: respuesta.data.m_rTipoCambio,
-          tipoCobro: respuesta.data.m_nIdTipoDeCobro,
-          estatusEmbarque: respuesta.data.m_nIdEstatusEmbarque,
-          nombreRemitente: dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente),
-          RFCRemitente: respuesta.data.m_sRFCRemitente,
-          domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-          codigoPostalRemitente: dataCodigoPostal.find(
-            (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalRemitente
-          ),
-          ciudadRemitente: dataCiudad.find(
-            (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadRemitente
-          ),
-          correoRemitente: respuesta.data.m_sCorreoRemitente,
-          telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
-          contactoRemitente: respuesta.data.m_sContactoRemitente,
-          ciudadOrigen: dataCiudad.find(
-            (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen
-          ),
+  }
 
-          nombreDestinatario: dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCDestinatario),
-          RFCDestinatario: respuesta.data.m_sRFCDestinatario,
-          domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-          codigoPostalDestinatario: dataCodigoPostal.find(
-            (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalDestinatario
-          ),
-          ciudadDestinatario: dataCiudad.find(
-            (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestinatario
-          ),
-          correoDestinatario: respuesta.data.m_sCorreoDestinatario,
-          telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
-          contactoDestinatario: respuesta.data.m_sContactoDestinatario,
-
-          ciudadDestino: dataCiudad.find(
-            (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino
-          ),
-          zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
-          domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
-          entregaEn: respuesta.data.m_sEntregarEnDetalleEntrega,
-          datosAdicionalesEntrega: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
-          fechaEntrega:
-            respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
-          codigoPostalEntrega: dataCodigoPostal.find(
-            (o) => o.m_nIdCP == respuesta.data.m_nIdCPDetalleEntrega
-          ),
-          ciudadEntrega: dataCiudad.find(
-            (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDetalleEntrega
-          ),
-          fechaHoraSalida:
-            respuesta.data.m_dFechaSalida + "T" + respuesta.data.m_tHoraSalida,
-          fechaHoraLlegada:
-            respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,
-          idOperador: dataOperador.find(
-            (o) => o.m_nIdOperador == respuesta.data.m_nIdOperador
-          ),
-          idTipoUnidad: dataTipoUnidad.find(
-            (o) =>
-              o.m_nIdTipoUnidad ==
-              dataUnidad.find((o) => o.m_nIdUnidad == respuesta.data.m_nIdUnidad)
-                .m_nIdUnidad
-          ),
-          idUnidad: dataUnidad.find(
-            (o) => o.m_nIdUnidad == respuesta.data.m_nIdUnidad
-          ),
-          paquetes: respuesta.data.m_parrPaquetes,
-        });
-        console.log(dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente))
-      });
-    } 
-  }, []);
-
-  async function getAllData() {
+  async function getAllEmbarque() {
     const url = `${process.env.REACT_APP_API_URL}/Embarques/GetListado`;
     await axios.get(url, { headers }).then((respuesta) => {
       setData(respuesta.data);
