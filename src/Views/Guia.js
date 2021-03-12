@@ -62,7 +62,7 @@ function Guia(props) {
   const [state, setState] = React.useState({
     showPopUp: false,
     idGuia: 0,
-    agregar: "Consultar",
+    agregar: "Agregar",
     fechaInicial: "",
     fechaFinal: today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate(),
     sucursalListado: 0,
