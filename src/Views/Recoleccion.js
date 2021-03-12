@@ -210,7 +210,6 @@ function Recoleccion() {
 
   const handleAceptar = (e) => {
     e.preventDefault();
-
     var params = {
 
       "m_nIdRecoleccion": state.idRecoleccion,
@@ -1154,7 +1153,7 @@ function Recoleccion() {
 
     return (
       <div className="col-md-12" style={{ overflowX: "scroll" }}>
-        <table className="table" {...getTableProps()} className="tabla-listado">
+        <table className="table tabla-listado" {...getTableProps()}>
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
@@ -2058,6 +2057,9 @@ function Recoleccion() {
   });
 
   if (redirect) {
+    if(data.find( (o) => o.m_nIdRecoleccion == state.idRecoleccion).m_nIdEmbarque != 0){
+      showSuccess("Recolección ya tiene Embarque")
+    } else {
     return (
       <Redirect push to={{
         pathname: '/Embarque',
@@ -2065,6 +2067,7 @@ function Recoleccion() {
       }}
       />
     )
+    }
   }
 
   return (
@@ -2648,6 +2651,7 @@ function Recoleccion() {
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
+                                              required
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
@@ -2760,6 +2764,7 @@ function Recoleccion() {
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
+                                              required
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
@@ -2910,6 +2915,7 @@ function Recoleccion() {
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
+                                              required
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
@@ -3018,6 +3024,7 @@ function Recoleccion() {
                                       renderInput={(params) => (
                                         <div>
                                           <TextField
+                                              required
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
@@ -3132,6 +3139,7 @@ function Recoleccion() {
                                       renderInput={(params) => (
                                         <div>
                                           <TextField
+                                              required
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
@@ -3275,6 +3283,7 @@ function Recoleccion() {
                                       renderInput={(params) => (
                                         <div>
                                           <TextField
+                                              required
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
@@ -3406,6 +3415,7 @@ function Recoleccion() {
                                             renderInput={(params) => (
                                               <div>
                                                 <TextField
+                                              required
                                                   {...params}
                                                   InputProps={{
                                                     ...params.InputProps,
@@ -3599,6 +3609,7 @@ function Recoleccion() {
                                             renderInput={(params) => (
                                               <div>
                                                 <TextField
+                                              required
                                                   {...params}
                                                   InputProps={{
                                                     ...params.InputProps,
@@ -3793,6 +3804,7 @@ function Recoleccion() {
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
+                                              required
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
@@ -3872,6 +3884,7 @@ function Recoleccion() {
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
+                                              required
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
@@ -3949,6 +3962,7 @@ function Recoleccion() {
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
+                                              required
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
