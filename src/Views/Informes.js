@@ -53,10 +53,14 @@ function showSuccess(mensaje){
 
 const styles = {
   seleccionado: {
-    backgroundColor: "#688ad9",
+    backgroundColor: "#FCC88F",
   },
   noSeleccionado: {
     backgroundColor: "#FFFFFF",
+  },
+  disabled: {
+    pointerEvents: "none",
+    cursor: "default",
   }
 };
 const useStyles = makeStyles(styles);
@@ -300,8 +304,8 @@ function Informes({history}) {
     );
 
     return (
-      <div className="col-md-12">
-        <table className="table" {...getTableProps()}>
+      <div className="col-md-12" style={{ overflowX: "scroll", height: "100%" }}>
+        <table className="table  tabla-listado" {...getTableProps()}>
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
@@ -353,18 +357,21 @@ function Informes({history}) {
                         <i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} />
                       </a>
                       <a
-                        href="#"
+                        href="#Agregar"
+                        role="tab"
+                        data-toggle="tab"
                         className="btn btn-default btn-sm"
-                        onClick={() => handleEliminar(row.original.m_nIdUnidad)}
+                        onClick={() => handleShowModificar(row.original.m_nIdUnidad)}
                       >
-                        <i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} />
+                        <i className="fa fa-eye" style={{color:"#F9A03E"}} />
                       </a>
+                      
                       <a
                         href="#"
                         className="btn btn-default btn-sm"
                         onClick={() => handleEliminar(row.original.m_nIdUnidad)}
                       >
-                        <i className="fa fa-eye" style={{color:"#F9A03E"}} />
+                        <i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} />
                       </a>
                     </div>
                   </td>
@@ -861,7 +868,6 @@ function Informes({history}) {
     IdCiudadDestino: 0,
     IdCiudadOrigen: 0,
     IdRuta: 0,
-    FechaCancelacion: "",
     IdIdUsuarioCancelacion: 0,
     agregar: "Agregar",
     height: window.innerHeight,
@@ -877,6 +883,10 @@ function Informes({history}) {
         observaciones: "",
       },
     ],
+    FechaCancelacion: "",
+    motivoCancelacion: "",
+    sucursalCancelacion: {},
+    sePuedeCancelar: false
   });
 
   const selectGuia = (index) => {
@@ -895,6 +905,24 @@ function Informes({history}) {
     });
   }
 
+  function handleShowCancelar() {
+    const url = `${process.env.REACT_APP_API_URL}/Informes/GetCancelarById/${state.IdInforme}`;
+    var today = new Date();
+    axios.get(url, { headers }).then((respuesta) => {
+      console.log(respuesta.data.m_nSePuedeCancelar)
+      setState({
+        ...state,
+        FolioInforme: respuesta.data.m_nIdInforme,
+        sucursalCancelacion: dataSucursal.find(o => o.m_nIdSucursal == respuesta.data.IdSucursal).m_sSucursal,
+        fechaCancelacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear(),
+        motivoCancelacion: respuesta.data.m_sMotivoCancelacion,
+        sePuedeCancelar: false
+      })
+      if (respuesta.data.m_nSePuedeCancelar == 0)
+        state.sePuedeCancelar = true
+        showSuccess("Embarque no se puede cancelar")
+    })
+  }
 
   function getAllGuiasFrom() {
     const url =
@@ -1207,17 +1235,7 @@ function Informes({history}) {
               </div>
               <div className="col-md-6 col-sm-6">
                 <ul className="list-page-breadcrumb">
-                  <li>
-                    <a href="#">
-                      Home <i className="zmdi zmdi-chevron-right" />
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      Layout <i className="zmdi zmdi-chevron-right" />
-                    </a>
-                  </li>
-                  <li className="active-page"> Dashboard</li>
+                  <li className="active-page"> Informes</li>
                 </ul>
               </div>
             </div>
@@ -1242,7 +1260,7 @@ function Informes({history}) {
             </li>
 
             <li>
-              <a data-toggle="tab" href="#Cancelar">
+            <a data-toggle="tab" href="#Cancelar" onClick={handleShowCancelar} className={state.IdInforme == 0 ? classes.disabled : ""}>
                 <i className="fa fa-ban" /> Cancelar
               </a>
             </li>
@@ -2329,6 +2347,121 @@ function Informes({history}) {
                 </div>
               </div>
             </div>
+            <div id="Cancelar" className="tab-pane fade">
+              <div className="widget-wrap">
+                <div className="widget-content">
+                  <div className="row">
+                    <form className="j-forms" >
+                      <div className="form-content">
+                        <div className="widget-wrap">
+                          <div className="widget-container">
+                            <div className="widget-content">
+                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                <label className="label">Folio Informes</label>
+                                <div className="input">
+                                  <input
+                                    className="form-control"
+                                    type="text"
+                                    value={state.FolioInforme}
+                                    id="FolioInforme"
+                                    readOnly
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                <label className="label">Sucursal</label>
+                                <div className="input">
+                                  <input
+                                    className="form-control"
+                                    type="text"
+                                    value={state.sucursalCancelacion}
+                                    id="sucursalCancelacion"
+                                    readOnly
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                <label className="label">Fecha</label>
+                                <div className="input">
+                                  <input
+                                    className="form-control"
+                                    type="text"
+                                    value={state.fechaCancelacion}
+                                    id="fechaCancelacion"
+                                    readOnly
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                <label className="label">Usuario</label>
+                                <div className="input">
+                                  <input
+                                    className="form-control"
+                                    type="text"
+                                    value={state.usuario}
+                                    id="usuario"
+                                    readOnly
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                <label className="label">Estatus</label>
+                                <div className="input">
+                                  <input
+                                    className="form-control"
+                                    type="text"
+                                    value={state.estatusEmbarque}
+                                    id="estatusEmbarque"
+                                    readOnly
+                                  />
+                                </div>
+                              </div>
+
+
+                              <div className="col-sm-12 col-md-12 col-lg-12 unit">
+                                <label className="label">Motivo</label>
+                                <div className="input">
+                                  <input
+                                    className="form-control"
+                                    type="text"
+                                    value={state.motivoCancelacion}
+                                    id="motivoCancelacion"
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="form-footer" className="col-md-12">
+                                <button
+                                  href="#Listado"
+                                  role="tab"
+                                  data-toggle="tab"
+                                  className="btn btn-secondary secondary-btn"
+                                >
+                                  Cancelar
+                                </button>
+                                <button
+                                  type="submit"
+                                  className="btn btn-primary primary-btn"
+                                >
+                                  Aceptar
+                                </button>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
           </div>
         </div>
       </section>

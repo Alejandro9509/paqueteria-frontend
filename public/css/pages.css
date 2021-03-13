@@ -17,11 +17,10 @@
   text-align: center;
 }
 .login-input .login-frm-input {
-  height: 50px;
+  height: 35px;
 }
 .login-input .icon-left {
-  height: 48px;
-  line-height: 47px !important;
+  line-height: 20px !important;
 }
 .login-form-footer .btn {
   padding: 10px 20px !important;

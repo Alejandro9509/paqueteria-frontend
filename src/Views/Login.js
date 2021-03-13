@@ -6,15 +6,21 @@ import {
 } from "@material-ui/core";
 import $ from 'jquery';
 import { sha512 } from "../Util/Sha";
+import LogoGMTransportDIG from "../iconos/LogoGMTransportDIG.png"
+import ERP from "../iconos/erp.png"
+import Localizacion from "../iconos/Localizacion.png"
+import HombreCamion from "../iconos/HombreCamion.png"
+import AplicacionMovil from "../iconos/apps.png"
+import LogoPaqueteria from "../iconos/LogoPaqueteria.png"
 
 import Noty from 'noty';
 
-function showSuccess(mensaje){
+function showSuccess(mensaje) {
   new Noty({
-    type:"information",
-    layout:"topCenter",
+    type: "information",
+    layout: "topCenter",
     text: mensaje,
-    timeout:"3000"
+    timeout: "3000"
   }).show()
 }
 
@@ -27,118 +33,139 @@ function Login() {
     isAuthenticated: false,
     idDepartamento: 0,
     resData: ''
-})
-  
-function login(){
-  const user = $("#usuario").val();
-  const rfc = $("#rfc").val();
-  const pass = sha512($("#password").val());
+  })
 
-  const url = `${process.env.REACT_APP_API_URL}/Usuarios/ValidarLogin/` +  user + "/" + pass + "/"+rfc;
+  const login = (e) => {
+    e.preventDefault();
+    const user = $("#usuario").val();
+    const rfc = $("#rfc").val();
+    const pass = sha512($("#password").val());
+
+    const url = `${process.env.REACT_APP_API_URL}/Usuarios/ValidarLogin/` + user + "/" + pass + "/" + rfc;
     axios.get(url, { headers }).then(respuesta => {
-      try{
+      try {
         debugger;
-      if (respuesta.data != undefined && respuesta.data.m_sUsuario != undefined && respuesta.data.m_sUsuario != ""  )
-      {
-        console.log(respuesta.data)
-        localStorage.setItem("accessToken", true);
-        localStorage.setItem("UsuarioId",respuesta.data.m_nIdUsuario);
-        localStorage.setItem("Sucursal",respuesta.data.m_nIdSucursal);
-        localStorage.setItem("TipoUsuario",respuesta.data.m_nTipoUsuario);
-        localStorage.setItem("Email",respuesta.data.m_sCorreoElectronico);
-        localStorage.setItem("Usuario",respuesta.data.m_sUsuario);
-        localStorage.setItem("Nombre",respuesta.data.m_sNombre);     
-        window.location.replace("configuracion");  
-      }
-      else
-      {
-        showSuccess(respuesta.data);
-      }
-      }catch{
+        if (respuesta.data != undefined && respuesta.data.m_sUsuario != undefined && respuesta.data.m_sUsuario != "") {
+          console.log(respuesta.data)
+          localStorage.setItem("accessToken", true);
+          localStorage.setItem("UsuarioId", respuesta.data.m_nIdUsuario);
+          localStorage.setItem("Sucursal", respuesta.data.m_nIdSucursal);
+          localStorage.setItem("TipoUsuario", respuesta.data.m_nTipoUsuario);
+          localStorage.setItem("Email", respuesta.data.m_sCorreoElectronico);
+          localStorage.setItem("Usuario", respuesta.data.m_sUsuario);
+          localStorage.setItem("Nombre", respuesta.data.m_sNombre);
+          window.location.replace("configuracion");
+        }
+        else {
+          showSuccess(respuesta.data);
+        }
+      } catch {
         showSuccess(respuesta.data);
       }
     });
-  
-}
-  
+
+  }
+
   return (
-    <div className="loginBg">
-      {/*Page Container Start Here*/}
-      <section className="login-container">
-        <div className="container">
-          <div className="col-md-4 col-md-offset-4 col-sm-4 col-sm-offset-4">
-            <div className="login-form-container">
-                <div className="row">
-
-                <div className="login-form-header">
-                  <div className="logo">
-                    <a href="index.html" title="Admin Template"><img src="iconos/GM-naranja.png" width="230" height="58" alt="logo" /></a>
-                  </div>
-                </div>
-                <div className="login-form-content">
-                  {/* start login */}
-
-                  <div className="unit">
-                    <div className="input login-input">
-                      <label className="icon-left" htmlFor="login">
-                        <i className="zmdi zmdi-account" />
-                      </label>
-                      <input className="form-control login-frm-input" type="text" id="rfc" name="rfc" placeholder="RFC" />
-                    </div>
-                  </div>
-                  <div className="unit">
-                    <div className="input login-input">
-                      <label className="icon-left" htmlFor="login">
-                        <i className="zmdi zmdi-account" />
-                      </label>
-                      <input className="form-control login-frm-input" type="text" id="usuario" name="usuario" placeholder="Usuario" />
-                    </div>
-                  </div>
-                  {/* end login */}
-                  {/* start password */}
-                  <div className="unit">
-                    <div className="input login-input">
-                      <label className="icon-left" htmlFor="Contraseña">
-                        <i className="zmdi zmdi-key" />
-                      </label>
-                      <input className="form-control login-frm-input" type="password" id="password" name="password" placeholder="Password" />
-                      <span className="hint">
-                        <a href="#" className="link">Olvidaste la contraseña?</a>
-                      </span>
-                    </div>
-                  </div>
-                  {/* end password */}
-                  {/* start keep logged */}
-                  
-                  {/* end keep logged */}
-                  {/* start response from server */}
-                  <div className="response" />
-                  {/* end response from server */}
-                </div>
-                <div className="login-form-footer">
-                  <button onClick={() => login()} className="btn-block btn btn-primary">Inicia Sesión</button>
-                </div>
-
-                </div>
-            </div>
-          </div>
+    <section className="login-container" >
+      <div className="split left">
+        <div style={{ display: "inline-flex", width: "100%" }}>
+          <input type="image" className="imagenes-login" src={LogoGMTransportDIG} />
+          <input type="image" className="imagenes-login" src={ERP} />
+          <input type="image" className="imagenes-login" src={Localizacion} />
+          <input type="image" className="imagenes-login" src={HombreCamion} />
+          <input type="image" className="imagenes-login" src={AplicacionMovil} />
         </div>
-        {/*Footer Start Here */}
-        <footer className="login-page-footer">
-          <div className="container">
-            <div className="row">
-              <div className="col-md-4 col-md-offset-4 col-sm-4 col-sm-offset-4">
-                <div className="footer-content">
-                </div>
+        <div className="logo-paqueteria">
+          <img className="imagen-logo-paqueteria" src={LogoPaqueteria}></img>
+        </div>
+        <div className="caja-copyright">
+          <label className="copyright-texto">Copyright © 2012 Julián Gaxiola Montoya. Todos los derechos reservados.
+          Grupo GM Transport S.A. de C.V. Alhóndiga de granaditas #800, Col. Independencia,
+          Mexicali, Baja California, México, C.P. 21290
+        </label>
+
+        </div>
+      </div>
+
+      <div className="split right">
+        <div style={{ marginLeft: "10%", marginTop: "20%" }}>
+          <form onSubmit={login}>
+            {/* start login */}
+
+            <div className="col-xs-11 col-sm-11 col-md-11 col-lg-11" style={{ textAlign: "center", paddingTop:"30%" }}>
+              <label style={{ color: "#FFFFFF", fontSize: "3vw", textAlign: "center", marginLeft: "0%" }}>
+                Bienvenido
+              </label>
+            </div>
+
+            <div className="col-xs-11 col-sm-11 col-md-11 col-lg-11">
+              <div className="input login-text">
+                <input style={{ fontSize: "1vw", paddingLeft:"1vw" }} className="form-control login-frm-input" type="text" id="rfc" name="rfc" placeholder="RFC"
+                  pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[010])(0[1-9]|[10][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
+                  required title="Favor de introducir un RFC válido." />
               </div>
             </div>
-          </div>
-        </footer>
-        {/*Footer End Here */}
-      </section>
-      {/*Page Container End Here*/}
-</div>
 
+            <div className="col-xs-11 col-sm-11 col-md-11 col-lg-11">
+              <div className="input login-text">
+                <input style={{ fontSize: "1vw", paddingLeft:"1vw" }} className="form-control login-frm-input" type="text" id="usuario" name="usuario" placeholder="Usuario" required />
+              </div>
+            </div>
+            {/* end login */}
+
+            {/* start password */}
+            <div className="col-xs-11 col-sm-11 col-md-11 col-lg-11">
+              <div className="input login-text">
+                <input style={{ fontSize: "1vw", paddingLeft:"1vw" }} className="form-control login-frm-input" type="password" id="password" name="password" placeholder="Contraseña" required />
+              </div>
+            </div>
+            {/* end password */}
+
+            <div className="col-xs-11 col-sm-11 col-md-11 col-lg-11 login-text">
+              <button style={{ fontSize: "1.3vw", paddingBottom: "0px", paddingTop: "0px", marginTop: "10%"}}
+                type="submit" className="btn-block btn btn-primary">Inicia Sesión</button>
+              <span className="hint" style={{textAlign: "center"}}>
+                <a href="#" className="link" style={{ color: "#FFFFFF" }}>¿Olvidaste la contraseña?</a>
+              </span>
+            </div>
+
+            <div className="col-xs-11 col-sm-11 col-md-11 col-lg-11" style={{ textAlign: "center" }}>
+              <label style={{ color: "#FFFFFF", fontSize: "1vw", textAlign: "center", marginLeft: "0%" }}>
+                Versión 1.0
+              </label>
+            </div>
+
+          </form>
+
+        </div>
+        <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" style={{ position: "absolute", bottom: "5px" }}>
+          <ul className="social-media">
+            <li className="social-media-item">
+              <a href="http://www.facebook.com/GMTransportOficial/" target="_blank">
+                <i className="fa fa-facebook circle-icon" />
+              </a>
+            </li>
+            <li className="social-media-item">
+              <a href=" https://www.instagram.com/grupogmtransport" target="_blank">
+                <i className="fa fa-instagram circle-icon" />
+              </a>
+            </li>
+            <li className="social-media-item">
+              <a href="http://bit.ly/paqueteriaGM" target="_blank">
+                <i className="fa fa-whatsapp circle-icon" />
+              </a>
+            </li>
+            <li className="social-media-item">
+              <a href="https://twitter.com/gmtransporterp?lang=es" target="_blank">
+                <i className="fa fa-twitter circle-icon" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </section >
   );
 }
 
