@@ -275,7 +275,7 @@ function Embarque(props) {
         })
         .catch((err) => {
           console.log(err);
-          showSuccess("err");
+          showSuccess("El Usuario no tiene derecho para modificar");
         });
     } else {
       const url = `${process.env.REACT_APP_API_URL}/Embarques/Agregar`;
