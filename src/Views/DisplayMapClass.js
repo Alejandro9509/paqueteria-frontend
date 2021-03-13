@@ -1,30 +1,89 @@
 // src/DisplayMapFC.js
 
-import * as React from 'react';
-import HPlatform, { HMap, HMapPolyLine } from "react-here-map";
+import React, { useEffect, useMemo, useRef } from 'react';
+import "../App.css"
+import H, { mapevents } from "@here/maps-api-for-javascript";
+import onResize from 'simple-element-resize-detector';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents, Polyline } from 'react-leaflet'
+import MarkerImage from '../iconos/Mapa/marker.png';
 
-export const DisplayMapClass = () => {
-  // Create a reference to the HTML element we want to put the map on
+import L from 'leaflet';
+
+const MarkerIcon = new L.Icon({
+    iconUrl: MarkerImage,
+    iconRetinaUrl: MarkerImage,
+    iconAnchor: null,
+    popupAnchor: null,
+    shadowUrl: null,
+    shadowSize: null,
+    shadowAnchor: null,
+    iconSize: new L.Point(30, 30),
+});
+
+const blackOptions = { color: '#65a0f4' }
+
+export function DisplayMapClass(props) {
+    const [state, setState] = React.useState({})
+
+    useEffect(value =>{
+        setState({print: true})
+    },[])
+
+    return (
+        <MapContainer style={{ width: "100%", height: "500px" }} center={[32.62781, -115.44632]} zoom={13} scrollWheelZoom={false} whenCreated={props.setMap}>
+            <TileLayer
+                attribution='&copy; <a href="http://osm.org/copyright">PTV, HERE</a> contributors'
+                url="https://xserver2-america-test.cloud.ptvgroup.com/services/rest/XMap/tile/{z}/{x}/{y}?userLanguage=es"
+
+            />
+            {props.markers.map(value => {
+                return (
+                    <LocationMarker markerId={value.key} position={value.location} label={value.label} />
+                )
+            })}
+            <MapEvents isManual={props.isManual} setNewPoint={props.setNewPoint}/>
+            {
+                props.polygon &&
+                <Polyline pathOptions={blackOptions} positions={props.polygon} />
+
+            }
+        </MapContainer>
+
+    )
 
 
+}
 
-  return (
-    <HPlatform
-    app_id="2Ts3vDUTLPW8kNUtyFRY"
-    app_code="MDivMVFtNkpim-dWuetlWw"
-    useCIT
-    useHTTPS
-    includeUI
-    includePlaces
-  >
-    <HMap
-      style={{
-        height: "400px",
-        width: "800px",
-      }}
-      mapOptions={{ center: { lat: 32.663334, lng: -115.467781 }, zoom: 4 }}
-    >
-    </HMap>
-  </HPlatform>
-  );
-};
+function MapEvents(props) {
+    const map = useMapEvents({
+        click(e) {
+            console.log(e)
+            if (props.isManual){
+                props.setNewPoint(e.latlng)
+            }
+        },
+    })
+    return ("")
+}
+
+function LocationMarker(props) {
+    const markerRef = useRef(null)
+
+    const eventHandlers = useMemo(
+        () => ({
+          dragend() {
+            const marker = markerRef.current
+            if (marker != null) {
+                console.log(markerRef)
+            }
+          },
+        }),
+        [],
+      )
+
+    return (
+        <Marker key={props.markerId} eventHandlers={eventHandlers} icon={MarkerIcon} draggable={false} position={props.position} ref={markerRef}>
+            <Popup>{props.label}</Popup>
+        </Marker>
+    )
+}
