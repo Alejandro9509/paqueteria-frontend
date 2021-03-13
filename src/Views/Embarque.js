@@ -102,7 +102,7 @@ function Embarque(props) {
       today.getHours() +
       ":" +
       today.getMinutes(),
-    estatusEmbarque: 0,
+    estatusEmbarque: 15,
     moneda: 0,
     tipoCambio: "",
     tipoCobro: 0,
@@ -211,6 +211,7 @@ function Embarque(props) {
 
     var params = {
       m_nIdEmbarque: state.idEmbarque,
+      m_nIdRecoleccion: props.location.idRecoleccion,
       m_nFolioEmbarque: state.folioEmbarque,
       m_nFolioGuia: state.folioGuía,
       m_nFolioInforme: state.folioInforme,
@@ -262,7 +263,7 @@ function Embarque(props) {
       m_tHoraDetalleEntrega: state.fechaEntrega.split("T")[1],
       m_parrSobres: state.sobres,
     };
-    console.log(params);
+    console.log(JSON.stringify(params));
     debugger;
     if (state.idEmbarque != 0) {
       const url = `${process.env.REACT_APP_API_URL}/Embarques/Modificar/${state.idEmbarque}`;
@@ -411,7 +412,7 @@ function Embarque(props) {
       console.log(respuesta.data.m_nSePuedeCancelar)
       setState({
         ...state,
-        folioRecoleccion: respuesta.data.m_nFolioEmbarque,
+        folioEmbarque: respuesta.data.m_nFolioEmbarque,
         sucursalCancelacion: dataSucursal.find(o => o.m_nIdSucursal == respuesta.data.IdSucursal).m_sSucursal,
         fechaCancelacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear(),
         estatusEmbarque: dataEstatusEmbarque.find(o => o.m_nIdEstatusEmbarque == respuesta.data.m_nIdEstatusEmbarque).m_sEstatus,
@@ -926,99 +927,92 @@ function Embarque(props) {
   ]);
 
   useEffect(async (value) => {
-    getAllData().then( async() => {
-      console.log(props.location.idRecoleccion)
-      if (props.location.idRecoleccion != undefined) {
-        const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetById/${props.location.idRecoleccion}`;
-        await axios.get(url, { headers }).then((respuesta) => {
-          setState({
-            ...state,
-            idEmbarque: 0,
-            idSucursalAgregar: respuesta.data.m_nIdSucursal,
-            folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
-            folioEmbarque: respuesta.data.m_nFolioEmbarque,
-            folioGuía: respuesta.data.m_nFolioGuia,
-            folioInforme: respuesta.data.m_nFolioInforme,
-            fechaHoraCreacion:
-              today.getDate() +
-              "/" +
-              (today.getMonth() + 1) +
-              "/" +
-              today.getFullYear() +
-              " " +
-              today.getHours() +
-              ":" +
-              today.getMinutes(),
-            moneda: respuesta.data.m_nMoneda,
-            tipoCambio: respuesta.data.m_rTipoCambio,
-            tipoCobro: respuesta.data.m_nIdTipoDeCobro,
-            estatusEmbarque: respuesta.data.m_nIdEstatusEmbarque,
-            nombreRemitente: dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente),
-            RFCRemitente: respuesta.data.m_sRFCRemitente,
-            domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-            codigoPostalRemitente: dataCodigoPostal.find(
-              (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalRemitente
-            ),
-            ciudadRemitente: dataCiudad.find(
-              (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadRemitente
-            ),
-            correoRemitente: respuesta.data.m_sCorreoRemitente,
-            telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
-            contactoRemitente: respuesta.data.m_sContactoRemitente,
-            ciudadOrigen: dataCiudad.find(
-              (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen
-            ),
+    if (props.location.idRecoleccion != undefined) {
+      const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetById/${props.location.idRecoleccion}`;
+      await axios.get(url, { headers }).then((respuesta) => {
+        setState({
+          ...state,
+          idEmbarque: 0,
+          idSucursalAgregar: respuesta.data.m_nIdSucursal,
+          folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
+          folioEmbarque: respuesta.data.m_nFolioEmbarque,
+          folioGuía: respuesta.data.m_nFolioGuia,
+          folioInforme: respuesta.data.m_nFolioInforme,
+          fechaHoraCreacion:
+            today.getDate() +
+            "/" +
+            (today.getMonth() + 1) +
+            "/" +
+            today.getFullYear() +
+            " " +
+            today.getHours() +
+            ":" +
+            today.getMinutes(),
+          moneda: respuesta.data.m_nMoneda,
+          tipoCambio: respuesta.data.m_rTipoCambio,
+          tipoCobro: respuesta.data.m_nIdTipoDeCobro,
+          nombreRemitente: dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente),
+          RFCRemitente: respuesta.data.m_sRFCRemitente,
+          domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
+          codigoPostalRemitente: dataCodigoPostal.find(
+            (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalRemitente
+          ),
+          ciudadRemitente: dataCiudad.find(
+            (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadRemitente
+          ),
+          correoRemitente: respuesta.data.m_sCorreoRemitente,
+          telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
+          contactoRemitente: respuesta.data.m_sContactoRemitente,
+          ciudadOrigen: dataCiudad.find(
+            (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen
+          ),
 
-            nombreDestinatario: dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCDestinatario),
-            RFCDestinatario: respuesta.data.m_sRFCDestinatario,
-            domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-            codigoPostalDestinatario: dataCodigoPostal.find(
-              (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalDestinatario
-            ),
-            ciudadDestinatario: dataCiudad.find(
-              (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestinatario
-            ),
-            correoDestinatario: respuesta.data.m_sCorreoDestinatario,
-            telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
-            contactoDestinatario: respuesta.data.m_sContactoDestinatario,
+          nombreDestinatario: dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCDestinatario),
+          RFCDestinatario: respuesta.data.m_sRFCDestinatario,
+          domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
+          codigoPostalDestinatario: dataCodigoPostal.find(
+            (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalDestinatario
+          ),
+          ciudadDestinatario: dataCiudad.find(
+            (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestinatario
+          ),
+          correoDestinatario: respuesta.data.m_sCorreoDestinatario,
+          telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
+          contactoDestinatario: respuesta.data.m_sContactoDestinatario,
 
-            ciudadDestino: dataCiudad.find(
-              (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino
-            ),
-            zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
-            domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
-            entregaEn: respuesta.data.m_sEntregarEnDetalleEntrega,
-            datosAdicionalesEntrega: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
-            fechaEntrega:
-              respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
-            codigoPostalEntrega: dataCodigoPostal.find(
-              (o) => o.m_nIdCP == respuesta.data.m_nIdCPDetalleEntrega
-            ),
-            ciudadEntrega: dataCiudad.find(
-              (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDetalleEntrega
-            ),
-            fechaHoraSalida:
-              respuesta.data.m_dFechaSalida + "T" + respuesta.data.m_tHoraSalida,
-            fechaHoraLlegada:
-              respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,
-            idOperador: dataOperador.find(
-              (o) => o.m_nIdOperador == respuesta.data.m_nIdOperador
-            ),
-            idTipoUnidad: dataTipoUnidad.find(
-              (o) =>
-                o.m_nIdTipoUnidad ==
-                dataUnidad.find((o) => o.m_nIdUnidad == respuesta.data.m_nIdUnidad)
-                  .m_nIdUnidad
-            ),
-            idUnidad: dataUnidad.find(
-              (o) => o.m_nIdUnidad == respuesta.data.m_nIdUnidad
-            ),
-            paquetes: respuesta.data.m_parrPaquetes,
-          });
-          console.log(dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente))
+          ciudadDestino: dataCiudad.find(
+            (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino
+          ),
+          zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
+          domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
+          entregaEn: respuesta.data.m_sEntregarEnDetalleEntrega,
+          datosAdicionalesEntrega: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
+          fechaEntrega:
+            respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
+          codigoPostalEntrega: dataCodigoPostal.find(
+            (o) => o.m_nIdCP == respuesta.data.m_nIdCPDetalleEntrega
+          ),
+          ciudadEntrega: dataCiudad.find(
+            (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDetalleEntrega
+          ),
+          fechaHoraSalida:
+            respuesta.data.m_dFechaSalida + "T" + respuesta.data.m_tHoraSalida,
+          fechaHoraLlegada:
+            respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,
+          idOperador: dataOperador.find(
+            (o) => o.m_nIdOperador == respuesta.data.m_nIdOperador
+          ),
+
+          idUnidad: dataUnidad.find(
+            (o) => o.m_nIdUnidad == respuesta.data.m_nIdUnidad
+          ),
+          paquetes: respuesta.data.m_parrPaquetes,
         });
-      }
-    })
+        console.log(dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente))
+      }).then(() => {
+        handleSelectRemitente()
+      })
+    }
     if (
       localStorage.getItem("UsuarioId") === null ||
       localStorage.getItem("UsuarioId") <= 0
@@ -1027,7 +1021,11 @@ function Embarque(props) {
       window.location.replace("login");
       return;
     }
-  }, []);
+  }, [dataRemitenteDestinatario, dataCiudad, dataCodigoPostal, dataOperador, dataUnidad, dataTipoUnidad]);
+
+  useEffect( (value) => {
+    getAllData()
+  }, [])
 
   async function getAllData() {
     getAllEmbarque();
@@ -1199,7 +1197,7 @@ function Embarque(props) {
 
     return (
       <div className="col-md-12" style={{ overflowX: "scroll", height: "100%" }}>
-        <table className="table" {...getTableProps()} className="tabla-listado" >
+        <table className="table tabla-listado" {...getTableProps()}>
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()} >
@@ -1834,13 +1832,17 @@ function Embarque(props) {
   }
 
   if (redirect) {
-    return (
-      <Redirect push to={{
-        pathname: '/Guia',
-        state: state.idEmbarque
-      }}
-      />
-    )
+    if (data.find((o) => o.m_nIdEmbarque == state.idEmbarque).m_sFolioGuia != "") {
+      showSuccess("Embarque ya tiene Guía")
+    } else {
+      return (
+        <Redirect push to={{
+          pathname: '/Guia',
+          idEmbarque: state.idEmbarque
+        }}
+        />
+      )
+    }
   }
 
   const framesPaquete = state.paquetes.map((p, index) => {
@@ -2156,12 +2158,12 @@ function Embarque(props) {
           </div>
 
           <ul className="nav navStatica nav-tabs">
-            <li className={props.location.state != undefined ? "" : "activo"}>
+            <li className={props.location.idRecoleccion != undefined ? "" : "activo"}>
               <a data-toggle="tab" href="#Listado">
                 <i className="fa fa-list" /> Listado
               </a>
             </li>
-            <li className={props.location.state != undefined ? "active" : ""}>
+            <li className={props.location.idRecoleccion != undefined ? "active" : ""}>
               <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
                 <i className="fa fa-plus-circle" /> {state.agregar}
               </a>
@@ -2598,6 +2600,7 @@ function Embarque(props) {
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
+                                                  required
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
@@ -2708,6 +2711,7 @@ function Embarque(props) {
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
+                                                  required
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
@@ -2784,6 +2788,7 @@ function Embarque(props) {
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
+                                                  required
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
@@ -2883,6 +2888,7 @@ function Embarque(props) {
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
+                                                  required
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
@@ -2973,6 +2979,7 @@ function Embarque(props) {
                                       renderInput={(params) => (
                                         <div>
                                           <TextField
+                                                  required
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
@@ -3088,6 +3095,7 @@ function Embarque(props) {
                                       renderInput={(params) => (
                                         <div>
                                           <TextField
+                                                  required
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
@@ -3159,6 +3167,7 @@ function Embarque(props) {
                                       renderInput={(params) => (
                                         <div>
                                           <TextField
+                                                  required
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
@@ -3259,6 +3268,7 @@ function Embarque(props) {
                                       renderInput={(params) => (
                                         <div>
                                           <TextField
+                                                  required
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
@@ -3375,6 +3385,7 @@ function Embarque(props) {
                                             renderInput={(params) => (
                                               <div>
                                                 <TextField
+                                                  required
                                                   {...params}
                                                   InputProps={{
                                                     ...params.InputProps,
@@ -3448,6 +3459,7 @@ function Embarque(props) {
                                             renderInput={(params) => (
                                               <div>
                                                 <TextField
+                                                  required
                                                   {...params}
                                                   InputProps={{
                                                     ...params.InputProps,
@@ -3598,6 +3610,7 @@ function Embarque(props) {
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
+                                                  required
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
@@ -3674,6 +3687,7 @@ function Embarque(props) {
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
+                                                  required
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
@@ -3751,6 +3765,7 @@ function Embarque(props) {
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
+                                                  required
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
@@ -3949,8 +3964,8 @@ function Embarque(props) {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    value={state.folioRecoleccion}
-                                    id="folioRecoleccion"
+                                    value={state.folioEmbarque}
+                                    id="folioEmbarque"
                                     readOnly
                                   />
                                 </div>
