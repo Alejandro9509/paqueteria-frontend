@@ -678,11 +678,11 @@ function Embarque() {
       ...state,
       fechaInicial: event.target.value,
     })
-    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
+    const url = `${process.env.REACT_APP_API_URL}/Embarques/GetByFiltro/` +
       event.target.value + "/" + state.fechaFinal + "/" + state.sucursalListado + "/" + state.estatusListado;
-    //await axios.get(url, { headers }).then(respuesta => {
-    //  setData(respuesta.data)
-    //})
+    await axios.get(url, { headers }).then(respuesta => {
+      setData(respuesta.data)
+    })
     console.log(url)
   }
 
@@ -691,11 +691,11 @@ function Embarque() {
       ...state,
       fechaFinal: event.target.value,
     })
-    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
+    const url = `${process.env.REACT_APP_API_URL}/Embarques/GetByFiltro/` +
       state.fechaInicial + "/" + event.target.value + "/" + state.sucursalListado + "/" + state.estatusListado;
-    //await axios.get(url, { headers }).then(respuesta => {
-    //  setData(respuesta.data)
-    //})
+    await axios.get(url, { headers }).then(respuesta => {
+      setData(respuesta.data)
+    })
     console.log(url)
   }
 
@@ -704,11 +704,11 @@ function Embarque() {
       ...state,
       sucursalListado: event.target.value,
     })
-    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
+    const url = `${process.env.REACT_APP_API_URL}/Embarques/GetByFiltro/` +
       state.fechaInicial + "/" + state.fechaFinal + "/" + event.target.value + "/" + state.estatusListado;
-    //await axios.get(url, { headers }).then(respuesta => {
-    //  setData(respuesta.data)
-    //})
+    await axios.get(url, { headers }).then(respuesta => {
+      setData(respuesta.data)
+    })
     console.log(url)
   }
 
@@ -717,11 +717,11 @@ function Embarque() {
       ...state,
       estatusListado: event.target.value,
     })
-    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
+    const url = `${process.env.REACT_APP_API_URL}/Embarques/GetByFiltro/` +
       state.fechaInicial + "/" + state.fechaFinal + "/" + state.sucursalListado + "/" + event.target.value;
-    //await axios.get(url, { headers }).then(respuesta => {
-    //  setData(respuesta.data)
-    //})
+    await axios.get(url, { headers }).then(respuesta => {
+     setData(respuesta.data)
+    })
     console.log(url)
   }
 
@@ -761,6 +761,7 @@ function Embarque() {
     );
   };
 
+
   const columns = React.useMemo(() => [
     {
       Name: "Folio",
@@ -769,8 +770,8 @@ function Embarque() {
 
     },
     {
-      Name: "Fecha Elaboración",
-      accessor: "m_dFecha",
+      Name: "Fecha/Hora Elaboración",
+      accessor: "m_sFechaHora",
     },
     {
       Name: "Sucursal",

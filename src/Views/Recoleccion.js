@@ -804,20 +804,20 @@ function Recoleccion() {
       accessor: "m_sFolioRecoleccion",
     },
     {
-      Name: "Fecha Elaboración",
-      accessor: "m_dFecha",
+      Name: "Fecha/Hora Elaboración",
+      accessor: "m_sFechaHora",
     },
     {
-      Name: "Fecha Recolección",
-      accessor: "m_dFechaSalidaSalidaRecoleccion",
+      Name: "Fecha/Hora Recolección",
+      accessor: "m_sFechaHoraDetalleRec",
     },
     {
       Name: "Sucursal",
-      accessor: "m_nIdSucursal",
+      accessor: "m_sSucursal",
     },
     {
       Name: "Zona Recolección",
-      accessor: "m_nIdZonaDetalleRecoleccion",
+      accessor: "m_sZonaRecoleccion",
     },
     {
       Name: "Recoger En",
@@ -3443,8 +3443,9 @@ function Recoleccion() {
                                       </div>
 
                                       <div className="col-sm-6 col-md-4 unit" >
-                                        <label className="label">Zona</label>
-                                        <label className="input select">
+                                      <label className="label">Zona</label>
+
+                                      <label className="input select">
                                           <select
                                             className="form-control"
                                             required
@@ -3465,6 +3466,13 @@ function Recoleccion() {
                                           </select>
                                           <i className="fa fa-arrow-down" />
                                         </label>
+
+
+
+
+
+
+                                          
                                       </div>
 
                                       <div className="col-sm-6 col-md-6  unit" >
