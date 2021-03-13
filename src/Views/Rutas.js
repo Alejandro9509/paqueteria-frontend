@@ -87,7 +87,8 @@ function Rutas(props) {
         tipoModal: 0,
         tipoUnidad: null,
         tipoViaje: null,
-        trayecto: "PERMANENTE"
+        trayecto: "PERMANENTE",
+        activa: false
     })
     const [map, setMap] = useState(null)
 
