@@ -102,7 +102,7 @@ function Embarque(props) {
       today.getHours() +
       ":" +
       today.getMinutes(),
-    estatusEmbarque: 0,
+    estatusEmbarque: 15,
     moneda: 0,
     tipoCambio: "",
     tipoCobro: 0,
@@ -211,6 +211,7 @@ function Embarque(props) {
 
     var params = {
       m_nIdEmbarque: state.idEmbarque,
+      m_nIdRecoleccion: props.location.idRecoleccion,
       m_nFolioEmbarque: state.folioEmbarque,
       m_nFolioGuia: state.folioGuía,
       m_nFolioInforme: state.folioInforme,
@@ -950,7 +951,6 @@ function Embarque(props) {
           moneda: respuesta.data.m_nMoneda,
           tipoCambio: respuesta.data.m_rTipoCambio,
           tipoCobro: respuesta.data.m_nIdTipoDeCobro,
-          estatusEmbarque: dataEstatusEmbarque[0].m_nIdEstatusEmbarque,
           nombreRemitente: dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente),
           RFCRemitente: respuesta.data.m_sRFCRemitente,
           domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
