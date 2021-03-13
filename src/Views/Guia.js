@@ -6,7 +6,7 @@ import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda"
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import ExportCSV from '../Components/Template/Export';
 import ExportPDF from "../Components/Template/ExportPDF";
-import Carousel from "re-carousel";
+import Carousel, { propTypes } from "re-carousel";
 import IndicatorDots from "../Util/Dots";
 import Buttons from "../Util/CarruselButtons";
 import { makeStyles } from "@material-ui/core/styles";
@@ -17,6 +17,7 @@ import { remove_array_element } from "../Util/Util";
 import Barra from "../Util/jquery-barcode"
 
 import Noty from 'noty';
+import { SignalCellularNoSimOutlined } from "@material-ui/icons";
 
 function showSuccess(mensaje) {
   new Noty({
@@ -41,12 +42,16 @@ const styles = {
   },
   noSeleccionado: {
     backgroundColor: "#FFFFFF",
+  },
+  disabled: {
+    pointerEvents: "none",
+    cursor: "default",
   }
 };
 
 const useStyles = makeStyles(styles);
 
-function Guia() {
+function Guia(props) {
   var today = new Date();
   var React = require('react');
   var QRCode = require('qrcode.react');
@@ -545,8 +550,9 @@ function Guia() {
   function handleShowConsultar(id) {
     const url = `${process.env.REACT_APP_API_URL}/Guia/GetById/` + id;
     axios.get(url, { headers }).then(respuesta => {
-      //cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)
-      //handleEmbarqueModificar(respuesta)
+      // debugger;
+      cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)
+      handleEmbarqueModificar(respuesta)
       //valor2=respuesta.data.m_nIdEmbarque;
       //     debugger;
       setState({
@@ -570,6 +576,7 @@ function Guia() {
         arClsGuiaConceptos: respuesta.data.m_arClsGuiaConceptos,
         creadoEl: respuesta.data.m_dCreadoEl,
         idSucursal: respuesta.data.IdSucursal
+
       });
       //handleEmbarque (respuesta.data.m_nIdEmbarque)
       // showSuccess(state.idMoneda)
@@ -746,10 +753,10 @@ function handleImprmir2()
       ...state,
       fechaInicial: event.target.value,
     })
-    const url = `${process.env.REACT_APP_API_URL}/Guia/GetByFiltro/` +
+    const url = `${process.env.REACT_APP_API_URL}/Guias/GetByFiltro/` +
       event.target.value + "/" + state.fechaFinal + "/" + state.sucursalListado + "/" + state.estatusListado;
     await axios.get(url, { headers }).then(respuesta => {
-     setData(respuesta.data)
+      setData(respuesta.data)
     })
     console.log(url)
   }
@@ -759,7 +766,7 @@ function handleImprmir2()
       ...state,
       fechaFinal: event.target.value,
     })
-    const url = `${process.env.REACT_APP_API_URL}/Guia/GetByFiltro/` +
+    const url = `${process.env.REACT_APP_API_URL}/Guias/GetByFiltro/` +
       state.fechaInicial + "/" + event.target.value + "/" + state.sucursalListado + "/" + state.estatusListado;
     await axios.get(url, { headers }).then(respuesta => {
       setData(respuesta.data)
@@ -772,7 +779,7 @@ function handleImprmir2()
       ...state,
       sucursalListado: event.target.value,
     })
-    const url = `${process.env.REACT_APP_API_URL}/Guia/GetByFiltro/` +
+    const url = `${process.env.REACT_APP_API_URL}/Guias/GetByFiltro/` +
       state.fechaInicial + "/" + state.fechaFinal + "/" + event.target.value + "/" + state.estatusListado;
     await axios.get(url, { headers }).then(respuesta => {
       setData(respuesta.data)
@@ -785,7 +792,7 @@ function handleImprmir2()
       ...state,
       estatusListado: event.target.value,
     })
-    const url = `${process.env.REACT_APP_API_URL}/Guia/GetByFiltro/` +
+    const url = `${process.env.REACT_APP_API_URL}/Guias/GetByFiltro/` +
       state.fechaInicial + "/" + state.fechaFinal + "/" + state.sucursalListado + "/" + event.target.value;
     await axios.get(url, { headers }).then(respuesta => {
       setData(respuesta.data)
@@ -881,6 +888,92 @@ function handleImprmir2()
   ]);
 
   useEffect(value => {
+    if(props.location.idEmbarque != undefined){
+      const url = `${process.env.REACT_APP_API_URL}/Embarques/GetById/${props.location.idEmbarque}`;
+      axios.get(url, { headers }).then(respuesta => {
+        setState({
+          ...state,
+          idEmbarque: respuesta.data.m_nIdEmbarque,
+          idEmbarque2: respuesta.data.m_nIdEmbarque,
+          paquetes: [],
+          sobres: [],
+          conceptos: []
+        });
+        const paquetesTemp = state.paquetes;
+        const sobresTemp = state.sobres;
+        //console.log(paquetesTemp);
+  
+        for (var i = 0; i < respuesta.data.m_arrPaquetes.length; i++) {
+  
+          if (respuesta.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle === "" || respuesta.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle === "0")
+            continue;
+  
+          paquetesTemp.push({
+  
+            "peso": respuesta.data.m_arrPaquetes[i].m_xPeso,
+            "largo": respuesta.data.m_arrPaquetes[i].m_xLargo,
+            "ancho": respuesta.data.m_arrPaquetes[i].m_xAncho,
+            "alto": respuesta.data.m_arrPaquetes[i].m_xAlto,
+            "volumen": respuesta.data.m_arrPaquetes[i].m_xVolumen,
+            "peso": respuesta.data.m_arrPaquetes[i].m_xPeso,
+            "tipoEmbalaje": respuesta.data.m_arrPaquetes[i].m_nTipo,
+            "valorDeclarado": respuesta.data.m_arrPaquetes[i].m_cValorDeclarado,
+            "descripcionPaquete": respuesta.data.m_arrPaquetes[i].m_sDescripcion,
+            "observacionesPaquete": respuesta.data.m_arrPaquetes[i].m_sObservaciones,
+            "id": respuesta.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle
+          });
+        }
+        paquetesTemp.splice(0, 1);
+  
+        for (var i = 0; i < respuesta.data.m_arrSobres.length; i++) {
+  
+          if (respuesta.data.m_arrSobres[i].m_nIdEmbarqueDetalle == "" || respuesta.data.m_arrSobres[i].m_nIdEmbarqueDetalle == "0")
+            continue;
+  
+          sobresTemp.push({
+            "descripcionSobre": respuesta.data.m_arrSobres[i].m_sDescripcion,
+            "id": respuesta.data.m_arrSobres[i].m_nIdEmbarqueDetalle
+          });
+        }
+        sobresTemp.splice(0, 1);
+        //showSuccess(respuesta.data.m_nIdEmbarque);
+        //setDataEmbarque(respuesta.data)
+        setState({
+          ...state,
+          fecha: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
+          idEmbarque: respuesta.data.m_nIdEmbarque,
+          idEmbarque2: respuesta.data.m_nIdEmbarque,
+          idSucursal: respuesta.data.IdSucursal,
+          idMoneda: respuesta.data.m_nIdMoneda,
+          nombreRemitente: respuesta.data.m_sNOmbreRemitente,
+          RFCRemitente: respuesta.data.m_sRFCRemitente,
+          domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
+          codigoPostalRemitente: respuesta.data.m_nIdCodigoPostalRemitente,
+          ciudadRemitente: respuesta.data.m_sCiudadRemitente,
+          correoRemitente: respuesta.data.m_sCorreoRemitente,
+          tipoCambio: respuesta.data.m_cTIpoCambio,
+          idTipoCobro: respuesta.data.m_nIdTIpoCobro,
+          telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
+          contactoRemitente: respuesta.data.m_sContactoRemitente,
+          origenRemitente: respuesta.data.m_sCiudadRemitente,
+          sNombreDestinatario: respuesta.data.m_sNombreDestinatario,
+          sRFCDestinatario: respuesta.data.m_sRFCDestinatario,
+          sDomicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
+          idCodigoPostalDestinatario: respuesta.data.m_nIdCodigoPostalDestinatario,
+          ciudadDestinatario: respuesta.data.m_sCIudadDestinatario,
+          sCorreoDestinatario: respuesta.data.m_sCorreoDestinatario,
+          sTelefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
+          sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
+          CiudadDestino: respuesta.data.m_sCIudadDestinatario,
+          paquetes: paquetesTemp,
+          sobres: sobresTemp
+        })
+        const getEmbarquesOpcionesURL = `${process.env.REACT_APP_API_URL}/Embarques/GetBySucursalMoneda/` + respuesta.data.IdSucursal + "/" + respuesta.data.m_nIdMoneda + "/" + state.idGuia;
+        axios.get(getEmbarquesOpcionesURL, { headers }).then(respuesta => {
+          setDataEmbarque(respuesta.data)
+        })
+      });
+      }
     if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
       showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
@@ -1321,7 +1414,6 @@ function handleImprmir2()
         sTelefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
         sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
         CiudadDestino: respuesta.data.m_sCIudadDestinatario,
-        agregar: "Modificar",
         showPopUp: true,
         idEmbarque: embarque.data.m_nIdEmbarque,
         folioGuía: embarque.data.m_nFolioGuia,
@@ -1396,8 +1488,8 @@ function handleImprmir2()
     )
 
     return (
-      <div className="col-md-12">
-        <table className="table" {...getTableProps()}>
+      <div className="col-md-12" style={{ overflowX: "scroll", height: "100%" }}>
+        <table className="table tabla-listado" {...getTableProps()}>
           <thead className="">
 
             {headerGroups.map(headerGroup => (
@@ -1520,7 +1612,7 @@ function handleImprmir2()
               value={state.paquetes[index].peso}
               placeholder="Peso"
               name="peso"
-              disabled="true"
+              disabled={true}
             />
           </div>
         </div>
@@ -1535,7 +1627,7 @@ function handleImprmir2()
               value={state.paquetes[index].largo}
               placeholder="Largo"
               name="largo"
-              disabled="true"
+              disabled={true}
             />
           </div>
         </div>
@@ -1550,7 +1642,7 @@ function handleImprmir2()
               value={state.paquetes[index].ancho}
               placeholder="Ancho"
               name="ancho"
-              disabled="true"
+              disabled={true}
             />
           </div>
         </div>
@@ -1565,7 +1657,7 @@ function handleImprmir2()
               value={state.paquetes[index].alto}
               placeholder="Alto"
               name="alto"
-              disabled="true"
+              disabled={true}
             />
           </div>
         </div>
@@ -1580,7 +1672,7 @@ function handleImprmir2()
               value={state.paquetes[index].volumen}
               placeholder="Volumen"
               name="volumen"
-              disabled="true"
+              disabled={true}
             />
           </div>
         </div>
@@ -1595,7 +1687,7 @@ function handleImprmir2()
               value={state.paquetes[index].tipoEmbalaje}
               placeholder="Tipo de Embarje"
               name="tipoEmbalaje"
-              disabled="true"
+              disabled={true}
             />
           </div>
         </div>
@@ -1610,7 +1702,7 @@ function handleImprmir2()
               value={state.paquetes[index].valorDeclarado}
               placeholder="Valor Declarado"
               name="valorDeclarado"
-              disabled="true"
+              disabled={true}
             />
           </div>
         </div>
@@ -1625,7 +1717,7 @@ function handleImprmir2()
               value={state.paquetes[index].descripcionPaquete}
               placeholder="Descripción"
               name="descripcionPaquete"
-              disabled="true"
+              disabled={true}
             />
           </div>
         </div>
@@ -1640,7 +1732,7 @@ function handleImprmir2()
               value={state.paquetes[index].Ctd}
               placeholder="Ctd"
               name="ctd"
-              disabled="true"
+              disabled={true}
             />
           </div>
         </div>
@@ -1655,7 +1747,7 @@ function handleImprmir2()
               value={state.paquetes[index].observacionesPaquete}
               placeholder="Observaciones"
               name="observacionesPaquete"
-              disabled="true"
+              disabled={true}
             />
           </div>
         </div>
@@ -1861,7 +1953,7 @@ function handleImprmir2()
                   <form className="j-forms">
                     <div className="form-content">
                       <div className="col-md-6">
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             Remitente
 											</label>
@@ -1875,7 +1967,7 @@ function handleImprmir2()
                             />
                           </div>
                         </div>
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             RFC
 											</label>
@@ -1889,7 +1981,7 @@ function handleImprmir2()
                             />
                           </div>
                         </div>
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             Dirección
 											</label>
@@ -1903,7 +1995,7 @@ function handleImprmir2()
                             />
                           </div>
                         </div>
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             Zona
 											</label>
@@ -1917,7 +2009,7 @@ function handleImprmir2()
                             />
                           </div>
                         </div>
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             CP
 											</label>
@@ -1931,7 +2023,7 @@ function handleImprmir2()
                             />
                           </div>
                         </div>
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             Ciudad
 											</label>
@@ -1945,7 +2037,7 @@ function handleImprmir2()
                             />
                           </div>
                         </div>
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             Teléfono
 											</label>
@@ -1963,7 +2055,7 @@ function handleImprmir2()
 
                       </div>
                       <div className="col-md-6">
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             Destinatario
 											</label>
@@ -1977,7 +2069,7 @@ function handleImprmir2()
                             />
                           </div>
                         </div>
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             RFC
 											</label>
@@ -1991,7 +2083,7 @@ function handleImprmir2()
                             />
                           </div>
                         </div>
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             Dirección
 											</label>
@@ -2005,7 +2097,7 @@ function handleImprmir2()
                             />
                           </div>
                         </div>
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             Zona
 											</label>
@@ -2019,7 +2111,7 @@ function handleImprmir2()
                             />
                           </div>
                         </div>
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             CP
 											</label>
@@ -2033,7 +2125,7 @@ function handleImprmir2()
                             />
                           </div>
                         </div>
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             Ciudad
 											</label>
@@ -2047,7 +2139,7 @@ function handleImprmir2()
                             />
                           </div>
                         </div>
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             Teléfono
 											</label>
@@ -2061,7 +2153,7 @@ function handleImprmir2()
                             />
                           </div>
                         </div>
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             Cantidad
 											</label>
@@ -2075,7 +2167,7 @@ function handleImprmir2()
                             />
                           </div>
                         </div>
-                        <div class="col-md-12 unit">
+                        <div className="col-md-12 unit">
                           <label className="label">
                             Descripcion
 											</label>
@@ -2131,7 +2223,7 @@ function handleImprmir2()
               id="descripcionSobre"
               name="descripcionSobre"
               read="true"
-              disabled="true"
+              disabled={true}
               value={state.sobres[index].descripcionSobre}
             />
           </div>
@@ -2185,13 +2277,13 @@ function handleImprmir2()
           </div>
 
           <ul className="nav navStatica nav-tabs">
-            <li className="active">
+            <li className={props.location.idEmbarque != undefined ? "" : "active"}>
               <a data-toggle="tab" href="#Listado">
                 <i className="fa fa-list" /> Listado
             </a>
             </li>
-            <li>
-              <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
+            <li className={props.location.idEmbarque != undefined ? "active" : ""}>
+              <a data-toggle="tab" href="#Agregar" onClick={() => handleShowAgregar()}>
                 <i className="fa fa-plus-circle" /> {state.agregar}
               </a>
             </li>
@@ -2206,7 +2298,7 @@ function handleImprmir2()
             </a>
             </li>
             <li>
-              <a data-toggle="tab" href="#Cancelar" onClick={handleShowCancelar}>
+              <a data-toggle="tab" href="#Cancelar" onClick={handleShowCancelar} className={state.idGuia == 0 ? classes.disabled : ""}>
                 <i className="fa fa-times-circle" /> Cancelar
               </a>
             </li>
@@ -2219,7 +2311,7 @@ function handleImprmir2()
           </ul>
 
           <div className="row" className="tab-content">
-            <div id="Listado" className="tab-pane fade in active">
+            <div id="Listado" className={props.location.idEmbarque != undefined ? "tab-pane fade" : "tab-pane fade in active"}>
               <div className="widget-wrap">
                 <div className="widget-content">
                   <div>
@@ -2319,7 +2411,7 @@ function handleImprmir2()
                 </div>
               </div>
             </div>
-            <div id="Agregar" className="tab-pane fade">
+            <div id="Agregar" className={props.location.idEmbarque != undefined ? "tab-pane fade in active" : "tab-pane fade"}>
               <form className="j-forms">
                 <div className="form-content">
 
@@ -3113,7 +3205,7 @@ function handleImprmir2()
                                           className="form-control"
                                           type="text"
                                           placeholder={state.ValorDeclarado}
-                                          readonly={state.agregar == "Consultar"}
+                                          readOnly={state.agregar == "Consultar"}
                                           id="ValorDeclarado"
                                         />
                                       </div>
@@ -3213,7 +3305,6 @@ function handleImprmir2()
                           <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
                           >
                             Cancelar</button>
-                          <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
                         </div>
                       </form>
                     </div>

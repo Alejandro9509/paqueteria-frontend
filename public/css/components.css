@@ -1810,6 +1810,7 @@ a.waves-effect .waves-ripple {
 =============================== */
 .j-forms {
   position: relative;
+  padding-left: 10px !important;
 }
 .j-forms .input {
   position: relative;
@@ -2276,6 +2277,7 @@ a.waves-effect .waves-ripple {
   -ms-transition: all.4s;
   -o-transition: all.4s;
   transition: all.4s;
+  padding-left: 10px !important;
 }
 .j-forms .input textarea {
   height: 112px;
@@ -2323,8 +2325,10 @@ a.waves-effect .waves-ripple {
 /* Select
 =============================== */
 .j-forms select {
-  padding-left: 0px;
+  padding-left: 10px !important;
 }
+
+
 .j-forms .multiple-select select {
   height: auto;
 }
@@ -4124,7 +4128,7 @@ a.waves-effect .waves-ripple {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   float: left;
-  padding-left: 10px;
+  padding-left: 10px !important;
   padding-right: 10px;
   position: relative;
 }
@@ -6007,7 +6011,7 @@ div.tagsinput div {
   padding-left: 1em;
 }
 .select2-container--default .select2-results__option .select2-results__option .select2-results__group {
-  padding-left: 0;
+  padding-left: 10;
 }
 .select2-container--default .select2-results__option .select2-results__option .select2-results__option {
   margin-left: -1em;

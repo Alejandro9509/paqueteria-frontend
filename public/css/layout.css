@@ -2975,18 +2975,45 @@
   }
 
   .tabla-listado {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
     width: 100%;
-    table-layout:fixed;
-    margin: 0;
-    padding: 0;
+    table-layout: fixed;
+    border-collapse: separate;
+  }
+
+  .tabla-listado thead{
+    display: table;
+    white-space: nowrap;
+  }
+
+  .tabla-listado tbody {
+    display: block;
+    width: 100%;
+    white-space: nowrap;
+  }
+
+  .tabla-listado tbody tr:hover {
+    background-color: #FCC88F;
+  }
+
+  .tabla-listado thead th:first-child{
+    position: sticky;
+    vertical-align: top;
+    left: 0;
+    z-index: 2;
+    background-color:#ffffff;
+  }
+
+  .tabla-listado tbody td:first-child{
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background-color:#ffffff;
+  }
+
+  .tabla-listado th {
+    min-width: 10vw;
   }
 
   .tabla-listado td {
-    overflow: hidden; 
-    text-overflow: ellipsis; 
-    word-wrap: break-word;
     min-width: 10vw;
   }

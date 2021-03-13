@@ -19,7 +19,7 @@ import PageviewIcon from "@material-ui/icons/Pageview";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import useModal from "react-hooks-use-modal";
-import { useHistory } from "react-router-dom";
+import { useHistory, Redirect } from "react-router-dom";
 
 import Noty from 'noty';
 import { Dialog, DialogActions, DialogContent } from "@material-ui/core";
@@ -55,9 +55,10 @@ const styles = {
 };
 const useStyles = makeStyles(styles);
 
-function Embarque() {
+function Embarque(props) {
   var today = new Date();
   const classes = useStyles();
+  const [redirect, setRedirect] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [dataSucursal, setDataSucursal] = React.useState([]);
   const [dataEstatusEmbarque, setEstatusEmbarque] = React.useState([]);
@@ -76,7 +77,6 @@ function Embarque() {
   ] = React.useState([]);
 
   const [state, setState] = React.useState({
-    showPopUp: false,
     DerechoBorrar: 139,
     identificadorModal: "",
     tipoModal: 0,
@@ -102,7 +102,7 @@ function Embarque() {
       today.getHours() +
       ":" +
       today.getMinutes(),
-    estatusEmbarque: 0,
+    estatusEmbarque: 15,
     moneda: 0,
     tipoCambio: "",
     tipoCobro: 0,
@@ -186,7 +186,9 @@ function Embarque() {
   }
 
   function handleSelectRemitente() {
-    state.RFCRemitente = state.nombreRemitente.m_sRFC;
+    if (state.nombreRemitente != undefined) {
+      state.RFCRemitente = state.nombreRemitente.m_sRFC;
+    }
     //state.domicilioRemitente = state.nombreRemitente.m_sNombreCompletoOperador
     //state.codigoPostalRemitente = state.nombreRemitente.m_sCodigoPostal
     //state.correoRemitente = state.nombreRemitente.m_sCorreoElectronico
@@ -194,7 +196,9 @@ function Embarque() {
     //state.contactoRemitente = state.nombreRemitente.m_sContacto
   }
   function handleSelectDestinatario() {
-    state.RFCDestinatario = state.nombreDestinatario.m_sRFC;
+    if (state.nombreDestinatario != undefined) {
+      state.RFCDestinatario = state.nombreDestinatario.m_sRFC;
+    }
     //state.domicilioDestinatario = state.nombreDestinatario.m_sNombreCompletoOperador
     //state.codigoPostalDestinatario= state.nombreDestinatario.m_sCodigoPostal
     //state.correoDestinatario= state.nombreDestinatario.m_sCorreoElectronico
@@ -207,6 +211,7 @@ function Embarque() {
 
     var params = {
       m_nIdEmbarque: state.idEmbarque,
+      m_nIdRecoleccion: props.location.idRecoleccion,
       m_nFolioEmbarque: state.folioEmbarque,
       m_nFolioGuia: state.folioGuía,
       m_nFolioInforme: state.folioInforme,
@@ -258,7 +263,7 @@ function Embarque() {
       m_tHoraDetalleEntrega: state.fechaEntrega.split("T")[1],
       m_parrSobres: state.sobres,
     };
-    console.log(params);
+    console.log(JSON.stringify(params));
     debugger;
     if (state.idEmbarque != 0) {
       const url = `${process.env.REACT_APP_API_URL}/Embarques/Modificar/${state.idEmbarque}`;
@@ -266,11 +271,11 @@ function Embarque() {
         .put(url, Object.assign({}, params), { headers2 })
         .then((respuesta) => {
           showSuccess(respuesta.data);
-          getAllData();
+          getAllEmbarque();
         })
         .catch((err) => {
           console.log(err);
-          showSuccess("err");
+          showSuccess("El Usuario no tiene derecho para modificar");
         });
     } else {
       const url = `${process.env.REACT_APP_API_URL}/Embarques/Agregar`;
@@ -279,7 +284,7 @@ function Embarque() {
         .then((respuesta) => {
           showSuccess(respuesta.data);
           console.log(respuesta.data);
-          getAllData();
+          getAllEmbarque();
         })
         .catch((err) => {
           console.log(err);
@@ -376,7 +381,7 @@ function Embarque() {
           .delete(url, { headers })
           .then((respuesta) => {
             showSuccess(respuesta.data);
-            getAllData();
+            getAllEmbarque();
           })
           .catch((err) => {
             showSuccess(err);
@@ -407,7 +412,7 @@ function Embarque() {
       console.log(respuesta.data.m_nSePuedeCancelar)
       setState({
         ...state,
-        folioRecoleccion: respuesta.data.m_nFolioEmbarque,
+        folioEmbarque: respuesta.data.m_nFolioEmbarque,
         sucursalCancelacion: dataSucursal.find(o => o.m_nIdSucursal == respuesta.data.IdSucursal).m_sSucursal,
         fechaCancelacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear(),
         estatusEmbarque: dataEstatusEmbarque.find(o => o.m_nIdEstatusEmbarque == respuesta.data.m_nIdEstatusEmbarque).m_sEstatus,
@@ -426,7 +431,6 @@ function Embarque() {
         ...state,
         agregar: "Modificar",
         idEmbarque: id,
-        showPopUp: true,
         idSucursalAgregar: respuesta.data.IdSucursal,
         folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
         folioEmbarque: respuesta.data.m_nFolioEmbarque,
@@ -442,14 +446,13 @@ function Embarque() {
         tipoCambio: respuesta.data.m_cTIpoCambio,
         tipoCobro: respuesta.data.m_nIdTIpoCobro,
         estatusEmbarque: respuesta.data.m_nIdEstatusEmbarque,
-        nombreRemitente: respuesta.data.m_sNOmbreRemitente,
-        RFCRemitente: respuesta.data.m_sRFCRemitente,
+        nombreRemitente: dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente),
         domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
         codigoPostalRemitente: dataCodigoPostal.find(
           (o) => o.m_nIdCP == respuesta.data.m_nIdCodigoPostalRemitente
         ),
         ciudadRemitente: dataCiudad.find(
-          (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadRemitente
+          (o) => o.m_nIdCiudad == respuesta.data.m_nCiudadRemitente
         ),
         correoRemitente: respuesta.data.m_sCorreoRemitente,
         telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
@@ -458,8 +461,7 @@ function Embarque() {
           (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen
         ),
 
-        nombreDestinatario: respuesta.data.m_sNombreDestinatario,
-        RFCDestinatario: respuesta.data.m_sRFCDestinatario,
+        nombreDestinatario: dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCDestinatario),
         domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
         codigoPostalDestinatario: dataCodigoPostal.find(
           (o) => o.m_nIdCP == respuesta.data.m_nIdCodigoPostalDestinatario
@@ -496,8 +498,7 @@ function Embarque() {
         idTipoUnidad: dataTipoUnidad.find(
           (o) =>
             o.m_nIdTipoUnidad ==
-            dataUnidad.find((o) => o.m_nIdUnidad == respuesta.data.m_nIdUnidad)
-              .m_nIdTipoUnidad
+            dataUnidad.find((o) => o.m_nIdUnidad == respuesta.data.m_nIdUnidad).m_nIdTipoUnidad
         ),
         idUnidad: dataUnidad.find(
           (o) => o.m_nIdUnidad == respuesta.data.m_nIdUnidad
@@ -515,7 +516,6 @@ function Embarque() {
         ...state,
         agregar: "Consultar",
         idEmbarque: id,
-        showPopUp: true,
         idSucursalAgregar: respuesta.data.IdSucursal,
         folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
         folioEmbarque: respuesta.data.m_nFolioEmbarque,
@@ -531,14 +531,13 @@ function Embarque() {
         tipoCambio: respuesta.data.m_cTIpoCambio,
         tipoCobro: respuesta.data.m_nIdTIpoCobro,
         estatusEmbarque: respuesta.data.m_nIdEstatusEmbarque,
-        nombreRemitente: respuesta.data.m_sNOmbreRemitente,
-        RFCRemitente: respuesta.data.m_sRFCRemitente,
+        nombreRemitente: dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente),
         domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
         codigoPostalRemitente: dataCodigoPostal.find(
           (o) => o.m_nIdCP == respuesta.data.m_nIdCodigoPostalRemitente
         ),
         ciudadRemitente: dataCiudad.find(
-          (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadRemitente
+          (o) => o.m_nIdCiudad == respuesta.data.m_nCiudadRemitente
         ),
         correoRemitente: respuesta.data.m_sCorreoRemitente,
         telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
@@ -547,8 +546,7 @@ function Embarque() {
           (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen
         ),
 
-        nombreDestinatario: respuesta.data.m_sNombreDestinatario,
-        RFCDestinatario: respuesta.data.m_sRFCDestinatario,
+        nombreDestinatario: dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCDestinatario),
         domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
         codigoPostalDestinatario: dataCodigoPostal.find(
           (o) => o.m_nIdCP == respuesta.data.m_nIdCodigoPostalDestinatario
@@ -561,7 +559,7 @@ function Embarque() {
         contactoDestinatario: respuesta.data.m_sContactoDestinatario,
 
         ciudadDestino: dataCiudad.find(
-          (o) => o.m_nIdCiudad == respuesta.data.m_nIdCIudadDestino
+          (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino
         ),
         fechaEntrega:
           respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
@@ -601,7 +599,6 @@ function Embarque() {
     setState({
       ...state,
       agregar: "Agregar",
-      showPopUp: true,
       idEmbarque: 0,
       folioRecoleccion: "",
       folioEmbarque: "",
@@ -621,7 +618,7 @@ function Embarque() {
       tipoCambio: "",
       tipoCobro: dataTipoCobro[0].m_nIdTipoCobro,
       estatusEmbarque: dataEstatusEmbarque[0].m_nIdEstatusEmbarque,
-      nombreRemitente: "",
+      nombreRemitente: {},
       RFCRemitente: "",
       domicilioRemitente: "",
       codigoPostalRemitente: dataCodigoPostal[0],
@@ -631,7 +628,7 @@ function Embarque() {
       contactoRemitente: "",
       ciudadDestino: {},
       ciudadOrigen: {},
-      nombreDestinatario: "",
+      nombreDestinatario: {},
       RFCDestinatario: "",
       domicilioDestinatario: "",
       codigoPostalDestinatario: dataCodigoPostal[0],
@@ -720,7 +717,7 @@ function Embarque() {
     const url = `${process.env.REACT_APP_API_URL}/Embarques/GetByFiltro/` +
       state.fechaInicial + "/" + state.fechaFinal + "/" + state.sucursalListado + "/" + event.target.value;
     await axios.get(url, { headers }).then(respuesta => {
-     setData(respuesta.data)
+      setData(respuesta.data)
     })
     console.log(url)
   }
@@ -930,7 +927,93 @@ function Embarque() {
     },
   ]);
 
-  useEffect((value) => {
+  useEffect(async (value) => {
+    if (props.location.idRecoleccion != undefined) {
+      const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetById/${props.location.idRecoleccion}`;
+      await axios.get(url, { headers }).then((respuesta) => {
+        setState({
+          ...state,
+          idEmbarque: 0,
+          idSucursalAgregar: respuesta.data.m_nIdSucursal,
+          folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
+          folioEmbarque: respuesta.data.m_nFolioEmbarque,
+          folioGuía: respuesta.data.m_nFolioGuia,
+          folioInforme: respuesta.data.m_nFolioInforme,
+          fechaHoraCreacion:
+            today.getDate() +
+            "/" +
+            (today.getMonth() + 1) +
+            "/" +
+            today.getFullYear() +
+            " " +
+            today.getHours() +
+            ":" +
+            today.getMinutes(),
+          moneda: respuesta.data.m_nMoneda,
+          tipoCambio: respuesta.data.m_rTipoCambio,
+          tipoCobro: respuesta.data.m_nIdTipoDeCobro,
+          nombreRemitente: dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente),
+          RFCRemitente: respuesta.data.m_sRFCRemitente,
+          domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
+          codigoPostalRemitente: dataCodigoPostal.find(
+            (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalRemitente
+          ),
+          ciudadRemitente: dataCiudad.find(
+            (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadRemitente
+          ),
+          correoRemitente: respuesta.data.m_sCorreoRemitente,
+          telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
+          contactoRemitente: respuesta.data.m_sContactoRemitente,
+          ciudadOrigen: dataCiudad.find(
+            (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen
+          ),
+
+          nombreDestinatario: dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCDestinatario),
+          RFCDestinatario: respuesta.data.m_sRFCDestinatario,
+          domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
+          codigoPostalDestinatario: dataCodigoPostal.find(
+            (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalDestinatario
+          ),
+          ciudadDestinatario: dataCiudad.find(
+            (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestinatario
+          ),
+          correoDestinatario: respuesta.data.m_sCorreoDestinatario,
+          telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
+          contactoDestinatario: respuesta.data.m_sContactoDestinatario,
+
+          ciudadDestino: dataCiudad.find(
+            (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino
+          ),
+          zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
+          domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
+          entregaEn: respuesta.data.m_sEntregarEnDetalleEntrega,
+          datosAdicionalesEntrega: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
+          fechaEntrega:
+            respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
+          codigoPostalEntrega: dataCodigoPostal.find(
+            (o) => o.m_nIdCP == respuesta.data.m_nIdCPDetalleEntrega
+          ),
+          ciudadEntrega: dataCiudad.find(
+            (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDetalleEntrega
+          ),
+          fechaHoraSalida:
+            respuesta.data.m_dFechaSalida + "T" + respuesta.data.m_tHoraSalida,
+          fechaHoraLlegada:
+            respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,
+          idOperador: dataOperador.find(
+            (o) => o.m_nIdOperador == respuesta.data.m_nIdOperador
+          ),
+
+          idUnidad: dataUnidad.find(
+            (o) => o.m_nIdUnidad == respuesta.data.m_nIdUnidad
+          ),
+          paquetes: respuesta.data.m_parrPaquetes,
+        });
+        console.log(dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente))
+      }).then(() => {
+        handleSelectRemitente()
+      })
+    }
     if (
       localStorage.getItem("UsuarioId") === null ||
       localStorage.getItem("UsuarioId") <= 0
@@ -939,7 +1022,14 @@ function Embarque() {
       window.location.replace("login");
       return;
     }
-    getAllData();
+  }, [dataRemitenteDestinatario, dataCiudad, dataCodigoPostal, dataOperador, dataUnidad, dataTipoUnidad]);
+
+  useEffect( (value) => {
+    getAllData()
+  }, [])
+
+  async function getAllData() {
+    getAllEmbarque();
     getAllSucursales();
     getAllEstatusEmbarque();
     getAllTipoCobro();
@@ -950,90 +1040,90 @@ function Embarque() {
     getAllTipoUnidad();
     getAllRemitentesDestinatarios();
     getAllEmbalajes();
-  }, []);
+  }
 
-  function getAllData() {
+  async function getAllEmbarque() {
     const url = `${process.env.REACT_APP_API_URL}/Embarques/GetListado`;
-    axios.get(url, { headers }).then((respuesta) => {
+    await axios.get(url, { headers }).then((respuesta) => {
       setData(respuesta.data);
     });
   }
 
-  function getAllRemitentesDestinatarios() {
+  async function getAllRemitentesDestinatarios() {
     const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/GetListado`;
-    axios.get(url, { headers }).then((respuesta) => {
+    await axios.get(url, { headers }).then((respuesta) => {
       setDataRemitenteDestinatario(respuesta.data);
     });
   }
 
-  function getAllSucursales() {
+  async function getAllSucursales() {
     const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-    axios.get(url, { headers }).then((respuesta) => {
+    await axios.get(url, { headers }).then((respuesta) => {
       setDataSucursal(respuesta.data);
     });
   }
 
-  function getAllEstatusEmbarque() {
+  async function getAllEstatusEmbarque() {
     const url = `${process.env.REACT_APP_API_URL}/SisEstatus/GetListadoEmbarque`;
-    axios.get(url, { headers }).then((respuesta) => {
+    await axios.get(url, { headers }).then((respuesta) => {
       setEstatusEmbarque(respuesta.data);
     });
   }
 
-  function getAllTipoCobro() {
+  async function getAllTipoCobro() {
     const url = `${process.env.REACT_APP_API_URL}/TipoCobro/GetListado`;
-    axios.get(url, { headers }).then((respuesta) => {
+    await axios.get(url, { headers }).then((respuesta) => {
       setDataTipoCobro(respuesta.data);
     });
   }
 
-  function getAllTipoMoneda() {
+  async function getAllTipoMoneda() {
     const url = `${process.env.REACT_APP_API_URL}/Moneda/GetListado`;
-    axios.get(url, { headers }).then((respuesta) => {
+    await axios.get(url, { headers }).then((respuesta) => {
       setDataTipoMoneda(respuesta.data);
     });
   }
 
-  function getAllCiudades() {
+  async function getAllCiudades() {
     const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
-    axios.get(url, { headers }).then((respuesta) => {
+    await axios.get(url, { headers }).then((respuesta) => {
       setDataCiudad(respuesta.data);
     });
   }
 
-  function getAllCodigosPostales() {
+  async function getAllCodigosPostales() {
     const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
-    axios.get(url, { headers }).then((respuesta) => {
+    await axios.get(url, { headers }).then((respuesta) => {
       setDataCodigoPostal(respuesta.data);
     });
   }
 
-  function getAllOperadores() {
+  async function getAllOperadores() {
     const url = `${process.env.REACT_APP_API_URL}/Operadores/GetListado`;
-    axios.get(url, { headers }).then((respuesta) => {
+    await axios.get(url, { headers }).then((respuesta) => {
       setDataOperador(respuesta.data);
     });
   }
 
-  function getAllTipoUnidad() {
+  async function getAllTipoUnidad() {
     const url = `${process.env.REACT_APP_API_URL}/TiposUnidades/GetListado`;
-    axios.get(url, { headers }).then((respuesta) => {
+    await axios.get(url, { headers }).then((respuesta) => {
       setDataTipoUnidad(respuesta.data);
       getAllUnidades(respuesta.data[0].m_nIdTipoUnidad);
     });
   }
 
-  function getAllUnidades(id) {
+  async function getAllUnidades(id) {
     const url = `${process.env.REACT_APP_API_URL}/Unidades/ByTipoUnidad/${id}`;
-    axios.get(url, { headers }).then((respuesta) => {
+    await axios.get(url, { headers }).then((respuesta) => {
       setDataUnidad(respuesta.data);
     });
     console.log(dataUnidad);
   }
 
-  function getAllEmbalajes() {
+  async function getAllEmbalajes() {
     const url = `${process.env.REACT_APP_API_URL}/Embalajes/GetListado`;
-    axios.get(url, { headers }).then((respuesta) => {
+    await axios.get(url, { headers }).then((respuesta) => {
       setDataEmbalaje(respuesta.data);
     });
   }
@@ -1041,7 +1131,7 @@ function Embarque() {
   const headers = {
     "Content-Type": "application/json",
   };
-  
+
   const headers2 = {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
@@ -1107,8 +1197,8 @@ function Embarque() {
     );
 
     return (
-      <div className="col-md-12">
-        <table className="table" {...getTableProps()} className="tabla-listado" >
+      <div className="col-md-12" style={{ overflowX: "scroll", height: "100%" }}>
+        <table className="table tabla-listado" {...getTableProps()}>
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()} >
@@ -1116,7 +1206,7 @@ function Embarque() {
                 {headerGroup.headers.map((column) => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())} >
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                     {column.render("Name")}
                     {/* Add a sort direction indicator */}
                     <span>
@@ -1147,7 +1237,7 @@ function Embarque() {
                     onClick={handleSelectRow.bind(this, row.original.m_nIdEmbarque)}
                     className={state.idEmbarque === row.original.m_nIdEmbarque ? classes.seleccionado : classes.noSeleccionado}>
                     <td>
-                      <div>
+                      <div style={{ paddingRight: "20px" }}>
                         <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdEmbarque))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
                         <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdEmbarque))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
                         <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdEmbarque))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
@@ -1742,6 +1832,20 @@ function Embarque() {
     });
   }
 
+  if (redirect) {
+    if (data.find((o) => o.m_nIdEmbarque == state.idEmbarque).m_sFolioGuia != "") {
+      showSuccess("Embarque ya tiene Guía")
+    } else {
+      return (
+        <Redirect push to={{
+          pathname: '/Guia',
+          idEmbarque: state.idEmbarque
+        }}
+        />
+      )
+    }
+  }
+
   const framesPaquete = state.paquetes.map((p, index) => {
     return (
       <div key={`paquete${index}`}>
@@ -1753,6 +1857,7 @@ function Embarque() {
               className="form-control"
               type="text"
               value={state.paquetes[index].m_xPeso}
+              disabled={state.agregar == "Consultar"}
               placeholder="kg"
               name="m_xPeso"
             />
@@ -1767,6 +1872,7 @@ function Embarque() {
               className="form-control"
               type="text"
               value={state.paquetes[index].m_xLargo}
+              disabled={state.agregar == "Consultar"}
               placeholder="mts"
               name="m_xLargo"
             />
@@ -1781,6 +1887,7 @@ function Embarque() {
               className="form-control"
               type="text"
               value={state.paquetes[index].m_xAncho}
+              disabled={state.agregar == "Consultar"}
               placeholder="mts"
               name="m_xAncho"
             />
@@ -1795,6 +1902,7 @@ function Embarque() {
               className="form-control"
               type="text"
               value={state.paquetes[index].m_xAlto}
+              disabled={state.agregar == "Consultar"}
               placeholder="mts"
               name="m_xAlto"
             />
@@ -1809,6 +1917,7 @@ function Embarque() {
               className="form-control"
               type="text"
               value={state.paquetes[index].m_xVolumen}
+              disabled={state.agregar == "Consultar"}
               placeholder="mts3"
               name="m_xVolumen"
             />
@@ -1824,6 +1933,7 @@ function Embarque() {
               value={state.paquetes[index].m_nIdTIpoEmpaque}
               disabled={state.agregar == "Consultar"}
               onChange={(event) => handleChangePaquete(event, index)}
+              disabled={state.agregar == "Consultar"}
               id="m_nIdTIpoEmpaque"
               name="m_nIdTIpoEmpaque"
             >
@@ -1845,6 +1955,7 @@ function Embarque() {
               className="form-control"
               type="text"
               value={state.paquetes[index].m_cValorDeclarado}
+              disabled={state.agregar == "Consultar"}
               placeholder="$"
               name="m_cValorDeclarado"
             />
@@ -1859,6 +1970,7 @@ function Embarque() {
               className="form-control"
               type="text"
               value={state.paquetes[index].m_sDescripcion}
+              disabled={state.agregar == "Consultar"}
               placeholder="Descripción"
               name="m_sDescripcion"
             />
@@ -1873,6 +1985,7 @@ function Embarque() {
               className="form-control"
               type="text"
               value={state.paquetes[index].ctd}
+              disabled={state.agregar == "Consultar"}
               placeholder="Ctd"
               name="ctd"
             />
@@ -1887,13 +2000,14 @@ function Embarque() {
               className="form-control"
               type="text"
               value={state.paquetes[index].m_sObservaciones}
+              disabled={state.agregar == "Consultar"}
               placeholder="Observaciones"
               name="m_sObservaciones"
             />
           </div>
         </div>
         {state.paquetes.length !== 1 && (
-          <a className="btn delete" onClick={() => removePaquete(index)}>
+          <a className="btn delete" onClick={() => removePaquete(index)} disabled={state.agregar == "Consultar"}>
             <i className="zmdi zmdi-delete"></i> Eliminar Paquete
           </a>
         )}
@@ -1912,13 +2026,14 @@ function Embarque() {
               className="form-control"
               type="text"
               value={state.sobres[index].descripcion}
+              disabled={state.agregar == "Consultar"}
               placeholder="Descripción"
               name="descripcion"
             />
           </div>
         </div>
         {state.sobres.length !== 1 && (
-          <a className="btn delete" onClick={() => removeSobre(index)}>
+          <a className="btn delete" onClick={() => removeSobre(index)} disabled={state.agregar == "Consultar"}>
             <i className="zmdi zmdi-delete"></i> Eliminar Sobre
           </a>
         )}
@@ -2044,12 +2159,12 @@ function Embarque() {
           </div>
 
           <ul className="nav navStatica nav-tabs">
-            <li className="active">
+            <li className={props.location.idRecoleccion != undefined ? "" : "activo"}>
               <a data-toggle="tab" href="#Listado">
                 <i className="fa fa-list" /> Listado
               </a>
             </li>
-            <li>
+            <li className={props.location.idRecoleccion != undefined ? "active" : ""}>
               <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
                 <i className="fa fa-plus-circle" /> {state.agregar}
               </a>
@@ -2062,92 +2177,95 @@ function Embarque() {
                 <i className="fa fa-times-circle" /> Cancelar
               </a>
             </li>
+            <li style={{ float: "right" }}>
+              <a data-toggle="tab" href="#" className={state.idEmbarque == 0 ? classes.disabled : ""} style={{ textAlign: "right" }} onClick={() => setRedirect(true)}>
+                Generar Guía
+              </a>
+            </li>
           </ul>
 
           <div className="row" className="tab-content">
-            <div id="Listado" className="tab-pane fade in active">
+            <div id="Listado" className={props.location.idRecoleccion != undefined ? "tab-pane fade" : "tab-pane fade in active"}>
               <div className="widget-wrap">
                 <div className="widget-content">
-                  <div>
-                    <form className="j-forms">
-                      <div className="form-content">
-                        <div className="col-sm-6 col-md-3 unit">
-                          <label className="label">Fecha Inicial</label>
-                          <div className="input">
-                            <input
-                              type="date"
-                              className="form-control"
-                              onChange={handleFechaInicialFiltro}
-                              value={state.fechaInicial}
-                              id="fechaInicial"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="col-sm-6 col-md-3 unit">
-                          <label className="label">Fecha Final</label>
-                          <div className="input">
-                            <input
-                              type="date"
-                              className="form-control"
-                              onChange={handleFechaFinalFiltro}
-                              value={state.fechaFinal}
-                              id="fechaFinal"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="col-sm-6 col-md-3 unit">
-                          <label className="label">Sucursal</label>
-                          <label className="input select">
-                            <select
-                              className="form-control"
-                              required
-                              onChange={handleSucursalFiltro}
-                              value={state.sucursalListado}
-                              id="sucursalListado"
-                            >
-                              <option value="0">Todas</option>
-                              {dataSucursal.map((sucursal) => (
-                                <option
-                                  key={sucursal.m_nIdSucursal}
-                                  value={sucursal.m_nIdSucursal}
-                                >
-                                  {sucursal.m_sSucursal}
-                                </option>
-                              ))}
-                            </select>
-                            <i></i>
-                          </label>
-                        </div>
-
-                        <div className="col-sm-6 col-md-3 unit">
-                          <label className="label">Estatus</label>
-                          <label className="input select">
-                            <select
-                              className="form-control"
-                              required
-                              onChange={handleEstatusFiltro}
-                              value={state.estatusListado}
-                              id="estatusListado"
-                            >
-                              <option value="0">Todos</option>
-                              {dataEstatusEmbarque.map((estatus) => (
-                                <option
-                                  key={estatus.m_nIdEstatusEmbarque}
-                                  value={estatus.m_nIdEstatusEmbarque}
-                                >
-                                  {estatus.m_sEstatus}
-                                </option>
-                              ))}
-                            </select>
-                            <i></i>
-                          </label>
+                  <form className="j-forms">
+                    <div className="form-content">
+                      <div className="col-sm-6 col-md-3 unit">
+                        <label className="label">Fecha Inicial</label>
+                        <div className="input">
+                          <input
+                            type="date"
+                            className="form-control"
+                            onChange={handleFechaInicialFiltro}
+                            value={state.fechaInicial}
+                            id="fechaInicial"
+                          />
                         </div>
                       </div>
-                    </form>
-                  </div>
-                  <div className="row">
+
+                      <div className="col-sm-6 col-md-3 unit">
+                        <label className="label">Fecha Final</label>
+                        <div className="input">
+                          <input
+                            type="date"
+                            className="form-control"
+                            onChange={handleFechaFinalFiltro}
+                            value={state.fechaFinal}
+                            id="fechaFinal"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-sm-6 col-md-3 unit">
+                        <label className="label">Sucursal</label>
+                        <label className="input select">
+                          <select
+                            className="form-control"
+                            required
+                            onChange={handleSucursalFiltro}
+                            value={state.sucursalListado}
+                            id="sucursalListado"
+                          >
+                            <option value="0">Todas</option>
+                            {dataSucursal.map((sucursal) => (
+                              <option
+                                key={sucursal.m_nIdSucursal}
+                                value={sucursal.m_nIdSucursal}
+                              >
+                                {sucursal.m_sSucursal}
+                              </option>
+                            ))}
+                          </select>
+                          <i></i>
+                        </label>
+                      </div>
+
+                      <div className="col-sm-6 col-md-3 unit">
+                        <label className="label">Estatus</label>
+                        <label className="input select">
+                          <select
+                            className="form-control"
+                            required
+                            onChange={handleEstatusFiltro}
+                            value={state.estatusListado}
+                            id="estatusListado"
+                          >
+                            <option value="0">Todos</option>
+                            {dataEstatusEmbarque.map((estatus) => (
+                              <option
+                                key={estatus.m_nIdEstatusEmbarque}
+                                value={estatus.m_nIdEstatusEmbarque}
+                              >
+                                {estatus.m_sEstatus}
+                              </option>
+                            ))}
+                          </select>
+                          <i></i>
+                        </label>
+                      </div>
+                    </div>
+                  </form>
+                  <div className="row caja-tabla">
                     {conDatos() ? (
                       <Table columns={columns} data={data} />
                     ) : (
@@ -2158,7 +2276,7 @@ function Embarque() {
               </div>
             </div>
 
-            <div id="Agregar" className="tab-pane fade">
+            <div id="Agregar" className={props.location.idRecoleccion != undefined ? "tab-pane fade in active" : "tab-pane fade"}>
               <form className="j-forms" onSubmit={handleAceptar}>
                 <div className="form-content">
                   <div
@@ -2468,6 +2586,7 @@ function Embarque() {
                                         id="nombreRemitente"
                                         disableClearable
                                         forcePopupIcon={false}
+                                        disabled={state.agregar == "Consultar"}
                                         options={dataRemitenteDestinatario}
                                         getOptionLabel={(option) =>
                                           option.m_sNombreFiscal
@@ -2482,6 +2601,7 @@ function Embarque() {
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
+                                                  required
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
@@ -2495,6 +2615,7 @@ function Embarque() {
                                                       style={{
                                                         paddingRight: "0px",
                                                       }}
+                                                      disabled={state.agregar == "Consultar"}
                                                       onClick={() => {
                                                         setState({
                                                           ...state,
@@ -2575,6 +2696,7 @@ function Embarque() {
                                         }
                                         id="codigoPostalRemitente"
                                         disableClearable
+                                        disabled={state.agregar == "Consultar"}
                                         forcePopupIcon={false}
                                         options={dataCodigoPostal}
                                         getOptionLabel={(option) =>
@@ -2590,6 +2712,7 @@ function Embarque() {
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
+                                                  required
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
@@ -2603,6 +2726,7 @@ function Embarque() {
                                                       style={{
                                                         paddingRight: "0px",
                                                       }}
+                                                      disabled={state.agregar == "Consultar"}
                                                       onClick={() => {
                                                         setState({
                                                           ...state,
@@ -2649,6 +2773,7 @@ function Embarque() {
                                         value={state.ciudadRemitente}
                                         id="ciudadRemitente"
                                         disableClearable
+                                        disabled={state.agregar == "Consultar"}
                                         forcePopupIcon={false}
                                         options={dataCiudad}
                                         getOptionLabel={(option) =>
@@ -2664,6 +2789,7 @@ function Embarque() {
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
+                                                  required
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
@@ -2673,7 +2799,7 @@ function Embarque() {
                                                   state.agregar == "Consultar",
                                                 endAdornment: (
                                                   <InputAdornment position="end">
-                                                    <IconButton padding="0px" style={{ paddingRight: "0px" }} onClick={() => { setState({ ...state, identificadorModal: "ciudadRemitente", tipoModal: 1, openDialog: true }) }}>
+                                                    <IconButton padding="0px" style={{ paddingRight: "0px" }} disabled={state.agregar == "Consultar"} onClick={() => { setState({ ...state, identificadorModal: "ciudadRemitente", tipoModal: 1, openDialog: true }) }}>
                                                       <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
                                                     </IconButton>
                                                   </InputAdornment>
@@ -2697,6 +2823,7 @@ function Embarque() {
                                         type="email"
                                         required
                                         value={state.correoRemitente}
+                                        disabled={state.agregar == "Consultar"}
                                         id="correoRemitente"
                                       />
                                     </div>
@@ -2746,6 +2873,7 @@ function Embarque() {
                                         value={state.ciudadOrigen}
                                         id="ciudadOrigen"
                                         disableClearable
+                                        disabled={state.agregar == "Consultar"}
                                         forcePopupIcon={false}
                                         options={dataCiudad}
                                         getOptionLabel={(option) =>
@@ -2761,6 +2889,7 @@ function Embarque() {
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
+                                                  required
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
@@ -2775,6 +2904,7 @@ function Embarque() {
                                                       style={{
                                                         paddingRight: "0px",
                                                       }}
+                                                      disabled={state.agregar == "Consultar"}
                                                       onClick={() => {
                                                         setState({
                                                           ...state,
@@ -2834,6 +2964,7 @@ function Embarque() {
                                       }
                                       id="nombreRemitente"
                                       disableClearable
+                                      disabled={state.agregar == "Consultar"}
                                       forcePopupIcon={false}
                                       options={dataRemitenteDestinatario}
                                       getOptionLabel={(option) =>
@@ -2849,6 +2980,7 @@ function Embarque() {
                                       renderInput={(params) => (
                                         <div>
                                           <TextField
+                                                  required
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
@@ -2862,6 +2994,7 @@ function Embarque() {
                                                     style={{
                                                       paddingRight: "0px",
                                                     }}
+                                                    disabled={state.agregar == "Consultar"}
                                                     onClick={() => {
                                                       setState({
                                                         ...state,
@@ -2950,6 +3083,7 @@ function Embarque() {
                                       value={state.codigoPostalDestinatario}
                                       id="codigoPostalDestinatario"
                                       disableClearable
+                                      disabled={state.agregar == "Consultar"}
                                       options={dataCodigoPostal}
                                       getOptionLabel={(option) => option.m_sCP}
                                       variant="outlined"
@@ -2962,6 +3096,7 @@ function Embarque() {
                                       renderInput={(params) => (
                                         <div>
                                           <TextField
+                                                  required
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
@@ -2975,6 +3110,7 @@ function Embarque() {
                                                     style={{
                                                       paddingRight: "0px",
                                                     }}
+                                                    disabled={state.agregar == "Consultar"}
                                                     onClick={() => {
                                                       setState({
                                                         ...state,
@@ -3032,6 +3168,7 @@ function Embarque() {
                                       renderInput={(params) => (
                                         <div>
                                           <TextField
+                                                  required
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
@@ -3041,7 +3178,7 @@ function Embarque() {
                                                 state.agregar == "Consultar",
                                               endAdornment: (
                                                 <InputAdornment position="end">
-                                                  <IconButton padding="0px" style={{ paddingRight: "0px" }} onClick={() => { setState({ ...state, identificadorModal: "ciudadDestino", tipoModal: 1, openDialog: true }) }}>
+                                                  <IconButton padding="0px" style={{ paddingRight: "0px" }} disabled={state.agregar == "Consultar"} onClick={() => { setState({ ...state, identificadorModal: "ciudadDestino", tipoModal: 1, openDialog: true }) }}>
                                                     <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
                                                   </IconButton>
                                                 </InputAdornment>
@@ -3132,6 +3269,7 @@ function Embarque() {
                                       renderInput={(params) => (
                                         <div>
                                           <TextField
+                                                  required
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
@@ -3146,6 +3284,7 @@ function Embarque() {
                                                     style={{
                                                       paddingRight: "0px",
                                                     }}
+                                                    disabled={state.agregar == "Consultar"}
                                                     onClick={() => {
                                                       setState({
                                                         ...state,
@@ -3247,6 +3386,7 @@ function Embarque() {
                                             renderInput={(params) => (
                                               <div>
                                                 <TextField
+                                                  required
                                                   {...params}
                                                   InputProps={{
                                                     ...params.InputProps,
@@ -3260,6 +3400,7 @@ function Embarque() {
                                                           style={{
                                                             paddingRight: "0px",
                                                           }}
+                                                          disabled={state.agregar == "Consultar"}
                                                           onClick={() => {
                                                             setState({
                                                               ...state,
@@ -3319,6 +3460,7 @@ function Embarque() {
                                             renderInput={(params) => (
                                               <div>
                                                 <TextField
+                                                  required
                                                   {...params}
                                                   InputProps={{
                                                     ...params.InputProps,
@@ -3329,7 +3471,7 @@ function Embarque() {
                                                       "Consultar",
                                                     endAdornment: (
                                                       <InputAdornment position="end">
-                                                        <IconButton padding="0px" style={{ paddingRight: "0px" }} onClick={() => { setState({ ...state, identificadorModal: "ciudadEntrega", tipoModal: 1, openDialog: true }) }}>
+                                                        <IconButton padding="0px" style={{ paddingRight: "0px" }} disabled={state.agregar == "Consultar"} onClick={() => { setState({ ...state, identificadorModal: "ciudadEntrega", tipoModal: 1, openDialog: true }) }}>
                                                           <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
                                                         </IconButton>
                                                       </InputAdornment>
@@ -3453,6 +3595,7 @@ function Embarque() {
                                         value={state.idOperador}
                                         id="idOperador"
                                         disableClearable
+                                        disabled={state.agregar == "Consultar"}
                                         forcePopupIcon={false}
                                         options={dataOperador}
                                         getOptionLabel={(option) =>
@@ -3468,6 +3611,7 @@ function Embarque() {
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
+                                                  required
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
@@ -3481,6 +3625,7 @@ function Embarque() {
                                                       style={{
                                                         paddingRight: "0px",
                                                       }}
+                                                      disabled={state.agregar == "Consultar"}
                                                       onClick={() => {
                                                         setState({
                                                           ...state,
@@ -3521,12 +3666,13 @@ function Embarque() {
                                         onChange={(event, newValue) =>
                                           setState({
                                             ...state,
-                                            tipoUnidad: newValue,
+                                            idTipoUnidad: newValue,
                                           })
                                         }
-                                        value={state.tipoUnidad}
-                                        id="tipoUnidad"
+                                        value={state.idTipoUnidad}
+                                        id="idTipoUnidad"
                                         disableClearable
+                                        disabled={state.agregar == "Consultar"}
                                         forcePopupIcon={false}
                                         options={dataTipoUnidad}
                                         getOptionLabel={(option) =>
@@ -3542,12 +3688,13 @@ function Embarque() {
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
+                                                  required
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
                                                 style: { height: "33px", fontSize: "14px" },
                                                 type: "search",
-                                                value: state.tipoUnidad,
+                                                value: state.idTipoUnidad,
                                                 disableUnderline: true,
                                                 endAdornment: (
                                                   <InputAdornment position="end">
@@ -3556,11 +3703,12 @@ function Embarque() {
                                                       style={{
                                                         paddingRight: "0px",
                                                       }}
+                                                      disabled={state.agregar == "Consultar"}
                                                       onClick={() => {
                                                         setState({
                                                           ...state,
                                                           identificadorModal:
-                                                            "tipoUnidad",
+                                                            "idTipoUnidad",
                                                           tipoModal: 3,
                                                           openDialog: true
                                                         });
@@ -3599,9 +3747,10 @@ function Embarque() {
                                             idUnidad: newValue,
                                           })
                                         }
-                                        value={state.unidad}
+                                        value={state.idUnidad}
                                         id="idUnidad"
                                         disableClearable
+                                        disabled={state.agregar == "Consultar"}
                                         forcePopupIcon={false}
                                         options={dataUnidad}
                                         getOptionLabel={(option) =>
@@ -3617,6 +3766,7 @@ function Embarque() {
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
+                                                  required
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
@@ -3632,6 +3782,7 @@ function Embarque() {
                                                       style={{
                                                         paddingRight: "0px",
                                                       }}
+                                                      disabled={state.agregar == "Consultar"}
                                                       onClick={() => {
                                                         setState({
                                                           ...state,
@@ -3731,6 +3882,7 @@ function Embarque() {
                                     className="btn"
                                     style={{ margin: "10px" }}
                                     onClick={() => addPaquete()}
+                                    disabled={state.agregar == "Consultar"}
                                   >
                                     <i className="zmdi zmdi-plus"></i> Agregar
                                     Paquete
@@ -3761,6 +3913,7 @@ function Embarque() {
                                     className="btn"
                                     style={{ margin: "10px" }}
                                     onClick={() => addSobre()}
+                                    disabled={state.agregar == "Consultar"}
                                   >
                                     <i className="zmdi zmdi-plus"></i> Agregar
                                     Sobre
@@ -3789,7 +3942,7 @@ function Embarque() {
                   >
                     Cancelar
                   </button>
-                  <button type="submit" className="btn btn-primary primary-btn">
+                  <button type="submit" className="btn btn-primary primary-btn" disabled={state.agregar == "Consultar"}>
                     Aceptar
                   </button>
                 </div>
@@ -3812,8 +3965,8 @@ function Embarque() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    value={state.folioRecoleccion}
-                                    id="folioRecoleccion"
+                                    value={state.folioEmbarque}
+                                    id="folioEmbarque"
                                     readOnly
                                   />
                                 </div>

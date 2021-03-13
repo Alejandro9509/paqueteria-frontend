@@ -125,8 +125,8 @@ function Login() {
             <div className="col-xs-11 col-sm-11 col-md-11 col-lg-11 login-text">
               <button style={{ fontSize: "1.3vw", paddingBottom: "0px", paddingTop: "0px", marginTop: "10%"}}
                 type="submit" className="btn-block btn btn-primary">Inicia Sesión</button>
-              <span className="hint">
-                <a href="#" className="link" style={{ color: "#FFFFFF" }}>Olvidaste la contraseña?</a>
+              <span className="hint" style={{textAlign: "center"}}>
+                <a href="#" className="link" style={{ color: "#FFFFFF" }}>¿Olvidaste la contraseña?</a>
               </span>
             </div>
 
