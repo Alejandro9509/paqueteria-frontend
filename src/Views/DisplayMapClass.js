@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useRef } from 'react';
 import "../App.css"
-import H, { mapevents } from "@here/maps-api-for-javascript";
+
 import onResize from 'simple-element-resize-detector';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents, Polyline } from 'react-leaflet'
 import MarkerImage from '../iconos/Mapa/marker.png';
