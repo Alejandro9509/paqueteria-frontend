@@ -411,7 +411,7 @@ function Embarque(props) {
       console.log(respuesta.data.m_nSePuedeCancelar)
       setState({
         ...state,
-        folioRecoleccion: respuesta.data.m_nFolioEmbarque,
+        folioEmbarque: respuesta.data.m_nFolioEmbarque,
         sucursalCancelacion: dataSucursal.find(o => o.m_nIdSucursal == respuesta.data.IdSucursal).m_sSucursal,
         fechaCancelacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear(),
         estatusEmbarque: dataEstatusEmbarque.find(o => o.m_nIdEstatusEmbarque == respuesta.data.m_nIdEstatusEmbarque).m_sEstatus,
@@ -3964,8 +3964,8 @@ function Embarque(props) {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    value={state.folioRecoleccion}
-                                    id="folioRecoleccion"
+                                    value={state.folioEmbarque}
+                                    id="folioEmbarque"
                                     readOnly
                                   />
                                 </div>
