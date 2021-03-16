@@ -51,7 +51,6 @@ function Catalogo() {
                     <button
                       type="button"
                       key={index}
-                      style={{ textAlign: "center", alignContent: "center" }}
                       className="boton-de-catalogos">
                       <SvgIcon
                         style={{ position: "relative" }}

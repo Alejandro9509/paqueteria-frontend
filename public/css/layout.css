@@ -2996,6 +2996,7 @@
   }
 
   .tabla-listado thead th:first-child{
+    min-width: 10vw;
     position: sticky;
     vertical-align: top;
     left: 0;
@@ -3004,6 +3005,7 @@
   }
 
   .tabla-listado tbody td:first-child{
+    min-width: 10vw;
     position: sticky;
     left: 0;
     z-index: 2;
@@ -3011,9 +3013,11 @@
   }
 
   .tabla-listado th {
-    min-width: 10vw;
+    min-width: 15vw;
+    width: 100%;
   }
 
   .tabla-listado td {
-    min-width: 10vw;
+    min-width: 15vw;
+    width: 100%;
   }
