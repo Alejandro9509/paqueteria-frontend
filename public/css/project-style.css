@@ -7,22 +7,13 @@ h2 {
 
 .imagen-de-catalogos {
     height: auto !important;
-    align-content: center !important;
-    align-items: center !important;
-    justify-content: center !important;
-    text-align: center;
     vertical-align: middle;
-    padding: 3px !important;
     width: 70% !important;
 }
 
 .boton-de-catalogos {
     height: 72px;
     width: 72px;
-    margin: 0%;
-    display: inline-block;
-    text-align: center;
-    align-content: center;
     color: #F9A03E;
     font-size: 20px;
     background: #FFFFFF 0% 0% no-repeat;
@@ -45,6 +36,8 @@ h2 {
   margin: 15px;
   width: 72px;
   text-align: center;
+  align-items: center;
+  justify-content: center;
 }
 
 .divider {
