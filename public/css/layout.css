@@ -2975,9 +2975,10 @@
   }
 
   .tabla-listado {
-    width: 100%;
     table-layout: fixed;
     border-collapse: separate;
+    border: none;
+    border-spacing: 0;
   }
 
   .tabla-listado thead{
@@ -2995,7 +2996,7 @@
     background-color: #FCC88F;
   }
 
-  .tabla-listado thead th:first-child{
+  .tabla-listado th:first-child{
     min-width: 10vw;
     position: sticky;
     vertical-align: top;
@@ -3004,20 +3005,21 @@
     background-color:#ffffff;
   }
 
-  .tabla-listado tbody td:first-child{
+  .tabla-listado td:first-child{
     min-width: 10vw;
     position: sticky;
+    vertical-align: top;
     left: 0;
     z-index: 2;
     background-color:#ffffff;
   }
 
   .tabla-listado th {
-    min-width: 15vw;
+    min-width: 13vw;
     width: 100%;
   }
 
   .tabla-listado td {
-    min-width: 15vw;
+    min-width: 13vw;
     width: 100%;
   }

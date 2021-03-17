@@ -406,15 +406,22 @@ function Embarque(props) {
   }
 
   function handleShowCancelar() {
-    const url = `${process.env.REACT_APP_API_URL}/Embarques/GetCancelarById/${state.idEmbarque}`;
     var today = new Date();
+    var hours = today.getHours();
+    var minutes = today.getMinutes();
+    var ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    var strTime = hours + ':' + minutes + ' ' + ampm;
+    const url = `${process.env.REACT_APP_API_URL}/Embarques/GetCancelarById/${state.idEmbarque}`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data.m_nSePuedeCancelar)
       setState({
         ...state,
         folioEmbarque: respuesta.data.m_nFolioEmbarque,
         sucursalCancelacion: dataSucursal.find(o => o.m_nIdSucursal == respuesta.data.IdSucursal).m_sSucursal,
-        fechaCancelacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear(),
+        fechaCancelacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" +today.getMinutes(),
         estatusEmbarque: dataEstatusEmbarque.find(o => o.m_nIdEstatusEmbarque == respuesta.data.m_nIdEstatusEmbarque).m_sEstatus,
         motivoCancelacion: respuesta.data.m_sMotivoCancelacion
       })
@@ -1197,7 +1204,8 @@ function Embarque(props) {
     );
 
     return (
-      <div className="col-md-12" style={{ overflowX: "scroll", height: "100%" }}>
+      <div className="wrapper-tabla" style={{height: state.height-270}}>
+        <div className="wrapper-tabla-2" >
         <table className="table tabla-listado" {...getTableProps()}>
           <thead>
             {headerGroups.map((headerGroup) => (
@@ -1254,6 +1262,7 @@ function Embarque(props) {
             )}
           </tbody>
         </table>
+        </div>
       </div>
     );
   }
@@ -2159,7 +2168,7 @@ function Embarque(props) {
           </div>
 
           <ul className="nav navStatica nav-tabs">
-            <li className={props.location.idRecoleccion != undefined ? "" : "activo"}>
+            <li className={props.location.idRecoleccion != undefined ? "" : "active"}>
               <a data-toggle="tab" href="#Listado">
                 <i className="fa fa-list" /> Listado
               </a>
@@ -2189,8 +2198,8 @@ function Embarque(props) {
               <div className="widget-wrap">
                 <div className="widget-content">
                   <form className="j-forms">
-                    <div className="form-content">
-                      <div className="col-sm-6 col-md-3 unit">
+                    <div className="row" style={{display: "flex"}}>
+                      <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
                         <label className="label">Fecha Inicial</label>
                         <div className="input">
                           <input
@@ -2203,7 +2212,7 @@ function Embarque(props) {
                         </div>
                       </div>
 
-                      <div className="col-sm-6 col-md-3 unit">
+                      <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
                         <label className="label">Fecha Final</label>
                         <div className="input">
                           <input
@@ -2216,7 +2225,7 @@ function Embarque(props) {
                         </div>
                       </div>
 
-                      <div className="col-sm-6 col-md-3 unit">
+                      <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
                         <label className="label">Sucursal</label>
                         <label className="input select">
                           <select
@@ -2240,7 +2249,7 @@ function Embarque(props) {
                         </label>
                       </div>
 
-                      <div className="col-sm-6 col-md-3 unit">
+                      <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
                         <label className="label">Estatus</label>
                         <label className="input select">
                           <select

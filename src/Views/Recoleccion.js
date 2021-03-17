@@ -322,13 +322,21 @@ function Recoleccion() {
   }
 
   function handleShowCancelar() {
+    var hours = today.getHours();
+    var minutes = today.getMinutes();
+    var ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    var strTime = hours + ':' + minutes + ' ' + ampm;
     const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetCancelarById/${state.idRecoleccion}`;
     axios.get(url, { headers }).then((respuesta) => {
       setState({
         ...state,
         folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
         sucursalCancelacion: dataSucursal.find(o => o.m_nIdSucursal == respuesta.data.m_nIdSucursal).m_sSucursal,
-        fechaCancelacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
+        fechaCancelacion: respuesta.data.m_nIdEstatusRecoleccion == "0" ? respuesta.data.m_dtFechaCancelacion :
+          today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + strTime,
         estatusRecoleccion: dataEstatusRecoleccion.find(o => o.m_nIdEstatusRecoleccion == respuesta.data.m_nIdEstatusRecoleccion).m_sEstatus,
         motivoCancelacion: respuesta.data.m_sMotivoCancelacion
       })
@@ -1152,95 +1160,97 @@ function Recoleccion() {
     );
 
     return (
-      <div className="col-md-12" style={{ overflowX: "scroll" }}>
-        <table className="table tabla-listado" {...getTableProps()}>
-          <thead>
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                <th style={{ verticalAlign: "top" }}>Acciones</th>
-                {headerGroup.headers.map((column) => (
-                  // Add the sorting props to control sorting. For this example
-                  // we can add them into the header props
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())} style={{ width: column.render("width") }}>
-                    {column.render("Name")}
-                    {/* Add a sort direction indicator */}
-                    <span>
-                      {column.isSorted ? (
-                        column.isSortedDesc ? (
-                          <i className="fa fa-caret-up" />
+      <div className="wrapper-tabla" style={{height: state.height-270}}>
+        <div className="wrapper-tabla-2">
+          <table className="table tabla-listado" {...getTableProps()}>
+            <thead>
+              {headerGroups.map((headerGroup) => (
+                <tr {...headerGroup.getHeaderGroupProps()}>
+                  <th style={{ verticalAlign: "top" }}>Acciones</th>
+                  {headerGroup.headers.map((column) => (
+                    // Add the sorting props to control sorting. For this example
+                    // we can add them into the header props
+                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                      {column.render("Name")}
+                      {/* Add a sort direction indicator */}
+                      <span>
+                        {column.isSorted ? (
+                          column.isSortedDesc ? (
+                            <i className="fa fa-caret-up" />
+                          ) : (
+                            <i className="fa fa-caret-down" />
+                          )
                         ) : (
-                          <i className="fa fa-caret-down" />
-                        )
-                      ) : (
-                        ""
-                      )}
-                    </span>
-                    <div>
-                      {column.canFilter ? column.render("Filter") : null}
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}
-                  onClick={handleSelectRow.bind(this, row.original.m_nIdRecoleccion)}
-                  className={state.idRecoleccion === row.original.m_nIdRecoleccion ? classes.seleccionado : classes.noSeleccionado}>
-                  <td>
-                    <div>
-                      <a
-                        href="#Agregar"
-                        role="tab"
-                        data-toggle="tab"
-                        onClick={() =>
-                          handleShowModificar(row.original.m_nIdRecoleccion)
-                        }
-                        className="btn btn-default btn-sm"
-                      >
-                        <i
-                          className="fa fa-pencil-square-o"
-                          style={{ color: "#F9A03E" }}
-                        />
-                      </a>
-                      <a
-                        href="#Agregar"
-                        role="tab"
-                        data-toggle="tab"
-                        className="btn btn-default btn-sm"
-                        onClick={() =>
-                          handleShowConsultar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i
-                          className="zmdi zmdi-delete"
-                          style={{ color: "#F30B0B" }}
-                        />
-                      </a>
-                    </div>
-                  </td>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                    );
-                  })}
+                          ""
+                        )}
+                      </span>
+                      <div>
+                        {column.canFilter ? column.render("Filter") : null}
+                      </div>
+                    </th>
+                  ))}
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              ))}
+            </thead>
+            <tbody {...getTableBodyProps()}>
+              {rows.map((row, i) => {
+                prepareRow(row);
+                return (
+                  <tr {...row.getRowProps()}
+                    onClick={handleSelectRow.bind(this, row.original.m_nIdRecoleccion)}
+                    className={state.idRecoleccion === row.original.m_nIdRecoleccion ? classes.seleccionado : classes.noSeleccionado}>
+                    <td>
+                      <div>
+                        <a
+                          href="#Agregar"
+                          role="tab"
+                          data-toggle="tab"
+                          onClick={() =>
+                            handleShowModificar(row.original.m_nIdRecoleccion)
+                          }
+                          className="btn btn-default btn-sm"
+                        >
+                          <i
+                            className="fa fa-pencil-square-o"
+                            style={{ color: "#F9A03E" }}
+                          />
+                        </a>
+                        <a
+                          href="#Agregar"
+                          role="tab"
+                          data-toggle="tab"
+                          className="btn btn-default btn-sm"
+                          onClick={() =>
+                            handleShowConsultar(row.original.m_nIdRecoleccion)
+                          }
+                        >
+                          <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
+                        </a>
+                        <a
+                          href="#"
+                          className="btn btn-default btn-sm"
+                          onClick={() =>
+                            handleEliminar(row.original.m_nIdRecoleccion)
+                          }
+                        >
+                          <i
+                            className="zmdi zmdi-delete"
+                            style={{ color: "#F30B0B" }}
+                          />
+                        </a>
+                      </div>
+                    </td>
+                    {row.cells.map((cell) => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }
@@ -2057,16 +2067,16 @@ function Recoleccion() {
   });
 
   if (redirect) {
-    if(data.find( (o) => o.m_nIdRecoleccion == state.idRecoleccion).m_nIdEmbarque != 0){
+    if (data.find((o) => o.m_nIdRecoleccion == state.idRecoleccion).m_nIdEmbarque != 0) {
       showSuccess("Recolección ya tiene Embarque")
     } else {
-    return (
-      <Redirect push to={{
-        pathname: '/Embarque',
-        idRecoleccion: state.idRecoleccion,
-      }}
-      />
-    )
+      return (
+        <Redirect push to={{
+          pathname: '/Embarque',
+          idRecoleccion: state.idRecoleccion,
+        }}
+        />
+      )
     }
   }
 
@@ -2241,8 +2251,8 @@ function Recoleccion() {
             <div id="Listado" className="tab-pane fade in active">
               <div className="widget-wrap">
                 <form className="j-forms">
-                  <div className="form-content">
-                    <div className="col-sm-6 col-md-3 unit">
+                  <div className="row" style={{display: "flex"}}>
+                    <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
                       <label className="label">Fecha Inicial</label>
                       <div className="input">
                         <input
@@ -2255,7 +2265,7 @@ function Recoleccion() {
                       </div>
                     </div>
 
-                    <div className="col-sm-6 col-md-3 unit">
+                    <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
                       <label className="label">Fecha Final</label>
                       <div className="input">
                         <input
@@ -2269,7 +2279,7 @@ function Recoleccion() {
 
                     </div>
 
-                    <div className="col-sm-6 col-md-3 unit">
+                    <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
                       <label className="label">Sucursal</label>
                       <label className="input select">
                         <select
@@ -2293,7 +2303,7 @@ function Recoleccion() {
                       </label>
                     </div>
 
-                    <div className="col-sm-6 col-md-3 unit">
+                    <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
                       <label className="label">Estatus</label>
                       <label className="input select">
                         <select
@@ -3024,7 +3034,7 @@ function Recoleccion() {
                                       renderInput={(params) => (
                                         <div>
                                           <TextField
-                                              required
+                                            required
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
@@ -3139,7 +3149,7 @@ function Recoleccion() {
                                       renderInput={(params) => (
                                         <div>
                                           <TextField
-                                              required
+                                            required
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
@@ -3283,7 +3293,7 @@ function Recoleccion() {
                                       renderInput={(params) => (
                                         <div>
                                           <TextField
-                                              required
+                                            required
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
@@ -3415,7 +3425,7 @@ function Recoleccion() {
                                             renderInput={(params) => (
                                               <div>
                                                 <TextField
-                                              required
+                                                  required
                                                   {...params}
                                                   InputProps={{
                                                     ...params.InputProps,
@@ -3483,9 +3493,9 @@ function Recoleccion() {
                                       </div>
 
                                       <div className="col-sm-6 col-md-4 unit" >
-                                      <label className="label">Zona</label>
+                                        <label className="label">Zona</label>
 
-                                      <label className="input select">
+                                        <label className="input select">
                                           <select
                                             className="form-control"
                                             required
@@ -3512,7 +3522,7 @@ function Recoleccion() {
 
 
 
-                                          
+
                                       </div>
 
                                       <div className="col-sm-6 col-md-6  unit" >
@@ -3617,7 +3627,7 @@ function Recoleccion() {
                                             renderInput={(params) => (
                                               <div>
                                                 <TextField
-                                              required
+                                                  required
                                                   {...params}
                                                   InputProps={{
                                                     ...params.InputProps,
@@ -3695,9 +3705,9 @@ function Recoleccion() {
                                             onChange={handleChange}
                                             id="zonaEntrega"
                                           >
-                                                                                        <option value="">Selecciona</option>
+                                            <option value="">Selecciona</option>
 
-                                             {dataZona.map((zona) => (
+                                            {dataZona.map((zona) => (
                                               <option
                                                 key={zona.m_nIdZona}
                                                 value={zona.m_nIdZona}

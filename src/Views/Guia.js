@@ -888,7 +888,7 @@ function handleImprmir2()
   ]);
 
   useEffect(value => {
-    if(props.location.idEmbarque != undefined){
+    if (props.location.idEmbarque != undefined) {
       const url = `${process.env.REACT_APP_API_URL}/Embarques/GetById/${props.location.idEmbarque}`;
       axios.get(url, { headers }).then(respuesta => {
         setState({
@@ -902,14 +902,14 @@ function handleImprmir2()
         const paquetesTemp = state.paquetes;
         const sobresTemp = state.sobres;
         //console.log(paquetesTemp);
-  
+
         for (var i = 0; i < respuesta.data.m_arrPaquetes.length; i++) {
-  
+
           if (respuesta.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle === "" || respuesta.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle === "0")
             continue;
-  
+
           paquetesTemp.push({
-  
+
             "peso": respuesta.data.m_arrPaquetes[i].m_xPeso,
             "largo": respuesta.data.m_arrPaquetes[i].m_xLargo,
             "ancho": respuesta.data.m_arrPaquetes[i].m_xAncho,
@@ -924,12 +924,12 @@ function handleImprmir2()
           });
         }
         paquetesTemp.splice(0, 1);
-  
+
         for (var i = 0; i < respuesta.data.m_arrSobres.length; i++) {
-  
+
           if (respuesta.data.m_arrSobres[i].m_nIdEmbarqueDetalle == "" || respuesta.data.m_arrSobres[i].m_nIdEmbarqueDetalle == "0")
             continue;
-  
+
           sobresTemp.push({
             "descripcionSobre": respuesta.data.m_arrSobres[i].m_sDescripcion,
             "id": respuesta.data.m_arrSobres[i].m_nIdEmbarqueDetalle
@@ -973,7 +973,7 @@ function handleImprmir2()
           setDataEmbarque(respuesta.data)
         })
       });
-      }
+    }
     if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
       showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
@@ -1488,60 +1488,62 @@ function handleImprmir2()
     )
 
     return (
-      <div className="col-md-12" style={{ overflowX: "scroll", height: "100%" }}>
-        <table className="table tabla-listado" {...getTableProps()}>
-          <thead className="">
+      <div className="wrapper-tabla" style={{height: state.height-270}}>
+        <div className="wrapper-tabla-2" >
+          <table className="table tabla-listado" {...getTableProps()}>
+            <thead>
 
-            {headerGroups.map(headerGroup => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
-                {headerGroup.headers.map(column => (
+              {headerGroups.map(headerGroup => (
+                <tr {...headerGroup.getHeaderGroupProps()}>
+                  <th>Acciones</th>
+                  {headerGroup.headers.map(column => (
 
-                  // Add the sorting props to control sorting. For this example
-                  // we can add them into the header props
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    {column.render('Name')}
-                    {/* Add a sort direction indicator */}
-                    <span>
-                      {column.isSorted
-                        ? column.isSortedDesc
-                          ? <i className="fa fa-caret-up" />
-                          : <i className="fa fa-caret-down" />
-                        : ''}
-                    </span>
-                    <div>{column.canFilter ? column.render('Filter') : null}</div>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map(
-              (row, i) => {
-                prepareRow(row);
-                return (
-                  <tr {...row.getRowProps()}
-                    onClick={handleSelectRow.bind(this, row.original.m_nIdGuia)}
-                    className={state.idGuia === row.original.m_nIdGuia ? classes.seleccionado : classes.noSeleccionado}>
+                    // Add the sorting props to control sorting. For this example
+                    // we can add them into the header props
+                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                      {column.render('Name')}
+                      {/* Add a sort direction indicator */}
+                      <span>
+                        {column.isSorted
+                          ? column.isSortedDesc
+                            ? <i className="fa fa-caret-up" />
+                            : <i className="fa fa-caret-down" />
+                          : ''}
+                      </span>
+                      <div>{column.canFilter ? column.render('Filter') : null}</div>
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody {...getTableBodyProps()}>
+              {rows.map(
+                (row, i) => {
+                  prepareRow(row);
+                  return (
+                    <tr {...row.getRowProps()}
+                      onClick={handleSelectRow.bind(this, row.original.m_nIdGuia)}
+                      className={state.idGuia === row.original.m_nIdGuia ? classes.seleccionado : classes.noSeleccionado}>
 
-                    <td>
-                      <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdGuia))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdGuia))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdGuia))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
-                      </div>
-                    </td>
-                    {row.cells.map(cell => {
-                      return (
-                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                      )
-                    })}
-                  </tr>
-                )
-              }
-            )}
-          </tbody>
-        </table>
+                      <td>
+                        <div>
+                          <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdGuia))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                          <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdGuia))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                          <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdGuia))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                        </div>
+                      </td>
+                      {row.cells.map(cell => {
+                        return (
+                          <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                        )
+                      })}
+                    </tr>
+                  )
+                }
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     )
   }
@@ -2314,10 +2316,9 @@ function handleImprmir2()
             <div id="Listado" className={props.location.idEmbarque != undefined ? "tab-pane fade" : "tab-pane fade in active"}>
               <div className="widget-wrap">
                 <div className="widget-content">
-                  <div>
                     <form className="j-forms">
-                      <div className="form-content">
-                        <div className="col-sm-6 col-md-3 unit">
+                      <div className="row" style={{display: "flex"}}>
+                        <div className="col-sm-6 col-md-3 unit" style={{ paddingLeft: "0px" }}>
                           <label className="label">
                             Fecha Inicial
                         </label>
@@ -2332,7 +2333,7 @@ function handleImprmir2()
                           </div>
                         </div>
 
-                        <div className="col-sm-6 col-md-3 unit">
+                        <div className="col-sm-6 col-md-3 unit" style={{ paddingLeft: "0px" }}>
                           <label className="label">
                             Fecha Final
                         </label>
@@ -2347,7 +2348,7 @@ function handleImprmir2()
                           </div>
                         </div>
 
-                        <div className="col-sm-6 col-md-3 unit">
+                        <div className="col-sm-6 col-md-3 unit" style={{ paddingLeft: "0px" }}>
                           <label className="label">
                             Sucursal
                         </label>
@@ -2372,7 +2373,7 @@ function handleImprmir2()
                           </div>
                         </div>
 
-                        <div className="col-sm-6 col-md-3 unit">
+                        <div className="col-sm-6 col-md-3 unit" style={{ paddingLeft: "0px" }}>
                           <label className="label">
                             Estatus
                         </label>
@@ -2401,7 +2402,6 @@ function handleImprmir2()
 
                       </div>
                     </form>
-                  </div>
 
                   <div className="row">
                     <Table columns={columns} data={data} />
@@ -2412,7 +2412,7 @@ function handleImprmir2()
               </div>
             </div>
             <div id="Agregar" className={props.location.idEmbarque != undefined ? "tab-pane fade in active" : "tab-pane fade"}>
-              <form className="j-forms">
+              <form className="j-forms" onSubmit={handleAceptar}>
                 <div className="form-content">
 
                   <div
@@ -2426,9 +2426,6 @@ function handleImprmir2()
                       marginBottom: "10px"
                     }}
                   >
-
-
-
 
                     <div className="row">
                       <div
@@ -2495,9 +2492,6 @@ function handleImprmir2()
                     </div>
                   </div>
 
-
-
-
                   <div className="widget-wrap" id="informacionGeneral">
                     <div className="widget-header">
                       <h2>Información General</h2>
@@ -2508,210 +2502,201 @@ function handleImprmir2()
                       <div className="widget-content">
                         <div className="row">
                           <div className="col-md-12">
-                            <form className="j-forms">
-                              <div className="form-content">
 
-                                <div className="col-sm-4 col-md-2-5 unit">
-                                  <label className="label">
-                                    Sucursal
+                            <div className="col-sm-4 col-md-2-5 unit">
+                              <label className="label">
+                                Sucursal
                           </label>
-                                  <select
-                                    className="form-control"
-                                    required
-                                    onChange={event => (cargaEmbarqueSucursal(event.target.value))}
-                                    id="idSucursal"
-                                    read="true"
-                                    value={state.idSucursal}
-                                    disabled="disabled"
-                                  >
-                                    <option value="0">
-                                      Seleccionar
+                              <select
+                                className="form-control"
+                                required
+                                onChange={event => (cargaEmbarqueSucursal(event.target.value))}
+                                id="idSucursal"
+                                read="true"
+                                value={state.idSucursal}
+                                disabled="disabled"
+                              >
+                                <option value="0">
+                                  Seleccionar
                             </option>
-                                    {dataSucursal.map(
-                                      (sucursal) => (
-                                        <option key={sucursal.m_nIdSucursal} value={sucursal.m_nIdSucursal}>
-                                          {
-                                            sucursal.m_sSucursal
-                                          }
-                                        </option>
-                                      )
-                                    )}
-                                  </select>
-                                </div>
-                                <div className="col-sm-4 col-md-2-5 unit">
-                                  <label className="label">
-                                    Folio Guia
+                                {dataSucursal.map(
+                                  (sucursal) => (
+                                    <option key={sucursal.m_nIdSucursal} value={sucursal.m_nIdSucursal}>
+                                      {
+                                        sucursal.m_sSucursal
+                                      }
+                                    </option>
+                                  )
+                                )}
+                              </select>
+                            </div>
+                            <div className="col-sm-4 col-md-2-5 unit">
+                              <label className="label">
+                                Folio Guia
                           </label>
-                                  <div className="input">
-                                    <input
-                                      onChange={handleChange}
-                                      className="form-control"
-                                      type="text"
-                                      placeholder={state.folioGuía}
-                                      readOnly={state.agregar == "Consultar"}
-                                      id="folioGuia"
-                                      disabled="disabled"
-                                    />
-                                  </div>
-                                </div>
-                                <div className="col-sm-4 col-md-2-5 unit">
-                                  <label className="label">
-                                    Folio Embarque
-                          </label>
-                                  <select
-                                    className="form-control"
-                                    required
-                                    onChange={event => (handleEmbarque(event.target.value))}
-                                    id="idEmbarque"
-                                    read="true"
-                                    value={state.idEmbarque}
-                                    disabled={state.agregar == "Consultar"}
-
-                                  >
-                                    <option value="0">
-                                      Seleccionar
-                            </option>
-                                    {dataEmbarque.map(
-                                      (embarque) => (
-                                        <option key={embarque.m_nIdEmbarque} value={embarque.m_nIdEmbarque} >
-                                          {
-                                            embarque.m_nFolioEmbarque
-                                          }
-                                        </option>
-                                      )
-                                    )}
-                                  </select>
-                                </div>
-                                <div className="col-sm-4 col-md-2-5 unit">
-                                  <label className="label">
-                                    Folio Informe
-                          </label>
-                                  <div className="input">
-                                    <input
-                                      onChange={handleChange}
-                                      className="form-control"
-                                      type="text"
-                                      placeholder={state.folioInforme}
-                                      readOnly={state.agregar == "Consultar"}
-                                      id="folioInforme"
-                                      disabled="disabled"
-                                    />
-                                  </div>
-                                </div>
-                                <div className="col-sm-4 col-md-2-5 unit">
-                                  <label className="label">
-                                    Tracking
-                          </label>
-                                  <div className="input">
-                                    <input
-                                      onChange={handleChange}
-                                      className="form-control"
-                                      type="text"
-                                      placeholder={state.tracking}
-                                      readOnly={state.agregar == "Consultar"}
-                                      id="tracking"
-                                      disabled="disabled"
-                                    />
-                                  </div>
-                                </div>
-
-                                <div className="col-sm-4 col-md-2-5 unit">
-                                  <label className="label">
-                                    Fecha / Hora
-                          </label>
-                                  <div className="input">
-                                    <input
-                                      onChange={handleChange}
-                                      className="form-control"
-                                      type="text"
-                                      placeholder={state.fecha}
-                                      readOnly={state.agregar == "Consultar"}
-                                      id="fecha"
-                                      disabled="disabled"
-                                    />
-                                  </div>
-                                </div>
-                                <div className="col-sm-4 col-md-2-5 unit">
-                                  <label className="label">
-                                    Estatus de la Guia
-                          </label>
-                                  <select
-                                    className="form-control"
-                                    required
-                                    onChange={handleChange}
-                                    id="idEstatusGuia"
-                                    read="true"
-                                    value={state.idEstatusGuia}
-                                    disabled={state.agregar == "Consultar"}
-                                  >
-                                    <option value="0">
-                                      Seleccionar
-                            </option>
-                                    {dataEstatusGuia.map(
-                                      (estatusGuia) => (
-                                        <option key={estatusGuia.m_nIdEstatusGuia} value={estatusGuia.m_nIdEstatusGuia} >
-                                          {
-                                            estatusGuia.m_sEstatus
-                                          }
-                                        </option>
-                                      )
-                                    )}
-                                  </select>
-
-                                </div>
-
-
-
-                                <div className="col-sm-4 col-md-2-5 unit">
-                                  <label className="label">
-                                    Moneda
-                          </label>
-                                  <select
-                                    className="form-control"
-                                    required
-                                    onChange={event => (cargaEmbarqueMoneda(event.target.value))}
-                                    id="idMoneda"
-                                    read="true"
-                                    value={state.idMoneda}
-                                    disabled={state.agregar == "Consultar"}
-                                  >
-                                    <option value="0">
-                                      Seleccionar
-                            </option>
-                                    {dataMoneda.map(
-                                      (moneda) => (
-                                        <option key={moneda.m_nIdMoneda} value={moneda.m_nIdMoneda}>
-                                          {
-                                            moneda.m_sMoneda
-                                          }
-                                        </option>
-                                      )
-                                    )}
-                                  </select>
-                                </div>
-
-
-
-
-                                <div className="col-sm-4 col-md-2-5 unit">
-                                  <label className="label">
-                                    Tipo de Cambio
-                          </label>
-                                  <div className="input">
-                                    <input
-                                      onChange={handleChange}
-                                      className="form-control"
-                                      type="text"
-                                      placeholder={state.tipoCambio}
-                                      readOnly={state.agregar == "Consultar"}
-                                      id="tipoCambio"
-                                      disabled="disabled"
-                                    />
-                                  </div>
-                                </div>
-
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  placeholder={state.folioGuía}
+                                  readOnly={state.agregar == "Consultar"}
+                                  id="folioGuia"
+                                  disabled="disabled"
+                                />
                               </div>
-                            </form>
+                            </div>
+                            <div className="col-sm-4 col-md-2-5 unit">
+                              <label className="label">
+                                Folio Embarque
+                          </label>
+                              <select
+                                className="form-control"
+                                required
+                                onChange={event => (handleEmbarque(event.target.value))}
+                                id="idEmbarque"
+                                read="true"
+                                value={state.idEmbarque}
+                                disabled={state.agregar == "Consultar"}
+
+                              >
+                                <option value="0">
+                                  Seleccionar
+                            </option>
+                                {dataEmbarque.map(
+                                  (embarque) => (
+                                    <option key={embarque.m_nIdEmbarque} value={embarque.m_nIdEmbarque} >
+                                      {
+                                        embarque.m_nFolioEmbarque
+                                      }
+                                    </option>
+                                  )
+                                )}
+                              </select>
+                            </div>
+                            <div className="col-sm-4 col-md-2-5 unit">
+                              <label className="label">
+                                Folio Informe
+                          </label>
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  placeholder={state.folioInforme}
+                                  readOnly={state.agregar == "Consultar"}
+                                  id="folioInforme"
+                                  disabled="disabled"
+                                />
+                              </div>
+                            </div>
+                            <div className="col-sm-4 col-md-2-5 unit">
+                              <label className="label">
+                                Tracking
+                          </label>
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  placeholder={state.tracking}
+                                  readOnly={state.agregar == "Consultar"}
+                                  id="tracking"
+                                  disabled="disabled"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="col-sm-4 col-md-2-5 unit">
+                              <label className="label">
+                                Fecha / Hora
+                          </label>
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  placeholder={state.fecha}
+                                  readOnly={state.agregar == "Consultar"}
+                                  id="fecha"
+                                  disabled="disabled"
+                                />
+                              </div>
+                            </div>
+                            <div className="col-sm-4 col-md-2-5 unit">
+                              <label className="label">
+                                Estatus de la Guia
+                          </label>
+                              <select
+                                className="form-control"
+                                required
+                                onChange={handleChange}
+                                id="idEstatusGuia"
+                                read="true"
+                                value={state.idEstatusGuia}
+                                disabled={state.agregar == "Consultar"}
+                              >
+                                <option value="0">
+                                  Seleccionar
+                            </option>
+                                {dataEstatusGuia.map(
+                                  (estatusGuia) => (
+                                    <option key={estatusGuia.m_nIdEstatusGuia} value={estatusGuia.m_nIdEstatusGuia} >
+                                      {
+                                        estatusGuia.m_sEstatus
+                                      }
+                                    </option>
+                                  )
+                                )}
+                              </select>
+
+                            </div>
+
+                            <div className="col-sm-4 col-md-2-5 unit">
+                              <label className="label">
+                                Moneda
+                          </label>
+                              <select
+                                className="form-control"
+                                required
+                                onChange={event => (cargaEmbarqueMoneda(event.target.value))}
+                                id="idMoneda"
+                                read="true"
+                                value={state.idMoneda}
+                                disabled={state.agregar == "Consultar"}
+                              >
+                                <option value="0">
+                                  Seleccionar
+                            </option>
+                                {dataMoneda.map(
+                                  (moneda) => (
+                                    <option key={moneda.m_nIdMoneda} value={moneda.m_nIdMoneda}>
+                                      {
+                                        moneda.m_sMoneda
+                                      }
+                                    </option>
+                                  )
+                                )}
+                              </select>
+                            </div>
+
+                            <div className="col-sm-4 col-md-2-5 unit">
+                              <label className="label">
+                                Tipo de Cambio
+                          </label>
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  placeholder={state.tipoCambio}
+                                  readOnly={state.agregar == "Consultar"}
+                                  id="tipoCambio"
+                                  disabled="disabled"
+                                />
+                              </div>
+                            </div>
+
                           </div>
                         </div>
                       </div>
@@ -3258,10 +3243,17 @@ function handleImprmir2()
 
                           <div className="form-footer" className="col-md-12">
 
-                            <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
+                            <button
+                              href="#Listado"
+                              role="tab"
+                              data-toggle="tab"
+                              className="btn btn-secondary secondary-btn"
                             >
-                              Cancelar</button>
-                            <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
+                              Cancelar
+                            </button>
+                            <button type="submit" className="btn btn-primary primary-btn" disabled={state.agregar == "Consultar"}>
+                              Aceptar
+                            </button>
                           </div>
 
                         </div>
