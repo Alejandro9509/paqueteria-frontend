@@ -88,7 +88,8 @@ function Rutas(props) {
         tipoUnidad: null,
         tipoViaje: null,
         trayecto: "PERMANENTE",
-        activa: false
+        activa: false,
+        CreadoPor: localStorage.getItem("UsuarioId"),
     })
     const [map, setMap] = useState(null)
 
@@ -217,12 +218,13 @@ function Rutas(props) {
             "m_nIdTipoViaje": state.tipoViaje,
             "m_nIdClasificacionViaje": state.calificacion,
             "m_bTipoTrayecto": state.tipoUnidad,
-            ".m_rHoras": state.horas,
+            "m_rHoras": state.horas,
             "m_rETA": state.eta,
             "m_rKM": state.kilometros,
             "m_rMillas": state.millas,
             "m_bActiva": state.activa,
-            ".m_bPermanente": state.trayecto === "PERMANENTE",
+            "m_nCreadoPor": state.CreadoPor,
+            "m_bPermanente": state.trayecto === "PERMANENTE",
             "m_bTrazoLibre": state.isManual,
             "m_xnOrigenLatitud": state.points[0].location[1],
             "m_xnOrigenLongitud": state.points[0].location[0],
@@ -230,6 +232,7 @@ function Rutas(props) {
             "m_xnDestinoLongitud": state.points[state.points.length - 1].location[0],
 
         }
+        console.log(JSON.stringify(params));
         console.log(params)
         if (state.idRuta != 0) {
             const url = `${process.env.REACT_APP_API_URL}/Rutas/Modificar/${state.idRuta}`;
