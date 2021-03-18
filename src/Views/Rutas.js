@@ -214,10 +214,12 @@ function Rutas(props) {
             "m_nIdFolio": state.folio,
             "m_sOrigen": state.origin,
             "m_sDestino": state.destiny,
-            "m_sDescripcion": state.descripcion,
+            "m_sDescripcion": state.description,
             "m_nIdTipoViaje": state.tipoViaje,
-            "m_nIdClasificacionViaje": state.calificacion,
-            "m_bTipoTrayecto": state.tipoUnidad,
+            //"m_nIdClasificacionViaje": state.clasificacion,
+            "m_nIdClasificacionViaje": 1,
+            "m_nIdTipoUnidad": state.tipoUnidad,
+            "m_bTipoTrayecto": 1,
             "m_rHoras": state.horas,
             "m_rETA": state.eta,
             "m_rKM": state.kilometros,
@@ -271,7 +273,7 @@ function Rutas(props) {
     };
 
     function getCalificacionesData() {
-        const url = `${process.env.REACT_APP_API_URL}/CalificacionViaje/GetListado`;
+        const url = `${process.env.REACT_APP_API_URL}/ClasificacionViajes/GetListado`;
         axios.get(url, { headers }).then(respuesta => {
             console.log(respuesta.data)
             setCalificaciones(respuesta.data)
@@ -924,7 +926,7 @@ function Rutas(props) {
                                                                                     value={state.description}
                                                                                     name={"description"}
                                                                                     onChange={handleChange}
-                                                                                    id="descripcion"
+                                                                                    id="description"
                                                                                 />
                                                                             </div>
                                                                         </div>
@@ -967,10 +969,10 @@ function Rutas(props) {
                                                                                 <select
                                                                                     className="form-control"
                                                                                     required="false"
-                                                                                    value={state.calificacion}
+                                                                                    value={state.clasificacion}
                                                                                     disabled={state.agregar == "Consultar"}
                                                                                     onChange={handleChange}
-                                                                                    name="calificacion"
+                                                                                    name="clasificacion"
                                                                                 >
                                                                                     <option value="0">Seleccionar</option>
                                                                                     
