@@ -975,7 +975,7 @@ function Rutas(props) {
                                                                                     name="clasificacion"
                                                                                 >
                                                                                     <option value="0">Seleccionar</option>
-                                                                                    
+
                                                                                 </select>
                                                                                 <i></i>
                                                                             </label>
@@ -1186,12 +1186,19 @@ function Rutas(props) {
                                                   </label>
 
                                                                     </div>
-
-
+                                                                    <label className="label">
+                                                                    Navegación
+                                                  </label>
+                                                                        
+                                                        <NavigationList indications={state.route ? state.route.events : []} />
+                                                                    
 
                                                                 </div>
-                                                                <div className="col-md-8 unit">
-
+                                                                <div className="col-md-8 col-sm-12">
+                                                                    {
+                                                                        state.showMap &&
+                                                                        <DisplayMapClass markers={state.points} isManual={state.isManual} setNewPoint={setPoint} route={state.route} polygon={state.polygon} setMap={setMap} />
+                                                                    }
 
                                                                 </div>
                                                             </div>
@@ -1199,20 +1206,6 @@ function Rutas(props) {
 
 
                                                         </div>
-                                                    </div>
-                                                    <div className="row">
-                                                        <div className="col-md-4 col-sm-12" >
-                                                            Navegación
-                                                        <NavigationList indications={state.route ? state.route.events : []} />
-                                                        </div>
-                                                        <div className="col-md-8 col-sm-12">
-                                                            {
-                                                                state.showMap &&
-                                                                <DisplayMapClass markers={state.points} isManual={state.isManual} setNewPoint={setPoint} route={state.route} polygon={state.polygon} setMap={setMap} />
-                                                            }
-
-                                                        </div>
-
                                                     </div>
 
 
