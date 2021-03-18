@@ -23,6 +23,7 @@ import { useHistory, Redirect } from "react-router-dom";
 
 import Noty from 'noty';
 import { Dialog, DialogActions, DialogContent } from "@material-ui/core";
+import { ToggleButtonGroup } from "@material-ui/lab";
 
 function showSuccess(mensaje) {
   new Noty({
@@ -421,7 +422,7 @@ function Embarque(props) {
         ...state,
         folioEmbarque: respuesta.data.m_nFolioEmbarque,
         sucursalCancelacion: dataSucursal.find(o => o.m_nIdSucursal == respuesta.data.IdSucursal).m_sSucursal,
-        fechaCancelacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" +today.getMinutes(),
+        fechaCancelacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
         estatusEmbarque: dataEstatusEmbarque.find(o => o.m_nIdEstatusEmbarque == respuesta.data.m_nIdEstatusEmbarque).m_sEstatus,
         motivoCancelacion: respuesta.data.m_sMotivoCancelacion
       })
@@ -1031,7 +1032,7 @@ function Embarque(props) {
     }
   }, [dataRemitenteDestinatario, dataCiudad, dataCodigoPostal, dataOperador, dataUnidad, dataTipoUnidad]);
 
-  useEffect( (value) => {
+  useEffect((value) => {
     getAllData()
   }, [])
 
@@ -1153,16 +1154,25 @@ function Embarque(props) {
     column: { filterValue, preFilteredRows, setFilter },
   }) {
     const count = preFilteredRows.length;
-
+    const [showResults, setShowResults] = React.useState(false)
+    const onClick = () => setShowResults(!showResults)
     return (
-      <input
-        className="form-control"
-        value={filterValue || ""}
-        onChange={(e) => {
-          setFilter(e.target.value || undefined);
-        }}
-        value={`Buscar ${count} registros...`}
-      />
+      <div style={{display: "flex"}}>
+        <a onClick={ onClick}>
+          <i className="fa fa-search"/>
+        </a>
+        <br></br>
+        <input
+          className="form-control"
+          type={showResults ? "" : "hidden"}
+          value={filterValue || ""}
+          onChange={(e) => {
+            setFilter(e.target.value || undefined);
+          }}
+          placeholder={`Buscar ${count} registros...`}
+        />
+      </div>
+
     );
   }
 
@@ -1204,64 +1214,64 @@ function Embarque(props) {
     );
 
     return (
-      <div className="wrapper-tabla" style={{height: state.height-270}}>
+      <div className="wrapper-tabla" style={{ height: state.height - 270 }}>
         <div className="wrapper-tabla-2" >
-        <table className="table tabla-listado" {...getTableProps()}>
-          <thead>
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()} >
-                <th>Acciones</th>
-                {headerGroup.headers.map((column) => (
-                  // Add the sorting props to control sorting. For this example
-                  // we can add them into the header props
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    {column.render("Name")}
-                    {/* Add a sort direction indicator */}
-                    <span>
-                      {column.isSorted ? (
-                        column.isSortedDesc ? (
-                          <i className="fa fa-caret-up" />
+          <table className="table tabla-listado" {...getTableProps()}>
+            <thead>
+              {headerGroups.map((headerGroup) => (
+                <tr {...headerGroup.getHeaderGroupProps()} >
+                  <th>Acciones</th>
+                  {headerGroup.headers.map((column) => (
+                    // Add the sorting props to control sorting. For this example
+                    // we can add them into the header props
+                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                      {column.render("Name")}
+                      {/* Add a sort direction indicator */}
+                      <span>
+                        {column.isSorted ? (
+                          column.isSortedDesc ? (
+                            <i className="fa fa-caret-up" />
+                          ) : (
+                            <i className="fa fa-caret-down" />
+                          )
                         ) : (
-                          <i className="fa fa-caret-down" />
-                        )
-                      ) : (
-                        ""
-                      )}
-                    </span>
-                    <div>
-                      {column.canFilter ? column.render("Filter") : null}
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map(
-              (row, i) => {
-                prepareRow(row);
-                return (
-                  <tr {...row.getRowProps()}
-                    onClick={handleSelectRow.bind(this, row.original.m_nIdEmbarque)}
-                    className={state.idEmbarque === row.original.m_nIdEmbarque ? classes.seleccionado : classes.noSeleccionado}>
-                    <td>
-                      <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdEmbarque))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdEmbarque))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdEmbarque))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                          ""
+                        )}
+                      </span>
+                      <div style={{display: "flex"}}>
+                        {column.canFilter ? column.render("Filter") : null}
                       </div>
-                    </td>
-                    {row.cells.map(cell => {
-                      return (
-                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                      )
-                    })}
-                  </tr>
-                )
-              }
-            )}
-          </tbody>
-        </table>
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody {...getTableBodyProps()}>
+              {rows.map(
+                (row, i) => {
+                  prepareRow(row);
+                  return (
+                    <tr {...row.getRowProps()}
+                      onClick={handleSelectRow.bind(this, row.original.m_nIdEmbarque)}
+                      className={state.idEmbarque === row.original.m_nIdEmbarque ? classes.seleccionado : classes.noSeleccionado}>
+                      <td>
+                        <div>
+                          <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdEmbarque))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E"}} /></a>
+                          <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.original.m_nIdEmbarque))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                          <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.original.m_nIdEmbarque))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                        </div>
+                      </td>
+                      {row.cells.map(cell => {
+                        return (
+                          <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                        )
+                      })}
+                    </tr>
+                  )
+                }
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
     );
@@ -2198,8 +2208,8 @@ function Embarque(props) {
               <div className="widget-wrap">
                 <div className="widget-content">
                   <form className="j-forms">
-                    <div className="row" style={{display: "flex"}}>
-                      <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
+                    <div className="row" style={{ display: "flex" }}>
+                      <div className="col-sm-6 col-md-3 " style={{ paddingLeft: "0px" }}>
                         <label className="label">Fecha Inicial</label>
                         <div className="input">
                           <input
@@ -2212,7 +2222,7 @@ function Embarque(props) {
                         </div>
                       </div>
 
-                      <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
+                      <div className="col-sm-6 col-md-3 " style={{ paddingLeft: "0px" }}>
                         <label className="label">Fecha Final</label>
                         <div className="input">
                           <input
@@ -2225,7 +2235,7 @@ function Embarque(props) {
                         </div>
                       </div>
 
-                      <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
+                      <div className="col-sm-6 col-md-3 " style={{ paddingLeft: "0px" }}>
                         <label className="label">Sucursal</label>
                         <label className="input select">
                           <select
@@ -2249,7 +2259,7 @@ function Embarque(props) {
                         </label>
                       </div>
 
-                      <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
+                      <div className="col-sm-6 col-md-3 " style={{ paddingLeft: "0px" }}>
                         <label className="label">Estatus</label>
                         <label className="input select">
                           <select
@@ -2610,7 +2620,7 @@ function Embarque(props) {
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
-                                                  required
+                                              required
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
@@ -2721,7 +2731,7 @@ function Embarque(props) {
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
-                                                  required
+                                              required
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
@@ -2798,7 +2808,7 @@ function Embarque(props) {
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
-                                                  required
+                                              required
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
@@ -2898,7 +2908,7 @@ function Embarque(props) {
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
-                                                  required
+                                              required
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
@@ -2989,7 +2999,7 @@ function Embarque(props) {
                                       renderInput={(params) => (
                                         <div>
                                           <TextField
-                                                  required
+                                            required
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
@@ -3105,7 +3115,7 @@ function Embarque(props) {
                                       renderInput={(params) => (
                                         <div>
                                           <TextField
-                                                  required
+                                            required
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
@@ -3177,7 +3187,7 @@ function Embarque(props) {
                                       renderInput={(params) => (
                                         <div>
                                           <TextField
-                                                  required
+                                            required
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
@@ -3278,7 +3288,7 @@ function Embarque(props) {
                                       renderInput={(params) => (
                                         <div>
                                           <TextField
-                                                  required
+                                            required
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
@@ -3620,7 +3630,7 @@ function Embarque(props) {
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
-                                                  required
+                                              required
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
@@ -3697,7 +3707,7 @@ function Embarque(props) {
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
-                                                  required
+                                              required
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
@@ -3775,7 +3785,7 @@ function Embarque(props) {
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
-                                                  required
+                                              required
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,

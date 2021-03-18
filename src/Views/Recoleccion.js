@@ -1120,16 +1120,28 @@ function Recoleccion() {
     column: { filterValue, preFilteredRows, setFilter },
   }) {
     const count = preFilteredRows.length;
-
+    const [showResults, setShowResults] = React.useState(false)
+    const onClick = () => setShowResults(!showResults)
     return (
-      <input
-        className="form-control"
-        value={filterValue || ""}
-        onChange={(e) => {
-          setFilter(e.target.value || undefined);
-        }}
-        placeholder={`Buscar ${count} registros...`}
-      />
+      <div style={{ display: "flex" }}>
+        <span style={{display: "block", float: "right" }}>
+          <a onClick={onClick}>
+            <i className="fa fa-search" />
+          </a>
+        </span>
+        <br></br>
+        <span style={{display: "block"}}>
+          <input
+            className="form-control"
+            type={showResults ? "" : "hidden"}
+            value={filterValue || ""}
+            onChange={(e) => {
+              setFilter(e.target.value || undefined);
+            }}
+            placeholder={`Buscar ${count} registros...`}
+          />
+        </span>
+      </div>
     );
   }
 
@@ -1160,7 +1172,7 @@ function Recoleccion() {
     );
 
     return (
-      <div className="wrapper-tabla" style={{height: state.height-270}}>
+      <div className="wrapper-tabla" style={{ height: state.height - 270 }}>
         <div className="wrapper-tabla-2">
           <table className="table tabla-listado" {...getTableProps()}>
             <thead>
@@ -1171,21 +1183,23 @@ function Recoleccion() {
                     // Add the sorting props to control sorting. For this example
                     // we can add them into the header props
                     <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                      {column.render("Name")}
-                      {/* Add a sort direction indicator */}
-                      <span>
-                        {column.isSorted ? (
-                          column.isSortedDesc ? (
-                            <i className="fa fa-caret-up" />
+                      <div style={{ display: "flex" }}>
+                        {column.render("Name")}
+                        {/* Add a sort direction indicator */}
+                        <span>
+                          {column.isSorted ? (
+                            column.isSortedDesc ? (
+                              <i className="fa fa-caret-up" />
+                            ) : (
+                              <i className="fa fa-caret-down" />
+                            )
                           ) : (
-                            <i className="fa fa-caret-down" />
-                          )
-                        ) : (
-                          ""
-                        )}
-                      </span>
-                      <div>
-                        {column.canFilter ? column.render("Filter") : null}
+                            ""
+                          )}
+                        </span>
+                        <div style={{ right: "0" }}>
+                          {column.canFilter ? column.render("Filter") : null}
+                        </div>
                       </div>
                     </th>
                   ))}
@@ -1208,7 +1222,7 @@ function Recoleccion() {
                           onClick={() =>
                             handleShowModificar(row.original.m_nIdRecoleccion)
                           }
-                          className="btn btn-default btn-sm"
+                          className="btn btn-default btn-xs"
                         >
                           <i
                             className="fa fa-pencil-square-o"
@@ -1219,7 +1233,7 @@ function Recoleccion() {
                           href="#Agregar"
                           role="tab"
                           data-toggle="tab"
-                          className="btn btn-default btn-sm"
+                          className="btn btn-default btn-xs"
                           onClick={() =>
                             handleShowConsultar(row.original.m_nIdRecoleccion)
                           }
@@ -1228,7 +1242,7 @@ function Recoleccion() {
                         </a>
                         <a
                           href="#"
-                          className="btn btn-default btn-sm"
+                          className="btn btn-default btn-xs"
                           onClick={() =>
                             handleEliminar(row.original.m_nIdRecoleccion)
                           }
@@ -2251,8 +2265,8 @@ function Recoleccion() {
             <div id="Listado" className="tab-pane fade in active">
               <div className="widget-wrap">
                 <form className="j-forms">
-                  <div className="row" style={{display: "flex"}}>
-                    <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
+                  <div className="row" style={{ display: "flex" }}>
+                    <div className="col-sm-6 col-md-3 unit" style={{ paddingLeft: "0px" }}>
                       <label className="label">Fecha Inicial</label>
                       <div className="input">
                         <input
@@ -2265,7 +2279,7 @@ function Recoleccion() {
                       </div>
                     </div>
 
-                    <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
+                    <div className="col-sm-6 col-md-3 unit" style={{ paddingLeft: "0px" }}>
                       <label className="label">Fecha Final</label>
                       <div className="input">
                         <input
@@ -2279,7 +2293,7 @@ function Recoleccion() {
 
                     </div>
 
-                    <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
+                    <div className="col-sm-6 col-md-3 unit" style={{ paddingLeft: "0px" }}>
                       <label className="label">Sucursal</label>
                       <label className="input select">
                         <select
@@ -2303,7 +2317,7 @@ function Recoleccion() {
                       </label>
                     </div>
 
-                    <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
+                    <div className="col-sm-6 col-md-3 unit" style={{ paddingLeft: "0px" }}>
                       <label className="label">Estatus</label>
                       <label className="input select">
                         <select
