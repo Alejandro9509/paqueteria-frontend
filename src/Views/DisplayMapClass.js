@@ -32,9 +32,8 @@ export function DisplayMapClass(props) {
     return (
         <MapContainer style={{ width: "100%", height: "500px" }} center={[32.62781, -115.44632]} zoom={13} scrollWheelZoom={false} whenCreated={props.setMap}>
             <TileLayer
-                attribution='&copy; <a href="http://osm.org/copyright">PTV, HERE</a> contributors'
                 url="https://xserver2-america-test.cloud.ptvgroup.com/services/rest/XMap/tile/{z}/{x}/{y}?userLanguage=es"
-
+                
             />
             {props.markers.map(value => {
                 return (
