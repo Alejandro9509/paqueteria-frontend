@@ -87,7 +87,8 @@ function Rutas(props) {
         tipoModal: 0,
         tipoUnidad: null,
         tipoViaje: null,
-        trayecto: "PERMANENTE",
+        trayecto:null,
+       // trayecto: "PERMANENTE",
         activa: false,
         CreadoPor: localStorage.getItem("UsuarioId"),
     })
@@ -219,14 +220,14 @@ function Rutas(props) {
             //"m_nIdClasificacionViaje": state.clasificacion,
             "m_nIdClasificacionViaje": 1,
             "m_nIdTipoUnidad": state.tipoUnidad,
-            "m_bTipoTrayecto": 1,
+            "m_bTipoTrayecto": state.trayecto,
             "m_rHoras": state.horas,
             "m_rETA": state.eta,
             "m_rKM": state.kilometros,
             "m_rMillas": state.millas,
             "m_bActiva": state.activa,
             "m_nCreadoPor": state.CreadoPor,
-            "m_bPermanente": state.trayecto === "PERMANENTE",
+            //"m_bPermanente": state.trayecto === "PERMANENTE",
             "m_bTrazoLibre": state.isManual,
             "m_xnOrigenLatitud": state.points[0].location[1],
             "m_xnOrigenLongitud": state.points[0].location[0],
@@ -1021,7 +1022,8 @@ function Rutas(props) {
                                                                                         value="PERMANETE"
                                                                                         onChange={handleChange}
                                                                                         defaultChecked
-                                                                                        checked={state.trayecto === "PERMANETE"}
+                                                                                        checked={state.trayecto === 1}
+                                                                                        required
                                                                                     />
                                                                                     <i />
                                                     Permanente
@@ -1032,7 +1034,8 @@ function Rutas(props) {
                                                                                         type="radio"
                                                                                         onChange={handleChange}
                                                                                         name="trayecto"
-                                                                                        checked={state.trayecto === "EVENTUAL"}
+                                                                                        //checked={state.trayecto === "EVENTUAL"}
+                                                                                        checked={state.trayecto === 0}
                                                                                     />
                                                                                     <i />
                                                     Eventual
