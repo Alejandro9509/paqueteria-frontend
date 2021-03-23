@@ -24,12 +24,12 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import Noty from 'noty';
 
-function showSuccess(mensaje){
+function showSuccess(mensaje) {
   new Noty({
-    type:"information",
-    layout:"topCenter",
+    type: "information",
+    layout: "topCenter",
     text: mensaje,
-    timeout:"3000"
+    timeout: "3000"
   }).show()
 }
 
@@ -151,11 +151,11 @@ function Clientes(props) {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                            <i className="fa fa-caret-down" />
-                          )
+                          <i className="fa fa-caret-down" />
+                        )
                       ) : (
-                          ""
-                        )}
+                        ""
+                      )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -239,85 +239,87 @@ function Clientes(props) {
     );
 
     return (
-      <div className="col-md-12">
-        <table className="table" {...getTableProps()}>
-          <thead>
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
-                {headerGroup.headers.map((column) => (
-                  // Add the sorting props to control sorting. For this example
-                  // we can add them into the header props
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    {column.render("Name")}
-                    {/* Add a sort direction indicator */}
-                    <span>
-                      {column.isSorted ? (
-                        column.isSortedDesc ? (
-                          <i className="fa fa-caret-up" />
-                        ) : (
+      <div className="wrapper-tabla" style={{ height: state.height - 270 }}>
+        <div className="wrapper-tabla-2" >
+          <table className="table tabla-listado" {...getTableProps()}>
+            <thead>
+              {headerGroups.map((headerGroup) => (
+                <tr {...headerGroup.getHeaderGroupProps()}>
+                  <th>Acciones</th>
+                  {headerGroup.headers.map((column) => (
+                    // Add the sorting props to control sorting. For this example
+                    // we can add them into the header props
+                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                      {column.render("Name")}
+                      {/* Add a sort direction indicator */}
+                      <span>
+                        {column.isSorted ? (
+                          column.isSortedDesc ? (
+                            <i className="fa fa-caret-up" />
+                          ) : (
                             <i className="fa fa-caret-down" />
                           )
-                      ) : (
+                        ) : (
                           ""
                         )}
-                    </span>
-                    <div>
-                      {column.canFilter ? column.render("Filter") : null}
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}
-                onClick={handleSelectRow.bind(this, row.original.m_nIdCliente)}
-                className={state.idCliente === row.original.m_nIdCliente ? classes.seleccionado : classes.noSeleccionado}>
-                <td>
-                    <div>
-                      <a
-                        href="#Agregar"
-                        role="tab"
-                        data-toggle="tab"
-                        onClick={() =>
-                          handleShowModificar(row.original.m_nIdCliente)
-                        }
-                        className="btn btn-default  btn-sm"
-                      >
-                        <i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} />
-                      </a>
-                      <a
-                        href="#Agregar"
-                        role="tab"
-                        data-toggle="tab"
-                        className="btn btn-default btn-sm"
-                        onClick={() => handleShowModificar(row.original.m_nIdCliente)}
-                      >
-                        <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm"
-                        onClick={() => handleEliminar(row.original.m_nIdCliente)}
-                      >
-                        <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
-                      </a>
-                    </div>
-                  </td>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                    );
-                  })}
+                      </span>
+                      <div>
+                        {column.canFilter ? column.render("Filter") : null}
+                      </div>
+                    </th>
+                  ))}
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              ))}
+            </thead>
+            <tbody {...getTableBodyProps()}>
+              {rows.map((row, i) => {
+                prepareRow(row);
+                return (
+                  <tr {...row.getRowProps()}
+                    onClick={handleSelectRow.bind(this, row.original.m_nIdCliente)}
+                    className={state.idCliente === row.original.m_nIdCliente ? classes.seleccionado : classes.noSeleccionado}>
+                    <td>
+                      <div>
+                        <a
+                          href="#Agregar"
+                          role="tab"
+                          data-toggle="tab"
+                          onClick={() =>
+                            handleShowModificar(row.original.m_nIdCliente)
+                          }
+                          className="btn btn-default  btn-sm"
+                        >
+                          <i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} />
+                        </a>
+                        <a
+                          href="#Agregar"
+                          role="tab"
+                          data-toggle="tab"
+                          className="btn btn-default btn-sm"
+                          onClick={() => handleShowModificar(row.original.m_nIdCliente)}
+                        >
+                          <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
+                        </a>
+                        <a
+                          href="#"
+                          className="btn btn-default btn-sm"
+                          onClick={() => handleEliminar(row.original.m_nIdCliente)}
+                        >
+                          <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
+                        </a>
+                      </div>
+                    </td>
+                    {row.cells.map((cell) => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }

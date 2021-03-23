@@ -175,6 +175,7 @@ function Recoleccion() {
     sucursalCancelacion: "",
     motivoCancelacion: "",
     fechaCancelacion: "",
+    mostraFechaCancelacion: "",
     usuario: localStorage.getItem("Usuario"),
     height: window.innerHeight,
   });
@@ -323,6 +324,7 @@ function Recoleccion() {
 
   function handleShowCancelar() {
     var hours = today.getHours();
+    var mostrarHora = today.getHours();
     var minutes = today.getMinutes();
     var ampm = hours >= 12 ? 'pm' : 'am';
     hours = hours % 12;
@@ -336,6 +338,8 @@ function Recoleccion() {
         folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
         sucursalCancelacion: dataSucursal.find(o => o.m_nIdSucursal == respuesta.data.m_nIdSucursal).m_sSucursal,
         fechaCancelacion: respuesta.data.m_nIdEstatusRecoleccion == "0" ? respuesta.data.m_dtFechaCancelacion :
+        today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate() + " " + mostrarHora +":" + minutes,
+        mostrarFechaCancelacion: respuesta.data.m_nIdEstatusRecoleccion == "0" ? respuesta.data.m_dtFechaCancelacion :
           today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + strTime,
         estatusRecoleccion: dataEstatusRecoleccion.find(o => o.m_nIdEstatusRecoleccion == respuesta.data.m_nIdEstatusRecoleccion).m_sEstatus,
         motivoCancelacion: respuesta.data.m_sMotivoCancelacion
@@ -4206,8 +4210,8 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    value={state.fechaCancelacion}
-                                    id="fechaCancelacion"
+                                    value={state.mostrarFechaCancelacion}
+                                    id="mostrarFechaCancelacion"
                                     readOnly
                                   />
                                 </div>

@@ -20,6 +20,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import useModal from "react-hooks-use-modal";
 import { useHistory, Redirect } from "react-router-dom";
+import { DataGrid } from '@material-ui/data-grid';
 
 import Noty from 'noty';
 import { Dialog, DialogActions, DialogContent } from "@material-ui/core";
@@ -767,7 +768,7 @@ function Embarque(props) {
   };
 
 
-  const columns = React.useMemo(() => [
+  const columns2 = React.useMemo(() => [
     {
       Name: "Folio",
       accessor: "m_nFolioEmbarque",
@@ -818,6 +819,82 @@ function Embarque(props) {
     }, {
       Name: "Usuario que Cancela",
       accessor: "m_sUsuarioqueCancela",
+    },
+  ]);
+
+  const columns = React.useMemo(() => [
+    {
+      headerName: "Acciones",
+      field: "",
+      renderCell: (row) => {
+        return (
+          <div>
+            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdEmbarque))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdEmbarque))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdEmbarque))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+          </div>
+        )
+      }
+    },
+    {
+      headerName: "Folio",
+      field: "m_nFolioEmbarque",
+      width: 125,
+      resizable: true
+    },
+    {
+      headerName: "Fecha/Hora Elaboración",
+      field: "m_sFechaHora",
+      width: 200
+    },
+    {
+      headerName: "Sucursal",
+      field: "m_sSucursal",
+      width: 150
+    },
+    {
+      headerName: "Estatus de la Orden",
+      field: "m_sEstatusEmbarque",
+      width: 200
+    },
+    {
+      headerName: "Origen",
+      field: "m_sCiudadOrigen",
+      width: 150
+    },
+    {
+      headerName: "Destino",
+      field: "m_sCiudadDestino",
+      width: 150
+    },
+    {
+      headerName: "Folio Guía",
+      field: "m_sFolioGuia",
+      width: 150
+    },
+    {
+      headerName: "Folio Informe",
+      field: "m_nFolioInforme",
+      width: 150
+    },
+    {
+      headerName: "Es Recolecta",
+      field: "m_bEsRecolecta",
+      width: 150
+    },
+    {
+      headerName: "Folio Recolección",
+      field: "m_nFolioRecoleccion",
+      width: 150
+    },
+    {
+      headerName: "Cancelado",
+      field: "m_dtFechaCancelado",
+      width: 150
+    }, {
+      headerName: "Usuario que Cancela",
+      field: "m_sUsuarioqueCancela",
+      width: 200
     },
   ]);
 
@@ -1157,9 +1234,9 @@ function Embarque(props) {
     const [showResults, setShowResults] = React.useState(false)
     const onClick = () => setShowResults(!showResults)
     return (
-      <div style={{display: "flex"}}>
-        <a onClick={ onClick}>
-          <i className="fa fa-search"/>
+      <div style={{ display: "flex" }}>
+        <a onClick={onClick}>
+          <i className="fa fa-search" />
         </a>
         <br></br>
         <input
@@ -1214,7 +1291,7 @@ function Embarque(props) {
     );
 
     return (
-      <div className="wrapper-tabla" style={{ height: state.height - 270 }}>
+      <div className="wrapper-tabla">
         <div className="wrapper-tabla-2" >
           <table className="table tabla-listado" {...getTableProps()}>
             <thead>
@@ -1238,7 +1315,7 @@ function Embarque(props) {
                           ""
                         )}
                       </span>
-                      <div style={{display: "flex"}}>
+                      <div style={{ display: "flex" }}>
                         {column.canFilter ? column.render("Filter") : null}
                       </div>
                     </th>
@@ -1256,7 +1333,7 @@ function Embarque(props) {
                       className={state.idEmbarque === row.original.m_nIdEmbarque ? classes.seleccionado : classes.noSeleccionado}>
                       <td>
                         <div>
-                          <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdEmbarque))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E"}} /></a>
+                          <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdEmbarque))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
                           <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.original.m_nIdEmbarque))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
                           <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.original.m_nIdEmbarque))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
                         </div>
@@ -2207,96 +2284,111 @@ function Embarque(props) {
             <div id="Listado" className={props.location.idRecoleccion != undefined ? "tab-pane fade" : "tab-pane fade in active"}>
               <div className="widget-wrap">
                 <div className="widget-content">
-                  <form className="j-forms">
-                    <div className="row" style={{ display: "flex" }}>
-                      <div className="col-sm-6 col-md-3 " style={{ paddingLeft: "0px" }}>
-                        <label className="label">Fecha Inicial</label>
-                        <div className="input">
-                          <input
-                            type="date"
-                            className="form-control"
-                            onChange={handleFechaInicialFiltro}
-                            value={state.fechaInicial}
-                            id="fechaInicial"
-                          />
+                  <div className="row" style={{paddingLeft: "8px"}}>
+                    <form className="j-forms">
+                      <div className="row" style={{ display: "flex" }}>
+                        <div className="col-sm-6 col-md-3 " style={{ paddingLeft: "0px" }}>
+                          <label className="label">Fecha Inicial</label>
+                          <div className="input">
+                            <input
+                              type="date"
+                              className="form-control"
+                              onChange={handleFechaInicialFiltro}
+                              value={state.fechaInicial}
+                              id="fechaInicial"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="col-sm-6 col-md-3 " style={{ paddingLeft: "0px" }}>
+                          <label className="label">Fecha Final</label>
+                          <div className="input">
+                            <input
+                              type="date"
+                              className="form-control"
+                              onChange={handleFechaFinalFiltro}
+                              value={state.fechaFinal}
+                              id="fechaFinal"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="col-sm-6 col-md-3 " style={{ paddingLeft: "0px" }}>
+                          <label className="label">Sucursal</label>
+                          <label className="input select">
+                            <select
+                              className="form-control"
+                              required
+                              onChange={handleSucursalFiltro}
+                              value={state.sucursalListado}
+                              id="sucursalListado"
+                            >
+                              <option value="0">Todas</option>
+                              {dataSucursal.map((sucursal) => (
+                                <option
+                                  key={sucursal.m_nIdSucursal}
+                                  value={sucursal.m_nIdSucursal}
+                                >
+                                  {sucursal.m_sSucursal}
+                                </option>
+                              ))}
+                            </select>
+                            <i></i>
+                          </label>
+                        </div>
+
+                        <div className="col-sm-6 col-md-3 " style={{ paddingLeft: "0px" }}>
+                          <label className="label">Estatus</label>
+                          <label className="input select">
+                            <select
+                              className="form-control"
+                              required
+                              onChange={handleEstatusFiltro}
+                              value={state.estatusListado}
+                              id="estatusListado"
+                            >
+                              <option value="0">Todos</option>
+                              {dataEstatusEmbarque.map((estatus) => (
+                                <option
+                                  key={estatus.m_nIdEstatusEmbarque}
+                                  value={estatus.m_nIdEstatusEmbarque}
+                                >
+                                  {estatus.m_sEstatus}
+                                </option>
+                              ))}
+                            </select>
+                            <i></i>
+                          </label>
                         </div>
                       </div>
-
-                      <div className="col-sm-6 col-md-3 " style={{ paddingLeft: "0px" }}>
-                        <label className="label">Fecha Final</label>
-                        <div className="input">
-                          <input
-                            type="date"
-                            className="form-control"
-                            onChange={handleFechaFinalFiltro}
-                            value={state.fechaFinal}
-                            id="fechaFinal"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="col-sm-6 col-md-3 " style={{ paddingLeft: "0px" }}>
-                        <label className="label">Sucursal</label>
-                        <label className="input select">
-                          <select
-                            className="form-control"
-                            required
-                            onChange={handleSucursalFiltro}
-                            value={state.sucursalListado}
-                            id="sucursalListado"
-                          >
-                            <option value="0">Todas</option>
-                            {dataSucursal.map((sucursal) => (
-                              <option
-                                key={sucursal.m_nIdSucursal}
-                                value={sucursal.m_nIdSucursal}
-                              >
-                                {sucursal.m_sSucursal}
-                              </option>
-                            ))}
-                          </select>
-                          <i></i>
-                        </label>
-                      </div>
-
-                      <div className="col-sm-6 col-md-3 " style={{ paddingLeft: "0px" }}>
-                        <label className="label">Estatus</label>
-                        <label className="input select">
-                          <select
-                            className="form-control"
-                            required
-                            onChange={handleEstatusFiltro}
-                            value={state.estatusListado}
-                            id="estatusListado"
-                          >
-                            <option value="0">Todos</option>
-                            {dataEstatusEmbarque.map((estatus) => (
-                              <option
-                                key={estatus.m_nIdEstatusEmbarque}
-                                value={estatus.m_nIdEstatusEmbarque}
-                              >
-                                {estatus.m_sEstatus}
-                              </option>
-                            ))}
-                          </select>
-                          <i></i>
-                        </label>
-                      </div>
-                    </div>
-                  </form>
-                  <div className="row caja-tabla">
+                    </form>
+                  </div>
+                  <div className="row wrapper-tabla" style={{ height: state.height - 250, width: '100%' }}>
                     {conDatos() ? (
-                      <Table columns={columns} data={data} />
+                      <DataGrid
+                        rows={data}
+                        columns={columns}
+                        pageSize={10}
+                        getRowId={(row) => row.m_nIdEmbarque}
+                        onRowSelected={(row) => {
+                          setState({
+                            ...state,
+                            idEmbarque: row.data.m_nIdEmbarque
+                          })
+                        }}
+                      />
                     ) : (
                       <div>No se encontró ningún registro</div>
                     )}
                   </div>
+
                 </div>
               </div>
             </div>
 
             <div id="Agregar" className={props.location.idRecoleccion != undefined ? "tab-pane fade in active" : "tab-pane fade"}>
-              <form className="j-forms" onSubmit={handleAceptar}>
+
+              <form className="j-forms row" onSubmit={handleAceptar}>
                 <div className="form-content">
                   <div
                     className="wizard-breadcrumb number-style"
