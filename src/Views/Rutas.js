@@ -87,7 +87,8 @@ function Rutas(props) {
         tipoModal: 0,
         tipoUnidad: null,
         tipoViaje: null,
-        trayecto: "PERMANENTE",
+        trayecto:null,
+       // trayecto: "PERMANENTE",
         activa: false,
         CreadoPor: localStorage.getItem("UsuarioId"),
     })
@@ -219,14 +220,14 @@ function Rutas(props) {
             //"m_nIdClasificacionViaje": state.clasificacion,
             "m_nIdClasificacionViaje": 1,
             "m_nIdTipoUnidad": state.tipoUnidad,
-            "m_bTipoTrayecto": 1,
+            "m_bTipoTrayecto": state.trayecto,
             "m_rHoras": state.horas,
             "m_rETA": state.eta,
             "m_rKM": state.kilometros,
             "m_rMillas": state.millas,
             "m_bActiva": state.activa,
             "m_nCreadoPor": state.CreadoPor,
-            "m_bPermanente": state.trayecto === "PERMANENTE",
+            //"m_bPermanente": state.trayecto === "PERMANENTE",
             "m_bTrazoLibre": state.isManual,
             "m_xnOrigenLatitud": state.points[0].location[1],
             "m_xnOrigenLongitud": state.points[0].location[0],
@@ -975,7 +976,7 @@ function Rutas(props) {
                                                                                     name="clasificacion"
                                                                                 >
                                                                                     <option value="0">Seleccionar</option>
-                                                                                    
+
                                                                                 </select>
                                                                                 <i></i>
                                                                             </label>
@@ -1021,7 +1022,8 @@ function Rutas(props) {
                                                                                         value="PERMANETE"
                                                                                         onChange={handleChange}
                                                                                         defaultChecked
-                                                                                        checked={state.trayecto === "PERMANETE"}
+                                                                                        checked={state.trayecto === 1}
+                                                                                        required
                                                                                     />
                                                                                     <i />
                                                     Permanente
@@ -1032,7 +1034,8 @@ function Rutas(props) {
                                                                                         type="radio"
                                                                                         onChange={handleChange}
                                                                                         name="trayecto"
-                                                                                        checked={state.trayecto === "EVENTUAL"}
+                                                                                        //checked={state.trayecto === "EVENTUAL"}
+                                                                                        checked={state.trayecto === 0}
                                                                                     />
                                                                                     <i />
                                                     Eventual
@@ -1186,12 +1189,19 @@ function Rutas(props) {
                                                   </label>
 
                                                                     </div>
-
-
+                                                                    <label className="label">
+                                                                    Navegación
+                                                  </label>
+                                                                        
+                                                        <NavigationList indications={state.route ? state.route.events : []} />
+                                                                    
 
                                                                 </div>
-                                                                <div className="col-md-8 unit">
-
+                                                                <div className="col-md-8 col-sm-12">
+                                                                    {
+                                                                        state.showMap &&
+                                                                        <DisplayMapClass markers={state.points} isManual={state.isManual} setNewPoint={setPoint} route={state.route} polygon={state.polygon} setMap={setMap} />
+                                                                    }
 
                                                                 </div>
                                                             </div>
@@ -1199,20 +1209,6 @@ function Rutas(props) {
 
 
                                                         </div>
-                                                    </div>
-                                                    <div className="row">
-                                                        <div className="col-md-4 col-sm-12" >
-                                                            Navegación
-                                                        <NavigationList indications={state.route ? state.route.events : []} />
-                                                        </div>
-                                                        <div className="col-md-8 col-sm-12">
-                                                            {
-                                                                state.showMap &&
-                                                                <DisplayMapClass markers={state.points} isManual={state.isManual} setNewPoint={setPoint} route={state.route} polygon={state.polygon} setMap={setMap} />
-                                                            }
-
-                                                        </div>
-
                                                     </div>
 
 
