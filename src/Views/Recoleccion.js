@@ -16,7 +16,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
-
+import { DataGrid } from '@material-ui/data-grid';
 import InputAdornment from "@material-ui/core/InputAdornment";
 
 import {
@@ -809,7 +809,7 @@ function Recoleccion() {
     getAllUnidades(event.target.value);
   };
 
-  const columns = React.useMemo(() => [
+  const columns2 = React.useMemo(() => [
     {
       Name: "Folio",
       accessor: "m_sFolioRecoleccion",
@@ -851,6 +851,73 @@ function Recoleccion() {
     {
       Name: "Remolque",
       accessor: "m_sTipoRemolque",
+    },
+  ]);
+
+  const columns = React.useMemo(() => [
+    {
+      headerName: "Acciones",
+      field: "",
+      renderCell: (row) => {
+        return (
+          <div>
+            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdRecoleccion))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdRecoleccion))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdRecoleccion))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+          </div>
+        )
+      }
+    },
+    {
+      headerName: "Folio",
+      field: "m_sFolioRecoleccion",
+      width: 125,
+    },
+    {
+      headerName: "Fecha/Hora Elaboración",
+      field: "m_sFechaHora",
+      width: 200,
+    },
+    {
+      headerName: "Fecha/Hora Recolección",
+      field: "m_sFechaHoraDetalleRec",
+      width: 200,
+    },
+    {
+      headerName: "Sucursal",
+      field: "m_sSucursal",
+      width: 125,
+    },
+    {
+      headerName: "Zona Recolección",
+      field: "m_sZonaRecoleccion",
+      width: 150,
+    },
+    {
+      headerName: "Recoger En",
+      field: "m_sRecogerEnDetalleRecoleccion",
+      width: 125,
+    },
+    {
+      headerName: "Estatus",
+      field: "m_sEstatusRecoleccion",
+      width: 125,
+    },
+    {
+      headerName: "Operador",
+      field: "m_sOperador",
+      width: 250,
+    },
+    {
+      headerName: "Unidad",
+      field: "m_sUnidad",
+      width: 125,
+    },
+
+    {
+      headerName: "Remolque",
+      field: "m_sTipoRemolque",
+      width: 125,
     },
   ]);
 
@@ -2345,19 +2412,30 @@ function Recoleccion() {
                     </div>
                   </div>
                 </form>
-                <div className="row">
-                  {conDatos() ? (
-                    <Table columns={columns} data={data} />
-                  ) : (
-                    <div>No se encontró ningún registro</div>
-                  )}
-                </div>
+                <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                    {conDatos() ? (
+                      <DataGrid
+                        rows={data}
+                        columns={columns}
+                        pageSize={10}
+                        getRowId={(row) => row.m_nIdRecoleccion}
+                        onRowSelected={(row) => {
+                          setState({
+                            ...state,
+                            idRecoleccion: row.data.m_nIdRecoleccion
+                          })
+                        }}
+                      />
+                    ) : (
+                      <div>No se encontró ningún registro</div>
+                    )}
+                  </div>
               </div>
             </div>
 
             <div id="Agregar" className="tab-pane fade">
               <form className="j-forms" onSubmit={handleAceptar}>
-                <div className="form-content">
+                <div className="form-content row">
                   <div
                     className="wizard-breadcrumb number-style"
                     style={{

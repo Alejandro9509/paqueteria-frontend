@@ -15,6 +15,7 @@ import { useTable, useFilters, useAsyncDebounce, useSortBy } from 'react-table'
 import $ from 'jquery';
 import { remove_array_element } from "../Util/Util";
 import Barra from "../Util/jquery-barcode"
+import { DataGrid } from '@material-ui/data-grid';
 
 import Noty from 'noty';
 import { SignalCellularNoSimOutlined } from "@material-ui/icons";
@@ -850,7 +851,7 @@ function handleImprmir2()
     });
   };
 
-  const columns = React.useMemo(() => [
+  const columns2 = React.useMemo(() => [
     {
       Name: "Fecha/Hora Elaboración",
       accessor: "m_sFechaHora",
@@ -883,6 +884,66 @@ function handleImprmir2()
     {
       Name: "Usuario de Cancelacion",
       accessor: "m_nUsuarioCancelacion"
+    }
+
+  ]);
+
+  const columns = React.useMemo(() => [
+    {
+      headerName: "Acciones",
+      field: "",
+      renderCell: (row) => {
+        return (
+          <div>
+            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdGuia))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdGuia))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdGuia))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+          </div>
+        )
+      }
+    },
+    {
+      headerName: "Fecha/Hora Elaboración",
+      field: "m_sFechaHora",
+      width: 200,
+    }, {
+      headerName: "Sucursal",
+      field: "m_sSucursal",
+      width: 125,
+    }, {
+      headerName: "Estatus Guia",
+      field: "m_sEstatusGuia",
+      width: 125,
+    }, {
+      headerName: "Origen",
+      field: "m_sCiudadOrigen",
+      width: 125,
+    }, {
+      headerName: "Destino",
+      field: "m_sCiudadDestino",
+      width: 125,
+    }, {
+      headerName: "Folio Guia",
+      field: "m_nFolioGuia",
+      width: 125,
+    }, {
+      headerName: "Folio Informe",
+      field: "m_nFolioInforme",
+      width: 125,
+    }, {
+      headerName: "Folio Embarque",
+      field: "m_nFolioEmbarque",
+      width: 150,
+    },
+    {
+      headerName: "Fecha de Cancelacion",
+      field: "m_dtFechaCancelacion",
+      width: 200,
+    },
+    {
+      headerName: "Usuario de Cancelacion",
+      field: "m_nUsuarioCancelacion",
+      width: 200,
     }
 
   ]);
@@ -2403,9 +2464,23 @@ function handleImprmir2()
                       </div>
                     </form>
 
-                  <div className="row">
-                    <Table columns={columns} data={data} />
-
+                    <div className="row wrapper-tabla" style={{ height: state.height - 250, width: '100%' }}>
+                    {data.length != 0 ? (
+                      <DataGrid
+                        rows={data}
+                        columns={columns}
+                        pageSize={10}
+                        getRowId={(row) => row.m_nIdGuia}
+                        onRowSelected={(row) => {
+                          setState({
+                            ...state,
+                            idGuia: row.data.m_nIdGuia
+                          })
+                        }}
+                      />
+                    ) : (
+                      <div>No se encontró ningún registro</div>
+                    )}
                   </div>
 
                 </div>

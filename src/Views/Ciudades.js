@@ -6,15 +6,16 @@ import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import { useTable, useFilters, useSortBy } from 'react-table'
 import { makeStyles } from "@material-ui/core/styles";
 import { Breadcrumbs, Link, Typography } from '@material-ui/core';
+import { DataGrid } from '@material-ui/data-grid';
 
 import Noty from 'noty';
 
-function showSuccess(mensaje){
+function showSuccess(mensaje) {
   new Noty({
-    type:"information",
-    layout:"topCenter",
+    type: "information",
+    layout: "topCenter",
     text: mensaje,
-    timeout:"3000"
+    timeout: "3000"
   }).show()
 }
 
@@ -42,7 +43,7 @@ function CiudadesCodigoPostal() {
     abreviacionCiudad: "",
     idEstado: 0,
     idPais: 0,
-    DerechoBorrar:13,
+    DerechoBorrar: 13,
     idCodigoPostal: 0,
     codigoPostal: "",
     zona: "",
@@ -60,9 +61,9 @@ function CiudadesCodigoPostal() {
       "m_nCodigo": state.codigoCiudad,
       "m_sCiudad": state.ciudad,
       "m_sAbreviacion": state.abreviacionCiudad,
-      "m_nIdEstado": state.idEstado,         
+      "m_nIdEstado": state.idEstado,
       "m_nCreadoPor": state.CreadoPor,
-      "m_nModificadoPor": state.ModificadoPor   
+      "m_nModificadoPor": state.ModificadoPor
     }
     console.log(params)
     if (state.idCiudad != 0) {
@@ -96,7 +97,7 @@ function CiudadesCodigoPostal() {
       "m_sCP": state.codigoPostal,
       "m_nIdCP": state.idCodigoPostal,
       "m_nCreadoPor": state.CreadoPor,
-      "m_nModificadoPor": state.ModificadoPor       
+      "m_nModificadoPor": state.ModificadoPor
     }
     console.log(params)
     if (state.idCodigoPostal != 0) {
@@ -138,22 +139,21 @@ function CiudadesCodigoPostal() {
       //showSuccess(respuesta.data)
 
       derecho = respuesta.data;
-      if (derecho == false)
-      {
-        showSuccess ("El usuario no tiene derechos para realizar el proceso");
-        return; 
+      if (derecho == false) {
+        showSuccess("El usuario no tiene derechos para realizar el proceso");
+        return;
       }
       const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/Eliminar/` + id;
-    axios.delete(url, { headers }).then(respuesta => {
-      showSuccess(respuesta.data)
-      getAllCodigoPostal();
+      axios.delete(url, { headers }).then(respuesta => {
+        showSuccess(respuesta.data)
+        getAllCodigoPostal();
+      }).catch(err => {
+        showSuccess(err)
+      });
     }).catch(err => {
       showSuccess(err)
     });
-	}).catch(err => {
-    showSuccess(err)
-    });
-    
+
   }
 
   function handleShowModificarCiudad(id) {
@@ -203,7 +203,7 @@ function CiudadesCodigoPostal() {
       })
     });
   }
-  
+
   function handleConsultarCodigoPostal(id) {
     const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetById/${id}`;
     axios.get(url, { headers }).then(respuesta => {
@@ -268,32 +268,61 @@ function CiudadesCodigoPostal() {
 
   const columns = React.useMemo(() => [
     {
-      Name: "Código",
-      accessor: "m_nCodigo",
+      headerName: "Acciones",
+      field: "",
+      renderCell: (row) => {
+        return (
+          <div>
+            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarCiudad(row.row.m_nIdCiudad))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultaCiudad(row.row.m_nIdCiudad))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminarCiudad(row.row.m_nIdCiudad))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+          </div>
+        )
+      }
+    },
+    {
+      headerName: "Código",
+      field: "m_nCodigo",
+      width: 100,
     }, {
-      Name: "Ciudad",
-      accessor: "m_sCiudad",
+      headerName: "Ciudad",
+      field: "m_sCiudad",
+      width: 200,
     }, {
-      Name: "Abreviación",
-      accessor: "m_sAbreviacion",
+      headerName: "Abreviación",
+      field: "m_sAbreviacion",
+      width: 125,
     }, {
-      Name: "Estado",
-      accessor: "m_nIdEstado",
+      headerName: "Estado",
+      field: "m_nIdEstado",
+      width: 100,
     }
 
   ]);
 
   const columnsCodigoPostal = React.useMemo(() => [
     {
-      Name: "Código",
-      accessor: "m_sCP",
+      headerName: "Acciones",
+      field: "",
+      renderCell: (row) => {
+        return (
+          <div>
+            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarCodigoPostal(row.row.m_nIdCiudad))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificarCodigoPostal(row.row.m_nIdCiudad))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminarCodigoPostal(row.row.m_nIdCiudad))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+          </div>
+        )
+      }
+    },
+    {
+      headerName: "Código",
+      field: "m_sCP",
     }
 
   ]);
 
   useEffect(value => {
-    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
-    {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
       showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
@@ -316,7 +345,7 @@ function CiudadesCodigoPostal() {
   };
 
   function getAllCodigoPostal(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListadoCP/`+id;
+    const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListadoCP/` + id;
     axios.get(url, { headers }).then(respuesta => {
       setDataCodigoPostal(respuesta.data)
     });
@@ -421,9 +450,9 @@ function CiudadesCodigoPostal() {
                     className={state.idCiudad === row.original.m_nIdCiudad ? classes.seleccionado : classes.noSeleccionado}>
                     <td>
                       <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowModificarCiudad(row.original.m_nIdCiudad))}><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
-                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultaCiudad(row.original.m_nIdCiudad))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminarCiudad(row.original.m_nIdCiudad))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowModificarCiudad(row.original.m_nIdCiudad))}><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultaCiudad(row.original.m_nIdCiudad))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminarCiudad(row.original.m_nIdCiudad))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -501,9 +530,9 @@ function CiudadesCodigoPostal() {
                   <tr {...row.getRowProps()}>
                     <td>
                       <div>
-                        <a href="#AgregarCP" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowModificarCodigoPostal(row.original.m_nIdCP))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
-                        <a href="#AgregarCP" role="tab" data-toggle="tab"  className="btn btn-default btn-sm" onClick={() => (handleConsultarCodigoPostal(row.original.m_nIdCP))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminarCodigoPostal(row.original.m_nIdCP))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#AgregarCP" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowModificarCodigoPostal(row.original.m_nIdCP))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                        <a href="#AgregarCP" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleConsultarCodigoPostal(row.original.m_nIdCP))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminarCodigoPostal(row.original.m_nIdCP))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -576,8 +605,20 @@ function CiudadesCodigoPostal() {
                 <div className="widget-wrap" id="Listado" className="tab-pane fade in active">
                   <div className="widget-wrap">
                     <div className="widget-content">
-                      <div className="row">
-                        <Table columns={columns} data={data} />
+                      <div className="row wrapper-tabla" style={{ height: state.height - 250, width: '100%' }}>
+                        {data.length != 0 ? (
+                          <DataGrid
+                            rows={data}
+                            columns={columns}
+                            pageSize={10}
+                            getRowId={(row) => row.m_nIdCiudad}
+                            onRowSelected={(row) => {
+                              handleSelectCiudad(row.data, this)
+                            }}
+                          />
+                        ) : (
+                          <div>No se encontró ningún registro</div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -747,8 +788,23 @@ function CiudadesCodigoPostal() {
                 <div className="widget-wrap" id="ListadoEstado" className="tab-pane fade in active">
                   <div className="widget-wrap">
                     <div className="widget-content">
-                      <div className="row">
-                        <TableCodigoPostal columns={columnsCodigoPostal} data={dataCodigoPostal} />
+                      <div className="row wrapper-tabla" style={{ height: state.height - 250, width: '100%' }}>
+                        {dataCodigoPostal.length != 0 ? (
+                          <DataGrid
+                            rows={dataCodigoPostal}
+                            columns={columnsCodigoPostal}
+                            pageSize={10}
+                            getRowId={(row) => row.m_nIdCP}
+                            onRowSelected={(row) => {
+                              setState({
+                                ...state,
+                                idCodigoPostal: row.data.m_nIdCP
+                              })
+                            }}
+                          />
+                        ) : (
+                          <div>No se encontró ningún registro</div>
+                        )}
                       </div>
                     </div>
                   </div>

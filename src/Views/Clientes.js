@@ -21,6 +21,7 @@ import { remove_array_element } from "../Util/Util";
 
 import { SettingsEthernet } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
+import { DataGrid } from '@material-ui/data-grid';
 
 import Noty from 'noty';
 
@@ -54,29 +55,47 @@ function Clientes(props) {
 
   const columns = React.useMemo(() => [
     {
-      Name: "Núm. Cliente",
-      accessor: "m_nNumeroCliente",
+      headerName: "Acciones",
+      field: "",
+      renderCell: (row) => {
+        return (
+          <div>
+            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdCliente))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdCliente))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdCliente))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+          </div>
+        )
+      }
     },
     {
-      Name: "Tipo Cliente",
-      accessor: "m_nTipoCliente",
+      headerName: "Núm. Cliente",
+      field: "m_nNumeroCliente",
+      width: 150,
     },
     {
-      Name: "RFC",
-      accessor: "m_sRFC",
+      headerName: "Tipo Cliente",
+      field: "m_nTipoCliente",
+      width: 125,
     },
     {
-      Name: "Nombre",
-      accessor: "m_sNombreFiscal",
-    },
-
-    {
-      Name: "Nombre Corto",
-      accessor: "m_sNombreCorto",
+      headerName: "RFC",
+      field: "m_sRFC",
+      width: 150,
     },
     {
-      Name: "m_sNombreSucursal",
-      accessor: "m_sNombreSucursal",
+      headerName: "Nombre",
+      field: "m_sNombreFiscal",
+      width: 200,
+    },
+    {
+      headerName: "Nombre Corto",
+      field: "m_sNombreCorto",
+      width: 200,
+    },
+    {
+      headerName: "m_sNombreSucursal",
+      field: "m_sNombreSucursal",
+      width: 200,
     },
   ]);
 
@@ -391,6 +410,7 @@ function Clientes(props) {
     ajustarImporte2Dec: "",
     detalleMateriales: "",
     formatoSelect: false,
+    height: window.innerHeight
   });
 
   function handleShowAgregar() {
@@ -765,7 +785,7 @@ function Clientes(props) {
       </header>
       {/*Topbar End Here*/}
       {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar">
+      <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
         <BarraLateralIzquierda />
       </aside>
       {/*Leftbar End Here*/}
@@ -802,10 +822,10 @@ function Clientes(props) {
               </a>
             </li>
             <li>
-              <ExportCSV csvData={data} fileName="Unidades_Listado" />
+              <ExportCSV csvData={dataListadoClientes} fileName="Unidades_Listado" />
             </li>
             <li>
-              <ExportPDF data={data} column={columns} fileName="Unidades" />
+              <ExportPDF data={dataListadoClientes} column={columns} fileName="Unidades" />
             </li>
           </ul>
 
@@ -813,8 +833,23 @@ function Clientes(props) {
             <div id="Listado" className="tab-pane fade in active">
               <div className="widget-wrap">
                 <div className="widget-content">
-                  <div className="row">
-                    <Table columns={columns} data={dataListadoClientes} />
+                <div className="row wrapper-tabla" style={{ height: state.height - 250, width: '100%' }}>
+                    {dataListadoClientes.length != 0 ? (
+                      <DataGrid
+                        rows={dataListadoClientes}
+                        columns={columns}
+                        pageSize={10}
+                        getRowId={(row) => row.m_nIdCliente}
+                        onRowSelected={(row) => {
+                          setState({
+                            ...state,
+                            idCliente: row.data.m_nIdCliente
+                          })
+                        }}
+                      />
+                    ) : (
+                      <div>No se encontró ningún registro</div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -2126,24 +2161,6 @@ function Clientes(props) {
             </div>
           </div>
         </div>
-        {/*Footer Start Here */}
-        <footer className="footer-container">
-          <div className="container-fluid">
-            <div className="row">
-              <div className="col-md-6 col-sm-6">
-                <div className="footer-left">
-                  <span></span>
-                </div>
-              </div>
-              <div className="col-md-6 col-sm-6">
-                <div className="footer-right">
-                  <span className="footer-meta"></span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </footer>
-        {/*Footer End Here */}
       </section>
       {/*Page Container End Here*/}
       {/*Rightbar Start Here*/}

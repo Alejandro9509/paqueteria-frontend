@@ -840,7 +840,6 @@ function Embarque(props) {
       headerName: "Folio",
       field: "m_nFolioEmbarque",
       width: 125,
-      resizable: true
     },
     {
       headerName: "Fecha/Hora Elaboración",
