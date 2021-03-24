@@ -1103,9 +1103,9 @@ function Rutas(props) {
                                                                                     <input
                                                                                         required
                                                                                         native="true"
-                                                                                        checked={state.activo}
-                                                                                        name="activo"
-                                                                                        onChange={(e) => setState({ ...state, activo: e.target.checked })}
+                                                                                        checked={state.activa}
+                                                                                        name="activa"
+                                                                                        onChange={(e) => setState({ ...state, activa: e.target.checked })}
                                                                                         type="checkbox"
                                                                                     />
                                                                                     <i />
