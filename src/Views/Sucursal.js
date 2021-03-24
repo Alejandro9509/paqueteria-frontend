@@ -6,6 +6,7 @@ import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import BasicTable from "./BasicTable";
 import { useTable, useFilters, useAsyncDebounce, useSortBy } from 'react-table'
 import { makeStyles } from "@material-ui/core/styles";
+import { DataGrid } from '@material-ui/data-grid';
 
 import Noty from 'noty';
 
@@ -211,17 +212,34 @@ function Sucursal() {
 
   const columns = React.useMemo(() => [
     {
-      Name: "Abreviación",
-      accessor: "m_sAbreviacion",
+      headerName: "Acciones",
+      field: "",
+      renderCell: (row) => {
+        return (
+          <div>
+            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdSucursal))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdSucursal))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdSucursal))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+          </div>
+        )
+      }
+    },
+    {
+      headerName: "Abreviación",
+      field: "m_sAbreviacion",
+      width: 125
     }, {
-      Name: "Sucursal",
-      accessor: "m_sSucursal",
+      headerName: "Sucursal",
+      field: "m_sSucursal",
+      width: 400
     }, {
-      Name: "Ubicación",
-      accessor: "m_dtCreadoEl",
+      headerName: "Ubicación",
+      field: "m_dtCreadoEl",
+      width: 400
     }, {
-      Name: "Activo",
-      accessor: "m_nCreadoPor",
+      headerName: "Activo",
+      field: "m_nCreadoPor",
+      width: 100
     }
 
   ]);
@@ -424,9 +442,25 @@ function Sucursal() {
             <div className="widget-wrap" id="Listado" className="tab-pane fade in active">
               <div className="widget-wrap">
                 <div className="widget-content">
-                  <div className="row">
-                    <Table columns={columns} data={data} />
+                <div className="row wrapper-tabla" style={{ height: state.height - 250, width: '100%' }}>
+                    {data.length != 0 ? (
+                      <DataGrid
+                        rows={data}
+                        columns={columns}
+                        pageSize={10}
+                        getRowId={(row) => row.m_nIdSucursal}
+                        onRowSelected={(row) => {
+                          setState({
+                            ...state,
+                            idSucursal: row.data.m_nIdSucursal
+                          })
+                        }}
+                      />
+                    ) : (
+                      <div>No se encontró ningún registro</div>
+                    )}
                   </div>
+
                 </div>
               </div>
             </div>
@@ -451,7 +485,7 @@ function Sucursal() {
                                 className="form-control"
                                 type="text"
                                 required
-                                placeholder={state.sucursal}
+                                value={state.sucursal}
                                 id="sucursal"
                                 maxLength="80"
                               />
@@ -470,7 +504,7 @@ function Sucursal() {
                                 className="form-control"
                                 type="text"
                                 required
-                                placeholder={state.abreviacion}
+                                value={state.abreviacion}
                                 id="abreviacion"
                                 maxLength="50"
                               />
@@ -599,7 +633,7 @@ function Sucursal() {
                                 className="form-control"
                                 type="text"
                                 required
-                                placeholder={state.municipio}
+                                value={state.municipio}
                                 id="municipio"
                                 maxLength="80"
                               />
@@ -616,7 +650,7 @@ function Sucursal() {
                                 className="form-control"
                                 type="text"
                                 required
-                                placeholder={state.localidad}
+                                value={state.localidad}
                                 id="localidad"
                                 maxLength="50"
                               />
@@ -635,7 +669,7 @@ function Sucursal() {
                                 className="form-control"
                                 type="text"
                                 required
-                                placeholder={state.colonia}
+                                value={state.colonia}
                                 id="colonia"
                                 maxLength="50"
                               />
@@ -652,7 +686,7 @@ function Sucursal() {
                                 className="form-control"
                                 type="text"
                                 required
-                                placeholder={state.calle}
+                                value={state.calle}
                                 id="calle"
                                 maxLength="50"
                               />
@@ -669,7 +703,7 @@ function Sucursal() {
                                 className="form-control"
                                 type="text"
                                 required
-                                placeholder={state.numInterior}
+                                value={state.numInterior}
                                 id="numInterior"
                                 maxLength="50"
                               />
@@ -686,7 +720,7 @@ function Sucursal() {
                                 className="form-control"
                                 type="text"
                                 required
-                                placeholder={state.numExterior}
+                                value={state.numExterior}
                                 id="numExterior"
                                 maxLength="50"
                               />
@@ -748,7 +782,8 @@ function Sucursal() {
                         <div className="form-footer" className="col-md-12">
                           <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
                           >
-                            Cancelar</button>
+                            Cancelar</button> 
+                            {/** TODO Realizar correctamente el cancelar*/}
                           <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                         </div>
                       </form>

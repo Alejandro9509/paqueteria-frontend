@@ -13,6 +13,7 @@ import { useTable, useFilters, useSortBy } from "react-table";
 import ExportCSV from "../Components/Template/Export";
 import ExportPDF from "../Components/Template/ExportPDF";
 import { makeStyles } from "@material-ui/core/styles";
+import { DataGrid } from '@material-ui/data-grid';
 
 import $ from "jquery";
 
@@ -47,20 +48,36 @@ function Operadores(props) {
 
   const columns = React.useMemo(() => [
     {
-      Name: "Código",
-      accessor: "m_nNumeroOperador",
+      headerName: "Acciones",
+      field: "",
+      renderCell: (row) => {
+        return (
+          <div>
+            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdOperador))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdOperador))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdOperador))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+          </div>
+        )
+      }
     },
     {
-      Name: "Nombre",
-      accessor: "m_sNombreCompleto",
+      headerName: "Código",
+      field: "m_nNumeroOperador",
+      width: 100,
     },
     {
-      Name: "Sucursal",
-      accessor: "m_sSucursal",
+      headerName: "Nombre",
+      field: "m_sNombreCompleto",
+      width: 300,
     },
     {
-      Name: "Activo",
-      accessor: "m_bActivo",
+      headerName: "Sucursal",
+      field: "m_sSucursal",
+      width: 200,
+    },
+    {
+      headerName: "Activo",
+      field: "m_bActivo",width: 100,
     },
   ]);
 
@@ -190,7 +207,6 @@ function Operadores(props) {
     );
   }
 
-  const [data, setData] = React.useState([]);
   const [state, setState] = React.useState({
     agregar: "Agregar",
     IdOperador: 0,
@@ -815,10 +831,10 @@ function Operadores(props) {
               </a>
             </li>
             <li>
-              <ExportCSV csvData={data} fileName="Operadores_Listado" />
+              <ExportCSV csvData={dataOperadores} fileName="Operadores_Listado" />
             </li>
             <li>
-              <ExportPDF data={data} column={columns} fileName="Operadores" />
+              <ExportPDF data={dataOperadores} column={columns} fileName="Operadores" />
             </li>
           </ul>
 
@@ -826,8 +842,23 @@ function Operadores(props) {
             <div id="Listado" className="tab-pane fade in active">
               <div className="widget-wrap">
                 <div className="widget-content">
-                  <div className="row">
-                    <Table columns={columns} data={dataOperadores} />
+                <div className="row wrapper-tabla" style={{ height: state.height - 250, width: '100%' }}>
+                    {dataOperadores.length != 0 ? (
+                      <DataGrid
+                        rows={dataOperadores}
+                        columns={columns}
+                        pageSize={10}
+                        getRowId={(row) => row.m_nIdOperador}
+                        onRowSelected={(row) => {
+                          setState({
+                            ...state,
+                            IdOperador: row.data.m_nIdOperador
+                          })
+                        }}
+                      />
+                    ) : (
+                      <div>No se encontró ningún registro</div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -2514,24 +2545,6 @@ function Operadores(props) {
             </div>
           </div>
         </div>
-        {/*Footer Start Here */}
-        <footer className="footer-container">
-          <div className="container-fluid">
-            <div className="row">
-              <div className="col-md-6 col-sm-6">
-                <div className="footer-left">
-                  <span></span>
-                </div>
-              </div>
-              <div className="col-md-6 col-sm-6">
-                <div className="footer-right">
-                  <span className="footer-meta"></span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </footer>
-        {/*Footer End Here */}
       </section>
       {/*Page Container End Here*/}
       {/*Rightbar Start Here*/}

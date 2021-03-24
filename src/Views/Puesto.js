@@ -5,6 +5,7 @@ import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda"
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import { useTable, useFilters, useAsyncDebounce, useSortBy } from 'react-table'
 import { makeStyles } from "@material-ui/core/styles";
+import { DataGrid } from '@material-ui/data-grid';
 
 import Noty from 'noty';
 
@@ -147,23 +148,42 @@ function Puesto() {
 
   const columns = React.useMemo(() => [
     {
-      Name: "Código",
-      accessor: "m_nCodigo",
+      headerName: "Acciones",
+      field: "",
+      renderCell: (row) => {
+        return (
+          <div>
+            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdPuesto))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdPuesto))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdPuesto))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+          </div>
+        )
+      }
+    },
+    {
+      headerName: "Código",
+      field: "m_nCodigo",
+      width: 100,
     }, {
-      Name: "Puesto",
-      accessor: "m_sPuesto",
+      headerName: "Puesto",
+      field: "m_sPuesto",
+      width: 200,
     }, {
-      Name: "Creado El",
-      accessor: "m_dtCreadoEl",
+      headerName: "Creado El",
+      field: "m_dtCreadoEl",
+      width: 200,
     }, {
-      Name: "Creado Por",
-      accessor: "m_nCreadoPor",
+      headerName: "Creado Por",
+      field: "m_nCreadoPor",
+      width: 150,
     }, {
-      Name: "Modificado El",
-      accessor: "m_dtModificadoEl",
+      headerName: "Modificado El",
+      field: "m_dtModificadoEl",
+      width: 200,
     }, {
-      Name: "Modificado Por",
-      accessor: "m_nModificadoPor",
+      headerName: "Modificado Por",
+      field: "m_nModificadoPor",
+      width: 150,
     }
 
   ]);
@@ -342,8 +362,23 @@ function Puesto() {
             <div className="widget-wrap" id="Listado" className="tab-pane fade in active">
               <div className="widget-wrap">
                 <div className="widget-content">
-                  <div className="row">
-                    <Table columns={columns} data={data} />
+                <div className="row wrapper-tabla" style={{ height: state.height - 250, width: '100%' }}>
+                    {data.length != 0 ? (
+                      <DataGrid
+                        rows={data}
+                        columns={columns}
+                        pageSize={10}
+                        getRowId={(row) => row.m_nIdPuesto}
+                        onRowSelected={(row) => {
+                          setState({
+                            ...state,
+                            idPuesto: row.data.m_nIdPuesto
+                          })
+                        }}
+                      />
+                    ) : (
+                      <div>No se encontró ningún registro</div>
+                    )}
                   </div>
                 </div>
               </div>

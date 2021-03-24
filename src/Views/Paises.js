@@ -5,6 +5,7 @@ import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda"
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import { useTable, useFilters, useSortBy } from 'react-table';
 import { makeStyles } from "@material-ui/core/styles";
+import { DataGrid } from '@material-ui/data-grid';
 
 import Noty from 'noty';
 
@@ -232,28 +233,60 @@ function PaisesEstado() {
 
   const columns = React.useMemo(() => [
     {
-      Name: "Código",
-      accessor: "m_sCodigo",
+      headerName: "Acciones",
+      field: "",
+      renderCell: (row) => {
+        return (
+          <div>
+            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarPais(row.row.m_nIdPais))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificarPais(row.row.m_nIdPais))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminarPais(row.row.m_nIdPais))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+          </div>
+        )
+      }
+    },
+    {
+      headerName: "Código",
+      field: "m_sCodigo",
+      width: 100
     }, {
-      Name: "País",
-      accessor: "m_sPais",
+      headerName: "País",
+      field: "m_sPais",
+      width: 150
     }, {
-      Name: "Moneda",
-      accessor: "m_nIdMoneda",
+      headerName: "Moneda",
+      field: "m_nIdMoneda",
+      width: 150
     }
 
   ]);
 
   const columnsEstado = React.useMemo(() => [
     {
-      Name: "Código",
-      accessor: "m_sCodigo",
+      headerName: "Acciones",
+      field: "",
+      renderCell: (row) => {
+        return (
+          <div>
+            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarEstado(row.row.m_nIdPais))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificarEstado(row.row.m_nIdPais))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminarEstado(row.row.m_nIdPais))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+          </div>
+        )
+      }
+    },
+    {
+      headerName: "Código",
+      field: "m_sCodigo",
+      width: 100
     }, {
-      Name: "Estado",
-      accessor: "m_sEstado",
+      headerName: "Estado",
+      field: "m_sEstado",
+      width: 150
     }, {
-      Name: "Abreviación",
-      accessor: "m_sAbreviacion",
+      headerName: "Abreviación",
+      field: "m_sAbreviacion",
+      width: 150
     }
 
   ]);
@@ -534,9 +567,24 @@ function PaisesEstado() {
                 <div className="widget-wrap" id="Listado" className="tab-pane fade in active">
                   <div className="widget-wrap">
                     <div className="widget-content">
-                      <div className="row">
-                        <Table columns={columns} data={data} />
-                      </div>
+                    <div className="row wrapper-tabla" style={{ height: state.height - 250, width: '100%' }}>
+                    {data.length != 0 ? (
+                      <DataGrid
+                        rows={data}
+                        columns={columns}
+                        pageSize={10}
+                        getRowId={(row) => row.m_nIdPais}
+                        onRowSelected={(row) => {
+                          setState({
+                            ...state,
+                            idPais: row.data.m_nIdPais
+                          })
+                        }}
+                      />
+                    ) : (
+                      <div>No se encontró ningún registro</div>
+                    )}
+                  </div>
                     </div>
                   </div>
                 </div>
@@ -645,9 +693,24 @@ function PaisesEstado() {
                 <div className="widget-wrap" id="ListadoEstado" className="tab-pane fade in active">
                   <div className="widget-wrap">
                     <div className="widget-content">
-                      <div className="row">
-                        <TableEstados columns={columnsEstado} data={dataEstado} />
-                      </div>
+                    <div className="row wrapper-tabla" style={{ height: state.height - 250, width: '100%' }}>
+                    {dataEstado.length != 0 ? (
+                      <DataGrid
+                        rows={dataEstado}
+                        columns={columnsEstado}
+                        pageSize={10}
+                        getRowId={(row) => row.m_nIdEstado}
+                        onRowSelected={(row) => {
+                          setState({
+                            ...state,
+                            idEstado: row.data.m_nIdEstado
+                          })
+                        }}
+                      />
+                    ) : (
+                      <div>No se encontró ningún registro</div>
+                    )}
+                  </div>
                     </div>
                   </div>
                 </div>
