@@ -2412,7 +2412,7 @@ function Recoleccion() {
                     </div>
                   </div>
                 </form>
-                <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                <div className="row" style={{ height: state.height - 200, width: '100%' }}>
                     {conDatos() ? (
                       <DataGrid
                         rows={data}

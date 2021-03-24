@@ -13,7 +13,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import { DisplayMapClass } from "./DisplayMapClass";
 import { makeStyles } from "@material-ui/core/styles";
 import PageviewIcon from "@material-ui/icons/Pageview";
-
+import { DataGrid } from '@material-ui/data-grid';
 import Noty from 'noty';
 import { point } from "leaflet";
 import NavigationList from "../Components/Map/ListNavigation";
@@ -159,24 +159,42 @@ function Rutas(props) {
 
     const columns = React.useMemo(() => [
         {
-            Name: "Folio",
-            accessor: "m_sFolio",
+            headerName: "Acciones",
+            field: "",
+            renderCell: (row) => {
+              return (
+                <div>
+                  <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdRuta))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                  <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdRuta))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                  <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdRuta))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                </div>
+              )
+            }
+          },
+        {
+            headerName: "Folio",
+            field: "m_sFolio",
+            width: 150,
         },
         {
-            Name: "Descripción",
-            accessor: "m_sDescripcion",
+            headerName: "Descripción",
+            field: "m_sDescripcion",
+            width: 200,
         },
         {
-            Name: "Origen",
-            accessor: "m_sOrigen",
+            headerName: "Origen",
+            field: "m_sOrigen",
+            width: 150,
         },
         {
-            Name: "Destino",
-            accessor: "m_sDestino",
+            headerName: "Destino",
+            field: "m_sDestino",
+            width: 150,
         },
         {
-            Name: "Activa",
-            accessor: "m_bActiva",
+            headerName: "Activa",
+            field: "m_bActiva",
+            width: 100,
         },
     ]);
 
@@ -810,13 +828,25 @@ function Rutas(props) {
                         >
                             <div className="widget-wrap">
                                 <div className="widget-content">
-                                    <div className="row">
-                                        {conDatos() ? (
-                                            <Table columns={columns} data={data} />
-                                        ) : (
-                                            <div>No se encontró ningún registro</div>
-                                        )}
-                                    </div>
+                                <div className="row wrapper-tabla" style={{ height: state.height - 200, width: '100%' }}>
+                    {data.length != 0 ? (
+                      <DataGrid
+                        rows={data}
+                        columns={columns}
+                        pageSize={10}
+                        getRowId={(row) => row.m_nIdRuta}
+                        onRowSelected={(row) => {
+                          setState({
+                            ...state,
+                            idRuta: row.data.m_nIdRuta
+                          })
+                        }}
+                      />
+                    ) : (
+                      <div>No se encontró ningún registro</div>
+                    )}
+                  </div>
+
                                 </div>
                             </div>
                         </div>

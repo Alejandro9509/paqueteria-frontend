@@ -13,6 +13,7 @@ import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import { useTable, useFilters, useSortBy } from "react-table";
 import ExportCSV from "../Components/Template/Export";
 import ExportPDF from "../Components/Template/ExportPDF";
+import { DataGrid } from '@material-ui/data-grid';
 
 import $ from "jquery";
 import { remove_array_element } from "../Util/Util";
@@ -47,39 +48,60 @@ const headers = {
   "Content-Type": "application/json",
 };
 
-function App(props) {
+function Unidades(props) {
   const columns = React.useMemo(() => [
     {
-      Name: "Tipo de unidad",
-      accessor: "m_sTipoUnidad",
+      headerName: "Acciones",
+      field: "",
+      renderCell: (row) => {
+        return (
+          <div>
+            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdUnidad))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdUnidad))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdUnidad))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+          </div>
+        )
+      }
     },
     {
-      Name: "Código",
-      accessor: "m_sCodigo",
+      headerName: "Tipo de unidad",
+      field: "m_sTipoUnidad",
+      width: 150
     },
     {
-      Name: "Descripción",
-      accessor: "m_sDescripcion",
+      headerName: "Código",
+      field: "m_sCodigo",
+      width: 100
     },
     {
-      Name: "ID Satelital",
-      accessor: "m_sIdentificadorSatelital",
+      headerName: "Descripción",
+      field: "m_sDescripcion",
+      width: 200
     },
     {
-      Name: "Núm. Operador",
-      accessor: "m_nNumeroOperador",
+      headerName: "ID Satelital",
+      field: "m_sIdentificadorSatelital",
+      width: 150
     },
     {
-      Name: "Operador",
-      accessor: "m_sNombreOperador",
+      headerName: "Núm. Operador",
+      field: "m_nNumeroOperador",
+      width: 150
     },
     {
-      Name: "Placas",
-      accessor: "m_sPlacas",
+      headerName: "Operador",
+      field: "m_sNombreOperador",
+      width: 275
     },
     {
-      Name: "Vencimiento",
-      accessor: "m_dtPlacasVencimiento",
+      headerName: "Placas",
+      field: "m_sPlacas",
+      width: 150
+    },
+    {
+      headerName: "Vencimiento",
+      field: "m_dtPlacasVencimiento",
+      width: 200
     },
   ]);
 
@@ -213,7 +235,7 @@ function App(props) {
   }
 
   const classes = useStyles();
-  const [data, setData] = React.useState([]);
+  const [dataOperador, setDataOperador] = React.useState([]);
 
   const [dataTiposUnidad, setDataTiposUnidad] = React.useState([]);
   const [dataSucursales, setDataSucursales] = React.useState([]);
@@ -544,7 +566,7 @@ function App(props) {
   function getAllOperadores() {
     const url = `${process.env.REACT_APP_API_URL}/Operadores/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
-      setData(respuesta.data);
+      setDataOperador(respuesta.data);
     });
   }
 
@@ -1054,10 +1076,10 @@ function App(props) {
               </a>
             </li>
             <li>
-              <ExportCSV csvData={data} fileName="Unidades_Listado" />
+              <ExportCSV csvData={dataListadoUnidades} fileName="Unidades_Listado" />
             </li>
             <li>
-              <ExportPDF data={data} column={columns} fileName="Unidades" />
+              <ExportPDF data={dataListadoUnidades} column={columns} fileName="Unidades" />
             </li>
           </ul>
 
@@ -1065,8 +1087,23 @@ function App(props) {
             <div id="Listado" className="tab-pane fade in active">
               <div className="widget-wrap">
                 <div className="widget-content">
-                  <div className="row">
-                    <Table columns={columns} data={dataListadoUnidades} />
+                <div className="row wrapper-tabla" style={{ height: state.height - 200, width: '100%' }}>
+                    {dataListadoUnidades.length != 0 ? (
+                      <DataGrid
+                        rows={dataListadoUnidades}
+                        columns={columns}
+                        pageSize={10}
+                        getRowId={(row) => row.m_nIdUnidad}
+                        onRowSelected={(row) => {
+                          setState({
+                            ...state,
+                            idUnidad: row.data.m_nIdUnidad
+                          })
+                        }}
+                      />
+                    ) : (
+                      <div>No se encontró ningún registro</div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -1391,7 +1428,7 @@ function App(props) {
                                                   Operador
                                                 </option>
 
-                                                {data.map((operador) => (
+                                                {dataOperador.map((operador) => (
                                                   <option
                                                     value={
                                                       operador.m_nIdOperador
@@ -3154,24 +3191,7 @@ function App(props) {
             </div>
           </div>
         </div>
-        {/*Footer Start Here */}
-        <footer className="footer-container">
-          <div className="container-fluid">
-            <div className="row">
-              <div className="col-md-6 col-sm-6">
-                <div className="footer-left">
-                  <span></span>
-                </div>
-              </div>
-              <div className="col-md-6 col-sm-6">
-                <div className="footer-right">
-                  <span className="footer-meta"></span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </footer>
-        {/*Footer End Here */}
+
       </section>
       {/*Page Container End Here*/}
       {/*Rightbar Start Here*/}
@@ -3188,4 +3208,4 @@ function App(props) {
   );
 }
 
-export default App;
+export default Unidades;

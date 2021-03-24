@@ -5,6 +5,7 @@ import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda"
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import { useTable, useFilters, useSortBy } from 'react-table'
 import { makeStyles } from "@material-ui/core/styles";
+import { DataGrid } from '@material-ui/data-grid';
 
 import Noty from 'noty';
 
@@ -198,33 +199,55 @@ function Caseta() {
 
   const columns = React.useMemo(() => [
     {
-      Name: "Casetas",
-      accessor: "m_sDescripcion",
-    }, {
-      Name: "2 Ejes",
-      accessor: "m_cTarifaEje2",
-    }, {
-      Name: "3 Ejes",
-      accessor: "m_cTarifaEje3",
-    }, {
-      Name: "4 Ejes",
-      accessor: "m_cTarifaEje4",
-    }, {
-      Name: "5 Ejes",
-      accessor: "m_cTarifaEje5",
-    }, {
-      Name: "6 Ejes",
-      accessor: "m_cTarifaEje6",
-    }, {
-      Name: "7 Ejes",
-      accessor: "m_cTarifaEje7",
-    }, {
-      Name: "8 Ejes",
-      accessor: "m_cTarifaEje8",
+      headerName: "Acciones",
+      field: "",
+      renderCell: (row) => {
+        return (
+          <div>
+            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdCaseta))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdCaseta))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdCaseta))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+          </div>
+        )
+      }
     },
     {
-      Name: "9 Ejes",
-      accessor: "m_cTarifaEje9",
+      headerName: "Casetas",
+      field: "m_sDescripcion",
+      width: 200
+    }, {
+      headerName: "2 Ejes",
+      field: "m_cTarifaEje2",
+      width: 100
+    }, {
+      headerName: "3 Ejes",
+      field: "m_cTarifaEje3",
+      width: 100
+    }, {
+      headerName: "4 Ejes",
+      field: "m_cTarifaEje4",
+      width: 100
+    }, {
+      headerName: "5 Ejes",
+      field: "m_cTarifaEje5",
+      width: 100
+    }, {
+      headerName: "6 Ejes",
+      field: "m_cTarifaEje6",
+      width: 100
+    }, {
+      headerName: "7 Ejes",
+      field: "m_cTarifaEje7",
+      width: 100
+    }, {
+      headerName: "8 Ejes",
+      field: "m_cTarifaEje8",
+      width: 100
+    },
+    {
+      headerName: "9 Ejes",
+      field: "m_cTarifaEje9",
+      width: 100
     }
 
   ]);
@@ -403,9 +426,25 @@ function Caseta() {
             <div className="widget-wrap" id="Listado" className="tab-pane fade in active">
               <div className="widget-wrap">
                 <div className="widget-content">
-                  <div className="row">
-                    <Table columns={columns} data={data} />
+                <div className="row wrapper-tabla" style={{ height: state.height - 200, width: '100%' }}>
+                    {data.length != 0 ? (
+                      <DataGrid
+                        rows={data}
+                        columns={columns}
+                        pageSize={10}
+                        getRowId={(row) => row.m_nIdCaseta}
+                        onRowSelected={(row) => {
+                          setState({
+                            ...state,
+                            idCaseta: row.data.m_nIdCaseta
+                          })
+                        }}
+                      />
+                    ) : (
+                      <div>No se encontró ningún registro</div>
+                    )}
                   </div>
+
                 </div>
               </div>
             </div>

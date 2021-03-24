@@ -2464,7 +2464,7 @@ function handleImprmir2()
                       </div>
                     </form>
 
-                    <div className="row wrapper-tabla" style={{ height: state.height - 250, width: '100%' }}>
+                    <div className="row wrapper-tabla" style={{ height: state.height - 200, width: '100%' }}>
                     {data.length != 0 ? (
                       <DataGrid
                         rows={data}
