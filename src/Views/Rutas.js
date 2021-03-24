@@ -1018,24 +1018,26 @@ function Rutas(props) {
                                                                                 <label className="radio">
                                                                                     <input
                                                                                         type="radio"
+                                                                                        value="1"
                                                                                         name="trayecto"
-                                                                                        value="PERMANETE"
+                                                                                        //value="PERMANETE"
                                                                                         onChange={handleChange}
                                                                                         defaultChecked
-                                                                                        checked={state.trayecto === 1}
-                                                                                        required
+                                                                                       // checked={state.trayecto === 1}
+                                                                                        
                                                                                     />
                                                                                     <i />
                                                     Permanente
                                                   </label>
                                                                                 <label className="radio">
                                                                                     <input
-                                                                                        value="EVENTUAL"
+                                                                                       // value="EVENTUAL"
+                                                                                       value="0"
                                                                                         type="radio"
                                                                                         onChange={handleChange}
                                                                                         name="trayecto"
                                                                                         //checked={state.trayecto === "EVENTUAL"}
-                                                                                        checked={state.trayecto === 0}
+                                                                                        //checked={state.trayecto === 0}
                                                                                     />
                                                                                     <i />
                                                     Eventual
