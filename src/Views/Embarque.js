@@ -21,6 +21,7 @@ import TextField from "@material-ui/core/TextField";
 import useModal from "react-hooks-use-modal";
 import { useHistory, Redirect } from "react-router-dom";
 import { DataGrid } from '@material-ui/data-grid';
+import clsx from 'clsx';
 
 import Noty from 'noty';
 import { Dialog, DialogActions, DialogContent } from "@material-ui/core";
@@ -53,7 +54,20 @@ const styles = {
   disabled: {
     pointerEvents: "none",
     cursor: "default",
-  }
+  },
+  root: {
+    '& .super-app-theme--cell': {
+      backgroundColor: 'rgba(224, 183, 60, 0.55)',
+      color: '#1a3e72',
+      fontWeight: '600',
+    },
+    '& .super-app.esRecolecta': {
+      backgroundColor: 'green',
+    },
+    '& .super-app.noRecolecta': {
+      backgroundColor: 'red',
+    },
+  },
 };
 const useStyles = makeStyles(styles);
 
@@ -879,7 +893,12 @@ function Embarque(props) {
     {
       headerName: "Es Recolecta",
       field: "m_bEsRecolecta",
-      width: 150
+      width: 150,
+      cellClassName: (params) =>
+      clsx('super-app', {
+        esRecolecta: params.value == 0,
+        noRecolecta: params.value == 1,
+      })
     },
     {
       headerName: "Folio Recolección",
@@ -2283,7 +2302,7 @@ function Embarque(props) {
             <div id="Listado" className={props.location.idRecoleccion != undefined ? "tab-pane fade" : "tab-pane fade in active"}>
               <div className="widget-wrap">
                 <div className="widget-content">
-                  <div className="row" style={{paddingLeft: "8px"}}>
+                  <div className="row" style={{ paddingLeft: "8px" }}>
                     <form className="j-forms">
                       <div className="row" style={{ display: "flex" }}>
                         <div className="col-sm-6 col-md-3 " style={{ paddingLeft: "0px" }}>
@@ -2365,6 +2384,7 @@ function Embarque(props) {
                   <div className="row wrapper-tabla" style={{ height: state.height - 250, width: '100%' }}>
                     {conDatos() ? (
                       <DataGrid
+                        className={classes.root}
                         rows={data}
                         columns={columns}
                         pageSize={10}
@@ -4061,123 +4081,118 @@ function Embarque(props) {
 
             <div id="Cancelar" className="tab-pane fade">
               <div className="widget-wrap">
-                <div className="widget-content">
-                  <div className="row">
-                    <form className="j-forms" onSubmit={handleCancelar}>
-                      <div className="form-content">
-                        <div className="widget-wrap">
-                          <div className="widget-container">
-                            <div className="widget-content">
-                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                <label className="label">Folio Embarque</label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    value={state.folioEmbarque}
-                                    id="folioEmbarque"
-                                    readOnly
-                                  />
-                                </div>
-                              </div>
+                <div className="widget-container">
+                  <div className="widget-content">
+                    <div className="row">
+                      <form className="j-forms" onSubmit={handleCancelar}>
+                        <div className="form-content">
 
-                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                <label className="label">Sucursal</label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    value={state.sucursalCancelacion}
-                                    id="sucursalCancelacion"
-                                    readOnly
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                <label className="label">Fecha</label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    value={state.fechaCancelacion}
-                                    id="fechaCancelacion"
-                                    readOnly
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                <label className="label">Usuario</label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    value={state.usuario}
-                                    id="usuario"
-                                    readOnly
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                <label className="label">Estatus</label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    value={state.estatusEmbarque}
-                                    id="estatusEmbarque"
-                                    readOnly
-                                  />
-                                </div>
-                              </div>
-
-
-                              <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                <label className="label">Motivo</label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    value={state.motivoCancelacion}
-                                    id="motivoCancelacion"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="form-footer" className="col-md-12">
-                                <button
-                                  href="#Listado"
-                                  role="tab"
-                                  data-toggle="tab"
-                                  className="btn btn-secondary secondary-btn"
-                                >
-                                  Cancelar
-                                </button>
-                                <button
-                                  type="submit"
-                                  className="btn btn-primary primary-btn"
-                                >
-                                  Aceptar
-                                </button>
-                              </div>
-
+                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                            <label className="label">Folio Embarque</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.folioEmbarque}
+                                id="folioEmbarque"
+                                readOnly
+                              />
                             </div>
                           </div>
+
+                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                            <label className="label">Sucursal</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.sucursalCancelacion}
+                                id="sucursalCancelacion"
+                                readOnly
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                            <label className="label">Fecha</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.fechaCancelacion}
+                                id="fechaCancelacion"
+                                readOnly
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                            <label className="label">Usuario</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.usuario}
+                                id="usuario"
+                                readOnly
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                            <label className="label">Estatus</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.estatusEmbarque}
+                                id="estatusEmbarque"
+                                readOnly
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-sm-12 col-md-12 col-lg-12 unit">
+                            <label className="label">Motivo</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.motivoCancelacion}
+                                id="motivoCancelacion"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="form-footer" className="col-md-12">
+                            <button
+                              href="#Listado"
+                              role="tab"
+                              data-toggle="tab"
+                              className="btn btn-secondary secondary-btn"
+                            >
+                              Cancelar
+                                </button>
+                            <button
+                              type="submit"
+                              className="btn btn-primary primary-btn"
+                            >
+                              Aceptar
+                                </button>
+                          </div>
+
                         </div>
-                      </div>
-                    </form>
+                      </form>
+                    </div>
                   </div>
                 </div>
               </div>
-
             </div>
 
 

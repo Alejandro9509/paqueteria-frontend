@@ -2458,13 +2458,11 @@ function Informes({ history }) {
             </div>
             <div id="Cancelar" className="tab-pane fade">
               <div className="widget-wrap">
+                <div className="widget-container">
                 <div className="widget-content">
                   <div className="row">
                     <form className="j-forms" onSubmit={handleCancelar}>
                       <div className="form-content">
-                        <div className="widget-wrap">
-                          <div className="widget-container">
-                            <div className="widget-content">
                               <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                 <label className="label">Folio Informes</label>
                                 <div className="input">
@@ -2530,7 +2528,6 @@ function Informes({ history }) {
                                 </div>
                               </div>
 
-
                               <div className="col-sm-12 col-md-12 col-lg-12 unit">
                                 <label className="label">Motivo</label>
                                 <div className="input">
@@ -2560,12 +2557,10 @@ function Informes({ history }) {
                                 </button>
                               </div>
 
-                            </div>
-                          </div>
-                        </div>
                       </div>
                     </form>
                   </div>
+                </div>
                 </div>
               </div>
 

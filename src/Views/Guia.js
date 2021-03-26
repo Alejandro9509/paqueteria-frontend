@@ -1549,7 +1549,7 @@ function handleImprmir2()
     )
 
     return (
-      <div className="wrapper-tabla" style={{height: state.height-270}}>
+      <div className="wrapper-tabla" style={{ height: state.height - 270 }}>
         <div className="wrapper-tabla-2" >
           <table className="table tabla-listado" {...getTableProps()}>
             <thead>
@@ -2377,94 +2377,94 @@ function handleImprmir2()
             <div id="Listado" className={props.location.idEmbarque != undefined ? "tab-pane fade" : "tab-pane fade in active"}>
               <div className="widget-wrap">
                 <div className="widget-content">
-                    <form className="j-forms">
-                      <div className="row" style={{display: "flex"}}>
-                        <div className="col-sm-6 col-md-3 unit" style={{ paddingLeft: "0px" }}>
-                          <label className="label">
-                            Fecha Inicial
+                  <form className="j-forms">
+                    <div className="row" style={{ display: "flex" }}>
+                      <div className="col-sm-6 col-md-3 unit" style={{ paddingLeft: "0px" }}>
+                        <label className="label">
+                          Fecha Inicial
                         </label>
-                          <div className="input">
-                            <input
-                              type="date"
-                              className="form-control"
-                              onChange={handleFechaInicialFiltro}
-                              value={state.fechaInicial}
-                              id="fechaInicial"
-                            />
-                          </div>
+                        <div className="input">
+                          <input
+                            type="date"
+                            className="form-control"
+                            onChange={handleFechaInicialFiltro}
+                            value={state.fechaInicial}
+                            id="fechaInicial"
+                          />
                         </div>
+                      </div>
 
-                        <div className="col-sm-6 col-md-3 unit" style={{ paddingLeft: "0px" }}>
-                          <label className="label">
-                            Fecha Final
+                      <div className="col-sm-6 col-md-3 unit" style={{ paddingLeft: "0px" }}>
+                        <label className="label">
+                          Fecha Final
                         </label>
-                          <div className="input">
-                            <input
-                              type="date"
-                              className="form-control"
-                              onChange={handleFechaFinalFiltro}
-                              value={state.fechaFinal}
-                              id="fechaFinal"
-                            />
-                          </div>
+                        <div className="input">
+                          <input
+                            type="date"
+                            className="form-control"
+                            onChange={handleFechaFinalFiltro}
+                            value={state.fechaFinal}
+                            id="fechaFinal"
+                          />
                         </div>
+                      </div>
 
-                        <div className="col-sm-6 col-md-3 unit" style={{ paddingLeft: "0px" }}>
-                          <label className="label">
-                            Sucursal
+                      <div className="col-sm-6 col-md-3 unit" style={{ paddingLeft: "0px" }}>
+                        <label className="label">
+                          Sucursal
                         </label>
-                          <div className="input">
+                        <div className="input">
+                          <select
+                            className="form-control"
+                            required
+                            value={state.sucursalListado}
+                            onChange={handleSucursalFiltro}
+                            id="sucursalListado"
+                          >
+                            <option value="0">Todas</option>
+                            {dataSucursal.map((sucursal) => (
+                              <option
+                                key={sucursal.m_nIdSucursal}
+                                value={sucursal.m_nIdSucursal}
+                              >
+                                {sucursal.m_sSucursal}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="col-sm-6 col-md-3 unit" style={{ paddingLeft: "0px" }}>
+                        <label className="label">
+                          Estatus
+                        </label>
+                        <div className="input">
+                          <label className="input select">
                             <select
                               className="form-control"
                               required
-                              value={state.sucursalListado}
-                              onChange={handleSucursalFiltro}
-                              id="sucursalListado"
+                              value={state.estatusListado}
+                              onChange={handleEstatusFiltro}
+                              id="estatusListado"
                             >
-                              <option value="0">Todas</option>
-                              {dataSucursal.map((sucursal) => (
+                              <option value="0">Todos</option>
+                              {dataEstatusGuia.map((estatus) => (
                                 <option
-                                  key={sucursal.m_nIdSucursal}
-                                  value={sucursal.m_nIdSucursal}
+                                  key={estatus.m_nIdEstatusGuia}
+                                  value={estatus.m_nIdEstatusGuia}
                                 >
-                                  {sucursal.m_sSucursal}
+                                  {estatus.m_sEstatus}
                                 </option>
                               ))}
                             </select>
-                          </div>
+                          </label>
                         </div>
-
-                        <div className="col-sm-6 col-md-3 unit" style={{ paddingLeft: "0px" }}>
-                          <label className="label">
-                            Estatus
-                        </label>
-                          <div className="input">
-                            <label className="input select">
-                              <select
-                                className="form-control"
-                                required
-                                value={state.estatusListado}
-                                onChange={handleEstatusFiltro}
-                                id="estatusListado"
-                              >
-                                <option value="0">Todos</option>
-                                {dataEstatusGuia.map((estatus) => (
-                                  <option
-                                    key={estatus.m_nIdEstatusGuia}
-                                    value={estatus.m_nIdEstatusGuia}
-                                  >
-                                    {estatus.m_sEstatus}
-                                  </option>
-                                ))}
-                              </select>
-                            </label>
-                          </div>
-                        </div>
-
                       </div>
-                    </form>
 
-                    <div className="row wrapper-tabla" style={{ height: state.height - 250, width: '100%' }}>
+                    </div>
+                  </form>
+
+                  <div className="row wrapper-tabla" style={{ height: state.height - 250, width: '100%' }}>
                     {data.length != 0 ? (
                       <DataGrid
                         rows={data}
@@ -3392,119 +3392,115 @@ function handleImprmir2()
             </div>
             <div id="Cancelar" className="tab-pane fade">
               <div className="widget-wrap">
-                <div className="widget-content">
-                  <div className="row">
-                    <form className="j-forms" onSubmit={handleCancelar}>
-                      <div className="form-content">
-                        <div className="widget-wrap">
-                          <div className="widget-container">
-                            <div className="widget-content">
-                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                <label className="label">Folio Guía</label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    value={state.folioGuía}
-                                    id="folioGuía"
-                                    readOnly
-                                  />
-                                </div>
-                              </div>
+                <div className="widget-container">
+                  <div className="widget-content">
+                    <div className="row">
+                      <form className="j-forms" onSubmit={handleCancelar}>
+                        <div className="form-content">
 
-                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                <label className="label">Sucursal</label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    value={state.sucursalCancelacion}
-                                    id="sucursalCancelacion"
-                                    readOnly
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                <label className="label">Fecha</label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    value={state.fechaCancelado}
-                                    id="fechaCancelado"
-                                    readOnly
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                <label className="label">Usuario</label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    value={state.usuarioCancela}
-                                    id="usuarioCancela"
-                                    readOnly
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                <label className="label">Estatus</label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    value={state.estatusGuia}
-                                    id="estatusGuia"
-                                    readOnly
-                                  />
-                                </div>
-                              </div>
-
-
-                              <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                <label className="label">Motivo</label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    value={state.MotivoCancelacion}
-                                    id="MotivoCancelacion"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="form-footer" className="col-md-12">
-                                <button
-                                  href="#Listado"
-                                  role="tab"
-                                  data-toggle="tab"
-                                  className="btn btn-secondary secondary-btn"
-                                >
-                                  Cancelar
-                                </button>
-                                <button
-                                  type="submit"
-                                  className="btn btn-primary primary-btn"
-                                >
-                                  Aceptar
-                                </button>
-                              </div>
-
+                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                            <label className="label">Folio Guía</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.folioGuía}
+                                id="folioGuía"
+                                readOnly
+                              />
                             </div>
                           </div>
+
+                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                            <label className="label">Sucursal</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.sucursalCancelacion}
+                                id="sucursalCancelacion"
+                                readOnly
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                            <label className="label">Fecha</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.fechaCancelado}
+                                id="fechaCancelado"
+                                readOnly
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                            <label className="label">Usuario</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.usuarioCancela}
+                                id="usuarioCancela"
+                                readOnly
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                            <label className="label">Estatus</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.estatusGuia}
+                                id="estatusGuia"
+                                readOnly
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-sm-12 col-md-12 col-lg-12 unit">
+                            <label className="label">Motivo</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.MotivoCancelacion}
+                                id="MotivoCancelacion"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="form-footer" className="col-md-12">
+                            <button
+                              href="#Listado"
+                              role="tab"
+                              data-toggle="tab"
+                              className="btn btn-secondary secondary-btn"
+                            >
+                              Cancelar
+                                </button>
+                            <button
+                              type="submit"
+                              className="btn btn-primary primary-btn"
+                            >
+                              Aceptar
+                                </button>
+                          </div>
+
                         </div>
-                      </div>
-                    </form>
+                      </form>
+                    </div>
                   </div>
                 </div>
               </div>

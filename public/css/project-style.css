@@ -33,8 +33,9 @@ h2 {
 }
 
 .caja-boton {
-  margin: 15px;
-  width: 90px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  width: 120px;
   text-align: center;
   align-items: center;
   justify-content: center;
@@ -208,7 +209,8 @@ h2 {
 }
 
 .MuiDataGrid-footer {
-  min-height: 30px !important;
+  min-height: 20px !important;
+  max-height: 20px !important;
 }
 
 .MuiDataGrid-colCellTitleContainer .MuiDataGrid-columnsContainer{

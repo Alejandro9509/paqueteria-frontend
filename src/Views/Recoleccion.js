@@ -16,8 +16,9 @@ import SearchIcon from "@material-ui/icons/Search";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
-import { DataGrid } from '@material-ui/data-grid';
+import { GridOverlay, DataGrid } from '@material-ui/data-grid';
 import InputAdornment from "@material-ui/core/InputAdornment";
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import {
   useTable,
@@ -172,10 +173,13 @@ function Recoleccion() {
     ],
     fechaHoraSalida: "",
     fechaHoraLlegada: "",
+
+    //Cancelacion
     sucursalCancelacion: "",
     motivoCancelacion: "",
     fechaCancelacion: "",
     mostraFechaCancelacion: "",
+
     usuario: localStorage.getItem("Usuario"),
     height: window.innerHeight,
   });
@@ -187,7 +191,15 @@ function Recoleccion() {
 
   const history = useHistory()
 
-
+  function CustomLoadingOverlay() {
+    return (
+      <GridOverlay>
+        <div style={{ position: 'absolute', top: 0, width: '100%' }}>
+          <LinearProgress />
+        </div>
+      </GridOverlay>
+    );
+  }
 
   function handleSelectRemitente() {
     state.RFCRemitente = state.nombreRemitente.m_sRFC
@@ -338,7 +350,7 @@ function Recoleccion() {
         folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
         sucursalCancelacion: dataSucursal.find(o => o.m_nIdSucursal == respuesta.data.m_nIdSucursal).m_sSucursal,
         fechaCancelacion: respuesta.data.m_nIdEstatusRecoleccion == "0" ? respuesta.data.m_dtFechaCancelacion :
-        today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate() + " " + mostrarHora +":" + minutes,
+          today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate() + " " + mostrarHora + ":" + minutes,
         mostrarFechaCancelacion: respuesta.data.m_nIdEstatusRecoleccion == "0" ? respuesta.data.m_dtFechaCancelacion :
           today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + strTime,
         estatusRecoleccion: dataEstatusRecoleccion.find(o => o.m_nIdEstatusRecoleccion == respuesta.data.m_nIdEstatusRecoleccion).m_sEstatus,
@@ -634,6 +646,28 @@ function Recoleccion() {
       });
       console.log("tipoUnidad:")
       console.log(dataTipoUnidad)
+    });
+  }
+
+  function handleShowSalidaLlegada() {
+    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetById/${state.idRecoleccion}`;
+    axios.get(url, { headers }).then((respuesta) => {
+      console.log(respuesta.data);
+      setState({
+        ...state,
+        sucursalCancelacion: dataSucursal.find(o => o.m_nIdSucursal == respuesta.data.m_nIdSucursal).m_sSucursal,
+        folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
+        fechaHoraCreacion:
+          respuesta.data.m_dFecha + "T" + respuesta.data.m_tHora.slice(0, 5),
+        unidad: dataUnidad.find(
+          (o) => o.m_nIdUnidad == respuesta.data.m_nIdUnidad
+        ),
+        operador: dataOperador.find(
+          (o) => o.m_nIdOperador == respuesta.data.m_nIdOperador
+        ),
+        recogerEn: respuesta.data.m_sRecogerEnDetalleRecoleccion,
+        fechaRecoleccion: respuesta.data.m_dFechaDetalleRecoleccion
+      });
     });
   }
 
@@ -1195,13 +1229,13 @@ function Recoleccion() {
     const onClick = () => setShowResults(!showResults)
     return (
       <div style={{ display: "flex" }}>
-        <span style={{display: "block", float: "right" }}>
+        <span style={{ display: "block", float: "right" }}>
           <a onClick={onClick}>
             <i className="fa fa-search" />
           </a>
         </span>
         <br></br>
-        <span style={{display: "block"}}>
+        <span style={{ display: "block" }}>
           <input
             className="form-control"
             type={showResults ? "" : "hidden"}
@@ -2319,6 +2353,17 @@ function Recoleccion() {
               </a>
             </li>
 
+            <li>
+              <a data-toggle="tab" href="#Salida-Llegada" onClick={handleShowSalidaLlegada} className={state.idRecoleccion == 0 ? classes.disabled : ""}>
+                <i className="fa fa-times-circle" /> Salida
+              </a>
+            </li>
+            <li>
+              <a data-toggle="tab" href="#Salida-Llegada" onClick={handleShowSalidaLlegada} className={state.idRecoleccion == 0 ? classes.disabled : ""}>
+                <i className="fa fa-times-circle" /> Llegada
+              </a>
+            </li>
+
             <li style={{ float: "right" }}>
               <a data-toggle="tab" href="#" className={state.idRecoleccion == 0 ? classes.disabled : ""} style={{ textAlign: "right" }} onClick={() => setRedirect(true)}>
                 Generar embarque
@@ -2413,23 +2458,29 @@ function Recoleccion() {
                   </div>
                 </form>
                 <div className="row" style={{ height: state.height - 250, width: '100%' }}>
-                    {conDatos() ? (
-                      <DataGrid
-                        rows={data}
-                        columns={columns}
-                        pageSize={10}
-                        getRowId={(row) => row.m_nIdRecoleccion}
-                        onRowSelected={(row) => {
-                          setState({
-                            ...state,
-                            idRecoleccion: row.data.m_nIdRecoleccion
-                          })
-                        }}
-                      />
-                    ) : (
-                      <div>No se encontró ningún registro</div>
-                    )}
-                  </div>
+                  {conDatos() ? (
+                    <DataGrid
+                      className={classes.root}
+                      components={{
+                        LoadingOverlay: CustomLoadingOverlay,
+                      }}
+                      loading={data == undefined}
+                      rows={data}
+                      columns={columns}
+                      density="compact"
+                      pageSize={10}
+                      getRowId={(row) => row.m_nIdRecoleccion}
+                      onRowSelected={(row) => {
+                        setState({
+                          ...state,
+                          idRecoleccion: row.data.m_nIdRecoleccion
+                        })
+                      }}
+                    />
+                  ) : (
+                    <div>No se encontró ningún registro</div>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -4246,119 +4297,337 @@ function Recoleccion() {
 
             <div id="Cancelar" className="tab-pane fade">
               <div className="widget-wrap">
-                <div className="widget-content">
-                  <div className="row">
-                    <form className="j-forms" onSubmit={handleCancelar}>
-                      <div className="form-content">
-                        <div className="widget-wrap">
-                          <div className="widget-container">
-                            <div className="widget-content">
-                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                <label className="label">Folio Recolección</label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    value={state.folioRecoleccion}
-                                    id="folioRecoleccion"
-                                    readOnly
-                                  />
-                                </div>
-                              </div>
+                <div className="widget-container">
+                  <div className="widget-content">
+                    <div className="row">
+                      <form className="j-forms" onSubmit={handleCancelar}>
+                        <div className="form-content">
 
-                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                <label className="label">Sucursal</label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    value={state.sucursalCancelacion}
-                                    id="sucursalCancelacion"
-                                    readOnly
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                <label className="label">Fecha</label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    value={state.mostrarFechaCancelacion}
-                                    id="mostrarFechaCancelacion"
-                                    readOnly
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                <label className="label">Usuario</label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    value={state.usuario}
-                                    id="usuario"
-                                    readOnly
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                <label className="label">Estatus</label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    value={state.estatusRecoleccion}
-                                    id="estatusRecoleccion"
-                                    readOnly
-                                  />
-                                </div>
-                              </div>
-
-
-                              <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                <label className="label">Motivo</label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    value={state.motivoCancelacion}
-                                    id="motivoCancelacion"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="form-footer" className="col-md-12">
-                                <button
-                                  href="#Listado"
-                                  role="tab"
-                                  data-toggle="tab"
-                                  className="btn btn-secondary secondary-btn"
-                                >
-                                  Cancelar
-                                </button>
-                                <button
-                                  type="submit"
-                                  className="btn btn-primary primary-btn"
-                                >
-                                  Aceptar
-                                </button>
-                              </div>
-
+                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                            <label className="label">Folio Recolección</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.folioRecoleccion}
+                                id="folioRecoleccion"
+                                readOnly
+                              />
                             </div>
                           </div>
+
+                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                            <label className="label">Sucursal</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.sucursalCancelacion}
+                                id="sucursalCancelacion"
+                                readOnly
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                            <label className="label">Fecha</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.mostrarFechaCancelacion}
+                                id="mostrarFechaCancelacion"
+                                readOnly
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                            <label className="label">Usuario</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.usuario}
+                                id="usuario"
+                                readOnly
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                            <label className="label">Estatus</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.estatusRecoleccion}
+                                id="estatusRecoleccion"
+                                readOnly
+                              />
+                            </div>
+                          </div>
+
+
+                          <div className="col-sm-12 col-md-12 col-lg-12 unit">
+                            <label className="label">Motivo</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.motivoCancelacion}
+                                id="motivoCancelacion"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="form-footer" className="col-md-12">
+                            <button
+                              href="#Listado"
+                              role="tab"
+                              data-toggle="tab"
+                              className="btn btn-secondary secondary-btn"
+                            >
+                              Cancelar
+                                </button>
+                            <button
+                              type="submit"
+                              className="btn btn-primary primary-btn"
+                            >
+                              Aceptar
+                                </button>
+                          </div>
+
                         </div>
-                      </div>
-                    </form>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="Salida-Llegada" className="tab-pane fade">
+              <div className="widget-wrap">
+                <div className="widget-container">
+                  <div className="widget-content">
+                    <div className="row">
+                      <form className="j-forms" onSubmit={handleCancelar}>
+                        <div className="form-content">
+
+                          <div className="col-sm-6 col-md-3 col-lg-3 unit">
+                            <label className="label">Sucursal</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.sucursalCancelacion}
+                                id="sucursalCancelacion"
+                                readOnly
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-sm-6 col-md-3 col-lg-3 unit">
+                            <label className="label">Folio Recolección</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.folioRecoleccion}
+                                id="folioRecoleccion"
+                                readOnly
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-sm-6 col-md-3 col-lg-3 unit">
+                            <label className="label">Fecha Elaboracion</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.fechaHoraCreacion}
+                                id="fechaHoraCreacion"
+                                readOnly
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-sm-6 col-md-3 col-lg-3 unit">
+                            <label className="label">Fecha Recoleccion</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.fechaRecoleccion}
+                                id="fechaRecoleccion"
+                                readOnly
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-sm-6 col-md-6 col-lg-6 unit">
+                            <label className="label">Zona</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.zonaRecoleccion}
+                                id="zonaRecoleccion"
+                                readOnly
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-sm-6 col-md-6 col-lg-6 unit">
+                            <label className="label">Recoger En</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.recogerEn}
+                                id="recogerEn"
+                                readOnly
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-sm-12 col-md-6 col-lg-6 unit">
+                            <label className="label">Operador</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.operador.m_sNombreCompleto}
+                                id="operador"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-sm-12 col-md-6 col-lg-6 unit">
+                            <label className="label">Estatus</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.motivoCancelacion}
+                                id="motivoCancelacion"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-sm-12 col-md-6 col-lg-6 unit">
+                            <label className="label">Unidad</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.unidad.m_sDescripcion}
+                                id="unidad"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-sm-12 col-md-6 col-lg-6 unit">
+                            <label className="label">Estatus</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.motivoCancelacion}
+                                id="motivoCancelacion"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-sm-12 col-md-6 col-lg-6 unit">
+                            <label className="label">Remolque</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.motivoCancelacion}
+                                id="motivoCancelacion"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-sm-12 col-md-3 col-lg-3 unit">
+                            <label className="label">Estatus</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.motivoCancelacion}
+                                id="motivoCancelacion"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-sm-12 col-md-3 col-lg-3 unit">
+                            <label className="label">Cargado</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.motivoCancelacion}
+                                id="motivoCancelacion"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-sm-12 col-md-4 col-lg-4 unit">
+                            <label className="label">Fecha Salida</label>
+                            <div className="input">
+                              <input
+                                onChange={handleChange}
+                                className="form-control"
+                                type="text"
+                                value={state.motivoCancelacion}
+                                id="motivoCancelacion"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="form-footer" className="col-md-12">
+                            <button
+                              href="#Listado"
+                              role="tab"
+                              data-toggle="tab"
+                              className="btn btn-secondary secondary-btn"
+                            >
+                              Cancelar
+                                </button>
+                            <button
+                              type="submit"
+                              className="btn btn-primary primary-btn"
+                            >
+                              Aceptar
+                                </button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+
                   </div>
                 </div>
               </div>
