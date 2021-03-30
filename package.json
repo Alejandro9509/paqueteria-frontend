@@ -19,6 +19,7 @@
     "datatables.net": "^1.10.22",
     "datatables.net-dt": "^1.10.22",
     "file-saver": "^2.0.5",
+    "iput": "^1.1.2",
     "jspdf": "^2.1.1",
     "jspdf-autotable": "^3.5.13",
     "leaflet": "^1.7.1",

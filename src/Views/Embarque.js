@@ -21,7 +21,9 @@ import TextField from "@material-ui/core/TextField";
 import useModal from "react-hooks-use-modal";
 import { useHistory, Redirect } from "react-router-dom";
 import { DataGrid } from '@material-ui/data-grid';
-import clsx from 'clsx';
+import SvgIcon from "@material-ui/core/SvgIcon";
+import { ReactComponent as EsRecoletaIcon } from '../iconos/Menu/palomita.svg';
+import { ReactComponent as NoEsRecolectaIcon } from '../iconos/Menu/cruz.svg';
 
 import Noty from 'noty';
 import { Dialog, DialogActions, DialogContent } from "@material-ui/core";
@@ -893,12 +895,21 @@ function Embarque(props) {
     {
       headerName: "Es Recolecta",
       field: "m_bEsRecolecta",
-      width: 150,
-      cellClassName: (params) =>
-      clsx('super-app', {
-        esRecolecta: params.value == 0,
-        noRecolecta: params.value == 1,
-      })
+      width: 125,
+      renderCell: (row) => {
+        return (
+          <div style={{ width: "100%", textAlign: "center", color: row.row.m_bEsRecolecta = 0 ? "green" : "red" }}>
+            {row.row.m_bEsRecolecta = 0 ?
+              <SvgIcon
+                component={EsRecoletaIcon}
+              /> :
+              <SvgIcon
+                component={NoEsRecolectaIcon}
+              />
+            }
+          </div>
+        )
+      },
     },
     {
       headerName: "Folio Recolección",
@@ -1309,8 +1320,8 @@ function Embarque(props) {
     );
 
     return (
-      <div className="wrapper-tabla">
-        <div className="wrapper-tabla-2" >
+      <div className="">
+        <div className="" >
           <table className="table tabla-listado" {...getTableProps()}>
             <thead>
               {headerGroups.map((headerGroup) => (
@@ -2381,7 +2392,7 @@ function Embarque(props) {
                       </div>
                     </form>
                   </div>
-                  <div className="row wrapper-tabla" style={{ height: state.height - 250, width: '100%' }}>
+                  <div className="row" style={{ height: state.height - 250, width: '100%' }}>
                     {conDatos() ? (
                       <DataGrid
                         className={classes.root}

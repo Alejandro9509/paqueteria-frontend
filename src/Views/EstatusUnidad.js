@@ -194,6 +194,14 @@ function EstatusUnidad() {
       headerName: "Abreviación",
       field: "m_sAbreviacion",
       width: 125,
+      renderCell: (row) => {
+        console.log(row.row.m_sColor)
+        return (
+          <div style={{backgroundColor: "#" + row.row.m_sColor, width:"100%", textAlign: "center" }}>
+            {row.row.m_sAbreviacion}
+          </div>
+        )
+      }
     }, {
       headerName: "Estatus",
       field: "m_sEstatus",
@@ -403,7 +411,7 @@ function EstatusUnidad() {
             <div className="widget-wrap" id="Listado" className="tab-pane fade in active">
               <div className="widget-wrap">
                 <div className="widget-content">
-                <div className="row wrapper-tabla" style={{ height: state.height - 250, width: '100%' }}>
+                <div className="row" style={{ height: state.height - 250, width: '100%' }}>
                     {data.length != 0 ? (
                       <DataGrid
                         rows={data}

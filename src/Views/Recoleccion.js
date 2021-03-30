@@ -2302,6 +2302,40 @@ function Recoleccion() {
 
               </DialogActions>
             </div>
+          }
+          {state.tipoModal == 6 &&
+            <div className="row" style={{ backgroundColor: '#FFFFFF' }} >
+
+              <div>
+                <h2>Selecciona el Formato</h2>
+                <label className="input select">
+                  <select
+                    className="form-control"
+                    required
+                    value={state.sucursalListado}
+                    onChange={handleSucursalFiltro}
+                    id="sucursalListado"
+                  >
+                    {dataSucursal.map((sucursal) => (
+                      <option
+                        key={sucursal.m_nIdSucursal}
+                        value={sucursal.m_nIdSucursal}
+                      >
+                        {sucursal.m_sSucursal}
+                      </option>
+                    ))}
+                  </select>
+                  <i></i>
+                </label>
+              </div>
+
+              <DialogActions style={{ justifyContent: "left" }}>
+
+                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-primary primary-btn">Aceptar</button>
+                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-secondary secondary-btn">Cerrar</button>
+
+              </DialogActions>
+            </div>
           }</DialogContent>
 
       </Dialog>
@@ -2345,12 +2379,28 @@ function Recoleccion() {
             </li>
 
             <li>
-              <ExportCSV csvData={data} fileName="Recoleccion_Listado" />
+              <a onClick={() => {
+                setState({
+                  ...state,
+                  identificadorModal:
+                    "nombreRemitente",
+                  tipoModal: 6,
+                  openDialog: true
+                });
+              }}>
+                <i className="fa fa-times-circle" /> Imprimir
+              </a>
             </li>
+
+
             <li>
               <a data-toggle="tab" href="#Cancelar" onClick={handleShowCancelar} className={state.idRecoleccion == 0 ? classes.disabled : ""}>
-                <i className="fa fa-times-circle" /> Cancelar
+                <i className="zmdi zmdi-print" /> Cancelar
               </a>
+            </li>
+
+            <li>
+              <ExportCSV csvData={data} fileName="Recoleccion_Listado" />
             </li>
 
             <li>

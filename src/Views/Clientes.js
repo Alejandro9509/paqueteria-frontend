@@ -258,8 +258,8 @@ function Clientes(props) {
     );
 
     return (
-      <div className="wrapper-tabla" style={{ height: state.height - 270 }}>
-        <div className="wrapper-tabla-2" >
+      <div className="" style={{ height: state.height - 270 }}>
+        <div className="" >
           <table className="table tabla-listado" {...getTableProps()}>
             <thead>
               {headerGroups.map((headerGroup) => (
@@ -833,7 +833,7 @@ function Clientes(props) {
             <div id="Listado" className="tab-pane fade in active">
               <div className="widget-wrap">
                 <div className="widget-content">
-                <div className="row wrapper-tabla" style={{ height: state.height - 250, width: '100%' }}>
+                <div className="row" style={{ height: state.height - 250, width: '100%' }}>
                     {dataListadoClientes.length != 0 ? (
                       <DataGrid
                         rows={dataListadoClientes}

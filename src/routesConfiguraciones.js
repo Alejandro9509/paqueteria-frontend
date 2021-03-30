@@ -5,6 +5,7 @@ import PaisesPage from './Views/Paises';
 import CiudadesCodigoPostalPage from './Views/Ciudades';
 import ParametrosPage from './Views/Parametros';
 import SucursalesPage from './Views/Sucursal';
+import UsuariosPage from './Views/Usuarios';
 
 import {ReactComponent as GParametroIcon} from './iconos/Configuracion/Icono Parametros/icono_parametro.svg';
 import {ReactComponent as GUsuarioIcon} from './iconos/Configuracion/Icono Usuarios/icono_usuarios.svg';
@@ -31,7 +32,7 @@ const configurationRoutes = [
     path: "/Usuarios",
     name: "Usuarios",
     icon:  GUsuarioIcon,
-    component: DepartamentoPage,
+    component: UsuariosPage,
   },
   {
     path: "/Paises",

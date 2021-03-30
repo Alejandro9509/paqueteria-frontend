@@ -842,7 +842,7 @@ function Operadores(props) {
             <div id="Listado" className="tab-pane fade in active">
               <div className="widget-wrap">
                 <div className="widget-content">
-                <div className="row wrapper-tabla" style={{ height: state.height - 250, width: '100%' }}>
+                <div className="row" style={{ height: state.height - 250, width: '100%' }}>
                     {dataOperadores.length != 0 ? (
                       <DataGrid
                         rows={dataOperadores}
