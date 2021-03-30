@@ -51,6 +51,8 @@ function showSuccess(mensaje) {
   }).show()
 }
 
+
+
 const styles = {
   seleccionado: {
     backgroundColor: "#FCC88F",
@@ -75,6 +77,8 @@ function Informes({ history }) {
   const classes = useStyles();
   const [stepActive, setStepActive] = React.useState(1);
   const [data, setData] = React.useState([]);
+  const [dataRutas, setDataRutas] = React.useState([]);
+
   const [Modal, open, close, isOpen] = useModal("root", {
     preventScroll: true,
   });
@@ -121,6 +125,22 @@ function Informes({ history }) {
     },
   ]);
 
+  function getAllDataRutas() {
+    const url = `${process.env.REACT_APP_API_URL}/Rutas/GetListado`;
+    axios.get(url, { headers }).then((respuesta) => {
+        console.log(respuesta.data);
+        setDataRutas(respuesta.data);
+  
+    });
+  }
+
+  const handleChange = (event) => {
+    console.log(event.target.id + " : " + event.target.value);
+    setState({
+      ...state,
+      [event.target.id]: event.target.value,
+    });
+  };
 
   function handleSelectCP(id, cp) {
     setState({
@@ -905,9 +925,9 @@ function Informes({ history }) {
     tipoModal: 0,
     IdInforme: 0,
     FolioInforme: 0,
-    Fecha: "",
+    fechaHoraLlegada: "",
     DerechoBorrar: 151,
-    Hora: "",
+    
     IdEstatusInforme: 0,
     IdViaje: 0,
     IdSucursalEmisora: 0,
@@ -921,6 +941,7 @@ function Informes({ history }) {
     IdRuta: 0,
     usuarioCancelacion: "",
     estatusCancelacion: "",
+    IdSucursal:  localStorage.getItem("Sucursal"),
     agregar: "Agregar",
     height: window.innerHeight,
     CreadoPor: localStorage.getItem("UsuarioId"),
@@ -1149,6 +1170,8 @@ function Informes({ history }) {
     getAllOperadores();
     getAllCiudades();
     getAllTipoUnidad();
+    getAllDataRutas();
+
   }, []);
 
   function getAllData() {
@@ -1475,7 +1498,9 @@ function Informes({ history }) {
                                                         <select
                                                           className="form-control"
                                                           required
-                                                          id="sucursal"
+                                                          id="IdSucursal"
+                                                          value={state.IdSucursal}
+                                                          disabled
                                                         >
                                                           <option value="0">
                                                             Todas
@@ -1509,35 +1534,27 @@ function Informes({ history }) {
                                                           className="form-control"
                                                           type="text"
                                                           id="Folio"
+                                                          disabled
                                                         />
                                                       </div>
                                                     </div>
                                                     {/*****************************************Fecha*******************************************************/}
-                                                    <div className="col-sm-12 col-md-3 unit">
-                                                      <label className="label">
-                                                        Fecha
-                                                      </label>
-                                                      <div className="input">
-                                                        <input
-                                                          className="form-control"
-                                                          type="text"
-                                                          id="Fecha"
-                                                        />
-                                                      </div>
+                                                    <div className="col-sm-12 col-md-6 unit">
+                                                    <label className="label">Fecha y Hora</label>
+                                  <div className="input">
+                                    <input
+                                      onChange={handleChange}
+                                      className="form-control"
+                                      type="datetime-local"
+                                      required
+                                      value={state.fechaHora}
+                                      disabled={state.agregar == "Consultar"}
+                                      id="fechaHora"
+                                    />
+                                  </div>
                                                     </div>
                                                     {/*****************************************Hora*******************************************************/}
-                                                    <div className="col-sm-12 col-md-3 unit">
-                                                      <label className="label">
-                                                        Hora
-                                                      </label>
-                                                      <div className="input">
-                                                        <input
-                                                          className="form-control"
-                                                          type="text"
-                                                          id="Hora"
-                                                        />
-                                                      </div>
-                                                    </div>
+                                                  
                                                     {/*****************************************Oficina Emisora***************************************************/}
                                                     <div className="col-sm-6 col-md-3 unit">
                                                       <label className="label">
@@ -1913,38 +1930,46 @@ function Informes({ history }) {
                                                         Ruta
                                                       </label>
                                                       {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
-                                                      <Autocomplete
-                                                        freeSolo
-                                                        onChange={(
-                                                          event,
-                                                          newValue
-                                                        ) =>
-                                                          setState({
-                                                            ...state,
-                                                            idRuta: newValue,
-                                                          })
-                                                        }
-                                                        placeholder={
-                                                          state.idRuta
-                                                        }
-                                                        id="idRuta"
-                                                        disableClearable
-                                                        getOptionLabel={(
-                                                          option
-                                                        ) => option.m_sCiudad}
-                                                        options={dataOrigenes}
-                                                        renderInput={(
-                                                          params
-                                                        ) => (
-                                                          <TextField
-                                                            {...params}
-                                                            InputProps={{
-                                                              ...params.InputProps,
-                                                              type: "search",
-                                                            }}
-                                                          />
-                                                        )}
-                                                      />{" "}
+                                                      <div className="input">
+                                                        <Autocomplete
+                                                          freeSolo
+                                                          onChange={(event, newValue) =>
+                                                            setState({
+                                                              ...state,
+                                                              idRuta: newValue,
+                                                            })
+                                                          }
+                                                          value={state.IdCiudadDestino}
+                                                          id="idRuta"
+                                                          disableClearable
+                                                          forcePopupIcon={false}
+                                                          options={dataRutas}
+                                                          getOptionLabel={(
+                                                            option
+                                                          ) => option.m_sDescripcion}
+                                                          variant="outlined"
+                                                          style={{ borderWidth: "1px", borderColor: "#dddddd", borderStyle: "solid", borderRadius: "5px" }}
+                                                          renderInput={(params) => (
+                                                            <div>
+                                                              <TextField
+                                                                {...params}
+                                                                InputProps={{
+                                                                  ...params.InputProps,
+                                                                  style: { height: 24 },
+                                                                  type: "search",
+                                                                  disableUnderline: true,
+                                                                  endAdornment:
+                                                                    <InputAdornment position="end">
+                                                                      <IconButton padding="0px" style={{ paddingRight: "0px" }} onClick={() => { setState({ ...state, identificadorModal: "IdCiudadDestino", tipoModal: 1, openDialog: true }); getAllViajesOrigenDestino(state.IdCiudadOrigen.m_nIdCiudad, state.IdCiudadDestino.m_nIdCiudad); getAllGuiasFrom() }}>
+                                                                        <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
+                                                                      </IconButton>
+                                                                    </InputAdornment>
+                                                                }}
+                                                              />
+                                                            </div>
+                                                          )}
+                                                        />
+                                                      </div>{" "}
                                                     </div>
                                                   </div>
                                                 </div>
