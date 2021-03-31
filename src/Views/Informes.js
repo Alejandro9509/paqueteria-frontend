@@ -1639,10 +1639,10 @@ function Informes({ history }) {
                                                             (estatus) => (
                                                               <option
                                                                 key={
-                                                                  estatus.m_nIdEstatusRecoleccion
+                                                                  estatus.m_nIdEstatusInforme
                                                                 }
                                                                 value={
-                                                                  estatus.m_nIdEstatusRecoleccion
+                                                                  estatus.m_nIdEstatusInforme
                                                                 }
                                                               >
                                                                 {
