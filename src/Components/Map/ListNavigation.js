@@ -31,7 +31,8 @@ export default function NavigationList(props) {
     return (
         <List component="nav" className={classes.root} aria-label="navication">
             {
-                props.indications.map(i => {
+
+props.indications && props.indications.map(i => {
                     return (
                         <ListItem >
                             <ListItemIcon>
