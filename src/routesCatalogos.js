@@ -16,6 +16,12 @@ import CasetaPage from './Views/Caseta';
 import GrupoClientePage from './Views/GrupoCliente';
 import GrupoUnidadPage from './Views/GrupoUnidades';
 import PuestoPage from './Views/Puesto';
+import EstatusViajePage from './Views/EstatusViaje';
+import EstatusEmbarquePage from './Views/EstatusEmbarque';
+import EstatusRecoleccionPage from './Views/EstatusRecoleccion';
+import EstatusGuiaPage from './Views/EstatusGuia';
+import EstatusInformePage from './Views/EstatusInforme';
+import EstatusDocumentoPage from './Views/EstatusDocumento';
 
 import {ReactComponent as GClienteIcon} from './iconos/Catalogos/Icono Grupo Clientes/icono_grupo_cliente.svg';
 import {ReactComponent as BancoIcon} from './iconos/Catalogos/Icono Banco/icono_banco.svg';
@@ -46,6 +52,7 @@ import {ReactComponent as TViajeIcon} from './iconos/Catalogos/Icono Tipos Viaje
 import {ReactComponent as UnidadesIcon} from './iconos/Catalogos/Icono Unidades/icono_unidades.svg';
 import {ReactComponent as ViajesIcon} from './iconos/Catalogos/Icono Viajes/icono_viajes.svg';
 import {ReactComponent as AddendasIcon} from './iconos/Catalogos/Icono Addendas/icono_addendas.svg';
+import EstatusGuia from './Views/EstatusGuia';
 
 
 const catalogRoutes = [
@@ -124,40 +131,40 @@ const catalogRoutes = [
     component: TiposViaje,
   },
   {
-    path: "/Embalajes",
+    path: "/EstatusViaje",
     name: "Estatus Viaje",
     icon: EViajeIcon,
-    component: EmbalajesPage,
+    component: EstatusViajePage,
   },
   {
-    path: "/Embalajes",
+    path: "/EstatusEmbarque",
     name: "Estatus Embarque",
     icon: EEmbarqueIcon,
-    component: EmbalajesPage,
+    component: EstatusEmbarquePage,
   },
   {
-    path: "/Embalajes",
+    path: "/EstatusRecoleccion",
     name: "Estatus Recolección",
     icon: ERecoleccionIcon,
-    component: EmbalajesPage,
+    component: EstatusRecoleccionPage,
   },
   {
-    path: "/Embalajes",
+    path: "/EstatusGuia",
     name: "Estatus Guías",
     icon: EGuiaIcon,
-    component: EmbalajesPage,
+    component: EstatusGuiaPage,
   },
   {
-    path: "/Embalajes",
+    path: "/EstatusInforme",
     name: "Estatus Informe",
     icon: EInformeIcon,
-    component: EmbalajesPage,
+    component: EstatusInformePage,
   },
   {
-    path: "/Embalajes",
+    path: "/EstatusDocumento",
     name: "Estatus Documentos",
     icon: GClienteIcon,
-    component: EmbalajesPage,
+    component: EstatusDocumentoPage,
   },
 
   {

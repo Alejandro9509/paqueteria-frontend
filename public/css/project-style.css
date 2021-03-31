@@ -178,6 +178,11 @@ h2 {
   font-size: 14px !important;
   color: #444444 !important;
   border: 0px !important;
+  overflow-y: hidden !important;
+}
+
+.MuiDataGrid-window{
+  overflow-y: hidden !important;
 }
 
 .MuiDataGrid-row{
@@ -224,4 +229,12 @@ h2 {
 
 .MuiDataGrid-columnsContainer{
   padding-top: 10px !important;
+}
+
+.MuiTypography-body2{
+  font-size: large !important;
+}
+
+.MuiTablePagination-actions > .MuiSvgIcon-root {
+  font-size: 3rem !important;
 }
