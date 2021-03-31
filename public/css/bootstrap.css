@@ -1506,7 +1506,7 @@ blockquote .small:before {
 }
 .blockquote-reverse,
 blockquote.pull-right {
-  padding-right: 15px;
+  padding-right: 0px;
   padding-left: 0;
   border-right: 5px solid #eeeeee;
   border-left: 0;
@@ -1619,7 +1619,6 @@ pre code {
   position: relative;
   min-height: 1px;
   padding-left: 15px;
-  padding-right: 15px;
 }
 .col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12 {
   float: left;
