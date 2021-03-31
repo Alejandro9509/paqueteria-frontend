@@ -62,13 +62,16 @@ const headers = {
 };
 
 function Rutas(props) {
+
     const classes = useStyles();
     const history = useHistory()
     const [data, setData] = React.useState([]);
     const [tiposViaje, setTiposViaje] = React.useState([])
+    const [destinos, setDestinos] = React.useState([])
     const [calificaciones, setCalificaciones] = React.useState([])
     const [dataTipoUnidad, setDataTipoUnidad] = React.useState([]);
     const [state, setState] = React.useState({
+        agregar: "Agregar",
         openDialog: false,
         idRuta: 0,
         height: window.innerHeight,
@@ -106,10 +109,20 @@ function Rutas(props) {
         });
     }
 
+    function getDestinos() {
+        const url = `${process.env.REACT_APP_API_URL}/Rutas/GetListadoCoordenadas`;
+        axios.get(url, { headers }).then((respuesta) => {
+            setDestinos(respuesta.data.filter(d => d.m_bPermanente));
+
+        });
+    }
+
     function routed(route, exc) {
+
 
         var polygon = []
         if (route) {
+            console.log(route)
             route.polyline.plain.polyline.map(c => {
                 polygon.push([c.y, c.x])
             })
@@ -117,7 +130,9 @@ function Rutas(props) {
                 ...state,
                 route: route,
                 polygon: polygon,
-                description: (state.origin + " - " + state.destiny)
+                description: (state.origin + " - " + state.destiny),
+                kilometros: (route.distance / 1000).toFixed(2),
+                millas: (route.distance / 1609).toFixed(2)
             })
 
             if (!state.isManual) {
@@ -127,39 +142,53 @@ function Rutas(props) {
 
     }
     useEffect(value => {
+
         getTiposViajeData()
         getAllTipoUnidad()
         getCalificacionesData()
         getAllData();
+        getDestinos()
     }, [])
+
+
+    useEffect(value => {
+        if (map) {
+            setTimeout(function () {
+                map.invalidateSize(true);
+
+            }, 500);
+
+        }
+    }, [map])
 
     function handleEliminar(id) {
         var derecho;
-    }
+        debugger;
+        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
+        axios.get(urlDelete, { headers }).then(respuesta => {
+            //showSuccess(respuesta.data)
 
-    const columnsTipoUnidades = React.useMemo(() => [
-        {
-            Name: "Tipo de unidad",
-            accessor: "m_sTipoUnidad",
-        },
-        {
-            Name: "Identificador",
-            accessor: "m_nIdentificador",
-        },
-        {
-            Name: "Nomenclatura",
-            accessor: "m_sNomenclaturaSCT",
-        },
-        {
-            Name: "Estatus",
-            accessor: "m_bActivo",
-        },
-    ]);
+            derecho = respuesta.data;
+            if (derecho == false) {
+                showSuccess("El usuario no tiene derechos para realizar el proceso");
+                return;
+            }
+            const url = `${process.env.REACT_APP_API_URL}/Rutas/Eliminar/` + id;
+            axios.delete(url, { headers }).then(respuesta => {
+                showSuccess(respuesta.data)
+                getAllData()
+            }).catch(err => {
+                showSuccess(err)
+            });
+        }).catch(err => {
+            showSuccess(err)
+        });
+    }
 
     const columns = React.useMemo(() => [
         {
             Name: "Folio",
-            accessor: "m_sFolio",
+            accessor: "m_nIdFolio",
         },
         {
             Name: "Descripción",
@@ -219,19 +248,20 @@ function Rutas(props) {
             //"m_nIdClasificacionViaje": state.clasificacion,
             "m_nIdClasificacionViaje": 1,
             "m_nIdTipoUnidad": state.tipoUnidad,
-            "m_bTipoTrayecto": 1,
+            "m_bTipoTrayecto": state.trayecto === "PERMANENTE" ? 1 : 0,
             "m_rHoras": state.horas,
             "m_rETA": state.eta,
             "m_rKM": state.kilometros,
             "m_rMillas": state.millas,
             "m_bActiva": state.activa,
             "m_nCreadoPor": state.CreadoPor,
-            "m_bPermanente": state.trayecto === "PERMANENTE",
+            "m_bPermanente": state.trayecto === "PERMANENTE" ? 1 : 0,
             "m_bTrazoLibre": state.isManual,
-            "m_xnOrigenLatitud": state.points[0].location[1],
-            "m_xnOrigenLongitud": state.points[0].location[0],
-            "m_xnDestinoLatitud": state.points[state.points.length - 1].location[1],
-            "m_xnDestinoLongitud": state.points[state.points.length - 1].location[0],
+            "m_xnOrigenLatitud": state.points[0].location[0],
+            "m_xnOrigenLongitud": state.points[0].location[1],
+            "m_xnDestinoLatitud": state.points[state.points.length - 1].location[0],
+            "m_xnDestinoLongitud": state.points[state.points.length - 1].location[1],
+            "m_arrClsTrazoLibre": state.points,
 
         }
         console.log(JSON.stringify(params));
@@ -313,19 +343,34 @@ function Rutas(props) {
         })
     };
 
-    const columnsTipoViaje = React.useMemo(() => [
-        {
-            Name: "Código",
-            accessor: "m_nCodigo",
-        }, {
-            Name: "Tipo de Viaje / Ruta",
-            accessor: "m_sTipoViaje",
-        },
-        {
-            Name: "Estatus",
-            accessor: "m_bActivo",
-        },
-    ]);
+    function showAgregar() {
+        setState({
+            ...state,
+            openDialog: false,
+            agregar: "Agregar",
+            idRuta: 0,
+            height: window.innerHeight,
+            points: [],
+            showMap: true,
+            folio: "",
+            route: null,
+            polygon: [],
+            origin: "",
+            destiny: "",
+            originLocation: null,
+            destinyLocation: null,
+            isManual: false,
+            isTour: false,
+            showDialog: false,
+            identificadorModal: "",
+            tipoModal: 0,
+            tipoUnidad: null,
+            tipoViaje: null,
+            trayecto: "PERMANENTE",
+            activa: false,
+            CreadoPor: localStorage.getItem("UsuarioId"),
+        })
+    }
 
     useEffect(value => {
         if (state.originLocation != null && state.destinyLocation != null) {
@@ -343,6 +388,7 @@ function Rutas(props) {
                     "MANEUVER_EVENT",
                     "TOLL_EVENT"
                 ],
+                "encodedPath": true,
                 "guidedNavigationRoute": true
             },
             "routeOptions": {
@@ -358,11 +404,72 @@ function Rutas(props) {
     }
 
     function handleShowConsultar(id) {
-        console.log(id);
+        const url = `${process.env.REACT_APP_API_URL}/Rutas/GetById/${id}`;
+        axios.get(url, { headers }).then(respuesta => {
+            console.log(respuesta.data)
+            setState({
+                ...state,
+                agregar: "Modificar",
+                idRuta: id,
+                height: window.innerHeight,
+                showMap: true,
+                folio: respuesta.data.m_nIdFolio,
+                description: respuesta.data.m_sDescripcion,
+                polygon: [],
+                origin: respuesta.data.m_sOrigen,
+                destiny: respuesta.data.m_sDestino,
+                originLocation: { location: { referenceCoordinate: { x: respuesta.data.m_xnOrigenLongitud, y: respuesta.data.m_xnOrigenLatitud } } },
+                destinyLocation: { location: { referenceCoordinate: { x: respuesta.data.m_xnDestinoLongitud, y: respuesta.data.m_xnDestinoLatitud } } },
+                points: [{ key: 0, label: "", location: [respuesta.data.m_xnOrigenLatitud, respuesta.data.m_xnOrigenLongitud] }, { key: 1, label: "", location: [respuesta.data.m_xnDestinoLatitud, respuesta.data.m_xnDestinoLongitud] }],
+                isManual: respuesta.data.m_bTrazoLibre,
+                isTour: respuesta.data.m_bTrazoLibre,
+                tipoUnidad: respuesta.data.m_nIdTipoUnidad,
+                tipoViaje: respuesta.data.m_nIdTipoViaje,
+                trayecto: respuesta.data.m_bTipoTrayecto === 1 ? "PERMANENTE" : "EVENTUAL",
+                activo: respuesta.data.m_bActiva,
+                eta: respuesta.data.m_rETA,
+                horas: respuesta.data.m_rHoras,
+                kilometros: respuesta.data.m_rKM,
+                millas: respuesta.data.m_rMillas,
+                CreadoPor: localStorage.getItem("UsuarioId"),
+
+            })
+        });
     }
 
     function handleShowModificar(id) {
-        console.log(id);
+        const url = `${process.env.REACT_APP_API_URL}/Rutas/GetById/${id}`;
+        axios.get(url, { headers }).then(respuesta => {
+            console.log(respuesta.data)
+            setState({
+                ...state,
+                agregar: "Modificar",
+                idRuta: id,
+                height: window.innerHeight,
+                showMap: true,
+                folio: respuesta.data.m_nIdFolio,
+                description: respuesta.data.m_sDescripcion,
+                polygon: [],
+                origin: respuesta.data.m_sOrigen,
+                destiny: respuesta.data.m_sDestino,
+                originLocation: { location: { referenceCoordinate: { x: respuesta.data.m_xnOrigenLongitud, y: respuesta.data.m_xnOrigenLatitud } } },
+                destinyLocation: { location: { referenceCoordinate: { x: respuesta.data.m_xnDestinoLongitud, y: respuesta.data.m_xnDestinoLatitud } } },
+                points: [{ key: 0, label: "", location: [respuesta.data.m_xnOrigenLatitud, respuesta.data.m_xnOrigenLongitud] }, { key: 1, label: "", location: [respuesta.data.m_xnDestinoLatitud, respuesta.data.m_xnDestinoLongitud] }],
+                isManual: respuesta.data.m_bTrazoLibre,
+                isTour: respuesta.data.m_bTrazoLibre,
+                tipoUnidad: respuesta.data.m_nIdTipoUnidad,
+                tipoViaje: respuesta.data.m_nIdTipoViaje,
+                trayecto: respuesta.data.m_bTipoTrayecto === 1 ? "PERMANENTE" : "EVENTUAL",
+                activo: respuesta.data.m_bActiva,
+                eta: respuesta.data.m_rETA,
+                horas: respuesta.data.m_rHoras,
+                kilometros: respuesta.data.m_rKM,
+                millas: respuesta.data.m_rMillas,
+                CreadoPor: localStorage.getItem("UsuarioId"),
+
+            })
+        });
+
     }
 
     function handleSelectRow(id, event) {
@@ -381,6 +488,29 @@ function Rutas(props) {
             ...state,
             [event.target.name]: event.target.value,
         });
+    };
+
+    const handleChangeDestino = (value, index) => {
+        var points = state.points
+        points[1] = { key: 0, label: destinos[index].m_sDescipcion, location: [destinos[index].m_xLatitud, destinos[index].m_xLongitud] }
+        setState({
+            ...state,
+            destiny: value,
+            points: points,
+            destinyLocation: { location: { referenceCoordinate: { x: destinos[index].m_xLongitud, y: destinos[index].m_xLatitud } } }
+        });
+        map.flyTo(points[1].location, 15)
+    };
+    const handleChangeOrigen = (value, index) => {
+        var points = state.points
+        points[0] = { key: 0, label: destinos[index].m_sDescipcion, location: [destinos[index].m_xLatitud, destinos[index].m_xLongitud] }
+        setState({
+            ...state,
+            origin: value,
+            points: points,
+            originLocation: { location: { referenceCoordinate: { x: destinos[index].m_xLongitud, y: destinos[index].m_xLatitud } } }
+        });
+        map.flyTo(points[0].location, 15)
     };
 
     function searchLocation(isOrigin) {
@@ -412,17 +542,20 @@ function Rutas(props) {
         console.log(dobleClick);
     }
 
+
     function searchCompleted(response, exception) {
         if (response) {
             if (response.results.length != 0) {
+                console.log(response.results[0])
                 var points = state.points
                 if (originFlag) {
                     points[0] = { key: 0, label: response.results[0].location.formattedAddress, location: [response.results[0].location.referenceCoordinate.y, response.results[0].location.referenceCoordinate.x] }
                     setState({ ...state, originLocation: response.results[0], points: points })
-                    //map.flyTo(points[0].location , 10)
+                    map.flyTo(points[0].location, 15)
                 } else {
                     points[1] = { key: points.length - 1, label: response.results[0].location.formattedAddress, location: [response.results[0].location.referenceCoordinate.y, response.results[0].location.referenceCoordinate.x] }
                     setState({ ...state, destinyLocation: response.results[0], points: points })
+                    map.flyTo(points[points.length - 1].location, 15)
                 }
 
 
@@ -433,155 +566,10 @@ function Rutas(props) {
         }
     }
 
-    function TableTipoViaje({ columns, data, select }) {
 
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        )
 
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn
-            },
-            useFilters,
-            useSortBy
-        )
 
-        return (
-            <div className="col-md-12">
-                <table className="table" {...getTableProps()}>
-                    <thead>
-                        {headerGroups.map(headerGroup => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map(column => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render('Name')}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
-                                            {column.isSorted
-                                                ? column.isSortedDesc
-                                                    ? <i className="fa fa-caret-up" />
-                                                    : <i className="fa fa-caret-down" />
-                                                : ''}
-                                        </span>
-                                        <div>{column.canFilter ? column.render('Filter') : null}</div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                        {rows.map(
-                            (row, i) => {
-                                prepareRow(row);
-                                return (
-                                    <tr style={{ backgroundColor: row.original.m_nIdTipoViaje === select ? "orange" : "white" }} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original, false)} onDoubleClick={handleSelectCP.bind(this, row.original, true)}>
-                                        {row.cells.map(cell => {
-                                            return (
-                                                <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                                            )
-                                        })}
-                                    </tr>
-                                )
-                            }
-                        )}
-                    </tbody>
-                </table>
-            </div>
-        )
-    }
 
-    function TableTipoUnidad({ columns, data, select }) {
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        );
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-            state,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn,
-            },
-            useFilters,
-            useSortBy
-        );
-
-        return (
-            <div className="col-md-12">
-                <table className="table" {...getTableProps()}>
-                    <thead>
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map(column => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render("Name")}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
-                                            {column.isSorted ? (
-                                                column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up" />
-                                                ) : (
-                                                    <i className="fa fa-caret-down" />
-                                                )
-                                            ) : (
-                                                ""
-                                            )}
-                                        </span>
-                                        <div>
-                                            {column.canFilter ? column.render("Filter") : null}
-                                        </div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                        {rows.map(
-                            (row, i) => {
-                                prepareRow(row);
-                                return (
-                                    <tr style={{ backgroundColor: row.original.m_nIdTipoUnidad === select ? "orange" : "white" }} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original, false)} onDoubleClick={handleSelectCP.bind(this, row.original, true)}>
-                                        {row.cells.map(cell => {
-                                            return (
-                                                <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                                            )
-                                        })}
-                                    </tr>
-                                )
-                            }
-                        )}
-                    </tbody>
-                </table>
-            </div>
-        );
-    }
 
 
     function Table({ columns, data }) {
@@ -706,43 +694,7 @@ function Rutas(props) {
 
     return (
         <div>
-            <Dialog open={state.openDialog} onClose={() => setState({ ...state, openDialog: false })}>
-                <DialogContent>
 
-
-                    {state.tipoModal == 3 &&
-                        <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-                            <div align="right">
-                                <button onClick={() => { history.push("/TipoUnidad") }} className="btn btn-primary primary-btn">Agregar</button>
-                            </div>
-                            {dataTipoUnidad.length != 0 ? <TableTipoUnidad object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdTipoUnidad} columns={columnsTipoUnidades} data={dataTipoUnidad} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
-
-                            <DialogActions style={{ justifyContent: "left" }}>
-
-                                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-primary primary-btn">Aceptar</button>
-                                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-secondary secondary-btn">Cerrar</button>
-
-                            </DialogActions>
-                        </div>
-                    }
-                    {state.tipoModal == 4 &&
-                        <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-                            <div align="right">
-                                <button onClick={() => { history.push("/TipoUnidad") }} className="btn btn-primary primary-btn">Agregar</button>
-                            </div>
-                            {dataTipoUnidad.length != 0 ? <TableTipoViaje object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdTipoViaje} columns={columnsTipoViaje} data={tiposViaje} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
-
-                            <DialogActions style={{ justifyContent: "left" }}>
-
-                                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-primary primary-btn">Aceptar</button>
-                                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-secondary secondary-btn">Cerrar</button>
-
-                            </DialogActions>
-                        </div>
-                    }
-                </DialogContent>
-
-            </Dialog>
             <header className="topbar clearfix">
                 <Cabecera />
             </header>
@@ -785,9 +737,9 @@ function Rutas(props) {
             </a>
                         </li>
                         <li>
-                            <a data-toggle="tab" href="#Agregar" onClick={() => setState({ ...state, showMap: true })}>
-                                Agregar
-            </a>
+                            <a data-toggle="tab" href="#Agregar" onClick={() => showAgregar()}>
+                                {state.agregar}
+                            </a>
                         </li>
                         <li>
                             <a data-toggle="tab" href="#Importar">
@@ -847,6 +799,7 @@ function Rutas(props) {
                                                                                 <input
                                                                                     type="text"
                                                                                     pattern="[0-9]*"
+                                                                                    required
                                                                                     className="form-control"
                                                                                     name="folio"
                                                                                     value={state.folio}
@@ -858,63 +811,95 @@ function Rutas(props) {
                                                                         <div className="col-md-4 unit">
                                                                             <label className="label">Origen</label>
                                                                             <div className="input">
-                                                                                <Input
-                                                                                    className="form-control"
-                                                                                    type="text"
+                                                                            <Autocomplete
+                                                                                className="form-control"
+                                                                                    freeSolo
+                                                                                    onChange={(event,value) => handleChangeOrigen(value, parseInt(value.slice(0, value.indexOf(" "))))}
+                                                                                    value={state.origin}
                                                                                     id="origin"
                                                                                     name="origin"
-                                                                                    onChange={handleChange}
-                                                                                    endAdornment={
-                                                                                        <InputAdornment position="end">
-                                                                                            <IconButton
-                                                                                                onClick={() => searchLocation(true)}
-                                                                                            >
-                                                                                                <PageviewIcon
-                                                                                                    style={{
-                                                                                                        color: "#F9A03E",
-                                                                                                        fontSize: 32,
-                                                                                                        paddingInlineEnd: 0,
-                                                                                                        paddingRight: 0,
-                                                                                                        paddingBlockEnd: 0,
-                                                                                                        paddingLeft: 0,
-                                                                                                        paddingBlock: 0,
-                                                                                                    }}
-                                                                                                />
-                                                                                            </IconButton>
-                                                                                        </InputAdornment>
-                                                                                    }
+                                                                                    onInputChange={(event, value) => setState({...state, origin: value})}
+                                                                                    disableClearable
+                                                                                    options={destinos.map((d,index) => `${index} ${d.m_sDescipcion}`)}
+                                                                                    renderInput={(params) => (
+                                                                                        <TextField
+                                                                                            {...params}
+                                                                                            InputProps={{
+                                                                                                ...params.InputProps,
+                                                                                                type: "search",
+                                                                                                name:"origin",
+                                                                                                endAdornment: (
+                                                                                                    <InputAdornment position="end">
+                                                                                                        <IconButton
+                                                                                                            onClick={() => searchLocation(true)}
+                                                                                                        >
+                                                                                                            <PageviewIcon
+                                                                                                                style={{
+                                                                                                                    color: "#F9A03E",
+                                                                                                                    fontSize: 32,
+                                                                                                                    paddingInlineEnd: 0,
+                                                                                                                    paddingRight: 0,
+                                                                                                                    paddingBlockEnd: 0,
+                                                                                                                    paddingLeft: 0,
+                                                                                                                    paddingBlock: 0,
+                                                                                                                }}
+                                                                                                            />
+                                                                                                        </IconButton>
+                                                                                                    </InputAdornment>
+                                                                                                )
+                                                                                            }}
+                                                                                            
+                                                                                        />
+                                                                                    )}
                                                                                 />
+                                                                                
                                                                             </div>
                                                                         </div>
                                                                         <div className="col-md-4 unit">
                                                                             <label className="label">Destino</label>
                                                                             <div className="input">
-                                                                                <Input
-                                                                                    className="form-control"
-                                                                                    type="text"
+                                                                                <Autocomplete
+                                                                                className="form-control"
+                                                                                    freeSolo
+                                                                                    onChange={(event,value) => handleChangeDestino(value, parseInt(value.slice(0, value.indexOf(" "))))}
+                                                                                    value={state.destiny}
                                                                                     id="destiny"
                                                                                     name="destiny"
-                                                                                    onChange={handleChange}
-                                                                                    endAdornment={
-                                                                                        <InputAdornment position="end">
-                                                                                            <IconButton
-                                                                                                onClick={() => searchLocation(false)}
-                                                                                            >
-                                                                                                <PageviewIcon
-                                                                                                    style={{
-                                                                                                        color: "#F9A03E",
-                                                                                                        fontSize: 32,
-                                                                                                        paddingInlineEnd: 0,
-                                                                                                        paddingRight: 0,
-                                                                                                        paddingBlockEnd: 0,
-                                                                                                        paddingLeft: 0,
-                                                                                                        paddingBlock: 0,
-                                                                                                    }}
-                                                                                                />
-                                                                                            </IconButton>
-                                                                                        </InputAdornment>
-                                                                                    }
+                                                                                    onInputChange={(event, value) => setState({...state, destiny: value})}
+                                                                                    disableClearable
+                                                                                    options={destinos.map((d,index) => `${index} ${d.m_sDescipcion}`)}
+                                                                                    renderInput={(params) => (
+                                                                                        <TextField
+                                                                                            {...params}
+                                                                                            InputProps={{
+                                                                                                ...params.InputProps,
+                                                                                                type: "search",
+                                                                                                name:"origin",
+                                                                                                endAdornment: (
+                                                                                                    <InputAdornment position="end">
+                                                                                                        <IconButton
+                                                                                                            onClick={() => searchLocation(false)}
+                                                                                                        >
+                                                                                                            <PageviewIcon
+                                                                                                                style={{
+                                                                                                                    color: "#F9A03E",
+                                                                                                                    fontSize: 32,
+                                                                                                                    paddingInlineEnd: 0,
+                                                                                                                    paddingRight: 0,
+                                                                                                                    paddingBlockEnd: 0,
+                                                                                                                    paddingLeft: 0,
+                                                                                                                    paddingBlock: 0,
+                                                                                                                }}
+                                                                                                            />
+                                                                                                        </IconButton>
+                                                                                                    </InputAdornment>
+                                                                                                )
+                                                                                            }}
+                                                                                            
+                                                                                        />
+                                                                                    )}
                                                                                 />
+                                                                                
                                                                             </div>
                                                                         </div>
                                                                         <div className="col-md-2 unit">
@@ -923,6 +908,7 @@ function Rutas(props) {
                                                                                 <input
                                                                                     className="form-control"
                                                                                     type="text"
+                                                                                    required
                                                                                     value={state.description}
                                                                                     name={"description"}
                                                                                     onChange={handleChange}
@@ -1007,12 +993,12 @@ function Rutas(props) {
                                                                             </label>
                                                                         </div>
                                                                     </div>
-                                                                    <div className="row">
+                                                                    <div className="row justify-content-md-center" style={{ display: "flex", alignItems: "center" }}>
 
-                                                                        <div className="col-md-2 unit">
-                                                                            <div className="inline-group">
-                                                                                <label className="label">
-                                                                                    Tipo Trayecto
+                                                                        <div className="col-md-4" >
+                                                                            <div className="inline-group" style={{ display: "flex", alignItems: "center" }}>
+                                                                                <label className="label" style={{ paddingRight: "10px" }} >
+                                                                                    Tipo Trayecto:
                                                   </label>
                                                                                 <label className="radio">
                                                                                     <input
@@ -1040,19 +1026,19 @@ function Rutas(props) {
 
                                                                             </div>
                                                                         </div>
-                                                                        <div className="col-md-2 unit">
+                                                                        <div className="col-md-1 ">
                                                                             <label className="label">Horas</label>
                                                                             <div className="input">
                                                                                 <input
                                                                                     className="form-control"
-                                                                                    type="text"
+                                                                                    type="number"
                                                                                     onChange={handleChange}
                                                                                     value={state.horas}
                                                                                     name="horas"
                                                                                 />
                                                                             </div>
                                                                         </div>
-                                                                        <div className="col-md-2 unit">
+                                                                        <div className="col-md-1 ">
                                                                             <label className="label">ETA</label>
                                                                             <div className="input">
                                                                                 <input
@@ -1064,31 +1050,31 @@ function Rutas(props) {
                                                                                 />
                                                                             </div>
                                                                         </div>
-                                                                        <div className="col-md-2 unit">
+                                                                        <div className="col-md-1 ">
                                                                             <label className="label">Kilometros</label>
                                                                             <div className="input">
                                                                                 <input
                                                                                     className="form-control"
-                                                                                    type="text"
+                                                                                    type="number"
                                                                                     onChange={handleChange}
                                                                                     value={state.kilometros}
                                                                                     name="kilometros"
                                                                                 />
                                                                             </div>
                                                                         </div>
-                                                                        <div className="col-md-2 unit">
+                                                                        <div className="col-md-1">
                                                                             <label className="label">Millas</label>
                                                                             <div className="input">
                                                                                 <input
                                                                                     className="form-control"
-                                                                                    type="text"
+                                                                                    type="number"
                                                                                     onChange={handleChange}
                                                                                     value={state.millas}
                                                                                     name="millas"
                                                                                 />
                                                                             </div>
                                                                         </div>
-                                                                        <div className="col-md-2 unit">
+                                                                        <div className="col-md-1">
 
                                                                             <div className="inline-group">
                                                                                 <label className="label">
@@ -1112,7 +1098,7 @@ function Rutas(props) {
 
 
                                                                         </div>
-                                                                        <div className="col-md-2 unit">
+                                                                        <div className="col-md-3">
                                                                             <div align="right">
 
                                                                                 <button
@@ -1151,66 +1137,66 @@ function Rutas(props) {
                                             <div className="widget-container margin-top-0">
                                                 <div className="widget-content">
                                                     {/*Inicio de ejemplo*/}
-                                                    <div className="widget-container">
-                                                        <div className="widget-content">
-                                                            <div className="row">
+                                                    <div className="widget-content">
+                                                        <div className="row">
 
 
-                                                                <div className="col-md-4 unit">
+                                                            <div className="col-md-4">
 
-                                                                    <div className="inline-group">
-                                                                        <label className="label">
-                                                                            Trazado de la ruta
+                                                                <div className="inline-group">
+                                                                    <label className="label">
+                                                                        Trazado de la ruta
                                                   </label>
-                                                                        <label className="checkbox">
-                                                                            <input
-                                                                                native="true"
-                                                                                name="activo"
-                                                                                type="checkbox"
-                                                                                onChange={(e) => handleTypeRoute(1, e.target.checked)}
-                                                                                checked={state.isManual}
-                                                                            />
-                                                                            <i />
+                                                                    <label className="checkbox">
+                                                                        <input
+                                                                            native="true"
+                                                                            name="activo"
+                                                                            type="checkbox"
+                                                                            onChange={(e) => handleTypeRoute(1, e.target.checked)}
+                                                                            checked={state.isManual}
+                                                                        />
+                                                                        <i />
                                                     Trazo libre
                                                   </label>
-                                                                        <label className="checkbox">
-                                                                            <input
-                                                                                native="true"
-                                                                                name="activo"
-                                                                                type="checkbox"
-                                                                                onChange={(e) => handleTypeRoute(2, e.target.checked)}
-                                                                                checked={state.isTour}
-                                                                            />
-                                                                            <i />
+                                                                    <label className="checkbox">
+                                                                        <input
+                                                                            native="true"
+                                                                            name="activo"
+                                                                            type="checkbox"
+                                                                            onChange={(e) => handleTypeRoute(2, e.target.checked)}
+                                                                            checked={state.isTour}
+                                                                        />
+                                                                        <i />
                                                     Modo recorrido
                                                   </label>
 
-                                                                    </div>
-                                                                    <label className="label">
+                                                                </div>
+                                                                <label className="label">
                                                                     Navegación
                                                   </label>
-                                                                        
-                                                        <NavigationList indications={state.route ? state.route.events : []} />
-                                                                    
 
-                                                                </div>
-                                                                <div className="col-md-8 col-sm-12">
-                                                                    {
-                                                                        state.showMap &&
-                                                                        <DisplayMapClass markers={state.points} isManual={state.isManual} setNewPoint={setPoint} route={state.route} polygon={state.polygon} setMap={setMap} />
-                                                                    }
+                                                                <NavigationList indications={state.route ? state.route.events : []} />
 
-                                                                </div>
+
                                                             </div>
+                                                            <div className="col-md-8 col-sm-12">
+                                                                {
+                                                                    state.showMap &&
+                                                                    <DisplayMapClass markers={state.points} isManual={state.isManual} setNewPoint={setPoint} route={state.route} polygon={state.polygon} setMap={setMap} />
+
+                                                                }
 
 
-
+                                                            </div>
                                                         </div>
+
+
+
                                                     </div>
-
-
-
                                                 </div>
+
+
+
                                             </div>
                                         </div>
                                     </div>
