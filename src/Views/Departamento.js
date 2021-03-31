@@ -435,7 +435,7 @@ function Departamento() {
                       <DataGrid
                         rows={data}
                         columns={columns}
-                        pageSize={10}
+                        pageSize={ Math.floor((state.height - 310)/30)}
                         getRowId={(row) => row.m_nIdDepartamento}
                         onRowSelected={(row) => {
                           setState({

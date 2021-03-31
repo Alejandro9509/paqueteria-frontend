@@ -573,7 +573,7 @@ function Usuarios() {
                       rows={data}
                       columns={columns}
                       density="compact"
-                      pageSize={10}
+                      pageSize={ Math.floor((state.height - 310)/30)}
                       getRowId={(row) => row.m_nIdUsuario}
                       onRowSelected={(row) => {
                         setState({
