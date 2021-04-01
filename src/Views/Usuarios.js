@@ -823,6 +823,7 @@ function Usuarios() {
                                     <IPut
                                       className={state.filtrarPorIP ? "" : classes.disabled}
                                       defaultValue={state.ip}
+                                      style={{width: "100%"}}
                                       onChange={(e) => {
                                         setState({ ...state, ip: e })
                                       }}

@@ -5,7 +5,7 @@ import GuiaPage from './Views/Guia';
 import InformesPage from './Views/Informes'
 import CatalogosPage from './Views/Catalogos';
 import ConfiguracionPage from './Views/Configuracion';
-
+import UltimaMillaPage from './Views/UltimaMilla';
 
 
 import {ReactComponent as ConfiguracionIcon} from './iconos/Menu/IconoConfiguraciones/iconoConfiguraciones.svg';
@@ -79,6 +79,14 @@ const dashboardRoutes = [
     name: "Viajes",
     icon: viajeIcon,
     component: DepartamentoPage,
+    single: true,
+    child:[]
+  },
+  {
+    path: "/UltimaMilla",
+    name: "Última Milla",
+    icon: viajeIcon,
+    component: UltimaMillaPage,
     single: true,
     child:[]
   }
