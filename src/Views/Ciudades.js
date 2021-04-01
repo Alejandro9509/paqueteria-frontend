@@ -610,7 +610,8 @@ function CiudadesCodigoPostal() {
                           <DataGrid
                             rows={data}
                             columns={columns}
-                            pageSize={ Math.floor((state.height - 310)/30)}
+                            density="compact"
+                        pageSize={ Math.floor((state.height - 310)/30)}
                             getRowId={(row) => row.m_nIdCiudad}
                             onRowSelected={(row) => {
                               handleSelectCiudad(row.data, this)
@@ -793,7 +794,8 @@ function CiudadesCodigoPostal() {
                           <DataGrid
                             rows={dataCodigoPostal}
                             columns={columnsCodigoPostal}
-                            pageSize={ Math.floor((state.height - 310)/30)}
+                            density="compact"
+                        pageSize={ Math.floor((state.height - 310)/30)}
                             getRowId={(row) => row.m_nIdCP}
                             onRowSelected={(row) => {
                               setState({

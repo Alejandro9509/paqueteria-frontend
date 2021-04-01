@@ -390,22 +390,6 @@ function EstatusViaje() {
                 <i className="fa fa-list" /> Listado
             </a>
             </li>
-            <li>
-              <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
-                <i className="fa fa-plus-circle" /> {state.agregar}
-              </a>
-            </li>
-            <li>
-              <a data-toggle="tab" href="#Importar">
-                <i className="fa fa-upload" /> Importar
-            </a>
-            </li>
-            <li>
-              <ExportCSV csvData={data} fileName="Departamento_Listado" />
-            </li>
-            <li>
-              <ExportPDF data={data} column={columns} fileName="Departamento" />
-            </li>
           </ul>
 
           <div className="row" className="tab-content">
@@ -417,6 +401,7 @@ function EstatusViaje() {
                       <DataGrid
                         rows={data}
                         columns={columns}
+                        density="compact"
                         pageSize={ Math.floor((state.height - 310)/30)}
                         getRowId={(row) => row.m_nIdEstatusViaje}
                         onRowSelected={(row) => {

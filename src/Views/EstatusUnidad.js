@@ -169,11 +169,22 @@ function EstatusUnidad() {
     });
   };
 
-  function handleSelectRow(id, event) {
-    setState({
-      ...state,
-      idEstatusUnidad: id
-    });
+  function setContrast(rgb) {
+  
+    // http://www.w3.org/TR/AERT#color-contrast
+    const brightness = Math.round(((parseInt(rgb.r) * 299) +
+                        (parseInt(rgb.g) * 587) +
+                        (parseInt(rgb.b) * 114)) / 1000);
+    return (brightness > 125) ? 'black' : 'white';
+  }
+
+  function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : null;
   }
 
   const columns = React.useMemo(() => [
@@ -195,10 +206,11 @@ function EstatusUnidad() {
       field: "m_sAbreviacion",
       width: 125,
       renderCell: (row) => {
-        console.log(row.row.m_sColor)
         return (
-          <div style={{backgroundColor: "#" + row.row.m_sColor, width:"100%", textAlign: "center" }}>
-            {row.row.m_sAbreviacion}
+          <div style={{backgroundColor: "#" + row.row.m_sColor, width:"100%", textAlign: "center"}}>
+            <div style={{color: setContrast(hexToRgb("#" + row.row.m_sColor))}}>
+              {row.row.m_sAbreviacion}
+            </div>
           </div>
         )
       }
@@ -246,105 +258,6 @@ function EstatusUnidad() {
   const headers = {
     'Content-Type': 'application/json',
     //    'access-control-allow-origin': '*'
-  }
-
-  function DefaultColumnFilter({
-    column: { filterValue, preFilteredRows, setFilter },
-  }) {
-    const count = preFilteredRows.length
-
-    return (
-      <input
-        className="form-control"
-        value={filterValue || ''}
-        onChange={e => {
-          setFilter(e.target.value || undefined)
-        }}
-        placeholder={`Buscar ${count} registros...`}
-      />
-    )
-  }
-
-  function Table({ columns, data }) {
-
-    const defaultColumn = React.useMemo(
-      () => ({
-        // Default Filter UI
-        Filter: DefaultColumnFilter,
-      }),
-      []
-    )
-
-    const {
-      getTableProps,
-      getTableBodyProps,
-      headerGroups,
-      rows,
-      prepareRow,
-    } = useTable(
-      {
-        columns,
-        data,
-        defaultColumn
-      },
-      useFilters,
-      useSortBy
-    )
-
-    return (
-      <div className="col-md-12">
-        <table className="table" {...getTableProps()}>
-          <thead>
-            {headerGroups.map(headerGroup => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
-                {headerGroup.headers.map(column => (
-                  // Add the sorting props to control sorting. For this example
-                  // we can add them into the header props
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    {column.render('Name')}
-                    {/* Add a sort direction indicator */}
-                    <span>
-                      {column.isSorted
-                        ? column.isSortedDesc
-                          ? <i className="fa fa-caret-up" />
-                          : <i className="fa fa-caret-down" />
-                        : ''}
-                    </span>
-                    <div>{column.canFilter ? column.render('Filter') : null}</div>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map(
-              (row, i) => {
-                prepareRow(row);
-                return (
-                  <tr {...row.getRowProps()}
-                  onClick={handleSelectRow.bind(this, row.original.m_nIdEstatusUnidad)}
-                  className={state.idEstatusUnidad === row.original.m_nIdEstatusUnidad ? classes.seleccionado : classes.noSeleccionado}>
-                    <td>
-                      <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowModificar(row.original.m_nIdEstatusUnidad))} ><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
-                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdEstatusUnidad))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdEstatusUnidad))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-                      </div>
-                    </td>
-                    {row.cells.map(cell => {
-                      return (
-                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                      )
-                    })}
-                  </tr>
-                )
-              }
-            )}
-          </tbody>
-        </table>
-      </div>
-    )
   }
 
   return (
@@ -416,6 +329,7 @@ function EstatusUnidad() {
                       <DataGrid
                         rows={data}
                         columns={columns}
+                        density="compact"
                         pageSize={ Math.floor((state.height - 310)/30)}
                         getRowId={(row) => row.m_nIdEstatusUnidad}
                         onRowSelected={(row) => {

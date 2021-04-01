@@ -752,6 +752,11 @@ function Recoleccion() {
     });
   };
 
+  const handleImprimir = (event) => {
+    showSuccess("A imprimir se ha dicho")
+    setState({ ...state, openDialog: false })
+  }
+
   function handleSelectRow(id, event) {
     setState({
       ...state,
@@ -2331,7 +2336,7 @@ function Recoleccion() {
 
               <DialogActions style={{ justifyContent: "left" }}>
 
-                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-primary primary-btn">Aceptar</button>
+                <button onClick={() => handleImprimir()} className="btn btn-primary primary-btn">Aceptar</button>
                 <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-secondary secondary-btn">Cerrar</button>
 
               </DialogActions>
@@ -2383,7 +2388,7 @@ function Recoleccion() {
                 setState({
                   ...state,
                   identificadorModal:
-                    "nombreRemitente",
+                    "imprimir",
                   tipoModal: 6,
                   openDialog: true
                 });
@@ -2397,10 +2402,6 @@ function Recoleccion() {
               <a data-toggle="tab" href="#Cancelar" onClick={handleShowCancelar} className={state.idRecoleccion == 0 ? classes.disabled : ""}>
                 <i className="zmdi zmdi-print" /> Cancelar
               </a>
-            </li>
-
-            <li>
-              <ExportCSV csvData={data} fileName="Recoleccion_Listado" />
             </li>
 
             <li>
@@ -2518,7 +2519,7 @@ function Recoleccion() {
                       rows={data}
                       columns={columns}
                       density="compact"
-                      pageSize={ Math.floor((state.height - 310)/30)}
+                      pageSize={Math.floor((state.height - 310) / 30)}
                       getRowId={(row) => row.m_nIdRecoleccion}
                       onRowSelected={(row) => {
                         setState({
@@ -2536,7 +2537,7 @@ function Recoleccion() {
 
             <div id="Agregar" className="tab-pane fade">
               <form className="j-forms" onSubmit={handleAceptar}>
-                <div className="form-content row">
+                <div className="form-content">
                   <div
                     className="wizard-breadcrumb number-style"
                     style={{
@@ -4682,7 +4683,6 @@ function Recoleccion() {
                 </div>
               </div>
             </div>
-
 
           </div>
         </div>

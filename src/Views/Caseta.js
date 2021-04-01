@@ -431,6 +431,7 @@ function Caseta() {
                       <DataGrid
                         rows={data}
                         columns={columns}
+                        density="compact"
                         pageSize={ Math.floor((state.height - 310)/30)}
                         getRowId={(row) => row.m_nIdCaseta}
                         onRowSelected={(row) => {

@@ -14,12 +14,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import { DataGrid } from '@material-ui/data-grid';
 import Noty from 'noty';
 
-function showSuccess(mensaje){
+function showSuccess(mensaje) {
   new Noty({
-    type:"information",
-    layout:"topCenter",
+    type: "information",
+    layout: "topCenter",
     text: mensaje,
-    timeout:"3000"
+    timeout: "3000"
   }).show()
 }
 
@@ -33,24 +33,23 @@ const styles = {
 };
 const useStyles = makeStyles(styles);
 
-function Departamento() {
+function Zonas() {
 
   const classes = useStyles();
   const [data, setData] = React.useState([])
+  const [dataSucursal, setDataSucursal] = React.useState([]);
   const [state, setState] = React.useState({
-    showPopUp: false,
-    idDepartamento: 0,
-    DerechoBorrar:58,
+    idZona: 0,
+    agregar: "Agregar",
+    DerechoBorrar: 58,
     codigoDepartamento: "",
     descripcionDepartamento: "",
-    agregar: "Agregar",
     importar: "",
-    CreadoPor:localStorage.getItem("UsuarioId"),
-    ModificadoPor:localStorage.getItem("UsuarioId"),
+    CreadoPor: localStorage.getItem("UsuarioId"),
+    ModificadoPor: localStorage.getItem("UsuarioId"),
     height: window.innerHeight
   })
   const [fileUploaded, setFileUploaded] = React.useState([])
-
 
   const handleAceptar = (e) => {
     e.preventDefault()
@@ -58,9 +57,9 @@ function Departamento() {
 
       "Codigo": state.codigoDepartamento,
       "Descripcion": state.descripcionDepartamento,
-      
+
       "CreadoPor": state.CreadoPor,
-      "ModificadoPor": state.ModificadoPor  
+      "ModificadoPor": state.ModificadoPor
     }
     console.log(params)
     if (state.idDepartamento != 0) {
@@ -90,21 +89,20 @@ function Departamento() {
     const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
       derecho = respuesta.data;
-      if (derecho == false)
-      {
-        showSuccess ("El usuario no tiene derechos para realizar el proceso");
-        return; 
+      if (derecho == false) {
+        showSuccess("El usuario no tiene derechos para realizar el proceso");
+        return;
       }
-      
-    const url = `${process.env.REACT_APP_API_URL}/Departamento/Eliminar/` + id;
-    axios.delete(url, { headers }).then(respuesta => {
-      console.log(respuesta);
-      getAllData();
+
+      const url = `${process.env.REACT_APP_API_URL}/Departamento/Eliminar/` + id;
+      axios.delete(url, { headers }).then(respuesta => {
+        console.log(respuesta);
+        getAllData();
+      }).catch(err => {
+        showSuccess(err)
+      });
     }).catch(err => {
       showSuccess(err)
-    });
-	}).catch(err => {
-    showSuccess(err)
     });
   }
 
@@ -157,13 +155,6 @@ function Departamento() {
     });
   };
 
-  function handleSelectRow(id, event) {
-    setState({
-      ...state,
-      idDepartamento: id
-    });
-  }
-
   const columns = React.useMemo(() => [
     {
       headerName: "Acciones",
@@ -179,26 +170,43 @@ function Departamento() {
       }
     },
     {
-      headerName: "Código",
-      field: "m_nCodigo",
+      headerName: "Folio",
+      field: "m_nFolio",
       width: 125,
-    }, {
+    },
+    {
       headerName: "Descripción",
       field: "m_sDescripcion",
       width: 200,
-    }, {
+    },
+    {
+      headerName: "Sucursal",
+      field: "m_nIdSucursal",
+      width: 200,
+      renderCell: (row) => {
+        return (
+          <div>
+            { dataSucursal.find(o => o.m_nIdSucursal == row.row.m_nIdSucursal).m_sSucursal}
+          </div>
+        )
+      }
+    },
+    {
       headerName: "Creado El",
       field: "m_dtCreadoEl",
       width: 200,
-    }, {
+    },
+    {
       headerName: "Creado Por",
       field: "m_nCreadoPor",
       width: 125,
-    }, {
+    },
+    {
       headerName: "Modificado El",
       field: "m_dtModificadoEl",
       width: 200,
-    }, {
+    },
+    {
       headerName: "Modificado Por",
       field: "m_nModificadoPor",
       width: 150,
@@ -206,22 +214,29 @@ function Departamento() {
 
   ]);
 
-  useEffect(value => {
-    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
-    {
+  useEffect( async value => {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
       showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
     }
     getAllData();
+    getAllSucursalData();
   }, []);
 
   function getAllData() {
-    const url = `${process.env.REACT_APP_API_URL}/Departamento/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL}/Zonas/GetListado`;
     axios.get(url, { headers }).then(respuesta => {
       setData(respuesta.data)
     });
   };
+
+  async function getAllSucursalData() {
+    const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
+    await axios.get(url, { headers }).then((respuesta) => {
+      setDataSucursal(respuesta.data);
+    });
+  }
 
   const handleUpload = (e) => {
     e.preventDefault();
@@ -244,126 +259,9 @@ function Departamento() {
     reader.readAsBinaryString(f)
   }
 
-  const FilterComponent = ({ filterText, onFilter, onClear }) => (
-    <>
-      <input
-        id="search"
-        type="text"
-        placeholder="Filter By Name"
-        aria-label="Search Input"
-        value={filterText}
-        onChange={handleChange} />
-      <button type="button" onClick={onClear}>X</button>
-    </>
-  );
-
-  const getSubHeaderComponent = () => {
-
-  };
-
   const headers = {
     'Content-Type': 'application/json',
     //    'access-control-allow-origin': '*'
-  }
-
-  function DefaultColumnFilter({
-    column: { filterValue, preFilteredRows, setFilter },
-  }) {
-    const count = preFilteredRows.length
-
-    return (
-      <input
-        className="form-control"
-        value={filterValue || ''}
-        onChange={e => {
-          setFilter(e.target.value || undefined)
-        }}
-        placeholder={`Buscar ${count} registros...`}
-      />
-    )
-  }
-
-  function Table({ columns, data }) {
-
-    const defaultColumn = React.useMemo(
-      () => ({
-        // Default Filter UI
-        Filter: DefaultColumnFilter,
-      }),
-      []
-    )
-
-    const {
-      getTableProps,
-      getTableBodyProps,
-      headerGroups,
-      rows,
-      prepareRow,
-    } = useTable(
-      {
-        columns,
-        data,
-        defaultColumn
-      },
-      useFilters,
-      useSortBy
-    )
-
-    return (
-      <div className="col-md-12">
-
-        <table className="table" {...getTableProps()}>
-          <thead>
-            {headerGroups.map(headerGroup => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
-                {headerGroup.headers.map(column => (
-                  // Add the sorting props to control sorting. For this example
-                  // we can add them into the header props
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    {column.render('Name')}
-                    {/* Add a sort direction indicator */}
-                    <span>
-                      {column.isSorted
-                        ? column.isSortedDesc
-                          ? <i className="fa fa-caret-up" />
-                          : <i className="fa fa-caret-down" />
-                        : ''}
-                    </span>
-                    <div>{column.canFilter ? column.render('Filter') : null}</div>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map(
-              (row, i) => {
-                prepareRow(row);
-                return (
-                  <tr {...row.getRowProps()}
-                  onClick={handleSelectRow.bind(this, row.original.m_nIdDepartamento)}
-                  className={state.idDepartamento === row.original.m_nIdDepartamento ? classes.seleccionado : classes.noSeleccionado}>
-                    <td>
-                      <div>
-                        <a href="#Agregar" className="btn btn-default btn-sm" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdDepartamento))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
-                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdDepartamento))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdDepartamento))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-                      </div>
-                    </td>
-                    {row.cells.map(cell => {
-                      return (
-                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                      )
-                    })}
-                  </tr>
-                )
-              }
-            )}
-          </tbody>
-        </table>
-      </div>
-    )
   }
 
   return (
@@ -387,16 +285,16 @@ function Departamento() {
           <div className="page-header filled full-block light">
             <div className="row">
               <div className="col-md-6 col-sm-6">
-                <h2>Departamento</h2>
+                <h2>Zonas</h2>
               </div>
               <div className="col-md-6 col-sm-6">
                 <ul className="list-page-breadcrumb">
                   <li>
                     <a href="/Catalogos" className="color-mapeo">
-                      Catálogos <i className="zmdi zmdi-chevron-right" />
+                      Configuración <i className="zmdi zmdi-chevron-right" />
                     </a>
                   </li>
-                  <li className="active-page">Departamento</li>
+                  <li className="active-page">Zonas</li>
                 </ul>
               </div>
             </div>
@@ -414,15 +312,9 @@ function Departamento() {
               </a>
             </li>
             <li>
-              <a data-toggle="tab" href="#Importar">
-                <i className="fa fa-upload" /> Importar
-            </a>
-            </li>
-            <li>
-              <ExportCSV csvData={data} fileName="Departamento_Listado" />
-            </li>
-            <li>
-              <ExportPDF data={data} column={columns} fileName="Departamento" />
+              <a data-toggle="tab" href="#Agregar">
+                Imprimir
+              </a>
             </li>
           </ul>
 
@@ -430,18 +322,18 @@ function Departamento() {
             <div className="widget-wrap" id="Listado" className="tab-pane fade in active">
               <div className="widget-wrap">
                 <div className="widget-content">
-                <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                  <div className="row" style={{ height: state.height - 250, width: '100%' }}>
                     {data.length != 0 ? (
                       <DataGrid
                         rows={data}
                         columns={columns}
                         density="compact"
-                        pageSize={ Math.floor((state.height - 310)/30)}
-                        getRowId={(row) => row.m_nIdDepartamento}
+                        pageSize={Math.floor((state.height - 310) / 30)}
+                        getRowId={(row) => row.m_nIdZona}
                         onRowSelected={(row) => {
                           setState({
                             ...state,
-                            idDepartamento: row.data.m_nIdDepartamento
+                            idZona: row.data.m_nIdZona
                           })
                         }}
                       />
@@ -457,60 +349,89 @@ function Departamento() {
               <div className="widget-wrap">
                 <div className="widget-content">
                   <div className="row">
-                    <div className="col-md-12">
                       <form className="j-forms" onSubmit={handleAceptar}>
                         <div className="form-content">
-                        <div className="row">
+                            <div className="row" style={{ display: "flex" }}>
+                              <div className="col-sm-6 col-md-4 unit">
+                                <label className="label">Folio</label>
+                                <div className="input">
+                                  <input
+                                    type="text"
+                                    className="form-control"
+                                    value={state.fechaInicial}
+                                    onChange={handleChange}
+                                    id="fechaInicial"
+                                  />
+                                </div>
+                              </div>
 
-                        <div className="col-xs-6  col-sm-3 col-md-2-5 col-lg-2-5 unit">
-                            <label className="label">
-                              Código
-                          </label>
-                            <div className="input">
-                              <input
-                                onChange={handleChange}
-                                className="form-control"
-                                type="number"
-                                min="0"
-                                max="999"
-                                step="1"
-                                required
-                                readOnly={state.agregar == "Consultar"}
-                                value={state.codigoDepartamento}
-                                id="codigoDepartamento"
+                              <div className="col-sm-6 col-md-4 unit">
+                                <label className="label">Fecha Final</label>
+                                <div className="input">
+                                  <input
+                                    type="date"
+                                    className="form-control"
+                                    value={state.fechaFinal}
+                                    onChange={handleChange}
+                                    id="fechaFinal"
+                                  />
+                                </div>
+
+                              </div>
+
+                              <div className="col-sm-6 col-md-4 unit">
+                                <label className="label">Sucursal</label>
+                                <label className="input select">
+                                  <select
+                                    className="form-control"
+                                    required
+                                    value={state.sucursalListado}
+                                    onChange={handleChange}
+                                    id="sucursalListado"
+                                  >
+                                    <option value="0">Todas</option>
+                                    {dataSucursal.map((sucursal) => (
+                                      <option
+                                        key={sucursal.m_nIdSucursal}
+                                        value={sucursal.m_nIdSucursal}
+                                      >
+                                        {sucursal.m_sSucursal}
+                                      </option>
+                                    ))}
+                                  </select>
+                                  <i></i>
+                                </label>
+                              </div>
+                           </div>
+
+                            <div className="widget-wrap col-sm-6 col-md-3">
+                              <DataGrid
+                                columns={columns}
+                                data={data}
                               />
                             </div>
-                          </div>
 
-                          <div className="col-xs-6  col-sm-3 col-md-2-5 col-lg-2-5 unit">
-                            <label className="label">
-                              Descripción
-                          </label>
-                            <div className="input">
-                              <input
-                                onChange={handleChange}
-                                className="form-control"
-                                type="text"
-                                maxLength="100"
-                                required
-                                readOnly={state.agregar == "Consultar"}
-                                value={state.descripcionDepartamento}
-                                id="descripcionDepartamento"
-                              />
+                            <div className="widget-wrap col-sm-6 col-md-3">
+                              Código Postal
                             </div>
-                          </div>
-                          </div>
+
+                            <div className="widget-wrap col-sm-6 col-md-3">
+                              Localidades
+                            </div>
+
+                            <div className="widget-wrap col-sm-6 col-md-3">
+                              Colonias
+                            </div>
+
                           <div className="row">
-                          <div className="form-footer" className="col-sm-6 col-md-5 unit">
-                          <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"> Cancelar</button>
-                          <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
+                            <div className="form-footer" className="col-sm-12 col-md-12 unit">
+                              <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"> Cancelar</button>
+                              <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
+                            </div>
+                          </div>
                         </div>
 
-</div>
-                        </div>
-                       
                       </form>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -567,4 +488,4 @@ function Departamento() {
   );
 }
 
-export default Departamento;
+export default Zonas;

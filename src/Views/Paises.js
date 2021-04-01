@@ -572,6 +572,7 @@ function PaisesEstado() {
                       <DataGrid
                         rows={data}
                         columns={columns}
+                        density="compact"
                         pageSize={ Math.floor((state.height - 310)/30)}
                         getRowId={(row) => row.m_nIdPais}
                         onRowSelected={(row) => {
@@ -698,6 +699,7 @@ function PaisesEstado() {
                       <DataGrid
                         rows={dataEstado}
                         columns={columnsEstado}
+                        density="compact"
                         pageSize={ Math.floor((state.height - 310)/30)}
                         getRowId={(row) => row.m_nIdEstado}
                         onRowSelected={(row) => {

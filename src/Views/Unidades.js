@@ -1092,6 +1092,7 @@ function Unidades(props) {
                       <DataGrid
                         rows={dataListadoUnidades}
                         columns={columns}
+                        density="compact"
                         pageSize={ Math.floor((state.height - 310)/30)}
                         getRowId={(row) => row.m_nIdUnidad}
                         onRowSelected={(row) => {

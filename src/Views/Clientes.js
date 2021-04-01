@@ -18,7 +18,9 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 
 import $ from "jquery";
 import { remove_array_element } from "../Util/Util";
-
+import SvgIcon from "@material-ui/core/SvgIcon";
+import { ReactComponent as Activo } from '../iconos/Menu/palomita.svg';
+import { ReactComponent as NoActivo } from '../iconos/Menu/cruz.svg';
 import { SettingsEthernet } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { DataGrid } from '@material-ui/data-grid';
@@ -93,10 +95,29 @@ function Clientes(props) {
       width: 200,
     },
     {
-      headerName: "m_sNombreSucursal",
+      headerName: "Nombre Sucursal",
       field: "m_sNombreSucursal",
       width: 200,
     },
+    {
+      headerName: "Activo",
+      field: "m_bActivo",
+      width: 125,
+      renderCell: (row) => {
+        return (
+          <div style={{ width: "100%", textAlign: "center", color: row.row.m_bActivo ? "green" : "red" }}>
+            {row.row.m_bActivo ?
+              <SvgIcon
+                component={Activo}
+              /> :
+              <SvgIcon
+                component={NoActivo}
+              />
+            }
+          </div>
+        )
+      },
+    }
   ]);
 
   const columns2 = React.useMemo(() => [
@@ -343,7 +364,6 @@ function Clientes(props) {
     );
   }
 
-  const [data, setData] = React.useState([]);
   const [dataPais, setDataPais] = React.useState([]);
   const [dataEstado, setDataEstado] = React.useState([]);
   const [dataImpuesto, setDataImpuesto] = React.useState([]);
@@ -838,6 +858,7 @@ function Clientes(props) {
                       <DataGrid
                         rows={dataListadoClientes}
                         columns={columns}
+                        density="compact"
                         pageSize={ Math.floor((state.height - 310)/30)}
                         getRowId={(row) => row.m_nIdCliente}
                         onRowSelected={(row) => {
