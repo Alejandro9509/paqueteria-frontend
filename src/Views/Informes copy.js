@@ -157,7 +157,7 @@ function Informes({ history }) {
   ]);
 
   function getAllDataRutas() {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/Rutas/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL}/Rutas/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
       setDataRutas(respuesta.data);
@@ -260,17 +260,17 @@ function Informes({ history }) {
     },
     {
       headerName: "Folio/Serie",
-      field: "m_sFolioInforme",
+      field: "m_nFolioInforme",
       width: 125,
     },
     {
       headerName: "Fecha/Hora Elaboración",
-      field: "m_sFechayHora",
+      field: "m_dFecha",
       width: 200,
     },
     {
       headerName: "Viaje",
-      field: "m_sFolioViaje",
+      field: "m_nIdViaje",
       width: 125,
     },
     {
@@ -289,34 +289,9 @@ function Informes({ history }) {
       width: 250,
     },
     {
-      headerName: "Tipo de Unidad",
-      field: "m_sTipoUnidadIdentificador",
+      headerName: "Unidad",
+      field: "m_sCodigoUnidad",
       width: 125,
-    },
-    {
-      headerName: "Remolque",
-      field: "m_sRemolque1",
-      width: 125,
-    },
-    {
-      headerName: "Origen",
-      field: "m_sCiudadOrigen",
-      width: 125,
-    },
-    {
-      headerName: "Destino",
-      field: "m_sCiudadDestino",
-      width: 125,
-    },
-    {
-      headerName: "Ruta",
-      field: "m_sRuta",
-      width: 150,
-    },
-    {
-      headerName: "Cancelado",
-      field: "m_dtFechaCancelacion",
-      width: 150,
     },
   ]);
 
@@ -1205,7 +1180,8 @@ function Informes({ history }) {
     agregar: "Agregar",
     height: window.innerHeight,
 
-   
+    Informes: [
+      {
         ruta2: "",
         operador2: "",
         unidad2: "",
@@ -1214,20 +1190,19 @@ function Informes({ history }) {
         tipoModal: 0,
         IdInforme: 0,
         FolioInforme: 0,
-        fechaHora: "",
+        fechaHoraLlegada: "",
         DerechoBorrar: 151,
-        EstatusInforme: 0,
-        IdViaje: {},
-        sucursalEmisora: 0,
-        sucursalReceptora: 0,
+
+        IdEstatusInforme: 0,
+        IdViaje: 0,
+        IdSucursalEmisora: 0,
+        IdSucursalReceptora: 0,
         IdOperador: {},
-        IdRemolque1: {},
-        IdRemolque2: {},
-        PlacasRemolque1:"",
-        PlacasRemolque2:"",
+        IdUnidad: {},
         IdTipoUnidad: {},
-        IdCiudadDestino: {},
-        IdCiudadOrigen: {},
+        IdRemolque: 0,
+        IdCiudadDestino: 0,
+        IdCiudadOrigen: 0,
         IdRuta: 0,
         IdSucursal: localStorage.getItem("Sucursal"),
         CreadoPor: localStorage.getItem("UsuarioId"),
@@ -1236,7 +1211,6 @@ function Informes({ history }) {
         estatusCancelacion: "",
         Guias: [
           {
-            m_nIdGuia:0,
             m_nFolioGuia: "",
             m_sEstatusGuia: "",
             m_cValorDeclarado: "",
@@ -1249,43 +1223,68 @@ function Informes({ history }) {
         motivoCancelacion: "",
         sucursalCancelacion: {},
         sePuedeCancelar: false,
-    
-    
+      },
+    ],
   });
+  /* const [state, setState] = React.useState({
+    showPopUp: false,
+    identificadorModal: "",
+    openDialog: false,
+
+    ruta2: "",
+    operador2: "",
+    unidad2: "",
+    remolque2: "",
+    viaje: {},
+    tipoModal: 0,
+    IdInforme: 0,
+    FolioInforme: 0,
+    fechaHoraLlegada: "",
+    DerechoBorrar: 151,
+
+    IdEstatusInforme: 0,
+    IdViaje: 0,
+    IdSucursalEmisora: 0,
+    IdSucursalReceptora: 0,
+    IdOperador: {},
+    IdUnidad: {},
+    IdTipoUnidad: {},
+    IdRemolque: 0,
+    IdCiudadDestino: 0,
+    IdCiudadOrigen: 0,
+    IdRuta: 0,
+    usuarioCancelacion: "",
+    estatusCancelacion: "",
+    IdSucursal: localStorage.getItem("Sucursal"),
+    agregar: "Agregar",
+    height: window.innerHeight,
+    CreadoPor: localStorage.getItem("UsuarioId"),
+    ModificadoPor: localStorage.getItem("UsuarioId"),
+    Guias: [
+      {
+        m_nFolioGuia: "",
+        m_sEstatusGuia: "",
+        m_cValorDeclarado: "",
+        m_sCiudadDestinatario: "",
+        tipoServicio: "",
+        observaciones: "",
+      },
+    ],
+    FechaCancelacion: "",
+    motivoCancelacion: "",
+    sucursalCancelacion: {},
+    sePuedeCancelar: false,
+  });  */
 
   const handleAceptar = (e) => {
     e.preventDefault();
 
     var params = {
-      m_nIdInforme: state.IdInforme,
-      m_nFolioInforme: state.FolioInforme,
-      m_dFecha: state.fechaHora.split("T")[0],
-      m_tHora: state.fechaHora.split("T")[1],
-      m_nIdCiudadDestino: state.IdCiudadDestino.m_nIdCiudad,
-      m_nIdCiudadOrigen: state.IdCiudadOrigen.m_nIdCiudad,
-      m_nIdEstatusInforme: state.EstatusInforme,
-      m_nIdOperador: state.IdOperador.m_nIdOperador,
-      m_nIdRemolque1: state.IdRemolque1.m_nIdUnidad,
-      m_nIdRemolque2: state.IdRemolque2.m_nIdUnidad,
-      m_sPlacasRemolque1: state.PlacasRemolque1,
-      m_sPlacasRemolque2: state.PlacasRemolque2,
-      m_nIdRuta: state.idRuta.m_nIdRuta,
-      m_nIdSucursalEmisora:state.sucursalEmisora,
-      m_nIdSucursalReceptora:state.sucursalReceptora,
-      m_nIdTipoUnidad: state.IdTipoUnidad.m_nIdTipoUnidad,
-      m_nIdViaje: state.IdViaje.m_nIdViaje,
-      TotalxCDestinatario:0,
-      TotalxCCobrarRemitente:0,
-      TotalPagoMostrador:0,
-      TotalUnidadCompleta: 0,
-      TotalGeneral:0,
-      m_nCreadoPor: state.CreadoPor,
-      m_arrClsProInformeGuia: dataGuias,
-
+      m_arrClsInformesGuias: state.Informes,
     };
     console.log(JSON.stringify(params));
     debugger;
-    if (state.IdInforme != 0) {
+    if (state.idEmbarque != 0) {
       const url = `${process.env.REACT_APP_API_URL}/Informes/Modificar/${state.IdInforme}`;
       axios
         .put(url, Object.assign({}, params), { headers2 })
@@ -1503,7 +1502,7 @@ function Informes({ history }) {
   }
 
   function getAllViajesOrigenDestino(origen, destino) {
-    const url = `http://localhhost/Informes/GetViajes/` + origen + `/` + destino;
+    const url = `http://localhost/Informes/GetViajes/` + origen + `/` + destino;
     axios.get(url, { headers }).then((respuesta) => {
       console.log("servicio viajes");
       console.log(origen);
@@ -1551,7 +1550,7 @@ function Informes({ history }) {
           return;
         }
 
-        const url = `${process.env.REACT_APP_API_URL}/Informes/Eliminar/` + id;
+        const url = `${process.env.REACT_APP_API_URL}/Unidadd/Eliminar/` + id;
         axios
           .get(url, { headers })
           .then((respuesta) => {
@@ -1673,346 +1672,9 @@ function Informes({ history }) {
     //closeSeccions();
   }, []);
 
-
-  return (
-    <div>
-      <Dialog
-        open={state.openDialog}
-        onClose={() => setState({ ...state, openDialog: false })}
-      >
-        <DialogContent>
-          {state.tipoModal == 1 && (
-            <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
-              <div align="right">
-                <button
-                  onClick={() => {
-                    history.push("/Ciudades");
-                  }}
-                  className="btn btn-primary primary-btn"
-                >
-                  Agregar
-                </button>
-              </div>
-
-              {dataOrigenes.length != 0 ? (
-                <TableCiudades
-                  select={
-                    state[state.identificadorModal] &&
-                    state[state.identificadorModal].m_nIdCiudad
-                  }
-                  columns={columnsCiudades}
-                  data={dataOrigenes}
-                  identificadorModal={state.identificadorModal}
-                />
-              ) : (
-                <div>No se encontró ningún registro</div>
-              )}
-              <DialogActions style={{ justifyContent: "left" }}>
-                <button
-                  onClick={() => setState({ ...state, openDialog: false })}
-                  className="btn btn-secondary secondary-btn"
-                >
-                  Cerrar
-                </button>
-                <button
-                  onClick={() => setState({ ...state, openDialog: false })}
-                  className="btn btn-primary primary-btn"
-                >
-                  Aceptar
-                </button>
-              </DialogActions>
-            </div>
-          )}
-          {state.tipoModal == 2 && (
-            <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
-              <div align="right">
-                <button
-                  onClick={() => {
-                    history.push("/Operadores");
-                  }}
-                  className="btn btn-primary primary-btn"
-                >
-                  Agregar
-                </button>
-              </div>
-
-              {dataOperadores.length != 0 ? (
-                <TableOperadores
-                  select={
-                    state[state.identificadorModal] &&
-                    state[state.identificadorModal].m_nIdOperador
-                  }
-                  columns={columnsOperadores}
-                  data={dataOperadores}
-                  identificadorModal={state.identificadorModal}
-                />
-              ) : (
-                <div>No se encontró ningún registro</div>
-              )}
-              <DialogActions style={{ justifyContent: "left" }}>
-                <button
-                  onClick={() => setState({ ...state, openDialog: false })}
-                  className="btn btn-secondary secondary-btn"
-                >
-                  Cerrar
-                </button>
-                <button
-                  onClick={() => setState({ ...state, openDialog: false })}
-                  className="btn btn-primary primary-btn"
-                >
-                  Aceptar
-                </button>
-              </DialogActions>
-            </div>
-          )}
-          {state.tipoModal == 3 && (
-            <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
-              <div align="right">
-                <button
-                  onClick={() => {
-                    history.push("/TipoUnidad");
-                  }}
-                  className="btn btn-primary primary-btn"
-                >
-                  Agregar
-                </button>
-              </div>
-              {dataTipoUnidad.length != 0 ? (
-                <TableTipoUnidad
-                  select={
-                    state[state.identificadorModal] &&
-                    state[state.identificadorModal].m_nIdTipoUnidad
-                  }
-                  columns={columnsTipoUnidades}
-                  data={dataTipoUnidad}
-                  identificadorModal={state.identificadorModal}
-                />
-              ) : (
-                <div>No se encontró ningún registro</div>
-              )}
-              <DialogActions style={{ justifyContent: "left" }}>
-                <button
-                  onClick={() => setState({ ...state, openDialog: false })}
-                  className="btn btn-secondary secondary-btn"
-                >
-                  Cerrar
-                </button>
-                <button
-                  onClick={() => setState({ ...state, openDialog: false })}
-                  className="btn btn-primary primary-btn"
-                >
-                  Aceptar
-                </button>
-              </DialogActions>
-            </div>
-          )}
-          {state.tipoModal == 4 && (
-            <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
-              <div align="right">
-                <button
-                  onClick={() => {
-                    history.push("/Unidades");
-                  }}
-                  className="btn btn-primary primary-btn"
-                >
-                  Agregar
-                </button>
-              </div>
-
-              {dataUnidades.length != 0 ? (
-                <TableUnidad
-                  object={state}
-                  select={
-                    state[state.identificadorModal] &&
-                    state[state.identificadorModal].m_nIdUnidad
-                  }
-                  columns={columnsUnidades}
-                  data={dataUnidades}
-                  identificadorModal={state.identificadorModal}
-                />
-              ) : (
-                <div>No se encontró ningún registro</div>
-              )}
-              <DialogActions style={{ justifyContent: "left" }}>
-                <button
-                  onClick={() => setState({ ...state, openDialog: false })}
-                  className="btn btn-secondary secondary-btn"
-                >
-                  Cerrar
-                </button>
-                <button
-                  onClick={() => setState({ ...state, openDialog: false })}
-                  className="btn btn-primary primary-btn"
-                >
-                  Aceptar
-                </button>
-              </DialogActions>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
-
-      <header className="topbar clearfix">
-        <Cabecera />
-      </header>
-      {/*Topbar End Here*/}
-      {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
-        <BarraLateralIzquierda />
-      </aside>
-
-      <section className="main-container">
-        <div className="container-fluid">
-          <div className="page-header filled full-block light">
-            <div className="row">
-              <div className="col-md-6 col-sm-6">
-                <h2>Informes</h2>
-              </div>
-              <div className="col-md-6 col-sm-6">
-                <ul className="list-page-breadcrumb">
-                  <li className="active-page"> Informes</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <ul className="nav navStatica nav-tabs">
-            <li className="active">
-              <a data-toggle="tab" href="#Listado">
-                <i className="fa fa-list" /> Listado
-              </a>
-            </li>
-            <li>
-              <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
-                <i className="fa fa-plus-circle" /> {state.agregar}
-              </a>
-            </li>
-
-            <li>
-              <a data-toggle="tab" href="#Imprimir">
-                <i className="fa fa-print" /> Imprimir
-              </a>
-            </li>
-
-            <li>
-              <a
-                data-toggle="tab"
-                href="#Cancelar"
-                onClick={handleShowCancelar}
-                className={state.IdInforme == 0 ? classes.disabled : ""}
-              >
-                <i className="fa fa-ban" /> Cancelar
-              </a>
-            </li>
-
-            <li>
-              <a data-toggle="tab" href="#Cubicar">
-                <i className="fa fa-adjust" /> Cubicar / Optimizar Rutas
-              </a>
-            </li>
-          </ul>
-
-          <div className="tab-content">
-            <div
-              className="widget-wrap"
-              id="Listado"
-              className="tab-pane fade in active"
-            >
-              <div className="widget-wrap">
-                <div className="widget-content">
-                  <div
-                    className="row"
-                    style={{ height: state.height - 250, width: "100%" }}
-                  >
-                    {data.length != 0 ? (
-                      <DataGrid
-                        rows={data}
-                        columns={columns}
-                        pageSize={10}
-                        getRowId={(row) => row.m_nIdInforme}
-                        onRowSelected={(row) => {
-                          setState({
-                            ...state,
-                            IdInforme: row.data.m_nIdInforme,
-                          });
-                        }}
-                      />
-                    ) : (
-                      <div>No se encontró ningún registro</div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div id="Imprimir" className="tab-pane fade ">
-              Imprimir
-            </div>
-            <div id="Importar" className="tab-pane fade ">
-              Importar
-            </div>
-            <div id="Agregar" className="tab-pane fade ">
-              {/*INICIO DE ESTRUCTURA */}
-
-              <form className="j-forms row" onSubmit={handleAceptar}>
-                {/*Inicio de ejemplo*/}
-                <div className="form-content">
-                  {/* start steps */}
-                  <div
-                    className="wizard-breadcrumb number-style"
-                    style={{
-                      position: "sticky",
-                      top: "150px",
-                      padding: "5px",
-                      backgroundColor: "white",
-                      zIndex: 100,
-                      marginBottom: "10px",
-                    }}
-                  >
-                    <div className="row">
-                      <div
-                        className={
-                          "col-md-4 col-sm-2 step " +
-                          (stepActive == 1 && "active-step")
-                        }
-                        onClick={() => openSection(1)}
-                      >
-                        <div className={"steps"}>
-                          <span className={"step-number"}>1</span>
-                          <p>Información De Envio</p>
-                        </div>
-                      </div>
-                      <div
-                        className={
-                          "col-md-4 col-sm-2 step " +
-                          (stepActive == 2 && "active-step")
-                        }
-                        onClick={() => openSection(2)}
-                      >
-                        <div className="steps">
-                          <span className="step-number">2</span>
-                          <p>Asignar a un Viaje</p>
-                        </div>
-                      </div>
-                      <div
-                        className={
-                          "col-md-4 col-sm-2 step " +
-                          (stepActive == 3 && "active-step")
-                        }
-                        onClick={() => openSection(3)}
-                      >
-                        <div className="steps">
-                          <span className="step-number">3</span>
-                          <p>Detalles de Guias</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  {/* end steps */}
-                </div>
-         
-
-              <div className="row">
-        
+  const framesInformeGuia = state.Informes.map((p, index) => {
+    return (
+      <div key={`Informe${index}`}>
         <div className="col-md-8">
           <div className="widget-wrap">
             <div className="widget-container margin-top-0">
@@ -2027,7 +1689,7 @@ function Informes({ history }) {
                   <div className="widget-content">
                     <div className="row">
                       <div className="col-md-12">
-                        <form action="#" className="j-forms" noValidate>
+                        <form action="#" className="j-forms" onSubmit={handleAceptar}>
                           <div className="form-content">
                             <div className="row">
                               {/*****************************************Sucursal**********************************************************/}
@@ -2089,16 +1751,15 @@ function Informes({ history }) {
                                   <select
                                     className="form-control"
                                     required
-                                    id="sucursalEmisora"
-                                    onChange={handleChange}
+                                    id="Oficina Emisora"
                                   >
                                     <option value="0">Todas</option>
-                                    {dataSucursal.map((sucursalEmisora) => (
+                                    {dataSucursal.map((sucursal) => (
                                       <option
-                                        key={sucursalEmisora.m_nIdSucursal}
-                                        value={sucursalEmisora.m_nIdSucursal}
+                                        key={sucursal.m_nIdSucursal}
+                                        value={sucursal.m_nIdSucursal}
                                       >
-                                        {sucursalEmisora.m_sSucursal}
+                                        {sucursal.m_sSucursal}
                                       </option>
                                     ))}
                                   </select>
@@ -2113,16 +1774,15 @@ function Informes({ history }) {
                                   <select
                                     className="form-control"
                                     required
-                                    id="sucursalReceptora"
-                                    onChange={handleChange}
+                                    id="Oficina Receptora"
                                   >
                                     <option value="0">Todas</option>
-                                    {dataSucursal.map((sucursalReceptora) => (
+                                    {dataSucursal.map((sucursal) => (
                                       <option
-                                        key={sucursalReceptora.m_nIdSucursal}
-                                        value={sucursalReceptora.m_nIdSucursal}
+                                        key={sucursal.m_nIdSucursal}
+                                        value={sucursal.m_nIdSucursal}
                                       >
-                                        {sucursalReceptora.m_sSucursal}
+                                        {sucursal.m_sSucursal}
                                       </option>
                                     ))}
                                   </select>
@@ -2134,19 +1794,16 @@ function Informes({ history }) {
                                 <label className="input select">
                                   <select
                                     className="form-control"
-                                    v 
-                                    onChange={handleChange}
-
-                                    //value={state.EstatusInforme}
-                                    id="EstatusInforme"
+                                    required
+                                    id="estatus"
                                   >
                                     <option value="0">Todos</option>
-                                    {dataEstatusInformes.map((EstatusInforme) => (
+                                    {dataEstatusInformes.map((estatus) => (
                                       <option
-                                        key={EstatusInforme.m_nIdEstatusInforme}
-                                        value={EstatusInforme.m_nIdEstatusInforme}
+                                        key={estatus.m_nIdEstatusRecoleccion}
+                                        value={estatus.m_nIdEstatusRecoleccion}
                                       >
-                                        {EstatusInforme.m_sEstatus}
+                                        {estatus.m_sEstatus}
                                       </option>
                                     ))}
                                   </select>
@@ -2326,18 +1983,18 @@ function Informes({ history }) {
                             {/*****************************************Remolque*************************************************/}
                             <div className="row">
                               <div className="col-sm-12 col-md-6 unit">
-                                <label className="label">Remolque 1</label>
+                                <label className="label">Remolque</label>
                                 <div className="input">
                                   <Autocomplete
                                     freeSolo
-                                    value={state.IdRemolque1}
+                                    value={state.IdUnidad}
                                     onChange={(event, newValue) =>
                                       setState({
                                         ...state,
-                                        IdRemolque1: newValue,
+                                        IdUnidad: newValue,
                                       })
                                     }
-                                    id="IdRemolque1"
+                                    id="IdUnidad"
                                     disableClearable
                                     forcePopupIcon={false}
                                     options={dataUnidades}
@@ -2373,7 +2030,7 @@ function Informes({ history }) {
                                                     setState({
                                                       ...state,
                                                       identificadorModal:
-                                                        "IdRemolque1",
+                                                        "IdUnidad",
                                                       tipoModal: 4,
                                                       openDialog: true,
                                                     });
@@ -2405,103 +2062,9 @@ function Informes({ history }) {
                                 <label className="label">Placa Int</label>
                                 <div className="input">
                                   <input
-                                   required
-                                   onChange={handleChange}
                                     className="form-control"
                                     type="text"
-                                    id="PlacasRemolque1"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-
-
-                            <div className="row">
-                              <div className="col-sm-12 col-md-6 unit">
-                                <label className="label">Remolque 2</label>
-                                <div className="input">
-                                  <Autocomplete
-                                    freeSolo
-                                    value={state.IdRemolque2}
-                                    onChange={(event, newValue) =>
-                                      setState({
-                                        ...state,
-                                        IdRemolque2: newValue,
-                                      })
-                                    }
-                                    id="IdRemolque2"
-                                    disableClearable
-                                    forcePopupIcon={false}
-                                    options={dataUnidades}
-                                    getOptionLabel={(option) =>
-                                      option.m_sDescripcion
-                                    }
-                                    variant="outlined"
-                                    style={{
-                                      borderWidth: "1px",
-                                      borderColor: "#dddddd",
-                                      borderStyle: "solid",
-                                      borderRadius: "5px",
-                                    }}
-                                    renderInput={(params) => (
-                                      <div>
-                                        <TextField
-                                          {...params}
-                                          InputProps={{
-                                            ...params.InputProps,
-                                            style: {
-                                              height: 24,
-                                            },
-                                            type: "search",
-                                            disableUnderline: true,
-                                            endAdornment: (
-                                              <InputAdornment position="end">
-                                                <IconButton
-                                                  padding="0px"
-                                                  style={{
-                                                    paddingRight: "0px",
-                                                  }}
-                                                  onClick={() => {
-                                                    setState({
-                                                      ...state,
-                                                      identificadorModal:
-                                                        "IdRemolque2",
-                                                      tipoModal: 4,
-                                                      openDialog: true,
-                                                    });
-                                                  }}
-                                                >
-                                                  <PageviewIcon
-                                                    style={{
-                                                      color: "#F9A03E",
-                                                      fontSize: 32,
-                                                      paddingInlineEnd: 0,
-                                                      paddingRight: 0,
-                                                      paddingBlockEnd: 0,
-                                                      paddingLeft: 0,
-                                                      paddingBlock: 0,
-                                                    }}
-                                                  />
-                                                </IconButton>
-                                              </InputAdornment>
-                                            ),
-                                          }}
-                                        />
-                                      </div>
-                                    )}
-                                  />
-                                </div>
-                              </div>
-                              {/*****************************************Placa Int*************************************************/}
-                              <div className="col-sm-12 col-md-2 unit">
-                                <label className="label">Placa Int</label>
-                                <div className="input">
-                                  <input
-                                   
-                                   onChange={handleChange}
-                                    className="form-control"
-                                    type="text"
-                                    id="PlacasRemolque2"
+                                    id="Placa Int"
                                   />
                                 </div>
                               </div>
@@ -2932,8 +2495,6 @@ function Informes({ history }) {
                                             Folio Guía
                                           </label>
                                           <input
-                                             onChange={handleChange}
-
                                             value={value.m_nFolioGuia}
                                             className="form-control"
                                             type="text"
@@ -3207,13 +2768,375 @@ function Informes({ history }) {
             
           </div>
           
-      
-       
+        </div>
+        {state.Informes.length !== 1 && (
+          <a
+            className="btn delete"
+            onClick={() => removeInformeGuia(index)}
+            disabled={state.agregar == "Consultar"}
+          >
+            <i className="zmdi zmdi-delete"></i> Eliminar Informe
+          </a>
+        )}
         
       </div>
+    );
+  });
+
+  return (
+    <div>
+      <Dialog
+        open={state.openDialog}
+        onClose={() => setState({ ...state, openDialog: false })}
+      >
+        <DialogContent>
+          {state.tipoModal == 1 && (
+            <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
+              <div align="right">
+                <button
+                  onClick={() => {
+                    history.push("/Ciudades");
+                  }}
+                  className="btn btn-primary primary-btn"
+                >
+                  Agregar
+                </button>
               </div>
-              
-              <div className="form-footer" className="col-md-12">
+
+              {dataOrigenes.length != 0 ? (
+                <TableCiudades
+                  select={
+                    state[state.identificadorModal] &&
+                    state[state.identificadorModal].m_nIdCiudad
+                  }
+                  columns={columnsCiudades}
+                  data={dataOrigenes}
+                  identificadorModal={state.identificadorModal}
+                />
+              ) : (
+                <div>No se encontró ningún registro</div>
+              )}
+              <DialogActions style={{ justifyContent: "left" }}>
+                <button
+                  onClick={() => setState({ ...state, openDialog: false })}
+                  className="btn btn-secondary secondary-btn"
+                >
+                  Cerrar
+                </button>
+                <button
+                  onClick={() => setState({ ...state, openDialog: false })}
+                  className="btn btn-primary primary-btn"
+                >
+                  Aceptar
+                </button>
+              </DialogActions>
+            </div>
+          )}
+          {state.tipoModal == 2 && (
+            <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
+              <div align="right">
+                <button
+                  onClick={() => {
+                    history.push("/Operadores");
+                  }}
+                  className="btn btn-primary primary-btn"
+                >
+                  Agregar
+                </button>
+              </div>
+
+              {dataOperadores.length != 0 ? (
+                <TableOperadores
+                  select={
+                    state[state.identificadorModal] &&
+                    state[state.identificadorModal].m_nIdOperador
+                  }
+                  columns={columnsOperadores}
+                  data={dataOperadores}
+                  identificadorModal={state.identificadorModal}
+                />
+              ) : (
+                <div>No se encontró ningún registro</div>
+              )}
+              <DialogActions style={{ justifyContent: "left" }}>
+                <button
+                  onClick={() => setState({ ...state, openDialog: false })}
+                  className="btn btn-secondary secondary-btn"
+                >
+                  Cerrar
+                </button>
+                <button
+                  onClick={() => setState({ ...state, openDialog: false })}
+                  className="btn btn-primary primary-btn"
+                >
+                  Aceptar
+                </button>
+              </DialogActions>
+            </div>
+          )}
+          {state.tipoModal == 3 && (
+            <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
+              <div align="right">
+                <button
+                  onClick={() => {
+                    history.push("/TipoUnidad");
+                  }}
+                  className="btn btn-primary primary-btn"
+                >
+                  Agregar
+                </button>
+              </div>
+              {dataTipoUnidad.length != 0 ? (
+                <TableTipoUnidad
+                  select={
+                    state[state.identificadorModal] &&
+                    state[state.identificadorModal].m_nIdTipoUnidad
+                  }
+                  columns={columnsTipoUnidades}
+                  data={dataTipoUnidad}
+                  identificadorModal={state.identificadorModal}
+                />
+              ) : (
+                <div>No se encontró ningún registro</div>
+              )}
+              <DialogActions style={{ justifyContent: "left" }}>
+                <button
+                  onClick={() => setState({ ...state, openDialog: false })}
+                  className="btn btn-secondary secondary-btn"
+                >
+                  Cerrar
+                </button>
+                <button
+                  onClick={() => setState({ ...state, openDialog: false })}
+                  className="btn btn-primary primary-btn"
+                >
+                  Aceptar
+                </button>
+              </DialogActions>
+            </div>
+          )}
+          {state.tipoModal == 4 && (
+            <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
+              <div align="right">
+                <button
+                  onClick={() => {
+                    history.push("/Unidades");
+                  }}
+                  className="btn btn-primary primary-btn"
+                >
+                  Agregar
+                </button>
+              </div>
+
+              {dataUnidades.length != 0 ? (
+                <TableUnidad
+                  object={state}
+                  select={
+                    state[state.identificadorModal] &&
+                    state[state.identificadorModal].m_nIdUnidad
+                  }
+                  columns={columnsUnidades}
+                  data={dataUnidades}
+                  identificadorModal={state.identificadorModal}
+                />
+              ) : (
+                <div>No se encontró ningún registro</div>
+              )}
+              <DialogActions style={{ justifyContent: "left" }}>
+                <button
+                  onClick={() => setState({ ...state, openDialog: false })}
+                  className="btn btn-secondary secondary-btn"
+                >
+                  Cerrar
+                </button>
+                <button
+                  onClick={() => setState({ ...state, openDialog: false })}
+                  className="btn btn-primary primary-btn"
+                >
+                  Aceptar
+                </button>
+              </DialogActions>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <header className="topbar clearfix">
+        <Cabecera />
+      </header>
+      {/*Topbar End Here*/}
+      {/*Leftbar Start Here*/}
+      <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
+        <BarraLateralIzquierda />
+      </aside>
+
+      <section className="main-container">
+        <div className="container-fluid">
+          <div className="page-header filled full-block light">
+            <div className="row">
+              <div className="col-md-6 col-sm-6">
+                <h2>Informes</h2>
+              </div>
+              <div className="col-md-6 col-sm-6">
+                <ul className="list-page-breadcrumb">
+                  <li className="active-page"> Informes</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <ul className="nav navStatica nav-tabs">
+            <li className="active">
+              <a data-toggle="tab" href="#Listado">
+                <i className="fa fa-list" /> Listado
+              </a>
+            </li>
+            <li>
+              <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
+                <i className="fa fa-plus-circle" /> {state.agregar}
+              </a>
+            </li>
+
+            <li>
+              <a data-toggle="tab" href="#Imprimir">
+                <i className="fa fa-print" /> Imprimir
+              </a>
+            </li>
+
+            <li>
+              <a
+                data-toggle="tab"
+                href="#Cancelar"
+                onClick={handleShowCancelar}
+                className={state.IdInforme == 0 ? classes.disabled : ""}
+              >
+                <i className="fa fa-ban" /> Cancelar
+              </a>
+            </li>
+
+            <li>
+              <a data-toggle="tab" href="#Cubicar">
+                <i className="fa fa-adjust" /> Cubicar / Optimizar Rutas
+              </a>
+            </li>
+          </ul>
+
+          <div className="tab-content">
+            <div
+              className="widget-wrap"
+              id="Listado"
+              className="tab-pane fade in active"
+            >
+              <div className="widget-wrap">
+                <div className="widget-content">
+                  <div
+                    className="row"
+                    style={{ height: state.height - 250, width: "100%" }}
+                  >
+                    {data.length != 0 ? (
+                      <DataGrid
+                        rows={data}
+                        columns={columns}
+                        pageSize={ Math.floor((state.height - 310)/30)}
+                        getRowId={(row) => row.m_nIdInforme}
+                        onRowSelected={(row) => {
+                          setState({
+                            ...state,
+                            IdInforme: row.data.m_nIdInforme,
+                          });
+                        }}
+                      />
+                    ) : (
+                      <div>No se encontró ningún registro</div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="Imprimir" className="tab-pane fade ">
+              Imprimir
+            </div>
+            <div id="Importar" className="tab-pane fade ">
+              Importar
+            </div>
+            <div id="Agregar" className="tab-pane fade ">
+              {/*INICIO DE ESTRUCTURA */}
+
+              <form className="j-forms">
+                {/*Inicio de ejemplo*/}
+                <div className="form-content">
+                  {/* start steps */}
+                  <div
+                    className="wizard-breadcrumb number-style"
+                    style={{
+                      position: "sticky",
+                      top: "150px",
+                      padding: "5px",
+                      backgroundColor: "white",
+                      zIndex: 100,
+                      marginBottom: "10px",
+                    }}
+                  >
+                    <div className="row">
+                      <div
+                        className={
+                          "col-md-4 col-sm-2 step " +
+                          (stepActive == 1 && "active-step")
+                        }
+                        onClick={() => openSection(1)}
+                      >
+                        <div className={"steps"}>
+                          <span className={"step-number"}>1</span>
+                          <p>Información De Envio</p>
+                        </div>
+                      </div>
+                      <div
+                        className={
+                          "col-md-4 col-sm-2 step " +
+                          (stepActive == 2 && "active-step")
+                        }
+                        onClick={() => openSection(2)}
+                      >
+                        <div className="steps">
+                          <span className="step-number">2</span>
+                          <p>Asignar a un Viaje</p>
+                        </div>
+                      </div>
+                      <div
+                        className={
+                          "col-md-4 col-sm-2 step " +
+                          (stepActive == 3 && "active-step")
+                        }
+                        onClick={() => openSection(3)}
+                      >
+                        <div className="steps">
+                          <span className="step-number">3</span>
+                          <p>Detalles de Guias</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {/* end steps */}
+                </div>
+              </form>
+
+              <div className="row">
+                <a
+                  className="btn"
+                  style={{ margin: "10px" }}
+                  onClick={() => addInformeGuia()}
+                  disabled={state.agregar == "Consultar"}
+                >
+                  <i className="zmdi zmdi-plus"></i> Agregar Informe
+                </a>
+
+                <Carousel
+                  className={classesInforme.InformeCarrusel}
+                  widgets={[IndicatorDots, Buttons]}
+                  frames={framesInformeGuia}
+                ></Carousel>
+
+<div className="form-footer" className="col-md-12">
                   <button
                     href="#Listado"
                     role="tab"
@@ -3226,7 +3149,8 @@ function Informes({ history }) {
                     Aceptar
                   </button>
                 </div>
-              </form>
+              </div>
+
               {/* aqui va el form */}
             </div>
             <div id="Cancelar" className="tab-pane fade">
