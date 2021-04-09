@@ -94,12 +94,15 @@ function Usuarios() {
     hora22: false,
     hora23: false,
     vencimientoCertificado: false,
+    fotoPerfil: [],
     CreadoPor: localStorage.getItem("UsuarioId"),
     ModificadoPor: localStorage.getItem("UsuarioId"),
     height: window.innerHeight
   })
   const [dataSucursal, setDataSucursal] = React.useState([]);
   const [fileUploaded, setFileUploaded] = React.useState([])
+  const [selectedFile, setSelectedFile] = useState();
+  const [isFilePicked, setIsFilePicked] = useState(false);
 
   const handleAceptar = (e) => {
     e.preventDefault()
@@ -460,8 +463,8 @@ function Usuarios() {
       window.location.replace("login");
       return;
     }
-    getAllData();
     getAllSucursalData();
+    getAllData();
   }, []);
 
   async function getAllData() {
@@ -503,6 +506,22 @@ function Usuarios() {
     'Content-Type': 'application/json',
     //    'access-control-allow-origin': '*'
   }
+
+  const onChangeFile = (event) => {
+    console.log(event.target.files[0])
+    var file = event.target.files[0];
+    var reader = new FileReader();
+    var url = reader.readAsDataURL(file);
+    console.log(file)
+    reader.onloadend = function (e) {
+      setState({
+        ...setState,
+        fotoPerfil: reader.result
+      })
+    }.bind(this);
+    console.log(url) // Would see a path?
+    // TODO: concat files
+  };
 
   return (
     <div>
@@ -599,7 +618,7 @@ function Usuarios() {
 
                           <div className="row" style={{ paddingBottom: "15px" }}>
 
-                            <div className="col-xs-12 col-sm-12 col-md-7 col-lg-7" style={{ paddingRight: "0px" }}>
+                            <div className="col-xs-12 col-sm-12 col-md-7 col-lg-7" style={{ paddingRight: "0px", paddingLeft: "0px" }}>
 
                               <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 unit">
                                 <label className="label">
@@ -787,9 +806,26 @@ function Usuarios() {
                                 </label>
                               </div>
 
+                              <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 unit">
+                                <label className="label">
+                                  Foto de Perfil
+                              </label>
+                                <input
+                                  onChange={onChangeFile}
+                                  type="file"
+                                  required
+                                  readOnly={state.agregar == "Consultar"}
+                                  value={selectedFile}
+                                  id="fotoPerfil"
+                                />
+                                <div style={{paddingTop: "15px"}}>
+                                  <img style={{width: "52px", height: "52px"}} src={state.fotoPerfil} />
+                                </div>
+                              </div>
+
                             </div>
 
-                            <div className="col-xs-12 col-sm-12 col-md-5 col-lg-5" style={{ paddingLeft: "0px", paddingRight: "0px" }}>
+                            <div className="col-xs-12 col-sm-12 col-md-5 col-lg-5" style={{ paddingRight: "0px" }}>
                               <ul className="nav navStatica nav-tabs" style={{ backgroundColor: "#FFFFFF" }}>
                                 <li className="active">
                                   <a data-toggle="tab" href="#SeguridadDeAcceso">
@@ -822,11 +858,11 @@ function Usuarios() {
                                     </label>
                                   </div>
 
-                                  <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6" style={{ paddingTop: "20px", marginBottom: "15px" }}>
+                                  <div style={{ paddingTop: "20px", marginBottom: "15px" }}>
                                     <IPut
                                       className={state.filtrarPorIP ? "" : classes.disabled}
-                                      defaultValue={state.ip}
                                       onChange={(e) => {
+                                        console.log(e)
                                         setState({ ...state, ip: e })
                                       }}
                                       value={state.ip}
@@ -852,7 +888,7 @@ function Usuarios() {
                                     <h2>Días</h2>
                                     <div id="dia" className={state.filtrarPorDiaHora ? "" : classes.disabled} style={{ display: "flex" }}>
 
-                                      <label className="checkbox" style={{ marginRight: "10px" }}>
+                                      <label className="checkbox" style={{ marginRight: "5px" }}>
                                         <input
                                           disabled={state.agregar == "Consultar"}
                                           native="true"
@@ -865,7 +901,7 @@ function Usuarios() {
                                         Lun
                                       </label>
 
-                                      <label className="checkbox" style={{ marginRight: "10px" }}>
+                                      <label className="checkbox" style={{ marginRight: "5px" }}>
                                         <input
                                           disabled={state.agregar == "Consultar"}
                                           native="true"
@@ -878,7 +914,7 @@ function Usuarios() {
                                         Mar
                                       </label>
 
-                                      <label className="checkbox" style={{ marginRight: "10px" }}>
+                                      <label className="checkbox" style={{ marginRight: "5px" }}>
                                         <input
                                           disabled={state.agregar == "Consultar"}
                                           native="true"
@@ -891,7 +927,7 @@ function Usuarios() {
                                         Mier
                                       </label>
 
-                                      <label className="checkbox" style={{ marginRight: "10px" }}>
+                                      <label className="checkbox" style={{ marginRight: "5px" }}>
                                         <input
                                           disabled={state.agregar == "Consultar"}
                                           native="true"
@@ -904,7 +940,7 @@ function Usuarios() {
                                         Jue
                                       </label>
 
-                                      <label className="checkbox" style={{ marginRight: "10px" }}>
+                                      <label className="checkbox" style={{ marginRight: "5px" }}>
                                         <input
                                           disabled={state.agregar == "Consultar"}
                                           native="true"
@@ -917,7 +953,7 @@ function Usuarios() {
                                         Vie
                                         </label>
 
-                                      <label className="checkbox" style={{ marginRight: "10px" }}>
+                                      <label className="checkbox" style={{ marginRight: "5px" }}>
                                         <input
                                           disabled={state.agregar == "Consultar"}
                                           native="true"
@@ -930,7 +966,7 @@ function Usuarios() {
                                         Sab
                                       </label>
 
-                                      <label className="checkbox" style={{ marginRight: "10px" }}>
+                                      <label className="checkbox" style={{ marginRight: "5px" }}>
                                         <input
                                           disabled={state.agregar == "Consultar"}
                                           native="true"
@@ -952,7 +988,7 @@ function Usuarios() {
 
                                       <div style={{ width: "25%" }}>
 
-                                        <label className="checkbox" style={{ marginRight: "10px" }}>
+                                        <label className="checkbox" style={{ marginRight: "5px" }}>
                                           <input
                                             disabled={state.agregar == "Consultar"}
                                             native="true"
@@ -965,7 +1001,7 @@ function Usuarios() {
                                           0:00 - 0:59
                                         </label>
 
-                                        <label className="checkbox" style={{ marginRight: "10px" }}>
+                                        <label className="checkbox" style={{ marginRight: "5px" }}>
                                           <input
                                             disabled={state.agregar == "Consultar"}
                                             native="true"
@@ -978,7 +1014,7 @@ function Usuarios() {
                                         1:00 - 1:59
                                         </label>
 
-                                        <label className="checkbox" style={{ marginRight: "10px" }}>
+                                        <label className="checkbox" style={{ marginRight: "5px" }}>
                                           <input
                                             disabled={state.agregar == "Consultar"}
                                             native="true"
@@ -991,7 +1027,7 @@ function Usuarios() {
                                         2:00 - 2:59
                                         </label>
 
-                                        <label className="checkbox" style={{ marginRight: "10px" }}>
+                                        <label className="checkbox" style={{ marginRight: "5px" }}>
                                           <input
                                             disabled={state.agregar == "Consultar"}
                                             native="true"
@@ -1004,7 +1040,7 @@ function Usuarios() {
                                           3:00 - 3:59
                                         </label>
 
-                                        <label className="checkbox" style={{ marginRight: "10px" }}>
+                                        <label className="checkbox" style={{ marginRight: "5px" }}>
                                           <input
                                             disabled={state.agregar == "Consultar"}
                                             native="true"
@@ -1017,7 +1053,7 @@ function Usuarios() {
                                           4:00 - 4:59
                                         </label>
 
-                                        <label className="checkbox" style={{ marginRight: "10px" }}>
+                                        <label className="checkbox" style={{ marginRight: "5px" }}>
                                           <input
                                             disabled={state.agregar == "Consultar"}
                                             native="true"
@@ -1034,7 +1070,7 @@ function Usuarios() {
 
                                       <div style={{ width: "25%" }}>
 
-                                        <label className="checkbox" style={{ marginRight: "10px" }}>
+                                        <label className="checkbox" style={{ marginRight: "5px" }}>
                                           <input
                                             disabled={state.agregar == "Consultar"}
                                             native="true"
@@ -1047,7 +1083,7 @@ function Usuarios() {
                                           6:00 - 6:59
                                         </label>
 
-                                        <label className="checkbox" style={{ marginRight: "10px" }}>
+                                        <label className="checkbox" style={{ marginRight: "5px" }}>
                                           <input
                                             disabled={state.agregar == "Consultar"}
                                             native="true"
@@ -1060,7 +1096,7 @@ function Usuarios() {
                                           7:00 - 7:59
                                         </label>
 
-                                        <label className="checkbox" style={{ marginRight: "10px" }}>
+                                        <label className="checkbox" style={{ marginRight: "5px" }}>
                                           <input
                                             disabled={state.agregar == "Consultar"}
                                             native="true"
@@ -1073,7 +1109,7 @@ function Usuarios() {
                                           8:00 - 8:59
                                         </label>
 
-                                        <label className="checkbox" style={{ marginRight: "10px" }}>
+                                        <label className="checkbox" style={{ marginRight: "5px" }}>
                                           <input
                                             disabled={state.agregar == "Consultar"}
                                             native="true"
@@ -1086,7 +1122,7 @@ function Usuarios() {
                                           9:00 - 9:59
                                         </label>
 
-                                        <label className="checkbox" style={{ marginRight: "10px" }}>
+                                        <label className="checkbox" style={{ marginRight: "5px" }}>
                                           <input
                                             disabled={state.agregar == "Consultar"}
                                             native="true"
@@ -1099,7 +1135,7 @@ function Usuarios() {
                                           10:00 - 10:59
                                         </label>
 
-                                        <label className="checkbox" style={{ marginRight: "10px" }}>
+                                        <label className="checkbox" style={{ marginRight: "5px" }}>
                                           <input
                                             disabled={state.agregar == "Consultar"}
                                             native="true"
@@ -1116,7 +1152,7 @@ function Usuarios() {
 
                                       <div style={{ width: "25%" }}>
 
-                                        <label className="checkbox" style={{ marginRight: "10px" }}>
+                                        <label className="checkbox" style={{ marginRight: "5px" }}>
                                           <input
                                             disabled={state.agregar == "Consultar"}
                                             native="true"
@@ -1129,7 +1165,7 @@ function Usuarios() {
                                           12:00 - 12:59
                                         </label>
 
-                                        <label className="checkbox" style={{ marginRight: "10px" }}>
+                                        <label className="checkbox" style={{ marginRight: "5px" }}>
                                           <input
                                             disabled={state.agregar == "Consultar"}
                                             native="true"
@@ -1142,7 +1178,7 @@ function Usuarios() {
                                           13:00 - 13:59
                                         </label>
 
-                                        <label className="checkbox" style={{ marginRight: "10px" }}>
+                                        <label className="checkbox" style={{ marginRight: "5px" }}>
                                           <input
                                             disabled={state.agregar == "Consultar"}
                                             native="true"
@@ -1155,7 +1191,7 @@ function Usuarios() {
                                           14:00 - 14:59
                                         </label>
 
-                                        <label className="checkbox" style={{ marginRight: "10px" }}>
+                                        <label className="checkbox" style={{ marginRight: "5px" }}>
                                           <input
                                             disabled={state.agregar == "Consultar"}
                                             native="true"
@@ -1168,7 +1204,7 @@ function Usuarios() {
                                           15:00 - 15:59
                                         </label>
 
-                                        <label className="checkbox" style={{ marginRight: "10px" }}>
+                                        <label className="checkbox" style={{ marginRight: "5px" }}>
                                           <input
                                             disabled={state.agregar == "Consultar"}
                                             native="true"
@@ -1181,7 +1217,7 @@ function Usuarios() {
                                           16:00 - 16:59
                                         </label>
 
-                                        <label className="checkbox" style={{ marginRight: "10px" }}>
+                                        <label className="checkbox" style={{ marginRight: "5px" }}>
                                           <input
                                             disabled={state.agregar == "Consultar"}
                                             native="true"
@@ -1198,7 +1234,7 @@ function Usuarios() {
 
                                       <div style={{ width: "25%" }}>
 
-                                        <label className="checkbox" style={{ marginRight: "10px" }}>
+                                        <label className="checkbox" style={{ marginRight: "5px" }}>
                                           <input
                                             disabled={state.agregar == "Consultar"}
                                             native="true"
@@ -1211,7 +1247,7 @@ function Usuarios() {
                                           18:00 - 18:59
                                         </label>
 
-                                        <label className="checkbox" style={{ marginRight: "10px" }}>
+                                        <label className="checkbox" style={{ marginRight: "5px" }}>
                                           <input
                                             disabled={state.agregar == "Consultar"}
                                             native="true"
@@ -1224,7 +1260,7 @@ function Usuarios() {
                                           19:00 - 19:59
                                         </label>
 
-                                        <label className="checkbox" style={{ marginRight: "10px" }}>
+                                        <label className="checkbox" style={{ marginRight: "5px" }}>
                                           <input
                                             disabled={state.agregar == "Consultar"}
                                             native="true"
@@ -1237,7 +1273,7 @@ function Usuarios() {
                                           20:00 - 20:59
                                         </label>
 
-                                        <label className="checkbox" style={{ marginRight: "10px" }}>
+                                        <label className="checkbox" style={{ marginRight: "5px" }}>
                                           <input
                                             disabled={state.agregar == "Consultar"}
                                             native="true"
@@ -1250,7 +1286,7 @@ function Usuarios() {
                                           21:00 - 21:59
                                         </label>
 
-                                        <label className="checkbox" style={{ marginRight: "10px" }}>
+                                        <label className="checkbox" style={{ marginRight: "5px" }}>
                                           <input
                                             disabled={state.agregar == "Consultar"}
                                             native="true"
@@ -1263,7 +1299,7 @@ function Usuarios() {
                                           22:00 - 22:59
                                         </label>
 
-                                        <label className="checkbox" style={{ marginRight: "10px" }}>
+                                        <label className="checkbox" style={{ marginRight: "5px" }}>
                                           <input
                                             disabled={state.agregar == "Consultar"}
                                             native="true"
@@ -1284,7 +1320,7 @@ function Usuarios() {
                                 </div>
 
                                 <div id="Notificaciones" className="tab-pane fade" style={{ paddingTop: "20px" }}>
-                                  <label className="checkbox" style={{ marginRight: "10px" }}>
+                                  <label className="checkbox" style={{ marginRight: "5px" }}>
                                     <input
                                       disabled={state.agregar == "Consultar"}
                                       native="true"
