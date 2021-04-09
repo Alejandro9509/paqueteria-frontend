@@ -4,27 +4,22 @@ import "../App.css";
 import React, { useEffect, useState, setData, useMemo, Component } from "react";
 
 import axios from "axios";
-import { FormControl, Input, InputLabel } from "@material-ui/core";
 
-import DataTable from "react-data-table-component";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import { useTable, useFilters, useSortBy } from "react-table";
-import ExportCSV from "../Components/Template/Export";
 import ExportPDF from "../Components/Template/ExportPDF";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-
 import $ from "jquery";
 import { remove_array_element } from "../Util/Util";
 import SvgIcon from "@material-ui/core/SvgIcon";
 import { ReactComponent as Activo } from '../iconos/Menu/palomita.svg';
 import { ReactComponent as NoActivo } from '../iconos/Menu/cruz.svg';
-import { SettingsEthernet } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import { DataGrid } from '@material-ui/data-grid';
-
+import { DataGrid, GridToolbarExport, GridToolbarContainer } from '@material-ui/data-grid';
+import { dataGridLocaleText } from '../Constants/index'
 import Noty from 'noty';
 
 function showSuccess(mensaje) {
@@ -130,6 +125,19 @@ function Clientes(props) {
       accessor: "m_nTipoProceso",
     },
   ]);
+
+  const locale = {
+    toolbarExport: 'Exportar',
+    toolbarExportLabel: 'Exportar',
+    toolbarExportCSV: 'Descargar como CSV',
+
+    // Columns panel text
+    columnsPanelTextFieldLabel: 'Buscar columna',
+    columnsPanelTextFieldPlaceholder: 'Columna title',
+    columnsPanelDragIconLabel: 'Reorder columna',
+    columnsPanelShowAllButton: 'Mostrar todo',
+    columnsPanelHideAllButton: 'Ocultar todo',
+  }
 
   function DefaultColumnFilter2({
     column: { filterValue, preFilteredRows, setFilter },
@@ -370,7 +378,7 @@ function Clientes(props) {
   const [dataGrupoClientes, setDataGrupoClientes] = React.useState([]);
   const [dataSucursales, setDataSucursales] = React.useState([]);
   const [dataFormatos, setDataFormatos] = React.useState([]);
-
+  const [selectedRows, setSelectedRows] = React.useState([]);
   const [dataListadoClientes, setDataListadoClientes] = React.useState([]);
   const [state, setState] = React.useState({
     agregar: "Agregar",
@@ -775,6 +783,14 @@ function Clientes(props) {
     );
   }
 
+  function CustomToolbar() {
+    return (
+      <GridToolbarContainer>
+        <GridToolbarExport />
+      </GridToolbarContainer>
+    );
+  }
+
   function value(event) {
     console.log(event.target.value);
   }
@@ -842,7 +858,9 @@ function Clientes(props) {
               </a>
             </li>
             <li>
-              <ExportCSV csvData={dataListadoClientes} fileName="Unidades_Listado" />
+              <a data-toggle="tab" href="#Imprimir" onClick={console.log(selectedRows)}>
+                <i className="fa fa-plus-circle" /> Imprimir
+              </a>
             </li>
             <li>
               <ExportPDF data={dataListadoClientes} column={columns} fileName="Unidades" />
@@ -853,20 +871,15 @@ function Clientes(props) {
             <div id="Listado" className="tab-pane fade in active">
               <div className="widget-wrap">
                 <div className="widget-content">
-                <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                  <div className="row" style={{ height: state.height - 250, width: '100%' }}>
                     {dataListadoClientes.length != 0 ? (
                       <DataGrid
+                        localeText={dataGridLocaleText}
                         rows={dataListadoClientes}
                         columns={columns}
                         density="compact"
-                        pageSize={ Math.floor((state.height - 310)/30)}
+                        pageSize={Math.floor((state.height - 310) / 30)}
                         getRowId={(row) => row.m_nIdCliente}
-                        onRowSelected={(row) => {
-                          setState({
-                            ...state,
-                            idCliente: row.data.m_nIdCliente
-                          })
-                        }}
                       />
                     ) : (
                       <div>No se encontró ningún registro</div>
@@ -877,7 +890,34 @@ function Clientes(props) {
             </div>
             <div id="Importar" className="tab-pane fade "></div>
             <div id="Imprimir" className="tab-pane fade ">
-              Imprimir
+              <div className="widget-wrap">
+                <div className="widget-content">
+                  <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                    {dataListadoClientes.length != 0 ? (
+                      <DataGrid
+                        components={{
+                          Toolbar: CustomToolbar
+                        }}
+                        localeText={dataGridLocaleText}
+                        rows={dataListadoClientes}
+                        columns={columns}
+                        density="compact"
+                        checkboxSelection={true}
+                        pageSize={Math.floor((state.height - 310) / 30)}
+                        getRowId={(row) => row.m_nIdCliente}
+                        onSelectionModelChange={(newSelection) => {
+                          console.log(newSelection)
+                          setSelectedRows(newSelection.rows);
+                        }}
+                      />
+                    ) : (
+                      <div>No se encontró ningún registro</div>
+                    )}
+                  </div>
+
+                </div>
+              </div>
+
             </div>
 
             <div id="Agregar" className="tab-pane fade">
