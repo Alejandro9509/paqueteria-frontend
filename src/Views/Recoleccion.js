@@ -180,10 +180,14 @@ function Recoleccion() {
     fechaCancelacion: "",
     mostraFechaCancelacion: "",
 
+    uploadedFileContent: "<div>Hello</div>",
+
     usuario: localStorage.getItem("Usuario"),
     height: window.innerHeight,
   });
   const [fileUploaded, setFileUploaded] = React.useState([]);
+  const [selectedFile, setSelectedFile] = useState();
+  const [isFilePicked, setIsFilePicked] = useState(false);
   const [stepActive, setStepActive] = React.useState(1);
   const [Modal, open, close, isOpen] = useModal("root", {
     preventScroll: true,
@@ -374,6 +378,24 @@ function Recoleccion() {
       showSuccess(respuesta.data)
     })
   }
+
+  const changeHandler = (event) => {
+    setSelectedFile(event.target.files[0]);
+    setIsFilePicked(true);
+  };
+
+  function handleSubmission() {
+    console.log(selectedFile)
+    var reader = new FileReader();
+    reader.onload = function () {
+      console.log(reader.result)
+    }.bind(this);
+    reader.readAsText(selectedFile);
+    setState({
+      ...setState,
+      uploadedFileContent: "reader.result"
+    })
+  };
 
   function addPaquete(index) {
     const { paquetes } = state;
@@ -2415,6 +2437,12 @@ function Recoleccion() {
               </a>
             </li>
 
+            <li>
+              <a data-toggle="tab" href="#Prueba">
+                <i className="zmdi zmdi-print" /> Boton de prueba
+              </a>
+            </li>
+
             <li style={{ float: "right" }}>
               <a data-toggle="tab" href="#" className={state.idRecoleccion == 0 ? classes.disabled : ""} style={{ textAlign: "right" }} onClick={() => setRedirect(true)}>
                 Generar embarque
@@ -2533,6 +2561,7 @@ function Recoleccion() {
                   )}
                 </div>
               </div>
+
             </div>
 
             <div id="Agregar" className="tab-pane fade">
@@ -4683,6 +4712,28 @@ function Recoleccion() {
                 </div>
               </div>
             </div>
+
+            <div id="Prueba" className="tab-pane fade">
+              <div className="widget-wrap">
+                <div className="widget-container">
+                  <div className="widget-content">
+                    <div className="row">
+                      <div className="form-content" style={{display: "flex"}}>
+                        <input type="file" id="archivoFormato" onChange={changeHandler} />
+                        <div>
+                          <button onClick={handleSubmission} disabled={!isFilePicked}>Submit</button>
+                        </div>
+                      </div>
+                      <article>
+                        <h2><a>Hello World</a></h2>
+                        <div dangerouslySetInnerHTML={{ __html: state.uploadedFileContent }}></div>
+                      </article>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
 
           </div>
         </div>

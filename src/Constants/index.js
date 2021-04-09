@@ -139,7 +139,7 @@ export const dataGridLocaleText = {
     columnMenuShowColumns: 'Mostrar columna',
     columnMenuFilter: 'Filtro',
     columnMenuHideColumn: 'Ocultar columna',
-    columnMenuUnsort: 'Desordenar',
+    columnMenuUnsort: 'Por defecto',
     columnMenuSortAsc: 'Ascendiente',
     columnMenuSortDesc: 'Descendiente',
 

@@ -307,9 +307,9 @@ function CiudadesCodigoPostal() {
       renderCell: (row) => {
         return (
           <div>
-            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarCodigoPostal(row.row.m_nIdCiudad))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificarCodigoPostal(row.row.m_nIdCiudad))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminarCodigoPostal(row.row.m_nIdCiudad))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarCodigoPostal(row.row.m_nIdCP))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificarCodigoPostal(row.row.m_nIdCP))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminarCodigoPostal(row.row.m_nIdCP))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
           </div>
         )
       }

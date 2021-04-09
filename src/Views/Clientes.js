@@ -594,14 +594,15 @@ function Clientes(props) {
         return;
       }
 
-      const url = `${process.env.REACT_APP_API_URL}/Unidad/Eliminar/` + id;
+      const url = `${process.env.REACT_APP_API_URL}/Clientes/Eliminar/` + id;
       axios
         .get(url, { headers })
         .then((respuesta) => {
           console.log(respuesta);
         })
         .catch((err) => {
-          showSuccess(err);
+          console.log(err)
+          showSuccess(JSON.stringify(err));
         });
     }).catch(err => {
       showSuccess(err)
