@@ -22,6 +22,8 @@ import { DataGrid, GridToolbarExport, GridToolbarContainer } from '@material-ui/
 import { dataGridLocaleText } from '../Constants/index'
 import Noty from 'noty';
 
+
+
 function showSuccess(mensaje) {
   new Noty({
     type: "information",
@@ -47,7 +49,15 @@ const headers = {
 };
 
 function Clientes(props) {
+  const headers = {
+    "Content-Type": "application/json",
+  };
 
+  const headers2 = {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  };
   const classes = useStyles();
 
   const columns = React.useMemo(() => [
@@ -381,6 +391,8 @@ function Clientes(props) {
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [dataListadoClientes, setDataListadoClientes] = React.useState([]);
   const [state, setState] = React.useState({
+    CreadoPor: localStorage.getItem("UsuarioId"),
+    ModificadoPor: localStorage.getItem("UsuarioId"),
     agregar: "Agregar",
     idCliente: 0,
     numeroCliente: 0,
@@ -448,7 +460,7 @@ function Clientes(props) {
   }
 
   function handleShowModificar(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Unidad/GetById/` + id;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/Unidad/GetById/` + id;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
       setState({
@@ -472,7 +484,7 @@ function Clientes(props) {
   }, []);
 
   function getAllGrupoClientes() {
-    const url = `${process.env.REACT_APP_API_URL}/GruposClientes/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/GruposClientes/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta);
 
@@ -480,7 +492,7 @@ function Clientes(props) {
     });
   }
   function getAllFormatos() {
-    const url = `${process.env.REACT_APP_API_URL}/Formato/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/Formato/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta);
 
@@ -498,7 +510,7 @@ function Clientes(props) {
   }
 
   function getAllPaises() {
-    const url = `${process.env.REACT_APP_API_URL}/Pais/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/Pais/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setDataPais(respuesta.data);
     });
@@ -510,7 +522,7 @@ function Clientes(props) {
 
   function getAllEstados(id) {
     console.log(id);
-    const url = `${process.env.REACT_APP_API_URL}/Estados/ByPais/` + id;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/Estados/ByPais/` + id;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
       setDataEstado(respuesta.data);
@@ -519,7 +531,7 @@ function Clientes(props) {
   }
 
   function getAllImpuestos() {
-    const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/Impuestos/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
       setDataImpuesto(respuesta.data);
@@ -528,14 +540,14 @@ function Clientes(props) {
   }
 
   function getAllSucursales() {
-    const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/Sucursales/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setDataSucursales(respuesta.data);
     });
   }
 
   function getAllGruposClientes() {
-    const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/GrupoUnidad/GetListado`;
     axios.get(url, { headers }).then((respuesta) => { });
   }
 
@@ -584,7 +596,7 @@ function Clientes(props) {
 
   function handleEliminar(id) {
     var derecho;
-    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.creadoPor}/${state.DerechoBorrar}/3`;
+    const urlDelete = `${process.env.REACT_APP_API_URL_LOCAL}/Utilerias/ValidaDerechos/${state.creadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
       //showSuccess(respuesta.data)
 
@@ -594,9 +606,9 @@ function Clientes(props) {
         return;
       }
 
-      const url = `${process.env.REACT_APP_API_URL}/Unidad/Eliminar/` + id;
+      const url = `${process.env.REACT_APP_API_URL_LOCAL}/Clientes/Eliminar/` + id;
       axios
-        .get(url, { headers })
+        .get(url, { headers2 })
         .then((respuesta) => {
           console.log(respuesta);
         })
@@ -618,7 +630,7 @@ function Clientes(props) {
 
   const handleChangeCodigo = (event) => {
     const url =
-      `${process.env.REACT_APP_API_URL}/Unidades/ValidaCodigoUnidad/` +
+      `${process.env.REACT_APP_API_URL_LOCAL}/Unidades/ValidaCodigoUnidad/` +
       state.codigo;
     axios
       .get(url, { headers })
@@ -665,14 +677,99 @@ function Clientes(props) {
     });
   }
 
+
   const handleAceptar = (e) => {
     e.preventDefault();
-    var params = {};
+    var params = {
+     m_nCreadoPor: state.CreadoPor,
+      m_nModificadoPor:state.ModificadoPor,
+      m_nNumeroCliente:state.numeroCliente,
+      m_nTipoCliente:state.tipoCliente,
+      m_sRFC:state.rfc,
+      m_bActivo:state.activo,
+      m_bOperadorLogistico:state.operadorLogistico,
+      m_sNombreFiscal:state.nombreFiscal,
+      m_sNombreCorto:state.nombreCorto,
+      m_nIdSucursal:state.idSucursal,
+      m_nIdMoneda:state.idMoneda,
+      m_nIdImpuestoTransladado:state.idImpuestoTransladado,
+      m_bAplicarDetalleMaterialesCadaViajeXML:state.aplicarDetalleConceptoCadaViajeXML,
+      m_nIdEstado:state.idEstado,
+      m_nIdGrupoCliente:state.idGrupoCliente,
+      m_sMetodoPago:state.metodoPago,
+      m_nDiasCredito:state.diasCredito,
+      m_cyCredito:state.credito,
+      m_cyCreditoDLLS:state.creditoDlls,
+      m_cySaldoCredito:state.saldoCredito,
+      m_cySaldoCreditoDLLS:state.saldoCreditoDLLS,
+      m_cyPendFacturar:state.pendFacturar,
+      m_cyPendFacturarDLLS:state.pendFacturarDLLS,
+      m_sBancoOrdenante:state.bancoOrdenante,
+      m_sRFCBancoOrdenante:state.rfcBancoOrdenante,
+      m_sNoCuentaBancoOrdenante:state.cuentaBancoOrdenante,
+      m_sCodigoPostal:state.codigoPostal,
+      m_nIdEstado:state.idEstado,
+      m_sMunicipio:state.municipio,
+      m_sLocalidad:state.localidad,
+      m_sColonia:state.colonia,
+      m_sCalle:state.calle,
+      m_sNoExterior:state.numeroExterior,
+      m_sNoInterior:state.numeroInterior,
+      m_sTelefono:state.telefono,
+      m_sCelular:state.celular,
+      m_sNextel:state.nextel,
+      m_sCorreoElectronico:state.correoElectronico,
+      m_sTableFormatos:state.tableformatos,
+      m_dtEnvioAutomaticoSeguimientoViajesFechaHoraInicio:state.m_dtEnvioAutomaticoSeguimientoViajesFechaHoraInicio,
+      m_sFechaEnvioCorreoApartir:state.fechaEnvioCorreo,
+      m_bEnvioAutomaticoSeguimientoViajesActivar:state.envioAutomaticoSeguimiento,
+      m_bExcluirNodoCondicionesPagoXML:state.excluirNodo,
+      m_sIdUsoCFDI:state.idUSOCFDI,
+      m_bPermitirAgruparCantidadPorConcepto:state.m_bPermitirAgruparCantidadPorConcepto,
+      m_bAjustarImportes2DecimalesXML:state.ajustarImporte2Dec,
+      m_bAplicarDetalleMaterialesCadaViajeXML:state.aplicarDetalleMaterialesCadaViajeXML,
+      agregar: "Agregar",
+      importar: "",
+    };
 
     console.log(params);
     if (state.idUnidad != 0) {
       const url =
         `${process.env.REACT_APP_API_URL}/Unidad/Modificar/` + state.idUnidad;
+      axios
+        .put(url, Object.assign({}, params), { headers })
+
+        .then((respuesta) => {
+          alert(respuesta.data);
+
+          window.location.reload();
+        })
+        .catch((err) => {
+          console.log(err);
+          alert("err");
+        });
+    } else {
+      const url = `${process.env.REACT_APP_API_URL}/Unidad/Agregar`;
+      axios
+        .post(url, Object.assign({}, params), { headers })
+        .then((respuesta) => {
+          alert(respuesta.data);
+          //window.location.reload();
+        })
+        .catch((err) => {
+          console.log(err);
+          alert(err);
+        });
+    }
+  
+
+
+
+
+    console.log(params);
+    if (state.idUnidad != 0) {
+      const url =
+        `${process.env.REACT_APP_API_URL_LOCAL}/Clientes/Modificar/` + state.idUnidad;
       axios
         .put(url, Object.assign({}, params), { headers })
 
@@ -686,7 +783,7 @@ function Clientes(props) {
           showSuccess("err");
         });
     } else {
-      const url = `${process.env.REACT_APP_API_URL}/Unidad/Agregar`;
+      const url = `${process.env.REACT_APP_API_URL_LOCAL}/Clientes/Agregar`;
       axios
         .post(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
@@ -810,6 +907,8 @@ function Clientes(props) {
     });
   }
 
+
+  
   useEffect((value) => {
     //closeSeccions();
   }, []);
@@ -1039,7 +1138,7 @@ function Clientes(props) {
                                     pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
                                     title="Favor de introducir un RFC válido."
                                     required
-                                    value={state.rfc}
+                                   // value={state.rfc}
                                     id="RFCRemitente"
                                   />
                                 </div>
@@ -1435,6 +1534,8 @@ function Clientes(props) {
                                       className="form-control"
                                       type="text"
                                       value={state.rfcBancoOrdenante}
+                                      pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
+                                      title="Favor de introducir un RFC válido."
                                       id="rfcBancoOrdenante"
                                       name="rfcBancoOrdenante"
                                     />
@@ -1710,8 +1811,8 @@ function Clientes(props) {
                                                       type="text"
                                                       placeholder=""
                                                       value={state.telefono}
-                                                      id="permisoSCT"
-                                                      name="permisoSCT"
+                                                      id="telefono"
+                                                      name="telefono"
                                                     />
                                                   </div>
                                                 </div>
@@ -1916,7 +2017,12 @@ function Clientes(props) {
                                                   value={state.idUSOCFDI}
                                                   id="idUSOCFDI"
                                                 >
-                                                  <option value="">""</option>
+                                                  <option value="1">1. Adqusicion de mercancias</option>
+                                                  <option value="2">2. Devoluciones, descuentos o bonificaciones </option>
+                                                  <option value="3">3. Gastos en general </option>
+                                                  <option value="4">4. Construcciones </option>
+                                                  <option value="5">5. Mobiliario y equipo </option>
+
                                                 </select>
                                                 <i></i>
                                               </label>
