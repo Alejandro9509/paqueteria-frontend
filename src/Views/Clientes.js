@@ -441,7 +441,6 @@ function Clientes(props) {
     tableformatos: "",
     frecuenciaEnvioDias: 0,
     enviarApartir: "",
-    envioAutoSeguimientoViajes: "",
     fechaEnvioCorreo: "",
     envioAutomaticoSeguimiento: "",
     excluirNodo: 0,
@@ -450,7 +449,32 @@ function Clientes(props) {
     ajustarImporte2Dec: "",
     detalleMateriales: "",
     formatoSelect: false,
-    height: window.innerHeight
+    height: window.innerHeight,
+    contactoNombre:"",
+    contactoCorreo:"",
+    contactoTelefono:"",
+    RecibirFactura:0,
+    RecibirEstadoCuenta:0,
+    PermitirSeguimiento:0,
+    UsoServicioWeb:0,
+    PermitirVerPortal:0,
+    RecibirCartaPorte:0,
+    
+    contactos: [
+      {
+        m_sNombre: "",
+        m_sCorreo: "",
+        m_sTelefono: "",
+        m_bRecibirFactura:0,
+        m_bRecibirEstadoCuenta:0,
+        m_bPermitirSeguimiento:0,
+        m_bUsoServicioWeb:0,
+        m_bPermitirVerPortal:0,
+        m_bRecibirCartaPorte:0
+
+
+      
+      }],
   });
 
   function handleShowAgregar() {
@@ -460,7 +484,7 @@ function Clientes(props) {
   }
 
   function handleShowModificar(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Unidad/GetById/` + id;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL_L}/Clientes/GetById/` + id;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
       setState({
@@ -484,7 +508,7 @@ function Clientes(props) {
   }, []);
 
   function getAllGrupoClientes() {
-    const url = `${process.env.REACT_APP_API_URL}/GruposClientes/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/GruposClientes/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta);
 
@@ -492,7 +516,7 @@ function Clientes(props) {
     });
   }
   function getAllFormatos() {
-    const url = `${process.env.REACT_APP_API_URL}/Formato/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/Formato/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta);
 
@@ -501,7 +525,7 @@ function Clientes(props) {
   }
 
   function getAllClientes() {
-    const url = `${process.env.REACT_APP_API_URL}/Clientes/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/Clientes/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta);
 
@@ -510,7 +534,7 @@ function Clientes(props) {
   }
 
   function getAllPaises() {
-    const url = `${process.env.REACT_APP_API_URL}/Pais/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/Pais/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setDataPais(respuesta.data);
     });
@@ -522,7 +546,7 @@ function Clientes(props) {
 
   function getAllEstados(id) {
     console.log(id);
-    const url = `${process.env.REACT_APP_API_URL}/Estados/ByPais/` + id;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/Estados/ByPais/` + id;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
       setDataEstado(respuesta.data);
@@ -531,7 +555,7 @@ function Clientes(props) {
   }
 
   function getAllImpuestos() {
-    const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/Impuestos/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
       setDataImpuesto(respuesta.data);
@@ -540,14 +564,14 @@ function Clientes(props) {
   }
 
   function getAllSucursales() {
-    const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/Sucursales/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setDataSucursales(respuesta.data);
     });
   }
 
   function getAllGruposClientes() {
-    const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/GrupoUnidad/GetListado`;
     axios.get(url, { headers }).then((respuesta) => { });
   }
 
@@ -559,6 +583,69 @@ function Clientes(props) {
     console.log(event.target.name + " " + state.activo);
   };
 
+  const handleChangeAplicarConcepto= (event) => {
+    setState({
+      ...state,
+      aplicarDetalleConceptoCadaViajeXML: !state.aplicarDetalleConceptoCadaViajeXML,
+    });
+    console.log(event.target.name + " " + state.aplicarDetalleConceptoCadaViajeXML);
+  };
+
+  const handleChangeEnvioAutoSeguimientoViajes = (event) => {
+    setState({
+      ...state,
+      envioAutomaticoSeguimiento: !state.envioAutomaticoSeguimiento,
+    });
+    console.log(event.target.name + " " + state.envioAutomaticoSeguimiento);
+  };
+
+  const handleChangeRecibirFactura = (event) => {
+    setState({
+      ...state,
+      RecibirFactura: !state.RecibirFactura,
+    });
+    console.log(event.target.name + " " + state.RecibirFactura);
+  };
+  const handleChangeRecibirEstadoCuenta = (event) => {
+    setState({
+      ...state,
+      activo: !state.RecibirEstadoCuenta,
+    });
+    console.log(event.target.name + " " + state.RecibirEstadoCuenta);
+  };
+
+  const handleChangePermitirSeguimiento = (event) => {
+    setState({
+      ...state,
+      PermitirSeguimiento: !state.PermitirSeguimiento,
+    });
+    console.log(event.target.name + " " + state.PermitirSeguimiento);
+  };
+  const handleChangeUsoServicioWeb = (event) => {
+    setState({
+      ...state,
+      UsoServicioWeb: !state.UsoServicioWeb,
+    });
+    console.log(event.target.name + " " + state.UsoServicioWeb);
+  };
+  const handlechangePermitirVerPortal = (event) => {
+    setState({
+      ...state,
+      PermitirVerPortal: !state.PermitirVerPortal,
+    });
+    console.log(event.target.name + " " + state.PermitirVerPortal);
+  };
+
+  const HandleChangePermitirRecibirCartaPorte = (event) => {
+    setState({
+      ...state,
+      RecibirCartaPorte: !state.RecibirCartaPorte,
+    });
+    console.log(event.target.name + " " + state.RecibirCartaPorte);
+  };
+
+
+
   const handleChangeFormatoSelectCheckboxChange = (event) => {
     setState({
       ...state,
@@ -567,22 +654,20 @@ function Clientes(props) {
     console.log(event.target.name + " " + state.activo);
   };
 
-  const handleChangeParoMotor = (event) => {
-    console.log(event.target.name + " " + state.paroMotor);
+ 
+  const handleChangeExcluirNodo= (event) => {
+    console.log(event.target.name + " " + state.excluirNodo);
     setState({
       ...state,
-      paroMotor: !state.paroMotor,
-
-      tiempoParoStatus: !state.tiempoParoStatus,
-      tiempoParoStatus: 0,
+      excluirNodo: !state.excluirNodo,
     });
   };
 
-  const handleChangeRentadaCheckboxChange = (event) => {
-    console.log(event.target.name + " " + state.rentada);
+  const handleChangeOperadorLogistico= (event) => {
+    console.log(event.target.name + " " + state.operadorLogistico);
     setState({
       ...state,
-      rentada: !state.rentada,
+      operadorLogistico: !state.operadorLogistico,
     });
   };
 
@@ -596,7 +681,7 @@ function Clientes(props) {
 
   function handleEliminar(id) {
     var derecho;
-    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.creadoPor}/${state.DerechoBorrar}/3`;
+    const urlDelete = `${process.env.REACT_APP_API_URL_LOCAL}/Utilerias/ValidaDerechos/${state.creadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
       //showSuccess(respuesta.data)
 
@@ -606,7 +691,7 @@ function Clientes(props) {
         return;
       }
 
-      const url = `${process.env.REACT_APP_API_URL}/Clientes/Eliminar/` + id;
+      const url = `${process.env.REACT_APP_API_URL_LOCAL}/Clientes/Eliminar/` + id;
       axios
         .get(url, { headers2 })
         .then((respuesta) => {
@@ -631,7 +716,7 @@ function Clientes(props) {
 
   const handleChangeCodigo = (event) => {
     const url =
-      `${process.env.REACT_APP_API_URL}/Unidades/ValidaCodigoUnidad/` +
+      `${process.env.REACT_APP_API_URL_LOCAL}/Unidades/ValidaCodigoUnidad/` +
       state.codigo;
     axios
       .get(url, { headers })
@@ -682,7 +767,7 @@ function Clientes(props) {
   const handleAceptar = (e) => {
     e.preventDefault();
     var params = {
-     m_nCreadoPor: state.CreadoPor,
+      m_nCreadoPor: state.CreadoPor,
       m_nModificadoPor:state.ModificadoPor,
       m_nNumeroCliente:state.numeroCliente,
       m_nTipoCliente:state.tipoCliente,
@@ -696,7 +781,7 @@ function Clientes(props) {
       m_nIdImpuestoTransladado:state.idImpuestoTransladado,
       m_bAplicarDetalleMaterialesCadaViajeXML:state.aplicarDetalleConceptoCadaViajeXML,
       m_nIdEstado:state.idEstado,
-      m_nIdGrupoCliente:state.idGrupoCliente,
+      m_nIdGrupoCliente:state.idGrupoCliente.m_nIdGrupoCliente,
       m_sMetodoPago:state.metodoPago,
       m_nDiasCredito:state.diasCredito,
       m_cyCredito:state.credito,
@@ -721,7 +806,8 @@ function Clientes(props) {
       m_sNextel:state.nextel,
       m_sCorreoElectronico:state.correoElectronico,
       m_sTableFormatos:state.tableformatos,
-      m_dtEnvioAutomaticoSeguimientoViajesFechaHoraInicio:state.m_dtEnvioAutomaticoSeguimientoViajesFechaHoraInicio,
+     // m_dtEnvioAutomaticoSeguimientoViajesFechaHoraInicio:state.m_dtEnvioAutomaticoSeguimientoViajesFechaHoraInicio,
+      m_nEnvioCorreoDias:state.frecuenciaEnvioDias,
       m_sFechaEnvioCorreoApartir:state.fechaEnvioCorreo,
       m_bEnvioAutomaticoSeguimientoViajesActivar:state.envioAutomaticoSeguimiento,
       m_bExcluirNodoCondicionesPagoXML:state.excluirNodo,
@@ -729,14 +815,24 @@ function Clientes(props) {
       m_bPermitirAgruparCantidadPorConcepto:state.m_bPermitirAgruparCantidadPorConcepto,
       m_bAjustarImportes2DecimalesXML:state.ajustarImporte2Dec,
       m_bAplicarDetalleMaterialesCadaViajeXML:state.aplicarDetalleMaterialesCadaViajeXML,
+      m_sContactoNombre: state.contactoNombre,
+      m_sContactoCorreo:state.contactoCorreo,
+      m_sContactoTelefono:state.contactoTelefono,
+      m_bRecibirFactura:state.RecibirFactura,
+      m_bRecibirEstadoCuenta:state.RecibirEstadoCuenta,
+      m_bPermitirSeguimiento:state.PermitirSeguimiento,
+      m_bUsoServicioWeb:state.UsoServicioWeb,
+      m_bPermitirVerPortal:state.m_bPermitirVerPortal,
+      m_bRecibirCartaPorte:state.RecibirCartaPorte,
+      
       agregar: "Agregar",
       importar: "",
     };
-
-    console.log(params);
-    if (state.idUnidad != 0) {
+    console.log(JSON.stringify(params));
+    debugger;
+    if (state.idCliente != 0) {
       const url =
-        `${process.env.REACT_APP_API_URL}/Unidad/Modificar/` + state.idUnidad;
+        `${process.env.REACT_APP_API_URL_LOCAL}/Clientes/Modificar/` + state.idCliente;
       axios
         .put(url, Object.assign({}, params), { headers })
 
@@ -750,7 +846,7 @@ function Clientes(props) {
           alert("err");
         });
     } else {
-      const url = `${process.env.REACT_APP_API_URL}/Unidad/Agregar`;
+      const url = `${process.env.REACT_APP_API_URL_LOCAL}/Clientes/Agregar`;
       axios
         .post(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
@@ -763,39 +859,6 @@ function Clientes(props) {
         });
     }
   
-
-
-
-
-    console.log(params);
-    if (state.idUnidad != 0) {
-      const url =
-        `${process.env.REACT_APP_API_URL}/Clientes/Modificar/` + state.idUnidad;
-      axios
-        .put(url, Object.assign({}, params), { headers })
-
-        .then((respuesta) => {
-          showSuccess(respuesta.data);
-
-          window.location.reload();
-        })
-        .catch((err) => {
-          console.log(err);
-          showSuccess("err");
-        });
-    } else {
-      const url = `${process.env.REACT_APP_API_URL}/Clientes/Agregar`;
-      axios
-        .post(url, Object.assign({}, params), { headers })
-        .then((respuesta) => {
-          showSuccess(respuesta.data);
-          //window.location.reload();
-        })
-        .catch((err) => {
-          console.log(err);
-          showSuccess(err);
-        });
-    }
   };
 
   function addDocumento() {
@@ -1139,8 +1202,9 @@ function Clientes(props) {
                                     pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
                                     title="Favor de introducir un RFC válido."
                                     required
-                                   // value={state.rfc}
-                                    id="RFCRemitente"
+                                   value={state.rfc}
+                                    id="rfc"
+                                    name="rfc"
                                   />
                                 </div>
                               </div>
@@ -1308,7 +1372,7 @@ function Clientes(props) {
                                 </label>
                             <label className="checkbox">
                               <input
-                                onChange={handleChangeRentadaCheckboxChange}
+                                onChange={handleChangeOperadorLogistico}
                                 native
                                 name="operadorLogistico"
                                 type="checkbox"
@@ -1963,12 +2027,12 @@ function Clientes(props) {
                                                     handleChangeActivoCheckboxChange
                                                   }
                                                   native
-                                                  name="envioAutoSeguimientoViajes"
+                                                  name="envioAutomaticoSeguimiento"
                                                   type="checkbox"
                                                   value={
                                                     state.envioAutomaticoSeguimiento
                                                   }
-                                                  id="envioAutoSeguimientoViajes"
+                                                  id="envioAutomaticoSeguimiento"
                                                 />
                                                 <i />
                                                 Envio Automático de Seguimiento
@@ -1981,7 +2045,7 @@ function Clientes(props) {
                                               <label className="checkbox">
                                                 <input
                                                   onChange={
-                                                    handleChangeRentadaCheckboxChange
+                                                    handleChangeExcluirNodo
                                                   }
                                                   native
                                                   name="excluirNodo"
@@ -2088,7 +2152,7 @@ function Clientes(props) {
                                                 <label className="checkbox">
                                                   <input
                                                     onChange={
-                                                      handleChangeActivoCheckboxChange
+                                                      handleChangeAplicarConcepto
                                                     }
                                                     native
                                                     name="aplicarDetalleConceptoCadaViajeXML"
@@ -2140,12 +2204,12 @@ function Clientes(props) {
                                   <div className="input">
                                     <input
                                       onChange={handleChange}
-                                      value={state.tarjetaIAVE}
-                                      name="tarjetaIAVE"
+                                      value={state.contactoNombre}
+                                      name="contactoNombre"
                                       className="form-control"
                                       type="text"
                                       placeholder=""
-                                      id="text"
+                                      id="contactoNombre"
                                     />
                                   </div>
                                 </div>
@@ -2155,13 +2219,13 @@ function Clientes(props) {
                                     <label className="checkbox">
                                       <input
                                         onChange={
-                                          handleChangeActivoCheckboxChange
+                                          handleChangeRecibirFactura
                                         }
                                         native
-                                        name="activo"
+                                        name="RecibirFactura"
                                         type="checkbox"
-                                        value={state.factura}
-                                        id="activo"
+                                        value={state.RecibirFactura}
+                                        id="RecibirFactura"
                                       />
                                       <i />
                                       Recibir factura
@@ -2175,12 +2239,12 @@ function Clientes(props) {
                                   <div className="input">
                                     <input
                                       onChange={handleChange}
-                                      value={state.tarjetaEPASS}
-                                      name="tarjetaEPASS"
+                                      value={state.contactoCorreo}
+                                      name="contactoCorreo"
                                       className="form-control"
                                       type="text"
                                       placeholder=""
-                                      id="text"
+                                      id="contactoCorreo"
                                     />
                                   </div>
                                 </div>
@@ -2189,13 +2253,13 @@ function Clientes(props) {
                                     <label className="checkbox">
                                       <input
                                         onChange={
-                                          handleChangeRentadaCheckboxChange
+                                          handleChangeRecibirEstadoCuenta
                                         }
                                         native
-                                        name="rentada"
+                                        name="RecibirEstadoCuenta"
                                         type="checkbox"
-                                        id="rentada"
-                                        value={state.rentada}
+                                        id="RecibirEstadoCuenta"
+                                        value={state.RecibirEstadoCuenta}
                                       />
                                       <i />
                                       Recibir Edo de cuenta
@@ -2209,12 +2273,12 @@ function Clientes(props) {
                                   <div className="input">
                                     <input
                                       onChange={handleChange}
-                                      value={state.tarjetaEPASS}
-                                      name="tarjetaEPASS"
+                                      value={state.contactoTelefono}
+                                      name="contactoTelefono"
                                       className="form-control"
                                       type="text"
                                       placeholder=""
-                                      id="text"
+                                      id="contactoTelefono"
                                     />
                                   </div>
                                 </div>
@@ -2223,13 +2287,13 @@ function Clientes(props) {
                                     <label className="checkbox">
                                       <input
                                         onChange={
-                                          handleChangeRentadaCheckboxChange
+                                          handleChangePermitirSeguimiento
                                         }
                                         native
-                                        name="rentada"
+                                        name="PermitirSeguimiento"
                                         type="checkbox"
-                                        id="rentada"
-                                        value={state.rentada}
+                                        id="PermitirSeguimiento"
+                                        value={state.PermitirSeguimiento}
                                       />
                                       <i />
                                       Permitir Seguiiento de Viajes/Unidades
@@ -2244,13 +2308,13 @@ function Clientes(props) {
                                     <label className="checkbox">
                                       <input
                                         onChange={
-                                          handleChangeRentadaCheckboxChange
+                                          handleChangeUsoServicioWeb
                                         }
                                         native
                                         name="rentada"
                                         type="checkbox"
                                         id="rentada"
-                                        value={state.rentada}
+                                        value={state.UsoServicioWeb}
                                       />
                                       <i />
                                       Uso de un servicio web
@@ -2265,13 +2329,13 @@ function Clientes(props) {
                                     <label className="checkbox">
                                       <input
                                         onChange={
-                                          handleChangeRentadaCheckboxChange
+                                          handlechangePermitirVerPortal
                                         }
                                         native
-                                        name="rentada"
+                                        name="PermitirVerPortal"
                                         type="checkbox"
-                                        id="rentada"
-                                        value={state.rentada}
+                                        id="PermitirVerPortal"
+                                        value={state.PermitirVerPortal}
                                       />
                                       <i />
                                       Permitir ver Portal de Clientes
@@ -2287,13 +2351,13 @@ function Clientes(props) {
                                     <label className="checkbox">
                                       <input
                                         onChange={
-                                          handleChangeRentadaCheckboxChange
+                                          handlechangePermitirVerPortal
                                         }
                                         native
-                                        name="rentada"
+                                        name="RecibirCartaPorte"
                                         type="checkbox"
-                                        id="rentada"
-                                        value={state.rentada}
+                                        id="RecibirCartaPorte"
+                                        value={state.RecibirCartaPorte}
                                       />
                                       <i />
                                       Recibir carta porte
