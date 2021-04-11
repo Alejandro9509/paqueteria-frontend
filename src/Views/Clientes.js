@@ -437,6 +437,10 @@ function Clientes(props) {
     agruparCantidadPorConcepto: "",
     ajustarImporte2Dec: "",
     detalleMateriales: "",
+
+    correoContacto: "",
+    telefonoContacto: "",
+
     formatoSelect: false,
     height: window.innerHeight
   });
@@ -596,9 +600,10 @@ function Clientes(props) {
 
       const url = `${process.env.REACT_APP_API_URL}/Clientes/Eliminar/` + id;
       axios
-        .get(url, { headers })
+        .delete(url, { headers })
         .then((respuesta) => {
-          console.log(respuesta);
+          showSuccess(respuesta);
+          getAllClientes();
         })
         .catch((err) => {
           console.log(err)
@@ -1290,6 +1295,7 @@ function Clientes(props) {
                                     <input
                                       onChange={handleChange}
                                       className="form-control"
+                                      required
                                       type="number"
                                       value={state.diasCredito}
                                       id="diasCredito"
@@ -2034,12 +2040,13 @@ function Clientes(props) {
                                   <div className="input">
                                     <input
                                       onChange={handleChange}
-                                      value={state.tarjetaIAVE}
-                                      name="tarjetaIAVE"
+                                      value={state.contacto}
+                                      name="contacto"
+                                      required
                                       className="form-control"
                                       type="text"
                                       placeholder=""
-                                      id="text"
+                                      id="contacto"
                                     />
                                   </div>
                                 </div>
@@ -2069,12 +2076,13 @@ function Clientes(props) {
                                   <div className="input">
                                     <input
                                       onChange={handleChange}
-                                      value={state.tarjetaEPASS}
-                                      name="tarjetaEPASS"
+                                      value={state.correoContacto}
+                                      name="correoContacto"
+                                      required
                                       className="form-control"
-                                      type="text"
+                                      type="email"
                                       placeholder=""
-                                      id="text"
+                                      id="correoContacto"
                                     />
                                   </div>
                                 </div>
@@ -2103,12 +2111,13 @@ function Clientes(props) {
                                   <div className="input">
                                     <input
                                       onChange={handleChange}
-                                      value={state.tarjetaEPASS}
-                                      name="tarjetaEPASS"
+                                      value={state.telefonoContacto}
+                                      name="telefonoContacto"
                                       className="form-control"
+                                      required
                                       type="text"
                                       placeholder=""
-                                      id="text"
+                                      id="telefonoContacto"
                                     />
                                   </div>
                                 </div>
