@@ -485,7 +485,7 @@ function Clientes(props) {
   }
 
   function handleShowModificar(id) {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL_L}/Clientes/GetById/` + id;
+    const url = `${process.env.REACT_APP_API_URL_L}/Clientes/GetById/` + id;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
       setState({
@@ -509,7 +509,7 @@ function Clientes(props) {
   }, []);
 
   function getAllGrupoClientes() {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/GruposClientes/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL}/GruposClientes/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta);
 
@@ -517,7 +517,7 @@ function Clientes(props) {
     });
   }
   function getAllFormatos() {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/Formato/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL}/Formato/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta);
 
@@ -526,7 +526,7 @@ function Clientes(props) {
   }
 
   function getAllClientes() {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/Clientes/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL}/Clientes/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta);
 
@@ -535,7 +535,7 @@ function Clientes(props) {
   }
 
   function getAllPaises() {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/Pais/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL}/Pais/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setDataPais(respuesta.data);
     });
@@ -547,7 +547,7 @@ function Clientes(props) {
 
   function getAllEstados(id) {
     console.log(id);
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/Estados/ByPais/` + id;
+    const url = `${process.env.REACT_APP_API_URL}/Estados/ByPais/` + id;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
       setDataEstado(respuesta.data);
@@ -556,7 +556,7 @@ function Clientes(props) {
   }
 
   function getAllImpuestos() {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/Impuestos/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
       setDataImpuesto(respuesta.data);
@@ -565,14 +565,14 @@ function Clientes(props) {
   }
 
   function getAllSucursales() {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/Sucursales/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setDataSucursales(respuesta.data);
     });
   }
 
   function getAllGruposClientes() {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/GrupoUnidad/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/GetListado`;
     axios.get(url, { headers }).then((respuesta) => { });
   }
 
@@ -682,7 +682,7 @@ function Clientes(props) {
 
   function handleEliminar(id) {
     var derecho;
-    const urlDelete = `${process.env.REACT_APP_API_URL_LOCAL}/Utilerias/ValidaDerechos/${state.creadoPor}/${state.DerechoBorrar}/3`;
+    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.creadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
       //showSuccess(respuesta.data)
 
@@ -692,11 +692,11 @@ function Clientes(props) {
         return;
       }
 
-      const url = `${process.env.REACT_APP_API_URL_LOCAL}/Clientes/Eliminar/` + id;
+      const url = `${process.env.REACT_APP_API_URL}/Clientes/Eliminar/` + id;
       axios
         .delete(url, { headers })
         .then((respuesta) => {
-          showSuccess(respuesta);
+          showSuccess(respuesta.data);
           getAllClientes();
         })
         .catch((err) => {
@@ -718,7 +718,7 @@ function Clientes(props) {
 
   const handleChangeCodigo = (event) => {
     const url =
-      `${process.env.REACT_APP_API_URL_LOCAL}/Unidades/ValidaCodigoUnidad/` +
+      `${process.env.REACT_APP_API_URL}/Unidades/ValidaCodigoUnidad/` +
       state.codigo;
     axios
       .get(url, { headers })
@@ -834,7 +834,7 @@ function Clientes(props) {
     debugger;
     if (state.idCliente != 0) {
       const url =
-        `${process.env.REACT_APP_API_URL_LOCAL}/Clientes/Modificar/` + state.idCliente;
+        `${process.env.REACT_APP_API_URL}/Clientes/Modificar/` + state.idCliente;
       axios
         .put(url, Object.assign({}, params), { headers })
 
@@ -848,7 +848,7 @@ function Clientes(props) {
           alert("err");
         });
     } else {
-      const url = `${process.env.REACT_APP_API_URL_LOCAL}/Clientes/Agregar`;
+      const url = `${process.env.REACT_APP_API_URL}/Clientes/Agregar`;
       axios
         .post(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
