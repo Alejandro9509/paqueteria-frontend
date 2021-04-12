@@ -382,19 +382,17 @@ function Recoleccion() {
   const changeHandler = (event) => {
     setSelectedFile(event.target.files[0]);
     setIsFilePicked(true);
-  };
-
-  function handleSubmission() {
-    console.log(selectedFile)
+    console.log(event.target.files[0])
     var reader = new FileReader();
     reader.onload = function () {
       console.log(reader.result)
     }.bind(this);
-    reader.readAsText(selectedFile);
-    setState({
-      ...setState,
-      uploadedFileContent: "reader.result"
-    })
+    reader.readAsText(event.target.files[0]);
+
+  };
+
+  function handleSubmission() {
+
   };
 
   function addPaquete(index) {
@@ -2436,13 +2434,14 @@ function Recoleccion() {
                 <i className="fa fa-times-circle" /> Llegada
               </a>
             </li>
-
+            {/**
             <li>
               <a data-toggle="tab" href="#Prueba">
                 <i className="zmdi zmdi-print" /> Boton de prueba
               </a>
             </li>
 
+            */}
             <li style={{ float: "right" }}>
               <a data-toggle="tab" href="#" className={state.idRecoleccion == 0 ? classes.disabled : ""} style={{ textAlign: "right" }} onClick={() => setRedirect(true)}>
                 Generar embarque
@@ -4718,7 +4717,7 @@ function Recoleccion() {
                 <div className="widget-container">
                   <div className="widget-content">
                     <div className="row">
-                      <div className="form-content" style={{display: "flex"}}>
+                      <div className="form-content" style={{ display: "flex" }}>
                         <input type="file" id="archivoFormato" onChange={changeHandler} />
                         <div>
                           <button onClick={handleSubmission} disabled={!isFilePicked}>Submit</button>

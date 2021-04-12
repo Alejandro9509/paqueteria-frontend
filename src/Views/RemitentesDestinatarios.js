@@ -21,6 +21,11 @@ import ExportCSV from "../Components/Template/Export";
 import ExportPDF from "../Components/Template/ExportPDF";
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from "@material-ui/core/styles";
+import SvgIcon from "@material-ui/core/SvgIcon";
+import { ReactComponent as Activo } from '../iconos/Menu/palomita.svg';
+import { ReactComponent as NoActivo } from '../iconos/Menu/cruz.svg';
+import { DataGrid, GridToolbarExport, GridToolbarContainer } from '@material-ui/data-grid';
+import { dataGridLocaleText } from '../Constants/index'
 
 import Noty from 'noty';
 
@@ -315,6 +320,66 @@ function RemitenteDestinatario(props) {
       });
     });
   }
+
+  const columns = React.useMemo(() => [
+    {
+      headerName: "Acciones",
+      field: "",
+      renderCell: (row) => {
+        return (
+          <div>
+            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdRemitenteDestinatario))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdRemitenteDestinatario))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdRemitenteDestinatario))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+          </div>
+        )
+      }
+    },
+    {
+      headerName: "Número",
+      field: "m_nNumero",
+      width: 125,
+    },
+    {
+      headerName: "RFC",
+      field: "m_sRFC",
+      width: 200,
+    },
+    {
+      headerName: "Remitente-Destinatario",
+      field: "m_sFechaHoraDetalleRec",
+      width: 200,
+    },
+    {
+      headerName: "Núm. Cliente",
+      field: "m_nNumeroCliente",
+      width: 125,
+    },
+    {
+      headerName: "Cliente",
+      field: "m_sZonaRecoleccion",
+      width: 150,
+    },
+    {
+      headerName: "Activo",
+      field: "m_bActivo",
+      width: 125,
+      renderCell: (row) => {
+        return (
+          <div style={{ width: "100%", textAlign: "center", color: row.row.m_bActivo ? "green" : "red" }}>
+            {row.row.m_bActivo ?
+              <SvgIcon
+                component={Activo}
+              /> :
+              <SvgIcon
+                component={NoActivo}
+              />
+            }
+          </div>
+        )
+      },
+    }
+  ]);
 
   const columns2 = React.useMemo(() => [
     {
@@ -836,9 +901,20 @@ function RemitenteDestinatario(props) {
           >
             <div className="widget-wrap">
               <div className="widget-content">
-                <div className="row">
-                  <Table columns={columns2} data={data} />
-                </div>
+              <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                    {data.length != 0 ? (
+                      <DataGrid
+                        localeText={dataGridLocaleText}
+                        rows={data}
+                        columns={columns}
+                        density="compact"
+                        pageSize={Math.floor((state.height - 310) / 30)}
+                        getRowId={(row) => row.m_nIdRemitenteDestinatario}
+                      />
+                    ) : (
+                      <div>No se encontró ningún registro</div>
+                    )}
+                  </div>
               </div>
             </div>
           </div>

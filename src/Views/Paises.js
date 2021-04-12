@@ -97,8 +97,8 @@ function PaisesEstado() {
       "Codigo": state.codigoEstado,
       "Estado": state.estado,
       "CreadoPor": state.CreadoPor,
-      "CreadoEl": fecha.getFullYear() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getDate(),
-      "ModificadoEl": fecha.getFullYear() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getDate(),
+      "CreadoEl": fecha.getFullYear() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getDate() +"T" +fecha.getHours() +":"  +fecha.getMinutes(),
+      "ModificadoEl": fecha.getFullYear() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getDate() +"T" +fecha.getHours() +":"  +fecha.getMinutes(),
       "ModificadoPor": 1,
       "Identificador": 0
     }
