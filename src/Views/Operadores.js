@@ -207,7 +207,11 @@ function Operadores(props) {
     );
   }
 
+
+ 
+
   const [state, setState] = React.useState({
+
     agregar: "Agregar",
     IdOperador: 0,
     NumeroOperador: 0,
@@ -463,6 +467,29 @@ function Operadores(props) {
     getAllPuestos();
     getAllDepartamentos();
   }, []);
+
+
+  const handleChangeNumero = (event) => {
+    const url =
+      `${process.env.REACT_APP_API_URL_LOCAL}/Operadores/ValidaNumeroOperador/` +state.NumeroOperador;
+    axios
+      .get(url, { headers })
+      .then((respuesta) => {
+        if (respuesta.data != "") {
+          showSuccess(respuesta.data.m_sMensaje);
+          console.log(respuesta.data);
+          setState({
+            ...state,
+
+            NumeroOperador: respuesta.data.m_nNumero,
+          });
+        }
+      })
+
+      .catch((err) => {
+        showSuccess(err);
+      });
+  };
 
   const handleChangeActivoCheckboxChange = (event) => {
     setState({
@@ -1004,6 +1031,8 @@ function Operadores(props) {
                                                 <div className="input">
                                                   <input
                                                     onChange={handleChange}
+                                                    onBlur={handleChangeNumero}
+
                                                     value={state.NumeroOperador}
                                                     name="NumeroOperador"
                                                     className="form-control"

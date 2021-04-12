@@ -97,8 +97,8 @@ function PaisesEstado() {
       "Codigo": state.codigoEstado,
       "Estado": state.estado,
       "CreadoPor": state.CreadoPor,
-      "CreadoEl": fecha.getFullYear() + "-" + fecha.getMonth() + 1 + "-" + fecha.getDate(),
-      "ModificadoEl": fecha.getFullYear() + "-" + fecha.getMonth() + 1 + "-" + fecha.getDate(),
+      "CreadoEl": fecha.getFullYear() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getDate(),
+      "ModificadoEl": fecha.getFullYear() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getDate(),
       "ModificadoPor": 1,
       "Identificador": 0
     }
@@ -223,7 +223,6 @@ function PaisesEstado() {
   };
 
   function handleSelectPais(id, event) {
-    console.log(event.target)
     setState({
       ...state,
       idPais: id
@@ -576,10 +575,7 @@ function PaisesEstado() {
                         pageSize={ Math.floor((state.height - 310)/30)}
                         getRowId={(row) => row.m_nIdPais}
                         onRowSelected={(row) => {
-                          setState({
-                            ...state,
-                            idPais: row.data.m_nIdPais
-                          })
+                          handleSelectPais(row.data.m_nIdPais)
                         }}
                       />
                     ) : (
