@@ -17,7 +17,6 @@ function Dot (props) {
 
 export default function IndicatorDots (props) {
   const wrapperStyle = {
-    position: 'absolute',
     width: '100%',
     zIndex: '100',
     bottom: '0px',
