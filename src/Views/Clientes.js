@@ -408,9 +408,13 @@ function Clientes(props) {
     idMoneda: 0,
     idImpuestoTransladado: 0,
     aplicarDetalleMaterialesCadaViajeXML: false,
+
+    //ver variable
     aplicarDetalleConceptoCadaViajeXML: false,
-    idEstado: 0,
     idGrupoCliente: {},
+
+
+
     metodoPago: "",
     diasCredito: 0,
     creadoPor: localStorage.getItem("UsuarioId"),
@@ -423,12 +427,16 @@ function Clientes(props) {
     saldoCreditoDLLS: 0,
     pendFacturar: 0,
     pendFacturarDLLS: 0,
+
+
     bancoOrdenante: "",
     rfcBancoOrdenante: "",
     cuentaBancoOrdenante: "",
 
+
     codigoPostal: 0,
     idEstado: 0,
+    
     municipio: "",
     localidad: "",
     colonia: "",
@@ -439,16 +447,21 @@ function Clientes(props) {
     celular: "",
     nextel: "",
     correoElectronico: "",
+
     tableformatos: "",
-    frecuenciaEnvioDias: 0,
+    frecuenciaEnvioDias: "",
     enviarApartir: "",
-    fechaEnvioCorreo: "",
+    
+
+
     envioAutomaticoSeguimiento: "",
     excluirNodo: 0,
+
     idUSOCFDI: "",
     agruparCantidadPorConcepto: "",
     ajustarImporte2Dec: "",
-    detalleMateriales: "",
+    
+
 
     formatoSelect: false,
     height: window.innerHeight,
@@ -486,11 +499,70 @@ function Clientes(props) {
   }
 
   function handleShowModificar(id) {
-    const url = `${process.env.REACT_APP_API_URL_L}/Clientes/GetById/` + id;
+    const url = `${process.env.REACT_APP_API_URL}/Clientes/GetById/` + id;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
       setState({
+
+        getAllEstados,
         ...state,
+        idCliente:id,
+        agregar: "Modificar",
+
+        ModificadoPor:respuesta.data.CreadoPor,
+        idCliente:respuesta.data.m_nIdCliente,
+        numeroCliente:respuesta.data.m_nNumeroCliente,
+        tipoCliente:respuesta.data.m_nTipoCliente,
+        rfc:respuesta.data.m_sRFC,
+        activo:respuesta.data.m_bActivo,
+        operadorLogistico:respuesta.data.m_bOperadorLogistico,
+        nombreFiscal:respuesta.data.m_sNombreFiscal,
+        nombreCorto:respuesta.data.m_sNombreCorto,
+        idSucursal:respuesta.data.m_nIdSucursal,
+        idMoneda:respuesta.data.m_nIdMoneda,
+        idImpuestoTransladado:respuesta.data.m_nIdImpuestoTransladado,
+        aplicarDetalleMaterialesCadaViajeXML:respuesta.data.m_bAplicarDetalleMaterialesCadaViajeXML,
+        idEstado:respuesta.data.m_nIdEstado,
+        idGrupoCliente:respuesta.data.m_nIdGrupoCliente,
+
+        idGrupoCliente: dataGrupoClientes.find(
+          (o) => o.m_nIdGrupoCliente == respuesta.data.m_nIdGrupoCliente
+        ),
+
+    
+        metodoPago:respuesta.data.m_sMetodoPago,
+        diasCredito:respuesta.data.m_nDiasCredito,
+        credito:respuesta.data.m_cyCredito,
+        creditoDlls:respuesta.data.m_cyCreditoDLLS,
+        saldoCredito:respuesta.data.m_cySaldoCredito,
+        saldoCreditoDLLS:respuesta.data.m_cySaldoCreditoDLLS,
+        pendFacturar:respuesta.data.m_cyPendFacturar,
+        pendFacturarDLLS:respuesta.data.m_cyPendFacturarDLLS,
+        bancoOrdenante:respuesta.data.m_sBancoOrdenante,
+        rfcBancoOrdenante:respuesta.data.m_sRFCBancoOrdenante,
+        cuentaBancoOrdenante:respuesta.data.m_sNoCuentaBancoOrdenante,
+        codigoPostal:respuesta.data.m_sCodigoPostal,
+        idEstado:respuesta.data.m_nIdEstado,
+        municipio:respuesta.data.m_sMunicipio,
+        localidad:respuesta.data.m_sLocalidad,
+        colonia:respuesta.data.m_sColonia,
+        calle:respuesta.data.m_sCalle,
+        numeroExterior:respuesta.data.m_sNoExterior,
+        numeroInterior:respuesta.data.m_sNoInterior,
+        telefono:respuesta.data.m_sTelefono,
+        celular:respuesta.data.m_sCelular,
+        nextel:respuesta.data.m_sNextel,
+        correoElectronico:respuesta.data.m_sCorreoElectronico,
+        tableformatos:respuesta.data.m_sTableFormatos,
+        frecuenciaEnvioDias:respuesta.data.m_nEnvioCorreoDias,
+        enviarApartir:respuesta.data.m_sFechaEnvioCorreoApartir,
+        envioAutomaticoSeguimiento:respuesta.data.m_bEnvioAutomaticoSeguimientoViajesActivar,
+        excluirNodo:respuesta.data.m_bExcluirNodoCondicionesPagoXML,
+        idUSOCFDI:respuesta.data.m_sIdUsoCFDI,
+        agruparCantidadPorConcepto:respuesta.data.m_bPermitirAgruparCantidadPorConcepto,
+        ajustarImporte2Dec:respuesta.data.m_bAjustarImportes2DecimalesXML,
+    
+        
       });
     });
   }
@@ -566,6 +638,8 @@ function Clientes(props) {
     console.log(dataEstado);
   }
 
+  
+
   function getAllImpuestos() {
     const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
@@ -595,7 +669,35 @@ function Clientes(props) {
     console.log(event.target.name + " " + state.activo);
   };
 
-  const handleChangeAplicarConcepto = (event) => {
+ 
+
+  const handleChangeAjustarImporte2Dec = (event) => {
+    setState({
+      ...state,
+      ajustarImporte2Dec: !state.ajustarImporte2Dec,
+    });
+    console.log(event.target.name + " " + state.ajustarImporte2Dec);
+  };
+
+  const handleChangeAgruparCantidadConcepto= (event) => {
+    setState({
+      ...state,
+      agruparCantidadPorConcepto: !state.agruparCantidadPorConcepto,
+    });
+    console.log(event.target.name + " " + state.agruparCantidadPorConcepto);
+  };
+
+
+  
+  const handleChangeAplicarDetalleCadaViaje = (event) => {
+    setState({
+      ...state,
+      aplicarDetalleMaterialesCadaViajeXML: !state.aplicarDetalleMaterialesCadaViajeXML,
+    });
+    console.log(event.target.name + " " + state.aplicarDetalleMaterialesCadaViajeXML);
+  };
+
+  const handleChangeAplicarConcepto= (event) => {
     setState({
       ...state,
       aplicarDetalleConceptoCadaViajeXML: !state.aplicarDetalleConceptoCadaViajeXML,
@@ -683,13 +785,7 @@ function Clientes(props) {
     });
   };
 
-  const handleChangePermisionarioCheckboxChange = (event) => {
-    console.log(event.target.name + " " + state.esUnidadPermisionario);
-    setState({
-      ...state,
-      esUnidadPermisionario: !state.esUnidadPermisionario,
-    });
-  };
+
 
   function handleEliminar(id) {
     var derecho;
@@ -781,53 +877,63 @@ function Clientes(props) {
     e.preventDefault();
     var params = {
       m_nCreadoPor: state.CreadoPor,
-      m_nModificadoPor: state.ModificadoPor,
-      m_nNumeroCliente: state.numeroCliente,
-      m_nTipoCliente: state.tipoCliente,
-      m_sRFC: state.rfc,
-      m_bActivo: state.activo,
-      m_bOperadorLogistico: state.operadorLogistico,
-      m_sNombreFiscal: state.nombreFiscal,
-      m_sNombreCorto: state.nombreCorto,
-      m_nIdSucursal: state.idSucursal,
-      m_nIdMoneda: state.idMoneda,
-      m_nIdImpuestoTransladado: state.idImpuestoTransladado,
-      m_bAplicarDetalleMaterialesCadaViajeXML: state.aplicarDetalleConceptoCadaViajeXML,
-      m_nIdEstado: state.idEstado,
-      m_nIdGrupoCliente: state.idGrupoCliente.m_nIdGrupoCliente,
-      m_sMetodoPago: state.metodoPago,
-      m_nDiasCredito: state.diasCredito,
-      m_cyCredito: state.credito,
-      m_cyCreditoDLLS: state.creditoDlls,
-      m_cySaldoCredito: state.saldoCredito,
-      m_cySaldoCreditoDLLS: state.saldoCreditoDLLS,
-      m_cyPendFacturar: state.pendFacturar,
-      m_cyPendFacturarDLLS: state.pendFacturarDLLS,
-      m_sBancoOrdenante: state.bancoOrdenante,
-      m_sRFCBancoOrdenante: state.rfcBancoOrdenante,
-      m_sNoCuentaBancoOrdenante: state.cuentaBancoOrdenante,
-      m_sCodigoPostal: state.codigoPostal,
-      m_nIdEstado: state.idEstado,
-      m_sMunicipio: state.municipio,
-      m_sLocalidad: state.localidad,
-      m_sColonia: state.colonia,
-      m_sCalle: state.calle,
-      m_sNoExterior: state.numeroExterior,
-      m_sNoInterior: state.numeroInterior,
-      m_sTelefono: state.telefono,
-      m_sCelular: state.celular,
-      m_sNextel: state.nextel,
-      m_sCorreoElectronico: state.correoElectronico,
-      m_sTableFormatos: state.tableformatos,
-      // m_dtEnvioAutomaticoSeguimientoViajesFechaHoraInicio:state.m_dtEnvioAutomaticoSeguimientoViajesFechaHoraInicio,
-      m_nEnvioCorreoDias: state.frecuenciaEnvioDias,
-      m_sFechaEnvioCorreoApartir: state.fechaEnvioCorreo,
-      m_bEnvioAutomaticoSeguimientoViajesActivar: state.envioAutomaticoSeguimiento,
-      m_bExcluirNodoCondicionesPagoXML: state.excluirNodo,
-      m_sIdUsoCFDI: state.idUSOCFDI,
-      m_bPermitirAgruparCantidadPorConcepto: state.m_bPermitirAgruparCantidadPorConcepto,
-      m_bAjustarImportes2DecimalesXML: state.ajustarImporte2Dec,
-      m_bAplicarDetalleMaterialesCadaViajeXML: state.aplicarDetalleMaterialesCadaViajeXML,
+      m_nModificadoPor:state.ModificadoPor,
+      m_nNumeroCliente:state.numeroCliente,
+      m_nTipoCliente:state.tipoCliente,
+      m_sRFC:state.rfc,
+      m_bActivo:state.activo,
+      m_bOperadorLogistico:state.operadorLogistico,
+      m_sNombreFiscal:state.nombreFiscal,
+      m_sNombreCorto:state.nombreCorto,
+      m_nIdSucursal:state.idSucursal,
+      m_nIdMoneda:state.idMoneda,
+      m_nIdImpuestoTransladado:state.idImpuestoTransladado,
+      m_nIdGrupoCliente:state.idGrupoCliente.m_nIdGrupoCliente,
+      m_bAplicarDetalleMaterialesCadaViajeXML:state.aplicarDetalleMaterialesCadaViajeXML,
+
+
+      m_sMetodoPago:state.metodoPago,
+      m_nDiasCredito:state.diasCredito,
+      m_cyCredito:state.credito,
+      m_cyCreditoDLLS:state.creditoDlls,
+      m_cySaldoCredito:state.saldoCredito,
+      m_cySaldoCreditoDLLS:state.saldoCreditoDLLS,
+      m_cyPendFacturar:state.pendFacturar,
+      m_cyPendFacturarDLLS:state.pendFacturarDLLS,
+
+
+      m_sBancoOrdenante:state.bancoOrdenante,
+      m_sRFCBancoOrdenante:state.rfcBancoOrdenante,
+      m_sNoCuentaBancoOrdenante:state.cuentaBancoOrdenante,
+
+
+      m_sCodigoPostal:state.codigoPostal,
+      m_nIdEstado:state.idEstado,
+      m_sMunicipio:state.municipio,
+      m_sLocalidad:state.localidad,
+      m_sColonia:state.colonia,
+      m_sCalle:state.calle,
+      m_sNoExterior:state.numeroExterior,
+      m_sNoInterior:state.numeroInterior,
+      m_sTelefono:state.telefono,
+      m_sCelular:state.celular,
+      m_sNextel:state.nextel,
+      m_sCorreoElectronico:state.correoElectronico,
+
+
+      m_sTableFormatos:state.tableformatos,
+     // m_dtEnvioAutomaticoSeguimientoViajesFechaHoraInicio:state.m_dtEnvioAutomaticoSeguimientoViajesFechaHoraInicio,
+      m_nEnvioCorreoDias:state.frecuenciaEnvioDias,
+      m_sFechaEnvioCorreoApartir:state.enviarApartir,
+      m_bEnvioAutomaticoSeguimientoViajesActivar:state.envioAutomaticoSeguimiento,
+      m_bExcluirNodoCondicionesPagoXML:state.excluirNodo,
+
+
+      m_sIdUsoCFDI:state.idUSOCFDI,
+      m_bPermitirAgruparCantidadPorConcepto:state.agruparCantidadPorConcepto,
+      m_bAjustarImportes2DecimalesXML:state.ajustarImporte2Dec,
+      //m_bAplicarDetalleMaterialesCadaViajeXML:state.aplicarDetalleMaterialesCadaViajeXML,
+
       m_sContactoNombre: state.contactoNombre,
       m_sContactoCorreo: state.contactoCorreo,
       m_sContactoTelefono: state.contactoTelefono,
@@ -1404,7 +1510,7 @@ function Clientes(props) {
                             <label className="label">{ }</label>
                             <label className="checkbox">
                               <input
-                                onChange={handleChangeActivoCheckboxChange}
+                                onChange={handleChangeAplicarDetalleCadaViaje}
                                 native
                                 name="aplicarDetalleMaterialesCadaViajeXML"
                                 type="checkbox"
@@ -1991,7 +2097,7 @@ function Clientes(props) {
                                               </h3>
                                             </div>
                                             <div className="row">
-                                              <div className="col-md-2-5">
+                                              <div className="col-md-2-5 col-sm-2-5 col-lg-2-5">
                                                 <label className="label">
                                                   Frecuencia de Envio (Dias)
                                                 </label>
@@ -2043,7 +2149,7 @@ function Clientes(props) {
                                               <label className="checkbox">
                                                 <input
                                                   onChange={
-                                                    handleChangeActivoCheckboxChange
+                                                    handleChangeEnvioAutoSeguimientoViajes
                                                   }
                                                   native
                                                   name="envioAutomaticoSeguimiento"
@@ -2120,7 +2226,7 @@ function Clientes(props) {
                                                 <label className="checkbox">
                                                   <input
                                                     onChange={
-                                                      handleChangeActivoCheckboxChange
+                                                      handleChangeAgruparCantidadConcepto
                                                     }
                                                     native
                                                     name="agruparCantidadPorConcepto"
@@ -2145,7 +2251,7 @@ function Clientes(props) {
                                                 <label className="checkbox">
                                                   <input
                                                     onChange={
-                                                      handleChangeActivoCheckboxChange
+                                                      handleChangeAjustarImporte2Dec
                                                     }
                                                     native
                                                     name="ajustarImporte2Dec"
