@@ -790,9 +790,10 @@ function Clientes(props) {
 
       const url = `${process.env.REACT_APP_API_URL}/Clientes/Eliminar/` + id;
       axios
-        .get(url, { headers2 })
+        .delete(url, { headers })
         .then((respuesta) => {
-          console.log(respuesta);
+          showSuccess(respuesta.data);
+          getAllClientes();
         })
         .catch((err) => {
           console.log(err)
@@ -1560,6 +1561,7 @@ function Clientes(props) {
                                     <input
                                       onChange={handleChange}
                                       className="form-control"
+                                      required
                                       type="number"
                                       value={state.diasCredito}
                                       id="diasCredito"
@@ -2349,7 +2351,7 @@ function Clientes(props) {
                                       value={state.contactoCorreo}
                                       name="contactoCorreo"
                                       className="form-control"
-                                      type="text"
+                                      type="email"
                                       placeholder=""
                                       id="contactoCorreo"
                                     />
@@ -2383,6 +2385,7 @@ function Clientes(props) {
                                       value={state.contactoTelefono}
                                       name="contactoTelefono"
                                       className="form-control"
+                                      required
                                       type="text"
                                       placeholder=""
                                       id="contactoTelefono"
