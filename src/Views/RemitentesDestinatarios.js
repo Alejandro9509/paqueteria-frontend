@@ -144,12 +144,6 @@ function RemitenteDestinatario(props) {
 
   function handleSelectCodigoPostal() {
     
-   
-    state.idPais = state.codigoPostal.m_nIdPais
-    getAllEstados(state.idPais);
-    state.idEstado = state.codigoPostal.m_nIdEstado
- 
-
   }
   
   function handleSelectCP(id, cp) {
@@ -162,7 +156,7 @@ function RemitenteDestinatario(props) {
   }
 
   function getAllCodigosPostales() {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/CodigoPostal/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta);
 
@@ -746,7 +740,6 @@ function RemitenteDestinatario(props) {
       console.log(respuesta.data);
       setDataEstado(respuesta.data);
     });
-    console.log(dataEstado);
   }
 
   return (

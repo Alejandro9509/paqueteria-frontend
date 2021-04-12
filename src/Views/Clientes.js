@@ -390,6 +390,7 @@ function Clientes(props) {
   const [dataFormatos, setDataFormatos] = React.useState([]);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [dataListadoClientes, setDataListadoClientes] = React.useState([]);
+  const [dataTipoMoneda, setDataTipoMoneda] = React.useState([]);
   const [state, setState] = React.useState({
     CreadoPor: localStorage.getItem("UsuarioId"),
     ModificadoPor: localStorage.getItem("UsuarioId"),
@@ -451,30 +452,30 @@ function Clientes(props) {
 
     formatoSelect: false,
     height: window.innerHeight,
-    contactoNombre:"",
-    contactoCorreo:"",
-    contactoTelefono:"",
-    RecibirFactura:0,
-    RecibirEstadoCuenta:0,
-    PermitirSeguimiento:0,
-    UsoServicioWeb:0,
-    PermitirVerPortal:0,
-    RecibirCartaPorte:0,
-    
+    contactoNombre: "",
+    contactoCorreo: "",
+    contactoTelefono: "",
+    RecibirFactura: 0,
+    RecibirEstadoCuenta: 0,
+    PermitirSeguimiento: 0,
+    UsoServicioWeb: 0,
+    PermitirVerPortal: 0,
+    RecibirCartaPorte: 0,
+
     contactos: [
       {
         m_sNombre: "",
         m_sCorreo: "",
         m_sTelefono: "",
-        m_bRecibirFactura:0,
-        m_bRecibirEstadoCuenta:0,
-        m_bPermitirSeguimiento:0,
-        m_bUsoServicioWeb:0,
-        m_bPermitirVerPortal:0,
-        m_bRecibirCartaPorte:0
+        m_bRecibirFactura: 0,
+        m_bRecibirEstadoCuenta: 0,
+        m_bPermitirSeguimiento: 0,
+        m_bUsoServicioWeb: 0,
+        m_bPermitirVerPortal: 0,
+        m_bRecibirCartaPorte: 0
 
 
-      
+
       }],
   });
 
@@ -506,6 +507,7 @@ function Clientes(props) {
     getAllGrupoClientes();
     getAllClientes();
     getAllFormatos();
+    getAllTipoMoneda()
   }, []);
 
   function getAllGrupoClientes() {
@@ -516,6 +518,7 @@ function Clientes(props) {
       setDataGrupoClientes(respuesta.data);
     });
   }
+
   function getAllFormatos() {
     const url = `${process.env.REACT_APP_API_URL}/Formato/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
@@ -540,6 +543,14 @@ function Clientes(props) {
       setDataPais(respuesta.data);
     });
   }
+
+  function getAllTipoMoneda() {
+    const url = `${process.env.REACT_APP_API_URL}/Moneda/GetListado`;
+    axios.get(url, { headers }).then((respuesta) => {
+      setDataTipoMoneda(respuesta.data);
+    });
+  }
+
   const handleSelectChange = (event) => {
     console.log("onChangeSelect");
     getAllEstados(event.target.value);
@@ -584,7 +595,7 @@ function Clientes(props) {
     console.log(event.target.name + " " + state.activo);
   };
 
-  const handleChangeAplicarConcepto= (event) => {
+  const handleChangeAplicarConcepto = (event) => {
     setState({
       ...state,
       aplicarDetalleConceptoCadaViajeXML: !state.aplicarDetalleConceptoCadaViajeXML,
@@ -655,8 +666,8 @@ function Clientes(props) {
     console.log(event.target.name + " " + state.activo);
   };
 
- 
-  const handleChangeExcluirNodo= (event) => {
+
+  const handleChangeExcluirNodo = (event) => {
     console.log(event.target.name + " " + state.excluirNodo);
     setState({
       ...state,
@@ -664,7 +675,7 @@ function Clientes(props) {
     });
   };
 
-  const handleChangeOperadorLogistico= (event) => {
+  const handleChangeOperadorLogistico = (event) => {
     console.log(event.target.name + " " + state.operadorLogistico);
     setState({
       ...state,
@@ -770,63 +781,63 @@ function Clientes(props) {
     e.preventDefault();
     var params = {
       m_nCreadoPor: state.CreadoPor,
-      m_nModificadoPor:state.ModificadoPor,
-      m_nNumeroCliente:state.numeroCliente,
-      m_nTipoCliente:state.tipoCliente,
-      m_sRFC:state.rfc,
-      m_bActivo:state.activo,
-      m_bOperadorLogistico:state.operadorLogistico,
-      m_sNombreFiscal:state.nombreFiscal,
-      m_sNombreCorto:state.nombreCorto,
-      m_nIdSucursal:state.idSucursal,
-      m_nIdMoneda:state.idMoneda,
-      m_nIdImpuestoTransladado:state.idImpuestoTransladado,
-      m_bAplicarDetalleMaterialesCadaViajeXML:state.aplicarDetalleConceptoCadaViajeXML,
-      m_nIdEstado:state.idEstado,
-      m_nIdGrupoCliente:state.idGrupoCliente.m_nIdGrupoCliente,
-      m_sMetodoPago:state.metodoPago,
-      m_nDiasCredito:state.diasCredito,
-      m_cyCredito:state.credito,
-      m_cyCreditoDLLS:state.creditoDlls,
-      m_cySaldoCredito:state.saldoCredito,
-      m_cySaldoCreditoDLLS:state.saldoCreditoDLLS,
-      m_cyPendFacturar:state.pendFacturar,
-      m_cyPendFacturarDLLS:state.pendFacturarDLLS,
-      m_sBancoOrdenante:state.bancoOrdenante,
-      m_sRFCBancoOrdenante:state.rfcBancoOrdenante,
-      m_sNoCuentaBancoOrdenante:state.cuentaBancoOrdenante,
-      m_sCodigoPostal:state.codigoPostal,
-      m_nIdEstado:state.idEstado,
-      m_sMunicipio:state.municipio,
-      m_sLocalidad:state.localidad,
-      m_sColonia:state.colonia,
-      m_sCalle:state.calle,
-      m_sNoExterior:state.numeroExterior,
-      m_sNoInterior:state.numeroInterior,
-      m_sTelefono:state.telefono,
-      m_sCelular:state.celular,
-      m_sNextel:state.nextel,
-      m_sCorreoElectronico:state.correoElectronico,
-      m_sTableFormatos:state.tableformatos,
-     // m_dtEnvioAutomaticoSeguimientoViajesFechaHoraInicio:state.m_dtEnvioAutomaticoSeguimientoViajesFechaHoraInicio,
-      m_nEnvioCorreoDias:state.frecuenciaEnvioDias,
-      m_sFechaEnvioCorreoApartir:state.fechaEnvioCorreo,
-      m_bEnvioAutomaticoSeguimientoViajesActivar:state.envioAutomaticoSeguimiento,
-      m_bExcluirNodoCondicionesPagoXML:state.excluirNodo,
-      m_sIdUsoCFDI:state.idUSOCFDI,
-      m_bPermitirAgruparCantidadPorConcepto:state.m_bPermitirAgruparCantidadPorConcepto,
-      m_bAjustarImportes2DecimalesXML:state.ajustarImporte2Dec,
-      m_bAplicarDetalleMaterialesCadaViajeXML:state.aplicarDetalleMaterialesCadaViajeXML,
+      m_nModificadoPor: state.ModificadoPor,
+      m_nNumeroCliente: state.numeroCliente,
+      m_nTipoCliente: state.tipoCliente,
+      m_sRFC: state.rfc,
+      m_bActivo: state.activo,
+      m_bOperadorLogistico: state.operadorLogistico,
+      m_sNombreFiscal: state.nombreFiscal,
+      m_sNombreCorto: state.nombreCorto,
+      m_nIdSucursal: state.idSucursal,
+      m_nIdMoneda: state.idMoneda,
+      m_nIdImpuestoTransladado: state.idImpuestoTransladado,
+      m_bAplicarDetalleMaterialesCadaViajeXML: state.aplicarDetalleConceptoCadaViajeXML,
+      m_nIdEstado: state.idEstado,
+      m_nIdGrupoCliente: state.idGrupoCliente.m_nIdGrupoCliente,
+      m_sMetodoPago: state.metodoPago,
+      m_nDiasCredito: state.diasCredito,
+      m_cyCredito: state.credito,
+      m_cyCreditoDLLS: state.creditoDlls,
+      m_cySaldoCredito: state.saldoCredito,
+      m_cySaldoCreditoDLLS: state.saldoCreditoDLLS,
+      m_cyPendFacturar: state.pendFacturar,
+      m_cyPendFacturarDLLS: state.pendFacturarDLLS,
+      m_sBancoOrdenante: state.bancoOrdenante,
+      m_sRFCBancoOrdenante: state.rfcBancoOrdenante,
+      m_sNoCuentaBancoOrdenante: state.cuentaBancoOrdenante,
+      m_sCodigoPostal: state.codigoPostal,
+      m_nIdEstado: state.idEstado,
+      m_sMunicipio: state.municipio,
+      m_sLocalidad: state.localidad,
+      m_sColonia: state.colonia,
+      m_sCalle: state.calle,
+      m_sNoExterior: state.numeroExterior,
+      m_sNoInterior: state.numeroInterior,
+      m_sTelefono: state.telefono,
+      m_sCelular: state.celular,
+      m_sNextel: state.nextel,
+      m_sCorreoElectronico: state.correoElectronico,
+      m_sTableFormatos: state.tableformatos,
+      // m_dtEnvioAutomaticoSeguimientoViajesFechaHoraInicio:state.m_dtEnvioAutomaticoSeguimientoViajesFechaHoraInicio,
+      m_nEnvioCorreoDias: state.frecuenciaEnvioDias,
+      m_sFechaEnvioCorreoApartir: state.fechaEnvioCorreo,
+      m_bEnvioAutomaticoSeguimientoViajesActivar: state.envioAutomaticoSeguimiento,
+      m_bExcluirNodoCondicionesPagoXML: state.excluirNodo,
+      m_sIdUsoCFDI: state.idUSOCFDI,
+      m_bPermitirAgruparCantidadPorConcepto: state.m_bPermitirAgruparCantidadPorConcepto,
+      m_bAjustarImportes2DecimalesXML: state.ajustarImporte2Dec,
+      m_bAplicarDetalleMaterialesCadaViajeXML: state.aplicarDetalleMaterialesCadaViajeXML,
       m_sContactoNombre: state.contactoNombre,
-      m_sContactoCorreo:state.contactoCorreo,
-      m_sContactoTelefono:state.contactoTelefono,
-      m_bRecibirFactura:state.RecibirFactura,
-      m_bRecibirEstadoCuenta:state.RecibirEstadoCuenta,
-      m_bPermitirSeguimiento:state.PermitirSeguimiento,
-      m_bUsoServicioWeb:state.UsoServicioWeb,
-      m_bPermitirVerPortal:state.m_bPermitirVerPortal,
-      m_bRecibirCartaPorte:state.RecibirCartaPorte,
-      
+      m_sContactoCorreo: state.contactoCorreo,
+      m_sContactoTelefono: state.contactoTelefono,
+      m_bRecibirFactura: state.RecibirFactura,
+      m_bRecibirEstadoCuenta: state.RecibirEstadoCuenta,
+      m_bPermitirSeguimiento: state.PermitirSeguimiento,
+      m_bUsoServicioWeb: state.UsoServicioWeb,
+      m_bPermitirVerPortal: state.m_bPermitirVerPortal,
+      m_bRecibirCartaPorte: state.RecibirCartaPorte,
+
       agregar: "Agregar",
       importar: "",
     };
@@ -860,7 +871,7 @@ function Clientes(props) {
           alert(err);
         });
     }
-  
+
   };
 
   function addDocumento() {
@@ -974,7 +985,7 @@ function Clientes(props) {
   }
 
 
-  
+
   useEffect((value) => {
     //closeSeccions();
   }, []);
@@ -1204,7 +1215,7 @@ function Clientes(props) {
                                     pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
                                     title="Favor de introducir un RFC válido."
                                     required
-                                   value={state.rfc}
+                                    value={state.rfc}
                                     id="rfc"
                                     name="rfc"
                                   />
@@ -1296,9 +1307,14 @@ function Clientes(props) {
                                     name="idMoneda"
                                     required
                                   >
-                                    <option value="">Moneda</option>
-                                    <option value="1">Pesos</option>
-                                    <option value="2">Dolares</option>
+                                    {dataTipoMoneda.map((moneda) => (
+                                      <option
+                                        key={moneda.m_nIdMoneda}
+                                        value={moneda.m_nIdMoneda}
+                                      >
+                                        {moneda.m_sMoneda}
+                                      </option>
+                                    ))}
                                   </select>
                                   <i></i>
                                 </label>
