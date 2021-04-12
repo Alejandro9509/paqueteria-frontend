@@ -930,8 +930,7 @@ function Clientes(props) {
 
   const handleChangeCodigo = (event) => {
     const url =
-      `${process.env.REACT_APP_API_URL}/Unidades/ValidaCodigoUnidad/` +
-      state.codigo;
+      `${process.env.REACT_APP_API_URL_LOCAL}/Clientes/ValidaNumeroCliente/` +state.numeroCliente+`/${state.idCliente}`;
     axios
       .get(url, { headers })
       .then((respuesta) => {
@@ -941,7 +940,7 @@ function Clientes(props) {
           setState({
             ...state,
 
-            codigo: respuesta.data.m_nNumero,
+            numeroCliente: respuesta.data.m_nNumero,
           });
         }
       })
