@@ -76,6 +76,7 @@ function Recoleccion() {
   const [dataSucursal, setDataSucursal] = React.useState([]);
   const [dataEstatusRecoleccion, setEstatusRecoleccion] = React.useState([]);
   const [dataTipoMoneda, setDataTipoMoneda] = React.useState([]);
+  const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
   const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
   const [dataCiudad, setDataCiudad] = React.useState([]);
   const [dataZona, setDataZona] = React.useState([]);
@@ -311,6 +312,13 @@ function Recoleccion() {
           showSuccess(err);
         });
     }
+  };
+
+  function getTipoCambio() {
+    const url = `${process.env.REACT_APP_API_URL}/TipoCambio/GetListado`;
+    axios.get(url, { headers }).then(respuesta => {
+      setDataTipoCambio(respuesta.data)
+    });
   };
 
   function handleSelectCP(id, dobleClick, e) {
@@ -1095,7 +1103,7 @@ function Recoleccion() {
     getAllRemitentesDestinatarios();
     getAllEmbalajes();
     getAllZonas();
-
+    getTipoCambio()
   }, []);
 
   function getAllData() {
@@ -2767,22 +2775,32 @@ function Recoleccion() {
                               </label>
                             </div>
 
-                            <div className="col-sm-6 col-md-2-5 col-lg-2-5  unit">
+                            <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                               <label className="label">Tipo de Cambio</label>
-                              <div className="input">
-                                <input
-                                  onChange={handleChange}
+                              <label className="input select">
+                                <select
                                   className="form-control"
-                                  type="number"
-                                  min="0"
-                                  step="0.01"
                                   required
                                   value={state.tipoCambio}
+                                  onChange={handleChange}
                                   disabled={state.agregar == "Consultar"}
                                   id="tipoCambio"
-                                />
-                              </div>
+                                >
+                                  <option value="0">Seleccionar</option>
+                                  {dataTipoCambio.map((cambio) => (
+                                    <option
+                                      key={cambio.m_nIdTipoCambio}
+                                      value={cambio.m_nIdTipoCambio}
+                                    >
+                                      {cambio.m_cTipoCambio}
+                                    </option>
+                                  ))}
+                                </select>
+                                <i className="fa fa-arrow-down" />
+                              </label>
                             </div>
+
+                            
 
                             <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                               <label className="label">Tipo Cobro</label>
