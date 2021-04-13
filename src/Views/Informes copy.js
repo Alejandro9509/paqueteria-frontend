@@ -1283,7 +1283,7 @@ function Informes({ history }) {
       m_arrClsInformesGuias: state.Informes,
     };
     console.log(JSON.stringify(params));
-    debugger;
+    //debugger;
     if (state.idEmbarque != 0) {
       const url = `${process.env.REACT_APP_API_URL}/Informes/Modificar/${state.IdInforme}`;
       axios

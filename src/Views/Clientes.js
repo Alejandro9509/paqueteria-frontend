@@ -15,22 +15,24 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import $ from "jquery";
 import { remove_array_element } from "../Util/Util";
 import SvgIcon from "@material-ui/core/SvgIcon";
-import { ReactComponent as Activo } from '../iconos/Menu/palomita.svg';
-import { ReactComponent as NoActivo } from '../iconos/Menu/cruz.svg';
+import { ReactComponent as Activo } from "../iconos/Menu/palomita.svg";
+import { ReactComponent as NoActivo } from "../iconos/Menu/cruz.svg";
 import { makeStyles } from "@material-ui/core/styles";
-import { DataGrid, GridToolbarExport, GridToolbarContainer } from '@material-ui/data-grid';
-import { dataGridLocaleText } from '../Constants/index'
-import Noty from 'noty';
-
-
+import {
+  DataGrid,
+  GridToolbarExport,
+  GridToolbarContainer,
+} from "@material-ui/data-grid";
+import { dataGridLocaleText } from "../Constants/index";
+import Noty from "noty";
 
 function showSuccess(mensaje) {
   new Noty({
     type: "information",
     layout: "topCenter",
     text: mensaje,
-    timeout: "3000"
-  }).show()
+    timeout: "3000",
+  }).show();
 }
 
 const styles = {
@@ -39,7 +41,7 @@ const styles = {
   },
   noSeleccionado: {
     backgroundColor: "#FFFFFF",
-  }
+  },
 };
 const useStyles = makeStyles(styles);
 
@@ -67,12 +69,37 @@ function Clientes(props) {
       renderCell: (row) => {
         return (
           <div>
-            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdCliente))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdCliente))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdCliente))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+            <a
+              href="#Agregar"
+              role="tab"
+              data-toggle="tab"
+              onClick={() => handleShowModificar(row.row.m_nIdCliente)}
+              className="btn btn-default btn-xs"
+            >
+              <i
+                className="fa fa-pencil-square-o"
+                style={{ color: "#F9A03E" }}
+              />
+            </a>
+            <a
+              href="#Agregar"
+              role="tab"
+              data-toggle="tab"
+              className="btn btn-default btn-xs"
+              onClick={() => handleShowModificar(row.row.m_nIdCliente)}
+            >
+              <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
+            </a>
+            <a
+              href="#"
+              className="btn btn-default btn-xs"
+              onClick={() => handleEliminar(row.row.m_nIdCliente)}
+            >
+              <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
+            </a>
           </div>
-        )
-      }
+        );
+      },
     },
     {
       headerName: "Núm. Cliente",
@@ -110,19 +137,22 @@ function Clientes(props) {
       width: 125,
       renderCell: (row) => {
         return (
-          <div style={{ width: "100%", textAlign: "center", color: row.row.m_bActivo ? "green" : "red" }}>
-            {row.row.m_bActivo ?
-              <SvgIcon
-                component={Activo}
-              /> :
-              <SvgIcon
-                component={NoActivo}
-              />
-            }
+          <div
+            style={{
+              width: "100%",
+              textAlign: "center",
+              color: row.row.m_bActivo ? "green" : "red",
+            }}
+          >
+            {row.row.m_bActivo ? (
+              <SvgIcon component={Activo} />
+            ) : (
+              <SvgIcon component={NoActivo} />
+            )}
           </div>
-        )
+        );
       },
-    }
+    },
   ]);
 
   const columns2 = React.useMemo(() => [
@@ -137,17 +167,17 @@ function Clientes(props) {
   ]);
 
   const locale = {
-    toolbarExport: 'Exportar',
-    toolbarExportLabel: 'Exportar',
-    toolbarExportCSV: 'Descargar como CSV',
+    toolbarExport: "Exportar",
+    toolbarExportLabel: "Exportar",
+    toolbarExportCSV: "Descargar como CSV",
 
     // Columns panel text
-    columnsPanelTextFieldLabel: 'Buscar columna',
-    columnsPanelTextFieldPlaceholder: 'Columna title',
-    columnsPanelDragIconLabel: 'Reorder columna',
-    columnsPanelShowAllButton: 'Mostrar todo',
-    columnsPanelHideAllButton: 'Ocultar todo',
-  }
+    columnsPanelTextFieldLabel: "Buscar columna",
+    columnsPanelTextFieldPlaceholder: "Columna title",
+    columnsPanelDragIconLabel: "Reorder columna",
+    columnsPanelShowAllButton: "Mostrar todo",
+    columnsPanelHideAllButton: "Ocultar todo",
+  };
 
   function DefaultColumnFilter2({
     column: { filterValue, preFilteredRows, setFilter },
@@ -298,7 +328,7 @@ function Clientes(props) {
 
     return (
       <div className="" style={{ height: state.height - 270 }}>
-        <div className="" >
+        <div className="">
           <table className="table tabla-listado" {...getTableProps()}>
             <thead>
               {headerGroups.map((headerGroup) => (
@@ -307,7 +337,9 @@ function Clientes(props) {
                   {headerGroup.headers.map((column) => (
                     // Add the sorting props to control sorting. For this example
                     // we can add them into the header props
-                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    <th
+                      {...column.getHeaderProps(column.getSortByToggleProps())}
+                    >
                       {column.render("Name")}
                       {/* Add a sort direction indicator */}
                       <span>
@@ -333,9 +365,18 @@ function Clientes(props) {
               {rows.map((row, i) => {
                 prepareRow(row);
                 return (
-                  <tr {...row.getRowProps()}
-                    onClick={handleSelectRow.bind(this, row.original.m_nIdCliente)}
-                    className={state.idCliente === row.original.m_nIdCliente ? classes.seleccionado : classes.noSeleccionado}>
+                  <tr
+                    {...row.getRowProps()}
+                    onClick={handleSelectRow.bind(
+                      this,
+                      row.original.m_nIdCliente
+                    )}
+                    className={
+                      state.idCliente === row.original.m_nIdCliente
+                        ? classes.seleccionado
+                        : classes.noSeleccionado
+                    }
+                  >
                     <td>
                       <div>
                         <a
@@ -347,23 +388,36 @@ function Clientes(props) {
                           }
                           className="btn btn-default  btn-sm"
                         >
-                          <i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} />
+                          <i
+                            className="fa fa-pencil-square-o"
+                            style={{ color: "#F9A03E" }}
+                          />
                         </a>
                         <a
                           href="#Agregar"
                           role="tab"
                           data-toggle="tab"
                           className="btn btn-default btn-sm"
-                          onClick={() => handleShowModificar(row.original.m_nIdCliente)}
+                          onClick={() =>
+                            handleShowModificar(row.original.m_nIdCliente)
+                          }
                         >
-                          <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
+                          <i
+                            className="fa fa-eye"
+                            style={{ color: "#F9A03E" }}
+                          />
                         </a>
                         <a
                           href="#"
                           className="btn btn-default btn-sm"
-                          onClick={() => handleEliminar(row.original.m_nIdCliente)}
+                          onClick={() =>
+                            handleEliminar(row.original.m_nIdCliente)
+                          }
                         >
-                          <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
+                          <i
+                            className="zmdi zmdi-delete"
+                            style={{ color: "#F30B0B" }}
+                          />
                         </a>
                       </div>
                     </td>
@@ -413,8 +467,6 @@ function Clientes(props) {
     aplicarDetalleConceptoCadaViajeXML: false,
     idGrupoCliente: {},
 
-
-
     metodoPago: "",
     diasCredito: 0,
     creadoPor: localStorage.getItem("UsuarioId"),
@@ -428,15 +480,13 @@ function Clientes(props) {
     pendFacturar: 0,
     pendFacturarDLLS: 0,
 
-
     bancoOrdenante: "",
     rfcBancoOrdenante: "",
     cuentaBancoOrdenante: "",
 
-
     codigoPostal: 0,
     idEstado: 0,
-    
+
     municipio: "",
     localidad: "",
     colonia: "",
@@ -451,8 +501,6 @@ function Clientes(props) {
     tableformatos: "",
     frecuenciaEnvioDias: "",
     enviarApartir: "",
-    
-
 
     envioAutomaticoSeguimiento: "",
     excluirNodo: 0,
@@ -460,8 +508,6 @@ function Clientes(props) {
     idUSOCFDI: "",
     agruparCantidadPorConcepto: "",
     ajustarImporte2Dec: "",
-    
-
 
     formatoSelect: false,
     height: window.innerHeight,
@@ -485,16 +531,77 @@ function Clientes(props) {
         m_bPermitirSeguimiento: 0,
         m_bUsoServicioWeb: 0,
         m_bPermitirVerPortal: 0,
-        m_bRecibirCartaPorte: 0
-
-
-
-      }],
+        m_bRecibirCartaPorte: 0,
+      },
+    ],
   });
 
   function handleShowAgregar() {
     setState({
       ...state,
+      agregar: "Agregar",
+      idCliente: 0,
+      numeroCliente: 0,
+      tipoCliente: 0,
+      rfc: "",
+      activo: false,
+      operadorLogistico: false,
+      nombreFiscal: "",
+      nombreCorto: "",
+      idSucursal: 0,
+      idMoneda: 0,
+      idImpuestoTransladado: 0,
+      aplicarDetalleMaterialesCadaViajeXML: false,
+
+      //ver variable
+      aplicarDetalleConceptoCadaViajeXML: false,
+      idGrupoCliente: {},
+      metodoPago: "",
+      diasCredito: 0,
+      credito: 0,
+      creditoDlls: 0,
+      saldoCredito: 0,
+      saldoCreditoDLLS: 0,
+      pendFacturar: 0,
+      pendFacturarDLLS: 0,
+
+      bancoOrdenante: "",
+      rfcBancoOrdenante: "",
+      cuentaBancoOrdenante: "",
+      codigoPostal: 0,
+      idEstado: 0,
+      municipio: "",
+      localidad: "",
+      colonia: "",
+      calle: "",
+      numeroExterior: "",
+      numeroInterior: "",
+      telefono: "",
+      celular: "",
+      nextel: "",
+      correoElectronico: "",
+
+      tableformatos: "",
+      frecuenciaEnvioDias: "",
+      enviarApartir: "",
+
+      envioAutomaticoSeguimiento: "",
+      excluirNodo: 0,
+
+      idUSOCFDI: "",
+      agruparCantidadPorConcepto: "",
+      ajustarImporte2Dec: "",
+
+      formatoSelect: false,
+      contactoNombre: "",
+      contactoCorreo: "",
+      contactoTelefono: "",
+      RecibirFactura: 0,
+      RecibirEstadoCuenta: 0,
+      PermitirSeguimiento: 0,
+      UsoServicioWeb: 0,
+      PermitirVerPortal: 0,
+      RecibirCartaPorte: 0,
     });
   }
 
@@ -503,72 +610,73 @@ function Clientes(props) {
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
       setState({
-
         getAllEstados,
         ...state,
-        idCliente:id,
+        idCliente: id,
         agregar: "Modificar",
 
-        ModificadoPor:respuesta.data.CreadoPor,
-        idCliente:respuesta.data.m_nIdCliente,
-        numeroCliente:respuesta.data.m_nNumeroCliente,
-        tipoCliente:respuesta.data.m_nTipoCliente,
-        rfc:respuesta.data.m_sRFC,
-        activo:respuesta.data.m_bActivo,
-        operadorLogistico:respuesta.data.m_bOperadorLogistico,
-        nombreFiscal:respuesta.data.m_sNombreFiscal,
-        nombreCorto:respuesta.data.m_sNombreCorto,
-        idSucursal:respuesta.data.m_nIdSucursal,
-        idMoneda:respuesta.data.m_nIdMoneda,
-        idImpuestoTransladado:respuesta.data.m_nIdImpuestoTransladado,
-        aplicarDetalleMaterialesCadaViajeXML:respuesta.data.m_bAplicarDetalleMaterialesCadaViajeXML,
-        idEstado:respuesta.data.m_nIdEstado,
-        idGrupoCliente:respuesta.data.m_nIdGrupoCliente,
+        idCliente: respuesta.data.m_nIdCliente,
+        numeroCliente: respuesta.data.m_nNumeroCliente,
+        tipoCliente: respuesta.data.m_nTipoCliente,
+        rfc: respuesta.data.m_sRFC,
+        activo: respuesta.data.m_bActivo,
+        operadorLogistico: respuesta.data.m_bOperadorLogistico,
+        nombreFiscal: respuesta.data.m_sNombreFiscal,
+        nombreCorto: respuesta.data.m_sNombreCorto,
+        idSucursal: respuesta.data.m_nIdSucursal,
+        idMoneda: respuesta.data.m_nIdMoneda,
+        idImpuestoTransladado: respuesta.data.m_nIdImpuestoTransladado,
+        aplicarDetalleMaterialesCadaViajeXML:
+          respuesta.data.m_bAplicarDetalleMaterialesCadaViajeXML,
+        idEstado: respuesta.data.m_nIdEstado,
+        idGrupoCliente: respuesta.data.m_nIdGrupoCliente,
 
         idGrupoCliente: dataGrupoClientes.find(
           (o) => o.m_nIdGrupoCliente == respuesta.data.m_nIdGrupoCliente
         ),
 
-    
-        metodoPago:respuesta.data.m_sMetodoPago,
-        diasCredito:respuesta.data.m_nDiasCredito,
-        credito:respuesta.data.m_cyCredito,
-        creditoDlls:respuesta.data.m_cyCreditoDLLS,
-        saldoCredito:respuesta.data.m_cySaldoCredito,
-        saldoCreditoDLLS:respuesta.data.m_cySaldoCreditoDLLS,
-        pendFacturar:respuesta.data.m_cyPendFacturar,
-        pendFacturarDLLS:respuesta.data.m_cyPendFacturarDLLS,
-        bancoOrdenante:respuesta.data.m_sBancoOrdenante,
-        rfcBancoOrdenante:respuesta.data.m_sRFCBancoOrdenante,
-        cuentaBancoOrdenante:respuesta.data.m_sNoCuentaBancoOrdenante,
-        codigoPostal:respuesta.data.m_sCodigoPostal,
-        idEstado:respuesta.data.m_nIdEstado,
-        municipio:respuesta.data.m_sMunicipio,
-        localidad:respuesta.data.m_sLocalidad,
-        colonia:respuesta.data.m_sColonia,
-        calle:respuesta.data.m_sCalle,
-        numeroExterior:respuesta.data.m_sNoExterior,
-        numeroInterior:respuesta.data.m_sNoInterior,
-        telefono:respuesta.data.m_sTelefono,
-        celular:respuesta.data.m_sCelular,
-        nextel:respuesta.data.m_sNextel,
-        correoElectronico:respuesta.data.m_sCorreoElectronico,
-        tableformatos:respuesta.data.m_sTableFormatos,
-        frecuenciaEnvioDias:respuesta.data.m_nEnvioCorreoDias,
-        enviarApartir:respuesta.data.m_sFechaEnvioCorreoApartir,
-        envioAutomaticoSeguimiento:respuesta.data.m_bEnvioAutomaticoSeguimientoViajesActivar,
-        excluirNodo:respuesta.data.m_bExcluirNodoCondicionesPagoXML,
-        idUSOCFDI:respuesta.data.m_sIdUsoCFDI,
-        agruparCantidadPorConcepto:respuesta.data.m_bPermitirAgruparCantidadPorConcepto,
-        ajustarImporte2Dec:respuesta.data.m_bAjustarImportes2DecimalesXML,
-    
-        
+        metodoPago: respuesta.data.m_sMetodoPago,
+        diasCredito: respuesta.data.m_nDiasCredito,
+        credito: respuesta.data.m_cyCredito,
+        creditoDlls: respuesta.data.m_cyCreditoDLLS,
+        saldoCredito: respuesta.data.m_cySaldoCredito,
+        saldoCreditoDLLS: respuesta.data.m_cySaldoCreditoDLLS,
+        pendFacturar: respuesta.data.m_cyPendFacturar,
+        pendFacturarDLLS: respuesta.data.m_cyPendFacturarDLLS,
+        bancoOrdenante: respuesta.data.m_sBancoOrdenante,
+        rfcBancoOrdenante: respuesta.data.m_sRFCBancoOrdenante,
+        cuentaBancoOrdenante: respuesta.data.m_sNoCuentaBancoOrdenante,
+        codigoPostal: respuesta.data.m_sCodigoPostal,
+        idEstado: respuesta.data.m_nIdEstado,
+        municipio: respuesta.data.m_sMunicipio,
+        localidad: respuesta.data.m_sLocalidad,
+        colonia: respuesta.data.m_sColonia,
+        calle: respuesta.data.m_sCalle,
+        numeroExterior: respuesta.data.m_sNoExterior,
+        numeroInterior: respuesta.data.m_sNoInterior,
+        telefono: respuesta.data.m_sTelefono,
+        celular: respuesta.data.m_sCelular,
+        nextel: respuesta.data.m_sNextel,
+        correoElectronico: respuesta.data.m_sCorreoElectronico,
+        tableformatos: respuesta.data.m_sTableFormatos,
+        frecuenciaEnvioDias: respuesta.data.m_nEnvioCorreoDias,
+        enviarApartir: respuesta.data.m_sFechaEnvioCorreoApartir,
+        envioAutomaticoSeguimiento:
+          respuesta.data.m_bEnvioAutomaticoSeguimientoViajesActivar,
+        excluirNodo: respuesta.data.m_bExcluirNodoCondicionesPagoXML,
+        idUSOCFDI: respuesta.data.m_sIdUsoCFDI,
+        agruparCantidadPorConcepto:
+          respuesta.data.m_bPermitirAgruparCantidadPorConcepto,
+        ajustarImporte2Dec: respuesta.data.m_bAjustarImportes2DecimalesXML,
       });
     });
   }
 
   useEffect((value) => {
-    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
+    if (
+      localStorage.getItem("UsuarioId") === null ||
+      localStorage.getItem("UsuarioId") <= 0
+    ) {
       showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
@@ -579,7 +687,7 @@ function Clientes(props) {
     getAllGrupoClientes();
     getAllClientes();
     getAllFormatos();
-    getAllTipoMoneda()
+    getAllTipoMoneda();
   }, []);
 
   function getAllGrupoClientes() {
@@ -638,8 +746,6 @@ function Clientes(props) {
     console.log(dataEstado);
   }
 
-  
-
   function getAllImpuestos() {
     const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
@@ -658,7 +764,7 @@ function Clientes(props) {
 
   function getAllGruposClientes() {
     const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/GetListado`;
-    axios.get(url, { headers }).then((respuesta) => { });
+    axios.get(url, { headers }).then((respuesta) => {});
   }
 
   const handleChangeActivoCheckboxChange = (event) => {
@@ -669,8 +775,6 @@ function Clientes(props) {
     console.log(event.target.name + " " + state.activo);
   };
 
- 
-
   const handleChangeAjustarImporte2Dec = (event) => {
     setState({
       ...state,
@@ -679,7 +783,7 @@ function Clientes(props) {
     console.log(event.target.name + " " + state.ajustarImporte2Dec);
   };
 
-  const handleChangeAgruparCantidadConcepto= (event) => {
+  const handleChangeAgruparCantidadConcepto = (event) => {
     setState({
       ...state,
       agruparCantidadPorConcepto: !state.agruparCantidadPorConcepto,
@@ -687,22 +791,24 @@ function Clientes(props) {
     console.log(event.target.name + " " + state.agruparCantidadPorConcepto);
   };
 
-
-  
   const handleChangeAplicarDetalleCadaViaje = (event) => {
     setState({
       ...state,
       aplicarDetalleMaterialesCadaViajeXML: !state.aplicarDetalleMaterialesCadaViajeXML,
     });
-    console.log(event.target.name + " " + state.aplicarDetalleMaterialesCadaViajeXML);
+    console.log(
+      event.target.name + " " + state.aplicarDetalleMaterialesCadaViajeXML
+    );
   };
 
-  const handleChangeAplicarConcepto= (event) => {
+  const handleChangeAplicarConcepto = (event) => {
     setState({
       ...state,
       aplicarDetalleConceptoCadaViajeXML: !state.aplicarDetalleConceptoCadaViajeXML,
     });
-    console.log(event.target.name + " " + state.aplicarDetalleConceptoCadaViajeXML);
+    console.log(
+      event.target.name + " " + state.aplicarDetalleConceptoCadaViajeXML
+    );
   };
 
   const handleChangeEnvioAutoSeguimientoViajes = (event) => {
@@ -758,8 +864,6 @@ function Clientes(props) {
     console.log(event.target.name + " " + state.RecibirCartaPorte);
   };
 
-
-
   const handleChangeFormatoSelectCheckboxChange = (event) => {
     setState({
       ...state,
@@ -767,7 +871,6 @@ function Clientes(props) {
     });
     console.log(event.target.name + " " + state.activo);
   };
-
 
   const handleChangeExcluirNodo = (event) => {
     console.log(event.target.name + " " + state.excluirNodo);
@@ -785,34 +888,35 @@ function Clientes(props) {
     });
   };
 
-
-
   function handleEliminar(id) {
     var derecho;
     const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.creadoPor}/${state.DerechoBorrar}/3`;
-    axios.get(urlDelete, { headers }).then(respuesta => {
-      //showSuccess(respuesta.data)
+    axios
+      .get(urlDelete, { headers })
+      .then((respuesta) => {
+        //showSuccess(respuesta.data)
 
-      derecho = respuesta.data;
-      if (derecho == false) {
-        showSuccess("El usuario no tiene derechos para realizar el proceso");
-        return;
-      }
+        derecho = respuesta.data;
+        if (derecho == false) {
+          showSuccess("El usuario no tiene derechos para realizar el proceso");
+          return;
+        }
 
-      const url = `${process.env.REACT_APP_API_URL}/Clientes/Eliminar/` + id;
-      axios
-        .delete(url, { headers })
-        .then((respuesta) => {
-          showSuccess(respuesta.data);
-          getAllClientes();
-        })
-        .catch((err) => {
-          console.log(err)
-          showSuccess(JSON.stringify(err));
-        });
-    }).catch(err => {
-      showSuccess(err)
-    });
+        const url = `${process.env.REACT_APP_API_URL}/Clientes/Eliminar/` + id;
+        axios
+          .delete(url, { headers })
+          .then((respuesta) => {
+            showSuccess(respuesta.data);
+            getAllClientes();
+          })
+          .catch((err) => {
+            console.log(err);
+            showSuccess(JSON.stringify(err));
+          });
+      })
+      .catch((err) => {
+        showSuccess(err);
+      });
   }
 
   const handleChange = (event) => {
@@ -825,8 +929,7 @@ function Clientes(props) {
 
   const handleChangeCodigo = (event) => {
     const url =
-      `${process.env.REACT_APP_API_URL}/Unidades/ValidaCodigoUnidad/` +
-      state.codigo;
+      `${process.env.REACT_APP_API_URL}/Clientes/ValidaNumeroCliente/` +state.numeroCliente+`/${state.idCliente}`;
     axios
       .get(url, { headers })
       .then((respuesta) => {
@@ -836,7 +939,7 @@ function Clientes(props) {
           setState({
             ...state,
 
-            codigo: respuesta.data.m_nNumero,
+            numeroCliente: respuesta.data.m_nNumero,
           });
         }
       })
@@ -868,70 +971,66 @@ function Clientes(props) {
   function handleSelectRow(id, event) {
     setState({
       ...state,
-      idCliente: id
+      idCliente: id,
     });
   }
-
 
   const handleAceptar = (e) => {
     e.preventDefault();
     var params = {
       m_nCreadoPor: state.CreadoPor,
-      m_nModificadoPor:state.ModificadoPor,
-      m_nNumeroCliente:state.numeroCliente,
-      m_nTipoCliente:state.tipoCliente,
-      m_sRFC:state.rfc,
-      m_bActivo:state.activo,
-      m_bOperadorLogistico:state.operadorLogistico,
-      m_sNombreFiscal:state.nombreFiscal,
-      m_sNombreCorto:state.nombreCorto,
-      m_nIdSucursal:state.idSucursal,
-      m_nIdMoneda:state.idMoneda,
-      m_nIdImpuestoTransladado:state.idImpuestoTransladado,
-      m_nIdGrupoCliente:state.idGrupoCliente.m_nIdGrupoCliente,
-      m_bAplicarDetalleMaterialesCadaViajeXML:state.aplicarDetalleMaterialesCadaViajeXML,
+      m_nModificadoPor: state.ModificadoPor,
+      m_nNumeroCliente: state.numeroCliente,
+      m_nTipoCliente: state.tipoCliente,
+      m_sRFC: state.rfc,
+      m_bActivo: state.activo,
+      m_bOperadorLogistico: state.operadorLogistico,
+      m_sNombreFiscal: state.nombreFiscal,
+      m_sNombreCorto: state.nombreCorto,
+      m_nIdSucursal: state.idSucursal,
+      m_nIdMoneda: state.idMoneda,
+      m_nIdImpuestoTransladado: state.idImpuestoTransladado,
+      m_nIdGrupoCliente: state.idGrupoCliente.m_nIdGrupoCliente,
+      m_bAplicarDetalleMaterialesCadaViajeXML:
+        state.aplicarDetalleMaterialesCadaViajeXML,
 
+      m_sMetodoPago: state.metodoPago,
+      m_nDiasCredito: state.diasCredito,
+      m_cyCredito: state.credito,
+      m_cyCreditoDLLS: state.creditoDlls,
+      m_cySaldoCredito: state.saldoCredito,
+      m_cySaldoCreditoDLLS: state.saldoCreditoDLLS,
+      m_cyPendFacturar: state.pendFacturar,
+      m_cyPendFacturarDLLS: state.pendFacturarDLLS,
 
-      m_sMetodoPago:state.metodoPago,
-      m_nDiasCredito:state.diasCredito,
-      m_cyCredito:state.credito,
-      m_cyCreditoDLLS:state.creditoDlls,
-      m_cySaldoCredito:state.saldoCredito,
-      m_cySaldoCreditoDLLS:state.saldoCreditoDLLS,
-      m_cyPendFacturar:state.pendFacturar,
-      m_cyPendFacturarDLLS:state.pendFacturarDLLS,
+      m_sBancoOrdenante: state.bancoOrdenante,
+      m_sRFCBancoOrdenante: state.rfcBancoOrdenante,
+      m_sNoCuentaBancoOrdenante: state.cuentaBancoOrdenante,
 
+      m_sCodigoPostal: state.codigoPostal,
+      m_nIdEstado: state.idEstado,
+      m_sMunicipio: state.municipio,
+      m_sLocalidad: state.localidad,
+      m_sColonia: state.colonia,
+      m_sCalle: state.calle,
+      m_sNoExterior: state.numeroExterior,
+      m_sNoInterior: state.numeroInterior,
+      m_sTelefono: state.telefono,
+      m_sCelular: state.celular,
+      m_sNextel: state.nextel,
+      m_sCorreoElectronico: state.correoElectronico,
 
-      m_sBancoOrdenante:state.bancoOrdenante,
-      m_sRFCBancoOrdenante:state.rfcBancoOrdenante,
-      m_sNoCuentaBancoOrdenante:state.cuentaBancoOrdenante,
+      m_sTableFormatos: state.tableformatos,
+      // m_dtEnvioAutomaticoSeguimientoViajesFechaHoraInicio:state.m_dtEnvioAutomaticoSeguimientoViajesFechaHoraInicio,
+      m_nEnvioCorreoDias: state.frecuenciaEnvioDias,
+      m_sFechaEnvioCorreoApartir: state.enviarApartir,
+      m_bEnvioAutomaticoSeguimientoViajesActivar:
+        state.envioAutomaticoSeguimiento,
+      m_bExcluirNodoCondicionesPagoXML: state.excluirNodo,
 
-
-      m_sCodigoPostal:state.codigoPostal,
-      m_nIdEstado:state.idEstado,
-      m_sMunicipio:state.municipio,
-      m_sLocalidad:state.localidad,
-      m_sColonia:state.colonia,
-      m_sCalle:state.calle,
-      m_sNoExterior:state.numeroExterior,
-      m_sNoInterior:state.numeroInterior,
-      m_sTelefono:state.telefono,
-      m_sCelular:state.celular,
-      m_sNextel:state.nextel,
-      m_sCorreoElectronico:state.correoElectronico,
-
-
-      m_sTableFormatos:state.tableformatos,
-     // m_dtEnvioAutomaticoSeguimientoViajesFechaHoraInicio:state.m_dtEnvioAutomaticoSeguimientoViajesFechaHoraInicio,
-      m_nEnvioCorreoDias:state.frecuenciaEnvioDias,
-      m_sFechaEnvioCorreoApartir:state.enviarApartir,
-      m_bEnvioAutomaticoSeguimientoViajesActivar:state.envioAutomaticoSeguimiento,
-      m_bExcluirNodoCondicionesPagoXML:state.excluirNodo,
-
-
-      m_sIdUsoCFDI:state.idUSOCFDI,
-      m_bPermitirAgruparCantidadPorConcepto:state.agruparCantidadPorConcepto,
-      m_bAjustarImportes2DecimalesXML:state.ajustarImporte2Dec,
+      m_sIdUsoCFDI: state.idUSOCFDI,
+      m_bPermitirAgruparCantidadPorConcepto: state.agruparCantidadPorConcepto,
+      m_bAjustarImportes2DecimalesXML: state.ajustarImporte2Dec,
       //m_bAplicarDetalleMaterialesCadaViajeXML:state.aplicarDetalleMaterialesCadaViajeXML,
 
       m_sContactoNombre: state.contactoNombre,
@@ -951,14 +1050,15 @@ function Clientes(props) {
     debugger;
     if (state.idCliente != 0) {
       const url =
-        `${process.env.REACT_APP_API_URL}/Clientes/Modificar/` + state.idCliente;
+        `${process.env.REACT_APP_API_URL}/Clientes/Modificar/` +
+        state.idCliente;
       axios
         .put(url, Object.assign({}, params), { headers })
 
         .then((respuesta) => {
           alert(respuesta.data);
 
-          window.location.reload();
+         // window.location.reload();
         })
         .catch((err) => {
           console.log(err);
@@ -977,7 +1077,6 @@ function Clientes(props) {
           alert(err);
         });
     }
-
   };
 
   function addDocumento() {
@@ -1090,8 +1189,6 @@ function Clientes(props) {
     });
   }
 
-
-
   useEffect((value) => {
     //closeSeccions();
   }, []);
@@ -1140,12 +1237,20 @@ function Clientes(props) {
               </a>
             </li>
             <li>
-              <a data-toggle="tab" href="#Imprimir" onClick={console.log(selectedRows)}>
+              <a
+                data-toggle="tab"
+                href="#Imprimir"
+                onClick={console.log(selectedRows)}
+              >
                 <i className="fa fa-plus-circle" /> Imprimir
               </a>
             </li>
             <li>
-              <ExportPDF data={dataListadoClientes} column={columns} fileName="Unidades" />
+              <ExportPDF
+                data={dataListadoClientes}
+                column={columns}
+                fileName="Unidades"
+              />
             </li>
           </ul>
 
@@ -1153,7 +1258,10 @@ function Clientes(props) {
             <div id="Listado" className="tab-pane fade in active">
               <div className="widget-wrap">
                 <div className="widget-content">
-                  <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                  <div
+                    className="row"
+                    style={{ height: state.height - 250, width: "100%" }}
+                  >
                     {dataListadoClientes.length != 0 ? (
                       <DataGrid
                         localeText={dataGridLocaleText}
@@ -1174,11 +1282,14 @@ function Clientes(props) {
             <div id="Imprimir" className="tab-pane fade ">
               <div className="widget-wrap">
                 <div className="widget-content">
-                  <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                  <div
+                    className="row"
+                    style={{ height: state.height - 250, width: "100%" }}
+                  >
                     {dataListadoClientes.length != 0 ? (
                       <DataGrid
                         components={{
-                          Toolbar: CustomToolbar
+                          Toolbar: CustomToolbar,
                         }}
                         localeText={dataGridLocaleText}
                         rows={dataListadoClientes}
@@ -1188,7 +1299,7 @@ function Clientes(props) {
                         pageSize={Math.floor((state.height - 310) / 30)}
                         getRowId={(row) => row.m_nIdCliente}
                         onSelectionModelChange={(newSelection) => {
-                          console.log(newSelection)
+                          console.log(newSelection);
                           setSelectedRows(newSelection.rows);
                         }}
                       />
@@ -1196,10 +1307,8 @@ function Clientes(props) {
                       <div>No se encontró ningún registro</div>
                     )}
                   </div>
-
                 </div>
               </div>
-
             </div>
 
             <div id="Agregar" className="tab-pane fade">
@@ -1290,12 +1399,13 @@ function Clientes(props) {
                     </div>
                     <div className="widget-container">
                       <div className="widget-content">
-
                         <div className="row">
                           <div className="col-md-12">
                             <div className="form-content">
                               <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">Número de Cliente</label>
+                                <label className="label">
+                                  Número de Cliente
+                                </label>
                                 <div className="input">
                                   <input
                                     onChange={handleChange}
@@ -1310,9 +1420,7 @@ function Clientes(props) {
                                 </div>
                               </div>
                               <div className="col-sm-4 col-md-2-5 unit">
-                                <label className="label">
-                                  RFC
-                                  </label>
+                                <label className="label">RFC</label>
                                 <div className="input">
                                   <input
                                     onChange={handleChange}
@@ -1475,8 +1583,6 @@ function Clientes(props) {
                                   )}
                                 />{" "}
                               </div>
-
-
                             </div>
                           </div>
                         </div>
@@ -1484,19 +1590,30 @@ function Clientes(props) {
                           <div className="inline-group">
                             <label className="checkbox">
                               <input
-                                onChange={handleChangeActivoCheckboxChange}
+                                checked={state.activo}
+                                onChange={(e) =>
+                                  setState({
+                                    ...state,
+                                    activo: e.target.checked,
+                                  })
+                                }
                                 native
                                 name="activo"
                                 type="checkbox"
-                                value={state.activo}
                                 id="activo"
                               />
                               <i />
-                                  Activa
-                                </label>
+                              Activa
+                            </label>
                             <label className="checkbox">
                               <input
-                                onChange={handleChangeOperadorLogistico}
+                                checked={state.operadorLogistico}
+                                onChange={(e) =>
+                                  setState({
+                                    ...state,
+                                    operadorLogistico: e.target.checked,
+                                  })
+                                }
                                 native
                                 name="operadorLogistico"
                                 type="checkbox"
@@ -1504,13 +1621,19 @@ function Clientes(props) {
                                 value={state.operadorLogistico}
                               />
                               <i />
-                                  Operador Lógistico
-                                </label>
+                              Operador Lógistico
+                            </label>
 
-                            <label className="label">{ }</label>
+                            <label className="label">{}</label>
                             <label className="checkbox">
                               <input
-                                onChange={handleChangeAplicarDetalleCadaViaje}
+                                checked={state.aplicarDetalleMaterialesCadaViajeXML}
+                                onChange={(e) =>
+                                  setState({
+                                    ...state,
+                                    aplicarDetalleMaterialesCadaViajeXML: e.target.checked,
+                                  })
+                                }
                                 native
                                 name="aplicarDetalleMaterialesCadaViajeXML"
                                 type="checkbox"
@@ -1520,16 +1643,10 @@ function Clientes(props) {
                                 id="aplicarDetalleMaterialesCadaViajeXML"
                               />
                               <i />
-                                  Aplicar en el XML de factura, el detalle por
-                                  Viaje
-                                </label>
+                              Aplicar en el XML de factura, el detalle por Viaje
+                            </label>
                           </div>
                         </div>
-
-
-
-
-
                       </div>
                     </div>
                   </div>
@@ -2148,9 +2265,13 @@ function Clientes(props) {
                                               </label>
                                               <label className="checkbox">
                                                 <input
-                                                  onChange={
-                                                    handleChangeEnvioAutoSeguimientoViajes
-                                                  }
+                                                    checked={state.envioAutomaticoSeguimiento}
+                                                    onChange={(e) =>
+                                                      setState({
+                                                        ...state,
+                                                        envioAutomaticoSeguimiento: e.target.checked,
+                                                      })
+                                                    }
                                                   native
                                                   name="envioAutomaticoSeguimiento"
                                                   type="checkbox"
@@ -2169,9 +2290,13 @@ function Clientes(props) {
                                             <div className="inline-group">
                                               <label className="checkbox">
                                                 <input
-                                                  onChange={
-                                                    handleChangeExcluirNodo
-                                                  }
+                                                     checked={state.excluirNodo}
+                                                     onChange={(e) =>
+                                                       setState({
+                                                         ...state,
+                                                         excluirNodo: e.target.checked,
+                                                       })
+                                                     }
                                                   native
                                                   name="excluirNodo"
                                                   type="checkbox"
@@ -2207,12 +2332,22 @@ function Clientes(props) {
                                                   value={state.idUSOCFDI}
                                                   id="idUSOCFDI"
                                                 >
-                                                  <option value="1">1. Adqusicion de mercancias</option>
-                                                  <option value="2">2. Devoluciones, descuentos o bonificaciones </option>
-                                                  <option value="3">3. Gastos en general </option>
-                                                  <option value="4">4. Construcciones </option>
-                                                  <option value="5">5. Mobiliario y equipo </option>
-
+                                                  <option value="1">
+                                                    1. Adqusicion de mercancias
+                                                  </option>
+                                                  <option value="2">
+                                                    2. Devoluciones, descuentos
+                                                    o bonificaciones{" "}
+                                                  </option>
+                                                  <option value="3">
+                                                    3. Gastos en general{" "}
+                                                  </option>
+                                                  <option value="4">
+                                                    4. Construcciones{" "}
+                                                  </option>
+                                                  <option value="5">
+                                                    5. Mobiliario y equipo{" "}
+                                                  </option>
                                                 </select>
                                                 <i></i>
                                               </label>
@@ -2221,13 +2356,17 @@ function Clientes(props) {
                                             <div className="unit">
                                               <div className="inline-group">
                                                 <label className="label">
-                                                  { }
+                                                  {}
                                                 </label>
                                                 <label className="checkbox">
                                                   <input
-                                                    onChange={
-                                                      handleChangeAgruparCantidadConcepto
-                                                    }
+                                                         checked={state.agruparCantidadPorConcepto}
+                                                         onChange={(e) =>
+                                                           setState({
+                                                             ...state,
+                                                             agruparCantidadPorConcepto: e.target.checked,
+                                                           })
+                                                         }
                                                     native
                                                     name="agruparCantidadPorConcepto"
                                                     type="checkbox"
@@ -2246,13 +2385,17 @@ function Clientes(props) {
                                             <div className="unit">
                                               <div className="inline-group">
                                                 <label className="label">
-                                                  { }
+                                                  {}
                                                 </label>
                                                 <label className="checkbox">
                                                   <input
-                                                    onChange={
-                                                      handleChangeAjustarImporte2Dec
-                                                    }
+                                                      checked={state.ajustarImporte2Dec}
+                                                      onChange={(e) =>
+                                                        setState({
+                                                          ...state,
+                                                          ajustarImporte2Dec: e.target.checked,
+                                                        })
+                                                      }
                                                     native
                                                     name="ajustarImporte2Dec"
                                                     type="checkbox"
@@ -2272,13 +2415,17 @@ function Clientes(props) {
                                             <div className="unit">
                                               <div className="inline-group">
                                                 <label className="label">
-                                                  { }
+                                                  {}
                                                 </label>
                                                 <label className="checkbox">
                                                   <input
-                                                    onChange={
-                                                      handleChangeAplicarConcepto
-                                                    }
+                                                      checked={state.aplicarDetalleConceptoCadaViajeXML}
+                                                      onChange={(e) =>
+                                                        setState({
+                                                          ...state,
+                                                          aplicarDetalleConceptoCadaViajeXML: e.target.checked,
+                                                        })
+                                                      }
                                                     native
                                                     name="aplicarDetalleConceptoCadaViajeXML"
                                                     type="checkbox"
@@ -2343,10 +2490,13 @@ function Clientes(props) {
                                     <label className="label">&nbsp; </label>
                                     <label className="checkbox">
                                       <input
-                                        onChange={
-                                          handleChangeRecibirFactura
-                                        }
-                                        native
+  checked={state.RecibirFactura}
+  onChange={(e) =>
+    setState({
+      ...state,
+      RecibirFactura: e.target.checked,
+    })
+  }                                        native
                                         name="RecibirFactura"
                                         type="checkbox"
                                         value={state.RecibirFactura}
@@ -2377,9 +2527,13 @@ function Clientes(props) {
                                   <div className="inline-group">
                                     <label className="checkbox">
                                       <input
-                                        onChange={
-                                          handleChangeRecibirEstadoCuenta
-                                        }
+                                         checked={state.RecibirEstadoCuenta}
+                                         onChange={(e) =>
+                                           setState({
+                                             ...state,
+                                             RecibirEstadoCuenta: e.target.checked,
+                                           })
+                                         }    
                                         native
                                         name="RecibirEstadoCuenta"
                                         type="checkbox"
@@ -2412,9 +2566,13 @@ function Clientes(props) {
                                   <div className="inline-group">
                                     <label className="checkbox">
                                       <input
-                                        onChange={
-                                          handleChangePermitirSeguimiento
-                                        }
+                                        checked={state.PermitirSeguimiento}
+                                        onChange={(e) =>
+                                          setState({
+                                            ...state,
+                                            PermitirSeguimiento: e.target.checked,
+                                          })
+                                        }   
                                         native
                                         name="PermitirSeguimiento"
                                         type="checkbox"
@@ -2433,13 +2591,17 @@ function Clientes(props) {
                                   <div className="inline-group">
                                     <label className="checkbox">
                                       <input
-                                        onChange={
-                                          handleChangeUsoServicioWeb
-                                        }
+                                         checked={state.UsoServicioWeb}
+                                         onChange={(e) =>
+                                           setState({
+                                             ...state,
+                                             UsoServicioWeb: e.target.checked,
+                                           })
+                                         }   
                                         native
-                                        name="rentada"
+                                        name="UsoServicioWeb"
                                         type="checkbox"
-                                        id="rentada"
+                                        id="UsoServicioWeb"
                                         value={state.UsoServicioWeb}
                                       />
                                       <i />
@@ -2454,9 +2616,13 @@ function Clientes(props) {
                                   <div className="inline-group">
                                     <label className="checkbox">
                                       <input
-                                        onChange={
-                                          handlechangePermitirVerPortal
-                                        }
+                                          checked={state.PermitirVerPortal}
+                                          onChange={(e) =>
+                                            setState({
+                                              ...state,
+                                              PermitirVerPortal: e.target.checked,
+                                            })
+                                          }  
                                         native
                                         name="PermitirVerPortal"
                                         type="checkbox"
@@ -2476,9 +2642,13 @@ function Clientes(props) {
                                   <div className="inline-group">
                                     <label className="checkbox">
                                       <input
-                                        onChange={
-                                          handlechangePermitirVerPortal
-                                        }
+                                         checked={state.RecibirCartaPorte}
+                                         onChange={(e) =>
+                                           setState({
+                                             ...state,
+                                             RecibirCartaPorte: e.target.checked,
+                                           })
+                                         }  
                                         native
                                         name="RecibirCartaPorte"
                                         type="checkbox"

@@ -136,13 +136,22 @@ function RemitenteDestinatario(props) {
   }
 
   function handleSelectCliente() {
+
+   
     state.rfc = state.cliente.m_sRFC
     state.nombre= state.cliente.m_sNombreCorto
-    //state.domicilioRemitente = state.nombreRemitente.m_sNombreCompletoOperador
-    //state.codigoPostalRemitente = state.nombreRemitente.m_sCodigoPostal
-    //state.correoRemitente = state.nombreRemitente.m_sCorreoElectronico
-    //state.telefonoRemitente = state.nombreRemitente.m_sTelefono
-    //state.contactoRemitente = state.nombreRemitente.m_sContacto
+    state.idPais=state.cliente.m_nIdPais
+    state.codigoPostal = state.cliente.m_sCodigoPostal
+    state.idEstado = state.cliente.m_nIdEstado
+    state.municipio = state.cliente.m_sMunicipio
+    state.localidad = state.cliente.m_sLocalidad
+    state.colonia = state.cliente.m_sColonia
+    state.calle= state.cliente.m_sCalle
+    state.noExterior=state.cliente.m_sNoExterior
+    state.noInterior=state.cliente.m_sNoInterior
+    state.telefono=state.cliente.m_sCelular
+    state.correoElectronico=state.cliente.m_sCorreoElectronico
+
 
   }
 
@@ -222,7 +231,8 @@ function RemitenteDestinatario(props) {
       agregar: "Agregar",
       importar: "",
     };
-    console.log(params);
+    console.log(JSON.stringify(params));
+    debugger;
     if (state.idRemitenteDestinatario != 0) {
       const url =
         `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/Modificar/` +
@@ -996,12 +1006,12 @@ function RemitenteDestinatario(props) {
                                       <Autocomplete
                                         value={state.cliente}
                                         freeSolo
-                                        onSelect={handleSelectCliente()}
                                         onChange={(event, newValue) =>
                                           setState({
                                             ...state,
                                             cliente: newValue,
-                                          })
+                                          }),
+                                          handleSelectCliente()
                                         }
                                         id="cliente"
                                         disableClearable
@@ -1074,7 +1084,7 @@ function RemitenteDestinatario(props) {
                                         }
                                         native
                                         type="checkbox"
-                                        value={state.activo}
+                                        checked={state.activo}
                                         id="activo"
                                         name="activo"
                                       />
