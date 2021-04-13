@@ -1284,7 +1284,7 @@ function Informes({ history }) {
 
     };
     console.log(JSON.stringify(params));
-    debugger;
+    //debugger;
     if (state.IdInforme != 0) {
       const url = `${process.env.REACT_APP_API_URL}/Informes/Modificar/${state.IdInforme}`;
       axios
@@ -2689,7 +2689,7 @@ function Informes({ history }) {
                                         idRuta: newValue,
                                       })
                                     }
-                                    value={state.IdCiudadDestino}
+                                    value={state.idRuta}
                                     id="idRuta"
                                     disableClearable
                                     forcePopupIcon={false}
@@ -2726,7 +2726,7 @@ function Informes({ history }) {
                                                     setState({
                                                       ...state,
                                                       identificadorModal:
-                                                        "IdCiudadDestino",
+                                                        "idRuta",
                                                       tipoModal: 1,
                                                       openDialog: true,
                                                     });
@@ -2976,7 +2976,7 @@ function Informes({ history }) {
                                             Destino
                                           </label>
                                           <input
-                                            value={value.destino}
+                                            value={value.m_sCiudadDestino}
                                             className="form-control"
                                             type="text"
                                             disabled="true"
@@ -3007,7 +3007,7 @@ function Informes({ history }) {
                                           </label>
                                           <input
                                             disabled="true"
-                                            value={value.observaciones}
+                                            value={value.m_sDescripcionPaquete}
                                             className="form-control"
                                             type="text"
                                             id={"observacion-" + index}

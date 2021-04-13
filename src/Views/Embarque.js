@@ -45,7 +45,7 @@ const styles = {
         height: "300px !important",
     },
     sobreCarrusel: {
-        height: "150px !important",
+        height: "100px !important",
     },
     seleccionado: {
         backgroundColor: "#FCC88F",
@@ -165,15 +165,15 @@ function Embarque(props) {
         idUnidad: {},
         paquetes: [
             {
-                m_xPeso: "",
-                m_xLargo: "",
-                m_xAncho: "",
-                m_xAlto: "",
-                m_xVolumen: "",
+                m_rPeso: "",
+                m_rLargo: "",
+                m_rAncho: "",
+                m_rAlto: "",
+                m_rVolumen: "",
                 m_nIdTIpoEmpaque: "",
-                m_cValorDeclarado: "",
+                m_cyValorDeclarado: "",
                 m_sDescripcion: "",
-                ctd: "",
+                m_nCantidad: "",
                 m_nTipo: 2,
                 m_sObservaciones: "",
             },
@@ -284,7 +284,6 @@ function Embarque(props) {
             m_parrSobres: state.sobres,
         };
         console.log(JSON.stringify(params));
-        debugger;
         if (state.idEmbarque != 0) {
             const url = `${process.env.REACT_APP_API_URL}/Embarques/Modificar/${state.idEmbarque}`;
             axios
@@ -325,15 +324,15 @@ function Embarque(props) {
     function addPaquete() {
         const { paquetes } = state;
         paquetes.push({
-            m_xPeso: "",
-            m_xLargo: "",
-            m_xAncho: "",
-            m_xAlto: "",
-            m_xVolumen: "",
+            m_rPeso: "",
+            m_rLargo: "",
+            m_rAncho: "",
+            m_rAlto: "",
+            m_rVolumen: "",
             m_nIdTIpoEmpaque: "",
-            m_cValorDeclarado: "",
+            m_cyValorDeclarado: "",
             m_sDescripcion: "",
-            ctd: "",
+            m_nCantidad: "",
             m_nTipo: 2,
             m_sObservaciones: "",
         });
@@ -757,7 +756,6 @@ function Embarque(props) {
     };
 
     function handleSelectDatos(id, cp) {
-        debugger;
         setState({
             ...state,
             [state.identificadorModal]: id,
@@ -1990,10 +1988,10 @@ function Embarque(props) {
                             onChange={(event) => handleChangePaquete(event, index)}
                             className="form-control"
                             type="text"
-                            value={state.paquetes[index].m_xPeso}
+                            value={state.paquetes[index].m_rPeso}
                             disabled={state.agregar == "Consultar"}
                             placeholder="kg"
-                            name="m_xPeso"
+                            name="m_rPeso"
                         />
                     </div>
                 </div>
@@ -2005,10 +2003,10 @@ function Embarque(props) {
                             onChange={(event) => handleChangePaquete(event, index)}
                             className="form-control"
                             type="text"
-                            value={state.paquetes[index].m_xLargo}
+                            value={state.paquetes[index].m_rLargo}
                             disabled={state.agregar == "Consultar"}
                             placeholder="mts"
-                            name="m_xLargo"
+                            name="m_rLargo"
                         />
                     </div>
                 </div>
@@ -2020,10 +2018,10 @@ function Embarque(props) {
                             onChange={(event) => handleChangePaquete(event, index)}
                             className="form-control"
                             type="text"
-                            value={state.paquetes[index].m_xAncho}
+                            value={state.paquetes[index].m_rAncho}
                             disabled={state.agregar == "Consultar"}
                             placeholder="mts"
-                            name="m_xAncho"
+                            name="m_rAncho"
                         />
                     </div>
                 </div>
@@ -2035,10 +2033,10 @@ function Embarque(props) {
                             onChange={(event) => handleChangePaquete(event, index)}
                             className="form-control"
                             type="text"
-                            value={state.paquetes[index].m_xAlto}
+                            value={state.paquetes[index].m_rAlto}
                             disabled={state.agregar == "Consultar"}
                             placeholder="mts"
-                            name="m_xAlto"
+                            name="m_rAlto"
                         />
                     </div>
                 </div>
@@ -2050,10 +2048,10 @@ function Embarque(props) {
                             onChange={(event) => handleChangePaquete(event, index)}
                             className="form-control"
                             type="text"
-                            value={state.paquetes[index].m_xVolumen}
+                            value={state.paquetes[index].m_rVolumen}
                             disabled={state.agregar == "Consultar"}
                             placeholder="mts3"
-                            name="m_xVolumen"
+                            name="m_rVolumen"
                         />
                     </div>
                 </div>
@@ -2088,10 +2086,10 @@ function Embarque(props) {
                             onChange={(event) => handleChangePaquete(event, index)}
                             className="form-control"
                             type="text"
-                            value={state.paquetes[index].m_cValorDeclarado}
+                            value={state.paquetes[index].m_cyValorDeclarado}
                             disabled={state.agregar == "Consultar"}
                             placeholder="$"
-                            name="m_cValorDeclarado"
+                            name="m_cyValorDeclarado"
                         />
                     </div>
                 </div>
@@ -2118,10 +2116,10 @@ function Embarque(props) {
                             onChange={(event) => handleChangePaquete(event, index)}
                             className="form-control"
                             type="text"
-                            value={state.paquetes[index].ctd}
+                            value={state.paquetes[index].m_nCantidad}
                             disabled={state.agregar == "Consultar"}
-                            placeholder="Ctd"
-                            name="ctd"
+                            placeholder="Cantidad"
+                            name="m_nCantidad"
                         />
                     </div>
                 </div>
@@ -3096,7 +3094,7 @@ function Embarque(props) {
                               </label>
                                                                     <div className="input">
                                                                         <Autocomplete
-                                                                            onSelect={handleSelectDestinatario()}
+                                                                            onSelect={() => handleSelectDestinatario()}
                                                                             value={state.nombreDestinatario}
                                                                             freeSolo
                                                                             onChange={(event, newValue) =>

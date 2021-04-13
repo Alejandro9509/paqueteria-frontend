@@ -56,7 +56,7 @@ const useStyles = makeStyles({
         height: "300px !important",
     },
     sobreCarrusel: {
-        height: "175px !important",
+        height: "100px !important",
     }, seleccionado: {
         backgroundColor: "#FCC88F",
     },
@@ -150,8 +150,8 @@ function Recoleccion() {
         operador: 0,
         tipoUnidad: {},
         unidad: 0,
-        CreadoPor: localStorage.getItem("UsuarioId"),
-        ModificadoPor: localStorage.getItem("UsuarioId"),
+        CreadoPor: parseInt(localStorage.getItem("UsuarioId")),
+        ModificadoPor: parseInt(localStorage.getItem("UsuarioId")),
         mismoPaquete: false,
         mismoSobre: false,
         paquetes: [
@@ -208,22 +208,50 @@ function Recoleccion() {
     }
 
     function handleSelectRemitente() {
-        state.RFCRemitente = state.nombreRemitente.m_sRFC
-        //state.domicilioRemitente = state.nombreRemitente.m_sNombreCompletoOperador
-        //state.codigoPostalRemitente = state.nombreRemitente.m_sCodigoPostal
-        //state.correoRemitente = state.nombreRemitente.m_sCorreoElectronico
-        //state.telefonoRemitente = state.nombreRemitente.m_sTelefono
-        //state.contactoRemitente = state.nombreRemitente.m_sContacto
+
+        setState({
+            ...state,
+            RFCRemitente: state.nombreRemitente ? state.nombreRemitente.m_sRFC : "",
+            domicilioRemitente: state.nombreRemitente ? state.nombreRemitente.m_sNombreCompletoOperador : "",
+            codigoPostalRemitente: state.nombreRemitente ? state.nombreRemitente.m_sCodigoPostal : "",
+            correoRemitente: state.nombreRemitente ? state.nombreRemitente.m_sCorreoElectronico : "",
+            telefonoRemitente: state.nombreRemitente ? state.nombreRemitente.m_sTelefono : "",
+            contactoRemitente: state.nombreRemitente ? state.nombreRemitente.m_sContacto : "",
+        })
 
     }
 
+    useEffect(value => {
+        if (state.mismoPaquete) {
+            var array = state.paquetes
+            for (var i in array) {
+                    array[i] = state.paquetes[0];
+              }
+            setState({ ...state, paquetes: array })
+        }
+    }, [state.mismoPaquete])
+
+    useEffect(value => {
+        if (state.mismoSobre) {
+            var array = state.sobres
+            for (var i in array) {
+                    array[i] = state.sobres[0];
+              }
+            setState({ ...state, sobres: array })
+        }
+    }, [state.mismoSobre])
+
     function handleSelectDestinatario() {
-        state.RFCDestinatario = state.nombreDestinatario.m_sRFC
-        //state.domicilioDestinatario = state.nombreDestinatario.m_sNombreCompletoOperador
-        //state.codigoPostalDestinatario= state.nombreDestinatario.m_sCodigoPostal
-        //state.correoDestinatario= state.nombreDestinatario.m_sCorreoElectronico
-        //state.telefonoDestinatario = state.nombreDestinatario.m_sTelefono
-        //state.contactoDestinatario = state.nombreDestinatario.m_sContacto
+        setState({
+            ...state,
+            RFCDestinatario: state.nombreDestinatario ? state.nombreDestinatario.m_sRFC : "",
+            domicilioDestinatario: state.nombreDestinatario ? state.nombreDestinatario.m_sNombreCompletoOperador : "",
+            codigoPostalDestinatario: state.nombreDestinatario ? state.nombreDestinatario.m_sCodigoPostal : "",
+            correoDestinatario: state.nombreDestinatario ? state.nombreDestinatario.m_sCorreoElectronico : "",
+            telefonoDestinatario: state.nombreDestinatario ? state.nombreDestinatario.m_sTelefono : "",
+            contactoDestinatario: state.nombreDestinatario ? state.nombreDestinatario.m_sContacto : "",
+        })
+
 
     }
 
@@ -303,7 +331,7 @@ function Recoleccion() {
                     showSuccess("err");
                 });
         } else {
-            debugger;
+            //debugger;
             const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Agregar`;
             axios
                 .post(url, Object.assign({}, params), { headers })
@@ -699,47 +727,47 @@ function Recoleccion() {
             folioGuía: "",
             folioInforme: "",
             fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + "T" + today.getHours() + ":" + today.getMinutes(),
-            estatusRecoleccion: dataEstatusRecoleccion[0].m_nIdEstatusRecoleccion,
+            estatusRecoleccion: dataEstatusRecoleccion.length !== 0 ? dataEstatusRecoleccion[0].m_nIdEstatusRecoleccion : 1,
             moneda: 0,
             tipoCambio: "",
             tipoCobro: 0,
             nombreRemitente: "",
             RFCRemitente: "",
             domicilioRemitente: "",
-            codigoPostalRemitente: dataCodigoPostal[0],
-            ciudadRemitente: dataCiudad[0].m_nIdCiudad,
+            codigoPostalRemitente: dataCodigoPostal.length !== 0 ? [0] : null,
+            ciudadRemitente: dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1,
             correoRemitente: "",
             telefonoRemitente: "",
             contactoRemitente: "",
-            origenRemitente: dataCiudad[0].m_nIdCiudad,
+            origenRemitente: dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1,
             nombreDestinatario: "",
             RFCDestinatario: "",
             domicilioDestinatario: "",
-            codigoPostalDestinatario: dataCodigoPostal[0],
-            ciudadDestinatario: dataCiudad[0].m_nIdCiudad,
+            codigoPostalDestinatario: dataCodigoPostal.length !== 0 ? dataCodigoPostal[0] : null,
+            ciudadDestinatario: dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1,
             correoDestinatario: "",
             telefonoDestinatario: "",
             contactoDestinatario: "",
-            destinoDestinatario: dataCiudad[0].m_nIdCiudad,
-            ciudadRemitente: dataCiudad[0].m_nIdCiudad,
-            ciudadDestinatario: dataCiudad[0].m_nIdCiudad,
+            destinoDestinatario: dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1,
+            ciudadRemitente: dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1,
+            ciudadDestinatario: dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1,
             fechaRecoleccion: "",
-            codigoPostalRecoleccion: dataCodigoPostal[0],
-            ciudadRecoleccion: dataCiudad[0].m_nIdCiudad,
+            codigoPostalRecoleccion: dataCodigoPostal.length !== 0 ? dataCodigoPostal[0] : null,
+            ciudadRecoleccion: dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1,
             zonaRecoleccion: 0,
             domicilioRecoleccion: "",
             recogerEn: "",
             datosAdicionalesRecoleccion: "",
-            codigoPostalEntrega: dataCodigoPostal[0],
-            ciudadEntrega: dataCiudad[0].m_nIdCiudad,
+            codigoPostalEntrega: dataCodigoPostal.length !== 0 ? dataCodigoPostal[0] : 1,
+            ciudadEntrega: dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1,
             zonaEntrega: 0,
             domicilioEntrega: "",
             entregaEn: "",
             datosAdicionalesEntrega: "",
             cantidadDePaquetes: 0,
             cantidadDeSobres: 0,
-            operador: dataOperador[0].m_nIdOperador,
-            unidad: dataUnidad[0].m_nIdUnidad,
+            operador: dataOperador.length !== 0 ? dataOperador[0].m_nIdOperador : 1,
+            unidad: dataUnidad.length !== 0 ? dataUnidad[0].m_nIdUnidad : 1,
             paquetes: [
                 {
                     m_rPeso: "",
@@ -763,12 +791,15 @@ function Recoleccion() {
     }
 
     const handleChange = (event) => {
-        console.log(event.target.id + " : " + event.target.value);
         setState({
             ...state,
             [event.target.id]: event.target.value,
         });
     };
+
+    useEffect(value => {
+        console.log(dataTipoMoneda)
+    }, [state.moneda])
 
     const handleImprimir = (event) => {
         showSuccess("A imprimir se ha dicho")
@@ -1952,25 +1983,9 @@ function Recoleccion() {
     const framesPaquete = state.paquetes.map((p, index) => {
         return (
             <div key={`paquete${index}`}>
-                        <h4><strong>{`Paquete #${index + 1}`}</strong></h4>
-                   
-                    
-                    {state.agregar != "Consultar" ?
-                    <div style={{display:"flex", alignItems:"flex-end"}}>
-                         <div className="input">
-                                <input
-                                    onChange={handleChange}
-                                    type="checkbox"
-                                    required
-                                    disabled={state.agregar == "Consultar"}
-                                    value={state.mismoPaquete}
-                                    id="mismoPaquete"
-                                />
-                            </div>
-                            <label className="label" style={{paddingLeft:"10px"}}>Mismo Paquete</label>
-                           
-                        </div>
-                        : <span></span>}
+                <h4><strong>{`Paquete #${index + 1}`}</strong></h4>
+
+
 
                 <div className="col-sm-4 col-md-2-5 unit">
                     <label className="label">Peso</label>
@@ -2145,24 +2160,9 @@ function Recoleccion() {
         return (
             <div key={`sobre${index}`}>
                 <h4> <strong>{`Sobre #${index + 1}`}</strong></h4>
-                
 
-                    {state.agregar != "Consultar" ?
-                        <div style={{ display: "flex", alignItems:"flex-end" }}>
-                            
-                            <div className="input">
-                                <input
-                                    onChange={handleChange}
-                                    type="checkbox"
-                                    required
-                                    value={state.mismoSobre}
-                                    id="mismoSobre"
-                                />
-                            </div>
-                            <label className="label" style={{paddingLeft:"10px"}}>Mismo Sobre</label>
-                            </div>
-                        : <span></span>}
-                
+
+
 
                 <div className="col-md-12 unit">
                     <label className="label">Descripcion</label>
@@ -2831,7 +2831,7 @@ function Recoleccion() {
                                                                         <div className="input">
                                                                             <Autocomplete
 
-                                                                                onSelect={handleSelectRemitente()}
+                                                                                onSelect={() => handleSelectRemitente()}
                                                                                 value={state.nombreRemitente}
                                                                                 disabled={state.agregar == "Consultar"}
                                                                                 freeSolo
@@ -3204,7 +3204,7 @@ function Recoleccion() {
                                                                     <label className="label">Nombre</label>
                                                                     <div className="input">
                                                                         <Autocomplete
-                                                                            onSelect={handleSelectDestinatario()}
+                                                                            onSelect={() => handleSelectDestinatario()}
                                                                             value={state.nombreDestinatario}
                                                                             disabled={state.agregar == "Consultar"}
                                                                             freeSolo
@@ -3564,60 +3564,61 @@ function Recoleccion() {
                                         </div>
 
                                         <div className="widget-wrap col-md-5" id="paquetesSobres">
-                                            
-                                                    <div className="row">
-                                                        <div className="col-md-6">
-                                                            <form className="j-forms">
-                                                                <div className="form-content">
-                                                                    <h2>Número de Paquetes</h2>
 
-                                                                    <a
-                                                                        className="btn"
-                                                                        style={{ margin: "5px", backgroundColor: "#F9A03E", color: "white" }}
-                                                                        onClick={() => removePaquete()}
-                                                                        disabled={state.agregar == "Consultar"}
-                                                                    >
-                                                                        <i className="zmdi zmdi-minus"></i>
-                                                                    </a>
-                                                                    <input type="number" value={state.countPaquetes} style={{ width: "40px", textAlign: "center" }} />
-                                                                    <a
-                                                                        className="btn"
-                                                                        style={{ margin: "5px", backgroundColor: "#F9A03E", color: "white" }}
-                                                                        onClick={() => addPaquete()}
-                                                                        disabled={state.agregar == "Consultar"}
-                                                                    >
-                                                                        <i className="zmdi zmdi-plus"></i>
-                                                                    </a>
+                                            <div className="row">
+                                                <div className="col-md-6">
+                                                    <form className="j-forms">
+                                                        <div className="form-content">
+                                                            <h2>Número de Paquetes</h2>
 
-
-
-
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                        <div className="col-md-6">
-                                                            <h2>Número de Sobres</h2>
                                                             <a
                                                                 className="btn"
-                                                                style={{ margin: "10px", backgroundColor: "#F9A03E", color: "white" }}
-                                                                onClick={() => removeSobre()}
+                                                                style={{ margin: "5px", backgroundColor: "#F9A03E", color: "white" }}
+                                                                onClick={() => removePaquete()}
                                                                 disabled={state.agregar == "Consultar"}
                                                             >
                                                                 <i className="zmdi zmdi-minus"></i>
                                                             </a>
-                                                            <input type="number" value={state.countSobres} style={{ width: "40px", textAlign: "center" }} />
-
+                                                            <input type="number" value={state.countPaquetes} style={{ width: "40px", textAlign: "center" }} />
                                                             <a
                                                                 className="btn"
-                                                                style={{ margin: "10px", backgroundColor: "#F9A03E", color: "white" }}
-                                                                onClick={() => addSobre()}
+                                                                style={{ margin: "5px", backgroundColor: "#F9A03E", color: "white" }}
+                                                                onClick={() => addPaquete()}
                                                                 disabled={state.agregar == "Consultar"}
                                                             >
                                                                 <i className="zmdi zmdi-plus"></i>
                                                             </a>
 
+
+
+
                                                         </div>
-                                                    </div>
+                                                    </form>
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <h2>Número de Sobres</h2>
+                                                    <a
+                                                        className="btn"
+                                                        style={{ margin: "10px", backgroundColor: "#F9A03E", color: "white" }}
+                                                        onClick={() => removeSobre()}
+                                                        disabled={state.agregar == "Consultar"}
+                                                    >
+                                                        <i className="zmdi zmdi-minus"></i>
+                                                    </a>
+                                                    <input type="number" value={state.countSobres} style={{ width: "40px", textAlign: "center" }} />
+
+                                                    <a
+                                                        className="btn"
+                                                        style={{ margin: "10px", backgroundColor: "#F9A03E", color: "white" }}
+                                                        onClick={() => addSobre()}
+                                                        disabled={state.agregar == "Consultar"}
+                                                    >
+                                                        <i className="zmdi zmdi-plus"></i>
+                                                    </a>
+
+
+                                                </div>
+                                            </div>
 
 
                                             <div className="widget-container">
@@ -3627,13 +3628,44 @@ function Recoleccion() {
                                                             <form className="j-forms">
                                                                 <div className="form-content">
 
+                                                                    {state.agregar != "Consultar" ?
+                                                                        <div style={{ display: "flex", alignItems: "flex-end" }}>
+                                                                            <div className="input">
+                                                                                <input
+                                                                                    onChange={(event) => { setState({ ...state, mismoPaquete: event.target.checked }) }}
+                                                                                    type="checkbox"
+                                                                                    required
+                                                                                    disabled={state.agregar == "Consultar"}
+                                                                                    value={state.mismoPaquete}
+                                                                                    id="mismoPaquete"
+                                                                                />
+                                                                            </div>
+                                                                            <label className="label" style={{ paddingLeft: "10px" }}>Mismo Paquete</label>
 
+                                                                        </div>
+                                                                        : <span></span>}
                                                                     <Carousel
                                                                         className={classes.paqueteCarrusel}
                                                                         widgets={[IndicatorDots, Buttons]}
                                                                         frames={framesPaquete}
                                                                     ></Carousel>
 
+
+                                                                    {state.agregar != "Consultar" ?
+                                                                        <div style={{ display: "flex", alignItems: "flex-end" }}>
+
+                                                                            <div className="input">
+                                                                                <input
+                                                                                    onChange={(event) => { setState({ ...state, mismoSobre: event.target.checked }) }}
+                                                                                    type="checkbox"
+                                                                                    required
+                                                                                    value={state.mismoSobre}
+                                                                                    id="mismoSobre"
+                                                                                />
+                                                                            </div>
+                                                                            <label className="label" style={{ paddingLeft: "10px" }}>Mismo Sobre</label>
+                                                                        </div>
+                                                                        : <span></span>}
                                                                     <Carousel
                                                                         className={classes.sobreCarrusel}
                                                                         widgets={[IndicatorDots, Buttons]}

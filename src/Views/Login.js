@@ -44,7 +44,7 @@ function Login() {
     const url = `${process.env.REACT_APP_API_URL}/Usuarios/ValidarLogin/` + user + "/" + pass + "/" + rfc;
     axios.get(url, { headers }).then(respuesta => {
       try {
-        debugger;
+        //debugger;
         if (respuesta.data != undefined && respuesta.data.m_sUsuario != undefined && respuesta.data.m_sUsuario != "") {
           console.log(respuesta.data)
           localStorage.setItem("accessToken", true);

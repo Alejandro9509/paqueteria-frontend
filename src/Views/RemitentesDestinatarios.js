@@ -998,7 +998,7 @@ function RemitenteDestinatario(props) {
                                         }
                                         native
                                         type="checkbox"
-                                        value={state.activo}
+                                        checked={state.activo}
                                         id="activo"
                                         name="activo"
                                       />

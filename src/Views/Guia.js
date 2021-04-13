@@ -340,12 +340,12 @@ function Guia(props) {
       });
     } else {
       const url = `${process.env.REACT_APP_API_URL}/Guia/Agregar`;
-      debugger;
+      //debugger;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         showSuccess(respuesta.data)
         //window.location.reload();
         var resp = respuesta.data;
-        debugger;
+        //debugger;
         var vGuia = resp.substring(resp.indexOf(":") + 2);
         getImpresion(vGuia);
       }).catch(err => {
@@ -962,7 +962,7 @@ function handleImprmir2()
         });
         const paquetesTemp = state.paquetes;
         const sobresTemp = state.sobres;
-        //console.log(paquetesTemp);
+        console.log(respuesta.data.m_arrPaquetes);
 
         for (var i = 0; i < respuesta.data.m_arrPaquetes.length; i++) {
 
@@ -970,7 +970,6 @@ function handleImprmir2()
             continue;
 
           paquetesTemp.push({
-
             "peso": respuesta.data.m_arrPaquetes[i].m_xPeso,
             "largo": respuesta.data.m_arrPaquetes[i].m_xLargo,
             "ancho": respuesta.data.m_arrPaquetes[i].m_xAncho,

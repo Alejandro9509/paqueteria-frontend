@@ -1048,7 +1048,6 @@ function Clientes(props) {
       importar: "",
     };
     console.log(JSON.stringify(params));
-    debugger;
     if (state.idCliente != 0) {
       const url =
         `${process.env.REACT_APP_API_URL}/Clientes/Modificar/` +

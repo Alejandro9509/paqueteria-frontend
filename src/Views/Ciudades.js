@@ -133,7 +133,6 @@ function CiudadesCodigoPostal() {
 
   function handleEliminarCodigoPostal(id) {
     var derecho;
-    debugger;
     const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
     axios.get(urlDelete, { headers }).then(respuesta => {
       //showSuccess(respuesta.data)
