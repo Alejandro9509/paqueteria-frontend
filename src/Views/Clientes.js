@@ -615,7 +615,6 @@ function Clientes(props) {
         idCliente: id,
         agregar: "Modificar",
 
-        ModificadoPor: respuesta.data.CreadoPor,
         idCliente: respuesta.data.m_nIdCliente,
         numeroCliente: respuesta.data.m_nNumeroCliente,
         tipoCliente: respuesta.data.m_nTipoCliente,
@@ -1048,6 +1047,7 @@ function Clientes(props) {
       importar: "",
     };
     console.log(JSON.stringify(params));
+    debugger;
     if (state.idCliente != 0) {
       const url =
         `${process.env.REACT_APP_API_URL}/Clientes/Modificar/` +
@@ -1058,7 +1058,7 @@ function Clientes(props) {
         .then((respuesta) => {
           alert(respuesta.data);
 
-          window.location.reload();
+         // window.location.reload();
         })
         .catch((err) => {
           console.log(err);
