@@ -674,6 +674,21 @@ function Embarque(props) {
       datosAdicionalesEntrega: "",
       fechaHoraSalida: "",
       fechaHoraLlegada: "",
+      paquetes: [
+        {
+          m_xPeso: "",
+          m_xLargo: "",
+          m_xAncho: "",
+          m_xAlto: "",
+          m_xVolumen: "",
+          m_nIdTIpoEmpaque: "",
+          m_cValorDeclarado: "",
+          m_sDescripcion: "",
+          ctd: "",
+          m_nTipo: dataEmbalaje[0].m_nIdEmbalaje,
+          m_sObservaciones: "",
+        },
+      ],
       cantidadDePaquetes: 0,
       cantidadDeSobres: 0,
     });

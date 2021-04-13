@@ -749,7 +749,7 @@ function Recoleccion() {
           m_rAncho: "",
           m_rAlto: "",
           m_rVolumen: "",
-          m_nIdTipoEmbalaje: "",
+          m_nIdTipoEmbalaje: dataEmbalaje[0].m_nIdEmbalaje,
           m_cyValorDeclarado: "",
           m_sDescripcion: "",
           m_nCantidad: "",
