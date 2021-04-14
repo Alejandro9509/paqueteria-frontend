@@ -19,7 +19,9 @@ import TextField from "@material-ui/core/TextField";
 import { GridOverlay, DataGrid } from '@material-ui/data-grid';
 import InputAdornment from "@material-ui/core/InputAdornment";
 import LinearProgress from '@material-ui/core/LinearProgress';
-
+import SvgIcon from "@material-ui/core/SvgIcon";
+import { ReactComponent as Activo } from "../iconos/Menu/palomita.svg";
+import { ReactComponent as NoActivo } from "../iconos/Menu/cruz.svg";
 import {
   useTable,
   useFilters,
@@ -76,6 +78,7 @@ function Recoleccion() {
   const [dataSucursal, setDataSucursal] = React.useState([]);
   const [dataEstatusRecoleccion, setEstatusRecoleccion] = React.useState([]);
   const [dataTipoMoneda, setDataTipoMoneda] = React.useState([]);
+  const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
   const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
   const [dataCiudad, setDataCiudad] = React.useState([]);
   const [dataZona, setDataZona] = React.useState([]);
@@ -87,6 +90,9 @@ function Recoleccion() {
   const [dataTipoUnidad, setDataTipoUnidad] = React.useState([]);
   const [dataUnidad, setDataUnidad] = React.useState([]);
   const [state, setState] = React.useState({
+    nombreRemitente: {},
+    nombreDestinatario: {},
+
     shouldOpenList: false,
     showPopUp: false,
     showDialog: false,
@@ -109,7 +115,6 @@ function Recoleccion() {
     moneda: "",
     tipoCambio: "",
     tipoCobro: "",
-    nombreRemitente: {},
     countSobres: 1,
     countPaquetes: 1,
     RFCRemitente: "",
@@ -120,7 +125,6 @@ function Recoleccion() {
     telefonoRemitente: "",
     contactoRemitente: "",
     origenRemitente: 0,
-    nombreDestinatario: {},
     RFCDestinatario: "",
     domicilioDestinatario: "",
     codigoPostalDestinatario: 0,
@@ -207,16 +211,22 @@ function Recoleccion() {
     );
   }
 
-  function handleSelectRemitente() {
+  function handleSelectRemitente(newValue) {
 
     setState({
       ...state,
-      RFCRemitente: state.nombreRemitente ? state.nombreRemitente.m_sRFC : "",
-      domicilioRemitente: state.nombreRemitente ? state.nombreRemitente.m_sNombreCompletoOperador : "",
-      codigoPostalRemitente: state.nombreRemitente ? state.nombreRemitente.m_sCodigoPostal : "",
-      correoRemitente: state.nombreRemitente ? state.nombreRemitente.m_sCorreoElectronico : "",
-      telefonoRemitente: state.nombreRemitente ? state.nombreRemitente.m_sTelefono : "",
-      contactoRemitente: state.nombreRemitente ? state.nombreRemitente.m_sContacto : "",
+      nombreRemitente: newValue,
+      RFCRemitente:newValue.m_sRFC,
+      domicilioRemitente: newValue.m_sDomicilio,
+
+      codigoPostalRemitente: dataCodigoPostal.find(
+        (o) => o.m_nIdCodigoPostal == newValue.m_nIdCodigoPostal
+      ),
+
+
+      correoRemitente: newValue.m_sCorreoElectronico ,
+      telefonoRemitente: newValue.m_sTelefono,
+      contactoRemitente: newValue.m_sContacto,
     })
 
   }
@@ -241,16 +251,25 @@ function Recoleccion() {
     }
   }, [state.mismoSobre])
 
-  function handleSelectDestinatario() {
-    setState({
-      ...state,
-      RFCDestinatario: state.nombreDestinatario ? state.nombreDestinatario.m_sRFC : "",
-      domicilioDestinatario: state.nombreDestinatario ? state.nombreDestinatario.m_sNombreCompletoOperador : "",
-      codigoPostalDestinatario: state.nombreDestinatario ? state.nombreDestinatario.m_sCodigoPostal : "",
-      correoDestinatario: state.nombreDestinatario ? state.nombreDestinatario.m_sCorreoElectronico : "",
-      telefonoDestinatario: state.nombreDestinatario ? state.nombreDestinatario.m_sTelefono : "",
-      contactoDestinatario: state.nombreDestinatario ? state.nombreDestinatario.m_sContacto : "",
-    })
+  function handleSelectDestinatario(newValue) {
+    
+      setState({
+        ...state,
+        nombreDestinatario: newValue,
+        RFCDestinatario:newValue.m_sRFC,
+        domicilioDestinatario: newValue.m_sDomicilio,
+  
+        codigoPostalDestinatario: dataCodigoPostal.find(
+          (o) => o.m_nIdCodigoPostal == newValue.m_nIdCodigoPostal
+        ),
+  
+  
+        correoDestinatario: newValue.m_sCorreoElectronico ,
+        telefonoDestinatario: newValue.m_sTelefono,
+        contactoDestinatario: newValue.m_sContacto,
+      })
+  
+   
 
 
   }
@@ -345,6 +364,13 @@ function Recoleccion() {
           showSuccess(err);
         });
     }
+  };
+
+  function getTipoCambio() {
+    const url = `${process.env.REACT_APP_API_URL}/TipoCambio/GetListado`;
+    axios.get(url, { headers }).then(respuesta => {
+      setDataTipoCambio(respuesta.data)
+    });
   };
 
   function handleSelectCP(id, dobleClick, e) {
@@ -720,6 +746,9 @@ function Recoleccion() {
   function handleShowAgregar() {
     setState({
       ...state,
+      nombreRemitente: dataRemitenteDestinatario[0],
+      nombreDestinatario: dataRemitenteDestinatario[0],
+
       agregar: "Agregar",
       idRecoleccion: 0,
       folioRecoleccion: "",
@@ -731,7 +760,6 @@ function Recoleccion() {
       moneda: 0,
       tipoCambio: "",
       tipoCobro: 0,
-      nombreRemitente: "",
       RFCRemitente: "",
       domicilioRemitente: "",
       codigoPostalRemitente: dataCodigoPostal.length !== 0 ? [0] : null,
@@ -740,7 +768,6 @@ function Recoleccion() {
       telefonoRemitente: "",
       contactoRemitente: "",
       origenRemitente: dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1,
-      nombreDestinatario: "",
       RFCDestinatario: "",
       domicilioDestinatario: "",
       codigoPostalDestinatario: dataCodigoPostal.length !== 0 ? dataCodigoPostal[0] : null,
@@ -1053,12 +1080,25 @@ function Recoleccion() {
       accessor: "m_sNombreCompleto",
     },
     {
-      Name: "Sucursal",
-      accessor: "m_nIdSucursal",
-    },
-    {
       Name: "Activo",
-      accessor: "m_nIdEstado",
+      accessor: "m_bActivo",width: 100,
+      renderCell: (row) => {
+        return (
+          <div
+            style={{
+              width: "100%",
+              textAlign: "center",
+              color: row.row.m_bActivo =='true' ? "green" : "red",
+            }}
+          >
+            {row.row.m_bActivo ? (
+              <SvgIcon component={Activo} />
+            ) : (
+              <SvgIcon component={NoActivo} />
+            )}
+          </div>
+        );
+      },
     },
   ]);
 
@@ -1144,7 +1184,7 @@ function Recoleccion() {
     getAllRemitentesDestinatarios();
     getAllEmbalajes();
     getAllZonas();
-
+    getTipoCambio()
   }, []);
 
   function getAllData() {
@@ -2239,7 +2279,7 @@ function Recoleccion() {
           {state.tipoModal == 2 &&
             <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
               <div align="right">
-                <button onClick={() => { history.push("/Operadores") }} className="btn btn-primary primary-btn">Agregar</button>
+                <button onClick={() => { history.push("/Operador") }} className="btn btn-primary primary-btn">Agregar</button>
 
               </div>
 
@@ -2287,7 +2327,7 @@ function Recoleccion() {
           {state.tipoModal == 5 &&
             <div className="row" style={{ backgroundColor: '#FFFFFF' }} >
               <div align="right">
-                <button onClick={() => { history.push("/Unidades") }} className="btn btn-primary primary-btn">Agregar</button>
+                <button onClick={() => { history.push("/RemitenteDestinatarios") }} className="btn btn-primary primary-btn">Agregar</button>
 
               </div>
 
@@ -2767,22 +2807,32 @@ function Recoleccion() {
                               </label>
                             </div>
 
-                            <div className="col-sm-6 col-md-2-5 col-lg-2-5  unit">
+                            <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                               <label className="label">Tipo de Cambio</label>
-                              <div className="input">
-                                <input
-                                  onChange={handleChange}
+                              <label className="input select">
+                                <select
                                   className="form-control"
-                                  type="number"
-                                  min="0"
-                                  step="0.01"
                                   required
                                   value={state.tipoCambio}
+                                  onChange={handleChange}
                                   disabled={state.agregar == "Consultar"}
                                   id="tipoCambio"
-                                />
-                              </div>
+                                >
+                                  <option value="0">Seleccionar</option>
+                                  {dataTipoCambio.map((cambio) => (
+                                    <option
+                                      key={cambio.m_nIdTipoCambio}
+                                      value={cambio.m_nIdTipoCambio}
+                                    >
+                                      {cambio.m_cTipoCambio}
+                                    </option>
+                                  ))}
+                                </select>
+                                <i className="fa fa-arrow-down" />
+                              </label>
                             </div>
+
+                            
 
                             <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                               <label className="label">Tipo Cobro</label>
@@ -2831,16 +2881,13 @@ function Recoleccion() {
                                     <div className="input">
                                       <Autocomplete
 
-                                        onSelect={() => handleSelectRemitente()}
+                                       
                                         value={state.nombreRemitente}
                                         disabled={state.agregar == "Consultar"}
                                         freeSolo
-                                        onChange={(event, newValue) =>
-                                          setState({
-                                            ...state,
-                                            nombreRemitente: newValue,
-                                          })
-                                        }
+                                        onChange={(event, newValue) => {
+                                          handleSelectRemitente(newValue)
+                                        }}
                                         id="nombreRemitente"
                                         disableClearable
                                         forcePopupIcon={false}
@@ -3204,16 +3251,14 @@ function Recoleccion() {
                                   <label className="label">Nombre</label>
                                   <div className="input">
                                     <Autocomplete
-                                      onSelect={() => handleSelectDestinatario()}
+                                     onChange={(event, newValue) => {
+                                      handleSelectDestinatario(newValue)
+                                    }}
                                       value={state.nombreDestinatario}
                                       disabled={state.agregar == "Consultar"}
                                       freeSolo
-                                      onChange={(event, newValue) =>
-                                        setState({
-                                          ...state,
-                                          nombreDestinatario: newValue,
-                                        })
-                                      }
+                                      
+                                
                                       id="nombreRemitente"
                                       disableClearable
                                       forcePopupIcon={false}
@@ -3700,7 +3745,7 @@ function Recoleccion() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="datetime-local"
-                                          required
+                                          
                                           value={state.fechaRecoleccion}
                                           disabled={state.agregar == "Consultar"}
                                           id="fechaRecoleccion"
@@ -3741,7 +3786,7 @@ function Recoleccion() {
                                           renderInput={(params) => (
                                             <div>
                                               <TextField
-                                                required
+                                                
                                                 {...params}
                                                 InputProps={{
                                                   ...params.InputProps,
@@ -3789,7 +3834,7 @@ function Recoleccion() {
                                       <label className="input select">
                                         <select
                                           className="form-control"
-                                          required
+                                          
                                           value={state.ciudadRecoleccion}
                                           disabled={state.agregar == "Consultar"}
                                           onChange={handleChange}
@@ -3814,7 +3859,7 @@ function Recoleccion() {
                                       <label className="input select">
                                         <select
                                           className="form-control"
-                                          required
+                                          
                                           value={state.zonaRecoleccion}
                                           disabled={state.agregar == "Consultar"}
                                           onChange={handleChange}
@@ -3850,7 +3895,7 @@ function Recoleccion() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
-                                          required
+                                          
                                           value={state.domicilioRecoleccion}
                                           disabled={state.agregar == "Consultar"}
                                           id="domicilioRecoleccion"
@@ -3867,7 +3912,7 @@ function Recoleccion() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
-                                          required
+                                          
                                           value={state.recogerEn}
                                           disabled={state.agregar == "Consultar"}
                                           id="recogerEn"
@@ -3884,7 +3929,7 @@ function Recoleccion() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
-                                          required
+                                          
                                           value={
                                             state.datosAdicionalesRecoleccion
                                           }
@@ -3943,7 +3988,7 @@ function Recoleccion() {
                                           renderInput={(params) => (
                                             <div>
                                               <TextField
-                                                required
+                                                
                                                 {...params}
                                                 InputProps={{
                                                   ...params.InputProps,
