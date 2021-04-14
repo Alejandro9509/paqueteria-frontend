@@ -29,12 +29,12 @@ import { dataGridLocaleText } from '../Constants/index'
 
 import Noty from 'noty';
 
-function showSuccess(mensaje){
+function showSuccess(mensaje) {
   new Noty({
-    type:"information",
-    layout:"topCenter",
+    type: "information",
+    layout: "topCenter",
     text: mensaje,
-    timeout:"3000"
+    timeout: "3000"
   }).show()
 }
 
@@ -68,12 +68,12 @@ function RemitenteDestinatario(props) {
   const [state, setState] = React.useState({
     idRemitenteDestinatario: 0,
     idCliente: {},
-    cliente:{},
+    cliente: {},
     numero: 0,
     nombre: "",
     rfc: "",
     activo: false,
-    DerechoBorrar:50,
+    DerechoBorrar: 50,
     calle: "",
     noExterior: 0,
     noInterior: 0,
@@ -83,9 +83,9 @@ function RemitenteDestinatario(props) {
     idPais: 0,
     idEstado: 0,
     codigoPostal: {},
-    creadoPor: localStorage.getItem("UsuarioId") ,
+    creadoPor: localStorage.getItem("UsuarioId"),
     creadoEl: "",
-    modificadoPor: localStorage.getItem("UsuarioId") ,
+    modificadoPor: localStorage.getItem("UsuarioId"),
     modificadoEl: "",
     contacto: "",
     correoElectronico: "",
@@ -135,31 +135,32 @@ function RemitenteDestinatario(props) {
     });
   }
 
-  function handleSelectCliente() {
+  function handleSelectCliente(newValue) {
 
-   
-    state.rfc = state.cliente.m_sRFC
-    state.nombre= state.cliente.m_sNombreCorto
-    state.idPais=state.cliente.m_nIdPais
-    state.codigoPostal = state.cliente.m_sCodigoPostal
-    state.idEstado = state.cliente.m_nIdEstado
-    state.municipio = state.cliente.m_sMunicipio
-    state.localidad = state.cliente.m_sLocalidad
-    state.colonia = state.cliente.m_sColonia
-    state.calle= state.cliente.m_sCalle
-    state.noExterior=state.cliente.m_sNoExterior
-    state.noInterior=state.cliente.m_sNoInterior
-    state.telefono=state.cliente.m_sCelular
-    state.correoElectronico=state.cliente.m_sCorreoElectronico
-
-
+    setState({
+      ...state,
+      cliente: newValue,
+      rfc: newValue.m_sRFC,
+      nombre: newValue.m_sNombreCorto,
+      idPais: newValue.m_nIdPais,
+      codigoPostal: newValue.m_sCodigoPostal,
+      idEstado: newValue.m_nIdEstado,
+      municipio: newValue.m_sMunicipio,
+      localidad: newValue.m_sLocalidad,
+      colonia: newValue.m_sColonia,
+      calle: newValue.m_sCalle,
+      noExterior: newValue.m_sNoExterior,
+      noInterior: newValue.m_sNoInterior,
+      telefono: newValue.m_sCelular,
+      correoElectronico: newValue.m_sCorreoElectronico,
+    })
   }
 
 
   function handleSelectCodigoPostal() {
-    
+
   }
-  
+
   function handleSelectCP(id, cp) {
     setState({
       ...state,
@@ -271,25 +272,24 @@ function RemitenteDestinatario(props) {
       //showSuccess(respuesta.data)
 
       derecho = respuesta.data;
-      if (derecho == false)
-      {
-        showSuccess ("El usuario no tiene derechos para realizar el proceso");
-        return; 
+      if (derecho == false) {
+        showSuccess("El usuario no tiene derechos para realizar el proceso");
+        return;
       }
-      
-    const url =
-    `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/Eliminar/` + id;
-  axios
-    .delete(url, { headers })
-    .then((respuesta) => {
-      showSuccess(respuesta.data);
-      getAllDataRemDes();
-    })
-    .catch((err) => {
-      showSuccess(err);
-    });
-	}).catch(err => {
-    showSuccess(err)
+
+      const url =
+        `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/Eliminar/` + id;
+      axios
+        .delete(url, { headers })
+        .then((respuesta) => {
+          showSuccess(respuesta.data);
+          getAllDataRemDes();
+        })
+        .catch((err) => {
+          showSuccess(err);
+        });
+    }).catch(err => {
+      showSuccess(err)
     });
   }
 
@@ -486,7 +486,7 @@ function RemitenteDestinatario(props) {
       [event.target.id]: event.target.value,
     });
   };
-  
+
   function handleSelectRow(id, event) {
     setState({
       ...state,
@@ -560,7 +560,7 @@ function RemitenteDestinatario(props) {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr style={{backgroundColor: row.original.m_nIdCP === select ? "orange" : "white"}}  {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)} onDoubleClick={close}>
+                  <tr style={{ backgroundColor: row.original.m_nIdCP === select ? "orange" : "white" }}  {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)} onDoubleClick={close}>
                     {row.cells.map(cell => {
                       return (
                         <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
@@ -619,11 +619,11 @@ function RemitenteDestinatario(props) {
                         column.isSortedDesc ? (
                           <i className="fa fa-caret-up" />
                         ) : (
-                            <i className="fa fa-caret-down" />
-                          )
+                          <i className="fa fa-caret-down" />
+                        )
                       ) : (
-                          ""
-                        )}
+                        ""
+                      )}
                     </span>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
@@ -638,9 +638,9 @@ function RemitenteDestinatario(props) {
               prepareRow(row);
               return (
                 <tr {...row.getRowProps()}
-                onClick={handleSelectRow.bind(this, row.original.m_nIdRemitenteDestinatario)}
-                className={state.idRemitenteDestinatario === row.original.m_nIdRemitenteDestinatario ? classes.seleccionado : classes.noSeleccionado}>
-                <td>
+                  onClick={handleSelectRow.bind(this, row.original.m_nIdRemitenteDestinatario)}
+                  className={state.idRemitenteDestinatario === row.original.m_nIdRemitenteDestinatario ? classes.seleccionado : classes.noSeleccionado}>
+                  <td>
                     <div>
                       <a
                         href="#Agregar"
@@ -649,7 +649,7 @@ function RemitenteDestinatario(props) {
                         onClick={() => handleShowModificar(row.original.m_nIdRemitenteDestinatario)}
                         className="btn btn-default btn-sm"
                       >
-                        <i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} />
+                        <i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} />
                       </a>
 
                       <a
@@ -661,7 +661,7 @@ function RemitenteDestinatario(props) {
                           )
                         }
                       >
-                        <i className="fa fa-eye" style={{color:"#F9A03E"}} /> 
+                        <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
                       </a>
                       <a
                         href="#"
@@ -672,7 +672,7 @@ function RemitenteDestinatario(props) {
                           )
                         }
                       >
-                        <i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} />
+                        <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
                       </a>
                     </div>
                   </td>
@@ -756,7 +756,7 @@ function RemitenteDestinatario(props) {
               (row, i) => {
                 prepareRow(row);
                 return (
-                  <tr style={{backgroundColor: row.original.m_nIdCP === select ? "orange" : "white"}}  {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original)} onDoubleClick={close}>
+                  <tr style={{ backgroundColor: row.original.m_nIdCP === select ? "orange" : "white" }}  {...row.getRowProps()} onClick={handleSelectCliente.bind(this, row.original)} onDoubleClick={close}>
                     {row.cells.map(cell => {
                       return (
                         <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
@@ -773,8 +773,7 @@ function RemitenteDestinatario(props) {
   }
 
   useEffect((value) => {
-    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
-    {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
       showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
@@ -819,28 +818,28 @@ function RemitenteDestinatario(props) {
 
   return (
     <div>
-  <Modal style={{height:"400px"}}>  
-      {state.tipoModal == 0 && 
-      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-        {dataClientes.length != 0 ? <TableClientes select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCliente} columns={columnsCliente} data={dataClientes} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-       <br></br>
-       <br></br>
-       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
-       <button onClick={() => {history.push("/Clientes")}} className="btn btn-primary primary-btn">Agregar</button>
-    </div>
-      }
-     
-      {state.tipoModal == 1 && 
-      <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-        {dataCodigoPostal.length != 0 ? <TableCodigoPostal select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP} columns={columnsCP} data={dataCodigoPostal} identificadorModal = {state.identificadorModal}/> : <div>No se encontró ningún registro</div>}
-       <br></br>
-       <br></br>
-       <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
-       <button onClick={() => {history.push("/Ciudades")}} className="btn btn-primary primary-btn">Agregar</button>
-    </div>
-}
-    
-  </Modal>
+      <Modal style={{ height: "400px" }}>
+        {state.tipoModal == 0 &&
+          <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+            {dataClientes.length != 0 ? <TableClientes select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCliente} columns={columnsCliente} data={dataClientes} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
+            <br></br>
+            <br></br>
+            <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+            <button onClick={() => { history.push("/Clientes") }} className="btn btn-primary primary-btn">Agregar</button>
+          </div>
+        }
+
+        {state.tipoModal == 1 &&
+          <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+            {dataCodigoPostal.length != 0 ? <TableCodigoPostal select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP} columns={columnsCP} data={dataCodigoPostal} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
+            <br></br>
+            <br></br>
+            <button onClick={close} className="btn btn-secondary secondary-btn">Cerrar</button>
+            <button onClick={() => { history.push("/Ciudades") }} className="btn btn-primary primary-btn">Agregar</button>
+          </div>
+        }
+
+      </Modal>
 
 
 
@@ -911,20 +910,20 @@ function RemitenteDestinatario(props) {
           >
             <div className="widget-wrap">
               <div className="widget-content">
-              <div className="row" style={{ height: state.height - 250, width: '100%' }}>
-                    {data.length != 0 ? (
-                      <DataGrid
-                        localeText={dataGridLocaleText}
-                        rows={data}
-                        columns={columns}
-                        density="compact"
-                        pageSize={Math.floor((state.height - 310) / 30)}
-                        getRowId={(row) => row.m_nIdRemitenteDestinatario}
-                      />
-                    ) : (
-                      <div>No se encontró ningún registro</div>
-                    )}
-                  </div>
+                <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                  {data.length != 0 ? (
+                    <DataGrid
+                      localeText={dataGridLocaleText}
+                      rows={data}
+                      columns={columns}
+                      density="compact"
+                      pageSize={Math.floor((state.height - 310) / 30)}
+                      getRowId={(row) => row.m_nIdRemitenteDestinatario}
+                    />
+                  ) : (
+                    <div>No se encontró ningún registro</div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -999,20 +998,16 @@ function RemitenteDestinatario(props) {
                                     </div>
                                   </div>
                                   <div className="col-sm-6 col-md-2-5 unit">
-                                  <label className="label">
+                                    <label className="label">
                                       Cliente
                                     </label>
                                     <div className="input">
                                       <Autocomplete
                                         value={state.cliente}
                                         freeSolo
-                                        onChange={(event, newValue) =>
-                                          setState({
-                                            ...state,
-                                            cliente: newValue,
-                                          }),
-                                          handleSelectCliente()
-                                        }
+                                        onChange={(event, newValue) => {
+                                          handleSelectCliente(newValue)
+                                        }}
                                         id="cliente"
                                         disableClearable
                                         forcePopupIcon={false}
@@ -1026,7 +1021,7 @@ function RemitenteDestinatario(props) {
                                           borderColor: "#dddddd",
                                           borderStyle: "solid",
                                           borderRadius: "5px",
-                                          
+
                                         }}
                                         renderInput={(params) => (
                                           <div>
@@ -1122,26 +1117,26 @@ function RemitenteDestinatario(props) {
                                         {dataPais.length < 1 ? (
                                           <option value="none">País</option>
                                         ) : (
-                                            dataPais.map((pais) => (
-                                              <option
-                                                key={pais.m_nIdPais}
-                                                value={pais.m_nIdPais}
-                                              >
-                                                {pais.m_sPais}
-                                              </option>
-                                            ))
-                                          )}
+                                          dataPais.map((pais) => (
+                                            <option
+                                              key={pais.m_nIdPais}
+                                              value={pais.m_nIdPais}
+                                            >
+                                              {pais.m_sPais}
+                                            </option>
+                                          ))
+                                        )}
                                       </select>
                                       <i></i>
                                     </label>
                                   </div>
                                   <div class="col-md-4 unit">
-                                  <label className="label">
+                                    <label className="label">
                                       Código Postal
                                     </label>
                                     <div className="input">
                                       <Autocomplete
-                                         onSelect={handleSelectCodigoPostal()}
+                                        onSelect={handleSelectCodigoPostal()}
 
                                         value={state.codigoPostal}
                                         freeSolo
@@ -1164,7 +1159,7 @@ function RemitenteDestinatario(props) {
                                           borderColor: "#dddddd",
                                           borderStyle: "solid",
                                           borderRadius: "5px",
-                                          
+
                                         }}
                                         renderInput={(params) => (
                                           <div>
@@ -1228,12 +1223,12 @@ function RemitenteDestinatario(props) {
                                         {dataEstado.length < 1 ? (
                                           <option value="none">Estados</option>
                                         ) : (
-                                            dataEstado.map((estado) => (
-                                              <option value={estado.m_nIdEstado}>
-                                                {estado.m_sEstado}
-                                              </option>
-                                            ))
-                                          )}
+                                          dataEstado.map((estado) => (
+                                            <option value={estado.m_nIdEstado}>
+                                              {estado.m_sEstado}
+                                            </option>
+                                          ))
+                                        )}
                                       </select>
                                       <i></i>
                                     </label>
