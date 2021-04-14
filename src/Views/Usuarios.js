@@ -650,7 +650,6 @@ function Usuarios() {
                               <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 inline-group" style={{ paddingTop: "20px", marginBottom: "15px" }}>
                                 <label className="checkbox">
                                   <input
-                                    required
                                     disabled={state.agregar == "Consultar"}
                                     native="true"
                                     checked={state.activo}
