@@ -1,5 +1,5 @@
 import React, { useEffect, useState, setData, useMemo, Component } from "react";
-import { remove_array_element } from "../Util/Util";
+import { cubicarGuias, remove_array_element } from "../Util/Util";
 import {
     ButtonBase,
     Checkbox,
@@ -17,6 +17,8 @@ import {
     ListItemSecondaryAction,
     ListItemText,
 } from "@material-ui/core";
+
+import { trackPromise } from "react-promise-tracker";
 
 import DataTable from "react-data-table-component";
 import $ from "jquery";
@@ -120,18 +122,16 @@ function Informes({ history }) {
     const [dataUnidades, setDataUnidades] = React.useState([]);
     const [dataGuias, setDataGuias] = React.useState([]);
     const [dataViajes, setDataViajes] = React.useState([]);
-
+    const [dataGuiasCubicar, setDataGuiasCubicar] = React.useState([]);
 
     function getAllDataRutas() {
         const url = `${process.env.REACT_APP_API_URL}/Rutas/GetListado`;
         axios.get(url, { headers }).then((respuesta) => {
-            console.log(respuesta.data);
             setDataRutas(respuesta.data);
         });
     }
 
     const handleChange = (event) => {
-        console.log(event.target.id + " : " + event.target.value);
         setState({
             ...state,
             [event.target.id]: event.target.value,
@@ -139,7 +139,6 @@ function Informes({ history }) {
     };
 
     function handleSelectCP(id, dobleClick, e) {
-        console.log(id);
         clearTimeout(timer);
         if (e.detail === 1) {
             timer = setTimeout(() => {
@@ -157,7 +156,6 @@ function Informes({ history }) {
             });
         }
 
-        console.log(dobleClick);
     }
 
     function getAllGuias() {
@@ -1184,7 +1182,6 @@ function Informes({ history }) {
         var params = {
             m_arrClsInformesGuias: state.Informes,
         };
-        console.log(JSON.stringify(params));
         debugger;
         if (state.idEmbarque != 0) {
             const url = `${process.env.REACT_APP_API_URL}/Informes/Modificar/${state.IdInforme}`;
@@ -1195,7 +1192,6 @@ function Informes({ history }) {
                     getAllData();
                 })
                 .catch((err) => {
-                    console.log(err);
                     showSuccess("El Usuario no tiene derecho para modificar");
                 });
         } else {
@@ -1204,11 +1200,9 @@ function Informes({ history }) {
                 .post(url, Object.assign({}, params), { headers })
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
-                    console.log(respuesta.data);
                     getAllData();
                 })
                 .catch((err) => {
-                    console.log(err);
                     showSuccess(err);
                 });
         }
@@ -1216,7 +1210,9 @@ function Informes({ history }) {
 
     function cubicarAccion(e) {
         e.preventDefault()
-        console.log(state)
+        getAllGuiasFrom(true)
+
+
     }
     function addInformeGuia() {
         const { Informes } = state;
@@ -1265,14 +1261,12 @@ function Informes({ history }) {
             sucursalCancelacion: {},
             sePuedeCancelar: false,
         });
-        console.log(Informes);
         setState({ ...state, Informes: Informes });
     }
 
     function removeInformeGuia(index) {
         var { Informes } = state;
         Informes = remove_array_element(Informes, index);
-        console.log(Informes);
         setState({ ...state, Informes: Informes });
     }
 
@@ -1289,7 +1283,6 @@ function Informes({ history }) {
         const newGuia = [...dataGuias];
 
         newGuia[index]["select"] = newGuia[index].select ? false : true;
-        console.log(newGuia);
         setDataGuias(newGuia);
     };
 
@@ -1304,8 +1297,6 @@ function Informes({ history }) {
         const url = `${process.env.REACT_APP_API_URL}/Informes/GetById/${state.IdInforme}`;
         var today = new Date();
         axios.get(url, { headers }).then((respuesta) => {
-            console.log(respuesta.data);
-            console.log(respuesta.data.m_nSePuedeCancelar);
             setState({
                 ...state,
                 FolioInforme: respuesta.data.m_nIdInforme,
@@ -1346,23 +1337,35 @@ function Informes({ history }) {
         });
     };
 
-    function getAllGuiasFrom() {
-        const url =
-            `${process.env.REACT_APP_API_URL}/Guia/GetListadoPendientes/` +
+    function getAllGuiasFrom(cubicar) {
+        console.log("hola")
+        const url = !cubicar ?
+            (`${process.env.REACT_APP_API_URL}/Guia/GetListadoPendientes/` +
             state.IdCiudadOrigen.m_nIdCiudad +
             "/" +
-            state.IdCiudadDestino.m_nIdCiudad;
-        axios.get(url, { headers }).then((respuesta) => {
-            console.log(respuesta.data);
-            setDataGuias(respuesta.data);
-        });
+            state.IdCiudadDestino.m_nIdCiudad) : (`${process.env.REACT_APP_API_URL}/Guia/GetListado` );
+
+
+        trackPromise(
+            axios.get(url, { headers }).then(async (respuesta) => {
+                setDataGuias(respuesta.data);
+                if (cubicar) {
+                    let array = await cubicarGuias(respuesta.data, state.IdCiudadOrigen, state.IdCiudadDestino, state.IdUnidad, state.remolqueSecundario)
+
+                    setInformes(array)
+                }
+            })
+        );
     }
+
+    
+
+
+
 
     function getAllCiudades() {
         const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
         axios.get(url, { headers }).then((respuesta) => {
-            console.log(respuesta);
-
             setDataOrigenes(respuesta.data);
         });
     }
@@ -1375,11 +1378,9 @@ function Informes({ history }) {
         });
     }
 
-    function getAllUnidades() {
-        const url = `${process.env.REACT_APP_API_URL}/Unidades/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
-            console.log(respuesta);
-
+    async function getAllUnidades(id) {
+        const url = `${process.env.REACT_APP_API_URL}/Unidades/ByTipoUnidad/${id}`;
+        await axios.get(url, { headers }).then((respuesta) => {
             setDataUnidades(respuesta.data);
         });
     }
@@ -1387,8 +1388,6 @@ function Informes({ history }) {
     function getAllOperadores() {
         const url = `${process.env.REACT_APP_API_URL}/Operadores/GetListado`;
         axios.get(url, { headers }).then((respuesta) => {
-            console.log(respuesta);
-
             setDataOperadores(respuesta.data);
         });
     }
@@ -1410,10 +1409,6 @@ function Informes({ history }) {
     function getAllViajesOrigenDestino(origen, destino) {
         const url = `http://localhost/Informes/GetViajes/` + origen + `/` + destino;
         axios.get(url, { headers }).then((respuesta) => {
-            console.log("servicio viajes");
-            console.log(origen);
-            console.log(destino);
-            console.log(respuesta.data);
             setDataViajes(respuesta.data);
         });
     }
@@ -1432,10 +1427,8 @@ function Informes({ history }) {
     }
 
     function handleShowModificar(id) {
-        console.log(id);
         const url = `${process.env.REACT_APP_API_URL}/Unidadd/GetById/` + id;
         axios.get(url, { headers }).then((respuesta) => {
-            console.log(respuesta.data);
             setState({
                 ...state,
             });
@@ -1472,7 +1465,6 @@ function Informes({ history }) {
     }
 
     const handleChangeOrigenChange = (event) => {
-        console.log(event.target.value);
 
         setState({
             ...state,
@@ -1483,12 +1475,11 @@ function Informes({ history }) {
     };
 
     const handleChangeDestinoChange = (event) => {
-        console.log(state.IdCiudadDestino);
         setState({
             ...state,
             idDestino: event.target.value,
         });
-        getAllGuiasFrom();
+        getAllGuiasFrom(false);
     };
 
     useEffect((value) => {
@@ -1613,7 +1604,7 @@ function Informes({ history }) {
                                                                         <option value="0">Todas</option>
                                                                         {dataSucursal.map((sucursal) => (
                                                                             <option
-                                                                                key={sucursal.m_nIdSucursal}
+                                                                                key={sucursal.m_sSucursal}
                                                                                 value={sucursal.m_nIdSucursal}
                                                                             >
                                                                                 {sucursal.m_sSucursal}
@@ -2067,7 +2058,7 @@ function Informes({ history }) {
                                                                             })
                                                                         }
                                                                         onSelect={() => {
-                                                                            getAllGuiasFrom();
+                                                                            getAllGuiasFrom(false);
                                                                             getAllViajesOrigenDestino(
                                                                                 state.IdCiudadOrigen.m_nIdCiudad,
                                                                                 state.IdCiudadDestino.m_nIdCiudad
@@ -2120,7 +2111,7 @@ function Informes({ history }) {
                                                                                                             state.IdCiudadDestino
                                                                                                                 .m_nIdCiudad
                                                                                                         );
-                                                                                                        getAllGuiasFrom();
+                                                                                                        getAllGuiasFrom(false);
                                                                                                     }}
                                                                                                 >
                                                                                                     <PageviewIcon
@@ -3182,12 +3173,12 @@ function Informes({ history }) {
                                                                 onChange={(event, newValue) =>
                                                                     setState({
                                                                         ...state,
-                                                                        origenRemitente: newValue,
+                                                                        IdCiudadOrigen: newValue,
                                                                     })
                                                                 }
-                                                                value={state.origenRemitente || ''}
+                                                                value={state.IdCiudadOrigen || ''}
                                                                 disabled={state.agregar == "Consultar"}
-                                                                id="origenRemitente"
+                                                                id="IdCiudadOrigen"
                                                                 disableClearable
                                                                 forcePopupIcon={false}
                                                                 options={dataOrigenes}
@@ -3224,7 +3215,7 @@ function Informes({ history }) {
                                                                                                 setState({
                                                                                                     ...state,
                                                                                                     identificadorModal:
-                                                                                                        "origenRemitente",
+                                                                                                        "IdCiudadOrigen",
                                                                                                     tipoModal: 1,
                                                                                                     openDialog: true
                                                                                                 });
@@ -3252,19 +3243,19 @@ function Informes({ history }) {
                                                         </div>
                                                     </div>
                                                     <div className="row">
-                                                        <label className="label">Origen</label>
+                                                        <label className="label">Destino</label>
                                                         <div className="input">
                                                             <Autocomplete
                                                                 freeSolo
                                                                 onChange={(event, newValue) =>
                                                                     setState({
                                                                         ...state,
-                                                                        origenRemitente: newValue,
+                                                                        IdCiudadDestino: newValue,
                                                                     })
                                                                 }
-                                                                value={state.destinoRemitente || ''}
+                                                                value={state.IdCiudadDestino || ''}
                                                                 disabled={state.agregar == "Consultar"}
-                                                                id="destinoRemitente"
+                                                                id="IdCiudadDestino"
                                                                 disableClearable
                                                                 forcePopupIcon={false}
                                                                 options={dataOrigenes}
@@ -3302,7 +3293,7 @@ function Informes({ history }) {
                                                                                                 setState({
                                                                                                     ...state,
                                                                                                     identificadorModal:
-                                                                                                        "destinoRemitente",
+                                                                                                        "IdCiudadDestino",
                                                                                                     tipoModal: 1,
                                                                                                     openDialog: true
                                                                                                 });
@@ -3408,14 +3399,14 @@ function Informes({ history }) {
                                                         <div className="input">
                                                             <Autocomplete
                                                                 freeSolo
-                                                                value={state.remolque2 || ''}
+                                                                value={state.remolqueSecundario || ''}
                                                                 onChange={(event, newValue) =>
                                                                     setState({
                                                                         ...state,
-                                                                        remolque2: newValue,
+                                                                        remolqueSecundario: newValue,
                                                                     })
                                                                 }
-                                                                id="remolque2"
+                                                                id="remolqueSecundario"
                                                                 disableClearable
                                                                 forcePopupIcon={false}
                                                                 options={dataUnidades}
@@ -3450,7 +3441,7 @@ function Informes({ history }) {
                                                                                                 setState({
                                                                                                     ...state,
                                                                                                     identificadorModal:
-                                                                                                        "remolque2",
+                                                                                                        "remolqueSecundario",
                                                                                                     tipoModal: 4,
                                                                                                     openDialog: true,
                                                                                                 });
@@ -3491,14 +3482,40 @@ function Informes({ history }) {
                                                     </div>
                                                 </form>
                                             </div>
-                                            <div className="col-sm-12 col-md-4 col-lg-4 unit" style={{ backgroundColor: "#ACACAC" }}>
+                                            <div className="col-sm-12 col-md-4 col-lg-4 unit" >
                                                 {
-                                                    <div>
-                                                        <h4 style={{color: "white"}}>Informes: {informes.length}</h4>
+                                                    <div style={{ backgroundColor: "#ACACAC", minHeight:"400px" }}>
+                                                        <h4 style={{ color: "white", padding: "5px" }}>Informes: {informes.length}</h4>
                                                         {informes.map((i, index) => (
-                                                            <div>
-                                                                <div style={{float: "left"}}>{informes.folio} - {informes.destino.m_sCiudad}</div>
-                                                                <div style={{float: "right"}}></div>
+                                                            <div style={{ padding: "10px" }}>
+
+
+                                                                <table style={{ backgroundColor: "white", height: "100%", width: "100%", overflow: "scroll" }}>
+                                                                    <thead>
+                                                                        <tr style={{ backgroundColor: "#F9A03E" }}>
+                                                                            <th tyle={{ paddingLeft: "5px" }}>F1-00000{index} - {i[0].destino}</th>
+                                                                            <th></th>
+                                                                            <th style={{ textAlign: "right", paddingRight: "5px" }}> Guias - {i.length}</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tr style={{ backgroundColor: "#E6E6E6" }}>
+                                                                        <th>Guía</th>
+                                                                        <th>Destino</th>
+                                                                        <th>Paquetes</th>
+                                                                    </tr>
+                                                                    {
+                                                                        i.map(g => (
+
+                                                                            <tr onClick={() => setState({ ...state, guiaSelected: g })}>
+                                                                                <td>{g.folio}</td>
+                                                                                <td>{g.destino}</td>
+                                                                                <td style={{ textAlign: "center" }}>{g.paquetes}</td>
+                                                                            </tr>
+                                                                        ))
+                                                                    }
+
+                                                                </table>
+
                                                             </div>
                                                         ))}
                                                     </div>
@@ -3507,8 +3524,146 @@ function Informes({ history }) {
 
                                             </div>
                                             <div className="col-sm-12 col-md-4 col-lg-4 unit">
-
+                                                {
+                                                    state.guiaSelected &&
+                                                    <div style={{ backgroundColor: "#E6E6E6" }}>
+                                                        <h4 style={{ color: "#717171", padding: "5px" }}>Detalles de Guía {state.guiaSelected.folio}</h4>
+                                                        {state.guiaSelected.arrayPaquetes.map((p, index) => (
+                                                            <div style={{ color: "#707070", padding: "5px" }}>
+                                                                <h4 >Paquete {index + 1}</h4>
+                                                                <div className="row">
+                                                                    <div className="col-sm-12 col-md-2 col-lg-2 unit">
+                                                                        <label className="label" style={{ color: "#848484" }}>Peso </label>
+                                                                        <div className="input" >
+                                                                            <input
+                                                                                style={{ backgroundColor: "#FFFFFF" }}
+                                                                                className="form-control"
+                                                                                type="text"
+                                                                                disabled
+                                                                                value={p.m_xPeso}
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-sm-12 col-md-2 col-lg-2 unit">
+                                                                        <label className="label" style={{ color: "#848484" }}>Largo </label>
+                                                                        <div className="input" >
+                                                                            <input
+                                                                                style={{ backgroundColor: "#FFFFFF" }}
+                                                                                className="form-control"
+                                                                                type="text"
+                                                                                disabled
+                                                                                value={p.m_xLargo}
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-sm-12 col-md-2 col-lg-2 unit">
+                                                                        <label className="label" style={{ color: "#848484" }}>Ancho </label>
+                                                                        <div className="input" >
+                                                                            <input
+                                                                                style={{ backgroundColor: "#FFFFFF" }}
+                                                                                className="form-control"
+                                                                                type="text"
+                                                                                disabled
+                                                                                value={p.m_xAncho}
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-sm-12 col-md-2 col-lg-2 unit">
+                                                                        <label className="label" style={{ color: "#848484" }}>Alto </label>
+                                                                        <div className="input" >
+                                                                            <input
+                                                                                style={{ backgroundColor: "#FFFFFF" }}
+                                                                                className="form-control"
+                                                                                type="text"
+                                                                                disabled
+                                                                                value={p.m_xAlto}
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-sm-12 col-md-3 col-lg-3 unit">
+                                                                        <label className="label" style={{ color: "#848484" }}>Volumen </label>
+                                                                        <div className="input" >
+                                                                            <input
+                                                                                style={{ backgroundColor: "#FFFFFF" }}
+                                                                                className="form-control"
+                                                                                type="text"
+                                                                                disabled
+                                                                                value={p.m_xAlto * p.m_xAlto * p.m_xLargo}
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-sm-12 col-md-6 col-lg-3 unit">
+                                                                        <label className="label" style={{ color: "#848484" }}>Tipo embalaje </label>
+                                                                        <div className="input" >
+                                                                            <input
+                                                                                style={{ backgroundColor: "#FFFFFF" }}
+                                                                                className="form-control"
+                                                                                type="text"
+                                                                                disabled
+                                                                                value={""}
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-sm-12 col-md-6 col-lg-3 unit">
+                                                                        <label className="label" style={{ color: "#848484" }}>Valor Declarado </label>
+                                                                        <div className="input" >
+                                                                            <input
+                                                                                style={{ backgroundColor: "#FFFFFF" }}
+                                                                                className="form-control"
+                                                                                type="text"
+                                                                                disabled
+                                                                                value={p.m_cValorDeclarado}
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-sm-12 col-md-12 col-lg-3 unit">
+                                                                        <label className="label" style={{ color: "#848484" }}>Descripción </label>
+                                                                        <div className="input" >
+                                                                            <input
+                                                                                style={{ backgroundColor: "#FFFFFF" }}
+                                                                                className="form-control"
+                                                                                type="text"
+                                                                                disabled
+                                                                                value={p.m_sDescripcion}
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-sm-12 col-md-12 col-lg-3 unit">
+                                                                        <label className="label" style={{ color: "#848484" }}>Ctd </label>
+                                                                        <div className="input" >
+                                                                            <input
+                                                                                style={{ backgroundColor: "#FFFFFF" }}
+                                                                                className="form-control"
+                                                                                type="text"
+                                                                                disabled
+                                                                                value={p.ctd}
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-sm-12 col-md-12 unit">
+                                                                        <label className="label" style={{ color: "#848484" }}>Observaciones </label>
+                                                                        <div className="input" >
+                                                                            <input
+                                                                                style={{ backgroundColor: "#FFFFFF" }}
+                                                                                className="form-control"
+                                                                                type="text"
+                                                                                disabled
+                                                                                value={p.m_sObservaciones}
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                }
                                             </div>
+                                            <div className="form-footer" className="col-md-12" style={{padding:"10px"}} align="center">
+                                                <button className="btn btn-primary primary-btn" style={{margin:"10px"}}>Aceptar</button>
+
+                                                <button className="btn btn-secondary primary-btn" style={{margin:"10px"}}>Cancelar</button>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -3517,7 +3672,7 @@ function Informes({ history }) {
                     </div>
                 </div>
             </section>
-        </div>
+        </div >
     );
 }
 
