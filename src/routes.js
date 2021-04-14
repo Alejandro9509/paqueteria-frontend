@@ -5,7 +5,7 @@ import GuiaPage from './Views/Guia';
 import InformesPage from './Views/Informes'
 import CatalogosPage from './Views/Catalogos';
 import ConfiguracionPage from './Views/Configuracion';
-
+import InicadoresPage from './Views/Indicadores';
 
 
 import {ReactComponent as ConfiguracionIcon} from './iconos/Menu/IconoConfiguraciones/iconoConfiguraciones.svg';
@@ -19,10 +19,10 @@ import {ReactComponent as viajeIcon} from './iconos/Menu/IconoViajes/iconoViajes
 
 const dashboardRoutes = [
   {
-    path: "/Departamento",
+    path: "/Indicadores",
     name: "Indicadores",
     icon: IndicadoresIcon,
-    component: DepartamentoPage,
+    component: InicadoresPage,
     single: true,
     child:[]
   },
