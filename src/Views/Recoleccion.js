@@ -87,6 +87,9 @@ function Recoleccion() {
   const [dataTipoUnidad, setDataTipoUnidad] = React.useState([]);
   const [dataUnidad, setDataUnidad] = React.useState([]);
   const [state, setState] = React.useState({
+    nombreRemitente: {},
+    nombreDestinatario: {},
+
     shouldOpenList: false,
     showPopUp: false,
     showDialog: false,
@@ -109,7 +112,6 @@ function Recoleccion() {
     moneda: "",
     tipoCambio: "",
     tipoCobro: "",
-    nombreRemitente: {},
     countSobres: 1,
     countPaquetes: 1,
     RFCRemitente: "",
@@ -120,7 +122,6 @@ function Recoleccion() {
     telefonoRemitente: "",
     contactoRemitente: "",
     origenRemitente: 0,
-    nombreDestinatario: {},
     RFCDestinatario: "",
     domicilioDestinatario: "",
     codigoPostalDestinatario: 0,
@@ -207,16 +208,22 @@ function Recoleccion() {
     );
   }
 
-  function handleSelectRemitente() {
+  function handleSelectRemitente(newValue) {
 
     setState({
       ...state,
-      RFCRemitente: state.nombreRemitente ? state.nombreRemitente.m_sRFC : "",
-      domicilioRemitente: state.nombreRemitente ? state.nombreRemitente.m_sNombreCompletoOperador : "",
-      codigoPostalRemitente: state.nombreRemitente ? state.nombreRemitente.m_sCodigoPostal : "",
-      correoRemitente: state.nombreRemitente ? state.nombreRemitente.m_sCorreoElectronico : "",
-      telefonoRemitente: state.nombreRemitente ? state.nombreRemitente.m_sTelefono : "",
-      contactoRemitente: state.nombreRemitente ? state.nombreRemitente.m_sContacto : "",
+      nombreRemitente: newValue,
+      RFCRemitente:newValue.m_sRFC,
+      domicilioRemitente: newValue.m_sDomicilio,
+
+      codigoPostalRemitente: dataCodigoPostal.find(
+        (o) => o.m_nIdCodigoPostal == newValue.m_nIdCodigoPostal
+      ),
+
+
+      correoRemitente: newValue.m_sCorreoElectronico ,
+      telefonoRemitente: newValue.m_sTelefono,
+      contactoRemitente: newValue.m_sContacto,
     })
 
   }
@@ -241,16 +248,25 @@ function Recoleccion() {
     }
   }, [state.mismoSobre])
 
-  function handleSelectDestinatario() {
-    setState({
-      ...state,
-      RFCDestinatario: state.nombreDestinatario ? state.nombreDestinatario.m_sRFC : "",
-      domicilioDestinatario: state.nombreDestinatario ? state.nombreDestinatario.m_sNombreCompletoOperador : "",
-      codigoPostalDestinatario: state.nombreDestinatario ? state.nombreDestinatario.m_sCodigoPostal : "",
-      correoDestinatario: state.nombreDestinatario ? state.nombreDestinatario.m_sCorreoElectronico : "",
-      telefonoDestinatario: state.nombreDestinatario ? state.nombreDestinatario.m_sTelefono : "",
-      contactoDestinatario: state.nombreDestinatario ? state.nombreDestinatario.m_sContacto : "",
-    })
+  function handleSelectDestinatario(newValue) {
+    
+      setState({
+        ...state,
+        nombreDestinatario: newValue,
+        RFCDestinatario:newValue.m_sRFC,
+        domicilioDestinatario: newValue.m_sDomicilio,
+  
+        codigoPostalDestinatario: dataCodigoPostal.find(
+          (o) => o.m_nIdCodigoPostal == newValue.m_nIdCodigoPostal
+        ),
+  
+  
+        correoDestinatario: newValue.m_sCorreoElectronico ,
+        telefonoDestinatario: newValue.m_sTelefono,
+        contactoDestinatario: newValue.m_sContacto,
+      })
+  
+   
 
 
   }
@@ -720,6 +736,9 @@ function Recoleccion() {
   function handleShowAgregar() {
     setState({
       ...state,
+      nombreRemitente: dataRemitenteDestinatario[0],
+      nombreDestinatario: dataRemitenteDestinatario[0],
+
       agregar: "Agregar",
       idRecoleccion: 0,
       folioRecoleccion: "",
@@ -731,7 +750,6 @@ function Recoleccion() {
       moneda: 0,
       tipoCambio: "",
       tipoCobro: 0,
-      nombreRemitente: "",
       RFCRemitente: "",
       domicilioRemitente: "",
       codigoPostalRemitente: dataCodigoPostal.length !== 0 ? [0] : null,
@@ -740,7 +758,6 @@ function Recoleccion() {
       telefonoRemitente: "",
       contactoRemitente: "",
       origenRemitente: dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1,
-      nombreDestinatario: "",
       RFCDestinatario: "",
       domicilioDestinatario: "",
       codigoPostalDestinatario: dataCodigoPostal.length !== 0 ? dataCodigoPostal[0] : null,
@@ -2831,16 +2848,13 @@ function Recoleccion() {
                                     <div className="input">
                                       <Autocomplete
 
-                                        onSelect={() => handleSelectRemitente()}
+                                       
                                         value={state.nombreRemitente}
                                         disabled={state.agregar == "Consultar"}
                                         freeSolo
-                                        onChange={(event, newValue) =>
-                                          setState({
-                                            ...state,
-                                            nombreRemitente: newValue,
-                                          })
-                                        }
+                                        onChange={(event, newValue) => {
+                                          handleSelectRemitente(newValue)
+                                        }}
                                         id="nombreRemitente"
                                         disableClearable
                                         forcePopupIcon={false}
@@ -3204,16 +3218,14 @@ function Recoleccion() {
                                   <label className="label">Nombre</label>
                                   <div className="input">
                                     <Autocomplete
-                                      onSelect={() => handleSelectDestinatario()}
+                                     onChange={(event, newValue) => {
+                                      handleSelectDestinatario(newValue)
+                                    }}
                                       value={state.nombreDestinatario}
                                       disabled={state.agregar == "Consultar"}
                                       freeSolo
-                                      onChange={(event, newValue) =>
-                                        setState({
-                                          ...state,
-                                          nombreDestinatario: newValue,
-                                        })
-                                      }
+                                      
+                                
                                       id="nombreRemitente"
                                       disableClearable
                                       forcePopupIcon={false}
