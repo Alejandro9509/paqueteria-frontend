@@ -1613,7 +1613,7 @@ pre code {
 }
 .row {
   margin-left: -15px;
-  margin-right: 0px;
+  margin-right: 10px;
 }
 
 [type="date"]::-webkit-calendar-picker-indicator {

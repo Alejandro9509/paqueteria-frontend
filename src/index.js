@@ -7,24 +7,18 @@ import { Router } from "react-router-dom";
 import { CircularProgress } from '@material-ui/core';
 import { usePromiseTracker } from "react-promise-tracker";
 import { createBrowserHistory } from "history";
+import { Spinner } from "./Components/spinner";
 
 const hist = createBrowserHistory();
-const LoadingIndicator = props => {
-       const { promiseInProgress } = usePromiseTracker();
-    
-       return (
-       promiseInProgress && 
-       <CircularProgress disableShrink/>
-      );  
-     };
+
 
 
 ReactDOM.render(
-        <Router history={hist} basename={'/'}>
-        <LoadingIndicator/>
+    <Router history={hist} basename={'/'}>
+        <Spinner />
+        <App />
 
-            <App/>
-        </Router>,
+    </Router>,
     document.getElementById('root')
 );
 
