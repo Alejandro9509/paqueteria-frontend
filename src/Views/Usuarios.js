@@ -106,6 +106,8 @@ function Usuarios() {
 
   const handleAceptar = (e) => {
     e.preventDefault()
+    console.log(state.CreadoPor)
+    console.log(localStorage.getItem("UsuarioId"))
     var params = {
 
       "Usuario": state.usuario,
@@ -155,8 +157,8 @@ function Usuarios() {
 
       "VencimientoCertificadoNotificaciones": state.vencimientoCertificado,
 
-      "CreadoPor": state.CreadoPor,
-      "ModificadoPor": state.ModificadoPor
+      "CreadoPor": localStorage.getItem("UsuarioId"),
+      "ModificadoPor": localStorage.getItem("UsuarioId")
     }
     console.log(params)
     if (state.idUsuario != 0) {
@@ -415,7 +417,7 @@ function Usuarios() {
       renderCell: (row) => {
         return (
           <div style={{ width: "100%" }}>
-            { dataSucursal.find(o => o.m_nIdSucursal == row.row.m_nIdSucursal).m_sSucursal}
+            { dataSucursal.length != 0 ? dataSucursal.find(o => o.m_nIdSucursal == row.row.m_nIdSucursal).m_sSucursal : ""}
           </div>
         )
       }
@@ -812,7 +814,6 @@ function Usuarios() {
                                 <input
                                   onChange={onChangeFile}
                                   type="file"
-                                  required
                                   readOnly={state.agregar == "Consultar"}
                                   value={selectedFile}
                                   id="fotoPerfil"

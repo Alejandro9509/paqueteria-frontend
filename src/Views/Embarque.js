@@ -166,11 +166,11 @@ function Embarque(props) {
         idUnidad: {},
         paquetes: [
             {
-                m_rPeso: "",
-                m_rLargo: "",
-                m_rAncho: "",
-                m_rAlto: "",
-                m_rVolumen: "",
+                m_xPeso: "",
+                m_xLargo: "",
+                m_xAncho: "",
+                m_xAlto: "",
+                m_xVolumen: "",
                 m_nIdTIpoEmpaque: "",
                 m_cyValorDeclarado: "",
                 m_sDescripcion: "",
@@ -282,7 +282,6 @@ function Embarque(props) {
             ModificadoPor: state.ModificadoPor,
             m_tFechaDetalleEntrega: state.fechaEntrega.split("T")[0],
             m_tHoraDetalleEntrega: state.fechaEntrega.split("T")[1],
-            m_parrSobres: state.sobres,
         };
         console.log(JSON.stringify(params));
         if (state.idEmbarque != 0) {
@@ -325,11 +324,11 @@ function Embarque(props) {
     function addPaquete() {
         const { paquetes } = state;
         paquetes.push({
-            m_rPeso: "",
-            m_rLargo: "",
-            m_rAncho: "",
-            m_rAlto: "",
-            m_rVolumen: "",
+            m_xPeso: "",
+            m_xLargo: "",
+            m_xAncho: "",
+            m_xAlto: "",
+            m_xVolumen: "",
             m_nIdTIpoEmpaque: "",
             m_cyValorDeclarado: "",
             m_sDescripcion: "",
@@ -1077,6 +1076,19 @@ function Embarque(props) {
         if (props.location.idRecoleccion != undefined) {
             const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetById/${props.location.idRecoleccion}`;
             await axios.get(url, { headers }).then((respuesta) => {
+                var paquetesModificado = respuesta.data.m_parrPaquetes
+                console.log(paquetesModificado)
+                for(let i = 0; i < respuesta.data.m_parrPaquetes.length; i++){
+                    paquetesModificado[i]["m_nTipo"] = 2
+                    paquetesModificado[i]["m_xPeso"] = paquetesModificado[i].m_rPeso
+                    paquetesModificado[i]["m_xLargo"] = paquetesModificado[i].m_rLargo
+                    paquetesModificado[i]["m_xAncho"] = paquetesModificado[i].m_rAncho
+                    paquetesModificado[i]["m_xAlto"] = paquetesModificado[i].m_rAlto
+                    paquetesModificado[i]["m_xVolumen"] = paquetesModificado[i].m_rVolumen
+                    paquetesModificado[i]["m_nIdTIpoEmpaque"] = paquetesModificado[i].m_nIdTipoEmbalaje
+                    paquetesModificado[i]["m_cValorDeclarado"] = paquetesModificado[i].m_cyValorDeclarado
+                }
+                console.log(paquetesModificado)
                 setState({
                     ...state,
                     idEmbarque: 0,
@@ -1153,7 +1165,7 @@ function Embarque(props) {
                     idUnidad: dataUnidad.find(
                         (o) => o.m_nIdUnidad == respuesta.data.m_nIdUnidad
                     ),
-                    paquetes: respuesta.data.m_parrPaquetes,
+                    paquetes: paquetesModificado,
                 });
                 console.log(dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente))
             }).then(() => {
@@ -2017,10 +2029,10 @@ function Embarque(props) {
                             onChange={(event) => handleChangePaquete(event, index)}
                             className="form-control"
                             type="text"
-                            value={state.paquetes[index].m_rPeso}
+                            value={state.paquetes[index].m_xPeso}
                             disabled={state.agregar == "Consultar"}
                             placeholder="kg"
-                            name="m_rPeso"
+                            name="m_xPeso"
                         />
                     </div>
                 </div>
@@ -2032,10 +2044,10 @@ function Embarque(props) {
                             onChange={(event) => handleChangePaquete(event, index)}
                             className="form-control"
                             type="text"
-                            value={state.paquetes[index].m_rLargo}
+                            value={state.paquetes[index].m_xLargo}
                             disabled={state.agregar == "Consultar"}
                             placeholder="mts"
-                            name="m_rLargo"
+                            name="m_xLargo"
                         />
                     </div>
                 </div>
@@ -2047,10 +2059,10 @@ function Embarque(props) {
                             onChange={(event) => handleChangePaquete(event, index)}
                             className="form-control"
                             type="text"
-                            value={state.paquetes[index].m_rAncho}
+                            value={state.paquetes[index].m_xAncho}
                             disabled={state.agregar == "Consultar"}
                             placeholder="mts"
-                            name="m_rAncho"
+                            name="m_xAncho"
                         />
                     </div>
                 </div>
@@ -2062,10 +2074,10 @@ function Embarque(props) {
                             onChange={(event) => handleChangePaquete(event, index)}
                             className="form-control"
                             type="text"
-                            value={state.paquetes[index].m_rAlto}
+                            value={state.paquetes[index].m_xAlto}
                             disabled={state.agregar == "Consultar"}
                             placeholder="mts"
-                            name="m_rAlto"
+                            name="m_xAlto"
                         />
                     </div>
                 </div>
@@ -2077,10 +2089,10 @@ function Embarque(props) {
                             onChange={(event) => handleChangePaquete(event, index)}
                             className="form-control"
                             type="text"
-                            value={state.paquetes[index].m_rVolumen}
+                            value={state.paquetes[index].m_xVolumen}
                             disabled={state.agregar == "Consultar"}
                             placeholder="mts3"
-                            name="m_rVolumen"
+                            name="m_xVolumen"
                         />
                     </div>
                 </div>
