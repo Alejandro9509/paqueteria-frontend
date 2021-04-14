@@ -3745,7 +3745,7 @@ function Recoleccion() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="datetime-local"
-                                          required
+                                          
                                           value={state.fechaRecoleccion}
                                           disabled={state.agregar == "Consultar"}
                                           id="fechaRecoleccion"
@@ -3786,7 +3786,7 @@ function Recoleccion() {
                                           renderInput={(params) => (
                                             <div>
                                               <TextField
-                                                required
+                                                
                                                 {...params}
                                                 InputProps={{
                                                   ...params.InputProps,
@@ -3834,7 +3834,7 @@ function Recoleccion() {
                                       <label className="input select">
                                         <select
                                           className="form-control"
-                                          required
+                                          
                                           value={state.ciudadRecoleccion}
                                           disabled={state.agregar == "Consultar"}
                                           onChange={handleChange}
@@ -3859,7 +3859,7 @@ function Recoleccion() {
                                       <label className="input select">
                                         <select
                                           className="form-control"
-                                          required
+                                          
                                           value={state.zonaRecoleccion}
                                           disabled={state.agregar == "Consultar"}
                                           onChange={handleChange}
@@ -3895,7 +3895,7 @@ function Recoleccion() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
-                                          required
+                                          
                                           value={state.domicilioRecoleccion}
                                           disabled={state.agregar == "Consultar"}
                                           id="domicilioRecoleccion"
@@ -3912,7 +3912,7 @@ function Recoleccion() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
-                                          required
+                                          
                                           value={state.recogerEn}
                                           disabled={state.agregar == "Consultar"}
                                           id="recogerEn"
@@ -3929,7 +3929,7 @@ function Recoleccion() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
-                                          required
+                                          
                                           value={
                                             state.datosAdicionalesRecoleccion
                                           }
@@ -3988,7 +3988,7 @@ function Recoleccion() {
                                           renderInput={(params) => (
                                             <div>
                                               <TextField
-                                                required
+                                                
                                                 {...params}
                                                 InputProps={{
                                                   ...params.InputProps,
