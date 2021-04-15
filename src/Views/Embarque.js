@@ -22,8 +22,6 @@ import useModal from "react-hooks-use-modal";
 import { useHistory, Redirect } from "react-router-dom";
 import { DataGrid } from '@material-ui/data-grid';
 import SvgIcon from "@material-ui/core/SvgIcon";
-import { ReactComponent as EsRecoletaIcon } from '../iconos/Menu/palomita.svg';
-import { ReactComponent as NoEsRecolectaIcon } from '../iconos/Menu/cruz.svg';
 import { ReactComponent as Activo } from "../iconos/Menu/palomita.svg";
 import { ReactComponent as NoActivo } from "../iconos/Menu/cruz.svg";
 import Noty from 'noty';
@@ -919,10 +917,10 @@ function Embarque(props) {
                     <div style={{ width: "100%", textAlign: "center", color: row.row.m_bEsRecolecta = 0 ? "green" : "red" }}>
                         {row.row.m_bEsRecolecta = 0 ?
                             <SvgIcon
-                                component={EsRecoletaIcon}
+                                component={Activo}
                             /> :
                             <SvgIcon
-                                component={NoEsRecolectaIcon}
+                                component={NoActivo}
                             />
                         }
                     </div>
