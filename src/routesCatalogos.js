@@ -13,6 +13,7 @@ import CasetaPage from './Views/Caseta';
 import ConceptosFacturacion from './Views/ConceptosFacturacion';
 import GrupoClientePage from './Views/GrupoCliente';
 import GrupoUnidadPage from './Views/GrupoUnidades';
+import ImpuestosPage from './Views/Impuestos';
 import PuestoPage from './Views/Puesto';
 import EstatusViajePage from './Views/EstatusViaje';
 import EstatusEmbarquePage from './Views/EstatusEmbarque';
@@ -178,10 +179,10 @@ const catalogRoutes = [
     component: CasetaPage,
   },
   {
-    path: "/Embalajes",
+    path: "/Impuestos",
     name: "Impuestos",
     icon: ImpuestosIcon,
-    component: EmbalajesPage,
+    component: ImpuestosPage,
   },
   {
     path: "/ConceptoFacturacion",
