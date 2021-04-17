@@ -22,6 +22,7 @@ import EstatusRecoleccionPage from './Views/EstatusRecoleccion';
 import EstatusGuiaPage from './Views/EstatusGuia';
 import EstatusInformePage from './Views/EstatusInforme';
 import EstatusDocumentoPage from './Views/EstatusDocumento';
+import ConceptosFacturacionPage from './Views/ConceptosFacturacion/ConceptosFacturacion';
 
 import {ReactComponent as GClienteIcon} from './iconos/Catalogos/Icono Grupo Clientes/icono_grupo_cliente.svg';
 import {ReactComponent as BancoIcon} from './iconos/Catalogos/Icono Banco/icono_banco.svg';
@@ -186,10 +187,10 @@ const catalogRoutes = [
     component: EmbalajesPage,
   },
   {
-    path: "/Embalajes",
+    path: "/ConceptosFacturacion",
     name: "Conceptos Fact.",
     icon: CFacturaIcon,
-    component: EmbalajesPage,
+    component: ConceptosFacturacionPage,
   },
   {
     path: "/Rutas",
