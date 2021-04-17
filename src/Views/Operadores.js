@@ -14,6 +14,9 @@ import ExportCSV from "../Components/Template/Export";
 import ExportPDF from "../Components/Template/ExportPDF";
 import { makeStyles } from "@material-ui/core/styles";
 import { DataGrid } from '@material-ui/data-grid';
+import SvgIcon from "@material-ui/core/SvgIcon";
+import { ReactComponent as Activo } from "../iconos/Menu/palomita.svg";
+import { ReactComponent as NoActivo } from "../iconos/Menu/cruz.svg";
 
 import $ from "jquery";
 
@@ -78,6 +81,23 @@ function Operadores(props) {
     {
       headerName: "Activo",
       field: "m_bActivo",width: 100,
+      renderCell: (row) => {
+        return (
+          <div
+            style={{
+              width: "100%",
+              textAlign: "center",
+              color: row.row.m_bActivo =='true' ? "green" : "red",
+            }}
+          >
+            {row.row.m_bActivo ? (
+              <SvgIcon component={Activo} />
+            ) : (
+              <SvgIcon component={NoActivo} />
+            )}
+          </div>
+        );
+      },
     },
   ]);
 

@@ -19,7 +19,9 @@ import TextField from "@material-ui/core/TextField";
 import { GridOverlay, DataGrid } from '@material-ui/data-grid';
 import InputAdornment from "@material-ui/core/InputAdornment";
 import LinearProgress from '@material-ui/core/LinearProgress';
-
+import SvgIcon from "@material-ui/core/SvgIcon";
+import { ReactComponent as Activo } from "../iconos/Menu/palomita.svg";
+import { ReactComponent as NoActivo } from "../iconos/Menu/cruz.svg";
 import {
   useTable,
   useFilters,
@@ -1078,12 +1080,25 @@ function Recoleccion() {
       accessor: "m_sNombreCompleto",
     },
     {
-      Name: "Sucursal",
-      accessor: "m_nIdSucursal",
-    },
-    {
       Name: "Activo",
-      accessor: "m_nIdEstado",
+      accessor: "m_bActivo",width: 100,
+      renderCell: (row) => {
+        return (
+          <div
+            style={{
+              width: "100%",
+              textAlign: "center",
+              color: row.row.m_bActivo =='true' ? "green" : "red",
+            }}
+          >
+            {row.row.m_bActivo ? (
+              <SvgIcon component={Activo} />
+            ) : (
+              <SvgIcon component={NoActivo} />
+            )}
+          </div>
+        );
+      },
     },
   ]);
 
@@ -2264,7 +2279,7 @@ function Recoleccion() {
           {state.tipoModal == 2 &&
             <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
               <div align="right">
-                <button onClick={() => { history.push("/Operadores") }} className="btn btn-primary primary-btn">Agregar</button>
+                <button onClick={() => { history.push("/Operador") }} className="btn btn-primary primary-btn">Agregar</button>
 
               </div>
 
@@ -2312,7 +2327,7 @@ function Recoleccion() {
           {state.tipoModal == 5 &&
             <div className="row" style={{ backgroundColor: '#FFFFFF' }} >
               <div align="right">
-                <button onClick={() => { history.push("/Unidades") }} className="btn btn-primary primary-btn">Agregar</button>
+                <button onClick={() => { history.push("/RemitenteDestinatarios") }} className="btn btn-primary primary-btn">Agregar</button>
 
               </div>
 
@@ -3730,7 +3745,7 @@ function Recoleccion() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="datetime-local"
-                                          required
+                                          
                                           value={state.fechaRecoleccion}
                                           disabled={state.agregar == "Consultar"}
                                           id="fechaRecoleccion"
@@ -3771,7 +3786,7 @@ function Recoleccion() {
                                           renderInput={(params) => (
                                             <div>
                                               <TextField
-                                                required
+                                                
                                                 {...params}
                                                 InputProps={{
                                                   ...params.InputProps,
@@ -3819,7 +3834,7 @@ function Recoleccion() {
                                       <label className="input select">
                                         <select
                                           className="form-control"
-                                          required
+                                          
                                           value={state.ciudadRecoleccion}
                                           disabled={state.agregar == "Consultar"}
                                           onChange={handleChange}
@@ -3844,7 +3859,7 @@ function Recoleccion() {
                                       <label className="input select">
                                         <select
                                           className="form-control"
-                                          required
+                                          
                                           value={state.zonaRecoleccion}
                                           disabled={state.agregar == "Consultar"}
                                           onChange={handleChange}
@@ -3880,7 +3895,7 @@ function Recoleccion() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
-                                          required
+                                          
                                           value={state.domicilioRecoleccion}
                                           disabled={state.agregar == "Consultar"}
                                           id="domicilioRecoleccion"
@@ -3897,7 +3912,7 @@ function Recoleccion() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
-                                          required
+                                          
                                           value={state.recogerEn}
                                           disabled={state.agregar == "Consultar"}
                                           id="recogerEn"
@@ -3914,7 +3929,7 @@ function Recoleccion() {
                                           onChange={handleChange}
                                           className="form-control"
                                           type="text"
-                                          required
+                                          
                                           value={
                                             state.datosAdicionalesRecoleccion
                                           }
@@ -3973,7 +3988,7 @@ function Recoleccion() {
                                           renderInput={(params) => (
                                             <div>
                                               <TextField
-                                                required
+                                                
                                                 {...params}
                                                 InputProps={{
                                                   ...params.InputProps,
