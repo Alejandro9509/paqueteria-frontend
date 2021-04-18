@@ -2463,7 +2463,7 @@ function Embarque(props) {
                                         <div className="row">
                                             <div
                                                 className={
-                                                    "col-md-2-5 col-sm-2 step " +
+                                                    "col-md-3 col-sm-3 step " +
                                                     (stepActive == 1 && "active-step")
                                                 }
                                                 onClick={() => openSection(1)}
@@ -2475,7 +2475,7 @@ function Embarque(props) {
                                             </div>
                                             <div
                                                 className={
-                                                    "col-md-2-5 col-sm-2 step " +
+                                                    "col-md-3 col-sm-3 step " +
                                                     (stepActive == 2 && "active-step")
                                                 }
                                                 onClick={() => openSection(2)}
@@ -2487,7 +2487,7 @@ function Embarque(props) {
                                             </div>
                                             <div
                                                 className={
-                                                    "col-md-2-5 col-sm-2 step " +
+                                                    "col-md-3 col-sm-3 step " +
                                                     (stepActive == 3 && "active-step")
                                                 }
                                                 onClick={() => openSection(3)}
@@ -2500,7 +2500,7 @@ function Embarque(props) {
 
                                             <div
                                                 className={
-                                                    "col-md-2-5 col-sm-2 step " +
+                                                    "col-md-3 col-sm-3 step " +
                                                     (stepActive == 4 && "active-step")
                                                 }
                                                 onClick={() => openSection(4)}
@@ -2510,7 +2510,7 @@ function Embarque(props) {
                                                     <p>Información Adicional del Pago</p>
                                                 </div>
                                             </div>
-                                            <div
+                                            {/* <div
                                                 className={
                                                     "col-md-2-5 col-sm-2 step " +
                                                     (stepActive == 5 && "active-step")
@@ -2521,7 +2521,7 @@ function Embarque(props) {
                                                     <span className="step-number">5</span>
                                                     <p>Detalles de Operación</p>
                                                 </div>
-                                            </div>
+                                            </div> */}
                                         </div>
                                     </div>
 
@@ -3830,7 +3830,7 @@ function Embarque(props) {
                                                 <div></div>
                                             )}
 
-                                            <div className="widget-wrap" id="detallesOperacion">
+                            {/*                 <div className="widget-wrap" id="detallesOperacion">
                                                 <div className="row">
                                                     <div className="col-md-12">
                                                         <div className="widget-header">
@@ -4123,7 +4123,7 @@ function Embarque(props) {
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> */}
                                     </div>
                                 </div>
                                 <div className="form-footer" className="col-md-12">
