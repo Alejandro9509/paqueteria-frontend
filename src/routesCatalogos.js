@@ -1,9 +1,6 @@
 import DepartamentoPage from './Views/Departamento';
 import ClientePage from './Views/Clientes';
-import RecoleccionPage from './Views/Recoleccion';
 import EmbalajesPage from './Views/Embalajes';
-import EmbarquePage from './Views/Embarque';
-import CatalogosPage from './Views/Catalogos';
 import RemDesPage from './Views/RemitentesDestinatarios';
 import UnidadesPage from './Views/Unidades';
 import OperadoresPage from './Views/Operadores';
@@ -13,8 +10,10 @@ import EstatusUnidadPage from './Views/EstatusUnidad';
 import TipoCobroPage from './Views/TipoCobro';
 import TiposViaje from './Views/TipoViaje'
 import CasetaPage from './Views/Caseta';
+import ConceptosFacturacion from './Views/ConceptosFacturacion';
 import GrupoClientePage from './Views/GrupoCliente';
 import GrupoUnidadPage from './Views/GrupoUnidades';
+import ImpuestosPage from './Views/Impuestos';
 import PuestoPage from './Views/Puesto';
 import EstatusViajePage from './Views/EstatusViaje';
 import EstatusEmbarquePage from './Views/EstatusEmbarque';
@@ -22,6 +21,7 @@ import EstatusRecoleccionPage from './Views/EstatusRecoleccion';
 import EstatusGuiaPage from './Views/EstatusGuia';
 import EstatusInformePage from './Views/EstatusInforme';
 import EstatusDocumentoPage from './Views/EstatusDocumento';
+import ConceptosFacturacionPage from './Views/ConceptosFacturacion/ConceptosFacturacion';
 
 import {ReactComponent as GClienteIcon} from './iconos/Catalogos/Icono Grupo Clientes/icono_grupo_cliente.svg';
 import {ReactComponent as BancoIcon} from './iconos/Catalogos/Icono Banco/icono_banco.svg';
@@ -180,16 +180,16 @@ const catalogRoutes = [
     component: CasetaPage,
   },
   {
-    path: "/Embalajes",
+    path: "/Impuestos",
     name: "Impuestos",
     icon: ImpuestosIcon,
-    component: EmbalajesPage,
+    component: ImpuestosPage,
   },
   {
-    path: "/Embalajes",
+    path: "/ConceptosFacturacion",
     name: "Conceptos Fact.",
     icon: CFacturaIcon,
-    component: EmbalajesPage,
+    component: ConceptosFacturacionPage,
   },
   {
     path: "/Rutas",
