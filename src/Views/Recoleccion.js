@@ -344,7 +344,7 @@ function Recoleccion() {
     console.log(JSON.stringify(params));
     debugger;
     if (state.idRecoleccion != 0) {
-      const url = `${process.env.REACT_APP_API_URL_LOCAL}/Recoleccion/Modificar/${state.idRecoleccion}`;
+      const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Modificar/${state.idRecoleccion}`;
       axios
         .put(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
@@ -357,7 +357,7 @@ function Recoleccion() {
         });
     } else {
       //debugger;
-      const url = `${process.env.REACT_APP_API_URL_LOCAL}/Recoleccion/Agregar`;
+      const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Agregar`;
       axios
         .post(url, Object.assign({}, params), { headers })
         .then((respuesta) => {
@@ -1253,7 +1253,7 @@ function Recoleccion() {
   }
 
   function getUltimoFolioRecoleccion() {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/Recoleccion/GetUltimoFolio`;
+    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetUltimoFolio`;
     axios.get(url, { headers }).then((respuesta) => { SetDataFolioRecoleccion(respuesta.data); });
   }
 
