@@ -4,6 +4,9 @@ import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import { DataGrid } from '@material-ui/data-grid';
+import SvgIcon from "@material-ui/core/SvgIcon";
+import { ReactComponent as ActivoIcon } from '../iconos/Menu/palomita.svg';
+import { ReactComponent as NoActivoIcon } from '../iconos/Menu/cruz.svg';
 import Noty from 'noty';
 
 function showSuccess(mensaje) {
@@ -22,6 +25,7 @@ function Impuestos() {
     idImpuestos: 0,
     DerechoBorrar: 58,
     descripcionImpuestos: "",
+    impuestoLocal: false,
     porcentajeImpuesto: 0,
     tipoDeCalculo: "",
     tipoImpuesto: "",
@@ -36,11 +40,15 @@ function Impuestos() {
     e.preventDefault()
     var params = {
 
-      "Codigo": state.codigoImpuestos,
-      "Descripcion": state.descripcionImpuestos,
+      "m_sImpuesto": state.descripcionImpuestos,
+      "m_bImpuestoLocal": state.impuestoLocal,
+      "m_nPorcentaje": state.porcentajeImpuesto,
+      "m_nTIpoCalculo": state.tipoDeCalculo,
+      "m_nTIpoImpuesto": state.tipoImpuesto,
+      "m_bActivo": state.activo,
 
-      "CreadoPor": state.CreadoPor,
-      "ModificadoPor": state.ModificadoPor
+      "m_nCreadoPor": state.CreadoPor,
+      "m_nModificadoPor": state.ModificadoPor
     }
     console.log(params)
     if (state.idImpuestos != 0) {
@@ -96,8 +104,12 @@ function Impuestos() {
         agregar: "Modificar",
         showPopUp: true,
         idImpuestos: id,
-        codigoImpuestos: respuesta.data.m_nCodigo,
-        descripcionImpuestos: respuesta.data.m_sDescripcion
+        descripcionImpuestos: respuesta.data.m_sImpuesto,
+        impuestoLocal: respuesta.data.m_bImpuestolocal,
+        porcentajeImpuesto: respuesta.data.m_nPorcentaje,
+        tipoDeCalculo: respuesta.data.m_nTIpoCalculo,
+        tipoImpuesto: respuesta.data.m_nTIpoImpuesto,
+        activo: respuesta.data.m_bActivo,
       })
     });
   }
@@ -136,6 +148,20 @@ function Impuestos() {
     });
   };
 
+  const handleChangeTipoImpuesto = event => {
+    let valor = 1
+    if (event.target.value == 1) {
+      valor = 1
+    } else if (event.target.value == 3) {
+      valor = 2
+    }
+    setState({
+      ...state,
+      [event.target.id]: event.target.value,
+      tipoDeCalculo: valor
+    });
+  }
+
   const columns = React.useMemo(() => [
     {
       headerName: "Acciones",
@@ -169,7 +195,7 @@ function Impuestos() {
       renderCell: (row) => {
         return (
           <div>
-            {row.row.m_nTipoCalculo = 0 ?
+            {row.row.m_nTIpoCalculo == 1 ?
               <div>Retención</div> :
               <div>Traslado</div>
             }
@@ -183,14 +209,32 @@ function Impuestos() {
       renderCell: (row) => {
         return (
           <div>
-            {row.row.m_nTipoCalculo = 0 ?
-              <div>Federal</div> :
-              <div>Local</div>
+            {row.row.m_bImpuestolocal ?
+              <div>Local</div> :
+              <div>Federal</div>
             }
           </div>
         )
       },
-    }
+    }, {
+      headerName: "Activo",
+      field: "m_bActivo",
+      width: 125,
+      renderCell: (row) => {
+        return (
+          <div style={{ width: "100%", textAlign: "center", color: row.row.m_bActivo ? "green" : "red" }}>
+            {row.row.m_bActivo ?
+              <SvgIcon
+                component={ActivoIcon}
+              /> :
+              <SvgIcon
+                component={NoActivoIcon}
+              />
+            }
+          </div>
+        )
+      },
+    },
 
   ]);
 
@@ -207,6 +251,7 @@ function Impuestos() {
     const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetListado`;
     axios.get(url, { headers }).then(respuesta => {
       setData(respuesta.data)
+      console.log(respuesta.data)
     });
   };
 
@@ -300,7 +345,7 @@ function Impuestos() {
                         <div className="form-content">
                           <div className="row">
 
-                            <div className="col-xs-6  col-sm-3 col-md-3 col-lg-3 unit">
+                            <div className="col-xs-6 col-sm-6 col-md-4 col-lg-4 unit">
                               <label className="label">
                                 Impuesto
                           </label>
@@ -317,7 +362,44 @@ function Impuestos() {
                               </div>
                             </div>
 
-                            <div className="col-xs-6  col-sm-3 col-md-3 col-lg-3 unit">
+                            <div className="col-xs-6 col-sm-6 col-md-4 col-lg-4 unit" style={{ paddingTop: "20px", marginBottom: "15px" }}>
+                              <label className="checkbox">
+                                <input
+                                  disabled={state.agregar == "Consultar"}
+                                  native="true"
+                                  checked={state.activo}
+                                  name="activo"
+                                  onChange={(e) => setState({ ...state, activo: e.target.checked })}
+                                  type="checkbox"
+                                />
+                                <i />
+                                Activo
+                              </label>
+                            </div>
+
+                            <div className="col-xs-6 col-sm-6 col-md-4 col-lg-4 unit" style={{ paddingTop: "20px", marginBottom: "15px" }}>
+                              <label className="checkbox">
+                                <input
+                                  disabled={state.agregar == "Consultar"}
+                                  native="true"
+                                  checked={state.impuestoLocal}
+                                  name="impuestoLocal"
+                                  onChange={(e) => {
+                                    setState({
+                                      ...state,
+                                      impuestoLocal: e.target.checked,
+                                      tipoImpuesto: 0,
+                                      tipoDeCalculo: 1,
+                                    })
+                                  }}
+                                  type="checkbox"
+                                />
+                                <i />
+                                Impuesto Local
+                              </label>
+                            </div>
+
+                            <div className="col-xs-6 col-sm-6 col-md-4 col-lg-4 unit">
                               <label className="label">
                                 Porcentaje
                           </label>
@@ -336,7 +418,7 @@ function Impuestos() {
                               </div>
                             </div>
 
-                            <div className="col-xs-6  col-sm-3 col-md-3 col-lg-3 unit">
+                            <div className="col-xs-6 col-sm-6 col-md-4 col-lg-4 unit">
                               <label className="label">
                                 Tipo de Cálculo
                               </label>
@@ -344,16 +426,15 @@ function Impuestos() {
                                 <select
                                   className="form-control"
                                   value={state.tipoDeCalculo}
-                                  disabled={state.agregar == "Consultar"}
+                                  disabled={state.agregar == "Consultar" || state.impuestoLocal || state.tipoImpuesto == 1 || state.tipoImpuesto == 3}
                                   onChange={handleChange}
-                                  disabled={state.agregar == "Consultar"}
                                   id="tipoDeCalculo"
                                   name="tipoDeCalculo"
                                 >
-                                  <option value="0">
+                                  <option value="1">
                                     Retención
                                   </option>
-                                  <option value="1">
+                                  <option value="2">
                                     Traslado
                                   </option>
                                 </select>
@@ -361,51 +442,34 @@ function Impuestos() {
                               </label>
                             </div>
 
-                            <div className="col-xs-6  col-sm-3 col-md-3 col-lg-3 unit">
-                              <label className="label">
-                                Tipo Impuesto
+                            {!state.impuestoLocal ?
+                              <div className="col-xs-6 col-sm-6 col-md-4 col-lg-4 unit">
+                                <label className="label">
+                                  Tipo Impuesto
                               </label>
-                              <label className="input select">
-                                <select
-                                  className="form-control"
-                                  value={state.tipoImpuesto}
-                                  disabled={state.agregar == "Consultar"}
-                                  onChange={handleChange}
-                                  disabled={state.agregar == "Consultar"}
-                                  id="tipoImpuesto"
-                                  name="tipoImpuesto"
-                                >
-                                  <option value="0">
-                                    Impuesto Local
+                                <label className="input select">
+                                  <select
+                                    className="form-control"
+                                    value={state.tipoImpuesto}
+                                    disabled={state.agregar == "Consultar"}
+                                    onChange={handleChangeTipoImpuesto}
+                                    id="tipoImpuesto"
+                                    name="tipoImpuesto"
+                                  >
+                                    <option value="2">
+                                      IVA
                                   </option>
-                                  <option value="1">
-                                    ISR
+                                    <option value="1">
+                                      ISR
                                   </option>
-                                  <option value="1">
-                                    IVA
+                                    <option value="3">
+                                      IEPS
                                   </option>
-                                  <option value="1">
-                                    IEPS
-                                  </option>
-                                </select>
-                                <i className="fa fa-arrow-down" />
-                              </label>
-                            </div>
-
-                            <div className="col-xs-12  col-sm-12 col-md-12 col-lg-12 unit">
-                              <label className="checkbox">
-                                <input
-                                  disabled={state.agregar == "Consultar"}
-                                  native="true"
-                                  checked={state.activo}
-                                  name="activo"
-                                  onChange={(e) => setState({ ...state, activo: e.target.checked })}
-                                  type="checkbox"
-                                />
-                                <i />
-                                Activo
-                              </label>
-                            </div>
+                                  </select>
+                                  <i className="fa fa-arrow-down" />
+                                </label>
+                              </div>
+                              : <div></div>}
 
                           </div>
                           <div className="row">
