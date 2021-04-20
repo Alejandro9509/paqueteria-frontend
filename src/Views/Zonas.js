@@ -38,6 +38,7 @@ function Zonas() {
   const classes = useStyles();
   const [data, setData] = React.useState([])
   const [dataSucursal, setDataSucursal] = React.useState([]);
+  const [dataCiudad, setDataCiudad] = React.useState([]);
   const [state, setState] = React.useState({
     idZona: 0,
     agregar: "Agregar",
@@ -162,9 +163,9 @@ function Zonas() {
       renderCell: (row) => {
         return (
           <div>
-            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdDepartamento))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdDepartamento))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdDepartamento))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdZona))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdZona))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdZona))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
           </div>
         )
       }
@@ -214,14 +215,23 @@ function Zonas() {
 
   ]);
 
-  useEffect( async value => {
+  const columnsCiudades = React.useMemo(() => [
+    {
+      headerName: "Ciudad",
+      field: "m_sCiudad",
+      width: "200",
+    },
+  ])
+
+  useEffect(async value => {
     if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
       showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
     }
-    getAllData();
+    getAllCiudades();
     getAllSucursalData();
+    getAllData();
   }, []);
 
   function getAllData() {
@@ -235,6 +245,13 @@ function Zonas() {
     const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
     await axios.get(url, { headers }).then((respuesta) => {
       setDataSucursal(respuesta.data);
+    });
+  }
+
+  async function getAllCiudades() {
+    const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
+    await axios.get(url, { headers }).then((respuesta) => {
+      setDataCiudad(respuesta.data);
     });
   }
 
@@ -349,89 +366,106 @@ function Zonas() {
               <div className="widget-wrap">
                 <div className="widget-content">
                   <div className="row">
-                      <form className="j-forms" onSubmit={handleAceptar}>
-                        <div className="form-content">
-                            <div className="row" style={{ display: "flex" }}>
-                              <div className="col-sm-6 col-md-4 unit">
-                                <label className="label">Folio</label>
-                                <div className="input">
-                                  <input
-                                    type="text"
-                                    className="form-control"
-                                    value={state.fechaInicial}
-                                    onChange={handleChange}
-                                    id="fechaInicial"
-                                  />
-                                </div>
-                              </div>
+                    <form className="j-forms" onSubmit={handleAceptar}>
+                      <div className="form-content">
+                        <div className="row" style={{ display: "flex" }}>
+                          <div className="col-sm-6 col-md-4 unit">
+                            <label className="label">Folio</label>
+                            <div className="input">
+                              <input
+                                type="text"
+                                className="form-control"
+                                value={state.fechaInicial}
+                                onChange={handleChange}
+                                id="fechaInicial"
+                              />
+                            </div>
+                          </div>
 
-                              <div className="col-sm-6 col-md-4 unit">
-                                <label className="label">Fecha Final</label>
-                                <div className="input">
-                                  <input
-                                    type="date"
-                                    className="form-control"
-                                    value={state.fechaFinal}
-                                    onChange={handleChange}
-                                    id="fechaFinal"
-                                  />
-                                </div>
-
-                              </div>
-
-                              <div className="col-sm-6 col-md-4 unit">
-                                <label className="label">Sucursal</label>
-                                <label className="input select">
-                                  <select
-                                    className="form-control"
-                                    required
-                                    value={state.sucursalListado}
-                                    onChange={handleChange}
-                                    id="sucursalListado"
-                                  >
-                                    <option value="0">Todas</option>
-                                    {dataSucursal.map((sucursal) => (
-                                      <option
-                                        key={sucursal.m_nIdSucursal}
-                                        value={sucursal.m_nIdSucursal}
-                                      >
-                                        {sucursal.m_sSucursal}
-                                      </option>
-                                    ))}
-                                  </select>
-                                  <i></i>
-                                </label>
-                              </div>
-                           </div>
-
-                            <div className="widget-wrap col-sm-6 col-md-3">
-                              <DataGrid
-                                columns={columns}
-                                data={data}
+                          <div className="col-sm-6 col-md-4 unit">
+                            <label className="label">Fecha Final</label>
+                            <div className="input">
+                              <input
+                                type="date"
+                                className="form-control"
+                                value={state.fechaFinal}
+                                onChange={handleChange}
+                                id="fechaFinal"
                               />
                             </div>
 
-                            <div className="widget-wrap col-sm-6 col-md-3">
-                              Código Postal
-                            </div>
+                          </div>
 
-                            <div className="widget-wrap col-sm-6 col-md-3">
-                              Localidades
-                            </div>
-
-                            <div className="widget-wrap col-sm-6 col-md-3">
-                              Colonias
-                            </div>
-
-                          <div className="row">
-                            <div className="form-footer" className="col-sm-12 col-md-12 unit">
-                              <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"> Cancelar</button>
-                              <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
-                            </div>
+                          <div className="col-sm-6 col-md-4 unit">
+                            <label className="label">Sucursal</label>
+                            <label className="input select">
+                              <select
+                                className="form-control"
+                                required
+                                value={state.sucursalListado}
+                                onChange={handleChange}
+                                id="sucursalListado"
+                              >
+                                <option value="0">Todas</option>
+                                {dataSucursal.map((sucursal) => (
+                                  <option
+                                    key={sucursal.m_nIdSucursal}
+                                    value={sucursal.m_nIdSucursal}
+                                  >
+                                    {sucursal.m_sSucursal}
+                                  </option>
+                                ))}
+                              </select>
+                              <i></i>
+                            </label>
                           </div>
                         </div>
 
-                      </form>
+                        <div className="widget-wrap col-sm-6 col-md-3">
+                          <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                            {dataCiudad.length != 0 ? (
+                              <DataGrid
+                                rows={dataCiudad}
+                                columns={columnsCiudades}
+                                hideFooterPagination="true"
+                                hideFooterSelectedRowCount="true"
+                                density="compact"
+                                getRowId={(row) => row.m_nIdCiudad}
+                                checkboxSelection={true}
+                                onRowSelected={(row) => {
+                                  setState({
+                                    ...state,
+                                    idZona: row.data.m_nIdCiudad
+                                  })
+                                }}
+                              />
+                            ) : (
+                              <div>No se encontró ningún registro</div>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="widget-wrap col-sm-6 col-md-3">
+                          Código Postal
+                            </div>
+
+                        <div className="widget-wrap col-sm-6 col-md-3">
+                          Localidades
+                            </div>
+
+                        <div className="widget-wrap col-sm-6 col-md-3">
+                          Colonias
+                            </div>
+
+                        <div className="row">
+                          <div className="form-footer" className="col-sm-12 col-md-12 unit">
+                            <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"> Cancelar</button>
+                            <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
+                          </div>
+                        </div>
+                      </div>
+
+                    </form>
                   </div>
                 </div>
               </div>
