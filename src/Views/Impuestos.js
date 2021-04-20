@@ -216,26 +216,7 @@ function Impuestos() {
           </div>
         )
       },
-    }, {
-      headerName: "Activo",
-      field: "m_bActivo",
-      width: 125,
-      renderCell: (row) => {
-        return (
-          <div style={{ width: "100%", textAlign: "center", color: row.row.m_bActivo ? "green" : "red" }}>
-            {row.row.m_bActivo ?
-              <SvgIcon
-                component={ActivoIcon}
-              /> :
-              <SvgIcon
-                component={NoActivoIcon}
-              />
-            }
-          </div>
-        )
-      },
-    },
-
+    }
   ]);
 
   useEffect(value => {
