@@ -4065,7 +4065,7 @@ function Recoleccion() {
                                       <label className="input select">
                                         <select
                                           className="form-control"
-                                          required
+                                          
                                           value={state.ciudadEntrega}
                                           disabled={state.agregar == "Consultar"}
                                           onChange={handleChange}
@@ -4089,7 +4089,7 @@ function Recoleccion() {
                                       <label className="input select">
                                         <select
                                           className="form-control"
-                                          required
+                                          
                                           value={state.zonaEntrega}
                                           disabled={state.agregar == "Consultar"}
                                           onChange={handleChange}
