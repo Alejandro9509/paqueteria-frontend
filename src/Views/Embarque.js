@@ -2754,7 +2754,7 @@ function Embarque(props) {
                                                                         <div className="input">
                                                                             <Autocomplete
 
-                                                                                onSelect={handleSelectRemitente()}
+                                                                                onSelect={() => handleSelectRemitente()}
                                                                                 value={state.nombreRemitente}
                                                                                 freeSolo
                                                                                 onChange={(event, newValue) =>
