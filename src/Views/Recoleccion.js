@@ -537,7 +537,7 @@ function Recoleccion() {
 
   function handleShowCiudadRemitente(id) {
     console.log(id);
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/Ciudades/GetByCP/${id}`;
+    const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetByCP/${id}`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
       setState({

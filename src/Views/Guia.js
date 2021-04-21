@@ -358,7 +358,7 @@ function Guia(props) {
   }
 
   function getUltimoFolioGuia() {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/Guia/GetUltimoFolio`;
+    const url = `${process.env.REACT_APP_API_URL}/Guia/GetUltimoFolio`;
     axios.get(url, { headers }).then((respuesta) => { SetDataFolioGuia(respuesta.data); });
   }
 

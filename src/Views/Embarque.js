@@ -285,7 +285,7 @@ function Embarque(props) {
         console.log(JSON.stringify(params));
         debugger;
         if (state.idEmbarque != 0) {
-            const url = `${process.env.REACT_APP_API_URL_LOCAL}/Embarques/Modificar/${state.idEmbarque}`;
+            const url = `${process.env.REACT_APP_API_URL}/Embarques/Modificar/${state.idEmbarque}`;
             axios
                 .put(url, Object.assign({}, params), { headers2 })
                 .then((respuesta) => {
@@ -297,7 +297,7 @@ function Embarque(props) {
                     showSuccess("El Usuario no tiene derecho para modificar");
                 });
         } else {
-            const url = `${process.env.REACT_APP_API_URL_LOCAL}/Embarques/Agregar`;
+            const url = `${process.env.REACT_APP_API_URL}/Embarques/Agregar`;
             axios
                 .post(url, Object.assign({}, params), { headers })
                 .then((respuesta) => {
@@ -700,7 +700,7 @@ function Embarque(props) {
     }
 
     function getUltimoFolioEmbarque() {
-        const url = `${process.env.REACT_APP_API_URL_LOCAL}/Embarques/GetUltimoFolio`;
+        const url = `${process.env.REACT_APP_API_URL}/Embarques/GetUltimoFolio`;
         axios.get(url, { headers }).then((respuesta) => { SetDataFolioEmbarque(respuesta.data); });
       }
     
