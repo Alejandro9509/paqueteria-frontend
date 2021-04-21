@@ -302,8 +302,8 @@ function Recoleccion() {
       "m_sDomicilioDestinatario": state.domicilioDestinatario,
       "m_sIdCodigoPostalRemitente": state.codigoPostalRemitente.m_nIdCP,
       "m_sIdCodigoPostalDestinatario": state.codigoPostalDestinatario.m_nIdCP,
-      "m_nIdCiudadRemitente": state.ciudadRemitente,
-      "m_nIdCiudadDestinatario": state.ciudadDestinatario,
+      "m_nIdCiudadRemitente": state.ciudadRemitente.m_nIdCiudad,
+      "m_nIdCiudadDestinatario": state.ciudadDestinatario.m_nIdCiudad,
       "m_sCorreoRemitente": state.correoRemitente,
       "m_sCorreoDestinatario": state.correoDestinatario,
       "m_sTelefonoRemitente": state.telefonoRemitente,
@@ -554,6 +554,7 @@ function Recoleccion() {
     const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetById/${id}`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
+      debugger;
       setState({
         ...state,
         agregar: "Modificar",
@@ -564,7 +565,7 @@ function Recoleccion() {
         folioGuía: respuesta.data.m_nIdGuia,
         folioInforme: respuesta.data.m_nIdInforme,
         fechaHoraCreacion:
-          respuesta.data.m_dFecha + "T" + respuesta.data.m_tHora.slice(0, 5),
+          respuesta.data.m_dFecha+ "T" + respuesta.data.m_tHora.slice(0, 5),
         estatusRecoleccion: respuesta.data.m_nIdEstatusRecoleccion,
         moneda: respuesta.data.m_nMoneda,
         tipoCambio: respuesta.data.m_rTipoCambio,
@@ -587,13 +588,17 @@ function Recoleccion() {
         nombreDestinatario: dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCDestinatario),
         RFCDestinatario: respuesta.data.m_sRFCDestinatario,
         domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
+//ERROR PORQUE NO HAY UNIDAD REGISTRADA
         tipoUnidad: dataTipoUnidad.find(o => o.m_nIdTipoUnidad == (dataUnidad.find(o => o.m_nIdUnidad == respuesta.data.m_nIdUnidad)).m_nIdTipoUnidad),
         unidad: dataUnidad.find(
           (o) => o.m_nIdUnidad == respuesta.data.m_nIdUnidad
         ),
+
+//ERROR PORQUE NO HAY OPERADOR REGISTRADO
         operador: dataOperador.find(
           (o) => o.m_nIdOperador == respuesta.data.m_nIdOperador
-        ),
+        ) ?       dataOperador[0].m_sNombreCompleto:null,        
+        
         codigoPostalDestinatario: dataCodigoPostal.find(
           (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalDestinatario
         ),
