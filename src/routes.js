@@ -3,6 +3,8 @@ import RecoleccionPage from './Views/Recoleccion';
 import EmbarquePage from './Views/Embarque';
 import GuiaPage from './Views/Guia';
 import InformesPage from './Views/Informes'
+import ViajesPage from './Views/Viajes'
+
 import CatalogosPage from './Views/Catalogos';
 import ConfiguracionPage from './Views/Configuracion';
 import InicadoresPage from './Views/Indicadores';
@@ -75,10 +77,10 @@ const dashboardRoutes = [
     child:[]
   },
   {
-    path: "/Departamento",
+    path: "/Viajes.js",
     name: "Viajes",
     icon: viajeIcon,
-    component: DepartamentoPage,
+    component: ViajesPage,
     single: true,
     child:[]
   }

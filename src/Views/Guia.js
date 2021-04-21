@@ -200,6 +200,7 @@ function Guia(props) {
     //	showSuccess(indice);
     $("#idBarra" + indice).barcode(valor, "code128");
   }
+  const [dataFolioGuia, SetDataFolioGuia] = React.useState([]);
 
   const [fileUploaded, setFileUploaded] = React.useState([])
   const [stepActive, setStepActive] = React.useState(1);
@@ -355,6 +356,12 @@ function Guia(props) {
     }
 
   }
+
+  function getUltimoFolioGuia() {
+    const url = `${process.env.REACT_APP_API_URL}/Guia/GetUltimoFolio`;
+    axios.get(url, { headers }).then((respuesta) => { SetDataFolioGuia(respuesta.data); });
+  }
+
 
   async function getImpresion(id) {
     //showSuccess (state.nGuiaId);		
@@ -681,7 +688,7 @@ function handleImprmir2()
       sucursal: "",
       folioRecoleccion: "",
       folioEmbarque: "",
-      folioGuía: "",
+      folioGuía:  dataFolioGuia.length !== 0 ? dataFolioGuia[0].m_sFolioGuia:null,
       folioInforme: "",
       fecha: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
       origen: "",
@@ -1049,6 +1056,7 @@ function handleImprmir2()
     getAllConceptos();
     getAllImpuestosTraslado();
     getAllImpuestosRetiene();
+    getUltimoFolioGuia()
   }, []);
 
   async function getAllData() {

@@ -82,6 +82,7 @@ function Recoleccion() {
   const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
   const [dataCiudad, setDataCiudad] = React.useState([]);
   const [dataZona, setDataZona] = React.useState([]);
+  const [dataFolioRecoleccion, SetDataFolioRecoleccion] = React.useState([]);
 
   const [dataCodigoPostal, setDataCodigoPostal] = React.useState([]);
   const [dataRemitenteDestinatario, setDataRemitenteDestinatario] = React.useState([]);
@@ -111,6 +112,7 @@ function Recoleccion() {
     folioGuía: "",
     folioInforme: "",
     fechaHoraCreacion: "",
+    fechaHoraRegistro: "",
     estatusRecoleccion: 0,
     moneda: "",
     tipoCambio: "",
@@ -286,6 +288,9 @@ function Recoleccion() {
       "m_nIdInforme": state.folioInforme,
       "m_dFecha": state.fechaHoraCreacion.split("T")[0],
       "m_tHora": state.fechaHoraCreacion.split("T")[1],
+      
+      "m_dFechaRegistro": state.fechaHoraRegistro.split("T")[0],
+      "m_tHoraRegistro":state.fechaHoraRegistro.split("T")[1],
       "m_nMoneda": state.moneda,
       "m_rTipoCambio": state.tipoCambio,
       "m_nIdTipoDeCobro": state.tipoCobro,
@@ -297,8 +302,8 @@ function Recoleccion() {
       "m_sDomicilioDestinatario": state.domicilioDestinatario,
       "m_sIdCodigoPostalRemitente": state.codigoPostalRemitente.m_nIdCP,
       "m_sIdCodigoPostalDestinatario": state.codigoPostalDestinatario.m_nIdCP,
-      "m_nIdCiudadRemitente": state.ciudadRemitente,
-      "m_nIdCiudadDestinatario": state.ciudadDestinatario,
+      "m_nIdCiudadRemitente": state.ciudadRemitente.m_nIdCiudad,
+      "m_nIdCiudadDestinatario": state.ciudadDestinatario.m_nIdCiudad,
       "m_sCorreoRemitente": state.correoRemitente,
       "m_sCorreoDestinatario": state.correoDestinatario,
       "m_sTelefonoRemitente": state.telefonoRemitente,
@@ -336,7 +341,8 @@ function Recoleccion() {
       "m_nModificadoPor": state.ModificadoPor
 
     }
-    console.log(params)
+    console.log(JSON.stringify(params));
+    debugger;
     if (state.idRecoleccion != 0) {
       const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Modificar/${state.idRecoleccion}`;
       axios
@@ -529,11 +535,26 @@ function Recoleccion() {
       });
   }
 
+  function handleShowCiudadRemitente(id) {
+    console.log(id);
+    const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetByCP/${id}`;
+    axios.get(url, { headers }).then((respuesta) => {
+      console.log(respuesta.data);
+      setState({
+        ...state,
+       //ciudadRemitente: respuesta.data.m_nIdCiudad
+       ciudadRemitente: dataCiudad.find(
+          (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudad
+        ),
+      }); 
+    });
+  }
   function handleShowModificar(id) {
     console.log(id);
     const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetById/${id}`;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
+      debugger;
       setState({
         ...state,
         agregar: "Modificar",
@@ -544,7 +565,7 @@ function Recoleccion() {
         folioGuía: respuesta.data.m_nIdGuia,
         folioInforme: respuesta.data.m_nIdInforme,
         fechaHoraCreacion:
-          respuesta.data.m_dFecha + "T" + respuesta.data.m_tHora.slice(0, 5),
+          respuesta.data.m_dFecha+ "T" + respuesta.data.m_tHora.slice(0, 5),
         estatusRecoleccion: respuesta.data.m_nIdEstatusRecoleccion,
         moneda: respuesta.data.m_nMoneda,
         tipoCambio: respuesta.data.m_rTipoCambio,
@@ -567,13 +588,17 @@ function Recoleccion() {
         nombreDestinatario: dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCDestinatario),
         RFCDestinatario: respuesta.data.m_sRFCDestinatario,
         domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
+//ERROR PORQUE NO HAY UNIDAD REGISTRADA
         tipoUnidad: dataTipoUnidad.find(o => o.m_nIdTipoUnidad == (dataUnidad.find(o => o.m_nIdUnidad == respuesta.data.m_nIdUnidad)).m_nIdTipoUnidad),
         unidad: dataUnidad.find(
           (o) => o.m_nIdUnidad == respuesta.data.m_nIdUnidad
         ),
+
+//ERROR PORQUE NO HAY OPERADOR REGISTRADO
         operador: dataOperador.find(
           (o) => o.m_nIdOperador == respuesta.data.m_nIdOperador
-        ),
+        ) ?       dataOperador[0].m_sNombreCompleto:null,        
+        
         codigoPostalDestinatario: dataCodigoPostal.find(
           (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalDestinatario
         ),
@@ -612,6 +637,11 @@ function Recoleccion() {
           respuesta.data.m_dFechaElaboracionLlegadaRecoleccion +
           "T" +
           respuesta.data.m_tHoraElaboracionLlegadaRecoleccion.slice(0, 5),
+
+          fechaHoraRegistro:
+          respuesta.data.m_dFechaRegistro +
+          "T" +
+          respuesta.data.m_tHoraRegistro.slice(0, 5),
         fechaRecoleccion:
           respuesta.data.m_dFechaDetalleRecoleccion +
           "T" +
@@ -751,14 +781,16 @@ function Recoleccion() {
 
       agregar: "Agregar",
       idRecoleccion: 0,
-      folioRecoleccion: "",
+      //folioRecoleccion: parseInt(dataFolioRecoleccion[0].m_sFolioRecoleccion.split("E")[1]),
+      folioRecoleccion: dataFolioRecoleccion.length !== 0 ? dataFolioRecoleccion[0].m_sFolioRecoleccion:null,
       folioEmbarque: "",
       folioGuía: "",
       folioInforme: "",
+      fechaHoraRegistro:"",
       fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + "T" + today.getHours() + ":" + today.getMinutes(),
-      estatusRecoleccion: dataEstatusRecoleccion.length !== 0 ? dataEstatusRecoleccion[0].m_nIdEstatusRecoleccion : 1,
-      moneda: 0,
-      tipoCambio: "",
+      estatusRecoleccion: dataEstatusRecoleccion.length !== 0 ? dataEstatusRecoleccion[0].m_nIdEstatusRecoleccion : 2,
+      moneda: 1,
+      tipoCambio: dataTipoCambio.length !== 0 ? dataTipoCambio[0].m_nIdTipoCambio:2,
       tipoCobro: 0,
       RFCRemitente: "",
       domicilioRemitente: "",
@@ -1185,6 +1217,7 @@ function Recoleccion() {
     getAllEmbalajes();
     getAllZonas();
     getTipoCambio()
+    getUltimoFolioRecoleccion();
   }, []);
 
   function getAllData() {
@@ -1243,6 +1276,10 @@ function Recoleccion() {
     });
   }
 
+  function getUltimoFolioRecoleccion() {
+    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetUltimoFolio`;
+    axios.get(url, { headers }).then((respuesta) => { SetDataFolioRecoleccion(respuesta.data); });
+  }
 
   function getAllCodigosPostales() {
     const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
@@ -2743,15 +2780,17 @@ function Recoleccion() {
                             </div>
 
                             <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                              <label className="label">Fecha / Hora</label>
+                              <label className="label">Fecha / Hora de Registro</label>
                               <div className="input">
                                 <input
                                   onChange={handleChange}
                                   required
-                                  value={state.fechaHoraCreacion}
+                                  value={state.fechaHoraRegistro}
                                   className="form-control"
-                                  disabled="disabled"
-                                  id="fechaHoraCreacion"
+                                  id="fechaHoraRegistro"
+                                  type="datetime-local"
+                                  disabled={state.agregar == "Consultar" || state.agregar=="Modificar"}
+
                                 />
                               </div>
                             </div>
@@ -2994,12 +3033,7 @@ function Recoleccion() {
                                       <Autocomplete
                                         value={state.codigoPostalRemitente}
                                         freeSolo
-                                        onChange={(event, newValue) =>
-                                          setState({
-                                            ...state,
-                                            codigoPostalRemitente: newValue,
-                                          })
-                                        }
+                                        onChange={(event, newValue) => { handleShowCiudadRemitente(newValue.m_nIdCP) }}
                                         id="codigoPostalRemitente"
                                         disableClearable
                                         forcePopupIcon={false}
@@ -4036,7 +4070,7 @@ function Recoleccion() {
                                       <label className="input select">
                                         <select
                                           className="form-control"
-                                          required
+                                          
                                           value={state.ciudadEntrega}
                                           disabled={state.agregar == "Consultar"}
                                           onChange={handleChange}
@@ -4060,7 +4094,7 @@ function Recoleccion() {
                                       <label className="input select">
                                         <select
                                           className="form-control"
-                                          required
+                                          
                                           value={state.zonaEntrega}
                                           disabled={state.agregar == "Consultar"}
                                           onChange={handleChange}
@@ -4167,10 +4201,12 @@ function Recoleccion() {
                                       }
                                       value={state.operador}
                                       id="operador"
+                                      
+
                                       disableClearable
                                       forcePopupIcon={false}
                                       options={dataOperador}
-                                      disabled={state.agregar == "Consultar"}
+                                      disabled
                                       getOptionLabel={(option) =>
                                         option.m_sNombreCompleto
                                       }
@@ -4184,7 +4220,7 @@ function Recoleccion() {
                                       renderInput={(params) => (
                                         <div>
                                           <TextField
-                                            required
+                                            
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
@@ -4250,7 +4286,7 @@ function Recoleccion() {
                                       disableClearable
                                       forcePopupIcon={false}
                                       options={dataTipoUnidad}
-                                      disabled={state.agregar == "Consultar"}
+                                      disabled
                                       getOptionLabel={(option) =>
                                         option.m_sTipoUnidad
                                       }
@@ -4264,7 +4300,7 @@ function Recoleccion() {
                                       renderInput={(params) => (
                                         <div>
                                           <TextField
-                                            required
+                                            
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
@@ -4328,7 +4364,7 @@ function Recoleccion() {
                                       forcePopupIcon={false}
                                       options={dataUnidad}
                                       value={state.unidad}
-                                      disabled={state.agregar == "Consultar"}
+                                      disabled
                                       getOptionLabel={(option) =>
                                         option.m_sDescripcion
                                       }
@@ -4342,7 +4378,7 @@ function Recoleccion() {
                                       renderInput={(params) => (
                                         <div>
                                           <TextField
-                                            required
+                                            
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
@@ -4406,7 +4442,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="datetime-local"
-                                    required
+                                    readOnly
                                     value={state.fechaHoraSalida}
                                     disabled={state.agregar == "Consultar"}
                                     id="fechaHoraSalida"
@@ -4429,7 +4465,7 @@ function Recoleccion() {
                                     onChange={handleChange}
                                     className="form-control"
                                     type="datetime-local"
-                                    required
+                                    readOnly
                                     value={state.fechaHoraLlegada}
                                     disabled={state.agregar == "Consultar"}
                                     id="fechaHoraLlegada"
