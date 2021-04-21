@@ -535,6 +535,20 @@ function Recoleccion() {
       });
   }
 
+  function handleShowCiudadRemitente(id) {
+    console.log(id);
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/Ciudades/GetByCP/${id}`;
+    axios.get(url, { headers }).then((respuesta) => {
+      console.log(respuesta.data);
+      setState({
+        ...state,
+       //ciudadRemitente: respuesta.data.m_nIdCiudad
+       ciudadRemitente: dataCiudad.find(
+          (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudad
+        ),
+      }); 
+    });
+  }
   function handleShowModificar(id) {
     console.log(id);
     const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetById/${id}`;
@@ -618,6 +632,11 @@ function Recoleccion() {
           respuesta.data.m_dFechaElaboracionLlegadaRecoleccion +
           "T" +
           respuesta.data.m_tHoraElaboracionLlegadaRecoleccion.slice(0, 5),
+
+          fechaHoraRegistro:
+          respuesta.data.m_dFechaRegistro +
+          "T" +
+          respuesta.data.m_tHoraRegistro.slice(0, 5),
         fechaRecoleccion:
           respuesta.data.m_dFechaDetalleRecoleccion +
           "T" +
@@ -2765,6 +2784,8 @@ function Recoleccion() {
                                   className="form-control"
                                   id="fechaHoraRegistro"
                                   type="datetime-local"
+                                  disabled={state.agregar == "Consultar" || state.agregar=="Modificar"}
+
                                 />
                               </div>
                             </div>
@@ -3007,12 +3028,7 @@ function Recoleccion() {
                                       <Autocomplete
                                         value={state.codigoPostalRemitente}
                                         freeSolo
-                                        onChange={(event, newValue) =>
-                                          setState({
-                                            ...state,
-                                            codigoPostalRemitente: newValue,
-                                          })
-                                        }
+                                        onChange={(event, newValue) => { handleShowCiudadRemitente(newValue.m_nIdCP) }}
                                         id="codigoPostalRemitente"
                                         disableClearable
                                         forcePopupIcon={false}

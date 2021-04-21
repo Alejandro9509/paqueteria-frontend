@@ -87,6 +87,7 @@ function Embarque(props) {
     const [dataTipoUnidad, setDataTipoUnidad] = React.useState([]);
     const [dataUnidad, setDataUnidad] = React.useState([]);
     const [dataEmbalaje, setDataEmbalaje] = React.useState([]);
+    const [dataFolioEmbarque, SetDataFolioEmbarque] = React.useState([]);
 
     const [
         dataRemitenteDestinatario,
@@ -282,8 +283,9 @@ function Embarque(props) {
             m_tHoraDetalleEntrega: state.fechaEntrega.split("T")[1],
         };
         console.log(JSON.stringify(params));
+        debugger;
         if (state.idEmbarque != 0) {
-            const url = `${process.env.REACT_APP_API_URL}/Embarques/Modificar/${state.idEmbarque}`;
+            const url = `${process.env.REACT_APP_API_URL_LOCAL}/Embarques/Modificar/${state.idEmbarque}`;
             axios
                 .put(url, Object.assign({}, params), { headers2 })
                 .then((respuesta) => {
@@ -295,7 +297,7 @@ function Embarque(props) {
                     showSuccess("El Usuario no tiene derecho para modificar");
                 });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/Embarques/Agregar`;
+            const url = `${process.env.REACT_APP_API_URL_LOCAL}/Embarques/Agregar`;
             axios
                 .post(url, Object.assign({}, params), { headers })
                 .then((respuesta) => {
@@ -628,7 +630,8 @@ function Embarque(props) {
             agregar: "Agregar",
             idEmbarque: 0,
             folioRecoleccion: "",
-            folioEmbarque: "",
+            folioEmbarque: dataFolioEmbarque.length !== 0 ? dataFolioEmbarque[0].m_sFolioEmbarque:null,
+
             folioGuía: "",
             folioInforme: "",
             fechaHoraCreacion:
@@ -695,6 +698,12 @@ function Embarque(props) {
             cantidadDeSobres: 0,
         });
     }
+
+    function getUltimoFolioEmbarque() {
+        const url = `${process.env.REACT_APP_API_URL_LOCAL}/Embarques/GetUltimoFolio`;
+        axios.get(url, { headers }).then((respuesta) => { SetDataFolioEmbarque(respuesta.data); });
+      }
+    
 
     const handleChange = (event) => {
         console.log(event.target.id + " : " + event.target.value);
@@ -1196,6 +1205,8 @@ function Embarque(props) {
         getAllTipoUnidad();
         getAllRemitentesDestinatarios();
         getAllEmbalajes();
+        getUltimoFolioEmbarque();
+
     }
 
     async function getAllEmbarque() {
