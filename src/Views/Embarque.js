@@ -1211,6 +1211,7 @@ function Embarque(props) {
         await axios
           .get(url, { headers })
           .then((respuesta) => {
+            
             var paquetesModificado = respuesta.data.m_parrPaquetes;
             console.log(paquetesModificado);
             for (let i = 0; i < respuesta.data.m_parrPaquetes.length; i++) {
@@ -1234,7 +1235,10 @@ function Embarque(props) {
               idEmbarque: 0,
               idSucursalAgregar: respuesta.data.m_nIdSucursal,
               folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
-              folioEmbarque: respuesta.data.m_nFolioEmbarque,
+              folioEmbarque:
+              dataFolioEmbarque.length !== 0
+                ? dataFolioEmbarque[0].m_sFolioEmbarque
+                : null,
               folioGuía: respuesta.data.m_nFolioGuia,
               folioInforme: respuesta.data.m_nFolioInforme,
               fechaHoraCreacion:
