@@ -135,7 +135,6 @@ function Recoleccion() {
     telefonoDestinatario: "",
     contactoDestinatario: "",
     destinoDestinatario: 0,
-    ciudadRemitente: 0,
     fechaRecoleccion: "",
     codigoPostalRecoleccion: 0,
     ciudadRecoleccion: 0,
@@ -302,8 +301,8 @@ function Recoleccion() {
       "m_sDomicilioDestinatario": state.domicilioDestinatario,
       "m_sIdCodigoPostalRemitente": state.codigoPostalRemitente.m_nIdCP,
       "m_sIdCodigoPostalDestinatario": state.codigoPostalDestinatario.m_nIdCP,
-      "m_nIdCiudadRemitente": state.ciudadRemitente.m_nIdCiudad,
-      "m_nIdCiudadDestinatario": state.ciudadDestinatario.m_nIdCiudad,
+      "m_nIdCiudadRemitente": state.ciudadRemitente,
+      "m_nIdCiudadDestinatario": state.ciudadDestinatario,
       "m_sCorreoRemitente": state.correoRemitente,
       "m_sCorreoDestinatario": state.correoDestinatario,
       "m_sTelefonoRemitente": state.telefonoRemitente,
@@ -3033,7 +3032,11 @@ function Recoleccion() {
                                       <Autocomplete
                                         value={state.codigoPostalRemitente}
                                         freeSolo
-                                        onChange={(event, newValue) => { handleShowCiudadRemitente(newValue.m_nIdCP) }}
+                                        onChange={(event, newValue) =>
+                                          setState({
+                                            ...state,
+                                            codigoPostalDestinatario: newValue,
+                                          })}
                                         id="codigoPostalRemitente"
                                         disableClearable
                                         forcePopupIcon={false}
