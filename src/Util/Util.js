@@ -200,7 +200,7 @@ async function obtenerEmbarque(id) {
     return location.data.m_arrPaquetes
 }
 
-function getUniqueListBy(arr, key) {
+export function getUniqueListBy(arr, key) {
     return [...new Map(arr.map(item => [item[key], item])).values()]
 }
 
