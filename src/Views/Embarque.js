@@ -291,8 +291,8 @@ function Embarque(props) {
       m_tHoraEntrega: "",
       m_nNoPaquetes: state.paquetes.length,
       m_nNoSobres: state.sobres.length,
-      m_nIdOperador: state.idOperador.m_nIdOperador,
-      m_nIdUnidad: state.idUnidad.m_nIdUnidad,
+      //m_nIdOperador: state.idOperador.m_nIdOperador,
+     // m_nIdUnidad: state.idUnidad.m_nIdUnidad,
       m_dFechaSalida: state.fechaHoraSalida.split("T")[0],
       m_tHoraSalida: state.fechaHoraSalida.split("T")[1],
       FechaLlegada: state.fechaHoraLlegada.split("T")[0],
@@ -1323,7 +1323,7 @@ function Embarque(props) {
             );
           })
           .then(() => {
-            handleSelectRemitente();
+           // handleSelectRemitente();
           });
       }
       if (
