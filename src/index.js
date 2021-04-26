@@ -8,17 +8,21 @@ import { CircularProgress } from '@material-ui/core';
 import { usePromiseTracker } from "react-promise-tracker";
 import { createBrowserHistory } from "history";
 import { Spinner } from "./Components/spinner";
+import { ThemeProvider, CssBaseline } from '@material-ui/core';
+import Themes from "./Assets/themes";
 
 const hist = createBrowserHistory();
 
 
 
 ReactDOM.render(
-    <Router history={hist} basename={'/'}>
-        <Spinner />
-        <App />
+    <ThemeProvider theme={Themes.default}>
+        <Router history={hist} basename={'/'}>
+            <Spinner />
+            <App />
 
-    </Router>,
+        </Router>
+    </ThemeProvider>,
     document.getElementById('root')
 );
 

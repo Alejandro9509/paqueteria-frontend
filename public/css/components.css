@@ -252,7 +252,7 @@ a.waves-effect .waves-ripple {
   position: sticky;
   top: 60px;
   z-index: 100;
-  padding-left: 15px;
+  padding-left: 30px;
 }
 .page-header.full-block .overlay-bg {
   -webkit-border-radius: 0px;
@@ -1830,6 +1830,7 @@ a.waves-effect .waves-ripple {
 }
 .j-forms .inline-group {
   display: inline-block;
+  padding-left: 10px;
 }
 .j-forms .hidden {
   display: none;
@@ -3490,26 +3491,7 @@ a.waves-effect .waves-ripple {
 }
 /* Multistep form
 =============================== */
-.j-forms fieldset {
-  border: none;
-  outline: none;
-  margin: 0;
-  padding: 0;
-  position: absolute;
-  opacity: 0;
-  left: -9999px;
-  top: 0;
-  -webkit-transform: translateY(-4%);
-  -moz-transform: translateY(-4%);
-  -ms-transform: translateY(-4%);
-  -o-transform: translateY(-4%);
-  transform: translateY(-4%);
-  -webkit-transition: opacity 0.3s, -webkit-transform 0.3s;
-  -moz-transition: opacity 0.3s, -moz-transform 0.3s;
-  -ms-transition: opacity 0.3s, -ms-transform 0.3s;
-  -o-transition: opacity 0.3s, -o-transform 0.3s;
-  transition: opacity.3s, transform.3s;
-}
+
 .j-forms .wizard-breadcrumb {
   margin-bottom: 10px;
 }
