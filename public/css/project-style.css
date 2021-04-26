@@ -256,4 +256,6 @@ h2 {
 }
 .MuiInputBase-root{
     font-size: 14px !important;
+    height: 33px;
 }
+

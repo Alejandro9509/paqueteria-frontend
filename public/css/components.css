@@ -1816,7 +1816,7 @@ a.waves-effect .waves-ripple {
 }
 .j-forms .unit {
   position: relative;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 .j-forms .link {
   color: #555;
@@ -2277,7 +2277,6 @@ a.waves-effect .waves-ripple {
   -ms-transition: all.4s;
   -o-transition: all.4s;
   transition: all.4s;
-  padding-left: 10px !important;
 }
 .j-forms .input textarea {
   height: 112px;

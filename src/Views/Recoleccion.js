@@ -2065,12 +2065,12 @@ function Recoleccion() {
 
 
                 <div className="col-sm-4 col-md-2-5 unit">
-                    <label className="label">Peso</label>
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
                             onChange={(event) => handleChangePaquete(event, index)}
                             className="form-control"
                             type="text"
+                            label="Peso"
                             value={state.paquetes[index].m_rPeso}
                             required
                             disabled={state.agregar == "Consultar"}
@@ -2081,7 +2081,6 @@ function Recoleccion() {
                 </div>
 
                 <div className="col-sm-4 col-md-2-5 unit">
-                    <label className="label">Largo</label>
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
                             onChange={(event) => handleChangePaquete(event, index)}
@@ -2089,6 +2088,7 @@ function Recoleccion() {
                             type="text"
                             value={state.paquetes[index].m_rLargo}
                             required
+                            label="Largo"
                             disabled={state.agregar == "Consultar"}
                             placeholder="mts"
                             name="m_rLargo"
@@ -2097,12 +2097,12 @@ function Recoleccion() {
                 </div>
 
                 <div className="col-sm-4 col-md-2-5 unit">
-                    <label className="label">Ancho</label>
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
                             onChange={(event) => handleChangePaquete(event, index)}
                             className="form-control"
                             type="text"
+                            label="Ancho"
                             value={state.paquetes[index].m_rAncho}
                             required
                             disabled={state.agregar == "Consultar"}
@@ -2113,7 +2113,6 @@ function Recoleccion() {
                 </div>
 
                 <div className="col-sm-4 col-md-2-5 unit">
-                    <label className="label">Alto</label>
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
                             onChange={(event) => handleChangePaquete(event, index)}
@@ -2121,6 +2120,7 @@ function Recoleccion() {
                             type="text"
                             value={state.paquetes[index].m_rAlto}
                             required
+                            label="Alto"
                             disabled={state.agregar == "Consultar"}
                             placeholder="mts"
                             name="m_rAlto"
@@ -2129,7 +2129,6 @@ function Recoleccion() {
                 </div>
 
                 <div className="col-sm-4 col-md-2-5 unit">
-                    <label className="label">Volumen</label>
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
                             onChange={(event) => handleChangePaquete(event, index)}
@@ -2137,6 +2136,7 @@ function Recoleccion() {
                             type="text"
                             value={state.paquetes[index].m_rVolumen}
                             required
+                            label="Volumen"
                             disabled={state.agregar == "Consultar"}
                             placeholder="mts3"
                             name="m_rVolumen"
@@ -2145,34 +2145,37 @@ function Recoleccion() {
                 </div>
 
                 <div className="col-sm-4 col-md-6 unit">
-                    <label className="label">Tipo de Embalaje</label>
                     <label className="input select">
-                        <select
-                            className="form-control"
-
-                            value={state.paquetes[index].m_nIdTIpoEmpaque}
-                            disabled={state.agregar == "Consultar"}
-                            onChange={(event) => handleChangePaquete(event, index)}
-                            id="m_nIdTipoEmbalaje"
-                            name="m_nIdTipoEmbalaje"
-                        >
-                            {dataEmbalaje.map((embalaje) => (
-                                <option key={embalaje.m_nIdEmbalaje} value={embalaje.m_nIdEmbalaje}>
-                                    {embalaje.m_sNombre}
-                                </option>
-                            ))}
-                        </select>
+                        <FormControl fullWidth variant="outlined" margin="dense">
+                            <InputLabel id="m_nIdTipoEmbalajeLabel">Tipo de Embalaje</InputLabel>
+                            <Select
+                                className="form-control"
+                                label="Tipo de Embalaje"
+                                labelId="m_nIdTipoEmbalajeLabel"
+                                value={state.paquetes[index].m_nIdTIpoEmpaque}
+                                disabled={state.agregar == "Consultar"}
+                                onChange={(event) => handleChangePaquete(event, index)}
+                                id="m_nIdTipoEmbalaje"
+                                name="m_nIdTipoEmbalaje"
+                            >
+                                {dataEmbalaje.map((embalaje) => (
+                                    <option key={embalaje.m_nIdEmbalaje} value={embalaje.m_nIdEmbalaje}>
+                                        {embalaje.m_sNombre}
+                                    </option>
+                                ))}
+                            </Select>
+                        </FormControl>
                         <i className="fa fa-arrow-down" />
                     </label>
                 </div>
 
                 <div className="col-sm-4 col-md-6 unit">
-                    <label className="label">Valor Declarado</label>
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
                             onChange={(event) => handleChangePaquete(event, index)}
                             className="form-control"
                             type="text"
+                            label="Valor Declarado"
                             value={state.paquetes[index].m_cyValorDeclarado}
                             required
                             disabled={state.agregar == "Consultar"}
@@ -2183,12 +2186,12 @@ function Recoleccion() {
                 </div>
 
                 <div className="col-sm-4 col-md-8 unit">
-                    <label className="label">Descripción</label>
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
                             onChange={(event) => handleChangePaquete(event, index)}
                             className="form-control"
                             type="text"
+                            label="Descripción"
                             value={state.paquetes[index].m_sDescripcion}
                             required
                             disabled={state.agregar == "Consultar"}
@@ -2199,12 +2202,12 @@ function Recoleccion() {
                 </div>
 
                 <div className="col-sm-4 col-md-4 unit">
-                    <label className="label">Ctd</label>
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
                             onChange={(event) => handleChangePaquete(event, index)}
                             className="form-control"
                             type="text"
+                            label="Ctd"
                             value={state.paquetes[index].m_nCantidad}
                             required
                             disabled={state.agregar == "Consultar"}
@@ -2221,6 +2224,7 @@ function Recoleccion() {
                             onChange={(event) => handleChangePaquete(event, index)}
                             className="form-control"
                             type="text"
+                            label="Observaciones"
                             value={state.paquetes[index].m_sObservaciones}
                             required
                             disabled={state.agregar == "Consultar"}
@@ -2242,12 +2246,12 @@ function Recoleccion() {
 
 
                 <div className="col-md-12 unit">
-                    <label className="label">Descripcion</label>
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
                             onChange={(event) => handleChangeSobre(event, index)}
                             className="form-control"
                             type="text"
+                            label="Descripcion"
                             value={state.sobres[index].m_sDescripcion}
                             required
                             disabled={state.agregar == "Consultar"}
@@ -2382,24 +2386,28 @@ function Recoleccion() {
                         <div className="row" style={{ backgroundColor: '#FFFFFF' }} >
 
                             <div>
-                                <h2>Selecciona el Formato</h2>
                                 <label className="input select">
-                                    <select
-                                        className="form-control"
-                                        required
-                                        value={state.sucursalListado}
-                                        onChange={handleSucursalFiltro}
-                                        id="sucursalListado"
-                                    >
-                                        {dataSucursal.map((sucursal) => (
-                                            <option
-                                                key={sucursal.m_nIdSucursal}
-                                                value={sucursal.m_nIdSucursal}
-                                            >
-                                                {sucursal.m_sSucursal}
-                                            </option>
-                                        ))}
-                                    </select>
+                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                        <InputLabel id="sucursalListadoLabel">Selecciona el Formato</InputLabel>
+                                        <Select
+                                            labelId="sucursalListadoLabel"
+                                            label="Selecciona el Formato"
+                                            className="form-control"
+                                            required
+                                            value={state.sucursalListado}
+                                            onChange={handleSucursalFiltro}
+                                            id="sucursalListado"
+                                        >
+                                            {dataSucursal.map((sucursal) => (
+                                                <option
+                                                    key={sucursal.m_nIdSucursal}
+                                                    value={sucursal.m_nIdSucursal}
+                                                >
+                                                    {sucursal.m_sSucursal}
+                                                </option>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
                                     <i></i>
                                 </label>
                             </div>
@@ -2551,6 +2559,7 @@ function Recoleccion() {
                                                     <InputLabel id="sucursalListadoLabel">Sucursal</InputLabel>
                                                     <Select
                                                         labelId="sucursalListadoLabel"
+                                                        label="Sucursal"
                                                         className="form-control"
                                                         required
                                                         label="Sucursal"
@@ -2720,35 +2729,39 @@ function Recoleccion() {
                                                     <div className="col-md-12">
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             {" "}
-                                                            <label className="label">Sucursal</label>
                                                             <label className="input select">
-                                                                <select
-                                                                    className="form-control"
-                                                                    required
-                                                                    value={state.idSucursalAgregar}
-                                                                    onChange={handleChange}
-                                                                    id="idSucursalAgregar"
-                                                                    disabled="disabled"
-                                                                >
-                                                                    {dataSucursal.map((sucursal) => (
-                                                                        <option
-                                                                            key={sucursal.m_nIdSucursal}
-                                                                            value={sucursal.m_nIdSucursal}
-                                                                        >
-                                                                            {sucursal.m_sSucursal}
-                                                                        </option>
-                                                                    ))}
-                                                                </select>
+                                                                <FormControl fullWidth variant="outlined" margin="dense">
+                                                                    <InputLabel id="idSucursalAgregarLabel">Sucursal</InputLabel>
+                                                                    <Select
+                                                                        labelId="idSucursalAgregarLabel"
+                                                                        className="form-control"
+                                                                        required
+                                                                        value={state.idSucursalAgregar}
+                                                                        onChange={handleChange}
+                                                                        id="idSucursalAgregar"
+                                                                        label="Sucursal"
+                                                                        disabled="disabled"
+                                                                    >
+                                                                        {dataSucursal.map((sucursal) => (
+                                                                            <option
+                                                                                key={sucursal.m_nIdSucursal}
+                                                                                value={sucursal.m_nIdSucursal}
+                                                                            >
+                                                                                {sucursal.m_sSucursal}
+                                                                            </option>
+                                                                        ))}
+                                                                    </Select>
+                                                                </FormControl>
                                                             </label>
                                                         </div>
 
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                            <label className="label">Folio Recolección</label>
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
                                                                     onChange={handleChange}
                                                                     className="form-control"
                                                                     type="text"
+                                                                    label="Folio Recolección"
                                                                     value={state.folioRecoleccion}
                                                                     id="folioRecoleccion"
                                                                     readOnly
@@ -2757,12 +2770,12 @@ function Recoleccion() {
                                                         </div>
 
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                            <label className="label">Folio Embarque</label>
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
                                                                     onChange={handleChange}
                                                                     className="form-control"
                                                                     type="text"
+                                                                    label="Folio Embarque"
                                                                     value={state.folioEmbarque}
                                                                     id="folioEmbarque"
                                                                     readOnly
@@ -2771,12 +2784,12 @@ function Recoleccion() {
                                                         </div>
 
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                            <label className="label">Folio Guía</label>
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
                                                                     onChange={handleChange}
                                                                     className="form-control"
                                                                     type="text"
+                                                                    label="Folio Guía"
                                                                     value={state.folioGuía}
                                                                     id="folioGuía"
                                                                     readOnly
@@ -2785,12 +2798,12 @@ function Recoleccion() {
                                                         </div>
 
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                            <label className="label">Folio Informe</label>
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
                                                                     onChange={handleChange}
                                                                     className="form-control"
                                                                     type="text"
+                                                                    label="Folio Informe"
                                                                     value={state.folioInforme}
                                                                     id="folioInforme"
                                                                     readOnly
@@ -2799,11 +2812,14 @@ function Recoleccion() {
                                                         </div>
 
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                            <label className="label">Fecha / Hora de Registro</label>
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
                                                                     onChange={handleChange}
                                                                     required
+                                                                    label="Fecha / Hora de Registro"
+                                                                    InputLabelProps={{
+                                                                        shrink: true,
+                                                                    }}
                                                                     value={state.fechaHoraRegistro}
                                                                     className="form-control"
                                                                     id="fechaHoraRegistro"
@@ -2815,77 +2831,88 @@ function Recoleccion() {
                                                         </div>
 
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                            <label className="label">
-                                                                Estatus de la Recolección
-                              </label>
+
                                                             <label className="input select">
-                                                                <select
-                                                                    className="form-control"
-                                                                    required
-                                                                    value={state.estatusRecoleccion}
-                                                                    onChange={handleChange}
-                                                                    disabled={state.agregar == "Consultar"}
-                                                                    id="estatusRecoleccion"
-                                                                >
-                                                                    {dataEstatusRecoleccion.map((estatus) => (
-                                                                        <option
-                                                                            key={estatus.m_nIdEstatusRecoleccion}
-                                                                            value={estatus.m_nIdEstatusRecoleccion}
-                                                                        >
-                                                                            {estatus.m_sEstatus}
-                                                                        </option>
-                                                                    ))}
-                                                                </select>
+                                                                <FormControl fullWidth variant="outlined" margin="dense">
+                                                                    <InputLabel id="estatusRecoleccionLabel">Estatus de la Recolección</InputLabel>
+                                                                    <Select
+                                                                        labelId="estatusRecoleccion"
+                                                                        className="form-control"
+                                                                        required
+                                                                        label="Estatus de la Recolección"
+                                                                        value={state.estatusRecoleccion}
+                                                                        onChange={handleChange}
+                                                                        disabled={state.agregar == "Consultar"}
+                                                                        id="estatusRecoleccion"
+                                                                    >
+                                                                        {dataEstatusRecoleccion.map((estatus) => (
+                                                                            <option
+                                                                                key={estatus.m_nIdEstatusRecoleccion}
+                                                                                value={estatus.m_nIdEstatusRecoleccion}
+                                                                            >
+                                                                                {estatus.m_sEstatus}
+                                                                            </option>
+                                                                        ))}
+                                                                    </Select>
+                                                                </FormControl>
                                                                 <i></i>
                                                             </label>
                                                         </div>
 
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                            <label className="label">Moneda</label>
                                                             <label className="input select">
-                                                                <select
-                                                                    className="form-control"
-                                                                    required
-                                                                    value={state.moneda}
-                                                                    onChange={handleChange}
-                                                                    disabled={state.agregar == "Consultar"}
-                                                                    id="moneda"
-                                                                >
-                                                                    <option value="0">Seleccionar</option>
-                                                                    {dataTipoMoneda.map((moneda) => (
-                                                                        <option
-                                                                            key={moneda.m_nIdMoneda}
-                                                                            value={moneda.m_nIdMoneda}
-                                                                        >
-                                                                            {moneda.m_sMoneda}
-                                                                        </option>
-                                                                    ))}
-                                                                </select>
+                                                                <FormControl fullWidth variant="outlined" margin="dense">
+                                                                    <InputLabel id="monedaLabel">Moneda</InputLabel>
+                                                                    <Select
+                                                                        labelId="monedaLabel"
+                                                                        label="Moneda"
+                                                                        className="form-control"
+                                                                        required
+                                                                        value={state.moneda}
+                                                                        onChange={handleChange}
+                                                                        disabled={state.agregar == "Consultar"}
+                                                                        id="moneda"
+                                                                    >
+                                                                        <option value="0">Seleccionar</option>
+                                                                        {dataTipoMoneda.map((moneda) => (
+                                                                            <option
+                                                                                key={moneda.m_nIdMoneda}
+                                                                                value={moneda.m_nIdMoneda}
+                                                                            >
+                                                                                {moneda.m_sMoneda}
+                                                                            </option>
+                                                                        ))}
+                                                                    </Select>
+                                                                </FormControl>
                                                                 <i className="fa fa-arrow-down" />
                                                             </label>
                                                         </div>
 
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                            <label className="label">Tipo de Cambio</label>
                                                             <label className="input select">
-                                                                <select
-                                                                    className="form-control"
-                                                                    required
-                                                                    value={state.tipoCambio}
-                                                                    onChange={handleChange}
-                                                                    disabled={state.agregar == "Consultar"}
-                                                                    id="tipoCambio"
-                                                                >
-                                                                    <option value="0">Seleccionar</option>
-                                                                    {dataTipoCambio.map((cambio) => (
-                                                                        <option
-                                                                            key={cambio.m_nIdTipoCambio}
-                                                                            value={cambio.m_nIdTipoCambio}
-                                                                        >
-                                                                            {cambio.m_cTipoCambio}
-                                                                        </option>
-                                                                    ))}
-                                                                </select>
+                                                                <FormControl fullWidth variant="outlined" margin="dense">
+                                                                    <InputLabel id="tipoCambioLabel">Tipo de Cambio</InputLabel>
+                                                                    <Select
+                                                                        labelId="tipoCambioLabel"
+                                                                        label="Tipo de Cambio"
+                                                                        className="form-control"
+                                                                        required
+                                                                        value={state.tipoCambio}
+                                                                        onChange={handleChange}
+                                                                        disabled={state.agregar == "Consultar"}
+                                                                        id="tipoCambio"
+                                                                    >
+                                                                        <option value="0">Seleccionar</option>
+                                                                        {dataTipoCambio.map((cambio) => (
+                                                                            <option
+                                                                                key={cambio.m_nIdTipoCambio}
+                                                                                value={cambio.m_nIdTipoCambio}
+                                                                            >
+                                                                                {cambio.m_cTipoCambio}
+                                                                            </option>
+                                                                        ))}
+                                                                    </Select>
+                                                                </FormControl>
                                                                 <i className="fa fa-arrow-down" />
                                                             </label>
                                                         </div>
@@ -2893,26 +2920,30 @@ function Recoleccion() {
 
 
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                            <label className="label">Tipo Cobro</label>
                                                             <label className="input select">
-                                                                <select
-                                                                    className="form-control"
-                                                                    required
-                                                                    value={state.tipoCobro}
-                                                                    disabled={state.agregar == "Consultar"}
-                                                                    onChange={handleChange}
-                                                                    id="tipoCobro"
-                                                                >
-                                                                    <option value="0">Seleccionar</option>
-                                                                    {dataTipoCobro.map((tipoCobro) => (
-                                                                        <option
-                                                                            key={tipoCobro.m_nIdTipoCobro}
-                                                                            value={tipoCobro.m_nIdTipoCobro}
-                                                                        >
-                                                                            {tipoCobro.m_sDescripcion}
-                                                                        </option>
-                                                                    ))}
-                                                                </select>
+                                                                <FormControl fullWidth variant="outlined" margin="dense">
+                                                                    <InputLabel id="tipoCobroLabel">Tipo Cobro</InputLabel>
+                                                                    <Select
+                                                                        labelId="tipoCobroLabel"
+                                                                        label="Tipo Cobro"
+                                                                        className="form-control"
+                                                                        required
+                                                                        value={state.tipoCobro}
+                                                                        disabled={state.agregar == "Consultar"}
+                                                                        onChange={handleChange}
+                                                                        id="tipoCobro"
+                                                                    >
+                                                                        <option value="0">Seleccionar</option>
+                                                                        {dataTipoCobro.map((tipoCobro) => (
+                                                                            <option
+                                                                                key={tipoCobro.m_nIdTipoCobro}
+                                                                                value={tipoCobro.m_nIdTipoCobro}
+                                                                            >
+                                                                                {tipoCobro.m_sDescripcion}
+                                                                            </option>
+                                                                        ))}
+                                                                    </Select>
+                                                                </FormControl>
                                                                 <i></i>
                                                             </label>
                                                         </div>
@@ -2935,11 +2966,8 @@ function Recoleccion() {
                                                                 <div className="row">
                                                                     {/* --------------------------------------- Nombre -------------------------------------- */}
                                                                     <div className="col-sm-12 col-md-12  unit">
-                                                                        <label className="label">Nombre</label>
                                                                         <div className="input">
                                                                             <Autocomplete
-
-
                                                                                 value={state.nombreRemitente}
                                                                                 disabled={state.agregar == "Consultar"}
                                                                                 freeSolo
@@ -2948,23 +2976,23 @@ function Recoleccion() {
                                                                                 }}
                                                                                 id="nombreRemitente"
                                                                                 disableClearable
+                                                                                label="Nombre"
                                                                                 forcePopupIcon={false}
                                                                                 options={dataRemitenteDestinatario}
                                                                                 getOptionLabel={(option) =>
                                                                                     option.m_sNombreFiscal
                                                                                 }
-                                                                                variant="outlined"
                                                                                 style={{
-                                                                                    borderWidth: "1px",
-                                                                                    borderColor: "#dddddd",
-                                                                                    borderStyle: "solid",
-                                                                                    borderRadius: "5px",
-
+                                                                                    transform: "translate(14px, 10px) scale(1) !important"
                                                                                 }}
                                                                                 renderInput={(params) => (
                                                                                     <div>
                                                                                         <TextField
                                                                                             required
+                                                                                            variant="outlined"
+                                                                                            label="Nombre"
+                                                                                            className="form-control"
+                                                                                            margin="dense"
                                                                                             {...params}
                                                                                             InputProps={{
                                                                                                 ...params.InputProps,
@@ -3013,12 +3041,13 @@ function Recoleccion() {
                                                                     {/* --------------------------------------- RFC -------------------------------------- */}
                                                                     <div className="col-sm-12 col-md-8 unit">
                                                                         {" "}
-                                                                        <label className="label">RFC</label>
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
                                                                                 onChange={handleChange}
                                                                                 className="form-control"
                                                                                 type="text"
+                                                                                fullWidth
+                                                                                label="RFC"
                                                                                 pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
                                                                                 title="Favor de introducir un RFC válido."
                                                                                 required
@@ -3030,13 +3059,13 @@ function Recoleccion() {
                                                                     </div>
                                                                     {/* --------------------------------------- Domicilio -------------------------------------- */}
                                                                     <div className="col-sm-12 col-md-12 unit">
-                                                                        <label className="label">Domicilio</label>
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
                                                                                 onChange={handleChange}
                                                                                 className="form-control"
                                                                                 type="text"
                                                                                 required
+                                                                                label="Domicilio"
                                                                                 value={state.domicilioRemitente}
                                                                                 disabled={state.agregar == "Consultar"}
                                                                                 id="domicilioRemitente"
@@ -3045,9 +3074,7 @@ function Recoleccion() {
                                                                     </div>
                                                                     {/* --------------------------------------- AutocompleteCPRemitente -------------------------------------- */}
                                                                     <div className="col-sm-12 col-md-8 unit" >
-                                                                        <label className="label">
-                                                                            Código Postal
-                                    </label>
+
                                                                         <div className="input">
                                                                             <Autocomplete
                                                                                 value={state.codigoPostalRemitente}
@@ -3063,15 +3090,14 @@ function Recoleccion() {
                                                                                 }
                                                                                 variant="outlined"
                                                                                 style={{
-                                                                                    borderWidth: "1px",
-                                                                                    borderColor: "#dddddd",
-                                                                                    borderStyle: "solid",
-                                                                                    borderRadius: "5px",
-
+                                                                                    transform: "translate(14px, 10px) scale(1) !important"
                                                                                 }}
                                                                                 renderInput={(params) => (
                                                                                     <div>
                                                                                         <TextField
+                                                                                            variant="outlined"
+                                                                                            label="Código Postal"
+                                                                                            margin="dense"
                                                                                             required
                                                                                             {...params}
                                                                                             InputProps={{
@@ -3121,39 +3147,42 @@ function Recoleccion() {
                                                                     </div>
                                                                     {/* --------------------------------------- Ciudad ------------------------------------------------- */}
                                                                     <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                                                        <label className="label">Ciudad</label>
                                                                         <label className="input select">
-                                                                            <select
-                                                                                className="form-control"
-                                                                                required
-                                                                                value={state.ciudadRemitente}
-                                                                                disabled={state.agregar == "Consultar"}
-                                                                                onChange={handleChange}
-                                                                                id="ciudadRemitente"
-                                                                            >
-                                                                                {dataCiudad.map((ciudad) => (
-                                                                                    <option
-                                                                                        key={ciudad.m_nIdCiudad}
-                                                                                        value={ciudad.m_nIdCiudad}
-                                                                                    >
-                                                                                        {ciudad.m_sCiudad}
-                                                                                    </option>
-                                                                                ))}
-                                                                            </select>
+                                                                            <FormControl fullWidth variant="outlined" margin="dense">
+                                                                                <InputLabel id="ciudadRemitenteLabel">Ciudad</InputLabel>
+                                                                                <Select
+                                                                                    labelId="ciudadRemitenteLabel"
+                                                                                    label="Ciudad"
+                                                                                    className="form-control"
+                                                                                    required
+                                                                                    value={state.ciudadRemitente}
+                                                                                    disabled={state.agregar == "Consultar"}
+                                                                                    onChange={handleChange}
+                                                                                    id="ciudadRemitente"
+                                                                                >
+                                                                                    {dataCiudad.map((ciudad) => (
+                                                                                        <option
+                                                                                            key={ciudad.m_nIdCiudad}
+                                                                                            value={ciudad.m_nIdCiudad}
+                                                                                        >
+                                                                                            {ciudad.m_sCiudad}
+                                                                                        </option>
+                                                                                    ))}
+                                                                                </Select>
+                                                                            </FormControl>
                                                                             <i className="fa fa-arrow-down" />
                                                                         </label>
                                                                     </div>
                                                                     {/* --------------------------------------- Correo ------------------------------------------------- */}
                                                                     <div className="col-sm-12 col-md-12 unit">
-                                                                        <label className="label">
-                                                                            Correo Electrónico
-                                    </label>
+
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
                                                                                 onChange={handleChange}
                                                                                 className="form-control"
                                                                                 type="email"
                                                                                 required
+                                                                                label="Correo Electrónico"
                                                                                 value={state.correoRemitente}
                                                                                 disabled={state.agregar == "Consultar"}
                                                                                 id="correoRemitente"
@@ -3162,7 +3191,6 @@ function Recoleccion() {
                                                                     </div>
                                                                     {/* --------------------------------------- Telefono ------------------------------------------------- */}
                                                                     <div className="col-sm-12 col-md-12 unit">
-                                                                        <label className="label">Teléfono</label>
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
                                                                                 onChange={handleChange}
@@ -3171,6 +3199,7 @@ function Recoleccion() {
                                                                                 pattern="[0-9]{10}"
                                                                                 maxLength="10"
                                                                                 required
+                                                                                label="Teléfono"
                                                                                 value={state.telefonoRemitente}
                                                                                 disabled={state.agregar == "Consultar"}
                                                                                 id="telefonoRemitente"
@@ -3179,12 +3208,12 @@ function Recoleccion() {
                                                                     </div>
                                                                     {/* --------------------------------------- Contacto ------------------------------------------------- */}
                                                                     <div className="col-sm-12 col-md-12 unit">
-                                                                        <label className="label">Contacto</label>
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
                                                                                 onChange={handleChange}
                                                                                 className="form-control"
                                                                                 type="text"
+                                                                                label="Contacto"
                                                                                 required
                                                                                 value={state.contactoRemitente}
                                                                                 disabled={state.agregar == "Consultar"}
@@ -3194,7 +3223,6 @@ function Recoleccion() {
                                                                     </div>
                                                                     {/* --------------------------------------- Origen ------------------------------------------------- */}
                                                                     <div className="col-sm-12 col-md-12 unit">
-                                                                        <label className="label">Origen</label>
                                                                         <div className="input">
                                                                             <Autocomplete
                                                                                 freeSolo
@@ -3213,16 +3241,15 @@ function Recoleccion() {
                                                                                 getOptionLabel={(option) =>
                                                                                     option.m_sCiudad
                                                                                 }
-                                                                                variant="outlined"
                                                                                 style={{
-                                                                                    borderWidth: "1px",
-                                                                                    borderColor: "#dddddd",
-                                                                                    borderStyle: "solid",
-                                                                                    borderRadius: "5px",
+                                                                                    transform: "translate(14px, 10px) scale(1) !important"
                                                                                 }}
                                                                                 renderInput={(params) => (
                                                                                     <div>
                                                                                         <TextField
+                                                                                            label="Origen"
+                                                                                            margin="dense"
+                                                                                            variant="outlined"
                                                                                             required
                                                                                             {...params}
                                                                                             InputProps={{
@@ -3301,7 +3328,6 @@ function Recoleccion() {
                                                         <div className="widget-container">
                                                             <div className="widget-content">
                                                                 <div className="col-sm-12 col-md-12    unit">
-                                                                    <label className="label">Nombre</label>
                                                                     <div className="input">
                                                                         <Autocomplete
                                                                             onChange={(event, newValue) => {
@@ -3321,15 +3347,14 @@ function Recoleccion() {
                                                                             }
                                                                             variant="outlined"
                                                                             style={{
-                                                                                borderWidth: "1px",
-                                                                                borderColor: "#dddddd",
-                                                                                borderStyle: "solid",
-                                                                                borderRadius: "5px",
-
+                                                                                transform: "translate(14px, 10px) scale(1) !important"
                                                                             }}
                                                                             renderInput={(params) => (
                                                                                 <div>
                                                                                     <TextField
+                                                                                        label="Nombre"
+                                                                                        margin="dense"
+                                                                                        variant="outlined"
                                                                                         required
                                                                                         {...params}
                                                                                         InputProps={{
@@ -3388,15 +3413,16 @@ function Recoleccion() {
                                                                 </div>
 
                                                                 <div className="col-sm-12 col-md-8 unit">
-                                                                    <label className="label">RFC</label>
                                                                     <div className="input">
                                                                         <TextField variant="outlined" margin="dense"
                                                                             onChange={handleChange}
                                                                             className="form-control"
                                                                             type="text"
+                                                                            label="RFC"
                                                                             pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
                                                                             title="Favor de introducir un RFC válido."
                                                                             required
+                                                                            fullWidth
                                                                             value={state.RFCDestinatario}
                                                                             disabled={state.agregar == "Consultar"}
                                                                             id="RFCDestinatario"
@@ -3405,13 +3431,13 @@ function Recoleccion() {
                                                                 </div>
 
                                                                 <div className="col-sm-12 col-md-12 unit">
-                                                                    <label className="label">Domicilio</label>
                                                                     <div className="input">
                                                                         <TextField variant="outlined" margin="dense"
                                                                             onChange={handleChange}
                                                                             className="form-control"
                                                                             type="text"
                                                                             required
+                                                                            label="Domicilio"
                                                                             value={state.domicilioDestinatario}
                                                                             disabled={state.agregar == "Consultar"}
                                                                             id="domicilioDestinatario"
@@ -3419,7 +3445,6 @@ function Recoleccion() {
                                                                     </div>
                                                                 </div>
                                                                 <div className="col-sm-12 col-md-8 unit" >
-                                                                    <label className="label">Código Postal</label>
                                                                     <div className="input">
                                                                         <Autocomplete
                                                                             freeSolo
@@ -3437,15 +3462,15 @@ function Recoleccion() {
                                                                             getOptionLabel={(option) => option.m_sCP}
                                                                             variant="outlined"
                                                                             style={{
-                                                                                borderWidth: "1px",
-                                                                                borderColor: "#dddddd",
-                                                                                borderStyle: "solid",
-                                                                                borderRadius: "5px",
+                                                                                transform: "translate(14px, 10px) scale(1) !important"
                                                                             }}
                                                                             renderInput={(params) => (
                                                                                 <div>
                                                                                     <TextField
                                                                                         required
+                                                                                        variant="outlined"
+                                                                                        label="Código Postal"
+                                                                                        margin="dense"
                                                                                         {...params}
                                                                                         InputProps={{
                                                                                             ...params.InputProps,
@@ -3489,35 +3514,38 @@ function Recoleccion() {
                                                                 </div>
 
                                                                 <div className="col-sm-12 col-md-12  unit">
-                                                                    <label className="label">Ciudad</label>
                                                                     <label className="input select">
-                                                                        <select
-                                                                            className="form-control"
-                                                                            required
-                                                                            value={state.ciudadDestinatario}
-                                                                            disabled={state.agregar == "Consultar"}
-                                                                            onChange={handleChange}
-                                                                            id="ciudadDestinatario"
-                                                                        >
-                                                                            {dataCiudad.map((ciudad) => (
-                                                                                <option
-                                                                                    key={ciudad.m_nIdCiudad}
-                                                                                    value={ciudad.m_nIdCiudad}
-                                                                                >
-                                                                                    {ciudad.m_sCiudad}
-                                                                                </option>
-                                                                            ))}
-                                                                        </select>
+                                                                        <FormControl fullWidth variant="outlined" margin="dense">
+                                                                            <InputLabel id="ciudadDestinatarioLabel">Ciudad</InputLabel>
+                                                                            <Select
+                                                                                labelId="ciudadDestinatarioLabel"
+                                                                                label="Ciudad"
+                                                                                className="form-control"
+                                                                                required
+                                                                                value={state.ciudadDestinatario}
+                                                                                disabled={state.agregar == "Consultar"}
+                                                                                onChange={handleChange}
+                                                                                id="ciudadDestinatario"
+                                                                            >
+                                                                                {dataCiudad.map((ciudad) => (
+                                                                                    <option
+                                                                                        key={ciudad.m_nIdCiudad}
+                                                                                        value={ciudad.m_nIdCiudad}
+                                                                                    >
+                                                                                        {ciudad.m_sCiudad}
+                                                                                    </option>
+                                                                                ))}
+                                                                            </Select>
+                                                                        </FormControl>
                                                                         <i className="fa fa-arrow-down" />
                                                                     </label>
                                                                 </div>
 
                                                                 <div className="col-sm-12 col-md-12 unit">
-                                                                    <label className="label">
-                                                                        Correo Electrónico
-                                  </label>
+
                                                                     <div className="input">
                                                                         <TextField variant="outlined" margin="dense"
+                                                                            label="Correo Electrónico"
                                                                             onChange={handleChange}
                                                                             className="form-control"
                                                                             type="email"
@@ -3530,12 +3558,12 @@ function Recoleccion() {
                                                                 </div>
 
                                                                 <div className="col-sm-12 col-md-12 unit">
-                                                                    <label className="label">Teléfono</label>
                                                                     <div className="input">
                                                                         <TextField variant="outlined" margin="dense"
                                                                             onChange={handleChange}
                                                                             className="form-control"
                                                                             type="text"
+                                                                            label="Teléfono"
                                                                             required
                                                                             value={state.telefonoDestinatario}
                                                                             disabled={state.agregar == "Consultar"}
@@ -3545,13 +3573,13 @@ function Recoleccion() {
                                                                 </div>
 
                                                                 <div className="col-sm-12 col-md-12 unit">
-                                                                    <label className="label">Contacto</label>
                                                                     <div className="input">
                                                                         <TextField variant="outlined" margin="dense"
                                                                             onChange={handleChange}
                                                                             className="form-control"
                                                                             type="text"
                                                                             required
+                                                                            label="Contacto"
                                                                             value={state.contactoDestinatario}
                                                                             disabled={state.agregar == "Consultar"}
                                                                             id="contactoDestinatario"
@@ -3560,7 +3588,6 @@ function Recoleccion() {
                                                                 </div>
 
                                                                 <div className="col-sm-12 col-md-12  unit">
-                                                                    <label className="label">Destino</label>
                                                                     <div className="input">
                                                                         <Autocomplete
                                                                             freeSolo
@@ -3581,15 +3608,16 @@ function Recoleccion() {
                                                                             }
                                                                             variant="outlined"
                                                                             style={{
-                                                                                borderWidth: "1px",
-                                                                                borderColor: "#dddddd",
-                                                                                borderStyle: "solid",
-                                                                                borderRadius: "5px",
+                                                                                transform: "translate(14px, 10px) scale(1) !important"
                                                                             }}
                                                                             renderInput={(params) => (
                                                                                 <div>
                                                                                     <TextField
                                                                                         required
+                                                                                        variant="outlined"
+                                                                                        className="form-control"
+                                                                                        label="Destino"
+                                                                                        margin="dense"
                                                                                         {...params}
                                                                                         InputProps={{
                                                                                             ...params.InputProps,
@@ -3790,15 +3818,16 @@ function Recoleccion() {
                                                                 <div className="row">
                                                                     <div className="col-md-12">
                                                                         <div className="col-sm-6 col-md-4  unit" >
-                                                                            <label className="label">
-                                                                                Fecha y Hora
-                                        </label>
+
                                                                             <div className="input">
                                                                                 <TextField variant="outlined" margin="dense"
                                                                                     onChange={handleChange}
                                                                                     className="form-control"
                                                                                     type="datetime-local"
-
+                                                                                    label="Fecha y Hora"
+                                                                                    InputLabelProps={{
+                                                                                        shrink: true,
+                                                                                    }}
                                                                                     value={state.fechaRecoleccion}
                                                                                     disabled={state.agregar == "Consultar"}
                                                                                     id="fechaRecoleccion"
@@ -3807,9 +3836,7 @@ function Recoleccion() {
                                                                         </div>
 
                                                                         <div className="col-sm-6 col-md-4  unit" >
-                                                                            <label className="label">
-                                                                                Código Postal
-                                        </label>
+
                                                                             <div className="input">
                                                                                 <Autocomplete
                                                                                     freeSolo
@@ -3831,15 +3858,15 @@ function Recoleccion() {
                                                                                     }
                                                                                     variant="outlined"
                                                                                     style={{
-                                                                                        borderWidth: "1px",
-                                                                                        borderColor: "#dddddd",
-                                                                                        borderStyle: "solid",
-                                                                                        borderRadius: "5px",
+                                                                                        transform: "translate(14px, 10px) scale(1) !important"
                                                                                     }}
                                                                                     renderInput={(params) => (
                                                                                         <div>
                                                                                             <TextField
-
+                                                                                                variant="outlined"
+                                                                                                label="Código Postal"
+                                                                                                margin="dense"
+                                                                                                className="form-control"
                                                                                                 {...params}
                                                                                                 InputProps={{
                                                                                                     ...params.InputProps,
@@ -3883,51 +3910,59 @@ function Recoleccion() {
                                                                         </div>
 
                                                                         <div className="col-sm-6 col-md-4  unit" >
-                                                                            <label className="label">Ciudad</label>
                                                                             <label className="input select">
-                                                                                <select
-                                                                                    className="form-control"
+                                                                                <FormControl fullWidth variant="outlined" margin="dense">
+                                                                                    <InputLabel id="ciudadRecoleccionLabel">Ciudad</InputLabel>
+                                                                                    <Select
+                                                                                        labelId="ciudadRecoleccionLabel"
+                                                                                        label="Ciudad"
+                                                                                        className="form-control"
 
-                                                                                    value={state.ciudadRecoleccion}
-                                                                                    disabled={state.agregar == "Consultar"}
-                                                                                    onChange={handleChange}
-                                                                                    id="ciudadRecoleccion"
-                                                                                >
-                                                                                    {dataCiudad.map((ciudad) => (
-                                                                                        <option
-                                                                                            key={ciudad.m_nIdCiudad}
-                                                                                            value={ciudad.m_nIdCiudad}
-                                                                                        >
-                                                                                            {ciudad.m_sCiudad}
-                                                                                        </option>
-                                                                                    ))}
-                                                                                </select>
+                                                                                        value={state.ciudadRecoleccion}
+                                                                                        disabled={state.agregar == "Consultar"}
+                                                                                        onChange={handleChange}
+                                                                                        id="ciudadRecoleccion"
+                                                                                    >
+                                                                                        {dataCiudad.map((ciudad) => (
+                                                                                            <option
+                                                                                                key={ciudad.m_nIdCiudad}
+                                                                                                value={ciudad.m_nIdCiudad}
+                                                                                            >
+                                                                                                {ciudad.m_sCiudad}
+                                                                                            </option>
+                                                                                        ))}
+                                                                                    </Select>
+                                                                                </FormControl>
                                                                                 <i className="fa fa-arrow-down" />
                                                                             </label>
                                                                         </div>
 
                                                                         <div className="col-sm-6 col-md-4 unit" >
-                                                                            <label className="label">Zona</label>
 
                                                                             <label className="input select">
-                                                                                <select
-                                                                                    className="form-control"
+                                                                                <FormControl fullWidth variant="outlined" margin="dense">
+                                                                                    <InputLabel id="zonaRecoleccionLabel">Zona</InputLabel>
+                                                                                    <Select
+                                                                                        labelId="zonaRecoleccionLabel"
+                                                                                        label="Zona"
+                                                                                        className="form-control"
 
-                                                                                    value={state.zonaRecoleccion}
-                                                                                    disabled={state.agregar == "Consultar"}
-                                                                                    onChange={handleChange}
-                                                                                    id="zonaRecoleccion"
-                                                                                >
-                                                                                    <option value="">Selecciona</option>
-                                                                                    {dataZona.map((zona) => (
-                                                                                        <option
-                                                                                            key={zona.m_nIdZona}
-                                                                                            value={zona.m_nIdZona}
-                                                                                        >
-                                                                                            {zona.m_sDescripcion}
-                                                                                        </option>
-                                                                                    ))}
-                                                                                </select>
+                                                                                        value={state.zonaRecoleccion}
+                                                                                        disabled={state.agregar == "Consultar"}
+                                                                                        onChange={handleChange}
+                                                                                        id="zonaRecoleccion"
+                                                                                    >
+                                                                                        <option value="">Selecciona</option>
+                                                                                        {dataZona.map((zona) => (
+                                                                                            <option
+                                                                                                key={zona.m_nIdZona}
+                                                                                                value={zona.m_nIdZona}
+                                                                                            >
+                                                                                                {zona.m_sDescripcion}
+                                                                                            </option>
+                                                                                        ))}
+                                                                                    </Select>
+                                                                                </FormControl>
                                                                                 <i className="fa fa-arrow-down" />
                                                                             </label>
 
@@ -3940,15 +3975,13 @@ function Recoleccion() {
                                                                         </div>
 
                                                                         <div className="col-sm-6 col-md-6  unit" >
-                                                                            <label className="label">
-                                                                                Domicilio
-                                        </label>
+
                                                                             <div className="input">
                                                                                 <TextField variant="outlined" margin="dense"
                                                                                     onChange={handleChange}
                                                                                     className="form-control"
                                                                                     type="text"
-
+                                                                                    label="Domicilio"
                                                                                     value={state.domicilioRecoleccion}
                                                                                     disabled={state.agregar == "Consultar"}
                                                                                     id="domicilioRecoleccion"
@@ -3957,15 +3990,13 @@ function Recoleccion() {
                                                                         </div>
 
                                                                         <div className="col-sm-12 col-md-6  unit" >
-                                                                            <label className="label">
-                                                                                Recoger En
-                                        </label>
+
                                                                             <div className="input">
                                                                                 <TextField variant="outlined" margin="dense"
                                                                                     onChange={handleChange}
                                                                                     className="form-control"
                                                                                     type="text"
-
+                                                                                    label="Recoger En"
                                                                                     value={state.recogerEn}
                                                                                     disabled={state.agregar == "Consultar"}
                                                                                     id="recogerEn"
@@ -3974,15 +4005,13 @@ function Recoleccion() {
                                                                         </div>
 
                                                                         <div className="col-sm-12 col-md-6  unit" >
-                                                                            <label className="label">
-                                                                                Datos Adicionales para la Recolección
-                                        </label>
+
                                                                             <div className="input">
                                                                                 <TextField variant="outlined" margin="dense"
                                                                                     onChange={handleChange}
                                                                                     className="form-control"
                                                                                     type="text"
-
+                                                                                    label="Datos Adicionales para la Recolección"
                                                                                     value={
                                                                                         state.datosAdicionalesRecoleccion
                                                                                     }
@@ -4010,9 +4039,7 @@ function Recoleccion() {
                                                                 <div className="row">
                                                                     <div className="col-md-12">
                                                                         <div className="col-sm-6 col-md-4  unit" >
-                                                                            <label className="label">
-                                                                                Código Postal
-                                        </label>
+
                                                                             <div className="input">
                                                                                 <Autocomplete
                                                                                     freeSolo
@@ -4033,15 +4060,15 @@ function Recoleccion() {
                                                                                     }
                                                                                     variant="outlined"
                                                                                     style={{
-                                                                                        borderWidth: "1px",
-                                                                                        borderColor: "#dddddd",
-                                                                                        borderStyle: "solid",
-                                                                                        borderRadius: "5px",
+                                                                                        transform: "translate(14px, 10px) scale(1) !important"
                                                                                     }}
                                                                                     renderInput={(params) => (
                                                                                         <div>
                                                                                             <TextField
-
+                                                                                                variant="outlined"
+                                                                                                label="Código Postal"
+                                                                                                margin="dense"
+                                                                                                className="form-control"
                                                                                                 {...params}
                                                                                                 InputProps={{
                                                                                                     ...params.InputProps,
@@ -4085,64 +4112,71 @@ function Recoleccion() {
                                                                         </div>
 
                                                                         <div className="col-sm-6 col-md-4  unit" >
-                                                                            <label className="label">Ciudad</label>
                                                                             <label className="input select">
-                                                                                <select
-                                                                                    className="form-control"
+                                                                                <FormControl fullWidth variant="outlined" margin="dense">
+                                                                                    <InputLabel id="ciudadEntregaLabel">Ciudad</InputLabel>
+                                                                                    <Select
+                                                                                        labelId="ciudadEntregaLabel"
+                                                                                        label="Ciudad"
+                                                                                        className="form-control"
 
-                                                                                    value={state.ciudadEntrega}
-                                                                                    disabled={state.agregar == "Consultar"}
-                                                                                    onChange={handleChange}
-                                                                                    id="ciudadEntrega"
-                                                                                >
-                                                                                    {dataCiudad.map((ciudad) => (
-                                                                                        <option
-                                                                                            key={ciudad.m_nIdCiudad}
-                                                                                            value={ciudad.m_nIdCiudad}
-                                                                                        >
-                                                                                            {ciudad.m_sCiudad}
-                                                                                        </option>
-                                                                                    ))}
-                                                                                </select>
+                                                                                        value={state.ciudadEntrega}
+                                                                                        disabled={state.agregar == "Consultar"}
+                                                                                        onChange={handleChange}
+                                                                                        id="ciudadEntrega"
+                                                                                    >
+                                                                                        {dataCiudad.map((ciudad) => (
+                                                                                            <option
+                                                                                                key={ciudad.m_nIdCiudad}
+                                                                                                value={ciudad.m_nIdCiudad}
+                                                                                            >
+                                                                                                {ciudad.m_sCiudad}
+                                                                                            </option>
+                                                                                        ))}
+                                                                                    </Select>
+                                                                                </FormControl>
                                                                                 <i className="fa fa-arrow-down" />
                                                                             </label>
                                                                         </div>
 
                                                                         <div className="col-sm-6 col-md-4 unit" >
-                                                                            <label className="label">Zona</label>
                                                                             <label className="input select">
-                                                                                <select
-                                                                                    className="form-control"
+                                                                                <FormControl fullWidth variant="outlined" margin="dense">
+                                                                                    <InputLabel id="zonaEntregaLabel">Zona</InputLabel>
+                                                                                    <Select
+                                                                                        labelId="zonaEntregaLabel"
+                                                                                        label="Zona"
+                                                                                        className="form-control"
 
-                                                                                    value={state.zonaEntrega}
-                                                                                    disabled={state.agregar == "Consultar"}
-                                                                                    onChange={handleChange}
-                                                                                    id="zonaEntrega"
-                                                                                >
-                                                                                    <option value="">Selecciona</option>
+                                                                                        value={state.zonaEntrega}
+                                                                                        disabled={state.agregar == "Consultar"}
+                                                                                        onChange={handleChange}
+                                                                                        id="zonaEntrega"
+                                                                                    >
+                                                                                        <option value="">Selecciona</option>
 
-                                                                                    {dataZona.map((zona) => (
-                                                                                        <option
-                                                                                            key={zona.m_nIdZona}
-                                                                                            value={zona.m_nIdZona}
-                                                                                        >
-                                                                                            {zona.m_sDescripcion}
-                                                                                        </option>
-                                                                                    ))}
-                                                                                </select>
+                                                                                        {dataZona.map((zona) => (
+                                                                                            <option
+                                                                                                key={zona.m_nIdZona}
+                                                                                                value={zona.m_nIdZona}
+                                                                                            >
+                                                                                                {zona.m_sDescripcion}
+                                                                                            </option>
+                                                                                        ))}
+                                                                                    </Select>
+                                                                                </FormControl>
                                                                                 <i className="fa fa-arrow-down" />
                                                                             </label>
                                                                         </div>
 
                                                                         <div className="col-sm-6 col-md-6 col-lg-6 unit" >
-                                                                            <label className="label">
-                                                                                Domicilio
-                                        </label>
+
                                                                             <div className="input">
                                                                                 <TextField variant="outlined" margin="dense"
                                                                                     onChange={handleChange}
                                                                                     className="form-control"
                                                                                     type="text"
+                                                                                    label="Domicilio"
                                                                                     value={state.domicilioEntrega}
                                                                                     disabled={state.agregar == "Consultar"}
                                                                                     id="domicilioEntrega"
@@ -4151,14 +4185,13 @@ function Recoleccion() {
                                                                         </div>
 
                                                                         <div className="col-sm-12 col-md-6 col-lg-6 unit" >
-                                                                            <label className="label">
-                                                                                Entrega En
-                                        </label>
+
                                                                             <div className="input">
                                                                                 <TextField variant="outlined" margin="dense"
                                                                                     onChange={handleChange}
                                                                                     className="form-control"
                                                                                     type="text"
+                                                                                    label="Entrega En"
                                                                                     value={state.entregaEn}
                                                                                     disabled={state.agregar == "Consultar"}
                                                                                     id="entregaEn"
@@ -4167,14 +4200,13 @@ function Recoleccion() {
                                                                         </div>
 
                                                                         <div className="col-sm-12 col-md-6 col-lg-6 unit" >
-                                                                            <label className="label ">
-                                                                                Datos Adicionales para la Entrega
-                                        </label>
+
                                                                             <div className="input">
                                                                                 <TextField variant="outlined" margin="dense"
                                                                                     onChange={handleChange}
                                                                                     className="form-control"
                                                                                     type="text"
+                                                                                    label="Datos Adicionales para la Entrega"
                                                                                     value={
                                                                                         state.datosAdicionalesEntrega
                                                                                     }
@@ -4208,7 +4240,6 @@ function Recoleccion() {
                                                             <div className="row">
                                                                 {/* --------------------------------------- Operador ------------------------------------------------- */}
                                                                 <div className="col-sm-4 col-md-4 unit">
-                                                                    <label className="label">Operador</label>
                                                                     <div className="input">
                                                                         <Autocomplete
                                                                             freeSolo
@@ -4231,15 +4262,15 @@ function Recoleccion() {
                                                                             }
                                                                             variant="outlined"
                                                                             style={{
-                                                                                borderWidth: "1px",
-                                                                                borderColor: "#dddddd",
-                                                                                borderStyle: "solid",
-                                                                                borderRadius: "5px",
+                                                                                transform: "translate(14px, 10px) scale(1) !important"
                                                                             }}
                                                                             renderInput={(params) => (
                                                                                 <div>
                                                                                     <TextField
-
+                                                                                        variant="outlined"
+                                                                                        label="Operador"
+                                                                                        margin="dense"
+                                                                                        className="form-control"
                                                                                         {...params}
                                                                                         InputProps={{
                                                                                             ...params.InputProps,
@@ -4288,9 +4319,7 @@ function Recoleccion() {
                                                                 </div>
                                                                 {/* --------------------------------------- TipoUnidad ------------------------------------------------- */}
                                                                 <div className="col-sm-4 col-md-4 unit">
-                                                                    <label className="label">
-                                                                        Tipo de Unidad
-                                    </label>
+
                                                                     <div className="input">
                                                                         <Autocomplete
                                                                             freeSolo
@@ -4311,15 +4340,15 @@ function Recoleccion() {
                                                                             }
                                                                             variant="outlined"
                                                                             style={{
-                                                                                borderWidth: "1px",
-                                                                                borderColor: "#dddddd",
-                                                                                borderStyle: "solid",
-                                                                                borderRadius: "5px",
+                                                                                transform: "translate(14px, 10px) scale(1) !important"
                                                                             }}
                                                                             renderInput={(params) => (
                                                                                 <div>
                                                                                     <TextField
-
+                                                                                        variant="outlined"
+                                                                                        label="Tipo de Unidad"
+                                                                                        margin="dense"
+                                                                                        className="form-control"
                                                                                         {...params}
                                                                                         InputProps={{
                                                                                             ...params.InputProps,
@@ -4368,7 +4397,6 @@ function Recoleccion() {
                                                                 </div>
                                                                 {/* --------------------------------------- Unidad ------------------------------------------------- */}
                                                                 <div className="col-sm-4 col-md-4 unit">
-                                                                    <label className="label">Unidad</label>
                                                                     <div className="input">
                                                                         <Autocomplete
                                                                             freeSolo
@@ -4389,15 +4417,15 @@ function Recoleccion() {
                                                                             }
                                                                             variant="outlined"
                                                                             style={{
-                                                                                borderWidth: "1px",
-                                                                                borderColor: "#dddddd",
-                                                                                borderStyle: "solid",
-                                                                                borderRadius: "5px",
+                                                                                transform: "translate(14px, 10px) scale(1) !important"
                                                                             }}
                                                                             renderInput={(params) => (
                                                                                 <div>
                                                                                     <TextField
-
+                                                                                        variant="outlined"
+                                                                                        label="Unidad"
+                                                                                        margin="dense"
+                                                                                        className="form-control"
                                                                                         {...params}
                                                                                         InputProps={{
                                                                                             ...params.InputProps,
@@ -4455,13 +4483,16 @@ function Recoleccion() {
                                                     <div className="widget-container">
                                                         <div className="widget-content">
                                                             <div className="col-md-12">
-                                                                <label className="label">Fecha y Hora</label>
                                                                 <div className="input">
                                                                     <TextField variant="outlined" margin="dense"
                                                                         onChange={handleChange}
                                                                         className="form-control"
                                                                         type="datetime-local"
                                                                         readOnly
+                                                                        InputLabelProps={{
+                                                                            shrink: true,
+                                                                          }}
+                                                                        label="Fecha y Hora"
                                                                         value={state.fechaHoraSalida}
                                                                         disabled={state.agregar == "Consultar"}
                                                                         id="fechaHoraSalida"
@@ -4478,13 +4509,16 @@ function Recoleccion() {
                                                     <div className="widget-container">
                                                         <div className="widget-content">
                                                             <div className="col-md-12">
-                                                                <label className="label">Fecha y Hora</label>
                                                                 <div className="input">
-                                                                    <input
+                                                                <TextField variant="outlined" margin="dense"
                                                                         onChange={handleChange}
                                                                         className="form-control"
                                                                         type="datetime-local"
                                                                         readOnly
+                                                                        InputLabelProps={{
+                                                                            shrink: true,
+                                                                          }}
+                                                                          label="Fecha y Hora"
                                                                         value={state.fechaHoraLlegada}
                                                                         disabled={state.agregar == "Consultar"}
                                                                         id="fechaHoraLlegada"
@@ -4531,12 +4565,12 @@ function Recoleccion() {
                                                 <div className="form-content">
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                        <label className="label">Folio Recolección</label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 type="text"
+                                                                label="Folio Recolección"
                                                                 value={state.folioRecoleccion}
                                                                 id="folioRecoleccion"
                                                                 readOnly
@@ -4545,12 +4579,12 @@ function Recoleccion() {
                                                     </div>
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                        <label className="label">Sucursal</label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 type="text"
+                                                                label="Sucursal"
                                                                 value={state.sucursalCancelacion}
                                                                 id="sucursalCancelacion"
                                                                 readOnly
@@ -4559,12 +4593,12 @@ function Recoleccion() {
                                                     </div>
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                        <label className="label">Fecha</label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 type="text"
+                                                                label="Fecha"
                                                                 value={state.mostrarFechaCancelacion}
                                                                 id="mostrarFechaCancelacion"
                                                                 readOnly
@@ -4573,12 +4607,12 @@ function Recoleccion() {
                                                     </div>
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                        <label className="label">Usuario</label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 type="text"
+                                                                label="Usuario"
                                                                 value={state.usuario}
                                                                 id="usuario"
                                                                 readOnly
@@ -4587,12 +4621,12 @@ function Recoleccion() {
                                                     </div>
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                        <label className="label">Estatus</label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 type="text"
+                                                                label="Estatus"
                                                                 value={state.estatusRecoleccion}
                                                                 id="estatusRecoleccion"
                                                                 readOnly
@@ -4602,12 +4636,12 @@ function Recoleccion() {
 
 
                                                     <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                                        <label className="label">Motivo</label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 type="text"
+                                                                label="Motivo"
                                                                 value={state.motivoCancelacion}
                                                                 id="motivoCancelacion"
                                                             />
@@ -4648,12 +4682,12 @@ function Recoleccion() {
                                                 <div className="form-content">
 
                                                     <div className="col-sm-6 col-md-3 col-lg-3 unit">
-                                                        <label className="label">Sucursal</label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 type="text"
+                                                                label="Sucursal"
                                                                 value={state.sucursalCancelacion}
                                                                 id="sucursalCancelacion"
                                                                 readOnly
@@ -4662,12 +4696,12 @@ function Recoleccion() {
                                                     </div>
 
                                                     <div className="col-sm-6 col-md-3 col-lg-3 unit">
-                                                        <label className="label">Folio Recolección</label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 type="text"
+                                                                label="Folio Recolección"
                                                                 value={state.folioRecoleccion}
                                                                 id="folioRecoleccion"
                                                                 readOnly
@@ -4676,12 +4710,12 @@ function Recoleccion() {
                                                     </div>
 
                                                     <div className="col-sm-6 col-md-3 col-lg-3 unit">
-                                                        <label className="label">Fecha Elaboracion</label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 type="text"
+                                                                label="Fecha Elaboracion"
                                                                 value={state.fechaHoraCreacion}
                                                                 id="fechaHoraCreacion"
                                                                 readOnly
@@ -4690,12 +4724,12 @@ function Recoleccion() {
                                                     </div>
 
                                                     <div className="col-sm-6 col-md-3 col-lg-3 unit">
-                                                        <label className="label">Fecha Recoleccion</label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 type="text"
+                                                                label="Fecha Recoleccion"
                                                                 value={state.fechaRecoleccion}
                                                                 id="fechaRecoleccion"
                                                                 readOnly
@@ -4704,12 +4738,12 @@ function Recoleccion() {
                                                     </div>
 
                                                     <div className="col-sm-6 col-md-6 col-lg-6 unit">
-                                                        <label className="label">Zona</label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 type="text"
+                                                                label="Zona"
                                                                 value={state.zonaRecoleccion}
                                                                 id="zonaRecoleccion"
                                                                 readOnly
@@ -4718,12 +4752,12 @@ function Recoleccion() {
                                                     </div>
 
                                                     <div className="col-sm-6 col-md-6 col-lg-6 unit">
-                                                        <label className="label">Recoger En</label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 type="text"
+                                                                label="Recoger En"
                                                                 value={state.recogerEn}
                                                                 id="recogerEn"
                                                                 readOnly
@@ -4732,12 +4766,12 @@ function Recoleccion() {
                                                     </div>
 
                                                     <div className="col-sm-12 col-md-6 col-lg-6 unit">
-                                                        <label className="label">Operador</label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 type="text"
+                                                                label="Operador"
                                                                 value={state.operador.m_sNombreCompleto}
                                                                 id="operador"
                                                             />
@@ -4745,12 +4779,12 @@ function Recoleccion() {
                                                     </div>
 
                                                     <div className="col-sm-12 col-md-6 col-lg-6 unit">
-                                                        <label className="label">Estatus</label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 type="text"
+                                                                label="Estatus"
                                                                 value={state.motivoCancelacion}
                                                                 id="motivoCancelacion"
                                                             />
@@ -4758,12 +4792,12 @@ function Recoleccion() {
                                                     </div>
 
                                                     <div className="col-sm-12 col-md-6 col-lg-6 unit">
-                                                        <label className="label">Unidad</label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 type="text"
+                                                                label="Unidad"
                                                                 value={state.unidad.m_sDescripcion}
                                                                 id="unidad"
                                                             />
@@ -4771,12 +4805,12 @@ function Recoleccion() {
                                                     </div>
 
                                                     <div className="col-sm-12 col-md-6 col-lg-6 unit">
-                                                        <label className="label">Estatus</label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 type="text"
+                                                                labekl="Estatus"
                                                                 value={state.motivoCancelacion}
                                                                 id="motivoCancelacion"
                                                             />
@@ -4784,12 +4818,12 @@ function Recoleccion() {
                                                     </div>
 
                                                     <div className="col-sm-12 col-md-6 col-lg-6 unit">
-                                                        <label className="label">Remolque</label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 type="text"
+                                                                label="Remolque"
                                                                 value={state.motivoCancelacion}
                                                                 id="motivoCancelacion"
                                                             />
@@ -4797,12 +4831,12 @@ function Recoleccion() {
                                                     </div>
 
                                                     <div className="col-sm-12 col-md-3 col-lg-3 unit">
-                                                        <label className="label">Estatus</label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 type="text"
+                                                                label="Estatus"
                                                                 value={state.motivoCancelacion}
                                                                 id="motivoCancelacion"
                                                             />
@@ -4810,12 +4844,12 @@ function Recoleccion() {
                                                     </div>
 
                                                     <div className="col-sm-12 col-md-3 col-lg-3 unit">
-                                                        <label className="label">Cargado</label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 type="text"
+                                                                label="Cargado"
                                                                 value={state.motivoCancelacion}
                                                                 id="motivoCancelacion"
                                                             />
@@ -4823,12 +4857,12 @@ function Recoleccion() {
                                                     </div>
 
                                                     <div className="col-sm-12 col-md-4 col-lg-4 unit">
-                                                        <label className="label">Fecha Salida</label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 type="text"
+                                                                label="Fecha Salida"
                                                                 value={state.motivoCancelacion}
                                                                 id="motivoCancelacion"
                                                             />
