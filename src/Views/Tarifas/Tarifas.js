@@ -30,6 +30,7 @@ class Tarifas extends Component {
             data: [],
             height: window.innerHeight,
             pantalla: 1,
+            selected: {},
             dataSucursal: [],
             height: window.innerHeight,
             columns: [
@@ -107,6 +108,7 @@ class Tarifas extends Component {
         this.handleShowModificar = this.handleShowModificar.bind(this)
         this.handleShowConsultar = this.handleShowConsultar.bind(this)
         this.handleEliminar = this.handleEliminar.bind(this)
+        this.handleAceptar = this.handleAceptar.bind(this)
     }
 
 
@@ -161,6 +163,46 @@ class Tarifas extends Component {
             showSuccess(err)
         });
     }
+
+    handleAceptar(data){
+        var params = {
+            m_nIdSucursal: data.sucursal,
+            m_sDestino: data.destino,
+            m_cFleteMinimo: data.precioFlete,
+            m_bActivo: data.activo ? 1 : 0,
+            m_cMontoMinimo: data.precioMinimo,
+            m_cPrecioKilo: data.precioKilo,
+            m_cPrecioM3: data.precioM3,
+            m_arrArCobros: data.tiposCobroSeleccionado.map(c => ({m_nIdTipoCobro: c.m_nIdTipoCobro})),
+            m_arrArServicios: data.tiposServicioSeleccionado.map(s => ({m_nIdTipoServicio: s.m_nIdTipoServicio})),
+            m_arrArConceptos: data.conceptosAdicionales.map(c => ({m_nIdConceptoFacturacion: c.concepto.m_nIdConceptoFacturacion, m_cImporte: c.importe, m_nIdImpuestoTraslada: c.traslada, m_nIdImpuestoRetiene: c.retiene, m_cImporteRetiene: c.importeRet, m_cImporteIva: c.importeIva})),
+            m_nCreadoPOr: localStorage.getItem("UsuarioId"),
+            m_nModificadoPor: localStorage.getItem("UsuarioId")
+        }
+        console.log(params)
+        if (this.state.edit) {
+          const url = `${process.env.REACT_APP_API_URL}/Tarifas/Modificar/` + this.state.selected.idConceptosFacturacion;
+          axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+            showSuccess(respuesta.data)
+            this.getAllData()
+            this.setState({openDialog: false})
+          }).catch(err => {
+            console.log(err)
+            showSuccess("err")
+          });
+        } else {
+          const url = `${process.env.REACT_APP_API_URL}/Tarifas/Agregar`;
+          axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+            showSuccess(respuesta.data)
+            this.getAllData()
+            this.setState({openDialog: false})
+          }).catch(err => {
+            console.log(err)
+            showSuccess(err)
+          });
+        }
+    
+      }
 
     cambiarPantalla(id) {
         this.setState({ pantalla: id })
@@ -264,7 +306,7 @@ class Tarifas extends Component {
                             </div>
 
                             <div id="Agregar" className="tab-pane fade">
-                                <CrearTarifa cancelAction={this.cambiarPantalla}></CrearTarifa>
+                                <CrearTarifa edit={this.state.edit} select={this.state.selected} onSubmit={this.handleAceptar}></CrearTarifa>
                             </div>
 
 

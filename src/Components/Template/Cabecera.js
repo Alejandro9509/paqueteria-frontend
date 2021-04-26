@@ -46,21 +46,6 @@ function Cabecera({ rutas }) {
                     <i className="zmdi zmdi-power" />
                   </a>
                 </li>
-                <li>
-                  <a href="index.html">
-                    <i className="zmdi zmdi-account" />
-                  </a>
-                </li>
-                <li>
-                  <a href="index.html">
-                    <i className="zmdi zmdi-key" />
-                  </a>
-                </li>
-                <li>
-                  <a href="index.html">
-                    <i className="zmdi zmdi-settings" />
-                  </a>
-                </li>
               </ul>
             </div>
           </div>

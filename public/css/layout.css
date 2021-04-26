@@ -1649,18 +1649,18 @@
 }
 .iconic-aside-container .user-profile-container {
   width: 60px;
-  height: 62px;
+  height: 30px;
   position: relative;
   background-color: #35353b;
 }
 .iconic-aside-container .user-profile-container .user-profile {
   display: table;
   width: 60px;
-  height: 62px;
+  height: 40px;
   cursor: pointer;
   z-index: 200;
   position: relative;
-  background-color: #35353b;
+  background-color: #ffffff;
 }
 .iconic-aside-container .user-profile-container .user-profile > div {
   display: table-cell;

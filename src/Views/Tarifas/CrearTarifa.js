@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from "axios";
-import { AppBar, Box, Tab, Tabs, Typography } from '@material-ui/core';
+import { AppBar, Box, FormControl, InputLabel, Select, Tab, Tabs, Typography } from '@material-ui/core';
 import ConceptosAdicionales from './ConceptosAdicionales';
 import TipoCobro from './TipoCobro';
 import TipoServicio from './TipoServicio';
 import SvgIcon from "@material-ui/core/SvgIcon";
 import { getUniqueListBy } from '../../Util/Util';
+import { PowerInputSharp } from '@material-ui/icons';
 
 const headers = {
     'Content-Type': 'application/json',
@@ -26,13 +27,19 @@ class CrearTarifa extends Component {
             dataSucursal: [],
             ciudades: [],
             tab: 0,
-            conceptosAdicionales: [],
+            conceptosAdicionales:  [],
             tiposCobroSeleccionado: [],
             tiposServicioSeleccionado: [],
             tiposCobroAll: false,
             tiposServicioAll: false,
             ivaTraslada: [],
-            ivaRetiene: []
+            ivaRetiene: [],
+            sucursal: props.edit ? props.select.m_nIdSucursal : "",
+            destino: props.edit ? props.select.m_sDestino : "",
+            precioFlete: props.edit ? props.select.m_cFleteMinimo : "",
+            precioMinimo: props.edit ? props.select.m_cMontoMinimo : "",
+            precioKilo: props.edit ? props.select.m_cPrecioKilo : "",
+            precioM3: props.edit ? props.select.m_cPrecioM3 : ""
         }
         this.getAllSucursales = this.getAllSucursales.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -42,6 +49,7 @@ class CrearTarifa extends Component {
         this.removeConcepto = this.removeConcepto.bind(this)
         this.handleChangeChecboxTiposCobro = this.handleChangeChecboxTiposCobro.bind(this)
         this.handleChangeChecboxTiposServicio = this.handleChangeChecboxTiposServicio.bind(this)
+        this.onSubmit = this.onSubmit.bind(this)
     }
 
     componentWillMount() {
@@ -127,7 +135,7 @@ class CrearTarifa extends Component {
         }
 
     }
-    
+
     handleChangeChecboxTiposServicio(event, index, arrayTipos, all) {
         const array = this.state.tiposServicioSeleccionado
         if (all) {
@@ -152,9 +160,14 @@ class CrearTarifa extends Component {
 
     }
 
+    onSubmit(event){
+        event.preventDefault()
+        this.props.onSubmit(this.state)
+    }
+
     render() {
         return (
-            <form className="j-forms">
+            <form className="j-forms" onSubmit={this.onSubmit}>
                 <div className="main-container" style={{ marginLeft: "0px", padding: "0px" }}>
                     <div className="row">
                         <div className="col-md-4 col-sm-12">
@@ -167,23 +180,28 @@ class CrearTarifa extends Component {
                                     </div>
                                     <div className="row">
                                         <div className="col-md-12 col-sm-12" style={{ padding: "2px" }}>
-                                            <label className="label">Sucursal</label>
                                             <label className="input select" style={{ width: "100%" }}>
-                                                <select
-                                                    className="form-control"
-                                                    required
-                                                    name="sucursal"
-                                                >
-                                                    {this.state.dataSucursal.map((sucursal) => (
-                                                        <option
-                                                            key={sucursal.m_nIdSucursal}
-                                                            value={sucursal.m_nIdSucursal}
-                                                        >
-                                                            {sucursal.m_sSucursal}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                                <i></i>
+                                                <FormControl fullWidth variant="outlined" margin="dense">
+                                                    <InputLabel id="sucursalLabel">Sucursal</InputLabel>
+                                                    <Select
+                                                        labelId="sucursalLabel"
+                                                        className="form-control"
+                                                        required
+                                                        onChange={this.handleChange}
+                                                        label="Sucursal"
+                                                        value={this.state.sucursal}
+                                                        name="sucursal"
+                                                    >
+                                                        {this.state.dataSucursal.map((sucursal) => (
+                                                            <option
+                                                                key={sucursal.m_nIdSucursal}
+                                                                value={sucursal.m_nIdSucursal}
+                                                            >
+                                                                {sucursal.m_sSucursal}
+                                                            </option>
+                                                        ))}
+                                                </Select>
+                                                </FormControl>
                                             </label>
                                         </div>
                                         <div className="col-md-12 col-sm-12" style={{ padding: "2px" }}>
@@ -192,7 +210,9 @@ class CrearTarifa extends Component {
                                                 <select
                                                     className="form-control"
                                                     required
-                                                    name="sucursal"
+                                                    value={this.state.destino}
+                                                    onChange={this.handleChange}
+                                                    name="destino"
                                                 >
                                                     {this.state.ciudades.map((sucursal) => (
                                                         <option
@@ -271,18 +291,20 @@ class CrearTarifa extends Component {
                                             </div>
                                         </div>
 
-                                        <div className="col-md-12 col-sm-12" style={{ padding: "2px", display:"inline-flex" }}>
-                                            <div className="form-footer " className="col-md-12" style={{padding: "10px"}}>
+                                        <div className="col-md-12 col-sm-12" style={{ padding: "2px", display: "inline-flex" }}>
+                                            <div className="form-footer " className="col-md-12" style={{ padding: "10px" }}>
                                                 <button
                                                     type="button"
-                                                    onClick={() => console.log("")}
                                                     className="btn btn-secondary secondary-btn"
-                                                    onClick={() => this.props.cancelAction(1)}
+                                                    role="tab" data-toggle="tab"
+                                                    href="#Listado"
                                                 >
                                                     Cancelar
                                     </button>
                                                 <button
                                                     type="submit"
+                                                    role="tab" data-toggle="tab"
+                                                    href="#Listado"
                                                     className="btn btn-primary primary-btn"
                                                 >
                                                     Aceptar

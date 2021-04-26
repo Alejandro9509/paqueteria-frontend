@@ -248,3 +248,14 @@ h2 {
 .MuiTabs-root {
     min-height: 20px !important;
 }
+.MuiFormControl-marginDense {
+    margin: 0px !important;
+}
+.MuiFormLabel-root{
+    font-size: 14px !important;
+}
+.MuiInputBase-root{
+    font-size: 14px !important;
+    height: 33px;
+}
+
