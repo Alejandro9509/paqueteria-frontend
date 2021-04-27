@@ -119,7 +119,9 @@ function Informes({ history }) {
   const [dataEstatusInformes, setEstatusInformes] = React.useState([]);
   const [dataOperadores, setDataOperadores] = React.useState([]);
   const [dataOrigenes, setDataOrigenes] = React.useState([]);
-  const [dataUnidades, setDataUnidades] = React.useState([]);
+  const [dataUnidadesRem, setDataUnidadesRem] = React.useState([]);
+  const [dataUnidadesDol, setDataUnidadesDol] = React.useState([]);
+
   const [dataGuias, setDataGuias] = React.useState([]);
   const [dataViajes, setDataViajes] = React.useState([]);
   const [dataGuiasCubicar, setDataGuiasCubicar] = React.useState([]);
@@ -713,6 +715,7 @@ function Informes({ history }) {
     IdRemolque2: {},
     PlacasRemolque1: "",
     PlacasRemolque2: "",
+    PlacasDolly: "",
     IdTipoUnidad: {},
     IdCiudadDestino: {},
     IdCiudadOrigen: {},
@@ -759,7 +762,9 @@ function Informes({ history }) {
       m_nIdRuta: state.idRuta.m_nIdRuta,
       m_nIdSucursalEmisora: state.sucursalEmisora,
       m_nIdSucursalReceptora: state.sucursalReceptora,
-      m_nIdTipoUnidad: state.IdTipoUnidad.m_nIdTipoUnidad,
+      m_nIdDolly: state.IdTipoUnidad.m_nIdUnidad,
+      m_sPlacasDolly: state.PlacasDolly,
+
       m_nIdViaje: state.IdViaje.m_nIdViaje,
       TotalxCDestinatario: 0,
       TotalxCCobrarRemitente: 0,
@@ -1388,18 +1393,24 @@ function Informes({ history }) {
     });
   }
 
-  function getAllTipoUnidad() {
+/*   function getAllTipoUnidad() {
     const url = `${process.env.REACT_APP_API_URL}/TiposUnidades/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setDataTipoUnidad(respuesta.data);
       getAllUnidades(respuesta.data[0].m_nIdTipoUnidad);
     });
   }
-
-  async function getAllUnidades(id) {
+ */
+  async function getAllUnidadesRemolques(id) {
     const url = `${process.env.REACT_APP_API_URL}/Unidades/ByTipoUnidad/${id}`;
     await axios.get(url, { headers }).then((respuesta) => {
-      setDataUnidades(respuesta.data);
+      setDataUnidadesRem(respuesta.data);
+    });
+  }
+  async function getAllUnidadesDolly(id) {
+    const url = `${process.env.REACT_APP_API_URL}/Unidades/ByTipoUnidad/${id}`;
+    await axios.get(url, { headers }).then((respuesta) => {
+      setDataUnidadesDol(respuesta.data);
     });
   }
 
@@ -1514,7 +1525,9 @@ function Informes({ history }) {
     getAllSucursales();
     getAllOperadores();
     getAllCiudades();
-    getAllTipoUnidad();
+    getAllUnidadesRemolques(8);
+    getAllUnidadesDolly(9);
+    //getAllTipoUnidad();
     getAllDataRutas();
   }, []);
 
@@ -1746,6 +1759,7 @@ function Informes({ history }) {
                                     })
                                   }
                                   id="IdOperador"
+                                  required
                                   disableClearable
                                   forcePopupIcon={false}
                                   options={dataOperadores}
@@ -1811,7 +1825,7 @@ function Informes({ history }) {
                             {/*****************************************tipo Unidad*************************************************/}
                             <div className="row">
                               <div className="col-sm-12 col-md-6 unit">
-                                <label className="label">Tipo de Unidad</label>
+                                <label className="label">Dolly</label>
                                 <div className="input">
                                   <Autocomplete
                                     freeSolo
@@ -1825,9 +1839,9 @@ function Informes({ history }) {
                                     id="IdTipoUnidad"
                                     disableClearable
                                     forcePopupIcon={false}
-                                    options={dataTipoUnidad}
+                                    options={dataUnidadesDol}
                                     getOptionLabel={(option) =>
-                                      option.m_sTipoUnidad
+                                      option.m_sDescripcion
                                     }
                                     variant="outlined"
                                     style={{
@@ -1858,8 +1872,8 @@ function Informes({ history }) {
                                                     setState({
                                                       ...state,
                                                       identificadorModal:
-                                                        "IdTipoUnidad",
-                                                      tipoModal: 3,
+                                                        "IdUnidad",
+                                                      tipoModal: 4,
                                                       openDialog: true,
                                                     });
                                                   }}
@@ -1916,7 +1930,7 @@ function Informes({ history }) {
                                     id="IdUnidad"
                                     disableClearable
                                     forcePopupIcon={false}
-                                    options={dataUnidades}
+                                    options={dataUnidadesRem}
                                     getOptionLabel={(option) =>
                                       option.m_sDescripcion
                                     }
@@ -2839,14 +2853,14 @@ function Informes({ history }) {
                 </button>
               </div>
 
-              {dataUnidades.length != 0 ? (
+              {dataUnidadesRem.length != 0 ? (
                 <TableUnidad
                   select={
                     state[state.identificadorModal] &&
                     state[state.identificadorModal].m_nIdUnidad
                   }
                   columns={columnsUnidades}
-                  data={dataUnidades}
+                  data={dataUnidadesRem}
                   identificadorModal={state.identificadorModal}
                 />
               ) : (
@@ -3291,7 +3305,7 @@ function Informes({ history }) {
                                       <div className="row">
                                         <div className="col-sm-12 col-md-6 unit">
                                           <label className="label">
-                                            Tipo de Unidad
+                                           Dolly
                                           </label>
                                           <div className="input">
                                             <Autocomplete
@@ -3306,9 +3320,9 @@ function Informes({ history }) {
                                               id="IdTipoUnidad"
                                               disableClearable
                                               forcePopupIcon={false}
-                                              options={dataTipoUnidad}
+                                              options={dataUnidadesDol}
                                               getOptionLabel={(option) =>
-                                                option.m_sTipoUnidad
+                                                option.m_sDescripcion
                                               }
                                               variant="outlined"
                                               style={{
@@ -3340,8 +3354,8 @@ function Informes({ history }) {
                                                               setState({
                                                                 ...state,
                                                                 identificadorModal:
-                                                                  "IdTipoUnidad",
-                                                                tipoModal: 3,
+                                                                  "IdRemolque1",
+                                                                tipoModal: 4,
                                                                 openDialog: true,
                                                               });
                                                             }}
@@ -3375,10 +3389,12 @@ function Informes({ history }) {
                                             Placa Int
                                           </label>
                                           <div className="input">
-                                            <input
+                                          <input
+                                              required
+                                              onChange={handleChange}
                                               className="form-control"
                                               type="text"
-                                              id="Placa Int"
+                                              id="PlacasDolly"
                                             />
                                           </div>
                                         </div>
@@ -3403,7 +3419,7 @@ function Informes({ history }) {
                                               id="IdRemolque1"
                                               disableClearable
                                               forcePopupIcon={false}
-                                              options={dataUnidades}
+                                              options={dataUnidadesRem}
                                               getOptionLabel={(option) =>
                                                 option.m_sDescripcion
                                               }
@@ -3500,7 +3516,7 @@ function Informes({ history }) {
                                               id="IdRemolque2"
                                               disableClearable
                                               forcePopupIcon={false}
-                                              options={dataUnidades}
+                                              options={dataUnidadesRem}
                                               getOptionLabel={(option) =>
                                                 option.m_sDescripcion
                                               }
@@ -3884,19 +3900,19 @@ function Informes({ history }) {
                                                     className="form-control"
                                                     required
                                                     id="viaje"
-                                                    onSelect={handleSelectViaje()}
+                                                    //onSelect={handleSelectViaje()}
                                                   >
                                                     <option value="0">
                                                       Seleccionar
                                                     </option>
-                                                    {dataViajes.map((viaje) => (
+                                                   {/*  {dataViajes.map((viaje) => (
                                                       <option
                                                         key={viaje.m_nIdViaje}
                                                         value={viaje.m_nIdViaje}
                                                       >
                                                         {viaje.m_sFolioViaje}
                                                       </option>
-                                                    ))}
+                                                    ))} */}
                                                   </select>
                                                 </label>
                                               </div>
@@ -4638,7 +4654,7 @@ function Informes({ history }) {
                                 id="IdUnidad"
                                 disableClearable
                                 forcePopupIcon={false}
-                                options={dataUnidades}
+                                options={dataUnidadesRem}
                                 getOptionLabel={(option) =>
                                   option.m_sDescripcion
                                 }
@@ -4715,7 +4731,7 @@ function Informes({ history }) {
                                 id="remolqueSecundario"
                                 disableClearable
                                 forcePopupIcon={false}
-                                options={dataUnidades}
+                                options={dataUnidadesRem}
                                 getOptionLabel={(option) =>
                                   option.m_sDescripcion
                                 }
