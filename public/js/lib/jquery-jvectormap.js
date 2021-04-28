@@ -1865,7 +1865,7 @@ jvm.MapObject.prototype.getLabelText = function(key){
 
   if (this.config.label) {
     if (typeof this.config.label.render === 'function') {
-      text = this.config.label.render(key);
+      text = this.config.label.render();
     } else {
       text = key;
     }

@@ -2494,7 +2494,7 @@
 				if (inputMode === 'single') self.clear(silent);
 				if (inputMode === 'multi' && self.isFull()) return;
 	
-				$item = $(self.render('item', self.options[value]));
+				$item = $(self.render());
 				wasFull = self.isFull();
 				self.items.splice(self.caretPos, 0, value);
 				self.insertAtCaret($item);
