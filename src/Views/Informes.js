@@ -1363,11 +1363,11 @@ function Informes({ history }) {
   function getAllGuiasFrom(cubicar) {
     console.log("hola");
     const url = !cubicar
-      ? `${process.env.REACT_APP_API_URL_LOCAL}/Guia/GetListadoPendientes/` +
+      ? `${process.env.REACT_APP_API_URL}/Guia/GetListadoPendientes/` +
         state.IdCiudadOrigen.m_nIdCiudad +
         "/" +
         state.IdCiudadDestino.m_nIdCiudad
-      : `${process.env.REACT_APP_API_URL_LOCAL}/Guia/GetListado`;
+      : `${process.env.REACT_APP_API_URL}/Guia/GetListado`;
 
     trackPromise(
       axios.get(url, { headers }).then(async (respuesta) => {
