@@ -13,6 +13,7 @@ import { useTable, useFilters, useSortBy } from 'react-table'
 import { makeStyles } from "@material-ui/core/styles";
 import { DataGrid } from '@material-ui/data-grid';
 import Noty from 'noty';
+import AgregarViaje from "./Viajes/AgregarViaje";
 
 function showSuccess(mensaje){
   new Noty({
@@ -38,10 +39,11 @@ function Viajes() {
   const classes = useStyles();
   const [data, setData] = React.useState([])
   const [dataSucursal, setDataSucursal] = React.useState([]);
-  const [dataEstatusEmbarque, setEstatusEmbarque] = React.useState([]);
-  const [state, setState] = React.useState({
-    showPopUp: false,
-    idDepartamento: 0,
+  const [dataEstatusViaje, setEstatusViaje] = React.useState([]);
+  const [dataEstatusDocumento, setEstatusDocumento] = React.useState([]);
+
+    const [state, setState] = React.useState({
+    showPopUp: false, idViaje: 0,
     DerechoBorrar:58,
     codigoDepartamento: "",
     descripcionDepartamento: "",
@@ -53,101 +55,117 @@ function Viajes() {
   })
   const [fileUploaded, setFileUploaded] = React.useState([])
 
+    function getAllEstatusViaje() {
+        const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoViajes`;
+        axios.get(url, { headers }).then((respuesta) => {
+            setEstatusViaje(respuesta.data);
+        });
+    }
 
+    function getAllEstatusDocumento() {
+        const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoDocumentos`;
+        axios.get(url, { headers }).then((respuesta) => {
+            setEstatusDocumento(respuesta.data);
+        });
+    }
+
+    function getAllSucursales() {
+        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
+        axios.get(url, { headers }).then((respuesta) => {
+            setDataSucursal(respuesta.data);
+        });
+    }
   const handleAceptar = (e) => {
     e.preventDefault()
-    var params = {
-
-      "Codigo": state.codigoDepartamento,
-      "Descripcion": state.descripcionDepartamento,
-      
-      "CreadoPor": state.CreadoPor,
-      "ModificadoPor": state.ModificadoPor  
-    }
-    console.log(params)
-    if (state.idDepartamento != 0) {
-      const url = `${process.env.REACT_APP_API_URL}/Departamento/Modificar/` + state.idDepartamento;
-      axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
-        showSuccess(respuesta.data)
-        getAllData()
-      }).catch(err => {
-        console.log(err)
-        showSuccess("err")
-      });
-    } else {
-      const url = `${process.env.REACT_APP_API_URL}/Departamento/Agregar`;
-      axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
-        showSuccess(respuesta.data)
-        getAllData()
-      }).catch(err => {
-        console.log(err)
-        showSuccess(err)
-      });
-    }
+    // var params = {
+    //
+    //   "Codigo": state.codigoDepartamento,
+    //   "Descripcion": state.descripcionDepartamento,
+    //
+    //   "CreadoPor": state.CreadoPor,
+    //   "ModificadoPor": state.ModificadoPor
+    // }
+    // console.log(params)
+    // if (state.idDepartamento != 0) {
+    //   const url = `${process.env.REACT_APP_API_URL}/Departamento/Modificar/` + state.idDepartamento;
+    //   axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+    //     showSuccess(respuesta.data)
+    //     getAllData()
+    //   }).catch(err => {
+    //     console.log(err)
+    //     showSuccess("err")
+    //   });
+    // } else {
+    //   const url = `${process.env.REACT_APP_API_URL}/Departamento/Agregar`;
+    //   axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+    //     showSuccess(respuesta.data)
+    //     getAllData()
+    //   }).catch(err => {
+    //     console.log(err)
+    //     showSuccess(err)
+    //   });
+    // }
 
   }
 
   function handleEliminar(id) {
-    var derecho;
-    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-    axios.get(urlDelete, { headers }).then(respuesta => {
-      derecho = respuesta.data;
-      if (derecho == false)
-      {
-        showSuccess ("El usuario no tiene derechos para realizar el proceso");
-        return; 
-      }
-      
-    const url = `${process.env.REACT_APP_API_URL}/Departamento/Eliminar/` + id;
-    axios.delete(url, { headers }).then(respuesta => {
-      console.log(respuesta);
-      getAllData();
-    }).catch(err => {
-      showSuccess(err)
-    });
-	}).catch(err => {
-    showSuccess(err)
-    });
+    // var derecho;
+    // const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
+    // axios.get(urlDelete, { headers }).then(respuesta => {
+    //   derecho = respuesta.data;
+    //   if (derecho == false)
+    //   {
+    //     showSuccess ("El usuario no tiene derechos para realizar el proceso");
+    //     return;
+    //   }
+    //
+    // const url = `${process.env.REACT_APP_API_URL}/Departamento/Eliminar/` + id;
+    // axios.delete(url, { headers }).then(respuesta => {
+    //   console.log(respuesta);
+    //   getAllData();
+    // }).catch(err => {
+    //   showSuccess(err)
+    // });
+	// }).catch(err => {
+    // showSuccess(err)
+    // });
   }
 
   function handleShowModificar(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Departamento/GetById/` + id;
-    axios.get(url, { headers }).then(respuesta => {
-      console.log(respuesta.data)
-      setState({
-        ...state,
-        agregar: "Modificar",
-        showPopUp: true,
-        idDepartamento: id,
-        codigoDepartamento: respuesta.data.m_nCodigo,
-        descripcionDepartamento: respuesta.data.m_sDescripcion
-      })
-    });
+    // const url = `${process.env.REACT_APP_API_URL}/Departamento/GetById/` + id;
+    // axios.get(url, { headers }).then(respuesta => {
+    //   console.log(respuesta.data)
+    //   setState({
+    //     ...state,
+    //     agregar: "Modificar",
+    //     showPopUp: true,
+    //     idDepartamento: id,
+    //     codigoDepartamento: respuesta.data.m_nCodigo,
+    //     descripcionDepartamento: respuesta.data.m_sDescripcion
+    //   })
+    // });
   }
 
   function handleShowConsultar(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Departamento/GetById/` + id;
-    axios.get(url, { headers }).then(respuesta => {
-      console.log(respuesta.data)
-      setState({
-        ...state,
-        agregar: "Consultar",
-        showPopUp: true,
-        idDepartamento: id,
-        codigoDepartamento: respuesta.data.m_nCodigo,
-        descripcionDepartamento: respuesta.data.m_sDescripcion
-      })
-    });
+    // const url = `${process.env.REACT_APP_API_URL}/Departamento/GetById/` + id;
+    // axios.get(url, { headers }).then(respuesta => {
+    //   console.log(respuesta.data)
+    //   setState({
+    //     ...state,
+    //     agregar: "Consultar",
+    //     showPopUp: true,
+    //     idDepartamento: id,
+    //     codigoDepartamento: respuesta.data.m_nCodigo,
+    //     descripcionDepartamento: respuesta.data.m_sDescripcion
+    //   })
+    // });
   }
 
   function handleShowAgregar() {
     setState({
       ...state,
-      agregar: "Agregar",
-      showPopUp: true,
-      idDepartamento: 0,
-      codigoDepartamento: "",
-      descripcionDepartamento: ""
+      agregar: "Viaje",
+      showPopUp: false
     })
   }
 
@@ -164,12 +182,12 @@ function Viajes() {
         ...state,
         fechaInicial: event.target.value,
     })
-    const url = `${process.env.REACT_APP_API_URL}/Embarques/GetByFiltro/` +
-        event.target.value + "/" + state.fechaFinal + "/" + state.sucursalListado + "/" + state.estatusListado;
-    await axios.get(url, { headers }).then(respuesta => {
-        setData(respuesta.data)
-    })
-    console.log(url)
+    // const url = `${process.env.REACT_APP_API_URL}/Embarques/GetByFiltro/` +
+    //     event.target.value + "/" + state.fechaFinal + "/" + state.sucursalListado + "/" + state.estatusListado;
+    // await axios.get(url, { headers }).then(respuesta => {
+    //     setData(respuesta.data)
+    // })
+    // console.log(url)
 }
 
 const handleFechaFinalFiltro = async (event) => {
@@ -177,12 +195,12 @@ const handleFechaFinalFiltro = async (event) => {
         ...state,
         fechaFinal: event.target.value,
     })
-    const url = `${process.env.REACT_APP_API_URL}/Embarques/GetByFiltro/` +
-        state.fechaInicial + "/" + event.target.value + "/" + state.sucursalListado + "/" + state.estatusListado;
-    await axios.get(url, { headers }).then(respuesta => {
-        setData(respuesta.data)
-    })
-    console.log(url)
+    // const url = `${process.env.REACT_APP_API_URL}/Embarques/GetByFiltro/` +
+    //     state.fechaInicial + "/" + event.target.value + "/" + state.sucursalListado + "/" + state.estatusListado;
+    // await axios.get(url, { headers }).then(respuesta => {
+    //     setData(respuesta.data)
+    // })
+    // console.log(url)
 }
 
 const handleSucursalFiltro = async (event) => {
@@ -190,12 +208,12 @@ const handleSucursalFiltro = async (event) => {
       ...state,
       sucursalListado: event.target.value,
   })
-  const url = `${process.env.REACT_APP_API_URL}/Embarques/GetByFiltro/` +
-      state.fechaInicial + "/" + state.fechaFinal + "/" + event.target.value + "/" + state.estatusListado;
-  await axios.get(url, { headers }).then(respuesta => {
-      setData(respuesta.data)
-  })
-  console.log(url)
+  // const url = `${process.env.REACT_APP_API_URL}/Embarques/GetByFiltro/` +
+  //     state.fechaInicial + "/" + state.fechaFinal + "/" + event.target.value + "/" + state.estatusListado;
+  // await axios.get(url, { headers }).then(respuesta => {
+  //     setData(respuesta.data)
+  // })
+  // console.log(url)
 }
 
 const handleEstatusFiltro = async (event) => {
@@ -203,19 +221,31 @@ const handleEstatusFiltro = async (event) => {
       ...state,
       estatusListado: event.target.value,
   })
-  const url = `${process.env.REACT_APP_API_URL}/Embarques/GetByFiltro/` +
-      state.fechaInicial + "/" + state.fechaFinal + "/" + state.sucursalListado + "/" + event.target.value;
-  await axios.get(url, { headers }).then(respuesta => {
-      setData(respuesta.data)
-  })
-  console.log(url)
+  // const url = `${process.env.REACT_APP_API_URL}/Embarques/GetByFiltro/` +
+  //     state.fechaInicial + "/" + state.fechaFinal + "/" + state.sucursalListado + "/" + event.target.value;
+  // await axios.get(url, { headers }).then(respuesta => {
+  //     setData(respuesta.data)
+  // })
+  // console.log(url)
 }
 
+    const handleEstatusDocumentoFiltro = async (event) => {
+        setState({
+            ...state,
+            estatusDocumentoListado: event.target.value,
+        })
+        // const url = `${process.env.REACT_APP_API_URL}/Embarques/GetByFiltro/` +
+        //     state.fechaInicial + "/" + state.fechaFinal + "/" + state.sucursalListado + "/" + event.target.value;
+        // await axios.get(url, { headers }).then(respuesta => {
+        //     setData(respuesta.data)
+        // })
+        // console.log(url)
+    }
 
   function handleSelectRow(id, event) {
     setState({
       ...state,
-      idDepartamento: id
+        idViaje: id
     });
   }
 
@@ -269,12 +299,16 @@ const handleEstatusFiltro = async (event) => {
       return;
     }
     getAllData();
+    getAllSucursales();
+    getAllEstatusViaje();
+    getAllEstatusDocumento();
   }, []);
 
   function getAllData() {
-    const url = `${process.env.REACT_APP_API_URL}/Departamento/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL}/Viajes/GetListado`;
     axios.get(url, { headers }).then(respuesta => {
-      setData(respuesta.data)
+        console.log(respuesta.data)
+        //setData(respuesta.data)
     });
   };
 
@@ -376,7 +410,7 @@ const handleEstatusFiltro = async (event) => {
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
                   <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    {column.render('Name')}
+                    {column.render()}
                     {/* Add a sort direction indicator */}
                     <span>
                       {column.isSorted
@@ -385,7 +419,7 @@ const handleEstatusFiltro = async (event) => {
                           : <i className="fa fa-caret-down" />
                         : ''}
                     </span>
-                    <div>{column.canFilter ? column.render('Filter') : null}</div>
+                    <div>{column.canFilter ? column.render() : null}</div>
                   </th>
                 ))}
               </tr>
@@ -398,7 +432,7 @@ const handleEstatusFiltro = async (event) => {
                 return (
                   <tr {...row.getRowProps()}
                   onClick={handleSelectRow.bind(this, row.original.m_nIdDepartamento)}
-                  className={state.idDepartamento === row.original.m_nIdDepartamento ? classes.seleccionado : classes.noSeleccionado}>
+                  className={state.idViaje === row.original.m_nIdDepartamento ? classes.seleccionado : classes.noSeleccionado}>
                     <td>
                       <div>
                         <a href="#Agregar" className="btn btn-default btn-sm" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdDepartamento))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
@@ -408,7 +442,7 @@ const handleEstatusFiltro = async (event) => {
                     </td>
                     {row.cells.map(cell => {
                       return (
-                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                        <td {...cell.getCellProps()}>{cell.render()}</td>
                       )
                     })}
                   </tr>
@@ -478,7 +512,7 @@ const handleEstatusFiltro = async (event) => {
                   openDialog: true
                 });
               }}>
-                <i className="fa fa-times-circle" /> Imprimir
+                <i className="fa fa-print" /> Imprimir
               </a>
             </li>
         
@@ -492,7 +526,7 @@ const handleEstatusFiltro = async (event) => {
                 <div className="row" style={{ paddingLeft: "8px" }}>
                                         <form className="j-forms">
                                             <div className="row" style={{ display: "flex" }}>
-                                                <div className="col-sm-6 col-md-3 " style={{ paddingLeft: "0px" }}>
+                                                <div className="col-sm-6 col-md-2 " style={{ paddingLeft: "0px" }}>
                                                     <label className="label">Fecha Inicial</label>
                                                     <div className="input">
                                                         <input
@@ -505,7 +539,7 @@ const handleEstatusFiltro = async (event) => {
                                                     </div>
                                                 </div>
 
-                                                <div className="col-sm-6 col-md-3 " style={{ paddingLeft: "0px" }}>
+                                                <div className="col-sm-6 col-md-2 " style={{ paddingLeft: "0px" }}>
                                                     <label className="label">Fecha Final</label>
                                                     <div className="input">
                                                         <input
@@ -518,7 +552,7 @@ const handleEstatusFiltro = async (event) => {
                                                     </div>
                                                 </div>
 
-                                                <div className="col-sm-6 col-md-3 " style={{ paddingLeft: "0px" }}>
+                                                <div className="col-sm-6 col-md-2 " style={{ paddingLeft: "0px" }}>
                                                     <label className="label">Sucursal</label>
                                                     <label className="input select">
                                                         <select
@@ -528,7 +562,7 @@ const handleEstatusFiltro = async (event) => {
                                                             value={state.sucursalListado}
                                                             id="sucursalListado"
                                                         >
-                                                            <option value="0">Todas</option>
+                                                            <option value="0">Todos</option>
                                                             {dataSucursal.map((sucursal) => (
                                                                 <option
                                                                     key={sucursal.m_nIdSucursal}
@@ -543,7 +577,7 @@ const handleEstatusFiltro = async (event) => {
                                                 </div>
 
                                                 <div className="col-sm-6 col-md-3 " style={{ paddingLeft: "0px" }}>
-                                                    <label className="label">Estatus</label>
+                                                    <label className="label">Estatus viaje</label>
                                                     <label className="input select">
                                                         <select
                                                             className="form-control"
@@ -553,7 +587,7 @@ const handleEstatusFiltro = async (event) => {
                                                             id="estatusListado"
                                                         >
                                                             <option value="0">Todos</option>
-                                                            {dataEstatusEmbarque.map((estatus) => (
+                                                            {dataEstatusViaje.map((estatus) => (
                                                                 <option
                                                                     key={estatus.m_nIdEstatusEmbarque}
                                                                     value={estatus.m_nIdEstatusEmbarque}
@@ -565,13 +599,35 @@ const handleEstatusFiltro = async (event) => {
                                                         <i></i>
                                                     </label>
                                                 </div>
+
+                                                <div className="col-sm-6 col-md-3 " style={{ paddingLeft: "0px" }}>
+                                                    <label className="label">Estatus documento</label>
+                                                    <label className="input select">
+                                                        <select
+                                                            className="form-control"
+                                                            required
+                                                            onChange={handleEstatusDocumentoFiltro}
+                                                            value={state.estatusDocumentoListado}
+                                                            id="estatusDocumentoListado"
+                                                        >
+                                                            <option value="0">Todos</option>
+                                                            {dataEstatusDocumento.map((estatus) => (
+                                                                <option
+                                                                    key={estatus.m_nIdEstatusEmbarque}
+                                                                    value={estatus.m_nIdEstatusEmbarque}
+                                                                >
+                                                                    {estatus.m_sEstatus}
+                                                                </option>
+                                                            ))}
+                                                        </select>
+                                                        <i></i>
+                                                    </label>
+                                                </div>
+
+
                                             </div>
                                         </form>
                                     </div>
-
-
-
-
 
                 <div className="row" style={{ height: state.height - 450, width: '100%' }}>
                     {data.length != 0 ? (
@@ -584,7 +640,7 @@ const handleEstatusFiltro = async (event) => {
                         onRowSelected={(row) => {
                           setState({
                             ...state,
-                            idDepartamento: row.data.m_nIdDepartamento
+                              idViaje: row.data.m_nIdDepartamento
                           })
                         }}
                       />
@@ -596,7 +652,8 @@ const handleEstatusFiltro = async (event) => {
               </div>
               <div className="row">
                 <div className="col-md-6">
-                <div className="widget-wrap">
+                    <label className="label" style={{color:'#717171'}}>Disponibilidad del Equipo</label>
+                    <div className="widget-wrap">
                 <div className="widget-content">
                 <div className="row" style={{ height: state.height - 450, width: '100%' }}>
                     {data.length != 0 ? (
@@ -609,7 +666,7 @@ const handleEstatusFiltro = async (event) => {
                         onRowSelected={(row) => {
                           setState({
                             ...state,
-                            idDepartamento: row.data.m_nIdDepartamento
+                            idViaje: row.data.m_nIdDepartamento
                           })
                         }}
                       />
@@ -620,7 +677,9 @@ const handleEstatusFiltro = async (event) => {
                 </div>
               </div>
                 </div>
+
                 <div className="col-md-6">
+                    <label className="label" style={{color:'#717171'}} >Detalle de Paradas</label>
                 <div className="widget-wrap">
                 <div className="widget-content">
                 <div className="row" style={{ height: state.height - 450, width: '100%' }}>
@@ -634,7 +693,7 @@ const handleEstatusFiltro = async (event) => {
                         onRowSelected={(row) => {
                           setState({
                             ...state,
-                            idDepartamento: row.data.m_nIdDepartamento
+                              idViaje: row.data.m_nIdDepartamento
                           })
                         }}
                       />
@@ -649,66 +708,9 @@ const handleEstatusFiltro = async (event) => {
             </div>
 
             <div className="widget-wrap" id="Agregar" className="tab-pane fade">
-              <div className="widget-wrap">
-                <div className="widget-content">
-                  <div className="row">
-                    <div className="col-md-12">
-                      <form className="j-forms" onSubmit={handleAceptar}>
-                        <div className="form-content">
-                        <div className="row">
 
-                        <div className="col-xs-6  col-sm-3 col-md-2-5 col-lg-2-5 unit">
-                            <label className="label">
-                              Código
-                          </label>
-                            <div className="input">
-                              <input
-                                onChange={handleChange}
-                                className="form-control"
-                                type="number"
-                                min="0"
-                                max="999"
-                                step="1"
-                                required
-                                readOnly={state.agregar == "Consultar"}
-                                value={state.codigoDepartamento}
-                                id="codigoDepartamento"
-                              />
-                            </div>
-                          </div>
+                <AgregarViaje/>
 
-                          <div className="col-xs-6  col-sm-3 col-md-2-5 col-lg-2-5 unit">
-                            <label className="label">
-                              Descripción
-                          </label>
-                            <div className="input">
-                              <input
-                                onChange={handleChange}
-                                className="form-control"
-                                type="text"
-                                maxLength="100"
-                                required
-                                readOnly={state.agregar == "Consultar"}
-                                value={state.descripcionDepartamento}
-                                id="descripcionDepartamento"
-                              />
-                            </div>
-                          </div>
-                          </div>
-                          <div className="row">
-                          <div className="form-footer" className="col-sm-6 col-md-5 unit">
-                          <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"> Cancelar</button>
-                          <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
-                        </div>
-
-</div>
-                        </div>
-                       
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
 
             <div className="widget-wrap" id="Importar" className="tab-pane fade">

@@ -77,7 +77,7 @@ const dashboardRoutes = [
     child:[]
   },
   {
-    path: "/Viajes.js",
+    path: "/Viajes",
     name: "Viajes",
     icon: viajeIcon,
     component: ViajesPage,

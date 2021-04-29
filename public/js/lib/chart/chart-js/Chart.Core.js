@@ -2142,7 +2142,7 @@
 					this.animations[i].animationObject.currentStep = this.animations[i].animationObject.numSteps;
 				}
 				
-				this.animations[i].animationObject.render(this.animations[i].chartInstance, this.animations[i].animationObject);
+				this.animations[i].animationObject.render();
 				
 				if (this.animations[i].animationObject.currentStep == this.animations[i].animationObject.numSteps){
 					// executed the last frame. Remove the animation.
