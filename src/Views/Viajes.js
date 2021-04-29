@@ -14,6 +14,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import { DataGrid } from '@material-ui/data-grid';
 import Noty from 'noty';
 import AgregarViaje from "./Viajes/AgregarViaje";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import TextField from "@material-ui/core/TextField";
 
 function showSuccess(mensaje){
   new Noty({
@@ -43,7 +47,8 @@ function Viajes() {
   const [dataEstatusDocumento, setEstatusDocumento] = React.useState([]);
 
     const [state, setState] = React.useState({
-    showPopUp: false, idViaje: 0,
+    showPopUp: false,
+        idViaje: 0,
     DerechoBorrar:58,
     codigoDepartamento: "",
     descripcionDepartamento: "",
@@ -51,15 +56,23 @@ function Viajes() {
     importar: "",
     CreadoPor:localStorage.getItem("UsuarioId"),
     ModificadoPor:localStorage.getItem("UsuarioId"),
-    height: window.innerHeight
+    height: window.innerHeight,
+        fechaInicial: "",
+        fechaFinal: "",
+        sucursalListado: 0,
+        estatusListado: 0,
+        estatusDocumentoListado: 0
+
+
+
   })
   const [fileUploaded, setFileUploaded] = React.useState([])
 
     function getAllEstatusViaje() {
-        const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoViajes`;
-        axios.get(url, { headers }).then((respuesta) => {
-            setEstatusViaje(respuesta.data);
-        });
+        // const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoViajes`;
+        // axios.get(url, { headers }).then((respuesta) => {
+        //     setEstatusViaje(respuesta.data);
+        // });
     }
 
     function getAllEstatusDocumento() {
@@ -177,43 +190,39 @@ function Viajes() {
     });
   };
 
+    async function getViajesByFiltro (fechaInicial, fechaFinal, sucursal, estatus) {
+        const url = `${process.env.REACT_APP_API_URL}/Viajes/GetByFiltro/` +
+            fechaInicial + "/" + fechaFinal + "/" + sucursal + "/" + estatus;
+        await axios.get(url, {headers}).then(respuesta => {
+            setData(respuesta.data)
+        })
+        console.log(url)
+    }
+
   const handleFechaInicialFiltro = async (event) => {
     setState({
         ...state,
         fechaInicial: event.target.value,
     })
-    // const url = `${process.env.REACT_APP_API_URL}/Embarques/GetByFiltro/` +
-    //     event.target.value + "/" + state.fechaFinal + "/" + state.sucursalListado + "/" + state.estatusListado;
-    // await axios.get(url, { headers }).then(respuesta => {
-    //     setData(respuesta.data)
-    // })
-    // console.log(url)
-}
+    await getViajesByFiltro(event.target.value, state.fechaFinal, state.sucursalListado, state.estatusDocumentoListado)
+    }
 
 const handleFechaFinalFiltro = async (event) => {
     setState({
         ...state,
         fechaFinal: event.target.value,
     })
-    // const url = `${process.env.REACT_APP_API_URL}/Embarques/GetByFiltro/` +
-    //     state.fechaInicial + "/" + event.target.value + "/" + state.sucursalListado + "/" + state.estatusListado;
-    // await axios.get(url, { headers }).then(respuesta => {
-    //     setData(respuesta.data)
-    // })
-    // console.log(url)
+    await getViajesByFiltro(state.fechaInicial, event.target.value, state.sucursalListado, state.estatusDocumentoListado)
+
 }
 
 const handleSucursalFiltro = async (event) => {
+        console.log(event.target.value)
   setState({
       ...state,
       sucursalListado: event.target.value,
   })
-  // const url = `${process.env.REACT_APP_API_URL}/Embarques/GetByFiltro/` +
-  //     state.fechaInicial + "/" + state.fechaFinal + "/" + event.target.value + "/" + state.estatusListado;
-  // await axios.get(url, { headers }).then(respuesta => {
-  //     setData(respuesta.data)
-  // })
-  // console.log(url)
+  await getViajesByFiltro(state.fechaInicial, state.fechaFinal, event.target.value, state.estatusDocumentoListado)
 }
 
 const handleEstatusFiltro = async (event) => {
@@ -234,12 +243,8 @@ const handleEstatusFiltro = async (event) => {
             ...state,
             estatusDocumentoListado: event.target.value,
         })
-        // const url = `${process.env.REACT_APP_API_URL}/Embarques/GetByFiltro/` +
-        //     state.fechaInicial + "/" + state.fechaFinal + "/" + state.sucursalListado + "/" + event.target.value;
-        // await axios.get(url, { headers }).then(respuesta => {
-        //     setData(respuesta.data)
-        // })
-        // console.log(url)
+        await getViajesByFiltro(state.fechaInicial, state.fechaFinal, state.sucursalListado, event.target.value)
+
     }
 
   function handleSelectRow(id, event) {
@@ -256,38 +261,49 @@ const handleEstatusFiltro = async (event) => {
       renderCell: (row) => {
         return (
           <div>
-            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdDepartamento))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdDepartamento))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdDepartamento))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdViaje))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdViaje))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdViaje))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
           </div>
         )
       }
     },
     {
-      headerName: "Código",
-      field: "m_nCodigo",
-      width: 125,
-    }, {
-      headerName: "Descripción",
-      field: "m_sDescripcion",
+      headerName: "Estatus de Viaje",
+      field: "m_sEstatus",
       width: 200,
     }, {
-      headerName: "Creado El",
-      field: "m_dtCreadoEl",
+      headerName: "Fecha/Hora Elaboración",
+      field: "m_sFechaHora",
       width: 200,
     }, {
-      headerName: "Creado Por",
-      field: "m_nCreadoPor",
-      width: 125,
-    }, {
-      headerName: "Modificado El",
-      field: "m_dtModificadoEl",
-      width: 200,
-    }, {
-      headerName: "Modificado Por",
-      field: "m_nModificadoPor",
+      headerName: "Viaje",
+      field: "m_sFolioViaje",
       width: 150,
-    }
+    }, {
+      headerName: "Sucursal",
+      field: "m_sSucursal",
+      width: 150,
+    },
+    //   {
+    //   headerName: "Origen",
+    //   field: "m_sDescripcion",
+    //   width: 150,
+    // }, {
+    //   headerName: "Destino",
+    //   field: "m_sDescripcion",
+    //   width: 150,
+    // },
+    //   {
+    //       headerName: "Ruta General",
+    //       field: "m_sDescripcion",
+    //       width: 150,
+    //   },
+    //   {
+    //       headerName: "Estatus de Documento",
+    //       field: "m_sEstatus",
+    //       width: 200,
+    //   }
 
   ]);
 
@@ -307,31 +323,9 @@ const handleEstatusFiltro = async (event) => {
   function getAllData() {
     const url = `${process.env.REACT_APP_API_URL}/Viajes/GetListado`;
     axios.get(url, { headers }).then(respuesta => {
-        console.log(respuesta.data)
-        //setData(respuesta.data)
+        setData(respuesta.data)
     });
   };
-
-  const handleUpload = (e) => {
-    e.preventDefault();
-
-    var files = e.target.files, f = files[0];
-    var reader = new FileReader();
-    console.log(e.target.files)
-    reader.onload = function (e) {
-      console.log("Nothing Happened")
-      var data = e.target.result;
-      let readedData = XLSX.read(data, { type: 'binary' });
-      const wsname = readedData.SheetNames[0];
-      const ws = readedData.Sheets[wsname];
-
-      /* Convert array to json*/
-      const dataParse = XLSX.utils.sheet_to_json(ws, { header: 1 });
-      console.log("dataParse : " + dataParse)
-      setFileUploaded(dataParse);
-    };
-    reader.readAsBinaryString(f)
-  }
 
   const FilterComponent = ({ filterText, onFilter, onClear }) => (
     <>
@@ -345,10 +339,6 @@ const handleEstatusFiltro = async (event) => {
       <button type="button" onClick={onClear}>X</button>
     </>
   );
-
-  const getSubHeaderComponent = () => {
-
-  };
 
   const headers = {
     'Content-Type': 'application/json',
@@ -431,13 +421,13 @@ const handleEstatusFiltro = async (event) => {
                 prepareRow(row);
                 return (
                   <tr {...row.getRowProps()}
-                  onClick={handleSelectRow.bind(this, row.original.m_nIdDepartamento)}
-                  className={state.idViaje === row.original.m_nIdDepartamento ? classes.seleccionado : classes.noSeleccionado}>
+                  onClick={handleSelectRow.bind(this, row.original.m_nIdViaje)}
+                  className={state.idViaje === row.original.m_nIdViaje ? classes.seleccionado : classes.noSeleccionado}>
                     <td>
                       <div>
-                        <a href="#Agregar" className="btn btn-default btn-sm" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdDepartamento))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
-                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdDepartamento))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdDepartamento))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
+                        <a href="#Agregar" className="btn btn-default btn-sm" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdViaje))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o"style={{color:"#F9A03E"}} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdViaje))}><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
+                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdViaje))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
                       </div>
                     </td>
                     {row.cells.map(cell => {
@@ -515,7 +505,7 @@ const handleEstatusFiltro = async (event) => {
                 <i className="fa fa-print" /> Imprimir
               </a>
             </li>
-        
+
           </ul>
 
           <div className="row" className="tab-content">
@@ -527,100 +517,121 @@ const handleEstatusFiltro = async (event) => {
                                         <form className="j-forms">
                                             <div className="row" style={{ display: "flex" }}>
                                                 <div className="col-sm-6 col-md-2 " style={{ paddingLeft: "0px" }}>
-                                                    <label className="label">Fecha Inicial</label>
                                                     <div className="input">
-                                                        <input
+                                                        <TextField
+                                                            autoFocus
                                                             type="date"
+                                                            margin="dense"
+                                                            label="Fecha Inicial"
+                                                            variant="outlined"
                                                             className="form-control"
-                                                            onChange={handleFechaInicialFiltro}
+                                                            InputLabelProps={{
+                                                                shrink: true,
+                                                            }}
                                                             value={state.fechaInicial}
+                                                            onChange={handleFechaInicialFiltro}
                                                             id="fechaInicial"
                                                         />
                                                     </div>
                                                 </div>
 
                                                 <div className="col-sm-6 col-md-2 " style={{ paddingLeft: "0px" }}>
-                                                    <label className="label">Fecha Final</label>
                                                     <div className="input">
-                                                        <input
+                                                        <TextField
+                                                            autoFocus
                                                             type="date"
+                                                            margin="dense"
+                                                            label="Fecha Final"
+                                                            variant="outlined"
                                                             className="form-control"
-                                                            onChange={handleFechaFinalFiltro}
+                                                            InputLabelProps={{
+                                                                shrink: true,
+                                                            }}
                                                             value={state.fechaFinal}
+                                                            onChange={handleFechaFinalFiltro}
                                                             id="fechaFinal"
                                                         />
                                                     </div>
                                                 </div>
 
                                                 <div className="col-sm-6 col-md-2 " style={{ paddingLeft: "0px" }}>
-                                                    <label className="label">Sucursal</label>
                                                     <label className="input select">
-                                                        <select
-                                                            className="form-control"
-                                                            required
-                                                            onChange={handleSucursalFiltro}
-                                                            value={state.sucursalListado}
-                                                            id="sucursalListado"
-                                                        >
-                                                            <option value="0">Todos</option>
-                                                            {dataSucursal.map((sucursal) => (
-                                                                <option
-                                                                    key={sucursal.m_nIdSucursal}
-                                                                    value={sucursal.m_nIdSucursal}
-                                                                >
-                                                                    {sucursal.m_sSucursal}
-                                                                </option>
-                                                            ))}
-                                                        </select>
-                                                        <i></i>
+                                                        <FormControl fullWidth variant="outlined" margin="dense">
+                                                            <InputLabel id="idSucursalAgregarLabel">Sucursal</InputLabel>
+                                                            <Select
+                                                                labelId="idSucursalAgregarLabel"
+                                                                className="form-control"
+                                                                required
+                                                                value={state.sucursalListado}
+                                                                onChange={handleSucursalFiltro}
+                                                                id="idSucursalAgregar"
+                                                                label="Sucursal"
+                                                            >
+                                                                <option value="0">Todas</option>
+                                                                {dataSucursal.map((sucursal) => (
+                                                                    <option
+                                                                        key={sucursal.m_nIdSucursal}
+                                                                        value={sucursal.m_nIdSucursal}
+                                                                    >
+                                                                        {sucursal.m_sSucursal}
+                                                                    </option>
+                                                                ))}
+                                                            </Select>
+                                                        </FormControl>
                                                     </label>
                                                 </div>
 
                                                 <div className="col-sm-6 col-md-3 " style={{ paddingLeft: "0px" }}>
-                                                    <label className="label">Estatus viaje</label>
                                                     <label className="input select">
-                                                        <select
-                                                            className="form-control"
-                                                            required
-                                                            onChange={handleEstatusFiltro}
-                                                            value={state.estatusListado}
-                                                            id="estatusListado"
-                                                        >
-                                                            <option value="0">Todos</option>
-                                                            {dataEstatusViaje.map((estatus) => (
-                                                                <option
-                                                                    key={estatus.m_nIdEstatusEmbarque}
-                                                                    value={estatus.m_nIdEstatusEmbarque}
-                                                                >
-                                                                    {estatus.m_sEstatus}
-                                                                </option>
-                                                            ))}
-                                                        </select>
-                                                        <i></i>
+                                                        <FormControl fullWidth variant="outlined" margin="dense">
+                                                            <InputLabel id="idEstatusViajeLabel">Estatus Viaje</InputLabel>
+                                                            <Select
+                                                                labelId="idEstatusViajeLabel"
+                                                                className="form-control"
+                                                                required
+                                                                value={state.estatusListado}
+                                                                onChange={handleEstatusFiltro}
+                                                                id="estatusListado"
+                                                                label="Estatus Viaje"
+                                                            >
+                                                                <option value="0">Todos</option>
+                                                                {dataEstatusViaje.map((estatus) => (
+                                                                    <option
+                                                                        key={estatus.m_nIdEstatusEmbarque}
+                                                                        value={estatus.m_nIdEstatusEmbarque}
+                                                                    >
+                                                                        {estatus.m_sEstatus}
+                                                                    </option>
+                                                                ))}
+                                                            </Select>
+                                                        </FormControl>
                                                     </label>
                                                 </div>
 
                                                 <div className="col-sm-6 col-md-3 " style={{ paddingLeft: "0px" }}>
-                                                    <label className="label">Estatus documento</label>
                                                     <label className="input select">
-                                                        <select
-                                                            className="form-control"
-                                                            required
-                                                            onChange={handleEstatusDocumentoFiltro}
-                                                            value={state.estatusDocumentoListado}
-                                                            id="estatusDocumentoListado"
-                                                        >
-                                                            <option value="0">Todos</option>
-                                                            {dataEstatusDocumento.map((estatus) => (
-                                                                <option
-                                                                    key={estatus.m_nIdEstatusEmbarque}
-                                                                    value={estatus.m_nIdEstatusEmbarque}
-                                                                >
-                                                                    {estatus.m_sEstatus}
-                                                                </option>
-                                                            ))}
-                                                        </select>
-                                                        <i></i>
+                                                        <FormControl fullWidth variant="outlined" margin="dense">
+                                                            <InputLabel id="idEstatusDocumentoLabel">Estatus Documento</InputLabel>
+                                                            <Select
+                                                                labelId="idEstatusDocumentoLabel"
+                                                                className="form-control"
+                                                                required
+                                                                value={state.estatusDocumentoListado}
+                                                                onChange={handleEstatusDocumentoFiltro}
+                                                                id="estatusDocumentoListado"
+                                                                label="Estatus Documento"
+                                                            >
+                                                                <option value="0">Todos</option>
+                                                                {dataEstatusDocumento.map((estatus) => (
+                                                                    <option
+                                                                        key={estatus.m_nIdEstatusEmbarque}
+                                                                        value={estatus}
+                                                                    >
+                                                                        {estatus.m_sEstatus}
+                                                                    </option>
+                                                                ))}
+                                                            </Select>
+                                                        </FormControl>
                                                     </label>
                                                 </div>
 
@@ -629,18 +640,18 @@ const handleEstatusFiltro = async (event) => {
                                         </form>
                                     </div>
 
-                <div className="row" style={{ height: state.height - 450, width: '100%' }}>
+                <div className="row" style={{ height: state.height - 650, width: '100%' }}>
                     {data.length != 0 ? (
                       <DataGrid
                         rows={data}
                         columns={columns}
                         density="compact"
                         pageSize={ Math.floor((state.height - 310)/30)}
-                        getRowId={(row) => row.m_nIdDepartamento}
+                        getRowId={(row) => row.m_nIdViaje}
                         onRowSelected={(row) => {
                           setState({
                             ...state,
-                              idViaje: row.data.m_nIdDepartamento
+                              idViaje: row.data.m_nIdViaje
                           })
                         }}
                       />
@@ -655,24 +666,24 @@ const handleEstatusFiltro = async (event) => {
                     <label className="label" style={{color:'#717171'}}>Disponibilidad del Equipo</label>
                     <div className="widget-wrap">
                 <div className="widget-content">
-                <div className="row" style={{ height: state.height - 450, width: '100%' }}>
-                    {data.length != 0 ? (
-                      <DataGrid
-                        rows={data}
-                        columns={columns}
-                        density="compact"
-                        pageSize={ Math.floor((state.height - 310)/30)}
-                        getRowId={(row) => row.m_nIdDepartamento}
-                        onRowSelected={(row) => {
-                          setState({
-                            ...state,
-                            idViaje: row.data.m_nIdDepartamento
-                          })
-                        }}
-                      />
-                    ) : (
-                      <div>No se encontró ningún registro</div>
-                    )}
+                <div className="row" style={{ height: state.height - 1000, width: '100%' }}>
+                    {/*{data.length != 0 ? (*/}
+                    {/*  <DataGrid*/}
+                    {/*    rows={data}*/}
+                    {/*    columns={columns}*/}
+                    {/*    density="compact"*/}
+                    {/*    pageSize={ Math.floor((state.height - 310)/30)}*/}
+                    {/*    getRowId={(row) => row.m_nIdDepartamento}*/}
+                    {/*    onRowSelected={(row) => {*/}
+                    {/*      setState({*/}
+                    {/*        ...state,*/}
+                    {/*        idViaje: row.data.m_nIdDepartamento*/}
+                    {/*      })*/}
+                    {/*    }}*/}
+                    {/*  />*/}
+                    {/*) : (*/}
+                    {/*  <div>No se encontró ningún registro</div>*/}
+                    {/*)}*/}
                   </div>
                 </div>
               </div>
@@ -682,24 +693,24 @@ const handleEstatusFiltro = async (event) => {
                     <label className="label" style={{color:'#717171'}} >Detalle de Paradas</label>
                 <div className="widget-wrap">
                 <div className="widget-content">
-                <div className="row" style={{ height: state.height - 450, width: '100%' }}>
-                    {data.length != 0 ? (
-                      <DataGrid
-                        rows={data}
-                        columns={columns}
-                        density="compact"
-                        pageSize={ Math.floor((state.height - 310)/30)}
-                        getRowId={(row) => row.m_nIdDepartamento}
-                        onRowSelected={(row) => {
-                          setState({
-                            ...state,
-                              idViaje: row.data.m_nIdDepartamento
-                          })
-                        }}
-                      />
-                    ) : (
-                      <div>No se encontró ningún registro</div>
-                    )}
+                <div className="row" style={{ height: state.height - 1000, width: '100%' }}>
+                    {/*{data.length != 0 ? (*/}
+                    {/*  <DataGrid*/}
+                    {/*    rows={data}*/}
+                    {/*    columns={columns}*/}
+                    {/*    density="compact"*/}
+                    {/*    pageSize={ Math.floor((state.height - 310)/30)}*/}
+                    {/*    getRowId={(row) => row.m_nIdDepartamento}*/}
+                    {/*    onRowSelected={(row) => {*/}
+                    {/*      setState({*/}
+                    {/*        ...state,*/}
+                    {/*          idViaje: row.data.m_nIdDepartamento*/}
+                    {/*      })*/}
+                    {/*    }}*/}
+                    {/*  />*/}
+                    {/*) : (*/}
+                    {/*  <div>No se encontró ningún registro</div>*/}
+                    {/*)}*/}
                   </div>
                 </div>
               </div>
@@ -726,7 +737,7 @@ const handleEstatusFiltro = async (event) => {
                           </label>
                             <div className="input">
                               <input
-                                onChange={handleUpload}
+                                //onChange={handleUpload}
                                 className="form-control"
                                 type="file"
                                 placeholder="some text"

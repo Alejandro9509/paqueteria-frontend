@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback } from "react";
+import React, {useEffect, useState, useMemo, useCallback} from "react";
 import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
@@ -8,7 +8,7 @@ import ExportPDF from "../Components/Template/ExportPDF";
 import Carousel from "re-carousel";
 import IndicatorDots from "../Util/Dots";
 import Buttons from "../Util/CarruselButtons";
-import { makeStyles } from "@material-ui/core/styles";
+import {makeStyles} from "@material-ui/core/styles";
 import * as XLSX from "xlsx";
 import useModal from "react-hooks-use-modal";
 import IconButton from "@material-ui/core/IconButton";
@@ -16,12 +16,12 @@ import SearchIcon from "@material-ui/icons/Search";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
-import { GridOverlay, DataGrid } from '@material-ui/data-grid';
+import {GridOverlay, DataGrid} from '@material-ui/data-grid';
 import InputAdornment from "@material-ui/core/InputAdornment";
 import LinearProgress from '@material-ui/core/LinearProgress';
 import SvgIcon from "@material-ui/core/SvgIcon";
-import { ReactComponent as Activo } from "../iconos/Menu/palomita.svg";
-import { ReactComponent as NoActivo } from "../iconos/Menu/cruz.svg";
+import {ReactComponent as Activo} from "../iconos/Menu/palomita.svg";
+import {ReactComponent as NoActivo} from "../iconos/Menu/cruz.svg";
 import {
     useTable,
     useFilters,
@@ -29,11 +29,20 @@ import {
     useSortBy,
 } from "react-table";
 import $ from "jquery";
-import { remove_array_element } from "../Util/Util";
-import { useHistory, Redirect } from 'react-router-dom';
+import {remove_array_element} from "../Util/Util";
+import {useHistory, Redirect} from 'react-router-dom';
 
 import Noty from 'noty';
-import { Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, InputLabel, Select } from "@material-ui/core";
+import {
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    FormControl,
+    FormControlLabel,
+    InputLabel,
+    Select
+} from "@material-ui/core";
 
 let timer;
 
@@ -70,6 +79,7 @@ const useStyles = makeStyles({
         cursor: "default",
     }
 });
+
 function Recoleccion() {
     const today = new Date();
     const classes = useStyles();
@@ -135,7 +145,6 @@ function Recoleccion() {
         telefonoDestinatario: "",
         contactoDestinatario: "",
         destinoDestinatario: 0,
-        ciudadRemitente: 0,
         fechaRecoleccion: "",
         codigoPostalRecoleccion: 0,
         ciudadRecoleccion: 0,
@@ -206,8 +215,8 @@ function Recoleccion() {
     function CustomLoadingOverlay() {
         return (
             <GridOverlay>
-                <div style={{ position: 'absolute', top: 0, width: '100%' }}>
-                    <LinearProgress />
+                <div style={{position: 'absolute', top: 0, width: '100%'}}>
+                    <LinearProgress/>
                 </div>
             </GridOverlay>
         );
@@ -239,7 +248,7 @@ function Recoleccion() {
             for (var i in array) {
                 array[i] = state.paquetes[0];
             }
-            setState({ ...state, paquetes: array })
+            setState({...state, paquetes: array})
         }
     }, [state.mismoPaquete])
 
@@ -249,7 +258,7 @@ function Recoleccion() {
             for (var i in array) {
                 array[i] = state.sobres[0];
             }
-            setState({ ...state, sobres: array })
+            setState({...state, sobres: array})
         }
     }, [state.mismoSobre])
 
@@ -270,8 +279,6 @@ function Recoleccion() {
             telefonoDestinatario: newValue.m_sTelefono,
             contactoDestinatario: newValue.m_sContacto,
         })
-
-
 
 
     }
@@ -346,7 +353,7 @@ function Recoleccion() {
         if (state.idRecoleccion != 0) {
             const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Modificar/${state.idRecoleccion}`;
             axios
-                .put(url, Object.assign({}, params), { headers })
+                .put(url, Object.assign({}, params), {headers})
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     getAllData();
@@ -359,7 +366,7 @@ function Recoleccion() {
             //debugger;
             const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Agregar`;
             axios
-                .post(url, Object.assign({}, params), { headers })
+                .post(url, Object.assign({}, params), {headers})
                 .then((respuesta) => {
                     console.log(respuesta.data);
                     showSuccess(respuesta.data);
@@ -374,7 +381,7 @@ function Recoleccion() {
 
     function getTipoCambio() {
         const url = `${process.env.REACT_APP_API_URL}/TipoCambio/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        axios.get(url, {headers}).then(respuesta => {
             setDataTipoCambio(respuesta.data)
         });
     };
@@ -410,7 +417,7 @@ function Recoleccion() {
         minutes = minutes < 10 ? '0' + minutes : minutes;
         var strTime = hours + ':' + minutes + ' ' + ampm;
         const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetCancelarById/${state.idRecoleccion}`;
-        axios.get(url, { headers }).then((respuesta) => {
+        axios.get(url, {headers}).then((respuesta) => {
             setState({
                 ...state,
                 folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
@@ -436,12 +443,13 @@ function Recoleccion() {
             "fechaCancelacion": state.fechaCancelacion
         }
         const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Cancelar/${state.idRecoleccion}`;
-        axios.put(url, Object.assign({}, params), { headers }).then((respuesta) => {
+        axios.put(url, Object.assign({}, params), {headers}).then((respuesta) => {
             showSuccess(respuesta.data)
         })
     }
 
     const changeHandler = (event) => {
+        event.preventDefault();
         setSelectedFile(event.target.files[0]);
         setIsFilePicked(true);
     };
@@ -460,7 +468,7 @@ function Recoleccion() {
     };
 
     function addPaquete() {
-        const { paquetes } = state;
+        const {paquetes} = state;
         paquetes.push({
             m_xPeso: "",
             m_xLargo: "",
@@ -475,32 +483,32 @@ function Recoleccion() {
             m_sObservaciones: "",
         });
         console.log(paquetes);
-        setState({ ...state, paquetes: paquetes, countPaquetes: state.countPaquetes + 1 });
+        setState({...state, paquetes: paquetes, countPaquetes: state.countPaquetes + 1});
     }
 
     function removePaquete(index) {
-        var { paquetes } = state;
+        var {paquetes} = state;
         if (paquetes.length !== 1) {
             paquetes.pop()
-            setState({ ...state, paquetes: paquetes, countPaquetes: state.countPaquetes - 1 });
+            setState({...state, paquetes: paquetes, countPaquetes: state.countPaquetes - 1});
         }
 
     }
 
     function addSobre() {
-        const { sobres } = state;
+        const {sobres} = state;
         sobres.push({
             descripcion: "",
         });
         console.log(sobres);
-        setState({ ...state, sobres: sobres, countSobres: state.countSobres + 1 });
+        setState({...state, sobres: sobres, countSobres: state.countSobres + 1});
     }
 
     function removeSobre(index) {
-        var { sobres } = state;
+        var {sobres} = state;
         if (sobres.length !== 1) {
             sobres.pop()
-            setState({ ...state, sobres: sobres, countSobres: state.countSobres - 1 });
+            setState({...state, sobres: sobres, countSobres: state.countSobres - 1});
         }
     }
 
@@ -508,7 +516,7 @@ function Recoleccion() {
         var derecho;
         const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
         axios
-            .get(urlDelete, { headers })
+            .get(urlDelete, {headers})
             .then((respuesta) => {
                 //showSuccess(respuesta.data)
 
@@ -521,7 +529,7 @@ function Recoleccion() {
                 const url =
                     `${process.env.REACT_APP_API_URL}/Recoleccion/Eliminar/` + id;
                 axios
-                    .delete(url, { headers })
+                    .delete(url, {headers})
                     .then((respuesta) => {
                         showSuccess(respuesta.data);
                         getAllData();
@@ -538,7 +546,7 @@ function Recoleccion() {
     function handleShowCiudadRemitente(id) {
         console.log(id);
         const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetByCP/${id}`;
-        axios.get(url, { headers }).then((respuesta) => {
+        axios.get(url, {headers}).then((respuesta) => {
             console.log(respuesta.data);
             setState({
                 ...state,
@@ -549,12 +557,13 @@ function Recoleccion() {
             });
         });
     }
+
     function handleShowModificar(id) {
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         console.log(id);
         const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetById/${id}`;
-        axios.get(url, { headers }).then((respuesta) => {
+        axios.get(url, {headers}).then((respuesta) => {
             console.log(respuesta.data);
             debugger;
             setState({
@@ -621,7 +630,7 @@ function Recoleccion() {
                 domicilioRecoleccion: respuesta.data.m_sDomicilioDetalleRecoleccion,
                 recogerEn: respuesta.data.m_sRecogerEnDetalleRecoleccion,
                 datosAdicionalesRecoleccion:
-                    respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
+                respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
                 codigoPostalEntrega: dataCodigoPostal.find(
                     (o) => o.m_nIdCP == respuesta.data.m_nIdCPDetalleEntrega
                 ),
@@ -630,7 +639,7 @@ function Recoleccion() {
                 domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
                 entregaEn: respuesta.data.m_sEntregarEnDetalleEntrega,
                 datosAdicionalesEntrega:
-                    respuesta.data.m_sDatosAdicionalesDetalleEntrega,
+                respuesta.data.m_sDatosAdicionalesDetalleEntrega,
                 fechaHoraSalida:
                     respuesta.data.m_dFechaElaboracionSalidaRecoleccion +
                     "T" +
@@ -661,7 +670,7 @@ function Recoleccion() {
         $('.nav-tabs li').eq(1).addClass('active');
         console.log(id);
         const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetById/${id}`;
-        axios.get(url, { headers }).then((respuesta) => {
+        axios.get(url, {headers}).then((respuesta) => {
             console.log(respuesta.data);
             setState({
                 ...state,
@@ -723,7 +732,7 @@ function Recoleccion() {
                 domicilioRecoleccion: respuesta.data.m_sDomicilioDetalleRecoleccion,
                 recogerEn: respuesta.data.m_sRecogerEnDetalleRecoleccion,
                 datosAdicionalesRecoleccion:
-                    respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
+                respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
                 codigoPostalEntrega: dataCodigoPostal.find(
                     (o) => o.m_nIdCP == respuesta.data.m_nIdCPDetalleEntrega
                 ),
@@ -732,7 +741,7 @@ function Recoleccion() {
                 domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
                 entregaEn: respuesta.data.m_sEntregarEnDetalleEntrega,
                 datosAdicionalesEntrega:
-                    respuesta.data.m_sDatosAdicionalesDetalleEntrega,
+                respuesta.data.m_sDatosAdicionalesDetalleEntrega,
                 fechaHoraSalida:
                     respuesta.data.m_dFechaElaboracionSalidaRecoleccion +
                     "T" +
@@ -757,7 +766,7 @@ function Recoleccion() {
 
     function handleShowSalidaLlegada() {
         const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetById/${state.idRecoleccion}`;
-        axios.get(url, { headers }).then((respuesta) => {
+        axios.get(url, {headers}).then((respuesta) => {
             console.log(respuesta.data);
             setState({
                 ...state,
@@ -800,7 +809,6 @@ function Recoleccion() {
             RFCRemitente: "",
             domicilioRemitente: "",
             codigoPostalRemitente: dataCodigoPostal.length !== 0 ? [0] : null,
-            ciudadRemitente: dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1,
             correoRemitente: "",
             telefonoRemitente: "",
             contactoRemitente: "",
@@ -808,7 +816,6 @@ function Recoleccion() {
             RFCDestinatario: "",
             domicilioDestinatario: "",
             codigoPostalDestinatario: dataCodigoPostal.length !== 0 ? dataCodigoPostal[0] : null,
-            ciudadDestinatario: dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1,
             correoDestinatario: "",
             telefonoDestinatario: "",
             contactoDestinatario: "",
@@ -852,13 +859,14 @@ function Recoleccion() {
                 },
             ],
         });
-        $('.nav-tabs li ').removeClass('active'); 
-        $('.nav-tabs li').eq(1).addClass('active'); 
-        $('.tab-content div ').removeClass('active show'); 
-        $('#Agregar').addClass('in active show in'); 
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('active show');
+        $('#Agregar').addClass('in active show in');
     }
 
     const handleChange = (event) => {
+        event.preventDefault();
         setState({
             ...state,
             [event.target.id]: event.target.value,
@@ -871,7 +879,7 @@ function Recoleccion() {
 
     const handleImprimir = (event) => {
         showSuccess("A imprimir se ha dicho")
-        setState({ ...state, openDialog: false })
+        setState({...state, openDialog: false})
     }
 
     function handleSelectRow(id, event) {
@@ -882,7 +890,7 @@ function Recoleccion() {
     }
 
     const handleChangePaquete = (event, index) => {
-        var { paquetes } = state;
+        var {paquetes} = state;
         paquetes[index][event.target.name] = event.target.value;
         setState({
             ...state,
@@ -891,7 +899,7 @@ function Recoleccion() {
     };
 
     const handleChangeSobre = (event, index) => {
-        var { sobres } = state;
+        var {sobres} = state;
         sobres[index][event.target.name] = event.target.value;
         setState({
             ...state,
@@ -900,6 +908,7 @@ function Recoleccion() {
     };
 
     const handleRecoleccionCheckboxChange = (event) => {
+        event.preventDefault();
         setState({
             ...state,
             diferenteRecoleccion: !state.diferenteRecoleccion,
@@ -907,6 +916,7 @@ function Recoleccion() {
     };
 
     const handleEntregaCheckboxChange = (event) => {
+        event.preventDefault();
         setState({
             ...state,
             diferenteEntrega: !state.diferenteEntrega,
@@ -914,101 +924,61 @@ function Recoleccion() {
     };
 
     const handleFechaInicialFiltro = async (event) => {
+        event.preventDefault();
         setState({
             ...state,
             fechaInicial: event.target.value,
         })
         const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
             event.target.value + "/" + state.fechaFinal + "/" + state.sucursalListado + "/" + state.estatusListado;
-        await axios.get(url, { headers }).then(respuesta => {
+        await axios.get(url, {headers}).then(respuesta => {
             setData(respuesta.data)
         })
     }
 
     const handleFechaFinalFiltro = async (event) => {
+        event.preventDefault();
         setState({
             ...state,
             fechaFinal: event.target.value,
         })
         const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
             state.fechaInicial + "/" + event.target.value + "/" + state.sucursalListado + "/" + state.estatusListado;
-        await axios.get(url, { headers }).then(respuesta => {
+        await axios.get(url, {headers}).then(respuesta => {
             setData(respuesta.data)
         })
     }
 
     const handleSucursalFiltro = async (event) => {
+        event.preventDefault();
         setState({
             ...state,
             sucursalListado: event.target.value,
         })
         const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
             state.fechaInicial + "/" + state.fechaFinal + "/" + event.target.value + "/" + state.estatusListado;
-        await axios.get(url, { headers }).then(respuesta => {
+        await axios.get(url, {headers}).then(respuesta => {
             setData(respuesta.data)
         })
     }
 
     const handleEstatusFiltro = async (event) => {
+        event.preventDefault();
         setState({
             ...state,
             estatusListado: event.target.value,
         })
         const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
             state.fechaInicial + "/" + state.fechaFinal + "/" + state.sucursalListado + "/" + event.target.value;
-        await axios.get(url, { headers }).then(respuesta => {
+        await axios.get(url, {headers}).then(respuesta => {
             setData(respuesta.data)
         })
     }
 
     const handleSelectChange = (event) => {
+        event.preventDefault();
         getAllUnidades(event.target.value);
     };
-
-    const columns2 = React.useMemo(() => [
-        {
-            Name: "Folio",
-            accessor: "m_sFolioRecoleccion",
-        },
-        {
-            Name: "Fecha/Hora Elaboración",
-            accessor: "m_sFechaHora",
-        },
-        {
-            Name: "Fecha/Hora Recolección",
-            accessor: "m_sFechaHoraDetalleRec",
-        },
-        {
-            Name: "Sucursal",
-            accessor: "m_sSucursal",
-        },
-        {
-            Name: "Zona Recolección",
-            accessor: "m_sZonaRecoleccion",
-        },
-        {
-            Name: "Recoger En",
-            accessor: "m_sRecogerEnDetalleRecoleccion",
-        },
-        {
-            Name: "Estatus",
-            accessor: "m_sEstatusRecoleccion",
-        },
-        {
-            Name: "Operador",
-            accessor: "m_sOperador",
-            width: "200px"
-        },
-        {
-            Name: "Unidad",
-            accessor: "m_sUnidad",
-        },
-
-        {
-            Name: "Remolque",
-            accessor: "m_sTipoRemolque",
-        },
-    ]);
 
     const columns = React.useMemo(() => [
         {
@@ -1017,9 +987,16 @@ function Recoleccion() {
             renderCell: (row) => {
                 return (
                     <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdRecoleccion))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdRecoleccion))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                        <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdRecoleccion))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab"
+                           onClick={() => (handleShowModificar(row.row.m_nIdRecoleccion))}
+                           className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
+                                                                 style={{color: "#F9A03E"}}/></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs"
+                           onClick={() => (handleShowConsultar(row.row.m_nIdRecoleccion))}><i className="fa fa-eye"
+                                                                                              style={{color: "#F9A03E"}}/></a>
+                        <a href="#" className="btn btn-default btn-xs"
+                           onClick={() => (handleEliminar(row.row.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"
+                                                                                         style={{color: "#F30B0B"}}/></a>
                     </div>
                 )
             }
@@ -1133,9 +1110,9 @@ function Recoleccion() {
                         }}
                     >
                         {row.row.m_bActivo ? (
-                            <SvgIcon component={Activo} />
+                            <SvgIcon component={Activo}/>
                         ) : (
-                            <SvgIcon component={NoActivo} />
+                            <SvgIcon component={NoActivo}/>
                         )}
                     </div>
                 );
@@ -1231,7 +1208,7 @@ function Recoleccion() {
 
     function getAllData() {
         const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        axios.get(url, {headers}).then((respuesta) => {
             console.log(respuesta.data);
             setData(respuesta.data);
         });
@@ -1240,59 +1217,63 @@ function Recoleccion() {
 
     function getAllEmbalajes() {
         const url = `${process.env.REACT_APP_API_URL}/Embalajes/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        axios.get(url, {headers}).then((respuesta) => {
             setDataEmbalaje(respuesta.data);
         });
     }
+
     function getAllSucursales() {
         const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        axios.get(url, {headers}).then((respuesta) => {
             setDataSucursal(respuesta.data);
         });
     }
 
     function getAllEstatusRecoleccion() {
         const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoRecoleccion`;
-        axios.get(url, { headers }).then((respuesta) => {
+        axios.get(url, {headers}).then((respuesta) => {
             setEstatusRecoleccion(respuesta.data);
         });
     }
 
     function getAllTipoCobro() {
         const url = `${process.env.REACT_APP_API_URL}/TipoCobro/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        axios.get(url, {headers}).then((respuesta) => {
             setDataTipoCobro(respuesta.data);
         });
     }
 
     function getAllTipoMoneda() {
         const url = `${process.env.REACT_APP_API_URL}/Moneda/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        axios.get(url, {headers}).then((respuesta) => {
             setDataTipoMoneda(respuesta.data);
         });
     }
 
     function getAllCiudades() {
         const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        axios.get(url, {headers}).then((respuesta) => {
             setDataCiudad(respuesta.data);
         });
     }
+
     function getAllZonas() {
         const url = `${process.env.REACT_APP_API_URL}/Zonas/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        axios.get(url, {headers}).then((respuesta) => {
             setDataZona(respuesta.data);
         });
     }
 
     function getUltimoFolioRecoleccion() {
         const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetUltimoFolio`;
-        axios.get(url, { headers }).then((respuesta) => { SetDataFolioRecoleccion(respuesta.data); });
+        axios.get(url, {headers}).then((respuesta) => {
+            SetDataFolioRecoleccion(respuesta.data);
+        });
     }
 
     function getAllCodigosPostales() {
         const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        axios.get(url, {headers}).then((respuesta) => {
             setDataCodigoPostal(respuesta.data);
         });
     }
@@ -1300,21 +1281,21 @@ function Recoleccion() {
 
     function getAllRemitentesDestinatarios() {
         const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        axios.get(url, {headers}).then((respuesta) => {
             setDataRemitenteDestinatario(respuesta.data);
         });
     }
 
     function getAllOperadores() {
         const url = `${process.env.REACT_APP_API_URL}/Operadores/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        axios.get(url, {headers}).then((respuesta) => {
             setDataOperador(respuesta.data);
         });
     }
 
     function getAllTipoUnidad() {
         const url = `${process.env.REACT_APP_API_URL}/TiposUnidades/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        axios.get(url, {headers}).then((respuesta) => {
             setDataTipoUnidad(respuesta.data);
             getAllUnidades(respuesta.data[0].m_nIdTipoUnidad);
         });
@@ -1323,7 +1304,7 @@ function Recoleccion() {
     function getAllUnidades(id) {
         console.log(id);
         const url = `${process.env.REACT_APP_API_URL}/Unidades/ByTipoUnidad/${id}`;
-        axios.get(url, { headers }).then((respuesta) => {
+        axios.get(url, {headers}).then((respuesta) => {
             console.log(respuesta.data);
             setDataUnidad(respuesta.data);
         });
@@ -1340,12 +1321,12 @@ function Recoleccion() {
         reader.onload = function (e) {
             console.log("Nothing Happened");
             var data = e.target.result;
-            let readedData = XLSX.read(data, { type: "binary" });
+            let readedData = XLSX.read(data, {type: "binary"});
             const wsname = readedData.SheetNames[0];
             const ws = readedData.Sheets[wsname];
 
             /* Convert array to json*/
-            const dataParse = XLSX.utils.sheet_to_json(ws, { header: 1 });
+            const dataParse = XLSX.utils.sheet_to_json(ws, {header: 1});
             console.log("dataParse : " + dataParse);
             setFileUploaded(dataParse);
         };
@@ -1362,20 +1343,20 @@ function Recoleccion() {
     }
 
     function DefaultColumnFilter({
-        column: { filterValue, preFilteredRows, setFilter },
-    }) {
+                                     column: {filterValue, preFilteredRows, setFilter},
+                                 }) {
         const count = preFilteredRows.length;
         const [showResults, setShowResults] = React.useState(false)
         const onClick = () => setShowResults(!showResults)
         return (
-            <div style={{ display: "flex" }}>
-                <span style={{ display: "block", float: "right" }}>
+            <div style={{display: "flex"}}>
+                <span style={{display: "block", float: "right"}}>
                     <a onClick={onClick}>
-                        <i className="fa fa-search" />
+                        <i className="fa fa-search"/>
                     </a>
                 </span>
                 <br></br>
-                <span style={{ display: "block" }}>
+                <span style={{display: "block"}}>
                     <input
                         className="form-control"
                         type={showResults ? "" : "hidden"}
@@ -1390,7 +1371,7 @@ function Recoleccion() {
         );
     }
 
-    function Table({ columns, data }) {
+    function Table({columns, data}) {
         const defaultColumn = React.useMemo(
             () => ({
                 // Default Filter UI
@@ -1417,96 +1398,96 @@ function Recoleccion() {
         );
 
         return (
-            <div className="wrapper-tabla" style={{ height: state.height - 270 }}>
+            <div className="wrapper-tabla" style={{height: state.height - 270}}>
                 <div className="wrapper-tabla-2">
                     <table className="table tabla-listado" {...getTableProps()}>
                         <thead>
-                            {headerGroups.map((headerGroup) => (
-                                <tr {...headerGroup.getHeaderGroupProps()}>
-                                    <th style={{ verticalAlign: "top" }}>Acciones</th>
-                                    {headerGroup.headers.map((column) => (
-                                        // Add the sorting props to control sorting. For this example
-                                        // we can add them into the header props
-                                        <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                            <div style={{ display: "flex" }}>
-                                                {column.render("Name")}
-                                                {/* Add a sort direction indicator */}
-                                                <span>
+                        {headerGroups.map((headerGroup) => (
+                            <tr {...headerGroup.getHeaderGroupProps()}>
+                                <th style={{verticalAlign: "top"}}>Acciones</th>
+                                {headerGroup.headers.map((column) => (
+                                    // Add the sorting props to control sorting. For this example
+                                    // we can add them into the header props
+                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                        <div style={{display: "flex"}}>
+                                            {column.render("Name")}
+                                            {/* Add a sort direction indicator */}
+                                            <span>
                                                     {column.isSorted ? (
                                                         column.isSortedDesc ? (
-                                                            <i className="fa fa-caret-up" />
+                                                            <i className="fa fa-caret-up"/>
                                                         ) : (
-                                                            <i className="fa fa-caret-down" />
+                                                            <i className="fa fa-caret-down"/>
                                                         )
                                                     ) : (
                                                         ""
                                                     )}
                                                 </span>
-                                                <div style={{ right: "0" }}>
-                                                    {column.canFilter ? column.render("Filter") : null}
-                                                </div>
+                                            <div style={{right: "0"}}>
+                                                {column.canFilter ? column.render("Filter") : null}
                                             </div>
-                                        </th>
-                                    ))}
-                                </tr>
-                            ))}
+                                        </div>
+                                    </th>
+                                ))}
+                            </tr>
+                        ))}
                         </thead>
                         <tbody {...getTableBodyProps()}>
-                            {rows.map((row, i) => {
-                                prepareRow(row);
-                                return (
-                                    <tr {...row.getRowProps()}
-                                        onClick={handleSelectRow.bind(this, row.original.m_nIdRecoleccion)}
-                                        className={state.idRecoleccion === row.original.m_nIdRecoleccion ? classes.seleccionado : classes.noSeleccionado}>
-                                        <td>
-                                            <div>
-                                                <a
-                                                    href="#Agregar"
-                                                    role="tab"
-                                                    data-toggle="tab"
-                                                    onClick={() =>
-                                                        handleShowModificar(row.original.m_nIdRecoleccion)
-                                                    }
-                                                    className="btn btn-default btn-xs"
-                                                >
-                                                    <i
-                                                        className="fa fa-pencil-square-o"
-                                                        style={{ color: "#F9A03E" }}
-                                                    />
-                                                </a>
-                                                <a
-                                                    href="#Agregar"
-                                                    role="tab"
-                                                    data-toggle="tab"
-                                                    className="btn btn-default btn-xs"
-                                                    onClick={() =>
-                                                        handleShowConsultar(row.original.m_nIdRecoleccion)
-                                                    }
-                                                >
-                                                    <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                                                </a>
-                                                <a
-                                                    href="#"
-                                                    className="btn btn-default btn-xs"
-                                                    onClick={() =>
-                                                        handleEliminar(row.original.m_nIdRecoleccion)
-                                                    }
-                                                >
-                                                    <i
-                                                        className="zmdi zmdi-delete"
-                                                        style={{ color: "#F30B0B" }}
-                                                    />
-                                                </a>
-                                            </div>
-                                        </td>
-                                        {row.cells.map((cell) => {
-                                            return (
-                                                <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                            );
-                                        })}
-                                    </tr>
-                                );
-                            })}
+                        {rows.map((row, i) => {
+                            prepareRow(row);
+                            return (
+                                <tr {...row.getRowProps()}
+                                    onClick={handleSelectRow.bind(this, row.original.m_nIdRecoleccion)}
+                                    className={state.idRecoleccion === row.original.m_nIdRecoleccion ? classes.seleccionado : classes.noSeleccionado}>
+                                    <td>
+                                        <div>
+                                            <a
+                                                href="#Agregar"
+                                                role="tab"
+                                                data-toggle="tab"
+                                                onClick={() =>
+                                                    handleShowModificar(row.original.m_nIdRecoleccion)
+                                                }
+                                                className="btn btn-default btn-xs"
+                                            >
+                                                <i
+                                                    className="fa fa-pencil-square-o"
+                                                    style={{color: "#F9A03E"}}
+                                                />
+                                            </a>
+                                            <a
+                                                href="#Agregar"
+                                                role="tab"
+                                                data-toggle="tab"
+                                                className="btn btn-default btn-xs"
+                                                onClick={() =>
+                                                    handleShowConsultar(row.original.m_nIdRecoleccion)
+                                                }
+                                            >
+                                                <i className="fa fa-eye" style={{color: "#F9A03E"}}/>
+                                            </a>
+                                            <a
+                                                href="#"
+                                                className="btn btn-default btn-xs"
+                                                onClick={() =>
+                                                    handleEliminar(row.original.m_nIdRecoleccion)
+                                                }
+                                            >
+                                                <i
+                                                    className="zmdi zmdi-delete"
+                                                    style={{color: "#F30B0B"}}
+                                                />
+                                            </a>
+                                        </div>
+                                    </td>
+                                    {row.cells.map((cell) => {
+                                        return (
+                                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                        );
+                                    })}
+                                </tr>
+                            );
+                        })}
                         </tbody>
                     </table>
                 </div>
@@ -1514,7 +1495,7 @@ function Recoleccion() {
         );
     }
 
-    function TableCodigoPostal({ columns, data, select, object }) {
+    function TableCodigoPostal({columns, data, select, object}) {
         const defaultColumn = React.useMemo(
             () => ({
                 // Default Filter UI
@@ -1543,60 +1524,62 @@ function Recoleccion() {
         return (
             <div
                 className="col-md-12"
-                style={{ maxHeight: "300px", overflow: "auto" }}
+                style={{maxHeight: "300px", overflow: "auto"}}
             >
                 <table className="table" {...getTableProps()}>
                     <thead>
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                <th>Acciones</th>
-                                {headerGroup.headers.map((column) => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render("Name")}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
+                    {headerGroups.map((headerGroup) => (
+                        <tr {...headerGroup.getHeaderGroupProps()}>
+                            <th>Acciones</th>
+                            {headerGroup.headers.map((column) => (
+                                // Add the sorting props to control sorting. For this example
+                                // we can add them into the header props
+                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                    {column.render("Name")}
+                                    {/* Add a sort direction indicator */}
+                                    <span>
                                             {column.isSorted ? (
                                                 column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up" />
+                                                    <i className="fa fa-caret-up"/>
                                                 ) : (
-                                                    <i className="fa fa-caret-down" />
+                                                    <i className="fa fa-caret-down"/>
                                                 )
                                             ) : (
                                                 ""
                                             )}
                                         </span>
-                                        <div>
-                                            {column.canFilter ? column.render("Filter") : null}
-                                        </div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
+                                    <div>
+                                        {column.canFilter ? column.render("Filter") : null}
+                                    </div>
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                        {rows.map(
-                            (row, i) => {
-                                prepareRow(row);
-                                return (
-                                    <tr style={{ backgroundColor: row.original.m_nIdCP === select ? "orange" : "white" }}  {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original, false)} onDoubleClick={handleSelectCP.bind(this, row.original, true)}>
-                                        {row.cells.map(cell => {
-                                            return (
-                                                <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                                            )
-                                        })}
-                                    </tr>
-                                )
-                            }
-                        )}
+                    {rows.map(
+                        (row, i) => {
+                            prepareRow(row);
+                            return (
+                                <tr style={{backgroundColor: row.original.m_nIdCP === select ? "orange" : "white"}}  {...row.getRowProps()}
+                                    onClick={handleSelectCP.bind(this, row.original, false)}
+                                    onDoubleClick={handleSelectCP.bind(this, row.original, true)}>
+                                    {row.cells.map(cell => {
+                                        return (
+                                            <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                        )
+                                    })}
+                                </tr>
+                            )
+                        }
+                    )}
                     </tbody>
                 </table>
             </div>
         );
     }
 
-    function TableCiudades({ columns, data, select }) {
+    function TableCiudades({columns, data, select}) {
         const defaultColumn = React.useMemo(
             () => ({
                 // Default Filter UI
@@ -1625,59 +1608,61 @@ function Recoleccion() {
         return (
             <div
                 className="col-md-12"
-                style={{ maxHeight: "300px", overflow: "auto" }}
+                style={{maxHeight: "300px", overflow: "auto"}}
             >
                 <table className="table" {...getTableProps()}>
                     <thead>
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map(column => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render("Name")}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
+                    {headerGroups.map((headerGroup) => (
+                        <tr {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map(column => (
+                                // Add the sorting props to control sorting. For this example
+                                // we can add them into the header props
+                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                    {column.render("Name")}
+                                    {/* Add a sort direction indicator */}
+                                    <span>
                                             {column.isSorted ? (
                                                 column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up" />
+                                                    <i className="fa fa-caret-up"/>
                                                 ) : (
-                                                    <i className="fa fa-caret-down" />
+                                                    <i className="fa fa-caret-down"/>
                                                 )
                                             ) : (
                                                 ""
                                             )}
                                         </span>
-                                        <div>
-                                            {column.canFilter ? column.render("Filter") : null}
-                                        </div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
+                                    <div>
+                                        {column.canFilter ? column.render("Filter") : null}
+                                    </div>
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                        {rows.map(
-                            (row, i) => {
-                                prepareRow(row);
-                                return (
-                                    <tr style={{ backgroundColor: row.original.m_nIdCiudad === select ? "orange" : "white" }} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original, false)} onDoubleClick={handleSelectCP.bind(this, row.original, true)}>
-                                        {row.cells.map(cell => {
-                                            return (
-                                                <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                                            )
-                                        })}
-                                    </tr>
-                                )
-                            }
-                        )}
+                    {rows.map(
+                        (row, i) => {
+                            prepareRow(row);
+                            return (
+                                <tr style={{backgroundColor: row.original.m_nIdCiudad === select ? "orange" : "white"}} {...row.getRowProps()}
+                                    onClick={handleSelectCP.bind(this, row.original, false)}
+                                    onDoubleClick={handleSelectCP.bind(this, row.original, true)}>
+                                    {row.cells.map(cell => {
+                                        return (
+                                            <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                        )
+                                    })}
+                                </tr>
+                            )
+                        }
+                    )}
                     </tbody>
                 </table>
             </div>
         );
     }
 
-    function TableOperadores({ columns, data, select }) {
+    function TableOperadores({columns, data, select}) {
         const defaultColumn = React.useMemo(
             () => ({
                 // Default Filter UI
@@ -1706,59 +1691,61 @@ function Recoleccion() {
         return (
             <div
                 className="col-md-12"
-                style={{ maxHeight: "300px", overflow: "auto" }}
+                style={{maxHeight: "300px", overflow: "auto"}}
             >
                 <table className="table" {...getTableProps()}>
                     <thead>
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map(column => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render("Name")}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
+                    {headerGroups.map((headerGroup) => (
+                        <tr {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map(column => (
+                                // Add the sorting props to control sorting. For this example
+                                // we can add them into the header props
+                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                    {column.render("Name")}
+                                    {/* Add a sort direction indicator */}
+                                    <span>
                                             {column.isSorted ? (
                                                 column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up" />
+                                                    <i className="fa fa-caret-up"/>
                                                 ) : (
-                                                    <i className="fa fa-caret-down" />
+                                                    <i className="fa fa-caret-down"/>
                                                 )
                                             ) : (
                                                 ""
                                             )}
                                         </span>
-                                        <div>
-                                            {column.canFilter ? column.render("Filter") : null}
-                                        </div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
+                                    <div>
+                                        {column.canFilter ? column.render("Filter") : null}
+                                    </div>
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                        {rows.map(
-                            (row, i) => {
-                                prepareRow(row);
-                                return (
-                                    <tr style={{ backgroundColor: row.original.m_nIdOperador === select ? "orange" : "white" }} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original, false)} onDoubleClick={handleSelectCP.bind(this, row.original, true)}>
-                                        {row.cells.map(cell => {
-                                            return (
-                                                <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                                            )
-                                        })}
-                                    </tr>
-                                )
-                            }
-                        )}
+                    {rows.map(
+                        (row, i) => {
+                            prepareRow(row);
+                            return (
+                                <tr style={{backgroundColor: row.original.m_nIdOperador === select ? "orange" : "white"}} {...row.getRowProps()}
+                                    onClick={handleSelectCP.bind(this, row.original, false)}
+                                    onDoubleClick={handleSelectCP.bind(this, row.original, true)}>
+                                    {row.cells.map(cell => {
+                                        return (
+                                            <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                        )
+                                    })}
+                                </tr>
+                            )
+                        }
+                    )}
                     </tbody>
                 </table>
             </div>
         );
     }
 
-    function TableTipoUnidad({ columns, data, select }) {
+    function TableTipoUnidad({columns, data, select}) {
         const defaultColumn = React.useMemo(
             () => ({
                 // Default Filter UI
@@ -1788,55 +1775,57 @@ function Recoleccion() {
             <div className="col-md-12">
                 <table className="table" {...getTableProps()}>
                     <thead>
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map(column => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render("Name")}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
+                    {headerGroups.map((headerGroup) => (
+                        <tr {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map(column => (
+                                // Add the sorting props to control sorting. For this example
+                                // we can add them into the header props
+                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                    {column.render("Name")}
+                                    {/* Add a sort direction indicator */}
+                                    <span>
                                             {column.isSorted ? (
                                                 column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up" />
+                                                    <i className="fa fa-caret-up"/>
                                                 ) : (
-                                                    <i className="fa fa-caret-down" />
+                                                    <i className="fa fa-caret-down"/>
                                                 )
                                             ) : (
                                                 ""
                                             )}
                                         </span>
-                                        <div>
-                                            {column.canFilter ? column.render("Filter") : null}
-                                        </div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
+                                    <div>
+                                        {column.canFilter ? column.render("Filter") : null}
+                                    </div>
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                        {rows.map(
-                            (row, i) => {
-                                prepareRow(row);
-                                return (
-                                    <tr style={{ backgroundColor: row.original.m_nIdTipoUnidad === select ? "orange" : "white" }} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original, false)} onDoubleClick={handleSelectCP.bind(this, row.original, true)}>
-                                        {row.cells.map(cell => {
-                                            return (
-                                                <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                                            )
-                                        })}
-                                    </tr>
-                                )
-                            }
-                        )}
+                    {rows.map(
+                        (row, i) => {
+                            prepareRow(row);
+                            return (
+                                <tr style={{backgroundColor: row.original.m_nIdTipoUnidad === select ? "orange" : "white"}} {...row.getRowProps()}
+                                    onClick={handleSelectCP.bind(this, row.original, false)}
+                                    onDoubleClick={handleSelectCP.bind(this, row.original, true)}>
+                                    {row.cells.map(cell => {
+                                        return (
+                                            <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                        )
+                                    })}
+                                </tr>
+                            )
+                        }
+                    )}
                     </tbody>
                 </table>
             </div>
         );
     }
 
-    function TableUnidad({ columns, data, select }) {
+    function TableUnidad({columns, data, select}) {
         const defaultColumn = React.useMemo(
             () => ({
                 // Default Filter UI
@@ -1865,59 +1854,61 @@ function Recoleccion() {
         return (
             <div
                 className="col-md-12"
-                style={{ maxHeight: "300px", overflow: "auto" }}
+                style={{maxHeight: "300px", overflow: "auto"}}
             >
                 <table className="table" {...getTableProps()}>
                     <thead>
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map(column => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render("Name")}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
+                    {headerGroups.map((headerGroup) => (
+                        <tr {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map(column => (
+                                // Add the sorting props to control sorting. For this example
+                                // we can add them into the header props
+                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                    {column.render("Name")}
+                                    {/* Add a sort direction indicator */}
+                                    <span>
                                             {column.isSorted ? (
                                                 column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up" />
+                                                    <i className="fa fa-caret-up"/>
                                                 ) : (
-                                                    <i className="fa fa-caret-down" />
+                                                    <i className="fa fa-caret-down"/>
                                                 )
                                             ) : (
                                                 ""
                                             )}
                                         </span>
-                                        <div>
-                                            {column.canFilter ? column.render("Filter") : null}
-                                        </div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
+                                    <div>
+                                        {column.canFilter ? column.render("Filter") : null}
+                                    </div>
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                        {rows.map(
-                            (row, i) => {
-                                prepareRow(row);
-                                return (
-                                    <tr style={{ backgroundColor: row.original.m_nIdUnidad === select ? "orange" : "white" }} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.origina, false)} onDoubleClick={handleSelectCP.bind(this, row.original, true)}>
-                                        {row.cells.map(cell => {
-                                            return (
-                                                <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                                            )
-                                        })}
-                                    </tr>
-                                )
-                            }
-                        )}
+                    {rows.map(
+                        (row, i) => {
+                            prepareRow(row);
+                            return (
+                                <tr style={{backgroundColor: row.original.m_nIdUnidad === select ? "orange" : "white"}} {...row.getRowProps()}
+                                    onClick={handleSelectCP.bind(this, row.origina, false)}
+                                    onDoubleClick={handleSelectCP.bind(this, row.original, true)}>
+                                    {row.cells.map(cell => {
+                                        return (
+                                            <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                        )
+                                    })}
+                                </tr>
+                            )
+                        }
+                    )}
                     </tbody>
                 </table>
             </div>
         );
     }
 
-    function TableRemitentesDestinatarios({ columns, data, select }) {
+    function TableRemitentesDestinatarios({columns, data, select}) {
         const defaultColumn = React.useMemo(
             () => ({
                 // Default Filter UI
@@ -1945,53 +1936,55 @@ function Recoleccion() {
         return (
             <div
                 className="col-md-12"
-                style={{ maxHeight: "300px", overflow: "auto" }}
+                style={{maxHeight: "300px", overflow: "auto"}}
             >
                 <table className="table" {...getTableProps()}>
                     <thead>
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map(column => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render("Name")}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
+                    {headerGroups.map((headerGroup) => (
+                        <tr {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map(column => (
+                                // Add the sorting props to control sorting. For this example
+                                // we can add them into the header props
+                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                    {column.render("Name")}
+                                    {/* Add a sort direction indicator */}
+                                    <span>
                                             {column.isSorted ? (
                                                 column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up" />
+                                                    <i className="fa fa-caret-up"/>
                                                 ) : (
-                                                    <i className="fa fa-caret-down" />
+                                                    <i className="fa fa-caret-down"/>
                                                 )
                                             ) : (
                                                 ""
                                             )}
                                         </span>
-                                        <div>
-                                            {column.canFilter ? column.render("Filter") : null}
-                                        </div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
+                                    <div>
+                                        {column.canFilter ? column.render("Filter") : null}
+                                    </div>
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                        {rows.map(
-                            (row, i) => {
-                                prepareRow(row);
-                                return (
-                                    <tr style={{ backgroundColor: row.original.m_nIdRemitenteDestinatario === select ? "#FCC88F" : "white" }} {...row.getRowProps()} onClick={handleSelectCP.bind(this, row.original, false)} onDoubleClick={handleSelectCP.bind(this, row.original, true)}>
+                    {rows.map(
+                        (row, i) => {
+                            prepareRow(row);
+                            return (
+                                <tr style={{backgroundColor: row.original.m_nIdRemitenteDestinatario === select ? "#FCC88F" : "white"}} {...row.getRowProps()}
+                                    onClick={handleSelectCP.bind(this, row.original, false)}
+                                    onDoubleClick={handleSelectCP.bind(this, row.original, true)}>
 
-                                        {row.cells.map(cell => {
-                                            return (
-                                                <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                                            )
-                                        })}
-                                    </tr>
-                                )
-                            }
-                        )}
+                                    {row.cells.map(cell => {
+                                        return (
+                                            <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                        )
+                                    })}
+                                </tr>
+                            )
+                        }
+                    )}
                     </tbody>
                 </table>
             </div>
@@ -2072,19 +2065,18 @@ function Recoleccion() {
                 <h4><strong>{`Paquete #${index + 1}`}</strong></h4>
 
 
-
                 <div className="col-sm-4 col-md-2-5 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
-                            onChange={(event) => handleChangePaquete(event, index)}
-                            className="form-control"
-                            type="text"
-                            label="Peso"
-                            value={state.paquetes[index].m_rPeso}
-                            required
-                            disabled={state.agregar == "Consultar"}
-                            placeholder="kg"
-                            name="m_rPeso"
+                                   onChange={(event) => handleChangePaquete(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   label="Peso"
+                                   value={state.paquetes[index].m_rPeso}
+                                   required
+                                   disabled={state.agregar === "Consultar"}
+                                   placeholder="kg"
+                                   name="m_rPeso"
                         />
                     </div>
                 </div>
@@ -2092,15 +2084,15 @@ function Recoleccion() {
                 <div className="col-sm-4 col-md-2-5 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
-                            onChange={(event) => handleChangePaquete(event, index)}
-                            className="form-control"
-                            type="text"
-                            value={state.paquetes[index].m_rLargo}
-                            required
-                            label="Largo"
-                            disabled={state.agregar == "Consultar"}
-                            placeholder="mts"
-                            name="m_rLargo"
+                                   onChange={(event) => handleChangePaquete(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   value={state.paquetes[index].m_rLargo}
+                                   required
+                                   label="Largo"
+                                   disabled={state.agregar === "Consultar"}
+                                   placeholder="mts"
+                                   name="m_rLargo"
                         />
                     </div>
                 </div>
@@ -2108,15 +2100,15 @@ function Recoleccion() {
                 <div className="col-sm-4 col-md-2-5 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
-                            onChange={(event) => handleChangePaquete(event, index)}
-                            className="form-control"
-                            type="text"
-                            label="Ancho"
-                            value={state.paquetes[index].m_rAncho}
-                            required
-                            disabled={state.agregar == "Consultar"}
-                            placeholder="mts"
-                            name="m_rAncho"
+                                   onChange={(event) => handleChangePaquete(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   label="Ancho"
+                                   value={state.paquetes[index].m_rAncho}
+                                   required
+                                   disabled={state.agregar === "Consultar"}
+                                   placeholder="mts"
+                                   name="m_rAncho"
                         />
                     </div>
                 </div>
@@ -2124,15 +2116,15 @@ function Recoleccion() {
                 <div className="col-sm-4 col-md-2-5 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
-                            onChange={(event) => handleChangePaquete(event, index)}
-                            className="form-control"
-                            type="text"
-                            value={state.paquetes[index].m_rAlto}
-                            required
-                            label="Alto"
-                            disabled={state.agregar == "Consultar"}
-                            placeholder="mts"
-                            name="m_rAlto"
+                                   onChange={(event) => handleChangePaquete(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   value={state.paquetes[index].m_rAlto}
+                                   required
+                                   label="Alto"
+                                   disabled={state.agregar === "Consultar"}
+                                   placeholder="mts"
+                                   name="m_rAlto"
                         />
                     </div>
                 </div>
@@ -2140,15 +2132,15 @@ function Recoleccion() {
                 <div className="col-sm-4 col-md-2-5 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
-                            onChange={(event) => handleChangePaquete(event, index)}
-                            className="form-control"
-                            type="text"
-                            value={state.paquetes[index].m_rVolumen}
-                            required
-                            label="Volumen"
-                            disabled={state.agregar == "Consultar"}
-                            placeholder="mts3"
-                            name="m_rVolumen"
+                                   onChange={(event) => handleChangePaquete(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   value={state.paquetes[index].m_rVolumen}
+                                   required
+                                   label="Volumen"
+                                   disabled={state.agregar === "Consultar"}
+                                   placeholder="mts3"
+                                   name="m_rVolumen"
                         />
                     </div>
                 </div>
@@ -2162,7 +2154,7 @@ function Recoleccion() {
                                 label="Tipo de Embalaje"
                                 labelId="m_nIdTipoEmbalajeLabel"
                                 value={state.paquetes[index].m_nIdTIpoEmpaque}
-                                disabled={state.agregar == "Consultar"}
+                                disabled={state.agregar === "Consultar"}
                                 onChange={(event) => handleChangePaquete(event, index)}
                                 id="m_nIdTipoEmbalaje"
                                 name="m_nIdTipoEmbalaje"
@@ -2174,22 +2166,22 @@ function Recoleccion() {
                                 ))}
                             </Select>
                         </FormControl>
-                        <i className="fa fa-arrow-down" />
+                        <i className="fa fa-arrow-down"/>
                     </label>
                 </div>
 
                 <div className="col-sm-4 col-md-6 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
-                            onChange={(event) => handleChangePaquete(event, index)}
-                            className="form-control"
-                            type="text"
-                            label="Valor Declarado"
-                            value={state.paquetes[index].m_cyValorDeclarado}
-                            required
-                            disabled={state.agregar == "Consultar"}
-                            placeholder="$"
-                            name="m_cyValorDeclarado"
+                                   onChange={(event) => handleChangePaquete(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   label="Valor Declarado"
+                                   value={state.paquetes[index].m_cyValorDeclarado}
+                                   required
+                                   disabled={state.agregar === "Consultar"}
+                                   placeholder="$"
+                                   name="m_cyValorDeclarado"
                         />
                     </div>
                 </div>
@@ -2197,15 +2189,15 @@ function Recoleccion() {
                 <div className="col-sm-4 col-md-8 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
-                            onChange={(event) => handleChangePaquete(event, index)}
-                            className="form-control"
-                            type="text"
-                            label="Descripción"
-                            value={state.paquetes[index].m_sDescripcion}
-                            required
-                            disabled={state.agregar == "Consultar"}
-                            placeholder="Descripción"
-                            name="m_sDescripcion"
+                                   onChange={(event) => handleChangePaquete(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   label="Descripción"
+                                   value={state.paquetes[index].m_sDescripcion}
+                                   required
+                                   disabled={state.agregar === "Consultar"}
+                                   placeholder="Descripción"
+                                   name="m_sDescripcion"
                         />
                     </div>
                 </div>
@@ -2213,15 +2205,15 @@ function Recoleccion() {
                 <div className="col-sm-4 col-md-4 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
-                            onChange={(event) => handleChangePaquete(event, index)}
-                            className="form-control"
-                            type="text"
-                            label="Ctd"
-                            value={state.paquetes[index].m_nCantidad}
-                            required
-                            disabled={state.agregar == "Consultar"}
-                            placeholder="Ctd"
-                            name="m_nCantidad"
+                                   onChange={(event) => handleChangePaquete(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   label="Ctd"
+                                   value={state.paquetes[index].m_nCantidad}
+                                   required
+                                   disabled={state.agregar === "Consultar"}
+                                   placeholder="Ctd"
+                                   name="m_nCantidad"
                         />
                     </div>
                 </div>
@@ -2229,15 +2221,15 @@ function Recoleccion() {
                 <div className="col-sm-4 col-md-12 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
-                            onChange={(event) => handleChangePaquete(event, index)}
-                            className="form-control"
-                            type="text"
-                            label="Observaciones"
-                            value={state.paquetes[index].m_sObservaciones}
-                            required
-                            disabled={state.agregar == "Consultar"}
-                            placeholder="Observaciones"
-                            name="m_sObservaciones"
+                                   onChange={(event) => handleChangePaquete(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   label="Observaciones"
+                                   value={state.paquetes[index].m_sObservaciones}
+                                   required
+                                   disabled={state.agregar === "Consultar"}
+                                   placeholder="Observaciones"
+                                   name="m_sObservaciones"
                         />
                     </div>
                 </div>
@@ -2248,23 +2240,23 @@ function Recoleccion() {
     const framesSobre = state.sobres.map((p, index) => {
         return (
             <div key={`sobre${index}`}>
-                <h4> <strong>{`Sobre #${index + 1}`}</strong></h4>
+                <h4><strong>{`Sobre #${index + 1}`}</strong></h4>
 
 
 
 
-                <div className="col-md-12 unit">|
+                <div className="col-md-12 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
-                            onChange={(event) => handleChangeSobre(event, index)}
-                            className="form-control"
-                            type="text"
-                            label="Descripcion"
-                            value={state.sobres[index].m_sDescripcion}
-                            required
-                            disabled={state.agregar == "Consultar"}
-                            placeholder="Descripción"
-                            name="m_sDescripcion"
+                                   onChange={(event) => handleChangeSobre(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   label="Descripcion"
+                                   value={state.sobres[index].m_sDescripcion}
+                                   required
+                                   disabled={state.agregar === "Consultar"}
+                                   placeholder="Descripción"
+                                   name="m_sDescripcion"
                         />
                     </div>
                 </div>
@@ -2288,156 +2280,227 @@ function Recoleccion() {
 
     return (
         <div>
-            <Dialog open={state.openDialog} onClose={() => setState({ ...state, openDialog: false })}>
+            <Dialog open={state.openDialog} onClose={() => setState({...state, openDialog: false})}>
                 <DialogContent>
-                    {state.tipoModal == 0 &&
-                        <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-                            <div align="right">
-                                <button onClick={() => { history.push("/Ciudades") }} className="btn btn-primary primary-btn">Agregar</button>
+                    {state.tipoModal === 0 &&
+                    <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                        <div align="right">
+                            <button onClick={() => {
+                                history.push("/Ciudades")
+                            }} className="btn btn-primary primary-btn">Agregar
+                            </button>
 
-                            </div>
-
-                            {dataCodigoPostal.length != 0 ? <TableCodigoPostal object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP} columns={columnsCP} data={dataCodigoPostal} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
-
-                            <DialogActions style={{ justifyContent: "left" }}>
-
-                                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-primary primary-btn">Aceptar</button>
-                                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-secondary secondary-btn">Cerrar</button>
-
-                            </DialogActions>
                         </div>
+
+                        {dataCodigoPostal.length !== 0 ? <TableCodigoPostal object={state}
+                                                                            select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP}
+                                                                            columns={columnsCP} data={dataCodigoPostal}
+                                                                            identificadorModal={state.identificadorModal}/> :
+                            <div>No se encontró ningún registro</div>}
+
+                        <DialogActions style={{justifyContent: "left"}}>
+
+                            <button onClick={() => setState({...state, openDialog: false})}
+                                    className="btn btn-primary primary-btn">Aceptar
+                            </button>
+                            <button onClick={() => setState({...state, openDialog: false})}
+                                    className="btn btn-secondary secondary-btn">Cerrar
+                            </button>
+
+                        </DialogActions>
+                    </div>
                     }
-                    {state.tipoModal == 1 &&
-                        <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-                            <div align="right">
-                                <button onClick={() => { history.push("/Ciudades") }} className="btn btn-primary primary-btn">Agregar</button>
+                    {state.tipoModal === 1 &&
+                    <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                        <div align="right">
+                            <button onClick={() => {
+                                history.push("/Ciudades")
+                            }} className="btn btn-primary primary-btn">Agregar
+                            </button>
 
-                            </div>
-
-                            {dataCiudad.length != 0 ? <TableCiudades object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCiudad} columns={columnsCiudades} data={dataCiudad} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
-
-
-                            <DialogActions style={{ justifyContent: "left" }}>
-
-                                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-primary primary-btn">Aceptar</button>
-                                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-secondary secondary-btn">Cerrar</button>
-
-                            </DialogActions>
                         </div>
+
+                        {dataCiudad.length !== 0 ? <TableCiudades object={state}
+                                                                  select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCiudad}
+                                                                  columns={columnsCiudades} data={dataCiudad}
+                                                                  identificadorModal={state.identificadorModal}/> :
+                            <div>No se encontró ningún registro</div>}
+
+
+                        <DialogActions style={{justifyContent: "left"}}>
+
+                            <button onClick={() => setState({...state, openDialog: false})}
+                                    className="btn btn-primary primary-btn">Aceptar
+                            </button>
+                            <button onClick={() => setState({...state, openDialog: false})}
+                                    className="btn btn-secondary secondary-btn">Cerrar
+                            </button>
+
+                        </DialogActions>
+                    </div>
                     }
-                    {state.tipoModal == 2 &&
-                        <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-                            <div align="right">
-                                <button onClick={() => { history.push("/Operador") }} className="btn btn-primary primary-btn">Agregar</button>
+                    {state.tipoModal === 2 &&
+                    <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                        <div align="right">
+                            <button onClick={() => {
+                                history.push("/Operador")
+                            }} className="btn btn-primary primary-btn">Agregar
+                            </button>
 
-                            </div>
-
-                            {dataOperador.length != 0 ? <TableOperadores object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdOperador} columns={columnsOperadores} data={dataOperador} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
-
-                            <DialogActions style={{ justifyContent: "left" }}>
-
-                                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-primary primary-btn">Aceptar</button>
-                                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-secondary secondary-btn">Cerrar</button>
-
-                            </DialogActions>
                         </div>
+
+                        {dataOperador.length !== 0 ? <TableOperadores object={state}
+                                                                      select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdOperador}
+                                                                      columns={columnsOperadores} data={dataOperador}
+                                                                      identificadorModal={state.identificadorModal}/> :
+                            <div>No se encontró ningún registro</div>}
+
+                        <DialogActions style={{justifyContent: "left"}}>
+
+                            <button onClick={() => setState({...state, openDialog: false})}
+                                    className="btn btn-primary primary-btn">Aceptar
+                            </button>
+                            <button onClick={() => setState({...state, openDialog: false})}
+                                    className="btn btn-secondary secondary-btn">Cerrar
+                            </button>
+
+                        </DialogActions>
+                    </div>
                     }
-                    {state.tipoModal == 3 &&
-                        <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-                            <div align="right">
-                                <button onClick={() => { history.push("/TipoUnidad") }} className="btn btn-primary primary-btn">Agregar</button>
-                            </div>
-                            {dataTipoUnidad.length != 0 ? <TableTipoUnidad object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdTipoUnidad} columns={columnsTipoUnidades} data={dataTipoUnidad} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
-
-                            <DialogActions style={{ justifyContent: "left" }}>
-
-                                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-primary primary-btn">Aceptar</button>
-                                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-secondary secondary-btn">Cerrar</button>
-
-                            </DialogActions>
+                    {state.tipoModal === 3 &&
+                    <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                        <div align="right">
+                            <button onClick={() => {
+                                history.push("/TipoUnidad")
+                            }} className="btn btn-primary primary-btn">Agregar
+                            </button>
                         </div>
+                        {dataTipoUnidad.length !== 0 ? <TableTipoUnidad object={state}
+                                                                        select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdTipoUnidad}
+                                                                        columns={columnsTipoUnidades}
+                                                                        data={dataTipoUnidad}
+                                                                        identificadorModal={state.identificadorModal}/> :
+                            <div>No se encontró ningún registro</div>}
+
+                        <DialogActions style={{justifyContent: "left"}}>
+
+                            <button onClick={() => setState({...state, openDialog: false})}
+                                    className="btn btn-primary primary-btn">Aceptar
+                            </button>
+                            <button onClick={() => setState({...state, openDialog: false})}
+                                    className="btn btn-secondary secondary-btn">Cerrar
+                            </button>
+
+                        </DialogActions>
+                    </div>
                     }
-                    {state.tipoModal == 4 &&
-                        <div className="row" style={{ backgroundColor: '#FFFFFF' }} >
-                            <div align="right">
-                                <button onClick={() => { history.push("/Unidades") }} className="btn btn-primary primary-btn">Agregar</button>
+                    {state.tipoModal === 4 &&
+                    <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                        <div align="right">
+                            <button onClick={() => {
+                                history.push("/Unidades")
+                            }} className="btn btn-primary primary-btn">Agregar
+                            </button>
 
-                            </div>
-
-                            {dataUnidad.length != 0 ? <TableUnidad object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdUnidad} columns={columnsUnidades} data={dataUnidad} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
-
-                            <DialogActions style={{ justifyContent: "left" }}>
-                                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-primary primary-btn">Aceptar</button>
-                                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-secondary secondary-btn">Cerrar</button>
-
-                            </DialogActions>
                         </div>
+
+                        {dataUnidad.length !== 0 ? <TableUnidad object={state}
+                                                                select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdUnidad}
+                                                                columns={columnsUnidades} data={dataUnidad}
+                                                                identificadorModal={state.identificadorModal}/> :
+                            <div>No se encontró ningún registro</div>}
+
+                        <DialogActions style={{justifyContent: "left"}}>
+                            <button onClick={() => setState({...state, openDialog: false})}
+                                    className="btn btn-primary primary-btn">Aceptar
+                            </button>
+                            <button onClick={() => setState({...state, openDialog: false})}
+                                    className="btn btn-secondary secondary-btn">Cerrar
+                            </button>
+
+                        </DialogActions>
+                    </div>
                     }
-                    {state.tipoModal == 5 &&
-                        <div className="row" style={{ backgroundColor: '#FFFFFF' }} >
-                            <div align="right">
-                                <button onClick={() => { history.push("/RemitenteDestinatarios") }} className="btn btn-primary primary-btn">Agregar</button>
+                    {state.tipoModal === 5 &&
+                    <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                        <div align="right">
+                            <button onClick={() => {
+                                history.push("/RemitenteDestinatarios")
+                            }} className="btn btn-primary primary-btn">Agregar
+                            </button>
 
-                            </div>
-
-                            {dataRemitenteDestinatario.length != 0 ? <TableRemitentesDestinatarios object={state} select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdRemitenteDestinatario} columns={columnsRemitenteDestinatarios} data={dataRemitenteDestinatario} identificadorModal={state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
-
-                            <DialogActions style={{ justifyContent: "left" }}>
-
-                                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-primary primary-btn">Aceptar</button>
-                                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-secondary secondary-btn">Cerrar</button>
-
-                            </DialogActions>
                         </div>
+
+                        {dataRemitenteDestinatario.length !== 0 ? <TableRemitentesDestinatarios object={state}
+                                                                                                select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdRemitenteDestinatario}
+                                                                                                columns={columnsRemitenteDestinatarios}
+                                                                                                data={dataRemitenteDestinatario}
+                                                                                                identificadorModal={state.identificadorModal}/> :
+                            <div>No se encontró ningún registro</div>}
+
+                        <DialogActions style={{justifyContent: "left"}}>
+
+                            <button onClick={() => setState({...state, openDialog: false})}
+                                    className="btn btn-primary primary-btn">Aceptar
+                            </button>
+                            <button onClick={() => setState({...state, openDialog: false})}
+                                    className="btn btn-secondary secondary-btn">Cerrar
+                            </button>
+
+                        </DialogActions>
+                    </div>
                     }
-                    {state.tipoModal == 6 &&
-                        <div className="row" style={{ backgroundColor: '#FFFFFF' }} >
+                    {state.tipoModal === 6 &&
+                    <div className="row" style={{backgroundColor: '#FFFFFF'}}>
 
-                            <div>
-                                <label className="input select">
-                                    <FormControl fullWidth variant="outlined" margin="dense">
-                                        <InputLabel id="sucursalListadoLabel">Selecciona el Formato</InputLabel>
-                                        <Select
-                                            labelId="sucursalListadoLabel"
-                                            label="Selecciona el Formato"
-                                            className="form-control"
-                                            required
-                                            value={state.sucursalListado}
-                                            onChange={handleSucursalFiltro}
-                                            id="sucursalListado"
-                                        >
-                                            {dataSucursal.map((sucursal) => (
-                                                <option
-                                                    key={sucursal.m_nIdSucursal}
-                                                    value={sucursal.m_nIdSucursal}
-                                                >
-                                                    {sucursal.m_sSucursal}
-                                                </option>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                    <i></i>
-                                </label>
-                            </div>
-
-                            <DialogActions style={{ justifyContent: "left" }}>
-
-                                <button onClick={() => handleImprimir()} className="btn btn-primary primary-btn">Aceptar</button>
-                                <button onClick={() => setState({ ...state, openDialog: false })} className="btn btn-secondary secondary-btn">Cerrar</button>
-
-                            </DialogActions>
+                        <div>
+                            <label className="input select">
+                                <FormControl fullWidth variant="outlined" margin="dense">
+                                    <InputLabel id="sucursalListadoLabel">Selecciona el Formato</InputLabel>
+                                    <Select
+                                        labelId="sucursalListadoLabel"
+                                        label="Selecciona el Formato"
+                                        className="form-control"
+                                        required
+                                        value={state.sucursalListado}
+                                        onChange={handleSucursalFiltro}
+                                        id="sucursalListado"
+                                    >
+                                        {dataSucursal.map((sucursal) => (
+                                            <option
+                                                key={sucursal.m_nIdSucursal}
+                                                value={sucursal.m_nIdSucursal}
+                                            >
+                                                {sucursal.m_sSucursal}
+                                            </option>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                <i></i>
+                            </label>
                         </div>
+
+                        <DialogActions style={{justifyContent: "left"}}>
+
+                            <button onClick={() => handleImprimir()} className="btn btn-primary primary-btn">Aceptar
+                            </button>
+                            <button onClick={() => setState({...state, openDialog: false})}
+                                    className="btn btn-secondary secondary-btn">Cerrar
+                            </button>
+
+                        </DialogActions>
+                    </div>
                     }</DialogContent>
 
             </Dialog>
 
             <header className="topbar clearfix">
-                <Cabecera />
+                <Cabecera/>
             </header>
 
             {/*Leftbar Start Here*/}
-            <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
-                <BarraLateralIzquierda />
+            <aside className="iconic-leftbar" style={{minHeight: state.height}}>
+                <BarraLateralIzquierda/>
             </aside>
             {/*Leftbar End Here*/}
 
@@ -2460,12 +2523,12 @@ function Recoleccion() {
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
                             <a data-toggle="tab" href="#Listado">
-                                <i className="fa fa-list" /> Listado
-              </a>
+                                <i className="fa fa-list"/> Listado
+                            </a>
                         </li>
                         <li>
                             <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
-                                <i className="fa fa-plus-circle" /> {state.agregar}
+                                <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
 
@@ -2479,36 +2542,40 @@ function Recoleccion() {
                                     openDialog: true
                                 });
                             }}>
-                                <i className="fa fa-times-circle" /> Imprimir
-              </a>
+                                <i className="fa fa-times-circle"/> Imprimir
+                            </a>
                         </li>
 
 
                         <li>
-                            <a data-toggle="tab" href="#Cancelar" onClick={handleShowCancelar} className={state.idRecoleccion == 0 ? classes.disabled : ""}>
-                                <i className="zmdi zmdi-print" /> Cancelar
-              </a>
+                            <a data-toggle="tab" href="#Cancelar" onClick={handleShowCancelar}
+                               className={state.idRecoleccion === 0 ? classes.disabled : ""}>
+                                <i className="zmdi zmdi-print"/> Cancelar
+                            </a>
                         </li>
 
                         <li>
-                            <a data-toggle="tab" href="#Salida-Llegada" onClick={handleShowSalidaLlegada} className={state.idRecoleccion == 0 ? classes.disabled : ""}>
-                                <i className="fa fa-times-circle" /> Salida
-              </a>
+                            <a data-toggle="tab" href="#Salida-Llegada" onClick={handleShowSalidaLlegada}
+                               className={state.idRecoleccion === 0 ? classes.disabled : ""}>
+                                <i className="fa fa-times-circle"/> Salida
+                            </a>
                         </li>
                         <li>
-                            <a data-toggle="tab" href="#Salida-Llegada" onClick={handleShowSalidaLlegada} className={state.idRecoleccion == 0 ? classes.disabled : ""}>
-                                <i className="fa fa-times-circle" /> Llegada
-              </a>
+                            <a data-toggle="tab" href="#Salida-Llegada" onClick={handleShowSalidaLlegada}
+                               className={state.idRecoleccion === 0 ? classes.disabled : ""}>
+                                <i className="fa fa-times-circle"/> Llegada
+                            </a>
                         </li>
 
                         <li>
                             <a data-toggle="tab" href="#Prueba">
-                                <i className="zmdi zmdi-print" /> Boton de prueba
-              </a>
+                                <i className="zmdi zmdi-print"/> Boton de prueba
+                            </a>
                         </li>
 
-                        <li style={{ float: "right" }}>
-                            <a data-toggle="tab" href="#" className={state.idRecoleccion == 0 ? classes.disabled : ""} style={{ textAlign: "right" }} onClick={() => setRedirect(true)}>
+                        <li style={{float: "right"}}>
+                            <a data-toggle="tab" href="#" className={state.idRecoleccion === 0 ? classes.disabled : ""}
+                               style={{textAlign: "right"}} onClick={() => setRedirect(true)}>
                                 Generar embarque
                             </a>
                         </li>
@@ -2517,15 +2584,14 @@ function Recoleccion() {
                     </ul>
 
                     <div
-                        className="row "
-                        className="tab-content"
-                        style={{ paddingLeft: "-15px" }}
+                        className="row tab-content"
+                        style={{paddingLeft: "-15px"}}
                     >
                         <div id="Listado" className="tab-pane fade in active">
                             <div className="widget-wrap">
                                 <form className="j-forms">
-                                    <div className="row " style={{ display: "flex" }}>
-                                        <div className="col-sm-6 col-md-3 unit" style={{ paddingLeft: "0px" }}>
+                                    <div className="row" style={{display: "flex"}}>
+                                        <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
                                             <div className="input">
                                                 <TextField
                                                     autoFocus
@@ -2544,24 +2610,24 @@ function Recoleccion() {
                                             </div>
                                         </div>
 
-                                        <div className="col-sm-6 col-md-3 unit" style={{ paddingLeft: "0px" }}>
+                                        <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
                                             <div className="input">
                                                 <TextField variant="outlined" margin="dense"
-                                                    type="date"
-                                                    className="form-control"
-                                                    label="Fecha Final"
-                                                    InputLabelProps={{
-                                                        shrink: true,
-                                                    }}
-                                                    value={state.fechaFinal}
-                                                    onChange={handleFechaFinalFiltro}
-                                                    id="fechaFinal"
+                                                           type="date"
+                                                           className="form-control"
+                                                           label="Fecha Final"
+                                                           InputLabelProps={{
+                                                               shrink: true,
+                                                           }}
+                                                           value={state.fechaFinal}
+                                                           onChange={handleFechaFinalFiltro}
+                                                           id="fechaFinal"
                                                 />
                                             </div>
 
                                         </div>
 
-                                        <div className="col-sm-6 col-md-3 unit" style={{ paddingLeft: "0px" }}>
+                                        <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
                                             <label className="input select">
                                                 <FormControl fullWidth variant="outlined" margin="dense">
                                                     <InputLabel id="sucursalListadoLabel">Sucursal</InputLabel>
@@ -2570,7 +2636,6 @@ function Recoleccion() {
                                                         label="Sucursal"
                                                         className="form-control"
                                                         required
-                                                        label="Sucursal"
                                                         value={state.sucursalListado}
                                                         onChange={handleSucursalFiltro}
                                                         id="sucursalListado"
@@ -2592,7 +2657,7 @@ function Recoleccion() {
 
                                         </div>
 
-                                        <div className="col-sm-6 col-md-3 unit" style={{ paddingLeft: "0px" }}>
+                                        <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
                                             <label className="input select">
                                                 <FormControl fullWidth variant="outlined" margin="dense">
                                                     <InputLabel id="estatusListadoLabel">Estatus</InputLabel>
@@ -2620,7 +2685,7 @@ function Recoleccion() {
                                         </div>
                                     </div>
                                 </form>
-                                <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                                <div className="row" style={{height: state.height - 250, width: '100%'}}>
                                     {conDatos() ? (
                                         <DataGrid
                                             className={classes.root}
@@ -2666,7 +2731,7 @@ function Recoleccion() {
                                             <div
                                                 className={
                                                     "col-sm-3 col-md-2-5 col-lg-2-5 step " +
-                                                    (stepActive == 1 && "active-step")
+                                                    (stepActive === 1 && "active-step")
                                                 }
                                                 onClick={() => openSection(1)}
                                             >
@@ -2678,7 +2743,7 @@ function Recoleccion() {
                                             <div
                                                 className={
                                                     "col-sm-3 col-md-2-5 col-lg-2-5 step " +
-                                                    (stepActive == 2 && "active-step")
+                                                    (stepActive === 2 && "active-step")
                                                 }
                                                 onClick={() => openSection(2)}
                                             >
@@ -2690,7 +2755,7 @@ function Recoleccion() {
                                             <div
                                                 className={
                                                     "col-sm-3 col-md-2-5 col-lg-2-5 step " +
-                                                    (stepActive == 3 && "active-step")
+                                                    (stepActive === 3 && "active-step")
                                                 }
                                                 onClick={() => openSection(3)}
                                             >
@@ -2703,7 +2768,7 @@ function Recoleccion() {
                                             <div
                                                 className={
                                                     "col-sm-3 col-md-2-5 col-lg-2-5 step " +
-                                                    (stepActive == 4 && "active-step")
+                                                    (stepActive === 4 && "active-step")
                                                 }
                                                 onClick={() => openSection(4)}
                                             >
@@ -2715,7 +2780,7 @@ function Recoleccion() {
                                             <div
                                                 className={
                                                     "col-sm-3 col-md-2-5 col-lg-2-5 step" +
-                                                    (stepActive == 5 && "active-step")
+                                                    (stepActive === 5 && "active-step")
                                                 }
                                                 onClick={() => openSection(5)}
                                             >
@@ -2738,8 +2803,10 @@ function Recoleccion() {
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             {" "}
                                                             <label className="input select">
-                                                                <FormControl fullWidth variant="outlined" margin="dense">
-                                                                    <InputLabel id="idSucursalAgregarLabel">Sucursal</InputLabel>
+                                                                <FormControl fullWidth variant="outlined"
+                                                                             margin="dense">
+                                                                    <InputLabel
+                                                                        id="idSucursalAgregarLabel">Sucursal</InputLabel>
                                                                     <Select
                                                                         labelId="idSucursalAgregarLabel"
                                                                         label="Sucursal"
@@ -2748,7 +2815,7 @@ function Recoleccion() {
                                                                         value={state.idSucursalAgregar}
                                                                         onChange={handleChange}
                                                                         id="idSucursalAgregar"
-                                                                        
+
                                                                         disabled="disabled"
                                                                     >
                                                                         {dataSucursal.map((sucursal) => (
@@ -2767,13 +2834,13 @@ function Recoleccion() {
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
-                                                                    onChange={handleChange}
-                                                                    className="form-control"
-                                                                    type="text"
-                                                                    label="Folio Recolección"
-                                                                    value={state.folioRecoleccion}
-                                                                    id="folioRecoleccion"
-                                                                    readOnly
+                                                                           onChange={handleChange}
+                                                                           className="form-control"
+                                                                           type="text"
+                                                                           label="Folio Recolección"
+                                                                           value={state.folioRecoleccion}
+                                                                           id="folioRecoleccion"
+                                                                           readOnly
                                                                 />
                                                             </div>
                                                         </div>
@@ -2781,13 +2848,13 @@ function Recoleccion() {
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
-                                                                    onChange={handleChange}
-                                                                    className="form-control"
-                                                                    type="text"
-                                                                    label="Folio Embarque"
-                                                                    value={state.folioEmbarque}
-                                                                    id="folioEmbarque"
-                                                                    readOnly
+                                                                           onChange={handleChange}
+                                                                           className="form-control"
+                                                                           type="text"
+                                                                           label="Folio Embarque"
+                                                                           value={state.folioEmbarque}
+                                                                           id="folioEmbarque"
+                                                                           readOnly
                                                                 />
                                                             </div>
                                                         </div>
@@ -2795,13 +2862,13 @@ function Recoleccion() {
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
-                                                                    onChange={handleChange}
-                                                                    className="form-control"
-                                                                    type="text"
-                                                                    label="Folio Guía"
-                                                                    value={state.folioGuía}
-                                                                    id="folioGuía"
-                                                                    readOnly
+                                                                           onChange={handleChange}
+                                                                           className="form-control"
+                                                                           type="text"
+                                                                           label="Folio Guía"
+                                                                           value={state.folioGuía}
+                                                                           id="folioGuía"
+                                                                           readOnly
                                                                 />
                                                             </div>
                                                         </div>
@@ -2809,13 +2876,13 @@ function Recoleccion() {
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
-                                                                    onChange={handleChange}
-                                                                    className="form-control"
-                                                                    type="text"
-                                                                    label="Folio Informe"
-                                                                    value={state.folioInforme}
-                                                                    id="folioInforme"
-                                                                    readOnly
+                                                                           onChange={handleChange}
+                                                                           className="form-control"
+                                                                           type="text"
+                                                                           label="Folio Informe"
+                                                                           value={state.folioInforme}
+                                                                           id="folioInforme"
+                                                                           readOnly
                                                                 />
                                                             </div>
                                                         </div>
@@ -2823,17 +2890,17 @@ function Recoleccion() {
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
-                                                                    onChange={handleChange}
-                                                                    required
-                                                                    label="Fecha / Hora de Registro"
-                                                                    InputLabelProps={{
-                                                                        shrink: true,
-                                                                    }}
-                                                                    value={state.fechaHoraRegistro}
-                                                                    className="form-control"
-                                                                    id="fechaHoraRegistro"
-                                                                    type="datetime-local"
-                                                                    disabled={state.agregar == "Consultar" || state.agregar == "Modificar"}
+                                                                           onChange={handleChange}
+                                                                           required
+                                                                           label="Fecha / Hora de Registro"
+                                                                           InputLabelProps={{
+                                                                               shrink: true,
+                                                                           }}
+                                                                           value={state.fechaHoraRegistro}
+                                                                           className="form-control"
+                                                                           id="fechaHoraRegistro"
+                                                                           type="datetime-local"
+                                                                           disabled={state.agregar === "Consultar" || state.agregar === "Modificar"}
 
                                                                 />
                                                             </div>
@@ -2842,8 +2909,10 @@ function Recoleccion() {
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
 
                                                             <label className="input select">
-                                                                <FormControl fullWidth variant="outlined" margin="dense">
-                                                                    <InputLabel id="estatusRecoleccionLabel">Estatus de la Recolección</InputLabel>
+                                                                <FormControl fullWidth variant="outlined"
+                                                                             margin="dense">
+                                                                    <InputLabel id="estatusRecoleccionLabel">Estatus de
+                                                                        la Recolección</InputLabel>
                                                                     <Select
                                                                         labelId="estatusRecoleccion"
                                                                         className="form-control"
@@ -2851,7 +2920,7 @@ function Recoleccion() {
                                                                         label="Estatus de la Recolección"
                                                                         value={state.estatusRecoleccion}
                                                                         onChange={handleChange}
-                                                                        disabled={state.agregar == "Consultar"}
+                                                                        disabled={state.agregar === "Consultar"}
                                                                         id="estatusRecoleccion"
                                                                     >
                                                                         {dataEstatusRecoleccion.map((estatus) => (
@@ -2870,7 +2939,8 @@ function Recoleccion() {
 
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <label className="input select">
-                                                                <FormControl fullWidth variant="outlined" margin="dense">
+                                                                <FormControl fullWidth variant="outlined"
+                                                                             margin="dense">
                                                                     <InputLabel id="monedaLabel">Moneda</InputLabel>
                                                                     <Select
                                                                         labelId="monedaLabel"
@@ -2879,7 +2949,7 @@ function Recoleccion() {
                                                                         required
                                                                         value={state.moneda}
                                                                         onChange={handleChange}
-                                                                        disabled={state.agregar == "Consultar"}
+                                                                        disabled={state.agregar === "Consultar"}
                                                                         id="moneda"
                                                                     >
                                                                         <option value="0">Seleccionar</option>
@@ -2893,14 +2963,16 @@ function Recoleccion() {
                                                                         ))}
                                                                     </Select>
                                                                 </FormControl>
-                                                                <i className="fa fa-arrow-down" />
+                                                                <i className="fa fa-arrow-down"/>
                                                             </label>
                                                         </div>
 
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <label className="input select">
-                                                                <FormControl fullWidth variant="outlined" margin="dense">
-                                                                    <InputLabel id="tipoCambioLabel">Tipo de Cambio</InputLabel>
+                                                                <FormControl fullWidth variant="outlined"
+                                                                             margin="dense">
+                                                                    <InputLabel id="tipoCambioLabel">Tipo de
+                                                                        Cambio</InputLabel>
                                                                     <Select
                                                                         labelId="tipoCambioLabel"
                                                                         label="Tipo de Cambio"
@@ -2908,7 +2980,7 @@ function Recoleccion() {
                                                                         required
                                                                         value={state.tipoCambio}
                                                                         onChange={handleChange}
-                                                                        disabled={state.agregar == "Consultar"}
+                                                                        disabled={state.agregar === "Consultar"}
                                                                         id="tipoCambio"
                                                                     >
                                                                         <option value="0">Seleccionar</option>
@@ -2922,23 +2994,24 @@ function Recoleccion() {
                                                                         ))}
                                                                     </Select>
                                                                 </FormControl>
-                                                                <i className="fa fa-arrow-down" />
+                                                                <i className="fa fa-arrow-down"/>
                                                             </label>
                                                         </div>
 
 
-
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <label className="input select">
-                                                                <FormControl fullWidth variant="outlined" margin="dense">
-                                                                    <InputLabel id="tipoCobroLabel">Tipo Cobro</InputLabel>
+                                                                <FormControl fullWidth variant="outlined"
+                                                                             margin="dense">
+                                                                    <InputLabel id="tipoCobroLabel">Tipo
+                                                                        Cobro</InputLabel>
                                                                     <Select
                                                                         labelId="tipoCobroLabel"
                                                                         label="Tipo Cobro"
                                                                         className="form-control"
                                                                         required
                                                                         value={state.tipoCobro}
-                                                                        disabled={state.agregar == "Consultar"}
+                                                                        disabled={state.agregar === "Consultar"}
                                                                         onChange={handleChange}
                                                                         id="tipoCobro"
                                                                     >
@@ -2977,7 +3050,7 @@ function Recoleccion() {
                                                                         <div className="input">
                                                                             <Autocomplete
                                                                                 value={state.nombreRemitente}
-                                                                                disabled={state.agregar == "Consultar"}
+                                                                                disabled={state.agregar === "Consultar"}
                                                                                 freeSolo
                                                                                 onChange={(event, newValue) => {
                                                                                     handleSelectRemitente(newValue)
@@ -3004,17 +3077,21 @@ function Recoleccion() {
                                                                                             {...params}
                                                                                             InputProps={{
                                                                                                 ...params.InputProps,
-                                                                                                style: { height: "33px", fontSize: "14px" },
+                                                                                                style: {
+                                                                                                    height: "33px",
+                                                                                                    fontSize: "14px"
+                                                                                                },
                                                                                                 type: "search",
                                                                                                 disableUnderline: true,
                                                                                                 endAdornment: (
-                                                                                                    <InputAdornment position="end">
+                                                                                                    <InputAdornment
+                                                                                                        position="end">
                                                                                                         <IconButton
                                                                                                             padding="0px"
                                                                                                             style={{
                                                                                                                 paddingRight: "0px",
                                                                                                             }}
-                                                                                                            disabled={state.agregar == "Consultar"}
+                                                                                                            disabled={state.agregar === "Consultar"}
                                                                                                             onClick={() => {
                                                                                                                 setState({
                                                                                                                     ...state,
@@ -3051,17 +3128,17 @@ function Recoleccion() {
                                                                         {" "}
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
-                                                                                onChange={handleChange}
-                                                                                className="form-control"
-                                                                                type="text"
-                                                                                fullWidth
-                                                                                label="RFC"
-                                                                                pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
-                                                                                title="Favor de introducir un RFC válido."
-                                                                                required
-                                                                                value={state.RFCRemitente}
-                                                                                disabled={state.agregar == "Consultar"}
-                                                                                id="RFCRemitente"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       fullWidth
+                                                                                       label="RFC"
+                                                                                       pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
+                                                                                       title="Favor de introducir un RFC válido."
+                                                                                       required
+                                                                                       value={state.RFCRemitente}
+                                                                                       disabled={state.agregar === "Consultar"}
+                                                                                       id="RFCRemitente"
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -3069,30 +3146,32 @@ function Recoleccion() {
                                                                     <div className="col-sm-12 col-md-12 unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
-                                                                                onChange={handleChange}
-                                                                                className="form-control"
-                                                                                type="text"
-                                                                                required
-                                                                                label="Domicilio"
-                                                                                value={state.domicilioRemitente}
-                                                                                disabled={state.agregar == "Consultar"}
-                                                                                id="domicilioRemitente"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       required
+                                                                                       label="Domicilio"
+                                                                                       value={state.domicilioRemitente}
+                                                                                       disabled={state.agregar === "Consultar"}
+                                                                                       id="domicilioRemitente"
                                                                             />
                                                                         </div>
                                                                     </div>
                                                                     {/* --------------------------------------- AutocompleteCPRemitente -------------------------------------- */}
-                                                                    <div className="col-sm-12 col-md-8 unit" >
+                                                                    <div className="col-sm-12 col-md-8 unit">
 
                                                                         <div className="input">
                                                                             <Autocomplete
                                                                                 value={state.codigoPostalRemitente}
                                                                                 freeSolo
-                                                                                onChange={(event, newValue) => { handleShowCiudadRemitente(newValue.m_nIdCP) }}
+                                                                                onChange={(event, newValue) => {
+                                                                                    handleShowCiudadRemitente(newValue.m_nIdCP)
+                                                                                }}
                                                                                 id="codigoPostalRemitente"
                                                                                 disableClearable
                                                                                 forcePopupIcon={false}
                                                                                 options={dataCodigoPostal}
-                                                                                disabled={state.agregar == "Consultar"}
+                                                                                disabled={state.agregar === "Consultar"}
                                                                                 getOptionLabel={(option) =>
                                                                                     option.m_sCP
                                                                                 }
@@ -3110,18 +3189,22 @@ function Recoleccion() {
                                                                                             {...params}
                                                                                             InputProps={{
                                                                                                 ...params.InputProps,
-                                                                                                style: { height: "33px", fontSize: "14px" },
+                                                                                                style: {
+                                                                                                    height: "33px",
+                                                                                                    fontSize: "14px"
+                                                                                                },
                                                                                                 type: "search",
                                                                                                 disableUnderline: true,
-                                                                                                disabled: state.agregar == "Consultar",
+                                                                                                disabled: state.agregar === "Consultar",
                                                                                                 endAdornment: (
-                                                                                                    <InputAdornment position="end">
+                                                                                                    <InputAdornment
+                                                                                                        position="end">
                                                                                                         <IconButton
                                                                                                             padding="0px"
                                                                                                             style={{
                                                                                                                 paddingRight: "0px",
                                                                                                             }}
-                                                                                                            disabled={state.agregar == "Consultar"}
+                                                                                                            disabled={state.agregar === "Consultar"}
                                                                                                             onClick={() => {
                                                                                                                 setState({
                                                                                                                     ...state,
@@ -3156,15 +3239,17 @@ function Recoleccion() {
                                                                     {/* --------------------------------------- Ciudad ------------------------------------------------- */}
                                                                     <div className="col-sm-12 col-md-12 col-lg-12 unit">
                                                                         <label className="input select">
-                                                                            <FormControl fullWidth variant="outlined" margin="dense">
-                                                                                <InputLabel id="ciudadRemitenteLabel">Ciudad</InputLabel>
+                                                                            <FormControl fullWidth variant="outlined"
+                                                                                         margin="dense">
+                                                                                <InputLabel
+                                                                                    id="ciudadRemitenteLabel">Ciudad</InputLabel>
                                                                                 <Select
                                                                                     labelId="ciudadRemitenteLabel"
                                                                                     label="Ciudad"
                                                                                     className="form-control"
                                                                                     required
                                                                                     value={state.ciudadRemitente}
-                                                                                    disabled={state.agregar == "Consultar"}
+                                                                                    disabled={state.agregar === "Consultar"}
                                                                                     onChange={handleChange}
                                                                                     id="ciudadRemitente"
                                                                                 >
@@ -3178,7 +3263,7 @@ function Recoleccion() {
                                                                                     ))}
                                                                                 </Select>
                                                                             </FormControl>
-                                                                            <i className="fa fa-arrow-down" />
+                                                                            <i className="fa fa-arrow-down"/>
                                                                         </label>
                                                                     </div>
                                                                     {/* --------------------------------------- Correo ------------------------------------------------- */}
@@ -3186,14 +3271,14 @@ function Recoleccion() {
 
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
-                                                                                onChange={handleChange}
-                                                                                className="form-control"
-                                                                                type="email"
-                                                                                required
-                                                                                label="Correo Electrónico"
-                                                                                value={state.correoRemitente}
-                                                                                disabled={state.agregar == "Consultar"}
-                                                                                id="correoRemitente"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="email"
+                                                                                       required
+                                                                                       label="Correo Electrónico"
+                                                                                       value={state.correoRemitente}
+                                                                                       disabled={state.agregar === "Consultar"}
+                                                                                       id="correoRemitente"
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -3201,16 +3286,16 @@ function Recoleccion() {
                                                                     <div className="col-sm-12 col-md-12 unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
-                                                                                onChange={handleChange}
-                                                                                className="form-control"
-                                                                                type="text"
-                                                                                pattern="[0-9]{10}"
-                                                                                maxLength="10"
-                                                                                required
-                                                                                label="Teléfono"
-                                                                                value={state.telefonoRemitente}
-                                                                                disabled={state.agregar == "Consultar"}
-                                                                                id="telefonoRemitente"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       pattern="[0-9]{10}"
+                                                                                       maxLength="10"
+                                                                                       required
+                                                                                       label="Teléfono"
+                                                                                       value={state.telefonoRemitente}
+                                                                                       disabled={state.agregar === "Consultar"}
+                                                                                       id="telefonoRemitente"
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -3218,14 +3303,14 @@ function Recoleccion() {
                                                                     <div className="col-sm-12 col-md-12 unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
-                                                                                onChange={handleChange}
-                                                                                className="form-control"
-                                                                                type="text"
-                                                                                label="Contacto"
-                                                                                required
-                                                                                value={state.contactoRemitente}
-                                                                                disabled={state.agregar == "Consultar"}
-                                                                                id="contactoRemitente"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       label="Contacto"
+                                                                                       required
+                                                                                       value={state.contactoRemitente}
+                                                                                       disabled={state.agregar === "Consultar"}
+                                                                                       id="contactoRemitente"
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -3241,7 +3326,7 @@ function Recoleccion() {
                                                                                     })
                                                                                 }
                                                                                 value={state.origenRemitente}
-                                                                                disabled={state.agregar == "Consultar"}
+                                                                                disabled={state.agregar === "Consultar"}
                                                                                 id="origenRemitente"
                                                                                 disableClearable
                                                                                 forcePopupIcon={false}
@@ -3262,19 +3347,23 @@ function Recoleccion() {
                                                                                             {...params}
                                                                                             InputProps={{
                                                                                                 ...params.InputProps,
-                                                                                                style: { height: "33px", fontSize: "14px" },
+                                                                                                style: {
+                                                                                                    height: "33px",
+                                                                                                    fontSize: "14px"
+                                                                                                },
                                                                                                 type: "search",
                                                                                                 value: state.origenRemitente,
-                                                                                                disabled: state.agregar == "Consultar",
+                                                                                                disabled: state.agregar === "Consultar",
                                                                                                 disableUnderline: true,
                                                                                                 endAdornment: (
-                                                                                                    <InputAdornment position="end">
+                                                                                                    <InputAdornment
+                                                                                                        position="end">
                                                                                                         <IconButton
                                                                                                             padding="0px"
                                                                                                             style={{
                                                                                                                 paddingRight: "0px",
                                                                                                             }}
-                                                                                                            disabled={state.agregar == "Consultar"}
+                                                                                                            disabled={state.agregar === "Consultar"}
                                                                                                             onClick={() => {
                                                                                                                 setState({
                                                                                                                     ...state,
@@ -3310,7 +3399,7 @@ function Recoleccion() {
                                                                     <div className="col-sm-12 col-md-12 unit">
                                                                         <label className="label">
                                                                             Recolección en Diferente Domicilio
-                                    </label>
+                                                                        </label>
                                                                         <div className="form">
                                                                             <input
                                                                                 onChange={
@@ -3318,7 +3407,7 @@ function Recoleccion() {
                                                                                 }
                                                                                 className="form-control"
                                                                                 value={state.diferenteRecoleccion}
-                                                                                disabled={state.agregar == "Consultar"}
+                                                                                disabled={state.agregar === "Consultar"}
                                                                                 checked={state.diferenteRecoleccion}
                                                                                 type="checkbox"
                                                                                 style={{height:"20px"}}
@@ -3343,7 +3432,7 @@ function Recoleccion() {
                                                                                 handleSelectDestinatario(newValue)
                                                                             }}
                                                                             value={state.nombreDestinatario}
-                                                                            disabled={state.agregar == "Consultar"}
+                                                                            disabled={state.agregar === "Consultar"}
                                                                             freeSolo
 
 
@@ -3368,17 +3457,21 @@ function Recoleccion() {
                                                                                         {...params}
                                                                                         InputProps={{
                                                                                             ...params.InputProps,
-                                                                                            style: { height: "33px", fontSize: "14px" },
+                                                                                            style: {
+                                                                                                height: "33px",
+                                                                                                fontSize: "14px"
+                                                                                            },
                                                                                             type: "search",
                                                                                             disableUnderline: true,
                                                                                             endAdornment: (
-                                                                                                <InputAdornment position="end">
+                                                                                                <InputAdornment
+                                                                                                    position="end">
                                                                                                     <IconButton
                                                                                                         padding="0px"
                                                                                                         style={{
                                                                                                             paddingRight: "0px",
                                                                                                         }}
-                                                                                                        disabled={state.agregar == "Consultar"}
+                                                                                                        disabled={state.agregar === "Consultar"}
                                                                                                         onClick={() => {
                                                                                                             setState({
                                                                                                                 ...state,
@@ -3398,7 +3491,6 @@ function Recoleccion() {
                                                                                                                 paddingBlockEnd: 0,
                                                                                                                 paddingLeft: 0,
                                                                                                                 paddingBlock: 0,
-                                                                                                                paddingRight: "0px",
                                                                                                             }}
                                                                                                             onClick={() => {
                                                                                                                 setState({
@@ -3424,17 +3516,17 @@ function Recoleccion() {
                                                                 <div className="col-sm-12 col-md-8 unit">
                                                                     <div className="input">
                                                                         <TextField variant="outlined" margin="dense"
-                                                                            onChange={handleChange}
-                                                                            className="form-control"
-                                                                            type="text"
-                                                                            label="RFC"
-                                                                            pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
-                                                                            title="Favor de introducir un RFC válido."
-                                                                            required
-                                                                            fullWidth
-                                                                            value={state.RFCDestinatario}
-                                                                            disabled={state.agregar == "Consultar"}
-                                                                            id="RFCDestinatario"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   label="RFC"
+                                                                                   pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
+                                                                                   title="Favor de introducir un RFC válido."
+                                                                                   required
+                                                                                   fullWidth
+                                                                                   value={state.RFCDestinatario}
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   id="RFCDestinatario"
                                                                         />
                                                                     </div>
                                                                 </div>
@@ -3442,18 +3534,18 @@ function Recoleccion() {
                                                                 <div className="col-sm-12 col-md-12 unit">
                                                                     <div className="input">
                                                                         <TextField variant="outlined" margin="dense"
-                                                                            onChange={handleChange}
-                                                                            className="form-control"
-                                                                            type="text"
-                                                                            required
-                                                                            label="Domicilio"
-                                                                            value={state.domicilioDestinatario}
-                                                                            disabled={state.agregar == "Consultar"}
-                                                                            id="domicilioDestinatario"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   required
+                                                                                   label="Domicilio"
+                                                                                   value={state.domicilioDestinatario}
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   id="domicilioDestinatario"
                                                                         />
                                                                     </div>
                                                                 </div>
-                                                                <div className="col-sm-12 col-md-8 unit" >
+                                                                <div className="col-sm-12 col-md-8 unit">
                                                                     <div className="input">
                                                                         <Autocomplete
                                                                             freeSolo
@@ -3464,7 +3556,7 @@ function Recoleccion() {
                                                                                 })
                                                                             }
                                                                             value={state.codigoPostalDestinatario}
-                                                                            disabled={state.agregar == "Consultar"}
+                                                                            disabled={state.agregar === "Consultar"}
                                                                             id="codigoPostalDestinatario"
                                                                             disableClearable
                                                                             options={dataCodigoPostal}
@@ -3483,18 +3575,22 @@ function Recoleccion() {
                                                                                         {...params}
                                                                                         InputProps={{
                                                                                             ...params.InputProps,
-                                                                                            style: { height: "33px", fontSize: "14px" },
+                                                                                            style: {
+                                                                                                height: "33px",
+                                                                                                fontSize: "14px"
+                                                                                            },
                                                                                             type: "search",
                                                                                             disableUnderline: true,
-                                                                                            disabled: state.agregar == "Consultar",
+                                                                                            disabled: state.agregar === "Consultar",
                                                                                             endAdornment: (
-                                                                                                <InputAdornment position="end">
+                                                                                                <InputAdornment
+                                                                                                    position="end">
                                                                                                     {" "}
                                                                                                     <IconButton
                                                                                                         style={{
                                                                                                             paddingRight: "0px",
                                                                                                         }}
-                                                                                                        disabled={state.agregar == "Consultar"}
+                                                                                                        disabled={state.agregar === "Consultar"}
                                                                                                         onClick={() => {
                                                                                                             setState({
                                                                                                                 ...state,
@@ -3524,15 +3620,17 @@ function Recoleccion() {
 
                                                                 <div className="col-sm-12 col-md-12  unit">
                                                                     <label className="input select">
-                                                                        <FormControl fullWidth variant="outlined" margin="dense">
-                                                                            <InputLabel id="ciudadDestinatarioLabel">Ciudad</InputLabel>
+                                                                        <FormControl fullWidth variant="outlined"
+                                                                                     margin="dense">
+                                                                            <InputLabel
+                                                                                id="ciudadDestinatarioLabel">Ciudad</InputLabel>
                                                                             <Select
                                                                                 labelId="ciudadDestinatarioLabel"
                                                                                 label="Ciudad"
                                                                                 className="form-control"
                                                                                 required
                                                                                 value={state.ciudadDestinatario}
-                                                                                disabled={state.agregar == "Consultar"}
+                                                                                disabled={state.agregar === "Consultar"}
                                                                                 onChange={handleChange}
                                                                                 id="ciudadDestinatario"
                                                                             >
@@ -3546,7 +3644,7 @@ function Recoleccion() {
                                                                                 ))}
                                                                             </Select>
                                                                         </FormControl>
-                                                                        <i className="fa fa-arrow-down" />
+                                                                        <i className="fa fa-arrow-down"/>
                                                                     </label>
                                                                 </div>
 
@@ -3554,14 +3652,14 @@ function Recoleccion() {
 
                                                                     <div className="input">
                                                                         <TextField variant="outlined" margin="dense"
-                                                                            label="Correo Electrónico"
-                                                                            onChange={handleChange}
-                                                                            className="form-control"
-                                                                            type="email"
-                                                                            required
-                                                                            value={state.correoDestinatario}
-                                                                            disabled={state.agregar == "Consultar"}
-                                                                            id="correoDestinatario"
+                                                                                   label="Correo Electrónico"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="email"
+                                                                                   required
+                                                                                   value={state.correoDestinatario}
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   id="correoDestinatario"
                                                                         />
                                                                     </div>
                                                                 </div>
@@ -3569,14 +3667,14 @@ function Recoleccion() {
                                                                 <div className="col-sm-12 col-md-12 unit">
                                                                     <div className="input">
                                                                         <TextField variant="outlined" margin="dense"
-                                                                            onChange={handleChange}
-                                                                            className="form-control"
-                                                                            type="text"
-                                                                            label="Teléfono"
-                                                                            required
-                                                                            value={state.telefonoDestinatario}
-                                                                            disabled={state.agregar == "Consultar"}
-                                                                            id="telefonoDestinatario"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   label="Teléfono"
+                                                                                   required
+                                                                                   value={state.telefonoDestinatario}
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   id="telefonoDestinatario"
                                                                         />
                                                                     </div>
                                                                 </div>
@@ -3584,14 +3682,14 @@ function Recoleccion() {
                                                                 <div className="col-sm-12 col-md-12 unit">
                                                                     <div className="input">
                                                                         <TextField variant="outlined" margin="dense"
-                                                                            onChange={handleChange}
-                                                                            className="form-control"
-                                                                            type="text"
-                                                                            required
-                                                                            label="Contacto"
-                                                                            value={state.contactoDestinatario}
-                                                                            disabled={state.agregar == "Consultar"}
-                                                                            id="contactoDestinatario"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   required
+                                                                                   label="Contacto"
+                                                                                   value={state.contactoDestinatario}
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   id="contactoDestinatario"
                                                                         />
                                                                     </div>
                                                                 </div>
@@ -3607,7 +3705,7 @@ function Recoleccion() {
                                                                                 })
                                                                             }
                                                                             value={state.destinoDestinatario}
-                                                                            disabled={state.agregar == "Consultar"}
+                                                                            disabled={state.agregar === "Consultar"}
                                                                             id="destinoDestinatario"
                                                                             disableClearable
                                                                             forcePopupIcon={false}
@@ -3630,19 +3728,23 @@ function Recoleccion() {
                                                                                         {...params}
                                                                                         InputProps={{
                                                                                             ...params.InputProps,
-                                                                                            style: { height: "33px", fontSize: "14px" },
+                                                                                            style: {
+                                                                                                height: "33px",
+                                                                                                fontSize: "14px"
+                                                                                            },
                                                                                             type: "search",
                                                                                             value: state.origenRemitente,
-                                                                                            disabled: state.agregar == "Consultar",
+                                                                                            disabled: state.agregar === "Consultar",
                                                                                             disableUnderline: true,
                                                                                             endAdornment: (
-                                                                                                <InputAdornment position="end">
+                                                                                                <InputAdornment
+                                                                                                    position="end">
                                                                                                     <IconButton
                                                                                                         padding="0px"
                                                                                                         style={{
                                                                                                             paddingRight: "0px",
                                                                                                         }}
-                                                                                                        disabled={state.agregar == "Consultar"}
+                                                                                                        disabled={state.agregar === "Consultar"}
                                                                                                         onClick={() => {
                                                                                                             setState({
                                                                                                                 ...state,
@@ -3678,13 +3780,13 @@ function Recoleccion() {
                                                                 <div className="col-sm-12 col-md-12  unit">
                                                                     <label className="label">
                                                                         Entrega en Diferente Domicilio
-                                  </label>
+                                                                    </label>
                                                                     <div className="input">
                                                                         <input
                                                                             onChange={handleEntregaCheckboxChange}
                                                                             className="form-control"
                                                                             value={state.diferenteEntrega}
-                                                                            disabled={state.agregar == "Consultar"}
+                                                                            disabled={state.agregar === "Consultar"}
                                                                             checked={state.diferenteEntrega}
                                                                             type="checkbox"
                                                                             style={{height:"20px"}}
@@ -3709,23 +3811,30 @@ function Recoleccion() {
 
                                                             <a
                                                                 className="btn"
-                                                                style={{ margin: "5px", backgroundColor: "#F9A03E", color: "white" }}
+                                                                style={{
+                                                                    margin: "5px",
+                                                                    backgroundColor: "#F9A03E",
+                                                                    color: "white"
+                                                                }}
                                                                 onClick={() => removePaquete()}
-                                                                disabled={state.agregar == "Consultar"}
+                                                                disabled={state.agregar === "Consultar"}
                                                             >
                                                                 <i className="zmdi zmdi-minus"></i>
                                                             </a>
-                                                            <input type="number" value={state.countPaquetes} style={{ width: "40px", textAlign: "center" }} />
+                                                            <input type="number" value={state.countPaquetes}
+                                                                   style={{width: "40px", textAlign: "center"}}/>
                                                             <a
                                                                 className="btn"
-                                                                style={{ margin: "5px", backgroundColor: "#F9A03E", color: "white" }}
+                                                                style={{
+                                                                    margin: "5px",
+                                                                    backgroundColor: "#F9A03E",
+                                                                    color: "white"
+                                                                }}
                                                                 onClick={() => addPaquete()}
-                                                                disabled={state.agregar == "Consultar"}
+                                                                disabled={state.agregar === "Consultar"}
                                                             >
                                                                 <i className="zmdi zmdi-plus"></i>
                                                             </a>
-
-
 
 
                                                         </div>
@@ -3735,21 +3844,30 @@ function Recoleccion() {
                                                     <h2>Número de Sobres</h2>
                                                     <a
                                                         className="btn"
-                                                        style={{ margin: "10px", backgroundColor: "#F9A03E", color: "white" }}
+                                                        style={{
+                                                            margin: "10px",
+                                                            backgroundColor: "#F9A03E",
+                                                            color: "white"
+                                                        }}
                                                         onClick={() => removeSobre()}
-                                                        disabled={state.agregar == "Consultar"}
+                                                        disabled={state.agregar === "Consultar"}
                                                     >
-                                                        <i className="zmdi zmdi-minus"></i>
+                                                        <i className="zmdi zmdi-minus"/>
                                                     </a>
-                                                    <input type="number" value={state.countSobres} style={{ width: "40px", textAlign: "center" }} />
+                                                    <input type="number" value={state.countSobres}
+                                                           style={{width: "40px", textAlign: "center"}}/>
 
                                                     <a
                                                         className="btn"
-                                                        style={{ margin: "10px", backgroundColor: "#F9A03E", color: "white" }}
+                                                        style={{
+                                                            margin: "10px",
+                                                            backgroundColor: "#F9A03E",
+                                                            color: "white"
+                                                        }}
                                                         onClick={() => addSobre()}
-                                                        disabled={state.agregar == "Consultar"}
+                                                        disabled={state.agregar === "Consultar"}
                                                     >
-                                                        <i className="zmdi zmdi-plus"></i>
+                                                        <i className="zmdi zmdi-plus"/>
                                                     </a>
 
 
@@ -3764,49 +3882,69 @@ function Recoleccion() {
                                                             <form className="j-forms">
                                                                 <div className="form-content">
 
-                                                                    {state.agregar != "Consultar" ?
-                                                                        <div style={{ display: "flex", alignItems: "flex-end" }}>
+                                                                    {state.agregar !== "Consultar" ?
+                                                                        <div style={{
+                                                                            display: "flex",
+                                                                            alignItems: "flex-end"
+                                                                        }}>
                                                                             <div className="input">
                                                                                 <input
-                                                                                    onChange={(event) => { setState({ ...state, mismoPaquete: event.target.checked }) }}
+                                                                                    onChange={(event) => {
+                                                                                        setState({
+                                                                                            ...state,
+                                                                                            mismoPaquete: event.target.checked
+                                                                                        })
+                                                                                    }}
                                                                                     type="checkbox"
                                                                                     required
-                                                                                    disabled={state.agregar == "Consultar"}
+                                                                                    disabled={state.agregar === "Consultar"}
                                                                                     value={state.mismoPaquete}
                                                                                     id="mismoPaquete"
                                                                                 />
                                                                             </div>
-                                                                            <label className="label" style={{ paddingLeft: "10px" }}>Mismo Paquete</label>
+                                                                            <label className="label"
+                                                                                   style={{paddingLeft: "10px"}}>Mismo
+                                                                                Paquete</label>
 
                                                                         </div>
-                                                                        : <span></span>}
+                                                                        : <span/>}
                                                                     <Carousel
                                                                         className={classes.paqueteCarrusel}
                                                                         widgets={[IndicatorDots, Buttons]}
                                                                         frames={framesPaquete}
-                                                                    ></Carousel>
+                                                                    />
 
 
-                                                                    {state.agregar != "Consultar" ?
-                                                                        <div style={{ display: "flex", alignItems: "flex-end" }}>
+                                                                    {state.agregar !== "Consultar" ?
+                                                                        <div style={{
+                                                                            display: "flex",
+                                                                            alignItems: "flex-end"
+                                                                        }}>
 
                                                                             <div className="input">
                                                                                 <input
-                                                                                    onChange={(event) => { setState({ ...state, mismoSobre: event.target.checked }) }}
+                                                                                    onChange={(event) => {
+                                                                                        setState({
+                                                                                            ...state,
+                                                                                            mismoSobre: event.target.checked
+                                                                                        })
+                                                                                    }}
                                                                                     type="checkbox"
                                                                                     required
                                                                                     value={state.mismoSobre}
                                                                                     id="mismoSobre"
                                                                                 />
                                                                             </div>
-                                                                            <label className="label" style={{ paddingLeft: "10px" }}>Mismo Sobre</label>
+                                                                            <label className="label"
+                                                                                   style={{paddingLeft: "10px"}}>Mismo
+                                                                                Sobre</label>
                                                                         </div>
-                                                                        : <span></span>}
+                                                                        : <span/>}
                                                                     <Carousel
                                                                         className={classes.sobreCarrusel}
                                                                         widgets={[IndicatorDots, Buttons]}
                                                                         frames={framesSobre}
-                                                                    ></Carousel>
+                                                                    />
                                                                 </div>
                                                             </form>
                                                         </div>
@@ -3827,25 +3965,26 @@ function Recoleccion() {
                                                             <div className="widget-content">
                                                                 <div className="row">
                                                                     <div className="col-md-12">
-                                                                        <div className="col-sm-6 col-md-4  unit" >
+                                                                        <div className="col-sm-6 col-md-4  unit">
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
-                                                                                    onChange={handleChange}
-                                                                                    className="form-control"
-                                                                                    type="datetime-local"
-                                                                                    label="Fecha y Hora"
-                                                                                    InputLabelProps={{
-                                                                                        shrink: true,
-                                                                                    }}
-                                                                                    value={state.fechaRecoleccion}
-                                                                                    disabled={state.agregar == "Consultar"}
-                                                                                    id="fechaRecoleccion"
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           onChange={handleChange}
+                                                                                           className="form-control"
+                                                                                           type="datetime-local"
+                                                                                           label="Fecha y Hora"
+                                                                                           InputLabelProps={{
+                                                                                               shrink: true,
+                                                                                           }}
+                                                                                           value={state.fechaRecoleccion}
+                                                                                           disabled={state.agregar === "Consultar"}
+                                                                                           id="fechaRecoleccion"
                                                                                 />
                                                                             </div>
                                                                         </div>
 
-                                                                        <div className="col-sm-6 col-md-4  unit" >
+                                                                        <div className="col-sm-6 col-md-4  unit">
 
                                                                             <div className="input">
                                                                                 <Autocomplete
@@ -3862,7 +4001,7 @@ function Recoleccion() {
                                                                                     id="codigoPostalRecoleccion"
                                                                                     disableClearable
                                                                                     options={dataCodigoPostal}
-                                                                                    disabled={state.agregar == "Consultar"}
+                                                                                    disabled={state.agregar === "Consultar"}
                                                                                     getOptionLabel={(option) =>
                                                                                         option.m_sCP
                                                                                     }
@@ -3880,18 +4019,22 @@ function Recoleccion() {
                                                                                                 {...params}
                                                                                                 InputProps={{
                                                                                                     ...params.InputProps,
-                                                                                                    style: { height: "33px", fontSize: "14px" },
+                                                                                                    style: {
+                                                                                                        height: "33px",
+                                                                                                        fontSize: "14px"
+                                                                                                    },
                                                                                                     type: "search",
-                                                                                                    disabled: state.agregar == "Consultar",
+                                                                                                    disabled: state.agregar === "Consultar",
                                                                                                     disableUnderline: true,
                                                                                                     endAdornment: (
-                                                                                                        <InputAdornment position="end">
+                                                                                                        <InputAdornment
+                                                                                                            position="end">
                                                                                                             {" "}
                                                                                                             <IconButton
                                                                                                                 style={{
                                                                                                                     paddingRight: "0px",
                                                                                                                 }}
-                                                                                                                disabled={state.agregar == "Consultar"}
+                                                                                                                disabled={state.agregar === "Consultar"}
                                                                                                                 onClick={() => {
                                                                                                                     setState({
                                                                                                                         ...state,
@@ -3919,17 +4062,20 @@ function Recoleccion() {
                                                                             </div>
                                                                         </div>
 
-                                                                        <div className="col-sm-6 col-md-4  unit" >
+                                                                        <div className="col-sm-6 col-md-4  unit">
                                                                             <label className="input select">
-                                                                                <FormControl fullWidth variant="outlined" margin="dense">
-                                                                                    <InputLabel id="ciudadRecoleccionLabel">Ciudad</InputLabel>
+                                                                                <FormControl fullWidth
+                                                                                             variant="outlined"
+                                                                                             margin="dense">
+                                                                                    <InputLabel
+                                                                                        id="ciudadRecoleccionLabel">Ciudad</InputLabel>
                                                                                     <Select
                                                                                         labelId="ciudadRecoleccionLabel"
                                                                                         label="Ciudad"
                                                                                         className="form-control"
 
                                                                                         value={state.ciudadRecoleccion}
-                                                                                        disabled={state.agregar == "Consultar"}
+                                                                                        disabled={state.agregar === "Consultar"}
                                                                                         onChange={handleChange}
                                                                                         id="ciudadRecoleccion"
                                                                                     >
@@ -3943,26 +4089,30 @@ function Recoleccion() {
                                                                                         ))}
                                                                                     </Select>
                                                                                 </FormControl>
-                                                                                <i className="fa fa-arrow-down" />
+                                                                                <i className="fa fa-arrow-down"/>
                                                                             </label>
                                                                         </div>
 
-                                                                        <div className="col-sm-6 col-md-4 unit" >
+                                                                        <div className="col-sm-6 col-md-4 unit">
 
                                                                             <label className="input select">
-                                                                                <FormControl fullWidth variant="outlined" margin="dense">
-                                                                                    <InputLabel id="zonaRecoleccionLabel">Zona</InputLabel>
+                                                                                <FormControl fullWidth
+                                                                                             variant="outlined"
+                                                                                             margin="dense">
+                                                                                    <InputLabel
+                                                                                        id="zonaRecoleccionLabel">Zona</InputLabel>
                                                                                     <Select
                                                                                         labelId="zonaRecoleccionLabel"
                                                                                         label="Zona"
                                                                                         className="form-control"
 
                                                                                         value={state.zonaRecoleccion}
-                                                                                        disabled={state.agregar == "Consultar"}
+                                                                                        disabled={state.agregar === "Consultar"}
                                                                                         onChange={handleChange}
                                                                                         id="zonaRecoleccion"
                                                                                     >
-                                                                                        <option value="">Selecciona</option>
+                                                                                        <option value="">Selecciona
+                                                                                        </option>
                                                                                         {dataZona.map((zona) => (
                                                                                             <option
                                                                                                 key={zona.m_nIdZona}
@@ -3973,60 +4123,58 @@ function Recoleccion() {
                                                                                         ))}
                                                                                     </Select>
                                                                                 </FormControl>
-                                                                                <i className="fa fa-arrow-down" />
+                                                                                <i className="fa fa-arrow-down"/>
                                                                             </label>
 
 
-
-
-
-
-
                                                                         </div>
 
-                                                                        <div className="col-sm-6 col-md-6  unit" >
+                                                                        <div className="col-sm-6 col-md-6  unit">
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
-                                                                                    onChange={handleChange}
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    label="Domicilio"
-                                                                                    value={state.domicilioRecoleccion}
-                                                                                    disabled={state.agregar == "Consultar"}
-                                                                                    id="domicilioRecoleccion"
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           onChange={handleChange}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           label="Domicilio"
+                                                                                           value={state.domicilioRecoleccion}
+                                                                                           disabled={state.agregar === "Consultar"}
+                                                                                           id="domicilioRecoleccion"
                                                                                 />
                                                                             </div>
                                                                         </div>
 
-                                                                        <div className="col-sm-12 col-md-6  unit" >
+                                                                        <div className="col-sm-12 col-md-6  unit">
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
-                                                                                    onChange={handleChange}
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    label="Recoger En"
-                                                                                    value={state.recogerEn}
-                                                                                    disabled={state.agregar == "Consultar"}
-                                                                                    id="recogerEn"
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           onChange={handleChange}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           label="Recoger En"
+                                                                                           value={state.recogerEn}
+                                                                                           disabled={state.agregar === "Consultar"}
+                                                                                           id="recogerEn"
                                                                                 />
                                                                             </div>
                                                                         </div>
 
-                                                                        <div className="col-sm-12 col-md-6  unit" >
+                                                                        <div className="col-sm-12 col-md-6  unit">
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
-                                                                                    onChange={handleChange}
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    label="Datos Adicionales para la Recolección"
-                                                                                    value={
-                                                                                        state.datosAdicionalesRecoleccion
-                                                                                    }
-                                                                                    disabled={state.agregar == "Consultar"}
-                                                                                    id="datosAdicionalesRecoleccion"
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           onChange={handleChange}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           label="Datos Adicionales para la Recolección"
+                                                                                           value={
+                                                                                               state.datosAdicionalesRecoleccion
+                                                                                           }
+                                                                                           disabled={state.agregar === "Consultar"}
+                                                                                           id="datosAdicionalesRecoleccion"
                                                                                 />
                                                                             </div>
                                                                         </div>
@@ -4048,7 +4196,7 @@ function Recoleccion() {
                                                             <div className="widget-content">
                                                                 <div className="row">
                                                                     <div className="col-md-12">
-                                                                        <div className="col-sm-6 col-md-4  unit" >
+                                                                        <div className="col-sm-6 col-md-4  unit">
 
                                                                             <div className="input">
                                                                                 <Autocomplete
@@ -4064,7 +4212,7 @@ function Recoleccion() {
                                                                                     id="codigoPostalEntrega"
                                                                                     disableClearable
                                                                                     options={dataCodigoPostal}
-                                                                                    disabled={state.agregar == "Consultar"}
+                                                                                    disabled={state.agregar === "Consultar"}
                                                                                     getOptionLabel={(option) =>
                                                                                         option.m_sCP
                                                                                     }
@@ -4082,18 +4230,22 @@ function Recoleccion() {
                                                                                                 {...params}
                                                                                                 InputProps={{
                                                                                                     ...params.InputProps,
-                                                                                                    style: { height: "33px", fontSize: "14px" },
+                                                                                                    style: {
+                                                                                                        height: "33px",
+                                                                                                        fontSize: "14px"
+                                                                                                    },
                                                                                                     type: "search",
-                                                                                                    disabled: state.agregar == "Consultar",
+                                                                                                    disabled: state.agregar === "Consultar",
                                                                                                     disableUnderline: true,
                                                                                                     endAdornment: (
-                                                                                                        <InputAdornment position="end">
+                                                                                                        <InputAdornment
+                                                                                                            position="end">
                                                                                                             {" "}
                                                                                                             <IconButton
                                                                                                                 style={{
                                                                                                                     paddingRight: "0px",
                                                                                                                 }}
-                                                                                                                disabled={state.agregar == "Consultar"}
+                                                                                                                disabled={state.agregar === "Consultar"}
                                                                                                                 onClick={() => {
                                                                                                                     setState({
                                                                                                                         ...state,
@@ -4121,17 +4273,20 @@ function Recoleccion() {
                                                                             </div>
                                                                         </div>
 
-                                                                        <div className="col-sm-6 col-md-4  unit" >
+                                                                        <div className="col-sm-6 col-md-4  unit">
                                                                             <label className="input select">
-                                                                                <FormControl fullWidth variant="outlined" margin="dense">
-                                                                                    <InputLabel id="ciudadEntregaLabel">Ciudad</InputLabel>
+                                                                                <FormControl fullWidth
+                                                                                             variant="outlined"
+                                                                                             margin="dense">
+                                                                                    <InputLabel
+                                                                                        id="ciudadEntregaLabel">Ciudad</InputLabel>
                                                                                     <Select
                                                                                         labelId="ciudadEntregaLabel"
                                                                                         label="Ciudad"
                                                                                         className="form-control"
 
                                                                                         value={state.ciudadEntrega}
-                                                                                        disabled={state.agregar == "Consultar"}
+                                                                                        disabled={state.agregar === "Consultar"}
                                                                                         onChange={handleChange}
                                                                                         id="ciudadEntrega"
                                                                                     >
@@ -4145,25 +4300,29 @@ function Recoleccion() {
                                                                                         ))}
                                                                                     </Select>
                                                                                 </FormControl>
-                                                                                <i className="fa fa-arrow-down" />
+                                                                                <i className="fa fa-arrow-down"/>
                                                                             </label>
                                                                         </div>
 
-                                                                        <div className="col-sm-6 col-md-4 unit" >
+                                                                        <div className="col-sm-6 col-md-4 unit">
                                                                             <label className="input select">
-                                                                                <FormControl fullWidth variant="outlined" margin="dense">
-                                                                                    <InputLabel id="zonaEntregaLabel">Zona</InputLabel>
+                                                                                <FormControl fullWidth
+                                                                                             variant="outlined"
+                                                                                             margin="dense">
+                                                                                    <InputLabel
+                                                                                        id="zonaEntregaLabel">Zona</InputLabel>
                                                                                     <Select
                                                                                         labelId="zonaEntregaLabel"
                                                                                         label="Zona"
                                                                                         className="form-control"
 
                                                                                         value={state.zonaEntrega}
-                                                                                        disabled={state.agregar == "Consultar"}
+                                                                                        disabled={state.agregar === "Consultar"}
                                                                                         onChange={handleChange}
                                                                                         id="zonaEntrega"
                                                                                     >
-                                                                                        <option value="">Selecciona</option>
+                                                                                        <option value="">Selecciona
+                                                                                        </option>
 
                                                                                         {dataZona.map((zona) => (
                                                                                             <option
@@ -4175,53 +4334,59 @@ function Recoleccion() {
                                                                                         ))}
                                                                                     </Select>
                                                                                 </FormControl>
-                                                                                <i className="fa fa-arrow-down" />
+                                                                                <i className="fa fa-arrow-down"/>
                                                                             </label>
                                                                         </div>
 
-                                                                        <div className="col-sm-6 col-md-6 col-lg-6 unit" >
+                                                                        <div
+                                                                            className="col-sm-6 col-md-6 col-lg-6 unit">
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
-                                                                                    onChange={handleChange}
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    label="Domicilio"
-                                                                                    value={state.domicilioEntrega}
-                                                                                    disabled={state.agregar == "Consultar"}
-                                                                                    id="domicilioEntrega"
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           onChange={handleChange}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           label="Domicilio"
+                                                                                           value={state.domicilioEntrega}
+                                                                                           disabled={state.agregar === "Consultar"}
+                                                                                           id="domicilioEntrega"
                                                                                 />
                                                                             </div>
                                                                         </div>
 
-                                                                        <div className="col-sm-12 col-md-6 col-lg-6 unit" >
+                                                                        <div
+                                                                            className="col-sm-12 col-md-6 col-lg-6 unit">
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
-                                                                                    onChange={handleChange}
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    label="Entrega En"
-                                                                                    value={state.entregaEn}
-                                                                                    disabled={state.agregar == "Consultar"}
-                                                                                    id="entregaEn"
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           onChange={handleChange}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           label="Entrega En"
+                                                                                           value={state.entregaEn}
+                                                                                           disabled={state.agregar === "Consultar"}
+                                                                                           id="entregaEn"
                                                                                 />
                                                                             </div>
                                                                         </div>
 
-                                                                        <div className="col-sm-12 col-md-6 col-lg-6 unit" >
+                                                                        <div
+                                                                            className="col-sm-12 col-md-6 col-lg-6 unit">
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
-                                                                                    onChange={handleChange}
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    label="Datos Adicionales para la Entrega"
-                                                                                    value={
-                                                                                        state.datosAdicionalesEntrega
-                                                                                    }
-                                                                                    disabled={state.agregar == "Consultar"}
-                                                                                    id="datosAdicionalesEntrega"
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           onChange={handleChange}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           label="Datos Adicionales para la Entrega"
+                                                                                           value={
+                                                                                               state.datosAdicionalesEntrega
+                                                                                           }
+                                                                                           disabled={state.agregar === "Consultar"}
+                                                                                           id="datosAdicionalesEntrega"
                                                                                 />
                                                                             </div>
                                                                         </div>
@@ -4284,18 +4449,22 @@ function Recoleccion() {
                                                                                         {...params}
                                                                                         InputProps={{
                                                                                             ...params.InputProps,
-                                                                                            style: { height: "33px", fontSize: "14px" },
+                                                                                            style: {
+                                                                                                height: "33px",
+                                                                                                fontSize: "14px"
+                                                                                            },
                                                                                             type: "search",
-                                                                                            disabled: state.agregar == "Consultar",
+                                                                                            disabled: state.agregar === "Consultar",
                                                                                             disableUnderline: true,
                                                                                             endAdornment: (
-                                                                                                <InputAdornment position="end">
+                                                                                                <InputAdornment
+                                                                                                    position="end">
                                                                                                     <IconButton
                                                                                                         padding="0px"
                                                                                                         style={{
                                                                                                             paddingRight: "0px",
                                                                                                         }}
-                                                                                                        disabled={state.agregar == "Consultar"}
+                                                                                                        disabled={state.agregar === "Consultar"}
                                                                                                         onClick={() => {
                                                                                                             setState({
                                                                                                                 ...state,
@@ -4362,18 +4531,22 @@ function Recoleccion() {
                                                                                         {...params}
                                                                                         InputProps={{
                                                                                             ...params.InputProps,
-                                                                                            style: { height: "33px", fontSize: "14px" },
+                                                                                            style: {
+                                                                                                height: "33px",
+                                                                                                fontSize: "14px"
+                                                                                            },
                                                                                             type: "search",
-                                                                                            disabled: state.agregar == "Consultar",
+                                                                                            disabled: state.agregar === "Consultar",
                                                                                             disableUnderline: true,
                                                                                             endAdornment: (
-                                                                                                <InputAdornment position="end">
+                                                                                                <InputAdornment
+                                                                                                    position="end">
                                                                                                     <IconButton
                                                                                                         padding="0px"
                                                                                                         style={{
                                                                                                             paddingRight: "0px",
                                                                                                         }}
-                                                                                                        disabled={state.agregar == "Consultar"}
+                                                                                                        disabled={state.agregar === "Consultar"}
                                                                                                         onClick={() => {
                                                                                                             setState({
                                                                                                                 ...state,
@@ -4439,18 +4612,22 @@ function Recoleccion() {
                                                                                         {...params}
                                                                                         InputProps={{
                                                                                             ...params.InputProps,
-                                                                                            style: { height: "33px", fontSize: "14px" },
+                                                                                            style: {
+                                                                                                height: "33px",
+                                                                                                fontSize: "14px"
+                                                                                            },
                                                                                             type: "search",
-                                                                                            disabled: state.agregar == "Consultar",
+                                                                                            disabled: state.agregar === "Consultar",
                                                                                             disableUnderline: true,
                                                                                             endAdornment: (
-                                                                                                <InputAdornment position="end">
+                                                                                                <InputAdornment
+                                                                                                    position="end">
                                                                                                     <IconButton
                                                                                                         padding="0px"
                                                                                                         style={{
                                                                                                             paddingRight: "0px",
                                                                                                         }}
-                                                                                                        disabled={state.agregar == "Consultar"}
+                                                                                                        disabled={state.agregar === "Consultar"}
                                                                                                         onClick={() => {
                                                                                                             setState({
                                                                                                                 ...state,
@@ -4495,17 +4672,17 @@ function Recoleccion() {
                                                             <div className="col-md-12">
                                                                 <div className="input">
                                                                     <TextField variant="outlined" margin="dense"
-                                                                        onChange={handleChange}
-                                                                        className="form-control"
-                                                                        type="datetime-local"
-                                                                        readOnly
-                                                                        InputLabelProps={{
-                                                                            shrink: true,
-                                                                          }}
-                                                                        label="Fecha y Hora"
-                                                                        value={state.fechaHoraSalida}
-                                                                        disabled={state.agregar == "Consultar"}
-                                                                        id="fechaHoraSalida"
+                                                                               onChange={handleChange}
+                                                                               className="form-control"
+                                                                               type="datetime-local"
+                                                                               readOnly
+                                                                               InputLabelProps={{
+                                                                                   shrink: true,
+                                                                               }}
+                                                                               label="Fecha y Hora"
+                                                                               value={state.fechaHoraSalida}
+                                                                               disabled={state.agregar === "Consultar"}
+                                                                               id="fechaHoraSalida"
                                                                     />
                                                                 </div>
                                                             </div>
@@ -4520,18 +4697,18 @@ function Recoleccion() {
                                                         <div className="widget-content">
                                                             <div className="col-md-12">
                                                                 <div className="input">
-                                                                <TextField variant="outlined" margin="dense"
-                                                                        onChange={handleChange}
-                                                                        className="form-control"
-                                                                        type="datetime-local"
-                                                                        readOnly
-                                                                        InputLabelProps={{
-                                                                            shrink: true,
-                                                                          }}
-                                                                          label="Fecha y Hora"
-                                                                        value={state.fechaHoraLlegada}
-                                                                        disabled={state.agregar == "Consultar"}
-                                                                        id="fechaHoraLlegada"
+                                                                    <TextField variant="outlined" margin="dense"
+                                                                               onChange={handleChange}
+                                                                               className="form-control"
+                                                                               type="datetime-local"
+                                                                               readOnly
+                                                                               InputLabelProps={{
+                                                                                   shrink: true,
+                                                                               }}
+                                                                               label="Fecha y Hora"
+                                                                               value={state.fechaHoraLlegada}
+                                                                               disabled={state.agregar === "Consultar"}
+                                                                               id="fechaHoraLlegada"
                                                                     />
                                                                 </div>
                                                             </div>
@@ -4543,8 +4720,7 @@ function Recoleccion() {
                                     </div>
 
 
-
-                                    <div className="form-footer" className="col-md-12">
+                                    <div className="form-footer col-md-12">
                                         <button
                                             href="#Listado"
                                             role="tab"
@@ -4552,14 +4728,14 @@ function Recoleccion() {
                                             className="btn btn-secondary secondary-btn"
                                         >
                                             Cancelar
-                    </button>
+                                        </button>
                                         <button
                                             type="submit"
                                             className="btn btn-primary primary-btn"
-                                            disabled={state.agregar == "Consultar"}
+                                            disabled={state.agregar === "Consultar"}
                                         >
                                             Aceptar
-                    </button>
+                                        </button>
                                     </div>
 
                                 </div>
@@ -4577,13 +4753,13 @@ function Recoleccion() {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Folio Recolección"
-                                                                value={state.folioRecoleccion}
-                                                                id="folioRecoleccion"
-                                                                readOnly
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Folio Recolección"
+                                                                       value={state.folioRecoleccion}
+                                                                       id="folioRecoleccion"
+                                                                       readOnly
                                                             />
                                                         </div>
                                                     </div>
@@ -4591,13 +4767,13 @@ function Recoleccion() {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Sucursal"
-                                                                value={state.sucursalCancelacion}
-                                                                id="sucursalCancelacion"
-                                                                readOnly
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Sucursal"
+                                                                       value={state.sucursalCancelacion}
+                                                                       id="sucursalCancelacion"
+                                                                       readOnly
                                                             />
                                                         </div>
                                                     </div>
@@ -4605,13 +4781,13 @@ function Recoleccion() {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Fecha"
-                                                                value={state.mostrarFechaCancelacion}
-                                                                id="mostrarFechaCancelacion"
-                                                                readOnly
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Fecha"
+                                                                       value={state.mostrarFechaCancelacion}
+                                                                       id="mostrarFechaCancelacion"
+                                                                       readOnly
                                                             />
                                                         </div>
                                                     </div>
@@ -4619,13 +4795,13 @@ function Recoleccion() {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Usuario"
-                                                                value={state.usuario}
-                                                                id="usuario"
-                                                                readOnly
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Usuario"
+                                                                       value={state.usuario}
+                                                                       id="usuario"
+                                                                       readOnly
                                                             />
                                                         </div>
                                                     </div>
@@ -4633,13 +4809,13 @@ function Recoleccion() {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Estatus"
-                                                                value={state.estatusRecoleccion}
-                                                                id="estatusRecoleccion"
-                                                                readOnly
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Estatus"
+                                                                       value={state.estatusRecoleccion}
+                                                                       id="estatusRecoleccion"
+                                                                       readOnly
                                                             />
                                                         </div>
                                                     </div>
@@ -4648,17 +4824,17 @@ function Recoleccion() {
                                                     <div className="col-sm-12 col-md-12 col-lg-12 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Motivo"
-                                                                value={state.motivoCancelacion}
-                                                                id="motivoCancelacion"
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Motivo"
+                                                                       value={state.motivoCancelacion}
+                                                                       id="motivoCancelacion"
                                                             />
                                                         </div>
                                                     </div>
 
-                                                    <div className="form-footer" className="col-md-12">
+                                                    <div className="form-footer col-md-12">
                                                         <button
                                                             href="#Listado"
                                                             role="tab"
@@ -4666,13 +4842,13 @@ function Recoleccion() {
                                                             className="btn btn-secondary secondary-btn"
                                                         >
                                                             Cancelar
-                                </button>
+                                                        </button>
                                                         <button
                                                             type="submit"
                                                             className="btn btn-primary primary-btn"
                                                         >
                                                             Aceptar
-                                </button>
+                                                        </button>
                                                     </div>
 
                                                 </div>
@@ -4694,13 +4870,13 @@ function Recoleccion() {
                                                     <div className="col-sm-6 col-md-3 col-lg-3 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Sucursal"
-                                                                value={state.sucursalCancelacion}
-                                                                id="sucursalCancelacion"
-                                                                readOnly
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Sucursal"
+                                                                       value={state.sucursalCancelacion}
+                                                                       id="sucursalCancelacion"
+                                                                       readOnly
                                                             />
                                                         </div>
                                                     </div>
@@ -4708,13 +4884,13 @@ function Recoleccion() {
                                                     <div className="col-sm-6 col-md-3 col-lg-3 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Folio Recolección"
-                                                                value={state.folioRecoleccion}
-                                                                id="folioRecoleccion"
-                                                                readOnly
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Folio Recolección"
+                                                                       value={state.folioRecoleccion}
+                                                                       id="folioRecoleccion"
+                                                                       readOnly
                                                             />
                                                         </div>
                                                     </div>
@@ -4722,13 +4898,13 @@ function Recoleccion() {
                                                     <div className="col-sm-6 col-md-3 col-lg-3 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Fecha Elaboracion"
-                                                                value={state.fechaHoraCreacion}
-                                                                id="fechaHoraCreacion"
-                                                                readOnly
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Fecha Elaboracion"
+                                                                       value={state.fechaHoraCreacion}
+                                                                       id="fechaHoraCreacion"
+                                                                       readOnly
                                                             />
                                                         </div>
                                                     </div>
@@ -4736,13 +4912,13 @@ function Recoleccion() {
                                                     <div className="col-sm-6 col-md-3 col-lg-3 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Fecha Recoleccion"
-                                                                value={state.fechaRecoleccion}
-                                                                id="fechaRecoleccion"
-                                                                readOnly
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Fecha Recoleccion"
+                                                                       value={state.fechaRecoleccion}
+                                                                       id="fechaRecoleccion"
+                                                                       readOnly
                                                             />
                                                         </div>
                                                     </div>
@@ -4750,13 +4926,13 @@ function Recoleccion() {
                                                     <div className="col-sm-6 col-md-6 col-lg-6 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Zona"
-                                                                value={state.zonaRecoleccion}
-                                                                id="zonaRecoleccion"
-                                                                readOnly
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Zona"
+                                                                       value={state.zonaRecoleccion}
+                                                                       id="zonaRecoleccion"
+                                                                       readOnly
                                                             />
                                                         </div>
                                                     </div>
@@ -4764,13 +4940,13 @@ function Recoleccion() {
                                                     <div className="col-sm-6 col-md-6 col-lg-6 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Recoger En"
-                                                                value={state.recogerEn}
-                                                                id="recogerEn"
-                                                                readOnly
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Recoger En"
+                                                                       value={state.recogerEn}
+                                                                       id="recogerEn"
+                                                                       readOnly
                                                             />
                                                         </div>
                                                     </div>
@@ -4778,12 +4954,12 @@ function Recoleccion() {
                                                     <div className="col-sm-12 col-md-6 col-lg-6 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Operador"
-                                                                value={state.operador.m_sNombreCompleto}
-                                                                id="operador"
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Operador"
+                                                                       value={state.operador.m_sNombreCompleto}
+                                                                       id="operador"
                                                             />
                                                         </div>
                                                     </div>
@@ -4791,12 +4967,12 @@ function Recoleccion() {
                                                     <div className="col-sm-12 col-md-6 col-lg-6 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Estatus"
-                                                                value={state.motivoCancelacion}
-                                                                id="motivoCancelacion"
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Estatus"
+                                                                       value={state.motivoCancelacion}
+                                                                       id="motivoCancelacion"
                                                             />
                                                         </div>
                                                     </div>
@@ -4804,12 +4980,12 @@ function Recoleccion() {
                                                     <div className="col-sm-12 col-md-6 col-lg-6 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Unidad"
-                                                                value={state.unidad.m_sDescripcion}
-                                                                id="unidad"
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Unidad"
+                                                                       value={state.unidad.m_sDescripcion}
+                                                                       id="unidad"
                                                             />
                                                         </div>
                                                     </div>
@@ -4817,12 +4993,12 @@ function Recoleccion() {
                                                     <div className="col-sm-12 col-md-6 col-lg-6 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Motivo"
-                                                                value={state.motivoCancelacion}
-                                                                id="motivoCancelacion"
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Estatus"
+                                                                       value={state.motivoCancelacion}
+                                                                       id="motivoCancelacion"
                                                             />
                                                         </div>
                                                     </div>
@@ -4830,12 +5006,12 @@ function Recoleccion() {
                                                     <div className="col-sm-12 col-md-6 col-lg-6 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Remolque"
-                                                                value={state.motivoCancelacion}
-                                                                id="motivoCancelacion"
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Remolque"
+                                                                       value={state.motivoCancelacion}
+                                                                       id="motivoCancelacion"
                                                             />
                                                         </div>
                                                     </div>
@@ -4843,12 +5019,12 @@ function Recoleccion() {
                                                     <div className="col-sm-12 col-md-3 col-lg-3 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Estatus"
-                                                                value={state.motivoCancelacion}
-                                                                id="motivoCancelacion"
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Estatus"
+                                                                       value={state.motivoCancelacion}
+                                                                       id="motivoCancelacion"
                                                             />
                                                         </div>
                                                     </div>
@@ -4856,12 +5032,12 @@ function Recoleccion() {
                                                     <div className="col-sm-12 col-md-3 col-lg-3 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Cargado"
-                                                                value={state.motivoCancelacion}
-                                                                id="motivoCancelacion"
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Cargado"
+                                                                       value={state.motivoCancelacion}
+                                                                       id="motivoCancelacion"
                                                             />
                                                         </div>
                                                     </div>
@@ -4869,12 +5045,12 @@ function Recoleccion() {
                                                     <div className="col-sm-12 col-md-4 col-lg-4 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Fecha Salida"
-                                                                value={state.motivoCancelacion}
-                                                                id="motivoCancelacion"
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Fecha Salida"
+                                                                       value={state.motivoCancelacion}
+                                                                       id="motivoCancelacion"
                                                             />
                                                         </div>
                                                     </div>
@@ -4887,13 +5063,13 @@ function Recoleccion() {
                                                             className="btn btn-secondary secondary-btn"
                                                         >
                                                             Cancelar
-                                </button>
+                                                        </button>
                                                         <button
                                                             type="submit"
                                                             className="btn btn-primary primary-btn"
                                                         >
                                                             Aceptar
-                                </button>
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -4909,15 +5085,17 @@ function Recoleccion() {
                                 <div className="widget-container">
                                     <div className="widget-content">
                                         <div className="row">
-                                            <div className="form-content" style={{ display: "flex" }}>
-                                                <input type="file" id="archivoFormato" onChange={changeHandler} />
+                                            <div className="form-content" style={{display: "flex"}}>
+                                                <input type="file" id="archivoFormato" onChange={changeHandler}/>
                                                 <div>
-                                                    <button onClick={handleSubmission} disabled={!isFilePicked}>Submit</button>
+                                                    <button onClick={handleSubmission} disabled={!isFilePicked}>Submit
+                                                    </button>
                                                 </div>
                                             </div>
                                             <article>
                                                 <h2><a>Hello World</a></h2>
-                                                <div dangerouslySetInnerHTML={{ __html: state.uploadedFileContent }}></div>
+                                                <div
+                                                    dangerouslySetInnerHTML={{__html: state.uploadedFileContent}}></div>
                                             </article>
                                         </div>
                                     </div>
