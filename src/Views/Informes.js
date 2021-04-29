@@ -1363,11 +1363,11 @@ function Informes({ history }) {
   function getAllGuiasFrom(cubicar) {
     console.log("hola");
     const url = !cubicar
-      ? `${process.env.REACT_APP_API_URL}/Guia/GetListadoPendientes/` +
+      ? `${process.env.REACT_APP_API_URL_LOCAL}/Guia/GetListadoPendientes/` +
         state.IdCiudadOrigen.m_nIdCiudad +
         "/" +
         state.IdCiudadDestino.m_nIdCiudad
-      : `${process.env.REACT_APP_API_URL}/Guia/GetListado`;
+      : `${process.env.REACT_APP_API_URL_LOCAL}/Guia/GetListado`;
 
     trackPromise(
       axios.get(url, { headers }).then(async (respuesta) => {
@@ -4108,7 +4108,7 @@ function Informes({ history }) {
                                                       Destino
                                                     </label>
                                                     <input
-                                                      value={value.destino}
+                                                      value={value.m_sCiudadDestino}
                                                       className="form-control"
                                                       type="text"
                                                       disabled="true"
@@ -4127,7 +4127,7 @@ function Informes({ history }) {
                                                     </label>
                                                     <input
                                                       disabled="true"
-                                                      value={value.servicio}
+                                                      value={value.m_sTipoServicio}
                                                       className="form-control"
                                                       type="text"
                                                       id={"servicio-" + index}
@@ -4146,7 +4146,7 @@ function Informes({ history }) {
                                                     <input
                                                       disabled="true"
                                                       value={
-                                                        value.observaciones
+                                                        value.m_sObservaciones
                                                       }
                                                       className="form-control"
                                                       type="text"
