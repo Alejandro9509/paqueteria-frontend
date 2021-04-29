@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from "axios";
-import { AppBar, Box, FormControl, InputLabel, Select, Tab, Tabs, Typography } from '@material-ui/core';
+import { AppBar, Box, FormControl, InputLabel, Select, Tab, Tabs, TextField, Typography } from '@material-ui/core';
 import ConceptosAdicionales from './ConceptosAdicionales';
 import TipoCobro from './TipoCobro';
 import TipoServicio from './TipoServicio';
@@ -27,15 +27,15 @@ class CrearTarifa extends Component {
             dataSucursal: [],
             ciudades: [],
             tab: 0,
-            conceptosAdicionales:  [],
-            tiposCobroSeleccionado: [],
-            tiposServicioSeleccionado: [],
+            conceptosAdicionales: [],
+            tiposCobroSeleccionado: props.edit ? props.select.m_arrArCobros : [],
+            tiposServicioSeleccionado: props.edit ? props.select.m_arrArServicios : [],
             tiposCobroAll: false,
             tiposServicioAll: false,
             ivaTraslada: [],
             ivaRetiene: [],
-            sucursal: props.edit ? props.select.m_nIdSucursal : "",
-            destino: props.edit ? props.select.m_sDestino : "",
+            sucursal: props.edit ? props.select.m_nIdSucursal : "0",
+            destino: props.edit ? props.select.m_sDestino : "0",
             precioFlete: props.edit ? props.select.m_cFleteMinimo : "",
             precioMinimo: props.edit ? props.select.m_cMontoMinimo : "",
             precioKilo: props.edit ? props.select.m_cPrecioKilo : "",
@@ -76,10 +76,12 @@ class CrearTarifa extends Component {
     }
 
     handleChange(event) {
+        event.preventDefault()
         this.setState({
             [event.target.name]: event.target.value
         });
     }
+
 
     addConcepto(data) {
         const { conceptosAdicionales } = this.state
@@ -160,7 +162,7 @@ class CrearTarifa extends Component {
 
     }
 
-    onSubmit(event){
+    onSubmit(event) {
         event.preventDefault()
         this.props.onSubmit(this.state)
     }
@@ -179,19 +181,27 @@ class CrearTarifa extends Component {
                                         </div>
                                     </div>
                                     <div className="row">
-                                        <div className="col-md-12 col-sm-12" style={{ padding: "2px" }}>
+                                        <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
                                             <label className="input select" style={{ width: "100%" }}>
                                                 <FormControl fullWidth variant="outlined" margin="dense">
                                                     <InputLabel id="sucursalLabel">Sucursal</InputLabel>
                                                     <Select
+                                                        native
                                                         labelId="sucursalLabel"
+                                                        label="Sucursal"
                                                         className="form-control"
                                                         required
                                                         onChange={this.handleChange}
-                                                        label="Sucursal"
                                                         value={this.state.sucursal}
                                                         name="sucursal"
+                                                        id="sucursal"
                                                     >
+                                                        <option
+                                                            key={"0"}
+                                                            value={"0"}
+                                                        >
+                                                            Seleccionar
+                                                            </option>
                                                         {this.state.dataSucursal.map((sucursal) => (
                                                             <option
                                                                 key={sucursal.m_nIdSucursal}
@@ -200,57 +210,65 @@ class CrearTarifa extends Component {
                                                                 {sucursal.m_sSucursal}
                                                             </option>
                                                         ))}
-                                                </Select>
+                                                    </Select>
                                                 </FormControl>
                                             </label>
                                         </div>
-                                        <div className="col-md-12 col-sm-12" style={{ padding: "2px" }}>
-                                            <label className="label">Destino</label>
+                                        <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
                                             <label className="input select" style={{ width: "100%" }}>
-                                                <select
-                                                    className="form-control"
-                                                    required
-                                                    value={this.state.destino}
-                                                    onChange={this.handleChange}
-                                                    name="destino"
-                                                >
-                                                    {this.state.ciudades.map((sucursal) => (
+                                                <FormControl fullWidth variant="outlined" margin="dense">
+                                                    <InputLabel id="destinoLabel">Destino</InputLabel>
+                                                    <Select
+                                                        native
+                                                        className="form-control"
+                                                        label="Destino"
+                                                        labelId="destinoLabel"
+                                                        className="form-control"
+                                                        required
+                                                        value={this.state.destino}
+                                                        onChange={this.handleChange}
+                                                        name="destino"
+                                                    >
                                                         <option
-                                                            key={sucursal.m_nIdCiudad}
-                                                            value={sucursal.m_nIdCiudad}
+                                                            key={"0"}
+                                                            value={"0"}
                                                         >
-                                                            {sucursal.m_sCiudad}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                                <i></i>
+                                                            Seleccionar
+                                                            </option>
+                                                        {this.state.ciudades.map((sucursal) => (
+                                                            <option
+                                                                key={sucursal.m_nIdCiudad}
+                                                                value={sucursal.m_nIdCiudad}
+                                                            >
+                                                                {sucursal.m_sCiudad}
+                                                            </option>
+                                                        ))}
+                                                    </Select>
+                                                </FormControl>
                                             </label>
                                         </div>
-                                        <div className="col-md-6 col-sm-6" style={{ padding: "2px" }}>
-                                            <label className="label">
-                                                Precio m<sup>3</sup>
-                                            </label>
+                                        <div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
+
                                             <div className="input">
-                                                <input
+                                                <TextField variant="outlined" margin="dense"
                                                     onChange={this.handleChange}
                                                     className="form-control"
                                                     type="number"
-                                                    required
+                                                    label={<div>Precio m<sup>3</sup></div>}
                                                     step="1"
                                                     value={this.state.precioM3}
                                                     name="precioM3"
                                                 />
                                             </div>
                                         </div>
-                                        <div className="col-md-6 col-sm-6" style={{ padding: "2px" }}>
-                                            <label className="label">
-                                                Precio Kilo
-                                            </label>
+                                        <div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
+
                                             <div className="input">
-                                                <input
+                                                <TextField variant="outlined" margin="dense"
                                                     onChange={this.handleChange}
                                                     className="form-control"
                                                     type="number"
+                                                    label="Precio Kilo"
                                                     required
                                                     step="2"
                                                     value={this.state.precioKilo}
@@ -258,31 +276,29 @@ class CrearTarifa extends Component {
                                                 />
                                             </div>
                                         </div>
-                                        <div className="col-md-6 col-sm-6" style={{ padding: "2px" }}>
-                                            <label className="label">
-                                                Flete Minimo
-                                            </label>
+                                        <div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
+
                                             <div className="input">
-                                                <input
+                                                <TextField variant="outlined" margin="dense"
                                                     onChange={this.handleChange}
                                                     className="form-control"
                                                     type="number"
                                                     required
+                                                    label="Flete Minimo"
                                                     step="1"
                                                     value={this.state.precioFlete}
                                                     name="precioFlete"
                                                 />
                                             </div>
                                         </div>
-                                        <div className="col-md-6 col-sm-6" style={{ padding: "2px" }}>
-                                            <label className="label">
-                                                Precio Minimo
-                                            </label>
+                                        <div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
+
                                             <div className="input">
-                                                <input
+                                                <TextField variant="outlined" margin="dense"
                                                     onChange={this.handleChange}
                                                     className="form-control"
                                                     type="number"
+                                                    label="Precio Minimo"
                                                     required
                                                     step="2"
                                                     value={this.state.precioMinimo}
@@ -291,7 +307,7 @@ class CrearTarifa extends Component {
                                             </div>
                                         </div>
 
-                                        <div className="col-md-12 col-sm-12" style={{ padding: "2px", display: "inline-flex" }}>
+                                        <div className="col-md-12 col-sm-12" style={{ padding: "5px", display: "inline-flex" }}>
                                             <div className="form-footer " className="col-md-12" style={{ padding: "10px" }}>
                                                 <button
                                                     type="button"
@@ -303,8 +319,6 @@ class CrearTarifa extends Component {
                                     </button>
                                                 <button
                                                     type="submit"
-                                                    role="tab" data-toggle="tab"
-                                                    href="#Listado"
                                                     className="btn btn-primary primary-btn"
                                                 >
                                                     Aceptar
@@ -325,7 +339,7 @@ class CrearTarifa extends Component {
                                         <Tab label="Condiciones de Precio por Tipo de Servicio" {...this.a11yProps(2)} />
                                     </Tabs>
                                     <TabPanel value={this.state.tab} index={0}>
-                                        <ConceptosAdicionales conceptosAdicionales={this.state.conceptosAdicionales} addConcepto={this.addConcepto} removeConcepto={this.removeConcepto} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada}>
+                                        <ConceptosAdicionales edit={this.props.edit} select={this.props.select} conceptosAdicionales={this.state.conceptosAdicionales} addConcepto={this.addConcepto} removeConcepto={this.removeConcepto} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada}>
 
                                         </ConceptosAdicionales>
                                     </TabPanel>

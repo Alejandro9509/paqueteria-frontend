@@ -9,7 +9,8 @@ import SvgIcon from "@material-ui/core/SvgIcon";
 import { ReactComponent as Activo } from "../../iconos/Menu/palomita.svg";
 import { ReactComponent as NoActivo } from "../../iconos/Menu/cruz.svg";
 import { DataGrid } from '@material-ui/data-grid';
-
+import $ from "jquery";
+window.jQuery = window.$ = $;
 const headers = {
     'Content-Type': 'application/json',
     //    'access-control-allow-origin': '*'
@@ -23,16 +24,17 @@ function showSuccess(mensaje) {
     }).show()
 }
 
+
 class Tarifas extends Component {
     constructor(props) {
         super(props);
         this.state = {
             data: [],
+            agregar: "Agregar",
             height: window.innerHeight,
             pantalla: 1,
             selected: {},
             dataSucursal: [],
-            height: window.innerHeight,
             columns: [
                 {
                     headerName: "Acciones",
@@ -117,11 +119,17 @@ class Tarifas extends Component {
     }
 
     handleShowModificar(id) {
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Agregar').addClass('in show');
         const url = `${process.env.REACT_APP_API_URL}/Tarifas/GetById/` + id;
         axios.get(url, { headers }).then(respuesta => {
             console.log(respuesta.data)
             this.setState({
+                pantalla: 2,
                 openDialog: true,
+                agregar: "Modificar",
                 edit: true,
                 consult: false,
                 selected: respuesta.data,
@@ -130,10 +138,16 @@ class Tarifas extends Component {
     }
 
     handleShowConsultar(id) {
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Agregar').addClass('in show');
         const url = `${process.env.REACT_APP_API_URL}/Tarifas/GetById/` + id;
         axios.get(url, { headers }).then(respuesta => {
             console.log(respuesta.data)
             this.setState({
+                pantalla: 2,
+                agregar: "Consultar",
                 openDialog: true,
                 edit: true,
                 consult: true,
@@ -164,7 +178,7 @@ class Tarifas extends Component {
         });
     }
 
-    handleAceptar(data){
+    handleAceptar(data) {
         var params = {
             m_nIdSucursal: data.sucursal,
             m_sDestino: data.destino,
@@ -173,36 +187,43 @@ class Tarifas extends Component {
             m_cMontoMinimo: data.precioMinimo,
             m_cPrecioKilo: data.precioKilo,
             m_cPrecioM3: data.precioM3,
-            m_arrArCobros: data.tiposCobroSeleccionado.map(c => ({m_nIdTipoCobro: c.m_nIdTipoCobro})),
-            m_arrArServicios: data.tiposServicioSeleccionado.map(s => ({m_nIdTipoServicio: s.m_nIdTipoServicio})),
-            m_arrArConceptos: data.conceptosAdicionales.map(c => ({m_nIdConceptoFacturacion: c.concepto.m_nIdConceptoFacturacion, m_cImporte: c.importe, m_nIdImpuestoTraslada: c.traslada, m_nIdImpuestoRetiene: c.retiene, m_cImporteRetiene: c.importeRet, m_cImporteIva: c.importeIva})),
+            m_arrArCobros: data.tiposCobroSeleccionado.map(c => ({ m_nIdTipoCobro: c.m_nIdTipoCobro })),
+            m_arrArServicios: data.tiposServicioSeleccionado.map(s => ({ m_nIdTipoServicio: s.m_nIdTipoServicio })),
+            m_arrArConceptos: data.conceptosAdicionales.map(c => ({ m_nIdConceptoFacturacion: c.concepto.m_nIdConceptoFacturacion, m_cImporte: c.importe, m_nIdImpuestoTraslada: c.traslada, m_nIdImpuestoRetiene: c.retiene, m_cImporteRetiene: c.importeRet, m_cImporteIva: c.importeIva })),
             m_nCreadoPOr: localStorage.getItem("UsuarioId"),
             m_nModificadoPor: localStorage.getItem("UsuarioId")
         }
-        console.log(params)
         if (this.state.edit) {
-          const url = `${process.env.REACT_APP_API_URL}/Tarifas/Modificar/` + this.state.selected.idConceptosFacturacion;
-          axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
-            showSuccess(respuesta.data)
-            this.getAllData()
-            this.setState({openDialog: false})
-          }).catch(err => {
-            console.log(err)
-            showSuccess("err")
-          });
+            const url = `${process.env.REACT_APP_API_URL}/Tarifas/Modificar/` + this.state.selected.m_nIdTarifa;
+            axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+                showSuccess(respuesta.data)
+                this.getAllData()
+                this.setState({ openDialog: false, pantalla: 1 })
+                $('.nav-tabs li ').removeClass('active');
+                $('.nav-tabs li').eq(0).addClass('active');
+                $('.tab-content div ').removeClass('in show');
+                $('#Listado').addClass('in show');
+            }).catch(err => {
+                console.log(err)
+                showSuccess("err")
+            });
         } else {
-          const url = `${process.env.REACT_APP_API_URL}/Tarifas/Agregar`;
-          axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
-            showSuccess(respuesta.data)
-            this.getAllData()
-            this.setState({openDialog: false})
-          }).catch(err => {
-            console.log(err)
-            showSuccess(err)
-          });
+            const url = `${process.env.REACT_APP_API_URL}/Tarifas/Agregar`;
+            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+                showSuccess(respuesta.data)
+                this.getAllData()
+                this.setState({ openDialog: false, pantalla: 1 })
+                $('.nav-tabs li ').removeClass('active');
+                $('.nav-tabs li').eq(0).addClass('active');
+                $('.tab-content div ').removeClass('in show');
+                $('#Listado').addClass('in show');
+            }).catch(err => {
+                console.log(err)
+                showSuccess(err)
+            });
         }
-    
-      }
+
+    }
 
     cambiarPantalla(id) {
         this.setState({ pantalla: id })
@@ -211,7 +232,7 @@ class Tarifas extends Component {
     getAllData() {
         const url = `${process.env.REACT_APP_API_URL}/Tarifas/GetListado`;
         axios.get(url, { headers }).then(respuesta => {
-            this.setState({ data: respuesta.data })
+            this.setState({ data: respuesta.data, agregar:"Agregar" })
         });
     }
 
@@ -253,18 +274,18 @@ class Tarifas extends Component {
 
                         <ul className="nav navStatica nav-tabs">
                             <li className="active">
-                                <a data-toggle="tab" href="#Listado">
+                                <a data-toggle="tab" data_id="1" href="#Listado" onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar"}); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
                                     <i className="fa fa-list" /> Listado
               </a>
                             </li>
-                            <li>
-                                <a data-toggle="tab" href="#Agregar" onClick={() => this.setState({ pantalla: 2, edit: false, consult: false })}>
-                                    <i className="fa fa-plus-circle" /> Agregar
+                            <li >
+                                <a data-toggle="tab" data_id="2" href="#Agregar" onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 2, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show'); }}>
+                                    <i className="fa fa-plus-circle" /> {this.state.agregar}
                                 </a>
                             </li>
 
                             <li>
-                                <a >
+                                <a data_id="3">
                                     <i className="fa fa-times-circle" /> Imprimir
                                 </a>
                             </li>
@@ -280,7 +301,7 @@ class Tarifas extends Component {
                             className="tab-content"
                             style={{ paddingLeft: "-15px" }}
                         >
-                            <div id="Listado" className="tab-pane fade in active">
+                            <div id="Listado" className="tab-pane fade in show">
                                 <div className="widget-wrap">
                                     <div className="widget-content">
                                         <div className="row" style={{ height: this.state.height - 250, width: '100%' }}>
@@ -306,7 +327,11 @@ class Tarifas extends Component {
                             </div>
 
                             <div id="Agregar" className="tab-pane fade">
-                                <CrearTarifa edit={this.state.edit} select={this.state.selected} onSubmit={this.handleAceptar}></CrearTarifa>
+                                {
+                                    this.state.pantalla == 2 &&
+                                    <CrearTarifa edit={this.state.edit} select={this.state.selected} onSubmit={this.handleAceptar}></CrearTarifa>
+                                }
+
                             </div>
 
 

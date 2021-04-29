@@ -1,7 +1,7 @@
 import React, { Component, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import axios from "axios";
-import { IconButton, InputAdornment, TextField } from '@material-ui/core';
+import { FormControl, IconButton, InputAdornment, InputLabel, Select, TextField } from '@material-ui/core';
 import PageviewIcon from "@material-ui/icons/Pageview";
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -20,10 +20,10 @@ class ConceptosAdicionales extends Component {
             impuestos: [],
             importe: 0,
             importeRet: "",
-            retiene: 0,
-            traslada: 0,
+            retiene: 1,
+            traslada: 1,
             importeIVA: "",
-            concepto: {}
+            concepto: null
 
         }
         this.getAllConceptos = this.getAllConceptos.bind(this)
@@ -52,6 +52,11 @@ class ConceptosAdicionales extends Component {
     getAllConceptos() {
         const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/GetListado`;
         axios.get(url, { headers }).then(respuesta => {
+            if (this.props.edit) {
+                this.props.select.m_arrArConceptos.forEach(element => {
+                    this.props.addConcepto({concepto: respuesta.data.find(c => c.m_nIdConceptosFacturacion === element.m_nIdConceptoFacturacion), importe: element.m_cImporte, traslada: element.m_nIdImpuestoTraslada, importeIVA: element.m_cImporteIva, retiene: element.m_nIdImpuestoRetiene, importeRet: element.m_cImporteRetiene})
+                })
+            }
             this.setState({ conceptos: respuesta.data })
         });
     }
@@ -104,9 +109,6 @@ class ConceptosAdicionales extends Component {
                 <div className="row">
                     <div className="col-md-2 col-sm-6" style={{ padding: "2px", paddingLeft: "15px" }}>
 
-                        <label className="label">
-                            Concepto
-                                  </label>
                         <div className="input">
                             <Autocomplete
                                 value={this.state.concepto}
@@ -130,15 +132,16 @@ class ConceptosAdicionales extends Component {
                                 }
                                 variant="outlined"
                                 style={{
-                                    borderWidth: "1px",
-                                    borderColor: "#dddddd",
-                                    borderStyle: "solid",
-                                    borderRadius: "5px",
+                                    transform: "translate(14px, 10px) scale(1) !important"
                                 }}
                                 renderInput={(params) => (
                                     <div>
                                         <TextField
                                             {...params}
+                                            variant="outlined"
+                                            label="Concepto"
+                                            className="form-control"
+                                            margin="dense"
                                             InputProps={{
                                                 ...params.InputProps,
                                                 style: { height: "33px", fontSize: "14px" },
@@ -183,14 +186,13 @@ class ConceptosAdicionales extends Component {
                         </div>
                     </div>
                     <div className="col-md-2 col-sm-6" style={{ padding: "2px" }}>
-                        <label className="label">
-                            Importe
-                        </label>
+
                         <div className="input">
-                            <input
+                            <TextField variant="outlined" margin="dense"
                                 onChange={this.handleChange}
                                 className="form-control"
                                 type="number"
+                                label="Importe"
                                 style={{ textAlign: "right" }}
                                 step="1"
                                 min="0"
@@ -200,43 +202,45 @@ class ConceptosAdicionales extends Component {
                         </div>
                     </div>
                     <div className="col-md-1 col-sm-6" style={{ padding: "2px" }}>
-                        <label className="label">Traslada</label>
                         <label className="input select" style={{ width: "100%" }}>
-                            <select
-                                className="form-control"
-                                value={this.state.traslada}
-                                onChange={this.handleChange}
-                                name="traslada"
-                            >
-                                <option
-                                    key={0}
-                                    value={""}
+                            <FormControl fullWidth variant="outlined" margin="dense">
+                                <InputLabel id="trasladaLabel">Traslada</InputLabel>
+                                <Select
+                                    labelId="trasladaLabel"
+                                    label="Traslada"
+                                    className="form-control"
+                                    value={this.state.traslada}
+                                    onChange={this.handleChange}
+                                    name="traslada"
                                 >
-                                    Selecciona
-                                        </option>
-                                {this.state.impuestos.map((impuesto) => (
                                     <option
-                                        key={impuesto.m_nIdImpuesto}
-                                        value={impuesto.m_nIdImpuesto}
+                                        key={0}
+                                        value={""}
                                     >
-                                        {impuesto.m_sImpuesto}
-                                    </option>
-                                ))}
-                            </select>
-                            <i></i>
+                                        Selecciona
+                                        </option>
+                                    {this.state.impuestos.map((impuesto) => (
+                                        <option
+                                            key={impuesto.m_nIdImpuesto}
+                                            value={impuesto.m_nIdImpuesto}
+                                        >
+                                            {impuesto.m_sImpuesto}
+                                        </option>
+                                    ))}
+                                </Select>
+                            </FormControl>
                         </label>
                     </div>
                     <div className="col-md-2 col-sm-6" style={{ padding: "2px" }}>
-                        <label className="label">
-                            Importe IVA
-                        </label>
+
                         <div className="input">
-                            <input
+                            <TextField variant="outlined" margin="dense"
                                 onChange={this.handleChange}
                                 className="form-control"
                                 type="number"
                                 style={{ textAlign: "right" }}
                                 disabled
+                                label="Importe IVA"
                                 step="1"
                                 min="0"
                                 value={this.state.importeIVA}
@@ -245,45 +249,45 @@ class ConceptosAdicionales extends Component {
                         </div>
                     </div>
                     <div className="col-md-1 col-sm-6" style={{ padding: "2px" }}>
-                        <label className="label">
-                            Retiene
-                        </label>
                         <label className="input select" style={{ width: "100%" }}>
-                            <select
-                                className="form-control"
-                                onChange={this.handleChange}
-                                name="retiene"
-                                value={this.state.retiene}
-                            >
-                                <option
-                                    key={0}
-                                    value={""}
+                            <FormControl fullWidth variant="outlined" margin="dense">
+                                <InputLabel id="retieneLabel">Retiene</InputLabel>
+                                <Select
+                                    labelId="retieneLabel"
+                                    label="Retiene"
+                                    className="form-control"
+                                    onChange={this.handleChange}
+                                    name="retiene"
+                                    value={this.state.retiene}
                                 >
-                                    Selecciona
-                                        </option>
-                                {this.state.impuestos.map((impuesto) => (
                                     <option
-                                        key={impuesto.m_nIdImpuesto}
-                                        value={impuesto.m_nIdImpuesto}
+                                        key={0}
+                                        value={""}
                                     >
-                                        {impuesto.m_sImpuesto}
-                                    </option>
-                                ))}
-                            </select>
-                            <i></i>
+                                        Selecciona
+                                        </option>
+                                    {this.state.impuestos.map((impuesto) => (
+                                        <option
+                                            key={impuesto.m_nIdImpuesto}
+                                            value={impuesto.m_nIdImpuesto}
+                                        >
+                                            {impuesto.m_sImpuesto}
+                                        </option>
+                                    ))}
+                                </Select>
+                            </FormControl>
                         </label>
                     </div>
                     <div className="col-md-2 col-sm-6" style={{ padding: "2px" }}>
-                        <label className="label">
-                            Importe Ret
-                        </label>
+
                         <div className="input">
-                            <input
+                            <TextField variant="outlined" margin="dense"
                                 onChange={this.handleChange}
                                 className="form-control"
                                 type="number"
                                 style={{ textAlign: "right" }}
                                 disabled
+                                label="Importe Ret"
                                 step="1"
                                 min="0"
                                 value={this.state.importeRet}
@@ -291,9 +295,9 @@ class ConceptosAdicionales extends Component {
                             />
                         </div>
                     </div>
-                    <div className="col-md-2 col-sm-6" style={{ padding: "2px" }}>
-                        <IconButton onClick={this.onSubmit}>
-                            <AddBoxIcon style={{ fill: "green", fontSize: "xxx-large" }} />
+                    <div className="col-md-2 col-sm-6" style={{ padding: "0px" }}>
+                        <IconButton onClick={this.onSubmit} style={{padding:"0px"}}>
+                            <AddBoxIcon style={{ fill: "green", fontSize: "xx-large" }} />
                         </IconButton>
                     </div>
                 </div>
