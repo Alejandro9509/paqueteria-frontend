@@ -34,6 +34,9 @@ import { ReactComponent as NoActivo } from "../iconos/Menu/cruz.svg";
 import Noty from "noty";
 import { Dialog, DialogActions, DialogContent } from "@material-ui/core";
 import { ToggleButtonGroup } from "@material-ui/lab";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
 
 function showSuccess(mensaje) {
   new Noty({
@@ -154,7 +157,6 @@ function Embarque(props) {
     correoDestinatario: "",
     telefonoDestinatario: "",
     contactoDestinatario: "",
-    ciudadRemitente: {},
     ciudadOrigen: {},
     fechaEntrega: "",
     horaEntrega: "",
@@ -203,7 +205,6 @@ function Embarque(props) {
     usuario: localStorage.getItem("Usuario"),
     height: window.innerHeight,
   });
-  const [fileUploaded, setFileUploaded] = React.useState([]);
   const [stepActive, setStepActive] = React.useState(1);
   const [Modal, open, close, isOpen] = useModal("root", {
     preventScroll: true,
@@ -725,7 +726,6 @@ function Embarque(props) {
       correoRemitente: "",
       telefonoRemitente: "",
       contactoRemitente: "",
-      ciudadDestino: {},
       ciudadOrigen: {},
       nombreDestinatario: {},
       RFCDestinatario: "",
@@ -890,71 +890,6 @@ function Embarque(props) {
       idEmbarque: id,
     });
   }
-
-  const recolectaBol = ({ values }) => {
-    return (
-      <>
-        {values.map((rec, idx) => {
-          return (
-            <span key={idx} className="badge">
-              {"KHE"}
-            </span>
-          );
-        })}
-      </>
-    );
-  };
-
-  const columns2 = React.useMemo(() => [
-    {
-      Name: "Folio",
-      accessor: "m_nFolioEmbarque",
-    },
-    {
-      Name: "Fecha/Hora Elaboración",
-      accessor: "m_sFechaHora",
-    },
-    {
-      Name: "Sucursal",
-      accessor: "m_sSucursal",
-    },
-    {
-      Name: "Estatus de la Orden",
-      accessor: "m_sEstatusEmbarque",
-    },
-    {
-      Name: "Origen",
-      accessor: "m_sCiudadOrigen",
-    },
-    {
-      Name: "Destino",
-      accessor: "m_sCiudadDestino",
-    },
-    {
-      Name: "Folio Guía",
-      accessor: "m_sFolioGuia",
-    },
-    {
-      Name: "Folio Informe",
-      accessor: "m_nFolioInforme",
-    },
-    {
-      Name: "Es Recolecta",
-      accessor: "m_bEsRecolecta",
-    },
-    {
-      Name: "Folio Recolección",
-      accessor: "m_nFolioRecoleccion",
-    },
-    {
-      Name: "Cancelado",
-      accessor: "m_dtFechaCancelado",
-    },
-    {
-      Name: "Usuario que Cancela",
-      accessor: "m_sUsuarioqueCancela",
-    },
-  ]);
 
   const columns = React.useMemo(() => [
     {
@@ -1489,152 +1424,6 @@ function Embarque(props) {
           }}
           placeholder={`Buscar ${count} registros...`}
         />
-      </div>
-    );
-  }
-
-  function Table({ columns, data }) {
-    const defaultColumn = React.useMemo(
-      () => ({
-        // Default Filter UI
-        Filter: DefaultColumnFilter,
-      }),
-      []
-    );
-
-    const {
-      getTableProps,
-      getTableBodyProps,
-      pageOptions,
-      page,
-
-      state: { pageIndex, pageSize },
-      gotoPage,
-      previousPage,
-      nextPage,
-      setPageSize,
-      canPreviousPage,
-      canNextPage,
-      headerGroups,
-      rows,
-      prepareRow,
-    } = useTable(
-      {
-        columns,
-        data,
-        defaultColumn,
-      },
-      useFilters,
-      useSortBy,
-      usePagination
-    );
-
-    return (
-      <div className="">
-        <div className="">
-          <table className="table tabla-listado" {...getTableProps()}>
-            <thead>
-              {headerGroups.map((headerGroup) => (
-                <tr {...headerGroup.getHeaderGroupProps()}>
-                  <th>Acciones</th>
-                  {headerGroup.headers.map((column) => (
-                    // Add the sorting props to control sorting. For this example
-                    // we can add them into the header props
-                    <th
-                      {...column.getHeaderProps(column.getSortByToggleProps())}
-                    >
-                      {column.render("Name")}
-                      {/* Add a sort direction indicator */}
-                      <span>
-                        {column.isSorted ? (
-                          column.isSortedDesc ? (
-                            <i className="fa fa-caret-up" />
-                          ) : (
-                            <i className="fa fa-caret-down" />
-                          )
-                        ) : (
-                          ""
-                        )}
-                      </span>
-                      <div style={{ display: "flex" }}>
-                        {column.canFilter ? column.render("Filter") : null}
-                      </div>
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody {...getTableBodyProps()}>
-              {rows.map((row, i) => {
-                prepareRow(row);
-                return (
-                  <tr
-                    {...row.getRowProps()}
-                    onClick={handleSelectRow.bind(
-                      this,
-                      row.original.m_nIdEmbarque
-                    )}
-                    className={
-                      state.idEmbarque === row.original.m_nIdEmbarque
-                        ? classes.seleccionado
-                        : classes.noSeleccionado
-                    }
-                  >
-                    <td>
-                      <div>
-                        <a
-                          href="#Agregar"
-                          role="tab"
-                          data-toggle="tab"
-                          onClick={() =>
-                            handleShowModificar(row.original.m_nIdEmbarque)
-                          }
-                          className="btn btn-default btn-xs"
-                        >
-                          <i
-                            className="fa fa-pencil-square-o"
-                            style={{ color: "#F9A03E" }}
-                          />
-                        </a>
-                        <a
-                          href="#Agregar"
-                          role="tab"
-                          data-toggle="tab"
-                          className="btn btn-default btn-xs"
-                          onClick={() =>
-                            handleShowConsultar(row.original.m_nIdEmbarque)
-                          }
-                        >
-                          <i
-                            className="fa fa-eye"
-                            style={{ color: "#F9A03E" }}
-                          />
-                        </a>
-                        <a
-                          href="#"
-                          className="btn btn-default btn-xs"
-                          onClick={() =>
-                            handleEliminar(row.original.m_nIdEmbarque)
-                          }
-                        >
-                          <i
-                            className="zmdi zmdi-delete"
-                            style={{ color: "#F30B0B" }}
-                          />
-                        </a>
-                      </div>
-                    </td>
-                    {row.cells.map((cell) => {
-                      return (
-                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                      );
-                    })}
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
       </div>
     );
   }
@@ -2246,14 +2035,13 @@ function Embarque(props) {
         </div>
 
         <div className="col-sm-4 col-md-2-5 unit">
-          <label className="label">Peso</label>
           <div className="input">
-            <input
+            <TextField variant="outlined" margin="dense" label="Peso"
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
               value={state.paquetes[index].m_xPeso}
-              disabled={state.agregar == "Consultar"}
+              disabled={state.agregar === "Consultar"}
               placeholder="kg"
               name="m_xPeso"
             />
@@ -2261,14 +2049,13 @@ function Embarque(props) {
         </div>
 
         <div className="col-sm-4 col-md-2-5 unit">
-          <label className="label">Largo</label>
           <div className="input">
-            <input
+            <TextField variant="outlined" margin="dense" label="Largo"
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
               value={state.paquetes[index].m_xLargo}
-              disabled={state.agregar == "Consultar"}
+              disabled={state.agregar === "Consultar"}
               placeholder="mts"
               name="m_xLargo"
             />
@@ -2276,14 +2063,13 @@ function Embarque(props) {
         </div>
 
         <div className="col-sm-4 col-md-2-5 unit">
-          <label className="label">Ancho</label>
           <div className="input">
-            <input
+            <TextField variant="outlined" margin="dense" label="Ancho"
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
               value={state.paquetes[index].m_xAncho}
-              disabled={state.agregar == "Consultar"}
+              disabled={state.agregar === "Consultar"}
               placeholder="mts"
               name="m_xAncho"
             />
@@ -2291,14 +2077,13 @@ function Embarque(props) {
         </div>
 
         <div className="col-sm-4 col-md-2-5 unit">
-          <label className="label">Alto</label>
           <div className="input">
-            <input
+            <TextField variant="outlined" margin="dense" label="Alto"
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
               value={state.paquetes[index].m_xAlto}
-              disabled={state.agregar == "Consultar"}
+              disabled={state.agregar === "Consultar"}
               placeholder="mts"
               name="m_xAlto"
             />
@@ -2306,14 +2091,13 @@ function Embarque(props) {
         </div>
 
         <div className="col-sm-4 col-md-2-5 unit">
-          <label className="label">Volumen</label>
           <div className="input">
-            <input
+            <TextField variant="outlined" margin="dense" label="Volumen"
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
               value={state.paquetes[index].m_xVolumen}
-              disabled={state.agregar == "Consultar"}
+              disabled={state.agregar === "Consultar"}
               placeholder="mts3"
               name="m_xVolumen"
             />
@@ -2321,15 +2105,17 @@ function Embarque(props) {
         </div>
 
         <div className="col-sm-4 col-md-6 unit">
-          <label className="label">Tipo de Embalaje</label>
           <label className="input select">
-            <select
+            <FormControl fullWidth variant="outlined" margin="dense">
+              <InputLabel id="idTipoEmbalajeLabel">Tipo de Embalaje</InputLabel>
+            <Select
+                labelId="idTipoEmbalajeLabel"
               className="form-control"
               value={state.paquetes[index].m_nIdTIpoEmpaque}
-              disabled={state.agregar == "Consultar"}
               onChange={(event) => handleChangePaquete(event, index)}
-              disabled={state.agregar == "Consultar"}
+              disabled={state.agregar === "Consultar"}
               id="m_nIdTIpoEmpaque"
+                label={"Tipo de Embalaje"}
               name="m_nIdTIpoEmpaque"
             >
               {dataEmbalaje.map((embalaje) => (
@@ -2340,20 +2126,19 @@ function Embarque(props) {
                   {embalaje.m_sNombre}
                 </option>
               ))}
-            </select>
-            <i className="fa fa-arrow-down" />
+            </Select>
+            </FormControl>
           </label>
         </div>
 
         <div className="col-sm-4 col-md-6 unit">
-          <label className="label">Valor Declarado</label>
           <div className="input">
-            <input
+            <TextField variant="outlined" margin="dense" label="Valor Declarado"
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
               value={state.paquetes[index].m_cyValorDeclarado}
-              disabled={state.agregar == "Consultar"}
+              disabled={state.agregar === "Consultar"}
               placeholder="$"
               name="m_cyValorDeclarado"
             />
@@ -2361,14 +2146,13 @@ function Embarque(props) {
         </div>
 
         <div className="col-sm-4 col-md-8 unit">
-          <label className="label">Descripción</label>
           <div className="input">
-            <input
+            <TextField variant="outlined" margin="dense" label="Descripción"
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
               value={state.paquetes[index].m_sDescripcion}
-              disabled={state.agregar == "Consultar"}
+              disabled={state.agregar === "Consultar"}
               placeholder="Descripción"
               name="m_sDescripcion"
             />
@@ -2376,14 +2160,13 @@ function Embarque(props) {
         </div>
 
         <div className="col-sm-4 col-md-4 unit">
-          <label className="label">Ctd</label>
           <div className="input">
-            <input
+            <TextField variant="outlined" margin="dense" label="Ctd"
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
               value={state.paquetes[index].m_nCantidad}
-              disabled={state.agregar == "Consultar"}
+              disabled={state.agregar === "Consultar"}
               placeholder="Cantidad"
               name="m_nCantidad"
             />
@@ -2391,14 +2174,13 @@ function Embarque(props) {
         </div>
 
         <div className="col-sm-4 col-md-12 unit">
-          <label className="label">Observaciones</label>
           <div className="input">
-            <input
+            <TextField variant="outlined" margin="dense" label="Observaciones"
               onChange={(event) => handleChangePaquete(event, index)}
               className="form-control"
               type="text"
               value={state.paquetes[index].m_sObservaciones}
-              disabled={state.agregar == "Consultar"}
+              disabled={state.agregar === "Consultar"}
               placeholder="Observaciones"
               name="m_sObservaciones"
             />
@@ -2416,14 +2198,13 @@ function Embarque(props) {
             {" "}
             <strong>{`Sobre #${index + 1}`}</strong>
           </h4>
-          <label className="label">Descripcion</label>
           <div className="input">
-            <input
+            <TextField variant="outlined" margin="dense" label="Descripcion"
               onChange={(event) => handleChangeSobre(event, index)}
               className="form-control"
               type="text"
               value={state.sobres[index].descripcion}
-              disabled={state.agregar == "Consultar"}
+              disabled={state.agregar === "Consultar"}
               placeholder="Descripción"
               name="descripcion"
             />
@@ -2790,14 +2571,20 @@ function Embarque(props) {
                           className="col-sm-6 col-md-3 "
                           style={{ paddingLeft: "0px" }}
                         >
-                          <label className="label">Fecha Inicial</label>
                           <div className="input">
-                            <input
-                              type="date"
-                              className="form-control"
-                              onChange={handleFechaInicialFiltro}
-                              value={state.fechaInicial}
-                              id="fechaInicial"
+                            <TextField
+                                autoFocus
+                                type="date"
+                                margin="dense"
+                                label="Fecha Inicial"
+                                variant="outlined"
+                                className="form-control"
+                                InputLabelProps={{
+                                  shrink: true,
+                                }}
+                                value={state.fechaInicial}
+                                onChange={handleFechaInicialFiltro}
+                                id="fechaInicial"
                             />
                           </div>
                         </div>
@@ -2806,42 +2593,52 @@ function Embarque(props) {
                           className="col-sm-6 col-md-3 "
                           style={{ paddingLeft: "0px" }}
                         >
-                          <label className="label">Fecha Final</label>
                           <div className="input">
-                            <input
-                              type="date"
-                              className="form-control"
-                              onChange={handleFechaFinalFiltro}
-                              value={state.fechaFinal}
-                              id="fechaFinal"
+                            <TextField
+                                autoFocus
+                                type="date"
+                                margin="dense"
+                                label="Fecha Final"
+                                variant="outlined"
+                                className="form-control"
+                                InputLabelProps={{
+                                  shrink: true,
+                                }}
+                                value={state.fechaFinal}
+                                onChange={handleFechaFinalFiltro}
+                                id="fechaInicial"
                             />
                           </div>
+
                         </div>
 
                         <div
                           className="col-sm-6 col-md-3 "
                           style={{ paddingLeft: "0px" }}
                         >
-                          <label className="label">Sucursal</label>
                           <label className="input select">
-                            <select
-                              className="form-control"
-                              required
-                              onChange={handleSucursalFiltro}
-                              value={state.sucursalListado}
-                              id="sucursalListado"
-                            >
-                              <option value="0">Todas</option>
-                              {dataSucursal.map((sucursal) => (
-                                <option
-                                  key={sucursal.m_nIdSucursal}
-                                  value={sucursal.m_nIdSucursal}
-                                >
-                                  {sucursal.m_sSucursal}
-                                </option>
-                              ))}
-                            </select>
-                            <i></i>
+                            <FormControl fullWidth variant="outlined" margin="dense">
+                              <InputLabel id="idSucursalAgregarLabel">Sucursal</InputLabel>
+                              <Select
+                                  labelId="idSucursalAgregarLabel"
+                                  className="form-control"
+                                  required
+                                  value={state.sucursalListado}
+                                  onChange={handleSucursalFiltro}
+                                  id="idSucursalAgregar"
+                                  label="Sucursal"
+                              >
+                                <option value="0">Todas</option>
+                                {dataSucursal.map((sucursal) => (
+                                    <option
+                                        key={sucursal.m_nIdSucursal}
+                                        value={sucursal.m_nIdSucursal}
+                                    >
+                                      {sucursal.m_sSucursal}
+                                    </option>
+                                ))}
+                              </Select>
+                            </FormControl>
                           </label>
                         </div>
 
@@ -2849,26 +2646,29 @@ function Embarque(props) {
                           className="col-sm-6 col-md-3 "
                           style={{ paddingLeft: "0px" }}
                         >
-                          <label className="label">Estatus</label>
                           <label className="input select">
-                            <select
-                              className="form-control"
-                              required
-                              onChange={handleEstatusFiltro}
-                              value={state.estatusListado}
-                              id="estatusListado"
-                            >
-                              <option value="0">Todos</option>
-                              {dataEstatusEmbarque.map((estatus) => (
-                                <option
-                                  key={estatus.m_nIdEstatusEmbarque}
-                                  value={estatus.m_nIdEstatusEmbarque}
-                                >
-                                  {estatus.m_sEstatus}
-                                </option>
-                              ))}
-                            </select>
-                            <i></i>
+                            <FormControl fullWidth variant="outlined" margin="dense">
+                              <InputLabel id="idEstatusViajeLabel">Estatus</InputLabel>
+                              <Select
+                                  labelId="idEstatusViajeLabel"
+                                  className="form-control"
+                                  required
+                                  value={state.estatusListado}
+                                  onChange={handleEstatusFiltro}
+                                  id="estatusListado"
+                                  label="Estatus"
+                              >
+                                <option value="0">Todos</option>
+                                {dataEstatusEmbarque.map((estatus) => (
+                                    <option
+                                        key={estatus.m_nIdEstatusEmbarque}
+                                        value={estatus.m_nIdEstatusEmbarque}
+                                    >
+                                      {estatus.m_sEstatus}
+                                    </option>
+                                ))}
+                              </Select>
+                            </FormControl>
                           </label>
                         </div>
                       </div>
@@ -2972,705 +2772,6 @@ function Embarque(props) {
                           <p>Información Adicional del Pago</p>
                         </div>
                       </div>
-                      {/* <div
-                                                className={
-                                                    "col-md-2-5 col-sm-2 step " +
-                                                    (stepActive == 5 && "active-step")
-                                                }
-                                                onClick={() => openSection(5)}
-                                            >
-                                                <div className="steps">
-                                                    <span className="step-number">5</span>
-                                                    <p>Detalles de Operación</p>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="widget-wrap" id="informacionGeneral">
-                                        <div className="widget-header">
-                                            <h2>Información General</h2>
-                                        </div>
-                                        <div className="widget-container">
-                                            <div className="widget-content">
-                                                <div className="row">
-                                                    <div className="col-md-12">
-
-                                                        <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                            <label className="label">
-                                                                Sucursal
-                          </label>
-                                                            <label className="input select">
-                                                                <select
-                                                                    className="form-control"
-                                                                    required
-                                                                    onChange={handleChange}
-                                                                    value={state.idSucursalAgregar}
-                                                                    disabled={state.agregar == "Consultar"}
-                                                                    id="idSucursalAgregar"
-                                                                    disabled="disabled"
-                                                                >
-                                                                    {dataSucursal.map((sucursal) => (
-                                                                        <option
-                                                                            key={sucursal.m_nIdSucursal}
-                                                                            value={sucursal.m_nIdSucursal}
-                                                                        >
-                                                                            {sucursal.m_sSucursal}
-                                                                        </option>
-                                                                    ))}
-                                                                </select>
-                                                                <i className="fa fa-arrow-down" />
-                                                            </label>
-                                                        </div>
-
-                                                        <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                            <label className="label">Folio Recolección</label>
-                                                            <div className="input">
-                                                                <input
-                                                                    onChange={handleChange}
-                                                                    className="form-control"
-                                                                    type="text"
-                                                                    value={state.folioRecoleccion}
-                                                                    id="folioRecoleccion"
-                                                                    readOnly
-                                                                />
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                            <label className="label">Folio Embarque</label>
-                                                            <div className="input">
-                                                                <input
-                                                                    onChange={handleChange}
-                                                                    className="form-control"
-                                                                    type="text"
-                                                                    value={state.folioEmbarque}
-                                                                    id="folioEmbarque"
-                                                                    readOnly
-                                                                />
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                            <label className="label">Folio Guía</label>
-                                                            <div className="input">
-                                                                <input
-                                                                    onChange={handleChange}
-                                                                    className="form-control"
-                                                                    type="text"
-                                                                    value={state.folioGuía}
-                                                                    id="folioGuía"
-                                                                    readOnly
-                                                                />
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                            <label className="label">Folio Informe</label>
-                                                            <div className="input">
-                                                                <input
-                                                                    onChange={handleChange}
-                                                                    className="form-control"
-                                                                    type="text"
-                                                                    value={state.folioInforme}
-                                                                    id="folioInforme"
-                                                                    readOnly
-                                                                />
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                            <label className="label">Fecha / Hora</label>
-                                                            <div className="input">
-                                                                <input
-                                                                    onChange={handleChange}
-                                                                    className="form-control"
-                                                                    value={state.fechaHoraCreacion}
-                                                                    disabled="disabled"
-                                                                    id="fechaHoraCreacion"
-                                                                />
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                            <label className="label">
-                                                                Estatus del Embarque
-                              </label>
-                                                            <label className="input select">
-                                                                <select
-                                                                    className="form-control"
-                                                                    required
-                                                                    onChange={handleChange}
-                                                                    value={state.estatusEmbarque}
-                                                                    disabled={state.agregar == "Consultar"}
-                                                                    id="estatusEmbarque"
-                                                                >
-                                                                    {dataEstatusEmbarque.map((estatus) => (
-                                                                        <option
-                                                                            key={estatus.m_nIdEstatusEmbarque}
-                                                                            value={estatus.m_nIdEstatusEmbarque}
-                                                                        >
-                                                                            {estatus.m_sEstatus}
-                                                                        </option>
-                                                                    ))}
-                                                                </select>
-                                                                <i></i>
-                                                            </label>
-                                                        </div>
-
-                                                        <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                            <label className="label">Moneda</label>
-                                                            <label className="input select">
-                                                                <select
-                                                                    className="form-control"
-                                                                    required
-                                                                    value={state.moneda}
-                                                                    disabled={state.agregar == "Consultar"}
-                                                                    onChange={handleChange}
-                                                                    id="moneda"
-                                                                >
-                                                                    {dataTipoMoneda.map((moneda) => (
-                                                                        <option
-                                                                            key={moneda.m_nIdMoneda}
-                                                                            value={moneda.m_nIdMoneda}
-                                                                        >
-                                                                            {moneda.m_sMoneda}
-                                                                        </option>
-                                                                    ))}
-                                                                </select>
-                                                                <i className="fa fa-arrow-down" />
-                                                            </label>
-                                                        </div>
-
-                                                        <div className="col-sm-6 col-md-2-5 col-lg-2-5  unit">
-                                                            <label className="label">Tipo de Cambio</label>
-                                                            <div className="input">
-                                                                <input
-                                                                    onChange={handleChange}
-                                                                    className="form-control"
-                                                                    type="number"
-                                                                    min="0"
-                                                                    step="0.01"
-                                                                    required
-                                                                    value={state.tipoCambio}
-                                                                    disabled={state.agregar == "Consultar"}
-                                                                    id="tipoCambio"
-                                                                />
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                            <label className="label">Tipo Cobro</label>
-                                                            <label className="input select">
-                                                                <select
-                                                                    className="form-control"
-                                                                    required
-                                                                    value={state.tipoCobro}
-                                                                    disabled={state.agregar == "Consultar"}
-                                                                    onChange={handleChange}
-                                                                    id="tipoCobro"
-                                                                >
-                                                                    {dataTipoCobro.map((tipoCobro) => (
-                                                                        <option
-                                                                            key={tipoCobro.m_nIdTipoCobro}
-                                                                            value={tipoCobro.m_nIdTipoCobro}
-                                                                        >
-                                                                            {tipoCobro.m_sDescripcion}
-                                                                        </option>
-                                                                    ))}
-                                                                </select>
-                                                                <i></i>
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-md-7">
-                                            <div className="widget-wrap" id="remitenteDestinatario">
-                                                <div className="row">
-                                                    <div className="col-md-6">
-                                                        <div className="widget-header">
-                                                            <h2>Remitente</h2>
-                                                        </div>
-                                                        <div className="widget-container">
-                                                            <div className="widget-content">
-                                                                <div className="row">
-
-                                                                    <div className="col-sm-12 col-md-12  unit">
-                                                                        <label className="label">
-                                                                            Nombre
-                                  </label>
-                                                                        <div className="input">
-                                                                            <Autocomplete
-
-                                                                                onSelect={() => handleSelectRemitente()}
-                                                                                value={state.nombreRemitente}
-                                                                                freeSolo
-                                                                                onChange={(event, newValue) =>
-                                                                                    setState({
-                                                                                        ...state,
-                                                                                        nombreRemitente: newValue,
-                                                                                    })
-                                                                                }
-                                                                                id="nombreRemitente"
-                                                                                disableClearable
-                                                                                forcePopupIcon={false}
-                                                                                disabled={state.agregar == "Consultar"}
-                                                                                options={dataRemitenteDestinatario}
-                                                                                getOptionLabel={(option) =>
-                                                                                    option.m_sNombreFiscal
-                                                                                }
-                                                                                variant="outlined"
-                                                                                style={{
-                                                                                    borderWidth: "1px",
-                                                                                    borderColor: "#dddddd",
-                                                                                    borderStyle: "solid",
-                                                                                    borderRadius: "5px",
-                                                                                }}
-                                                                                renderInput={(params) => (
-                                                                                    <div>
-                                                                                        <TextField
-                                                                                            required
-                                                                                            {...params}
-                                                                                            InputProps={{
-                                                                                                ...params.InputProps,
-                                                                                                style: { height: "33px", fontSize: "14px" },
-                                                                                                type: "search",
-                                                                                                disableUnderline: true,
-                                                                                                endAdornment: (
-                                                                                                    <InputAdornment position="end">
-                                                                                                        <IconButton
-                                                                                                            padding="0px"
-                                                                                                            style={{
-                                                                                                                paddingRight: "0px",
-                                                                                                            }}
-                                                                                                            disabled={state.agregar == "Consultar"}
-                                                                                                            onClick={() => {
-                                                                                                                setState({
-                                                                                                                    ...state,
-                                                                                                                    identificadorModal:
-                                                                                                                        "nombreRemitente",
-                                                                                                                    tipoModal: 5,
-                                                                                                                    openDialog: true
-                                                                                                                });
-                                                                                                            }}
-                                                                                                        >
-                                                                                                            <PageviewIcon
-                                                                                                                style={{
-                                                                                                                    color: "#F9A03E",
-                                                                                                                    fontSize: 32,
-                                                                                                                    paddingInlineEnd: 0,
-                                                                                                                    paddingRight: 0,
-                                                                                                                    paddingBlockEnd: 0,
-                                                                                                                    paddingLeft: 0,
-                                                                                                                    paddingBlock: 0,
-                                                                                                                }}
-                                                                                                            />
-                                                                                                        </IconButton>
-                                                                                                    </InputAdornment>
-                                                                                                ),
-                                                                                            }}
-                                                                                        />
-                                                                                    </div>
-                                                                                )}
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div className="col-sm-12 col-md-8 unit">
-                                                                        <label className="label">RFC</label>
-                                                                        <div className="input">
-                                                                            <input
-                                                                                onChange={handleChange}
-                                                                                className="form-control"
-                                                                                type="text"
-                                                                                pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
-                                                                                title="Favor de introducir un RFC válido."
-                                                                                required
-                                                                                value={state.RFCRemitente}
-                                                                                disabled={state.agregar == "Consultar"}
-                                                                                id="RFCRemitente"
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div className="col-sm-12 col-md-12 unit">
-                                                                        <label className="label">Domicilio</label>
-                                                                        <div className="input">
-                                                                            <input
-                                                                                onChange={handleChange}
-                                                                                className="form-control"
-                                                                                type="text"
-                                                                                required
-                                                                                value={state.domicilioRemitente}
-                                                                                disabled={state.agregar == "Consultar"}
-                                                                                id="domicilioRemitente"
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div className="col-sm-12 col-md-8 unit" >
-                                                                        <label className="label">
-                                                                            Código Postal
-                                    </label>
-                                                                        <div className="input">
-                                                                            <Autocomplete
-                                                                                value={state.codigoPostalRemitente}
-                                                                                freeSolo
-                                                                                onChange={(event, newValue) =>
-                                                                                    setState({
-                                                                                        ...state,
-                                                                                        codigoPostalRemitente: newValue,
-                                                                                    })
-                                                                                }
-                                                                                id="codigoPostalRemitente"
-                                                                                disableClearable
-                                                                                disabled={state.agregar == "Consultar"}
-                                                                                forcePopupIcon={false}
-                                                                                options={dataCodigoPostal}
-                                                                                getOptionLabel={(option) =>
-                                                                                    option.m_sCP
-                                                                                }
-                                                                                variant="outlined"
-                                                                                style={{
-                                                                                    borderWidth: "1px",
-                                                                                    borderColor: "#dddddd",
-                                                                                    borderStyle: "solid",
-                                                                                    borderRadius: "5px",
-                                                                                }}
-                                                                                renderInput={(params) => (
-                                                                                    <div>
-                                                                                        <TextField
-                                                                                            required
-                                                                                            {...params}
-                                                                                            InputProps={{
-                                                                                                ...params.InputProps,
-                                                                                                style: { height: "33px", fontSize: "14px" },
-                                                                                                type: "search",
-                                                                                                disableUnderline: true,
-                                                                                                endAdornment: (
-                                                                                                    <InputAdornment position="end">
-                                                                                                        <IconButton
-                                                                                                            padding="0px"
-                                                                                                            style={{
-                                                                                                                paddingRight: "0px",
-                                                                                                            }}
-                                                                                                            disabled={state.agregar == "Consultar"}
-                                                                                                            onClick={() => {
-                                                                                                                setState({
-                                                                                                                    ...state,
-                                                                                                                    identificadorModal:
-                                                                                                                        "codigoPostalRemitente",
-                                                                                                                    tipoModal: 0,
-                                                                                                                    openDialog: true
-                                                                                                                });
-                                                                                                            }}
-                                                                                                        >
-                                                                                                            <PageviewIcon
-                                                                                                                style={{
-                                                                                                                    color: "#F9A03E",
-                                                                                                                    fontSize: 32,
-                                                                                                                    paddingInlineEnd: 0,
-                                                                                                                    paddingRight: 0,
-                                                                                                                    paddingBlockEnd: 0,
-                                                                                                                    paddingLeft: 0,
-                                                                                                                    paddingBlock: 0,
-                                                                                                                }}
-                                                                                                            />
-                                                                                                        </IconButton>
-                                                                                                    </InputAdornment>
-                                                                                                ),
-                                                                                            }}
-                                                                                        />
-                                                                                    </div>
-                                                                                )}
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                                                        <label className="label">Ciudad</label>
-                                                                        <div className="input">
-                                                                            <Autocomplete
-                                                                                freeSolo
-                                                                                onChange={(event, newValue) =>
-                                                                                    setState({
-                                                                                        ...state,
-                                                                                        ciudadRemitente: newValue,
-                                                                                    })
-                                                                                }
-                                                                                value={state.ciudadRemitente}
-                                                                                id="ciudadRemitente"
-                                                                                disableClearable
-                                                                                disabled={state.agregar == "Consultar"}
-                                                                                forcePopupIcon={false}
-                                                                                options={dataCiudad}
-                                                                                getOptionLabel={(option) =>
-                                                                                    option.m_sCiudad
-                                                                                }
-                                                                                variant="outlined"
-                                                                                style={{
-                                                                                    borderWidth: "1px",
-                                                                                    borderColor: "#dddddd",
-                                                                                    borderStyle: "solid",
-                                                                                    borderRadius: "5px",
-                                                                                }}
-                                                                                renderInput={(params) => (
-                                                                                    <div>
-                                                                                        <TextField
-                                                                                            required
-                                                                                            {...params}
-                                                                                            InputProps={{
-                                                                                                ...params.InputProps,
-                                                                                                style: { height: 24 },
-                                                                                                type: "search",
-                                                                                                disabled:
-                                                                                                    state.agregar == "Consultar",
-                                                                                                endAdornment: (
-                                                                                                    <InputAdornment position="end">
-                                                                                                        <IconButton padding="0px" style={{ paddingRight: "0px" }} disabled={state.agregar == "Consultar"} onClick={() => { setState({ ...state, identificadorModal: "ciudadRemitente", tipoModal: 1, openDialog: true }) }}>
-                                                                                                            <PageviewIcon style={{ color: "#F9A03E", fontSize: 32, paddingInlineEnd: 0, paddingRight: 0, paddingBlockEnd: 0, paddingLeft: 0, paddingBlock: 0 }} />
-                                                                                                        </IconButton>
-                                                                                                    </InputAdornment>
-                                                                                                ),
-                                                                                            }}
-                                                                                        />
-                                                                                    </div>
-                                                                                )}
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-                                                                    { }
-                                                                    <div className="col-sm-12 col-md-12 unit">
-                                                                        <label className="label">
-                                                                            Correo Electrónico
-                                    </label>
-                                                                        <div className="input">
-                                                                            <input
-                                                                                onChange={handleChange}
-                                                                                className="form-control"
-                                                                                type="email"
-                                                                                required
-                                                                                value={state.correoRemitente}
-                                                                                disabled={state.agregar == "Consultar"}
-                                                                                id="correoRemitente"
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-                                                                    { }
-                                                                    <div className="col-sm-12 col-md-12 unit">
-                                                                        <label className="label">Teléfono</label>
-                                                                        <div className="input">
-                                                                            <input
-                                                                                onChange={handleChange}
-                                                                                className="form-control"
-                                                                                type="tel"
-                                                                                required
-                                                                                value={state.telefonoRemitente}
-                                                                                disabled={state.agregar == "Consultar"}
-                                                                                id="telefonoRemitente"
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div className="col-sm-12 col-md-12 unit">
-                                                                        <label className="label">Contacto</label>
-                                                                        <div className="input">
-                                                                            <input
-                                                                                onChange={handleChange}
-                                                                                className="form-control"
-                                                                                type="text"
-                                                                                required
-                                                                                value={state.contactoRemitente}
-                                                                                disabled={state.agregar == "Consultar"}
-                                                                                id="contactoRemitente"
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div className="col-sm-12 col-md-6 unit">
-                                                                        <label className="label">Origen</label>
-                                                                        <div className="input">
-                                                                            <Autocomplete
-                                                                                freeSolo
-                                                                                onChange={(event, newValue) =>
-                                                                                    setState({
-                                                                                        ...state,
-                                                                                        ciudadOrigen: newValue,
-                                                                                    })
-                                                                                }
-                                                                                value={state.ciudadOrigen}
-                                                                                id="ciudadOrigen"
-                                                                                disableClearable
-                                                                                disabled={state.agregar == "Consultar"}
-                                                                                forcePopupIcon={false}
-                                                                                options={dataCiudad}
-                                                                                getOptionLabel={(option) =>
-                                                                                    option.m_sCiudad
-                                                                                }
-                                                                                variant="outlined"
-                                                                                style={{
-                                                                                    borderWidth: "1px",
-                                                                                    borderColor: "#dddddd",
-                                                                                    borderStyle: "solid",
-                                                                                    borderRadius: "5px",
-                                                                                }}
-                                                                                renderInput={(params) => (
-                                                                                    <div>
-                                                                                        <TextField
-                                                                                            required
-                                                                                            {...params}
-                                                                                            InputProps={{
-                                                                                                ...params.InputProps,
-                                                                                                style: { height: "33px", fontSize: "14px" },
-                                                                                                type: "search",
-                                                                                                value: state.ciudadOrigen,
-                                                                                                disableUnderline: true,
-                                                                                                endAdornment: (
-                                                                                                    <InputAdornment position="end">
-                                                                                                        <IconButton
-                                                                                                            padding="0px"
-                                                                                                            style={{
-                                                                                                                paddingRight: "0px",
-                                                                                                            }}
-                                                                                                            disabled={state.agregar == "Consultar"}
-                                                                                                            onClick={() => {
-                                                                                                                setState({
-                                                                                                                    ...state,
-                                                                                                                    identificadorModal:
-                                                                                                                        "ciudadOrigen",
-                                                                                                                    tipoModal: 1,
-                                                                                                                    openDialog: true
-                                                                                                                });
-                                                                                                            }}
-                                                                                                        >
-                                                                                                            <PageviewIcon
-                                                                                                                style={{
-                                                                                                                    color: "#F9A03E",
-                                                                                                                    fontSize: 32,
-                                                                                                                    paddingInlineEnd: 0,
-                                                                                                                    paddingRight: 0,
-                                                                                                                    paddingBlockEnd: 0,
-                                                                                                                    paddingLeft: 0,
-                                                                                                                    paddingBlock: 0,
-                                                                                                                }}
-                                                                                                            />
-                                                                                                        </IconButton>
-                                                                                                    </InputAdornment>
-                                                                                                ),
-                                                                                            }}
-                                                                                        />
-                                                                                    </div>
-                                                                                )}
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-md-6">
-                                                        <div className="widget-header">
-                                                            <h2>Destinatario</h2>
-                                                        </div>
-                                                        <div className="widget-container">
-                                                            <div className="widget-content">
-
-                                                                <div className="col-sm-12 col-md-12    unit">
-                                                                    <label className="label">
-                                                                        Nombre
-                              </label>
-                                                                    <div className="input">
-                                                                        <Autocomplete
-                                                                            onSelect={() => handleSelectDestinatario()}
-                                                                            value={state.nombreDestinatario}
-                                                                            freeSolo
-                                                                            onChange={(event, newValue) =>
-                                                                                setState({
-                                                                                    ...state,
-                                                                                    nombreDestinatario: newValue,
-                                                                                })
-                                                                            }
-                                                                            id="nombreRemitente"
-                                                                            disableClearable
-                                                                            disabled={state.agregar == "Consultar"}
-                                                                            forcePopupIcon={false}
-                                                                            options={dataRemitenteDestinatario}
-                                                                            getOptionLabel={(option) =>
-                                                                                option.m_sNombreFiscal
-                                                                            }
-                                                                            variant="outlined"
-                                                                            style={{
-                                                                                borderWidth: "1px",
-                                                                                borderColor: "#dddddd",
-                                                                                borderStyle: "solid",
-                                                                                borderRadius: "5px",
-                                                                            }}
-                                                                            renderInput={(params) => (
-                                                                                <div>
-                                                                                    <TextField
-                                                                                        required
-                                                                                        {...params}
-                                                                                        InputProps={{
-                                                                                            ...params.InputProps,
-                                                                                            style: { height: "33px", fontSize: "14px" },
-                                                                                            type: "search",
-                                                                                            disableUnderline: true,
-                                                                                            endAdornment: (
-                                                                                                <InputAdornment position="end">
-                                                                                                    <IconButton
-                                                                                                        padding="0px"
-                                                                                                        style={{
-                                                                                                            paddingRight: "0px",
-                                                                                                        }}
-                                                                                                        disabled={state.agregar == "Consultar"}
-                                                                                                        onClick={() => {
-                                                                                                            setState({
-                                                                                                                ...state,
-                                                                                                                identificadorModal:
-                                                                                                                    "nombreDestinatario",
-                                                                                                                tipoModal: 5,
-                                                                                                            });
-                                                                                                            open();
-                                                                                                        }}
-                                                                                                    >
-                                                                                                        <PageviewIcon
-                                                                                                            style={{
-                                                                                                                color: "#F9A03E",
-                                                                                                                fontSize: 32,
-                                                                                                                paddingInlineEnd: 0,
-                                                                                                                paddingRight: 0,
-                                                                                                                paddingBlockEnd: 0,
-                                                                                                                paddingLeft: 0,
-                                                                                                                paddingBlock: 0,
-                                                                                                                paddingRight: "0px",
-                                                                                                            }}
-                                                                                                            onClick={() => {
-                                                                                                                setState({
-                                                                                                                    ...state,
-                                                                                                                    identificadorModal:
-                                                                                                                        "nombreDestinatario",
-                                                                                                                    tipoModal: 5,
-                                                                                                                    openDialog: true
-                                                                                                                });
-                                                                                                            }}
-                                                                                                        />
-                                                                                                    </IconButton>
-                                                                                                </InputAdornment>
-                                                                                            ),
-                                                                                        }}
-                                                                                    />
-                                                                                </div>
-                                                                            )}
-                                                                        />
-                                                                    </div>
-                                                                </div>
-
-                                            </div> */}
                     </div>
                   </div>
 
@@ -3683,117 +2784,123 @@ function Embarque(props) {
                         <div className="row">
                           <div className="col-md-12">
                             <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                              <label className="label">Sucursal</label>
                               <label className="input select">
-                                <select
-                                  className="form-control"
-                                  required
-                                  onChange={handleChange}
-                                  value={state.idSucursalAgregar}
-                                  disabled={state.agregar == "Consultar"}
-                                  id="idSucursalAgregar"
-                                  disabled="disabled"
-                                >
-                                  {dataSucursal.map((sucursal) => (
-                                    <option
-                                      key={sucursal.m_nIdSucursal}
-                                      value={sucursal.m_nIdSucursal}
-                                    >
-                                      {sucursal.m_sSucursal}
-                                    </option>
-                                  ))}
-                                </select>
-                                <i className="fa fa-arrow-down" />
+                                <FormControl fullWidth variant="outlined" margin="dense">
+                                  <InputLabel id="idSucursalAgregarLabel">Sucursal</InputLabel>
+                                  <Select
+                                      labelId="idSucursalAgregarLabel"
+                                      className="form-control"
+                                      required
+                                      disabled
+                                      value={state.idSucursalAgregar}
+                                      onChange={handleSucursalFiltro}
+                                      id="idSucursalAgregar"
+                                      label="Sucursal"
+                                      readOnly
+                                  >
+                                    <option value="0">Todas</option>
+                                    {dataSucursal.map((sucursal) => (
+                                        <option
+                                            key={sucursal.m_nIdSucursal}
+                                            value={sucursal.m_nIdSucursal}
+                                        >
+                                          {sucursal.m_sSucursal}
+                                        </option>
+                                    ))}
+                                  </Select>
+                                </FormControl>
                               </label>
                             </div>
 
                             <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                              <label className="label">Folio Recolección</label>
                               <div className="input">
-                                <input
+                                <TextField variant="outlined" margin="dense" label="Folio Recolección"
                                   onChange={handleChange}
                                   className="form-control"
                                   type="text"
                                   value={state.folioRecoleccion}
                                   id="folioRecoleccion"
                                   readOnly
+                                           disabled
                                 />
                               </div>
                             </div>
 
                             <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                              <label className="label">Folio Embarque</label>
                               <div className="input">
-                                <input
+                                <TextField variant="outlined" margin="dense" label="Folio Embarque"
                                   onChange={handleChange}
                                   className="form-control"
                                   type="text"
                                   value={state.folioEmbarque}
                                   id="folioEmbarque"
                                   readOnly
+                                           disabled
                                 />
                               </div>
                             </div>
 
                             <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                              <label className="label">Folio Guía</label>
                               <div className="input">
-                                <input
+                                <TextField variant="outlined" margin="dense" label="Folio Guía"
                                   onChange={handleChange}
                                   className="form-control"
                                   type="text"
                                   value={state.folioGuía}
                                   id="folioGuía"
                                   readOnly
+                                           disabled
                                 />
                               </div>
                             </div>
 
                             <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                              <label className="label">Folio Informe</label>
                               <div className="input">
-                                <input
+                                <TextField variant="outlined" margin="dense" label="Folio Informe"
                                   onChange={handleChange}
                                   className="form-control"
                                   type="text"
                                   value={state.folioInforme}
                                   id="folioInforme"
                                   readOnly
+                                           disabled
                                 />
                               </div>
                             </div>
 
                             <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                              <label className="label">
-                                Fecha / Hora de Registro
-                              </label>
                               <div className="input">
-                                <input
+                                <TextField variant="outlined" margin="dense" label="Fecha / Hora de Registro"
                                   onChange={handleChange}
                                   required
                                   value={state.fechaHoraRegistro}
                                   className="form-control"
                                   id="fechaHoraRegistro"
                                   type="datetime-local"
+                                           InputLabelProps={{
+                                             shrink: true,
+                                           }}
                                   disabled={
-                                    state.agregar == "Consultar" ||
-                                    state.agregar == "Modificar"
+                                    state.agregar === "Consultar" ||
+                                    state.agregar === "Modificar"
                                   }
                                 />
                               </div>
                             </div>
 
                             <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                              <label className="label">
-                                Estatus del Embarque
-                              </label>
+
                               <label className="input select">
-                                <select
+                                <FormControl fullWidth variant="outlined" margin="dense">
+                                  <InputLabel id="idEstatusEmbarque">Estatus del Embarque</InputLabel>
+                                <Select
+                                    labelId={"idEstatusEmbarque"}
+                                    label={"Estatus del Embarque"}
                                   className="form-control"
                                   required
                                   onChange={handleChange}
                                   value={state.estatusEmbarque}
-                                  disabled={state.agregar == "Consultar"}
+                                  disabled={state.agregar === "Consultar"}
                                   id="estatusEmbarque"
                                 >
                                   {dataEstatusEmbarque.map((estatus) => (
@@ -3804,19 +2911,22 @@ function Embarque(props) {
                                       {estatus.m_sEstatus}
                                     </option>
                                   ))}
-                                </select>
-                                <i></i>
+                                </Select>
+                                </FormControl>
                               </label>
                             </div>
 
                             <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                              <label className="label">Moneda</label>
                               <label className="input select">
-                                <select
+                                <FormControl fullWidth variant="outlined" margin="dense">
+                                  <InputLabel id="idMonedaLabel">Moneda</InputLabel>
+                                <Select
+                                    labelId={"idMonedaLabel"}
+                                    label={"Moneda"}
                                   className="form-control"
                                   required
                                   value={state.moneda}
-                                  disabled={state.agregar == "Consultar"}
+                                  disabled={state.agregar === "Consultar"}
                                   onChange={handleChange}
                                   id="moneda"
                                 >
@@ -3828,15 +2938,14 @@ function Embarque(props) {
                                       {moneda.m_sMoneda}
                                     </option>
                                   ))}
-                                </select>
-                                <i className="fa fa-arrow-down" />
+                                </Select>
+                                </FormControl>
                               </label>
                             </div>
 
                             <div className="col-sm-6 col-md-2-5 col-lg-2-5  unit">
-                              <label className="label">Tipo de Cambio</label>
                               <div className="input">
-                                <input
+                                <TextField variant="outlined" margin="dense" label="Tipo de Cambio"
                                   onChange={handleChange}
                                   className="form-control"
                                   type="number"
@@ -3844,16 +2953,19 @@ function Embarque(props) {
                                   step="0.01"
                                   required
                                   value={state.tipoCambio}
-                                  disabled={state.agregar == "Consultar"}
+                                  disabled={state.agregar === "Consultar"}
                                   id="tipoCambio"
                                 />
                               </div>
                             </div>
 
                             <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                              <label className="label">Tipo Cobro</label>
                               <label className="input select">
-                                <select
+                                <FormControl fullWidth variant="outlined" margin="dense">
+                                  <InputLabel id="idTipoCobroLabel">Tipo Cobro</InputLabel>
+                                <Select
+                                    labelId={"idTipoCobroLabel"}
+                                    label={"Tipo Cobro"}
                                   className="form-control"
                                   required
                                   value={state.tipoCobro}
@@ -3869,8 +2981,8 @@ function Embarque(props) {
                                       {tipoCobro.m_sDescripcion}
                                     </option>
                                   ))}
-                                </select>
-                                <i></i>
+                                </Select>
+                              </FormControl>
                               </label>
                             </div>
                           </div>
@@ -3890,7 +3002,6 @@ function Embarque(props) {
                               <div className="widget-content">
                                 <div className="row">
                                   <div className="col-sm-12 col-md-12  unit">
-                                    <label className="label">Nombre</label>
                                     <div className="input">
                                       <Autocomplete
                                         onChange={(event, newValue) => {
@@ -3902,23 +3013,23 @@ function Embarque(props) {
                                         id="nombreRemitente"
                                         disableClearable
                                         forcePopupIcon={false}
-                                        disabled={state.agregar == "Consultar"}
+                                        disabled={state.agregar === "Consultar"}
                                         options={dataRemitenteDestinatario}
                                         getOptionLabel={(option) =>
                                           option.m_sNombreFiscal
                                         }
                                         variant="outlined"
                                         style={{
-                                          borderWidth: "1px",
-                                          borderColor: "#dddddd",
-                                          borderStyle: "solid",
-                                          borderRadius: "5px",
+                                          transform: "translate(14px, 10px) scale(1) !important"
                                         }}
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
                                               required
+                                              label={"Nombre"}
                                               {...params}
+                                              margin="dense"
+                                              variant="outlined"
                                               InputProps={{
                                                 ...params.InputProps,
                                                 style: {
@@ -3935,7 +3046,7 @@ function Embarque(props) {
                                                         paddingRight: "0px",
                                                       }}
                                                       disabled={
-                                                        state.agregar ==
+                                                        state.agregar ===
                                                         "Consultar"
                                                       }
                                                       onClick={() => {
@@ -3971,9 +3082,8 @@ function Embarque(props) {
                                   </div>
 
                                   <div className="col-sm-12 col-md-8 unit">
-                                    <label className="label">RFC</label>
                                     <div className="input">
-                                      <input
+                                      <TextField variant="outlined" margin="dense" label="RFC"
                                         onChange={handleChange}
                                         className="form-control"
                                         type="text"
@@ -3981,31 +3091,27 @@ function Embarque(props) {
                                         title="Favor de introducir un RFC válido."
                                         required
                                         value={state.RFCRemitente}
-                                        disabled={state.agregar == "Consultar"}
+                                        disabled={state.agregar === "Consultar"}
                                         id="RFCRemitente"
                                       />
                                     </div>
                                   </div>
 
                                   <div className="col-sm-12 col-md-12 unit">
-                                    <label className="label">Domicilio</label>
                                     <div className="input">
-                                      <input
+                                      <TextField variant="outlined" margin="dense" label="Domicilio"
                                         onChange={handleChange}
                                         className="form-control"
                                         type="text"
                                         required
                                         value={state.domicilioRemitente}
-                                        disabled={state.agregar == "Consultar"}
+                                        disabled={state.agregar === "Consultar"}
                                         id="domicilioRemitente"
                                       />
                                     </div>
                                   </div>
 
                                   <div className="col-sm-12 col-md-8 unit">
-                                    <label className="label">
-                                      Código Postal
-                                    </label>
                                     <div className="input">
                                       <Autocomplete
                                         value={state.codigoPostalRemitente}
@@ -4018,7 +3124,7 @@ function Embarque(props) {
                                         }
                                         id="codigoPostalRemitente"
                                         disableClearable
-                                        disabled={state.agregar == "Consultar"}
+                                        disabled={state.agregar === "Consultar"}
                                         forcePopupIcon={false}
                                         options={dataCodigoPostal}
                                         getOptionLabel={(option) =>
@@ -4026,15 +3132,15 @@ function Embarque(props) {
                                         }
                                         variant="outlined"
                                         style={{
-                                          borderWidth: "1px",
-                                          borderColor: "#dddddd",
-                                          borderStyle: "solid",
-                                          borderRadius: "5px",
+                                          transform: "translate(14px, 10px) scale(1) !important"
                                         }}
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
                                               required
+                                              margin="dense"
+                                              variant="outlined"
+                                              label={"Código Postal"}
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
@@ -4052,7 +3158,7 @@ function Embarque(props) {
                                                         paddingRight: "0px",
                                                       }}
                                                       disabled={
-                                                        state.agregar ==
+                                                        state.agregar ===
                                                         "Consultar"
                                                       }
                                                       onClick={() => {
@@ -4088,7 +3194,6 @@ function Embarque(props) {
                                   </div>
 
                                   <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                    <label className="label">Ciudad</label>
                                     <div className="input">
                                       <Autocomplete
                                         freeSolo
@@ -4101,7 +3206,7 @@ function Embarque(props) {
                                         value={state.ciudadRemitente}
                                         id="ciudadRemitente"
                                         disableClearable
-                                        disabled={state.agregar == "Consultar"}
+                                        disabled={state.agregar === "Consultar"}
                                         forcePopupIcon={false}
                                         options={dataCiudad}
                                         getOptionLabel={(option) =>
@@ -4109,22 +3214,22 @@ function Embarque(props) {
                                         }
                                         variant="outlined"
                                         style={{
-                                          borderWidth: "1px",
-                                          borderColor: "#dddddd",
-                                          borderStyle: "solid",
-                                          borderRadius: "5px",
+                                          transform: "translate(14px, 10px) scale(1) !important"
                                         }}
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
                                               required
+                                              margin="dense"
+                                              variant="outlined"
+                                              label={"Ciudad"}
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
                                                 style: { height: 24 },
                                                 type: "search",
                                                 disabled:
-                                                  state.agregar == "Consultar",
+                                                  state.agregar === "Consultar",
                                                 endAdornment: (
                                                   <InputAdornment position="end">
                                                     <IconButton
@@ -4133,7 +3238,7 @@ function Embarque(props) {
                                                         paddingRight: "0px",
                                                       }}
                                                       disabled={
-                                                        state.agregar ==
+                                                        state.agregar ===
                                                         "Consultar"
                                                       }
                                                       onClick={() => {
@@ -4169,54 +3274,48 @@ function Embarque(props) {
                                   </div>
                                   {}
                                   <div className="col-sm-12 col-md-12 unit">
-                                    <label className="label">
-                                      Correo Electrónico
-                                    </label>
                                     <div className="input">
-                                      <input
+                                      <TextField variant="outlined" margin="dense" label="Correo Electrónico"
                                         onChange={handleChange}
                                         className="form-control"
                                         type="email"
                                         required
                                         value={state.correoRemitente}
-                                        disabled={state.agregar == "Consultar"}
+                                        disabled={state.agregar === "Consultar"}
                                         id="correoRemitente"
                                       />
                                     </div>
                                   </div>
                                   {}
                                   <div className="col-sm-12 col-md-12 unit">
-                                    <label className="label">Teléfono</label>
                                     <div className="input">
-                                      <input
+                                      <TextField variant="outlined" margin="dense" label="Teléfono"
                                         onChange={handleChange}
                                         className="form-control"
                                         type="tel"
                                         required
                                         value={state.telefonoRemitente}
-                                        disabled={state.agregar == "Consultar"}
+                                        disabled={state.agregar === "Consultar"}
                                         id="telefonoRemitente"
                                       />
                                     </div>
                                   </div>
 
                                   <div className="col-sm-12 col-md-12 unit">
-                                    <label className="label">Contacto</label>
                                     <div className="input">
-                                      <input
+                                      <TextField variant="outlined" margin="dense" label="Contacto"
                                         onChange={handleChange}
                                         className="form-control"
                                         type="text"
                                         required
                                         value={state.contactoRemitente}
-                                        disabled={state.agregar == "Consultar"}
+                                        disabled={state.agregar === "Consultar"}
                                         id="contactoRemitente"
                                       />
                                     </div>
                                   </div>
 
                                   <div className="col-sm-12 col-md-6 unit">
-                                    <label className="label">Origen</label>
                                     <div className="input">
                                       <Autocomplete
                                         freeSolo
@@ -4237,15 +3336,15 @@ function Embarque(props) {
                                         }
                                         variant="outlined"
                                         style={{
-                                          borderWidth: "1px",
-                                          borderColor: "#dddddd",
-                                          borderStyle: "solid",
-                                          borderRadius: "5px",
+                                          transform: "translate(14px, 10px) scale(1) !important"
                                         }}
                                         renderInput={(params) => (
                                           <div>
                                             <TextField
                                               required
+                                              margin="dense"
+                                              variant="outlined"
+                                              label={"Origen"}
                                               {...params}
                                               InputProps={{
                                                 ...params.InputProps,
@@ -4264,7 +3363,7 @@ function Embarque(props) {
                                                         paddingRight: "0px",
                                                       }}
                                                       disabled={
-                                                        state.agregar ==
+                                                        state.agregar ===
                                                         "Consultar"
                                                       }
                                                       onClick={() => {
@@ -4308,8 +3407,7 @@ function Embarque(props) {
                             </div>
                             <div className="widget-container">
                               <div className="widget-content">
-                                <div className="col-sm-12 col-md-12    unit">
-                                  <label className="label">Nombre</label>
+                                <div className="col-sm-12 col-md-12 unit">
                                   <div className="input">
                                     <Autocomplete
                                      onChange={(event, newValue) => {
@@ -4320,23 +3418,23 @@ function Embarque(props) {
                                      
                                       id="nombreRemitente"
                                       disableClearable
-                                      disabled={state.agregar == "Consultar"}
+                                      disabled={state.agregar === "Consultar"}
                                       forcePopupIcon={false}
                                       options={dataRemitenteDestinatario}
                                       getOptionLabel={(option) =>
                                         option.m_sNombreFiscal
                                       }
                                       variant="outlined"
-                                      style={{
-                                        borderWidth: "1px",
-                                        borderColor: "#dddddd",
-                                        borderStyle: "solid",
-                                        borderRadius: "5px",
-                                      }}
+                                     style={{
+                                       transform: "translate(14px, 10px) scale(1) !important"
+                                     }}
                                       renderInput={(params) => (
                                         <div>
                                           <TextField
                                             required
+                                            label={"Nombre"}
+                                            margin="dense"
+                                            variant="outlined"
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
@@ -4354,7 +3452,7 @@ function Embarque(props) {
                                                       paddingRight: "0px",
                                                     }}
                                                     disabled={
-                                                      state.agregar ==
+                                                      state.agregar ===
                                                       "Consultar"
                                                     }
                                                     onClick={() => {
@@ -4376,7 +3474,6 @@ function Embarque(props) {
                                                         paddingBlockEnd: 0,
                                                         paddingLeft: 0,
                                                         paddingBlock: 0,
-                                                        paddingRight: "0px",
                                                       }}
                                                       onClick={() => {
                                                         setState({
@@ -4400,9 +3497,8 @@ function Embarque(props) {
                                 </div>
 
                                 <div className="col-sm-12 col-md-8 unit">
-                                  <label className="label">RFC</label>
                                   <div className="input">
-                                    <input
+                                    <TextField variant="outlined" margin="dense" label="RFC"
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
@@ -4410,29 +3506,27 @@ function Embarque(props) {
                                       title="Favor de introducir un RFC válido."
                                       required
                                       value={state.RFCDestinatario}
-                                      disabled={state.agregar == "Consultar"}
+                                      disabled={state.agregar === "Consultar"}
                                       id="RFCDestinatario"
                                     />
                                   </div>
                                 </div>
 
                                 <div className="col-sm-12 col-md-12 unit">
-                                  <label className="label">Domicilio</label>
                                   <div className="input">
-                                    <input
+                                    <TextField variant="outlined" margin="dense" label="Domicilio"
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
                                       required
                                       value={state.domicilioDestinatario}
-                                      disabled={state.agregar == "Consultar"}
+                                      disabled={state.agregar === "Consultar"}
                                       id="domicilioDestinatario"
                                     />
                                   </div>
                                 </div>
 
                                 <div className="col-sm-4 col-md-6 unit">
-                                  <label className="label">Código Postal</label>
                                   <div className="input">
                                     <Autocomplete
                                       freeSolo
@@ -4445,20 +3539,20 @@ function Embarque(props) {
                                       value={state.codigoPostalDestinatario}
                                       id="codigoPostalDestinatario"
                                       disableClearable
-                                      disabled={state.agregar == "Consultar"}
+                                      disabled={state.agregar === "Consultar"}
                                       options={dataCodigoPostal}
                                       getOptionLabel={(option) => option.m_sCP}
                                       variant="outlined"
                                       style={{
-                                        borderWidth: "1px",
-                                        borderColor: "#dddddd",
-                                        borderStyle: "solid",
-                                        borderRadius: "5px",
+                                        transform: "translate(14px, 10px) scale(1) !important"
                                       }}
                                       renderInput={(params) => (
                                         <div>
                                           <TextField
                                             required
+                                            margin="dense"
+                                            variant="outlined"
+                                            label={"Código Postal"}
                                             {...params}
                                             InputProps={{
                                               ...params.InputProps,
@@ -4476,7 +3570,7 @@ function Embarque(props) {
                                                       paddingRight: "0px",
                                                     }}
                                                     disabled={
-                                                      state.agregar ==
+                                                      state.agregar ===
                                                       "Consultar"
                                                     }
                                                     onClick={() => {
@@ -4507,7 +3601,6 @@ function Embarque(props) {
                                 </div>
 
                                 <div className="col-sm-12 col-md-12  unit">
-                                  <label className="label">Ciudad</label>
                                   <div className="input">
                                     <Autocomplete
                                       freeSolo
@@ -4518,7 +3611,7 @@ function Embarque(props) {
                                         })
                                       }
                                       value={state.ciudadDestinatario}
-                                      disabled={state.agregar == "Consultar"}
+                                      disabled={state.agregar === "Consultar"}
                                       id="ciudadDestinatario"
                                       disableClearable
                                       forcePopupIcon={false}
@@ -4528,14 +3621,14 @@ function Embarque(props) {
                                       }
                                       variant="outlined"
                                       style={{
-                                        borderWidth: "1px",
-                                        borderColor: "#dddddd",
-                                        borderStyle: "solid",
-                                        borderRadius: "5px",
+                                        transform: "translate(14px, 10px) scale(1) !important"
                                       }}
                                       renderInput={(params) => (
                                         <div>
                                           <TextField
+                                              margin="dense"
+                                              variant="outlined"
+                                              label={"Ciudad"}
                                             required
                                             {...params}
                                             InputProps={{
@@ -4543,7 +3636,7 @@ function Embarque(props) {
                                               style: { height: 24 },
                                               type: "search",
                                               disabled:
-                                                state.agregar == "Consultar",
+                                                state.agregar === "Consultar",
                                               endAdornment: (
                                                 <InputAdornment position="end">
                                                   <IconButton
@@ -4552,7 +3645,7 @@ function Embarque(props) {
                                                       paddingRight: "0px",
                                                     }}
                                                     disabled={
-                                                      state.agregar ==
+                                                      state.agregar ===
                                                       "Consultar"
                                                     }
                                                     onClick={() => {
@@ -4588,55 +3681,48 @@ function Embarque(props) {
                                 </div>
 
                                 <div className="col-sm-12 col-md-12 unit">
-                                  <label className="label">
-                                    Correo Electrónico
-                                  </label>
                                   <div className="input">
-                                    <input
+                                    <TextField variant="outlined" margin="dense" label="Correo Electrónico"
                                       onChange={handleChange}
                                       className="form-control"
                                       type="email"
                                       required
                                       value={state.correoDestinatario}
-                                      disabled={state.agregar == "Consultar"}
+                                      disabled={state.agregar === "Consultar"}
                                       id="correoDestinatario"
                                     />
                                   </div>
                                 </div>
 
                                 <div className="col-sm-12 col-md-12 unit">
-                                  <label className="label">Teléfono</label>
                                   <div className="input">
-                                    <input
+                                    <TextField variant="outlined" margin="dense" label="Teléfono"
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
                                       required
                                       value={state.telefonoDestinatario}
-                                      disabled={state.agregar == "Consultar"}
+                                      disabled={state.agregar === "Consultar"}
                                       id="telefonoDestinatario"
                                     />
                                   </div>
                                 </div>
 
                                 <div className="col-sm-12 col-md-12 unit">
-                                  <label className="label">Contacto</label>
                                   <div className="input">
-                                    <input
-                                      required={true}
+                                    <TextField variant="outlined" margin="dense" label="Contacto"
                                       onChange={handleChange}
                                       className="form-control"
                                       type="text"
                                       required
                                       value={state.contactoDestinatario}
-                                      disabled={state.agregar == "Consultar"}
+                                      disabled={state.agregar === "Consultar"}
                                       id="contactoDestinatario"
                                     />
                                   </div>
                                 </div>
 
                                 <div className="col-sm-12 col-md-6 unit">
-                                  <label className="label">Destino</label>
                                   <div className="input">
                                     <Autocomplete
                                       freeSolo
@@ -4647,7 +3733,7 @@ function Embarque(props) {
                                         })
                                       }
                                       value={state.ciudadDestino}
-                                      disabled={state.agregar == "Consultar"}
+                                      disabled={state.agregar === "Consultar"}
                                       id="ciudadDestino"
                                       disableClearable
                                       forcePopupIcon={false}
@@ -4657,14 +3743,14 @@ function Embarque(props) {
                                       }
                                       variant="outlined"
                                       style={{
-                                        borderWidth: "1px",
-                                        borderColor: "#dddddd",
-                                        borderStyle: "solid",
-                                        borderRadius: "5px",
+                                        transform: "translate(14px, 10px) scale(1) !important"
                                       }}
                                       renderInput={(params) => (
                                         <div>
                                           <TextField
+                                              margin="dense"
+                                              variant="outlined"
+                                              label={"Destino"}
                                             required
                                             {...params}
                                             InputProps={{
@@ -4684,7 +3770,7 @@ function Embarque(props) {
                                                       paddingRight: "0px",
                                                     }}
                                                     disabled={
-                                                      state.agregar ==
+                                                      state.agregar ===
                                                       "Consultar"
                                                     }
                                                     onClick={() => {
@@ -4730,7 +3816,7 @@ function Embarque(props) {
                                       type="checkbox"
                                       checked={state.diferenteEntrega}
                                       value={state.diferenteEntrega}
-                                      disabled={state.agregar == "Consultar"}
+                                      disabled={state.agregar === "Consultar"}
                                       id="diferenteEntrega"
                                     />
                                   </div>
@@ -4757,7 +3843,7 @@ function Embarque(props) {
                                   color: "white",
                                 }}
                                 onClick={() => removePaquete()}
-                                disabled={state.agregar == "Consultar"}
+                                disabled={state.agregar === "Consultar"}
                               >
                                 <i className="zmdi zmdi-minus"></i>
                               </a>
@@ -4842,9 +3928,8 @@ function Embarque(props) {
                     </div>
                   </div>
                   <div className="row">
-                    {state.diferenteEntrega ? (
-                      <div className="widget-wrap" id="detallesRecoleccion">
-                        {state.diferenteEntrega ? (
+                    <div className="widget-wrap" id="detallesRecoleccion">
+                      {state.diferenteEntrega ? (
                           <div>
                             <div className="widget-header">
                               <h2>Detalles de la Entrega</h2>
@@ -4854,240 +3939,228 @@ function Embarque(props) {
                                 <div className="row">
                                   <div className="col-md-12">
                                     <div className="col-sm-4 col-md-4 unit">
-                                      <label className="label">
-                                        Código Postal
-                                      </label>
                                       <div className="input">
                                         <Autocomplete
-                                          freeSolo
-                                          onSelect={handleSelectCodigoPostal()}
-                                          onChange={(event, newValue) =>
-                                            setState({
-                                              ...state,
-                                              codigoPostalEntrega: newValue,
-                                            })
-                                          }
-                                          value={state.codigoPostalEntrega}
-                                          disabled={
-                                            state.agregar == "Consultar"
-                                          }
-                                          id="codigoPostalEntrega"
-                                          disableClearable
-                                          forcePopupIcon={false}
-                                          options={dataCodigoPostal}
-                                          getOptionLabel={(option) =>
-                                            option.m_sCP
-                                          }
-                                          variant="outlined"
-                                          style={{
-                                            borderWidth: "1px",
-                                            borderColor: "#dddddd",
-                                            borderStyle: "solid",
-                                            borderRadius: "5px",
-                                          }}
-                                          renderInput={(params) => (
-                                            <div>
-                                              <TextField
-                                                required
-                                                {...params}
-                                                InputProps={{
-                                                  ...params.InputProps,
-                                                  style: {
-                                                    height: "33px",
-                                                    fontSize: "14px",
-                                                  },
-                                                  type: "search",
-                                                  disableUnderline: true,
-                                                  endAdornment: (
-                                                    <InputAdornment position="end">
-                                                      {" "}
-                                                      <IconButton
-                                                        style={{
-                                                          paddingRight: "0px",
-                                                        }}
-                                                        disabled={
-                                                          state.agregar ==
-                                                          "Consultar"
-                                                        }
-                                                        onClick={() => {
-                                                          setState({
-                                                            ...state,
-                                                            identificadorModal:
-                                                              "codigoPostalEntrega",
-                                                            tipoModal: 0,
-                                                            openDialog: true,
-                                                          });
-                                                        }}
-                                                      >
-                                                        <PageviewIcon
-                                                          style={{
-                                                            color: "#F9A03E",
-                                                            fontSize: 32,
-                                                          }}
-                                                        />
-                                                      </IconButton>{" "}
-                                                    </InputAdornment>
-                                                  ),
-                                                }}
-                                              />
-                                            </div>
-                                          )}
+                                            freeSolo
+                                            onSelect={handleSelectCodigoPostal()}
+                                            onChange={(event, newValue) =>
+                                                setState({
+                                                  ...state,
+                                                  codigoPostalEntrega: newValue,
+                                                })
+                                            }
+                                            value={state.codigoPostalEntrega}
+                                            disabled={
+                                              state.agregar === "Consultar"
+                                            }
+                                            id="codigoPostalEntrega"
+                                            disableClearable
+                                            forcePopupIcon={false}
+                                            options={dataCodigoPostal}
+                                            getOptionLabel={(option) =>
+                                                option.m_sCP
+                                            }
+                                            variant="outlined"
+                                            style={{
+                                              transform: "translate(14px, 10px) scale(1) !important"
+                                            }}
+                                            renderInput={(params) => (
+                                                <div>
+                                                  <TextField
+                                                      required
+                                                      label={"Código Postal"}
+                                                      margin="dense"
+                                                      variant="outlined"
+                                                      {...params}
+                                                      InputProps={{
+                                                        ...params.InputProps,
+                                                        style: {
+                                                          height: "33px",
+                                                          fontSize: "14px",
+                                                        },
+                                                        type: "search",
+                                                        disableUnderline: true,
+                                                        endAdornment: (
+                                                            <InputAdornment position="end">
+                                                              {" "}
+                                                              <IconButton
+                                                                  style={{
+                                                                    paddingRight: "0px",
+                                                                  }}
+                                                                  disabled={
+                                                                    state.agregar ===
+                                                                    "Consultar"
+                                                                  }
+                                                                  onClick={() => {
+                                                                    setState({
+                                                                      ...state,
+                                                                      identificadorModal:
+                                                                          "codigoPostalEntrega",
+                                                                      tipoModal: 0,
+                                                                      openDialog: true,
+                                                                    });
+                                                                  }}
+                                                              >
+                                                                <PageviewIcon
+                                                                    style={{
+                                                                      color: "#F9A03E",
+                                                                      fontSize: 32,
+                                                                    }}
+                                                                />
+                                                              </IconButton>{" "}
+                                                            </InputAdornment>
+                                                        ),
+                                                      }}
+                                                  />
+                                                </div>
+                                            )}
                                         />
                                       </div>
                                     </div>
 
                                     <div className="col-sm-6 col-md-4  unit">
-                                      <label className="label">Ciudad</label>
                                       <div className="input">
                                         <Autocomplete
-                                          freeSolo
-                                          onChange={(event, newValue) =>
-                                            setState({
-                                              ...state,
-                                              ciudadEntrega: newValue,
-                                            })
-                                          }
-                                          value={state.ciudadEntrega}
-                                          disabled={
-                                            state.agregar == "Consultar"
-                                          }
-                                          id="ciudadEntrega"
-                                          disableClearable
-                                          forcePopupIcon={false}
-                                          options={dataCiudad}
-                                          getOptionLabel={(option) =>
-                                            option.m_sCiudad
-                                          }
-                                          variant="outlined"
-                                          style={{
-                                            borderWidth: "1px",
-                                            borderColor: "#dddddd",
-                                            borderStyle: "solid",
-                                            borderRadius: "5px",
-                                          }}
-                                          renderInput={(params) => (
-                                            <div>
-                                              <TextField
-                                                required
-                                                {...params}
-                                                InputProps={{
-                                                  ...params.InputProps,
-                                                  style: { height: 24 },
-                                                  type: "search",
-                                                  disabled:
-                                                    state.agregar ==
-                                                    "Consultar",
-                                                  endAdornment: (
-                                                    <InputAdornment position="end">
-                                                      <IconButton
-                                                        padding="0px"
-                                                        style={{
-                                                          paddingRight: "0px",
-                                                        }}
-                                                        disabled={
-                                                          state.agregar ==
-                                                          "Consultar"
-                                                        }
-                                                        onClick={() => {
-                                                          setState({
-                                                            ...state,
-                                                            identificadorModal:
-                                                              "ciudadEntrega",
-                                                            tipoModal: 1,
-                                                            openDialog: true,
-                                                          });
-                                                        }}
-                                                      >
-                                                        <PageviewIcon
-                                                          style={{
-                                                            color: "#F9A03E",
-                                                            fontSize: 32,
-                                                            paddingInlineEnd: 0,
-                                                            paddingRight: 0,
-                                                            paddingBlockEnd: 0,
-                                                            paddingLeft: 0,
-                                                            paddingBlock: 0,
-                                                          }}
-                                                        />
-                                                      </IconButton>
-                                                    </InputAdornment>
-                                                  ),
-                                                }}
-                                              />
-                                            </div>
-                                          )}
+                                            freeSolo
+                                            onChange={(event, newValue) =>
+                                                setState({
+                                                  ...state,
+                                                  ciudadEntrega: newValue,
+                                                })
+                                            }
+                                            value={state.ciudadEntrega}
+                                            disabled={
+                                              state.agregar === "Consultar"
+                                            }
+                                            id="ciudadEntrega"
+                                            disableClearable
+                                            forcePopupIcon={false}
+                                            options={dataCiudad}
+                                            getOptionLabel={(option) =>
+                                                option.m_sCiudad
+                                            }
+                                            variant="outlined"
+                                            style={{
+                                              transform: "translate(14px, 10px) scale(1) !important"
+                                            }}
+                                            renderInput={(params) => (
+                                                <div>
+                                                  <TextField
+                                                      required
+                                                      label={"Ciudad"}
+                                                      margin="dense"
+                                                      variant="outlined"
+                                                      {...params}
+                                                      InputProps={{
+                                                        ...params.InputProps,
+                                                        style: { height: 24 },
+                                                        type: "search",
+                                                        disabled:
+                                                            state.agregar ===
+                                                            "Consultar",
+                                                        endAdornment: (
+                                                            <InputAdornment position="end">
+                                                              <IconButton
+                                                                  padding="0px"
+                                                                  style={{
+                                                                    paddingRight: "0px",
+                                                                  }}
+                                                                  disabled={
+                                                                    state.agregar ==
+                                                                    "Consultar"
+                                                                  }
+                                                                  onClick={() => {
+                                                                    setState({
+                                                                      ...state,
+                                                                      identificadorModal:
+                                                                          "ciudadEntrega",
+                                                                      tipoModal: 1,
+                                                                      openDialog: true,
+                                                                    });
+                                                                  }}
+                                                              >
+                                                                <PageviewIcon
+                                                                    style={{
+                                                                      color: "#F9A03E",
+                                                                      fontSize: 32,
+                                                                      paddingInlineEnd: 0,
+                                                                      paddingRight: 0,
+                                                                      paddingBlockEnd: 0,
+                                                                      paddingLeft: 0,
+                                                                      paddingBlock: 0,
+                                                                    }}
+                                                                />
+                                                              </IconButton>
+                                                            </InputAdornment>
+                                                        ),
+                                                      }}
+                                                  />
+                                                </div>
+                                            )}
                                         />
                                       </div>
                                     </div>
 
                                     <div className="col-sm-6 col-md-4 unit">
-                                      <label className="label">Zona</label>
                                       <div className="input">
-                                        <input
-                                          onChange={handleChange}
-                                          className="form-control"
-                                          type="text"
-                                          required
-                                          value={state.zonaEntrega}
-                                          disabled={
-                                            state.agregar == "Consultar"
-                                          }
-                                          id="zonaEntrega"
+                                        <TextField variant="outlined" margin="dense" label="Zona"
+                                                   onChange={handleChange}
+                                                   className="form-control"
+                                                   type="text"
+                                                   required
+                                                   value={state.zonaEntrega}
+                                                   disabled={
+                                                     state.agregar == "Consultar"
+                                                   }
+                                                   id="zonaEntrega"
                                         />
                                       </div>
                                     </div>
 
                                     <div className="col-sm-4 col-md-12 unit">
-                                      <label className="label">Domicilio</label>
                                       <div className="input">
-                                        <input
-                                          onChange={handleChange}
-                                          className="form-control"
-                                          type="text"
-                                          required
-                                          value={state.domicilioEntrega}
-                                          disabled={
-                                            state.agregar == "Consultar"
-                                          }
-                                          id="domicilioEntrega"
+                                        <TextField variant="outlined" margin="dense" label="Domicilio"
+                                                   onChange={handleChange}
+                                                   className="form-control"
+                                                   type="text"
+                                                   required
+                                                   value={state.domicilioEntrega}
+                                                   disabled={
+                                                     state.agregar == "Consultar"
+                                                   }
+                                                   id="domicilioEntrega"
                                         />
                                       </div>
                                     </div>
 
                                     <div className="col-sm-12 col-md-6  unit">
-                                      <label className="label">
-                                        Entrega En
-                                      </label>
                                       <div className="input">
-                                        <input
-                                          onChange={handleChange}
-                                          className="form-control"
-                                          type="text"
-                                          required
-                                          value={state.entregaEn}
-                                          disabled={
-                                            state.agregar == "Consultar"
-                                          }
-                                          id="entregaEn"
+                                        <TextField variant="outlined" margin="dense" label="Entrega En"
+                                                   onChange={handleChange}
+                                                   className="form-control"
+                                                   type="text"
+                                                   required
+                                                   value={state.entregaEn}
+                                                   disabled={
+                                                     state.agregar === "Consultar"
+                                                   }
+                                                   id="entregaEn"
                                         />
                                       </div>
                                     </div>
 
                                     <div className="col-sm-4 col-md-8 unit">
-                                      <label className="label">
-                                        Datos Adicionales para la Entrega
-                                      </label>
                                       <div className="input">
-                                        <input
-                                          onChange={handleChange}
-                                          className="form-control"
-                                          type="text"
-                                          required
-                                          value={state.datosAdicionalesEntrega}
-                                          disabled={
-                                            state.agregar == "Consultar"
-                                          }
-                                          id="datosAdicionalesEntrega"
+                                        <TextField variant="outlined" margin="dense" label="Datos Adicionales para la Entrega"
+                                                   onChange={handleChange}
+                                                   className="form-control"
+                                                   type="text"
+                                                   required
+                                                   value={state.datosAdicionalesEntrega}
+                                                   disabled={
+                                                     state.agregar == "Consultar"
+                                                   }
+                                                   id="datosAdicionalesEntrega"
                                         />
                                       </div>
                                     </div>
@@ -5096,308 +4169,10 @@ function Embarque(props) {
                               </div>
                             </div>
                           </div>
-                        ) : (
-                          <div></div>
-                        )}
-                      </div>
-                    ) : (
-                      <div></div>
-                    )}
-
-                    {/*                 <div className="widget-wrap" id="detallesOperacion">
-                                                <div className="row">
-                                                    <div className="col-md-12">
-                                                        <div className="widget-header">
-                                                            <h2>Detalles de la Operación</h2>
-                                                        </div>
-                                                        <div className="widget-container">
-                                                            <div className="widget-content">
-                                                                <div className="row">
-                                                                    <div className="col-sm-4 col-md-4 unit">
-                                                                        <label className="label">Operador</label>
-                                                                        <div className="input">
-                                                                            <Autocomplete
-                                                                                freeSolo
-                                                                                onChange={(event, newValue) =>
-                                                                                    setState({
-                                                                                        ...state,
-                                                                                        idOperador: newValue,
-                                                                                    })
-                                                                                }
-                                                                                value={state.idOperador}
-                                                                                id="idOperador"
-                                                                                disableClearable
-                                                                                disabled={state.agregar == "Consultar"}
-                                                                                forcePopupIcon={false}
-                                                                                options={dataOperador}
-                                                                                getOptionLabel={(option) =>
-                                                                                    option.m_sNombreCompleto
-                                                                                }
-                                                                                variant="outlined"
-                                                                                style={{
-                                                                                    borderWidth: "1px",
-                                                                                    borderColor: "#dddddd",
-                                                                                    borderStyle: "solid",
-                                                                                    borderRadius: "5px",
-                                                                                }}
-                                                                                renderInput={(params) => (
-                                                                                    <div>
-                                                                                        <TextField
-                                                                                            required
-                                                                                            {...params}
-                                                                                            InputProps={{
-                                                                                                ...params.InputProps,
-                                                                                                style: { height: "33px", fontSize: "14px" },
-                                                                                                type: "search",
-                                                                                                disableUnderline: true,
-                                                                                                endAdornment: (
-                                                                                                    <InputAdornment position="end">
-                                                                                                        <IconButton
-                                                                                                            padding="0px"
-                                                                                                            style={{
-                                                                                                                paddingRight: "0px",
-                                                                                                            }}
-                                                                                                            disabled={state.agregar == "Consultar"}
-                                                                                                            onClick={() => {
-                                                                                                                setState({
-                                                                                                                    ...state,
-                                                                                                                    identificadorModal:
-                                                                                                                        "idOperador",
-                                                                                                                    tipoModal: 2,
-                                                                                                                    openDialog: true
-                                                                                                                });
-                                                                                                            }}
-                                                                                                        >
-                                                                                                            <PageviewIcon
-                                                                                                                style={{
-                                                                                                                    color: "#F9A03E",
-                                                                                                                    fontSize: 32,
-                                                                                                                    paddingInlineEnd: 0,
-                                                                                                                    paddingRight: 0,
-                                                                                                                    paddingBlockEnd: 0,
-                                                                                                                    paddingLeft: 0,
-                                                                                                                    paddingBlock: 0,
-                                                                                                                }}
-                                                                                                            />
-                                                                                                        </IconButton>
-                                                                                                    </InputAdornment>
-                                                                                                ),
-                                                                                            }}
-                                                                                        />
-                                                                                    </div>
-                                                                                )}
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div className="col-sm-4 col-md-4 unit">
-                                                                        <label className="label">Tipo Unidad</label>
-                                                                        <div className="input">
-                                                                            <Autocomplete
-                                                                                freeSolo
-                                                                                onChange={(event, newValue) =>
-                                                                                    setState({
-                                                                                        ...state,
-                                                                                        idTipoUnidad: newValue,
-                                                                                    })
-                                                                                }
-                                                                                value={state.idTipoUnidad}
-                                                                                id="idTipoUnidad"
-                                                                                disableClearable
-                                                                                disabled={state.agregar == "Consultar"}
-                                                                                forcePopupIcon={false}
-                                                                                options={dataTipoUnidad}
-                                                                                getOptionLabel={(option) =>
-                                                                                    option.m_sTipoUnidad
-                                                                                }
-                                                                                variant="outlined"
-                                                                                style={{
-                                                                                    borderWidth: "1px",
-                                                                                    borderColor: "#dddddd",
-                                                                                    borderStyle: "solid",
-                                                                                    borderRadius: "5px",
-                                                                                }}
-                                                                                renderInput={(params) => (
-                                                                                    <div>
-                                                                                        <TextField
-                                                                                            required
-                                                                                            {...params}
-                                                                                            InputProps={{
-                                                                                                ...params.InputProps,
-                                                                                                style: { height: "33px", fontSize: "14px" },
-                                                                                                type: "search",
-                                                                                                value: state.idTipoUnidad,
-                                                                                                disableUnderline: true,
-                                                                                                endAdornment: (
-                                                                                                    <InputAdornment position="end">
-                                                                                                        <IconButton
-                                                                                                            padding="0px"
-                                                                                                            style={{
-                                                                                                                paddingRight: "0px",
-                                                                                                            }}
-                                                                                                            disabled={state.agregar == "Consultar"}
-                                                                                                            onClick={() => {
-                                                                                                                setState({
-                                                                                                                    ...state,
-                                                                                                                    identificadorModal:
-                                                                                                                        "idTipoUnidad",
-                                                                                                                    tipoModal: 3,
-                                                                                                                    openDialog: true
-                                                                                                                });
-                                                                                                            }}
-                                                                                                        >
-                                                                                                            <PageviewIcon
-                                                                                                                style={{
-                                                                                                                    color: "#F9A03E",
-                                                                                                                    fontSize: 32,
-                                                                                                                    paddingInlineEnd: 0,
-                                                                                                                    paddingRight: 0,
-                                                                                                                    paddingBlockEnd: 0,
-                                                                                                                    paddingLeft: 0,
-                                                                                                                    paddingBlock: 0,
-                                                                                                                }}
-                                                                                                            />
-                                                                                                        </IconButton>
-                                                                                                    </InputAdornment>
-                                                                                                ),
-                                                                                            }}
-                                                                                        />
-                                                                                    </div>
-                                                                                )}
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div className="col-sm-4 col-md-4 unit">
-                                                                        <label className="label">Unidad</label>
-                                                                        <div className="input">
-                                                                            <Autocomplete
-                                                                                freeSolo
-                                                                                onChange={(event, newValue) =>
-                                                                                    setState({
-                                                                                        ...state,
-                                                                                        idUnidad: newValue,
-                                                                                    })
-                                                                                }
-                                                                                value={state.idUnidad}
-                                                                                id="idUnidad"
-                                                                                disableClearable
-                                                                                disabled={state.agregar == "Consultar"}
-                                                                                forcePopupIcon={false}
-                                                                                options={dataUnidad}
-                                                                                getOptionLabel={(option) =>
-                                                                                    option.m_sDescripcion
-                                                                                }
-                                                                                variant="outlined"
-                                                                                style={{
-                                                                                    borderWidth: "1px",
-                                                                                    borderColor: "#dddddd",
-                                                                                    borderStyle: "solid",
-                                                                                    borderRadius: "5px",
-                                                                                }}
-                                                                                renderInput={(params) => (
-                                                                                    <div>
-                                                                                        <TextField
-                                                                                            required
-                                                                                            {...params}
-                                                                                            InputProps={{
-                                                                                                ...params.InputProps,
-                                                                                                style: { height: "33px", fontSize: "14px" },
-                                                                                                type: "search",
-                                                                                                value: state.idUnidad,
-
-                                                                                                disableUnderline: true,
-                                                                                                endAdornment: (
-                                                                                                    <InputAdornment position="end">
-                                                                                                        <IconButton
-                                                                                                            padding="0px"
-                                                                                                            style={{
-                                                                                                                paddingRight: "0px",
-                                                                                                            }}
-                                                                                                            disabled={state.agregar == "Consultar"}
-                                                                                                            onClick={() => {
-                                                                                                                setState({
-                                                                                                                    ...state,
-                                                                                                                    identificadorModal:
-                                                                                                                        "idUnidad",
-                                                                                                                    tipoModal: 4,
-                                                                                                                    openDialog: true
-                                                                                                                });
-                                                                                                            }}
-                                                                                                        >
-                                                                                                            <PageviewIcon
-                                                                                                                style={{
-                                                                                                                    color: "#F9A03E",
-                                                                                                                    fontSize: 32,
-                                                                                                                    paddingInlineEnd: 0,
-                                                                                                                    paddingRight: 0,
-                                                                                                                    paddingBlockEnd: 0,
-                                                                                                                    paddingLeft: 0,
-                                                                                                                    paddingBlock: 0,
-                                                                                                                }}
-                                                                                                            />
-                                                                                                        </IconButton>
-                                                                                                    </InputAdornment>
-                                                                                                ),
-                                                                                            }}
-                                                                                        />
-                                                                                    </div>
-                                                                                )}
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-md-6">
-                                                        <div className="widget-header">
-                                                            <h2>Salida para la Entrega</h2>
-                                                        </div>
-                                                        <div className="widget-container">
-                                                            <div className="widget-content">
-                                                                <div className="col-md-12">
-                                                                    <label className="label">Fecha y Hora</label>
-                                                                    <div className="input">
-                                                                        <input
-                                                                            onChange={handleChange}
-                                                                            className="form-control"
-                                                                            type="datetime-local"
-                                                                            required
-                                                                            value={state.fechaHoraSalida}
-                                                                            disabled={state.agregar == "Consultar"}
-                                                                            id="fechaHoraSalida"
-                                                                        />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-md-6">
-                                                        <div className="widget-header">
-                                                            <h2>Llegada de la Entrega</h2>
-                                                        </div>
-                                                        <div className="widget-container">
-                                                            <div className="widget-content">
-                                                                <div className="col-md-12">
-                                                                    <label className="label">Fecha y Hora</label>
-                                                                    <div className="input">
-                                                                        <input
-                                                                            onChange={handleChange}
-                                                                            className="form-control"
-                                                                            type="datetime-local"
-                                                                            required
-                                                                            value={state.fechaHoraLlegada}
-                                                                            disabled={state.agregar == "Consultar"}
-                                                                            id="fechaHoraLlegada"
-                                                                        />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div> */}
+                      ) : (
+                          <div/>
+                      )}
+                    </div>
                   </div>
                 </div>
                 <div className="form-footer" className="col-md-12">
@@ -5428,9 +4203,8 @@ function Embarque(props) {
                       <form className="j-forms" onSubmit={handleCancelar}>
                         <div className="form-content">
                           <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                            <label className="label">Folio Embarque</label>
                             <div className="input">
-                              <input
+                              <TextField variant="outlined" margin="dense" label="Folio Embarque"
                                 onChange={handleChange}
                                 className="form-control"
                                 type="text"
@@ -5442,65 +4216,63 @@ function Embarque(props) {
                           </div>
 
                           <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                            <label className="label">Sucursal</label>
                             <div className="input">
-                              <input
+                              <TextField variant="outlined" margin="dense" label="Sucursal"
                                 onChange={handleChange}
                                 className="form-control"
                                 type="text"
                                 value={state.sucursalCancelacion}
                                 id="sucursalCancelacion"
-                                readOnly
+                                readOnly disabled
                               />
                             </div>
                           </div>
 
                           <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                            <label className="label">Fecha</label>
                             <div className="input">
-                              <input
+                              <TextField variant="outlined" margin="dense" label="Fecha"
                                 onChange={handleChange}
                                 className="form-control"
                                 type="text"
                                 value={state.fechaCancelacion}
                                 id="fechaCancelacion"
                                 readOnly
+                                         disabled
                               />
                             </div>
                           </div>
 
                           <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                            <label className="label">Usuario</label>
                             <div className="input">
-                              <input
+                              <TextField variant="outlined" margin="dense" label="Usuario"
                                 onChange={handleChange}
                                 className="form-control"
                                 type="text"
                                 value={state.usuario}
                                 id="usuario"
                                 readOnly
+                                         disabled
                               />
                             </div>
                           </div>
 
                           <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                            <label className="label">Estatus</label>
                             <div className="input">
-                              <input
+                              <TextField variant="outlined" margin="dense" label="Estatus"
                                 onChange={handleChange}
                                 className="form-control"
                                 type="text"
                                 value={state.estatusEmbarque}
                                 id="estatusEmbarque"
                                 readOnly
+                                         disabled
                               />
                             </div>
                           </div>
 
                           <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                            <label className="label">Motivo</label>
                             <div className="input">
-                              <input
+                              <TextField variant="outlined" margin="dense" label="Motivo"
                                 onChange={handleChange}
                                 className="form-control"
                                 type="text"
@@ -5510,9 +4282,9 @@ function Embarque(props) {
                             </div>
                           </div>
 
-                          <div className="form-footer" className="col-md-12">
+                          <div className="form-footer col-md-12">
                             <button
-                              href="#Listado"
+                                href="#Listado"
                               role="tab"
                               data-toggle="tab"
                               className="btn btn-secondary secondary-btn"

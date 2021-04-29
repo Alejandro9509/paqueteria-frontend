@@ -135,7 +135,6 @@ function Recoleccion() {
         telefonoDestinatario: "",
         contactoDestinatario: "",
         destinoDestinatario: 0,
-        ciudadRemitente: 0,
         fechaRecoleccion: "",
         codigoPostalRecoleccion: 0,
         ciudadRecoleccion: 0,
@@ -795,7 +794,6 @@ function Recoleccion() {
             RFCRemitente: "",
             domicilioRemitente: "",
             codigoPostalRemitente: dataCodigoPostal.length !== 0 ? [0] : null,
-            ciudadRemitente: dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1,
             correoRemitente: "",
             telefonoRemitente: "",
             contactoRemitente: "",
@@ -803,7 +801,6 @@ function Recoleccion() {
             RFCDestinatario: "",
             domicilioDestinatario: "",
             codigoPostalDestinatario: dataCodigoPostal.length !== 0 ? dataCodigoPostal[0] : null,
-            ciudadDestinatario: dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1,
             correoDestinatario: "",
             telefonoDestinatario: "",
             contactoDestinatario: "",
@@ -3389,7 +3386,6 @@ function Recoleccion() {
                                                                                                                 paddingBlockEnd: 0,
                                                                                                                 paddingLeft: 0,
                                                                                                                 paddingBlock: 0,
-                                                                                                                paddingRight: "0px",
                                                                                                             }}
                                                                                                             onClick={() => {
                                                                                                                 setState({

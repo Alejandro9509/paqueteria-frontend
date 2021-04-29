@@ -150,12 +150,14 @@ class AgregarViaje extends Component {
     }
 
     handleChange = (event) => {
+        event.preventDefault();
         this.setState({
             [event.target.id]: event.target.value,
         });
     };
 
     handleRutaFiltro = async (event) => {
+        event.preventDefault();
         this.setState({idRuta: event.target.value});
 
         this.getInformesByFiltro(event.target.value.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
@@ -163,6 +165,7 @@ class AgregarViaje extends Component {
     }
 
     handleOrigenFiltro = async (event) => {
+        event.preventDefault();
         this.setState({origen: event.target.value});
 
         this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, event.target.value.m_nIdCiudad, this.state.destino.m_nIdCiudad,
@@ -170,6 +173,7 @@ class AgregarViaje extends Component {
     }
 
     handleDestinoFiltro = async (event) => {
+        event.preventDefault();
         this.setState({destino: event.target.value});
 
         this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, event.target.value.m_nIdCiudad,
@@ -177,6 +181,7 @@ class AgregarViaje extends Component {
     }
 
     handleRemolqueUnoFiltro = async (event) => {
+        event.preventDefault();
         let newValue = event.target.value
         this.setState({IdRemolque1: newValue, placasRemolque1: newValue.m_sPlacas})
 
@@ -185,6 +190,7 @@ class AgregarViaje extends Component {
     }
 
     handleRemolqueDosFiltro = async (event) => {
+        event.preventDefault();
         let newValue = event.target.value
         this.setState({IdRemolque2: newValue, placasRemolque2: newValue.m_sPlacas})
 
@@ -193,6 +199,7 @@ class AgregarViaje extends Component {
     }
 
     handleDollyFiltro = async (event) => {
+        event.preventDefault();
         let newValue = event.target.value
         this.setState({IdDolly: newValue, placasDolly: newValue.m_sPlacas})
 
@@ -314,7 +321,7 @@ class AgregarViaje extends Component {
                 <div className="widget-wrap">
                     <div className="widget-content">
 
-                        <div className="row" style={{ paddingLeft: "8px" }}>
+                        <div className="row" >
                             <form className="j-forms">
                                 <div className={"row"} style={{ display: "flex" }}>
                                     {/* Sucursal */}
@@ -353,7 +360,8 @@ class AgregarViaje extends Component {
                                                        label="Folio Viaje"
                                                        value={this.state.folioViaje}
                                                        id="folioViaje"
-                                                       readOnly
+
+                                                       disabled
                                             />
                                         </div>
                                     </div>
@@ -367,7 +375,7 @@ class AgregarViaje extends Component {
                                                        label="Núm. Viaje Cliente"
                                                        value={this.state.viajeCliente}
                                                        id="numeroViajeCliente"
-                                                       readOnly
+
                                             />
                                         </div>
                                     </div>
@@ -381,7 +389,8 @@ class AgregarViaje extends Component {
                                                        label="Fecha Elaboracion"
                                                        value={this.state.fechaHoraCreacion}
                                                        id="fechaHoraCreacion"
-                                                       readOnly
+
+                                                       disabled
                                             />
                                         </div>
                                     </div>
@@ -444,7 +453,7 @@ class AgregarViaje extends Component {
                                         <div className="input">
                                             <Autocomplete
                                                 freeSolo
-                                                onChange={this.handleRutaFiltro()}
+                                                onChange={this.handleRutaFiltro}
                                                 value={this.state.idRuta}
                                                 //disabled={state.agregar == "Consultar"}
                                                 id="ruta"
@@ -463,6 +472,7 @@ class AgregarViaje extends Component {
                                                             label="Ruta"
                                                             margin="dense"
                                                             variant="outlined"
+
                                                             {...params}
                                                             InputProps={{
                                                                 ...params.InputProps,
