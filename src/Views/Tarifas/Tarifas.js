@@ -32,7 +32,6 @@ class Tarifas extends Component {
             pantalla: 1,
             selected: {},
             dataSucursal: [],
-            height: window.innerHeight,
             columns: [
                 {
                     headerName: "Acciones",
