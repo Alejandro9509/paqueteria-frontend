@@ -55,10 +55,10 @@ const useStyles = makeStyles({
         },
     },
     paqueteCarrusel: {
-        height: "300px !important",
+        height: "230px !important",
     },
     sobreCarrusel: {
-        height: "100px !important",
+        height: "70px !important",
     }, seleccionado: {
         backgroundColor: "#FCC88F",
     },
@@ -550,6 +550,8 @@ function Recoleccion() {
         });
     }
     function handleShowModificar(id) {
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
         console.log(id);
         const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetById/${id}`;
         axios.get(url, { headers }).then((respuesta) => {
@@ -655,6 +657,8 @@ function Recoleccion() {
     }
 
     function handleShowConsultar(id) {
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
         console.log(id);
         const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetById/${id}`;
         axios.get(url, { headers }).then((respuesta) => {
@@ -773,7 +777,8 @@ function Recoleccion() {
         });
     }
 
-    function handleShowAgregar() {
+    function handleShowAgregar(event) {
+        event.stopPropagation()
         setState({
             ...state,
             nombreRemitente: dataRemitenteDestinatario[0],
@@ -782,7 +787,7 @@ function Recoleccion() {
             agregar: "Agregar",
             idRecoleccion: 0,
             //folioRecoleccion: parseInt(dataFolioRecoleccion[0].m_sFolioRecoleccion.split("E")[1]),
-            folioRecoleccion: dataFolioRecoleccion.length !== 0 ? dataFolioRecoleccion[0].m_sFolioRecoleccion : null,
+            folioRecoleccion: dataFolioRecoleccion.length !== 0 ? dataFolioRecoleccion[0].m_sFolioRecoleccion : "",
             folioEmbarque: "",
             folioGuía: "",
             folioInforme: "",
@@ -847,6 +852,10 @@ function Recoleccion() {
                 },
             ],
         });
+        $('.nav-tabs li ').removeClass('active'); 
+        $('.nav-tabs li').eq(1).addClass('active'); 
+        $('.tab-content div ').removeClass('active show'); 
+        $('#Agregar').addClass('in active show in'); 
     }
 
     const handleChange = (event) => {
@@ -2218,7 +2227,6 @@ function Recoleccion() {
                 </div>
 
                 <div className="col-sm-4 col-md-12 unit">
-                    <label className="label">Observaciones</label>
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
                             onChange={(event) => handleChangePaquete(event, index)}
@@ -2245,7 +2253,7 @@ function Recoleccion() {
 
 
 
-                <div className="col-md-12 unit">
+                <div className="col-md-12 unit">|
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
                             onChange={(event) => handleChangeSobre(event, index)}
@@ -2437,7 +2445,7 @@ function Recoleccion() {
             <section className="main-container">
                 <div className="container-fluid">
                     <div className="page-header filled full-block light">
-                        <div className="row">
+                        <div className="row ">
                             <div className="col-md-6 col-sm-6">
                                 <h2>Recolección</h2>
                             </div>
@@ -2509,14 +2517,14 @@ function Recoleccion() {
                     </ul>
 
                     <div
-                        className="row"
+                        className="row "
                         className="tab-content"
                         style={{ paddingLeft: "-15px" }}
                     >
                         <div id="Listado" className="tab-pane fade in active">
                             <div className="widget-wrap">
                                 <form className="j-forms">
-                                    <div className="row" style={{ display: "flex" }}>
+                                    <div className="row " style={{ display: "flex" }}>
                                         <div className="col-sm-6 col-md-3 unit" style={{ paddingLeft: "0px" }}>
                                             <div className="input">
                                                 <TextField
@@ -2654,7 +2662,7 @@ function Recoleccion() {
                                             marginBottom: "10px",
                                         }}
                                     >
-                                        <div className="row">
+                                        <div className="row ">
                                             <div
                                                 className={
                                                     "col-sm-3 col-md-2-5 col-lg-2-5 step " +
@@ -2725,7 +2733,7 @@ function Recoleccion() {
                                         </div>
                                         <div className="widget-container">
                                             <div className="widget-content">
-                                                <div className="row">
+                                                <div className="row ">
                                                     <div className="col-md-12">
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             {" "}
@@ -2734,12 +2742,13 @@ function Recoleccion() {
                                                                     <InputLabel id="idSucursalAgregarLabel">Sucursal</InputLabel>
                                                                     <Select
                                                                         labelId="idSucursalAgregarLabel"
+                                                                        label="Sucursal"
                                                                         className="form-control"
                                                                         required
                                                                         value={state.idSucursalAgregar}
                                                                         onChange={handleChange}
                                                                         id="idSucursalAgregar"
-                                                                        label="Sucursal"
+                                                                        
                                                                         disabled="disabled"
                                                                     >
                                                                         {dataSucursal.map((sucursal) => (
@@ -2944,7 +2953,6 @@ function Recoleccion() {
                                                                         ))}
                                                                     </Select>
                                                                 </FormControl>
-                                                                <i></i>
                                                             </label>
                                                         </div>
                                                     </div>
@@ -2953,8 +2961,8 @@ function Recoleccion() {
                                         </div>
                                     </div>
 
-                                    <div className="row">
-                                        <div className="col-md-7">
+                                    <div className="row ">
+                                        <div className="col-md-7" style={{height:"600px"}}>
                                             <div className="widget-wrap" id="remitenteDestinatario">
                                                 <div className="row">
                                                     <div className="col-md-6">
@@ -3313,6 +3321,7 @@ function Recoleccion() {
                                                                                 disabled={state.agregar == "Consultar"}
                                                                                 checked={state.diferenteRecoleccion}
                                                                                 type="checkbox"
+                                                                                style={{height:"20px"}}
                                                                                 id="diferenteRecoleccion"
                                                                             />
                                                                         </div>
@@ -3678,6 +3687,7 @@ function Recoleccion() {
                                                                             disabled={state.agregar == "Consultar"}
                                                                             checked={state.diferenteEntrega}
                                                                             type="checkbox"
+                                                                            style={{height:"20px"}}
                                                                             id="diferenteEntrega"
                                                                         />
                                                                     </div>
@@ -3689,7 +3699,7 @@ function Recoleccion() {
                                             </div>
                                         </div>
 
-                                        <div className="widget-wrap col-md-5" id="paquetesSobres">
+                                        <div className="widget-wrap col-md-5" id="paquetesSobres" style={{height:"600px"}}>
 
                                             <div className="row">
                                                 <div className="col-md-6">
@@ -4810,7 +4820,7 @@ function Recoleccion() {
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 type="text"
-                                                                labekl="Estatus"
+                                                                label="Motivo"
                                                                 value={state.motivoCancelacion}
                                                                 id="motivoCancelacion"
                                                             />

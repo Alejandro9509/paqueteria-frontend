@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from "axios";
 import Noty from 'noty';
-import { List, ListItem, Popover } from '@material-ui/core';
+import { List, ListItem, Popover, TextField } from '@material-ui/core';
 import { TrafficOutlined } from '@material-ui/icons';
 
 const headers = {
@@ -124,14 +124,13 @@ class TipoServicio extends Component {
                                 <div style={{ padding: "10px" }} className="j-forms">
                                     <h5>Agregando Tipo de Servicio</h5>
                                     <div className="col-sm-12 col-md-12 unit">
-                                        <label className="label">
-                                            Código
-                                            </label>
+
                                         <div className="input">
-                                            <input
+                                            <TextField variant="outlined" margin="dense"
                                                 onChange={this.handleChange}
                                                 className="form-control"
                                                 type="text"
+                                                label="Código"
                                                 required={true}
                                                 value={this.state.codigo}
                                                 name="codigo"
@@ -140,13 +139,12 @@ class TipoServicio extends Component {
                                     </div>
 
                                     <div className="col-sm-12 col-md-12 unit">
-                                        <label className="label">
-                                            Descripción
-                                            </label>
+
                                         <div className="input">
-                                            <input
+                                            <TextField variant="outlined" margin="dense"
                                                 onChange={this.handleChange}
                                                 className="form-control"
+                                                label="Descripción"
                                                 type="text"
                                                 maxLenght="125"
                                                 required={true}
@@ -157,7 +155,7 @@ class TipoServicio extends Component {
                                     </div>
                                     <div className="col-sm-12 col-md-12 unit">
                                         <button className="btn btn-secondary secondary-btn"
-                                        onClick={this.handleClose}
+                                            onClick={this.handleClose}
                                         >
                                             Cancelar</button>
                                         <button onClick={this.handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>

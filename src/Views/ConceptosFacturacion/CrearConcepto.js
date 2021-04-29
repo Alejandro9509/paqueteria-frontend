@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from "axios";
-import { Checkbox, FormControlLabel, List, ListItem } from '@material-ui/core';
+import { Checkbox, FormControlLabel, List, ListItem, TextField } from '@material-ui/core';
 
 const headers = {
     'Content-Type': 'application/json',
@@ -100,7 +100,7 @@ class CrearConcepto extends Component {
     }
 
 
-    onSubmit(event){
+    onSubmit(event) {
         event.preventDefault()
         this.props.onSubmit(this.state)
     }
@@ -117,14 +117,12 @@ class CrearConcepto extends Component {
                     <div className="main-container" style={{ margin: "0px", padding: "0px" }}>
                         <div className="row" style={{ margin: "0px" }}>
                             <div className="col-sm-6 col-md-3 col-lg-3 unit" style={{ padding: "2px" }}>
-                                <label className="label">
-                                    Código
-                                </label>
                                 <div className="input">
-                                    <input
+                                    <TextField variant="outlined" margin="dense"
                                         onChange={this.handleChange}
                                         className="form-control"
                                         type="text"
+                                        label="Código"
                                         disabled={this.props.consult}
                                         required
                                         step="1"
@@ -134,16 +132,15 @@ class CrearConcepto extends Component {
                                 </div>
                             </div>
                             <div className="col-sm-6 col-md-9 col-lg-9 unit" style={{ padding: "2px" }}>
-                                <label className="label">
-                                    Concepto
-                                </label>
+
                                 <div className="input">
-                                    <input
+                                    <TextField variant="outlined" margin="dense"
                                         onChange={this.handleChange}
                                         className="form-control"
                                         type="text"
                                         disabled={this.props.consult}
                                         required
+                                        label="Concepto"
                                         step="2"
                                         value={this.state.concepto}
                                         name="concepto"
@@ -198,7 +195,7 @@ class CrearConcepto extends Component {
                                                             </label>
                                                         </div>
                                                         <div className="col-sm-4 col-md-4 col-lg-4 unit" style={{ padding: "2px" }}>
-                                                            <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.handleChangeChecboxTraslado(event, index)} checked={this.state.impuestosSeleccionadosTraslado.find(t => t.m_nIdImpuesto === i.m_nIdImpuesto) != null}/>
+                                                            <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.handleChangeChecboxTraslado(event, index)} checked={this.state.impuestosSeleccionadosTraslado.find(t => t.m_nIdImpuesto === i.m_nIdImpuesto) != null} />
                                                         </div>
                                                         <div className="col-sm-4 col-md-4 col-lg-4 unit" style={{ padding: "2px" }}>
                                                             <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.handleChangeChecboxTrasladoPredeterminado(event, index)} checked={i.m_nIdImpuesto === this.state.predeterminadoSeleccionadosTraslado.m_nIdImpuesto} />
@@ -250,7 +247,7 @@ class CrearConcepto extends Component {
                                                             </label>
                                                         </div>
                                                         <div className="col-sm-4 col-md-4 col-lg-4 unit" style={{ padding: "2px" }}>
-                                                            <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.handleChangeChecboxRetencion(event, index)} checked={this.state.impuestosSeleccionadosRetencion.find(t => t.m_nIdImpuesto === i.m_nIdImpuesto) != null}/>
+                                                            <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.handleChangeChecboxRetencion(event, index)} checked={this.state.impuestosSeleccionadosRetencion.find(t => t.m_nIdImpuesto === i.m_nIdImpuesto) != null} />
                                                         </div>
                                                         <div className="col-sm-4 col-md-4 col-lg-4 unit" style={{ padding: "2px" }}>
                                                             <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.handleChangeChecboxRetencionPredeterminado(event, index)} checked={i.m_nIdImpuesto === this.state.predeterminadoSeleccionadosRetencion.m_nIdImpuesto} />
@@ -331,12 +328,12 @@ class CrearConcepto extends Component {
                         <div className="row" style={{ margin: "0px" }}>
 
                             <div className="col-sm-12 col-md-12 col-lg-12 unit" style={{ padding: "2px" }}>
-                                <label className="label">Unidad Medida</label>
                                 <div className="input">
-                                    <input
+                                    <TextField variant="outlined" margin="dense"
                                         type="text"
                                         disabled={this.props.consult}
                                         className="form-control"
+                                        label="Unidad Medida"
                                         value={this.state.unidadMedia}
                                         onChange={this.handleChange}
                                         name="unidadMedia"
