@@ -84,12 +84,14 @@ class CrearTarifa extends Component {
 
 
     addConcepto(data) {
+        console.log(data)
         const { conceptosAdicionales } = this.state
         var ivaTraslada = []
         var ivaRetiene = []
         conceptosAdicionales.push({ concepto: data.concepto, importe: data.importe, retiene: data.retiene, traslada: data.traslada, importeRet: data.importeRet, importeIVA: data.importeIVA })
         ivaTraslada = getUniqueListBy(conceptosAdicionales, "traslada").map(i => i.traslada);
         ivaRetiene = getUniqueListBy(conceptosAdicionales, "retiene").map(i => i.retiene);
+        
         this.setState({ conceptosAdicionales: conceptosAdicionales, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
     }
 
