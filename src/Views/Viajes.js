@@ -708,15 +708,9 @@ const handleEstatusFiltro = async (event) => {
             </div>
 
             <div className="widget-wrap" id="Agregar" className="tab-pane fade">
-              <div className="widget-wrap">
-                <div className="widget-content">
-                  <div className="row">
 
-                    <AgregarViaje/>
+                <AgregarViaje/>
 
-                  </div>
-                </div>
-              </div>
             </div>
 
             <div className="widget-wrap" id="Importar" className="tab-pane fade">
