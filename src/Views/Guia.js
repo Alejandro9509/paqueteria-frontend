@@ -1178,12 +1178,18 @@ function Guia(props) {
             }
             //showSuccess(respuesta.data.m_nIdEmbarque);
             //setDataEmbarque(respuesta.data)
+            var conceptosTemp = []
+            var ivaTraslada = []
+            var ivaRetiene = []
             axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetBySucursalDestino/${state.idSucursal}/${respuesta.data.m_nIdCiudadDestino}`, { headers }).then(tarifa => {
-                console.log(tarifa.data)
+
                 if (tarifa.data.length !== 0) {
                     tarifa.data[0].m_arrArConceptos.forEach(element => {
-                        addConcepto({ concepto: dataConcepto.find(c => c.m_nIdConceptosFacturacion === element.m_nIdConceptoFacturacion), importe: element.m_cImporte, traslada: element.m_nIdImpuestoTraslada, importeIVA: element.m_cImporteIva, retiene: element.m_nIdImpuestoRetiene, importeRet: element.m_cImporteRetiene })
+                        conceptosTemp.push({ concepto: dataConcepto.find(c => c.m_nIdConceptosFacturacion === element.m_nIdConceptoFacturacion), importe: element.m_cImporte, traslada: element.m_nIdImpuestoTraslada, importeIVA: element.m_cImporteIva, retiene: element.m_nIdImpuestoRetiene, importeRet: element.m_cImporteRetiene })
+
                     })
+                    ivaTraslada = getUniqueListBy(conceptosTemp, "traslada").map(i => i.traslada);
+                    ivaRetiene = getUniqueListBy(conceptosTemp, "retiene").map(i => i.retiene);
                 }
             })
             setState({
@@ -1212,6 +1218,7 @@ function Guia(props) {
                 CiudadDestino: respuesta.data.m_sCIudadDestinatario,
                 paquetes: paquetesTemp,
                 sobres: sobresTemp,
+                conceptosAdicionales: conceptosTemp, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada
             })
 
         });
@@ -3027,9 +3034,13 @@ function Guia(props) {
                                                 <div className="row">
                                                     <div className="col-md-12">
                                                         <form className="j-forms">
-                                                            <ConceptosAdicionales conceptosAdicionales={state.conceptosAdicionales} addConcepto={addConcepto} removeConcepto={removeConcepto} ivaRetiene={state.ivaRetiene} ivaTraslada={state.ivaTraslada}>
+                                                            {
+                                                                state.idEmbarque && 
+                                                                <ConceptosAdicionales conceptosAdicionales={state.conceptosAdicionales} addConcepto={addConcepto} removeConcepto={removeConcepto} ivaRetiene={state.ivaRetiene} ivaTraslada={state.ivaTraslada}>
 
-                                                            </ConceptosAdicionales>
+                                                                </ConceptosAdicionales>
+                                                            }
+
                                                         </form>
                                                     </div>
 
