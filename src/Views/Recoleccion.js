@@ -3072,8 +3072,9 @@ function Recoleccion() {
                                                                                             required
                                                                                             variant="outlined"
                                                                                             label="Nombre"
-                                                                                            className="form-control"
                                                                                             margin="dense"
+                                                                                            className="form-control"
+                                                                                            
                                                                                             {...params}
                                                                                             InputProps={{
                                                                                                 ...params.InputProps,
