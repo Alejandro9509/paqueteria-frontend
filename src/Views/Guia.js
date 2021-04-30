@@ -986,7 +986,7 @@ function Guia(props) {
     }, []);
 
     async function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL_LOCAL}/Guia/GetListado`;
+        const url = `${process.env.REACT_APP_API_URL}/Guia/GetListado`;
         await axios.get(url, { headers }).then(respuesta => {
             setData(respuesta.data)
         });

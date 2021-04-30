@@ -491,7 +491,7 @@ function Operadores(props) {
 
   const handleChangeNumero = (event) => {
     const url =
-      `${process.env.REACT_APP_API_URL_LOCAL}/Operadores/ValidaNumeroOperador/` +state.NumeroOperador;
+      `${process.env.REACT_APP_API_URL}/Operadores/ValidaNumeroOperador/` +state.NumeroOperador;
     axios
       .get(url, { headers })
       .then((respuesta) => {
