@@ -533,6 +533,8 @@ function Embarque(props) {
                 tipoCambio: respuesta.data.m_cTIpoCambio,
                 tipoCobro: respuesta.data.m_nIdTIpoCobro,
                 estatusEmbarque: respuesta.data.m_nIdEstatusEmbarque,
+
+
                 nombreRemitente: dataRemitenteDestinatario.find(
                     (o) => o.m_sRFC === respuesta.data.m_sRFCRemitente
                 ),
@@ -550,6 +552,8 @@ function Embarque(props) {
                     (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadOrigen
                 ),
 
+                RFCRemitente: respuesta.data.m_sRFCRemitente,
+                RFCDestinatario: respuesta.data.m_sRFCDestinatario,
                 nombreDestinatario: dataRemitenteDestinatario.find(
                     (o) => o.m_sRFC === respuesta.data.m_sRFCDestinatario
                 ),
@@ -563,7 +567,7 @@ function Embarque(props) {
                 correoDestinatario: respuesta.data.m_sCorreoDestinatario,
                 telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
                 contactoDestinatario: respuesta.data.m_sContactoDestinatario,
-
+               
                 ciudadDestino: dataCiudad.find(
                     (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadDestino
                 ),
@@ -997,7 +1001,7 @@ function Embarque(props) {
         },
         {
             headerName: "Folio Recolección",
-            field: "m_nFolioRecoleccion",
+            field: "m_sFolioRecoleccion",
             width: 150,
         },
         {

@@ -478,9 +478,9 @@ function Guia(props) {
                 agregar: "Modificar",
                 showPopUp: true,
                 IdEmbarque: respuesta.data.m_nIdEmbarque,
-                folioGuía: respuesta.data.m_nFolioGuia,
+                folioGuía: respuesta.data.m_sFolioGuia,
                 folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
-                folioInforme: respuesta.data.m_nFolioInforme,
+                folioInforme: respuesta.data.m_sFolioInforme,
                 idGuia: respuesta.data.m_nIdGuia,
                 fecha: respuesta.data.m_dFecha,
                 hora: respuesta.data.m_sHora,
@@ -811,10 +811,10 @@ function Guia(props) {
             accessor: "m_nFolioGuia",
         }, {
             Name: "Folio Informe",
-            accessor: "m_nFolioInforme",
+            accessor: "m_sFolioInforme",
         }, {
             Name: "Folio Embarque",
-            accessor: "m_nFolioEmbarque",
+            accessor: "m_sFolioEmbarque",
         },
         {
             Name: "Fecha de Cancelacion",
@@ -867,11 +867,11 @@ function Guia(props) {
             width: 125,
         }, {
             headerName: "Folio Informe",
-            field: "m_nFolioInforme",
+            field: "m_sFolioInforme",
             width: 125,
         }, {
             headerName: "Folio Embarque",
-            field: "m_nFolioEmbarque",
+            field: "m_sFolioEmbarque",
             width: 150,
         },
         {
@@ -986,7 +986,7 @@ function Guia(props) {
     }, []);
 
     async function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/Guia/GetListado`;
+        const url = `${process.env.REACT_APP_API_URL_LOCAL}/Guia/GetListado`;
         await axios.get(url, { headers }).then(respuesta => {
             setData(respuesta.data)
         });
