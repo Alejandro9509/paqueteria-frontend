@@ -170,8 +170,8 @@ function RemitenteDestinatario(props) {
     console.log(state.identificadorModal);
   }
 
-  function getAllCodigosPostales() {
-    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
+  function getAllCodigosPostales(idEstado) {
+    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListadoPorEstado/`+idEstado;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta);
 
@@ -781,7 +781,7 @@ function RemitenteDestinatario(props) {
     getAllPaises();
     getAllDataRemDes();
     getAllClientes();
-    getAllCodigosPostales();
+   
   }, []);
 
   function getAllDataRemDes() {
@@ -1146,6 +1146,9 @@ function RemitenteDestinatario(props) {
                                             codigoPostal: newValue,
                                           })
                                         }
+
+
+                                        
                                         id="codigoPostal"
                                         disableClearable
                                         forcePopupIcon={false}
@@ -1212,7 +1215,8 @@ function RemitenteDestinatario(props) {
                                     <label className="label">Estado</label>
                                     <label className="input select">
                                       <select
-                                        onChange={handleChange}
+                                        onChange={handleChangeNumero}
+                                        onSelect={ getAllCodigosPostales(state.idEstado)}
                                         className="form-control"
                                         required
                                         native

@@ -1300,7 +1300,7 @@ function Embarque(props) {
         getAllTipoCobro();
         getAllTipoMoneda();
         getAllCiudades();
-        getAllCodigosPostales();
+      //  getAllCodigosPostales();
         getAllOperadores();
         getAllTipoUnidad();
         getAllRemitentesDestinatarios();
@@ -1357,8 +1357,8 @@ function Embarque(props) {
         });
     }
 
-    async function getAllCodigosPostales() {
-        const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
+    async function getAllCodigosPostales(idCiudad) {
+        const url = `${process.env.REACT_APP_API_URL_LOCAL}/CodigoPostal/GetListadoPorCiudad/`+idCiudad;
         await axios.get(url, {headers}).then((respuesta) => {
             setDataCodigoPostal(respuesta.data);
         });
@@ -3221,10 +3221,14 @@ function Embarque(props) {
                                                                             <Autocomplete
                                                                                 freeSolo
                                                                                 onChange={(event, newValue) =>
+                                                                                  
                                                                                     setState({
                                                                                         ...state,
                                                                                         ciudadRemitente: newValue,
-                                                                                    })
+                                                                        
+
+                                                                                    }),
+                                                                                    getAllCodigosPostales(state.ciudadRemitente.m_nIdCiudad)
                                                                                 }
                                                                                 value={state.ciudadRemitente}
                                                                                 id="ciudadRemitente"
@@ -3640,7 +3644,9 @@ function Embarque(props) {
                                                                                 setState({
                                                                                     ...state,
                                                                                     ciudadDestinatario: newValue,
-                                                                                })
+                                                                                }),
+                                                                                getAllCodigosPostales(state.ciudadDestinatario.m_nIdCiudad)
+
                                                                             }
                                                                             value={state.ciudadDestinatario}
                                                                             disabled={state.agregar === "Consultar"}

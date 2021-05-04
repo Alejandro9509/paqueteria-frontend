@@ -95,6 +95,7 @@ function Recoleccion() {
     const [dataFolioRecoleccion, SetDataFolioRecoleccion] = React.useState([]);
 
     const [dataCodigoPostal, setDataCodigoPostal] = React.useState([]);
+    
     const [dataRemitenteDestinatario, setDataRemitenteDestinatario] = React.useState([]);
     const [dataEmbalaje, setDataEmbalaje] = React.useState([]);
     const [dataOperador, setDataOperador] = React.useState([]);
@@ -1196,7 +1197,10 @@ function Recoleccion() {
         getAllTipoCobro();
         getAllTipoMoneda();
         getAllCiudades();
-        getAllCodigosPostales();
+        //getAllCodigosPostales();
+        //getAllCodigosPostalesRem(state.ciudadRemitente);
+        //getAllCodigosPostalesDes(state.ciudadDestinatario);
+
         getAllOperadores();
         getAllTipoUnidad();
         getAllRemitentesDestinatarios();
@@ -1271,12 +1275,30 @@ function Recoleccion() {
         });
     }
 
-    function getAllCodigosPostales() {
-        const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
+    function getAllCodigosPostales(idCiudad) {
+        const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListadoPorCiudad/`+idCiudad;
         axios.get(url, {headers}).then((respuesta) => {
             setDataCodigoPostal(respuesta.data);
         });
     }
+  /*   function getAllCodigosPostalesRem(idCiudad) {
+        const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListadoPorCiudad/`+idCiudad;
+        axios.get(url, { headers }).then((respuesta) => {
+          console.log(respuesta);
+    
+          setDataCodigoPostal(respuesta.data);
+        });
+      }
+ */
+     /*  function getAllCodigosPostalesDes(idCiudad) {
+        const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListadoPorCiudad/`+idCiudad;
+        axios.get(url, { headers }).then((respuesta) => {
+          console.log(respuesta);
+    
+          setDataCodigoPostal(respuesta.data);
+        });
+      } */
+    
 
 
     function getAllRemitentesDestinatarios() {
@@ -3252,6 +3274,8 @@ function Recoleccion() {
                                                                                     value={state.ciudadRemitente}
                                                                                     disabled={state.agregar === "Consultar"}
                                                                                     onChange={handleChange}
+                                                                                    onSelect={ getAllCodigosPostales(state.ciudadRemitente)}     
+                                                
                                                                                     id="ciudadRemitente"
                                                                                 >
                                                                                     {dataCiudad.map((ciudad) => (
@@ -3633,6 +3657,7 @@ function Recoleccion() {
                                                                                 value={state.ciudadDestinatario}
                                                                                 disabled={state.agregar === "Consultar"}
                                                                                 onChange={handleChange}
+                                                                                onSelect={ getAllCodigosPostales(state.ciudadDestinatario)}  
                                                                                 id="ciudadDestinatario"
                                                                             >
                                                                                 {dataCiudad.map((ciudad) => (
