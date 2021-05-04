@@ -1281,6 +1281,19 @@ function Recoleccion() {
             setDataCodigoPostal(respuesta.data);
         });
     }
+
+
+    const handleChangeCiudadRemitente = (event) =>  {
+        event.preventDefault();
+        setState({
+            ...state,
+            ciudadRemitente: event.target.value,
+        });
+        const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListadoPorCiudad/`+ state.ciudadRemitente;
+        axios.get(url, {headers}).then((respuesta) => {
+            setDataCodigoPostal(respuesta.data);
+        });
+    }
   /*   function getAllCodigosPostalesRem(idCiudad) {
         const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListadoPorCiudad/`+idCiudad;
         axios.get(url, { headers }).then((respuesta) => {
@@ -3273,8 +3286,8 @@ function Recoleccion() {
                                                                                     required
                                                                                     value={state.ciudadRemitente}
                                                                                     disabled={state.agregar === "Consultar"}
-                                                                                    onChange={handleChange}
-                                                                                    onSelect={ getAllCodigosPostales(state.ciudadRemitente)}     
+                                                                                    onChange={handleChangeCiudadRemitente}
+                                                                                    //onSelect={ getAllCodigosPostales(state.ciudadRemitente)}     
                                                 
                                                                                     id="ciudadRemitente"
                                                                                 >
