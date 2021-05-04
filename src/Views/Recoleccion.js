@@ -232,7 +232,7 @@ function Recoleccion() {
             domicilioRemitente: newValue.m_sDomicilio,
 
             codigoPostalRemitente: dataCodigoPostal.find(
-                (o) => o.m_nIdCodigoPostal == newValue.m_nIdCodigoPostal
+                (o) => o.m_nIdCP == newValue.m_sCodigoPostal
             ),
 
 
@@ -272,7 +272,7 @@ function Recoleccion() {
             domicilioDestinatario: newValue.m_sDomicilio,
 
             codigoPostalDestinatario: dataCodigoPostal.find(
-                (o) => o.m_nIdCodigoPostal == newValue.m_nIdCodigoPostal
+                (o) => o.m_nIdCP == newValue.m_sCodigoPostal
             ),
 
 
@@ -1197,7 +1197,7 @@ function Recoleccion() {
         getAllTipoCobro();
         getAllTipoMoneda();
         getAllCiudades();
-        //getAllCodigosPostales();
+        getAllCodigosPostales(1);
         //getAllCodigosPostalesRem(state.ciudadRemitente);
         //getAllCodigosPostalesDes(state.ciudadDestinatario);
 
@@ -3160,7 +3160,7 @@ function Recoleccion() {
                                                                         </div>
                                                                     </div>
                                                                     {/* --------------------------------------- RFC -------------------------------------- */}
-                                                                    <div className="col-sm-12 col-md-8 unit">
+                                                                    <div className="col-sm-12 col-md-12 unit">
                                                                         {" "}
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
@@ -3194,7 +3194,7 @@ function Recoleccion() {
                                                                         </div>
                                                                     </div>
                                                                     {/* --------------------------------------- AutocompleteCPRemitente -------------------------------------- */}
-                                                                    <div className="col-sm-12 col-md-8 unit">
+                                                                    <div className="col-sm-12 col-md-12 unit">
 
                                                                         <div className="input">
                                                                             <Autocomplete
@@ -3551,7 +3551,7 @@ function Recoleccion() {
                                                                     </div>
                                                                 </div>
 
-                                                                <div className="col-sm-12 col-md-8 unit">
+                                                                <div className="col-sm-12 col-md-12 unit">
                                                                     <div className="input">
                                                                         <TextField variant="outlined" margin="dense"
                                                                                    onChange={handleChange}
@@ -3583,7 +3583,7 @@ function Recoleccion() {
                                                                         />
                                                                     </div>
                                                                 </div>
-                                                                <div className="col-sm-12 col-md-8 unit">
+                                                                <div className="col-sm-12 col-md-12 unit">
                                                                     <div className="input">
                                                                         <Autocomplete
                                                                             freeSolo
@@ -3670,7 +3670,7 @@ function Recoleccion() {
                                                                                 value={state.ciudadDestinatario}
                                                                                 disabled={state.agregar === "Consultar"}
                                                                                 onChange={handleChange}
-                                                                                onSelect={ getAllCodigosPostales(state.ciudadDestinatario)}  
+                                                                                //onSelect={ getAllCodigosPostales(state.ciudadDestinatario)}  
                                                                                 id="ciudadDestinatario"
                                                                             >
                                                                                 {dataCiudad.map((ciudad) => (

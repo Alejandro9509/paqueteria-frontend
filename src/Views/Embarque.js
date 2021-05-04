@@ -227,13 +227,18 @@ function Embarque(props) {
             domicilioRemitente: newValue.m_sDomicilio,
 
             codigoPostalRemitente: dataCodigoPostal.find(
-                (o) => o.m_nIdCodigoPostal === newValue.m_nIdCodigoPostal
+                (o) => o.m_nIdCP == newValue.m_sCodigoPostal
+            ),
+
+            ciudadRemitente: dataCiudad.find(
+              (o) => o.m_nIdCiudad == dataCodigoPostal.find((o) => o.m_nIdCP == newValue.m_sCodigoPostal).m_nIdCiudad
             ),
 
             correoRemitente: newValue.m_sCorreoElectronico,
             telefonoRemitente: newValue.m_sTelefono,
             contactoRemitente: newValue.m_sContacto,
         });
+
     }
 
     function handleSelectDestinatario(newValue) {
@@ -244,8 +249,13 @@ function Embarque(props) {
             domicilioDestinatario: newValue.m_sDomicilio,
 
             codigoPostalDestinatario: dataCodigoPostal.find(
-                (o) => o.m_nIdCodigoPostal === newValue.m_nIdCodigoPostal
-            ),
+              (o) => o.m_nIdCP == newValue.m_sCodigoPostal
+          ),
+
+          ciudadDestinatario: dataCiudad.find(
+            (o) => o.m_nIdCiudad ==
+            dataCodigoPostal.find((o) => o.m_nIdCP == newValue.m_sCodigoPostal).m_nIdCiudad
+          ),
 
             correoDestinatario: newValue.m_sCorreoElectronico,
             telefonoDestinatario: newValue.m_sTelefono,
@@ -796,6 +806,15 @@ function Embarque(props) {
         });
     };
 
+    const handleSelectCiudadChange = (event) => {
+      console.log("diferenteEntrega : " + state.diferenteEntrega);
+      setState({
+          ...state,
+          ciudadRemitente: event.target.value,
+      });
+      getAllCodigosPostales(event.target.value.IdCiudad)
+  };
+
     const handleFechaInicialFiltro = async (event) => {
         setState({
             ...state,
@@ -1300,7 +1319,7 @@ function Embarque(props) {
         getAllTipoCobro();
         getAllTipoMoneda();
         getAllCiudades();
-      //  getAllCodigosPostales();
+        getAllCodigosPostales(1);
         getAllOperadores();
         getAllTipoUnidad();
         getAllRemitentesDestinatarios();
@@ -1358,7 +1377,7 @@ function Embarque(props) {
     }
 
     async function getAllCodigosPostales(idCiudad) {
-        const url = `${process.env.REACT_APP_API_URL_LOCAL}/CodigoPostal/GetListadoPorCiudad/`+idCiudad;
+        const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListadoPorCiudad/`+idCiudad;
         await axios.get(url, {headers}).then((respuesta) => {
             setDataCodigoPostal(respuesta.data);
         });
@@ -3101,7 +3120,7 @@ function Embarque(props) {
                                                                         </div>
                                                                     </div>
 
-                                                                    <div className="col-sm-12 col-md-8 unit">
+                                                                    <div className="col-sm-12 col-md-12 unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
                                                                                        label="RFC"
@@ -3133,7 +3152,7 @@ function Embarque(props) {
                                                                         </div>
                                                                     </div>
 
-                                                                    <div className="col-sm-12 col-md-8 unit">
+                                                                    <div className="col-sm-12 col-md-12 unit">
                                                                         <div className="input">
                                                                             <Autocomplete
                                                                                 value={state.codigoPostalRemitente}
@@ -3145,6 +3164,7 @@ function Embarque(props) {
                                                                                     })
                                                                                 }
                                                                                 id="codigoPostalRemitente"
+                                                                                value={state.codigoPostalRemitente}
                                                                                 disableClearable
                                                                                 disabled={state.agregar === "Consultar"}
                                                                                 forcePopupIcon={false}
@@ -3220,16 +3240,7 @@ function Embarque(props) {
                                                                         <div className="input">
                                                                             <Autocomplete
                                                                                 freeSolo
-                                                                                onChange={(event, newValue) =>
-                                                                                  
-                                                                                    setState({
-                                                                                        ...state,
-                                                                                        ciudadRemitente: newValue,
-                                                                        
-
-                                                                                    }),
-                                                                                    getAllCodigosPostales(state.ciudadRemitente.m_nIdCiudad)
-                                                                                }
+                                                                                onChange={handleSelectCiudadChange}
                                                                                 value={state.ciudadRemitente}
                                                                                 id="ciudadRemitente"
                                                                                 disableClearable
@@ -3529,7 +3540,7 @@ function Embarque(props) {
                                                                     </div>
                                                                 </div>
 
-                                                                <div className="col-sm-12 col-md-8 unit">
+                                                                <div className="col-sm-12 col-md-12 unit">
                                                                     <div className="input">
                                                                         <TextField variant="outlined" margin="dense"
                                                                                    label="RFC"
@@ -3561,7 +3572,7 @@ function Embarque(props) {
                                                                     </div>
                                                                 </div>
 
-                                                                <div className="col-sm-4 col-md-6 unit">
+                                                                <div className="col-sm-12 col-md-12 unit">
                                                                     <div className="input">
                                                                         <Autocomplete
                                                                             freeSolo
@@ -3644,9 +3655,7 @@ function Embarque(props) {
                                                                                 setState({
                                                                                     ...state,
                                                                                     ciudadDestinatario: newValue,
-                                                                                }),
-                                                                                getAllCodigosPostales(state.ciudadDestinatario.m_nIdCiudad)
-
+                                                                                })
                                                                             }
                                                                             value={state.ciudadDestinatario}
                                                                             disabled={state.agregar === "Consultar"}
