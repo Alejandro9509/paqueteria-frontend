@@ -113,7 +113,7 @@ function RemitenteDestinatario(props) {
       localidad: "",
       municipio: "",
       idPais: 0,
-      idEstado: 0,
+      idEstado: 21,
       codigoPostal: 0,
       creadoPor: state.creadoPor,
       creadoEl: "",
@@ -807,12 +807,21 @@ function RemitenteDestinatario(props) {
     getAllEstados(event.target.value);
   };
 
+  const handleSelectEstadoChange = (event) => {
+    setState({
+      ...state,
+      idEstado: event.target.value,
+    });
+    getAllCodigosPostales(event.target.value);
+  };
+
   function getAllEstados(id) {
     console.log(id);
     const url = `${process.env.REACT_APP_API_URL}/Estados/ByPais/` + id;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta.data);
       setDataEstado(respuesta.data);
+      getAllCodigosPostales(21)
     });
   }
 
@@ -1215,8 +1224,7 @@ function RemitenteDestinatario(props) {
                                     <label className="label">Estado</label>
                                     <label className="input select">
                                       <select
-                                        onChange={handleChangeNumero}
-                                        onSelect={ getAllCodigosPostales(state.idEstado)}
+                                        onChange={ handleSelectEstadoChange}
                                         className="form-control"
                                         required
                                         native
