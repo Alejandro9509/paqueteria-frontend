@@ -310,8 +310,8 @@ function Recoleccion() {
             "m_sDomicilioDestinatario": state.domicilioDestinatario,
             "m_sIdCodigoPostalRemitente": state.codigoPostalRemitente.m_nIdCP,
             "m_sIdCodigoPostalDestinatario": state.codigoPostalDestinatario.m_nIdCP,
-            "m_nIdCiudadRemitente": state.ciudadRemitente.m_nIdCiudad,
-            "m_nIdCiudadDestinatario": state.ciudadDestinatario.m_nIdCiudad,
+            "m_nIdCiudadRemitente": state.ciudadRemitente,
+            "m_nIdCiudadDestinatario": state.ciudadDestinatario,
             "m_sCorreoRemitente": state.correoRemitente,
             "m_sCorreoDestinatario": state.correoDestinatario,
             "m_sTelefonoRemitente": state.telefonoRemitente,
@@ -1294,6 +1294,47 @@ function Recoleccion() {
             setDataCodigoPostal(respuesta.data);
         });
     }
+
+    const handleChangeCiudadDestinatario = (event) =>  {
+        event.preventDefault();
+        setState({
+            ...state,
+            ciudadDestinatario: event.target.value,
+        });
+    }
+
+    const handleChangeCiudadRecoleccion = (event) =>  {
+        event.preventDefault();
+        setState({
+            ...state,
+            ciudadRecoleccion: event.target.value,
+        });
+    }
+
+    const handleChangeCiudadEntrega = (event) =>  {
+        event.preventDefault();
+        setState({
+            ...state,
+            ciudadEntrega: event.target.value,
+        });
+    }
+
+    const handleChangeZonaRecoleccion = (event) =>  {
+        event.preventDefault();
+        setState({
+            ...state,
+            zonaRecoleccion: event.target.value,
+        });
+    }
+
+    const handleChangeZonaEntrega = (event) =>  {
+        event.preventDefault();
+        setState({
+            ...state,
+            zonaEntrega: event.target.value,
+        });
+    }
+
   /*   function getAllCodigosPostalesRem(idCiudad) {
         const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListadoPorCiudad/`+idCiudad;
         axios.get(url, { headers }).then((respuesta) => {
@@ -3047,7 +3088,11 @@ function Recoleccion() {
                                                                         required
                                                                         value={state.tipoCobro}
                                                                         disabled={state.agregar === "Consultar"}
-                                                                        onChange={handleChange}
+                                                                        onChange={ (event) => {event.preventDefault();
+                                                                            setState({
+                                                                                ...state,
+                                                                                tipoCobro: event.target.value,
+                                                                            });}}
                                                                         id="tipoCobro"
                                                                     >
                                                                         <option value="0">Seleccionar</option>
@@ -3669,7 +3714,7 @@ function Recoleccion() {
                                                                                 required
                                                                                 value={state.ciudadDestinatario}
                                                                                 disabled={state.agregar === "Consultar"}
-                                                                                onChange={handleChange}
+                                                                                onChange={handleChangeCiudadDestinatario}
                                                                                 //onSelect={ getAllCodigosPostales(state.ciudadDestinatario)}  
                                                                                 id="ciudadDestinatario"
                                                                             >
@@ -4115,7 +4160,7 @@ function Recoleccion() {
 
                                                                                         value={state.ciudadRecoleccion}
                                                                                         disabled={state.agregar === "Consultar"}
-                                                                                        onChange={handleChange}
+                                                                                        onChange={handleChangeCiudadRecoleccion}
                                                                                         id="ciudadRecoleccion"
                                                                                     >
                                                                                         {dataCiudad.map((ciudad) => (
@@ -4147,7 +4192,7 @@ function Recoleccion() {
 
                                                                                         value={state.zonaRecoleccion}
                                                                                         disabled={state.agregar === "Consultar"}
-                                                                                        onChange={handleChange}
+                                                                                        onChange={handleChangeZonaRecoleccion}
                                                                                         id="zonaRecoleccion"
                                                                                     >
                                                                                         <option value="">Selecciona
@@ -4326,7 +4371,7 @@ function Recoleccion() {
 
                                                                                         value={state.ciudadEntrega}
                                                                                         disabled={state.agregar === "Consultar"}
-                                                                                        onChange={handleChange}
+                                                                                        onChange={handleChangeCiudadEntrega}
                                                                                         id="ciudadEntrega"
                                                                                     >
                                                                                         {dataCiudad.map((ciudad) => (
@@ -4357,7 +4402,7 @@ function Recoleccion() {
 
                                                                                         value={state.zonaEntrega}
                                                                                         disabled={state.agregar === "Consultar"}
-                                                                                        onChange={handleChange}
+                                                                                        onChange={handleChangeZonaEntrega}
                                                                                         id="zonaEntrega"
                                                                                     >
                                                                                         <option value="">Selecciona
