@@ -801,7 +801,14 @@ function Recoleccion() {
             folioEmbarque: "",
             folioGuía: "",
             folioInforme: "",
-            fechaHoraRegistro: "",
+            fechaHoraRegistro:`${new Date().getFullYear()}-${`${new Date().getMonth() +
+                1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(
+                2,
+                0
+              )}T${`${new Date().getHours()}`.padStart(
+                2,
+                0
+              )}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
             fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + "T" + today.getHours() + ":" + today.getMinutes(),
             estatusRecoleccion: dataEstatusRecoleccion.length !== 0 ? dataEstatusRecoleccion[0].m_nIdEstatusRecoleccion : 2,
             moneda: 1,
@@ -2113,11 +2120,7 @@ function Recoleccion() {
             200
         );
 
-        var $welem = $section
-            .parentsUntil(".widget-action-bar")
-            .parentsUntil(".w-action")
-            .parents(".widget-header")
-            .next(".widget-container");
+        
     }
 
     function closeSeccions() {
@@ -2868,7 +2871,7 @@ function Recoleccion() {
                                         </div>
                                     </div>
 
-                                    <div className="widget-wrap" id="informacionGeneral">
+                                    <div className="widget-wrap2" id="informacionGeneral">
                                         <div className="widget-header">
                                             <h2>Información General</h2>
                                         </div>

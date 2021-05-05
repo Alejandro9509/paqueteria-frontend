@@ -715,7 +715,14 @@ function Embarque(props) {
                 dataFolioEmbarque.length !== 0
                     ? dataFolioEmbarque[0].m_sFolioEmbarque
                     : null,
-            fechaHoraRegistro: "",
+            fechaHoraRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() +
+                1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(
+                2,
+                0
+              )}T${`${new Date().getHours()}`.padStart(
+                2,
+                0
+              )}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
 
             folioGuía: "",
             folioInforme: "",
