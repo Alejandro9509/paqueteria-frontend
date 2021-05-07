@@ -1950,23 +1950,6 @@ function Clientes(props) {
                                                                                             </div>
                                                                                             <div className="col-sm-6 col-md-2-5 ">
                                                                                                 <label className="label">
-                                                                                                    Código Postal
-                                                </label>
-                                                                                                <div className="input">
-                                                                                                    <TextField variant="outlined" margin="dense"
-                                                                                                        onChange={handleChange}
-                                                                                                        className="form-control"
-                                                                                                        type="text"
-                                                                                                        placeholder=""
-                                                                                                        value={state.codigoPostal}
-                                                                                                        id="codigoPostal"
-                                                                                                        name="codigoPostal"
-                                                                                                    />
-                                                                                                </div>
-                                                                                            </div>
-
-                                                                                            <div className="col-sm-6 col-md-2-5 ">
-                                                                                                <label className="label">
                                                                                                     &nbsp;{" "}
                                                                                                 </label>
                                                                                                 <label className="input select">
@@ -1998,6 +1981,24 @@ function Clientes(props) {
                                                                                                     <i></i>
                                                                                                 </label>
                                                                                             </div>
+                                                                                            
+                                                                                            <div className="col-sm-6 col-md-2-5 ">
+                                                                                                <label className="label">
+                                                                                                    Código Postal
+                                                </label>
+                                                                                                <div className="input">
+                                                                                                    <TextField variant="outlined" margin="dense"
+                                                                                                        onChange={handleChange}
+                                                                                                        className="form-control"
+                                                                                                        type="text"
+                                                                                                        placeholder=""
+                                                                                                        value={state.codigoPostal}
+                                                                                                        id="codigoPostal"
+                                                                                                        name="codigoPostal"
+                                                                                                    />
+                                                                                                </div>
+                                                                                            </div>
+
                                                                                             <div className="col-sm-6 col-md-2-5 ">
                                                                                                 <label className="label">
                                                                                                     Municipio

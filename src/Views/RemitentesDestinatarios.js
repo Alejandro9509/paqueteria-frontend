@@ -171,7 +171,7 @@ function RemitenteDestinatario(props) {
   }
 
   function getAllCodigosPostales(idEstado) {
-    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListadoPorEstado/`+idEstado;
+    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListadoPorEstado/` + idEstado;
     axios.get(url, { headers }).then((respuesta) => {
       console.log(respuesta);
 
@@ -781,7 +781,7 @@ function RemitenteDestinatario(props) {
     getAllPaises();
     getAllDataRemDes();
     getAllClientes();
-   
+
   }, []);
 
   function getAllDataRemDes() {
@@ -1112,7 +1112,7 @@ function RemitenteDestinatario(props) {
 
                                 <div className="row">
 
-                                  <div class="col-md-4 unit">
+                                  <div className="col-md-4 unit">
                                     <label className="label">País</label>
                                     <label className="input select">
                                       <select
@@ -1139,7 +1139,32 @@ function RemitenteDestinatario(props) {
                                       <i></i>
                                     </label>
                                   </div>
-                                  <div class="col-md-4 unit">
+                                  <div className="col-md-4 unit">
+                                    <label className="label">Estado</label>
+                                    <label className="input select">
+                                      <select
+                                        onChange={handleSelectEstadoChange}
+                                        className="form-control"
+                                        required
+                                        native
+                                        name="idEstado"
+                                        value={state.idEstado}
+                                        id="idEstado"
+                                      >
+                                        {dataEstado.length < 1 ? (
+                                          <option value="none">Estados</option>
+                                        ) : (
+                                          dataEstado.map((estado) => (
+                                            <option value={estado.m_nIdEstado}>
+                                              {estado.m_sEstado}
+                                            </option>
+                                          ))
+                                        )}
+                                      </select>
+                                      <i></i>
+                                    </label>
+                                  </div>
+                                  <div className="col-md-4 unit">
                                     <label className="label">
                                       Código Postal
                                     </label>
@@ -1157,7 +1182,7 @@ function RemitenteDestinatario(props) {
                                         }
 
 
-                                        
+
                                         id="codigoPostal"
                                         disableClearable
                                         forcePopupIcon={false}
@@ -1219,31 +1244,6 @@ function RemitenteDestinatario(props) {
                                         )}
                                       />
                                     </div>
-                                  </div>
-                                  <div className="col-md-4 unit">
-                                    <label className="label">Estado</label>
-                                    <label className="input select">
-                                      <select
-                                        onChange={ handleSelectEstadoChange}
-                                        className="form-control"
-                                        required
-                                        native
-                                        name="idEstado"
-                                        value={state.idEstado}
-                                        id="idEstado"
-                                      >
-                                        {dataEstado.length < 1 ? (
-                                          <option value="none">Estados</option>
-                                        ) : (
-                                          dataEstado.map((estado) => (
-                                            <option value={estado.m_nIdEstado}>
-                                              {estado.m_sEstado}
-                                            </option>
-                                          ))
-                                        )}
-                                      </select>
-                                      <i></i>
-                                    </label>
                                   </div>
                                 </div>
 

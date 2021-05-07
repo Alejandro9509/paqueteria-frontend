@@ -166,7 +166,7 @@ function Sucursal() {
       sucursal: "",
       abreviacion: "",
       idPais: dataPais[0].m_nIdPais,
-      idEstado: dataEstado[0].m_nIdEstado,
+      idEstado: 21,
       codigoPostal: dataCodigoPostal[0].m_nIdCP,
       municipio: "",
       localidad: "",
@@ -187,6 +187,14 @@ function Sucursal() {
       [event.target.id]: event.target.value
     });
   };
+
+  const handleSelectEstado = event => {
+    setState({
+      ...state,
+      idEstado: event.target.value
+    });
+    getAllCodigosPostales(event.target.value)
+  }
 
   function handleSelectRow(id, event) {
     setState({
@@ -253,7 +261,6 @@ function Sucursal() {
     }
     getAllData();
     getAllPais();
-    getAllCodigosPostales();
   }, []);
 
   function getAllData() {
@@ -275,11 +282,12 @@ function Sucursal() {
     const url = `${process.env.REACT_APP_API_URL}/Estados/ByPais/${id}`;
     axios.get(url, { headers }).then((respuesta) => {
       setDataEstado(respuesta.data);
+      getAllCodigosPostales(21)
     });
   }
 
-  function getAllCodigosPostales() {
-    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
+  function getAllCodigosPostales(id) {
+    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListadoPorEstado/${id}`;
     axios.get(url, { headers }).then((respuesta) => {
       setDataCodigoPostal(respuesta.data);
     });
@@ -574,7 +582,7 @@ function Sucursal() {
                                 <select
                                   className="form-control"
                                   required
-                                  onChange={handleChange}
+                                  onChange={handleSelectEstado}
                                   value={state.idEstado}
                                   id="idEstado"
                                 >
