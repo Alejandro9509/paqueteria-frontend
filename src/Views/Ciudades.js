@@ -293,8 +293,8 @@ function CiudadesCodigoPostal() {
             width: 125,
         }, {
             headerName: "Estado",
-            field: "m_nIdEstado",
-            width: 100,
+            field: "m_sEstado",
+            width: 150,
         }
 
     ]);
