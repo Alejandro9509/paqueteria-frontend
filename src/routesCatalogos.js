@@ -54,6 +54,7 @@ import {ReactComponent as UnidadesIcon} from './iconos/Catalogos/Icono Unidades/
 import {ReactComponent as ViajesIcon} from './iconos/Catalogos/Icono Viajes/icono_viajes.svg';
 import {ReactComponent as AddendasIcon} from './iconos/Catalogos/Icono Addendas/icono_addendas.svg';
 import EstatusGuia from './Views/EstatusGuia';
+import TipoUnidad from "./Views/TipoUnidad/TipoUnidad";
 
 
 const catalogRoutes = [
@@ -94,10 +95,10 @@ const catalogRoutes = [
     component: OperadoresPage,
   },
   {
-    path: "/Departamento",
+    path: "/TipoUnidad",
     name: "Tipo Unidad",
     icon: TUnidadIcon,
-    component: DepartamentoPage,
+    component: TipoUnidad,
   },
   {
     path: "/GrupoUnidades",

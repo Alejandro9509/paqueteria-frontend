@@ -258,7 +258,6 @@ function Unidades(props) {
     idSatelital: "",
     idConvoy: "",
     idGrupoUnidad: 0,
-    creadoEl: "",
     creadoPor: localStorage.getItem("UsuarioId"),
     creadoEl: "",
     modificadoPor: localStorage.getItem("UsuarioId"),
@@ -363,8 +362,6 @@ function Unidades(props) {
       idSatelital: "",
       idConvoy: "",
       idGrupoUnidad: 0,
-      creadoEl: "",
-      
       creadoEl: "",
       modificadoEl: "",
       largo: 0,
@@ -1075,12 +1072,12 @@ function Unidades(props) {
                 <i className="fa fa-plus-circle" /> {state.agregar}
               </a>
             </li>
-            <li>
-              <ExportCSV csvData={dataListadoUnidades} fileName="Unidades_Listado" />
-            </li>
-            <li>
-              <ExportPDF data={dataListadoUnidades} column={columns} fileName="Unidades" />
-            </li>
+            {/*<li>*/}
+            {/*  <ExportCSV csvData={dataListadoUnidades} fileName="Unidades_Listado" />*/}
+            {/*</li>*/}
+            {/*<li>*/}
+            {/*  <ExportPDF data={dataListadoUnidades} column={columns} fileName="Unidades" />*/}
+            {/*</li>*/}
           </ul>
 
           <div className="tab-content">

@@ -896,19 +896,19 @@ function RemitenteDestinatario(props) {
               <i className="fa fa-plus-circle" /> {state.agregar}
             </a>
           </li>
-          <li>
-            <ExportCSV
-              csvData={data}
-              fileName="RemitentesDestinatarios_Listado"
-            />
-          </li>
-          <li>
-            <ExportPDF
-              data={data}
-              column={columns2}
-              fileName="Remitentes-Destinatarios"
-            />
-          </li>
+          {/*<li>*/}
+          {/*  <ExportCSV*/}
+          {/*    csvData={data}*/}
+          {/*    fileName="RemitentesDestinatarios_Listado"*/}
+          {/*  />*/}
+          {/*</li>*/}
+          {/*<li>*/}
+          {/*  <ExportPDF*/}
+          {/*    data={data}*/}
+          {/*    column={columns2}*/}
+          {/*    fileName="Remitentes-Destinatarios"*/}
+          {/*  />*/}
+          {/*</li>*/}
         </ul>
 
         <div className="tab-content">

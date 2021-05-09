@@ -613,7 +613,7 @@ function Clientes(props) {
             setState({
                 getAllEstados,
                 ...state,
-                idCliente: id,
+                //idCliente: id,
                 agregar: "Modificar",
 
                 idCliente: respuesta.data.m_nIdCliente,
@@ -629,8 +629,8 @@ function Clientes(props) {
                 idImpuestoTransladado: respuesta.data.m_nIdImpuestoTransladado,
                 aplicarDetalleMaterialesCadaViajeXML:
                     respuesta.data.m_bAplicarDetalleMaterialesCadaViajeXML,
-                idEstado: respuesta.data.m_nIdEstado,
-                idGrupoCliente: respuesta.data.m_nIdGrupoCliente,
+                //idEstado: respuesta.data.m_nIdEstado,
+                //idGrupoCliente: respuesta.data.m_nIdGrupoCliente,
 
                 idGrupoCliente: dataGrupoClientes.find(
                     (o) => o.m_nIdGrupoCliente == respuesta.data.m_nIdGrupoCliente
@@ -1237,22 +1237,22 @@ function Clientes(props) {
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>
-                        <li>
-                            <a
-                                data-toggle="tab"
-                                href="#Imprimir"
-                                onClick={console.log(selectedRows)}
-                            >
-                                <i className="fa fa-plus-circle" /> Imprimir
-              </a>
-                        </li>
-                        <li>
-                            <ExportPDF
-                                data={dataListadoClientes}
-                                column={columns}
-                                fileName="Unidades"
-                            />
-                        </li>
+                        {/*<li>*/}
+                        {/*    <a*/}
+                        {/*        data-toggle="tab"*/}
+                        {/*        href="#Imprimir"*/}
+                        {/*        onClick={console.log(selectedRows)}*/}
+                        {/*    >*/}
+                        {/*        <i className="fa fa-plus-circle" /> Imprimir*/}
+                        {/*    </a>*/}
+                        {/*</li>*/}
+                        {/*<li>*/}
+                        {/*    <ExportPDF*/}
+                        {/*        data={dataListadoClientes}*/}
+                        {/*        column={columns}*/}
+                        {/*        fileName="Unidades"*/}
+                        {/*    />*/}
+                        {/*</li>*/}
                     </ul>
 
                     <div className="tab-content">
