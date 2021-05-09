@@ -40,6 +40,7 @@ class AgregarTipoUnidad extends Component {
         console.log(props)
         this.handleChange = this.handleChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this)
+        this.handleShowConsultar = this.handleShowConsultar.bind(this);
     }
 
     onSubmit(event) {
