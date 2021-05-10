@@ -877,12 +877,12 @@ function Operadores(props) {
                 <i className="fa fa-plus-circle" /> {state.agregar}{" "}
               </a>
             </li>
-            <li>
-              <ExportCSV csvData={dataOperadores} fileName="Operadores_Listado" />
-            </li>
-            <li>
-              <ExportPDF data={dataOperadores} column={columns} fileName="Operadores" />
-            </li>
+            {/*<li>*/}
+            {/*  <ExportCSV csvData={dataOperadores} fileName="Operadores_Listado" />*/}
+            {/*</li>*/}
+            {/*<li>*/}
+            {/*  <ExportPDF data={dataOperadores} column={columns} fileName="Operadores" />*/}
+            {/*</li>*/}
           </ul>
 
           <div className="tab-content">

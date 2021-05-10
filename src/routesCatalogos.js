@@ -23,6 +23,7 @@ import EstatusInformePage from './Views/EstatusInforme';
 import EstatusDocumentoPage from './Views/EstatusDocumento';
 import ConceptosFacturacionPage from './Views/ConceptosFacturacion/ConceptosFacturacion';
 import TarifasPage from './Views/Tarifas/Tarifas';
+import ClasificacionViajePage from './Views/ClasificacionViajes/ClasificacionViaje'
 
 import {ReactComponent as GClienteIcon} from './iconos/Catalogos/Icono Grupo Clientes/icono_grupo_cliente.svg';
 import {ReactComponent as BancoIcon} from './iconos/Catalogos/Icono Banco/icono_banco.svg';
@@ -54,6 +55,7 @@ import {ReactComponent as UnidadesIcon} from './iconos/Catalogos/Icono Unidades/
 import {ReactComponent as ViajesIcon} from './iconos/Catalogos/Icono Viajes/icono_viajes.svg';
 import {ReactComponent as AddendasIcon} from './iconos/Catalogos/Icono Addendas/icono_addendas.svg';
 import EstatusGuia from './Views/EstatusGuia';
+import TipoUnidad from "./Views/TipoUnidad/TipoUnidad";
 
 
 const catalogRoutes = [
@@ -94,10 +96,10 @@ const catalogRoutes = [
     component: OperadoresPage,
   },
   {
-    path: "/Departamento",
+    path: "/TipoUnidad",
     name: "Tipo Unidad",
     icon: TUnidadIcon,
-    component: DepartamentoPage,
+    component: TipoUnidad,
   },
   {
     path: "/GrupoUnidades",
@@ -169,10 +171,10 @@ const catalogRoutes = [
   },
 
   {
-    path: "/Embalajes",
+    path: "/ClasificacionViaje",
     name: "Clasificación Viaje",
     icon: ClasificacionIcon,
-    component: EmbalajesPage,
+    component: ClasificacionViajePage,
   },
   {
     path: "/Caseta",

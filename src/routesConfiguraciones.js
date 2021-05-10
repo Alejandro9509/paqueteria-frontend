@@ -20,6 +20,8 @@ import {ReactComponent as GTipoCambioIcon} from './iconos/Configuracion/Icono Ti
 import {ReactComponent as GMonedaIcon} from './iconos/Configuracion/Icono Moneda/icono_moneda.svg';
 import {ReactComponent as GCuentaCorreoIcon} from './iconos/Configuracion/Icono Correo/icono_correo.svg';
 import {ReactComponent as GBitacoraIcon} from './iconos/Configuracion/Icono Bitacora/icono_bitacora.svg';
+import Folios from "./Views/Folios/Folios";
+import CuentasCorreo from "./Views/CuentasCorreo/CuentasCorreo";
 
 const configurationRoutes = [
 
@@ -28,72 +30,84 @@ const configurationRoutes = [
     name: "Parámetros",
     icon:  GParametroIcon,
     component: ParametrosPage,
+    isDialog: false
   },
   {
     path: "/Usuarios",
     name: "Usuarios",
     icon:  GUsuarioIcon,
     component: UsuariosPage,
+    isDialog: false
   },
   {
     path: "/Paises",
     name: "Países",
     icon: GUsuarioIcon,
     component: PaisesPage,
+    isDialog: false
   },
   {
     path: "/Ciudades",
     name: "Ciudades",
     icon:  GCiudadIcon,
     component: CiudadesCodigoPostalPage,
+    isDialog: false
   },
   {
     path: "/Sucursales",
     name: "Sucursales",
     icon:  GSucursalIcon,
     component: SucursalesPage,
+    isDialog: false
   },
   {
     path: "/Zonas",
     name: "Zonas",
     icon:  GZonasIcon,
     component: ZonasPage,
+    isDialog: false
   },
   {
     path: "/FormatosImpresion",
     name: "Formatos Impresión",
     icon:  GFormatosIcon,
     component: DepartamentoPage,
+    isDialog: false
   },
   {
     path: "/Folios",
     name: "Folios",
     icon:  GFoliosIcon,
-    component: DepartamentoPage,
+    component: Folios,
+    isDialog: false
   },
   {
     path: "/TipoDeCambio",
     name: "Tipo de Cambio",
     icon:  GTipoCambioIcon,
     component: TipoCambio,
+    isDialog: false
   },
   {
     path: "/Moneda",
     name: "Moneda",
     icon:  GMonedaIcon,
     component: MonedaPage,
+    isDialog: false
   },
   {
     path: "/CuentasCorreo",
     name: "Cuentas Correo",
     icon:  GCuentaCorreoIcon,
-    component: DepartamentoPage,
+    component: CuentasCorreo,
+    isDialog: true
   },
   {
     path: "/BitacoraProcesos",
     name: "Bitácora Procesos",
     icon:  GBitacoraIcon,
     component: DepartamentoPage,
+    isDialog: false
   },
 ]
 

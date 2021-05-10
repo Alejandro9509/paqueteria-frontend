@@ -17,8 +17,6 @@ R
 "public/js/lib/jquery-jvectormap.js,8/c/8cffc73873e7712424c05af0a71a89e675d4359f
 J
 public/js/lib/selectize.js,d/c/dc5726840358b69afc7f0c079a88cc50bef7a1c5
-=
-src/routes.js,e/8/e8d89f7a2814c9e07e58bcf9b360f6aa076dd83e
 H
 public/css/bootstrap.css,c/7/c7570d2755ff73dede1fcc3ecc3b2ecb5a1f7667
 W
@@ -33,5 +31,9 @@ U
 %src/Views/Viajes/TablaUnidadViajes.js,7/f/7fcd3efa88ff26a5784a0819998ca972b07084b1
 E
 src/Views/Informes.js,5/4/545cd622852b90c9330df68a732ecad688a11eab
-L
-src/Views/Tarifas/Tarifas.js,9/f/9f479c144c30fd299cedb41972ef4c81e7e012d1
+A
+package-lock.json,f/a/fa288d1472d29beccb489a676f68739ad365fc47
+T
+$.idea/codeStyles/codeStyleConfig.xml,d/d/dd7b3350c29c49497756c7f32c69a3bed18b1cba
+\
+,.idea/inspectionProfiles/Project_Default.xml,4/9/496a238a6afa168dbaf6efd37bb459331589579c

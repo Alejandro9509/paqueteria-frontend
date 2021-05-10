@@ -334,9 +334,6 @@ class Tarifas extends Component {
 
                             </div>
 
-
-
-
                         </div>
                     </div>
                 </section>

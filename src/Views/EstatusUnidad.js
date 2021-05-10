@@ -312,12 +312,12 @@ function EstatusUnidad() {
                 <i className="fa fa-upload" /> Importar
             </a>
             </li>
-            <li>
-              <ExportCSV csvData={data} fileName="Departamento_Listado" />
-            </li>
-            <li>
-              <ExportPDF data={data} column={columns} fileName="Departamento" />
-            </li>
+            {/*<li>*/}
+            {/*  <ExportCSV csvData={data} fileName="Departamento_Listado" />*/}
+            {/*</li>*/}
+            {/*<li>*/}
+            {/*  <ExportPDF data={data} column={columns} fileName="Departamento" />*/}
+            {/*</li>*/}
           </ul>
 
           <div className="row" className="tab-content">

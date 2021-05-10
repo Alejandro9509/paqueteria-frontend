@@ -108,7 +108,6 @@ function Guia(props) {
         destino: "",
         usuarioCancela: "",
         fechaCancelado: "",
-        idGuia: 0,
         idEmbarque: 0,
         idEmbarque2: 0,
         hora: "",
@@ -174,7 +173,6 @@ function Guia(props) {
                 ancho: "",
                 alto: "",
                 volumen: "",
-                peso: "",
                 tipoEmbalaje: "",
                 valorDeclarado: "",
                 descripcionPaquete: "",
@@ -408,7 +406,6 @@ function Guia(props) {
                     Cantidad: respuesta.data[i].m_nCantidadPaquete,
                     Descripcion: respuesta.data[i].m_sDescripcionPaquete,
                     Destinatario: respuesta.data[i].m_sNombreDestinatario,
-                    FolioPaquete: respuesta.data[i].m_sFolioPaquete,
                     PaqueteCant: respuesta.data[i].m_nCantidadPaquete,
                     DescripcionPaquete: respuesta.data[i].m_sDescripcionPaquete,
                     RfcFiscal: respuesta.data[i].m_sRfcFiscal,
@@ -907,7 +904,6 @@ function Guia(props) {
                         "ancho": respuesta.data.m_arrPaquetes[i].m_xAncho,
                         "alto": respuesta.data.m_arrPaquetes[i].m_xAlto,
                         "volumen": respuesta.data.m_arrPaquetes[i].m_xVolumen,
-                        "peso": respuesta.data.m_arrPaquetes[i].m_xPeso,
                         "tipoEmbalaje": respuesta.data.m_arrPaquetes[i].m_nTipo,
                         "valorDeclarado": respuesta.data.m_arrPaquetes[i].m_cValorDeclarado,
                         "descripcionPaquete": respuesta.data.m_arrPaquetes[i].m_sDescripcion,
@@ -1157,7 +1153,6 @@ function Guia(props) {
                     "ancho": respuesta.data.m_arrPaquetes[i].m_xAncho,
                     "alto": respuesta.data.m_arrPaquetes[i].m_xAlto,
                     "volumen": respuesta.data.m_arrPaquetes[i].m_xVolumen,
-                    "peso": respuesta.data.m_arrPaquetes[i].m_xPeso,
                     "tipoEmbalaje": respuesta.data.m_arrPaquetes[i].m_nTipo,
                     "valorDeclarado": respuesta.data.m_arrPaquetes[i].m_cValorDeclarado,
                     "descripcionPaquete": respuesta.data.m_arrPaquetes[i].m_sDescripcion,
@@ -1168,7 +1163,7 @@ function Guia(props) {
 
             for (var i = 0; i < respuesta.data.m_arrSobres.length; i++) {
 
-                if (respuesta.data.m_arrSobres[i].m_nIdEmbarqueDetalle == "" || respuesta.data.m_arrSobres[i].m_nIdEmbarqueDetalle == "0")
+                if (respuesta.data.m_arrSobres[i].m_nIdEmbarqueDetalle === "" || respuesta.data.m_arrSobres[i].m_nIdEmbarqueDetalle === "0")
                     continue;
 
                 sobresTemp.push({
@@ -1245,7 +1240,6 @@ function Guia(props) {
                     "ancho": respuesta.data.m_arrPaquetes[i].m_xAncho,
                     "alto": respuesta.data.m_arrPaquetes[i].m_xAlto,
                     "volumen": respuesta.data.m_arrPaquetes[i].m_xVolumen,
-                    "peso": respuesta.data.m_arrPaquetes[i].m_xPeso,
                     "tipoEmbalaje": respuesta.data.m_arrPaquetes[i].m_nTipo,
                     "valorDeclarado": respuesta.data.m_arrPaquetes[i].m_cValorDeclarado,
                     "descripcionPaquete": respuesta.data.m_arrPaquetes[i].m_sDescripcion,
@@ -1267,7 +1261,7 @@ function Guia(props) {
             }
             for (var i = 0; i < embarque.data.m_arClsGuiaConceptos.length; i++) {
 
-                if (embarque.data.m_arClsGuiaConceptos[i].m_nIdConceptosFacturacion == "" || embarque.data.m_arClsGuiaConceptos[i].m_nIdConceptosFacturacion == "0")
+                if (embarque.data.m_arClsGuiaConceptos[i].m_nIdConceptosFacturacion === "" || embarque.data.m_arClsGuiaConceptos[i].m_nIdConceptosFacturacion === "0")
                     continue;
 
                 conceptosTemp.push({
@@ -1277,7 +1271,6 @@ function Guia(props) {
                     ImporteIva: embarque.data.m_arClsGuiaConceptos[i].m_cImporteIva,
                     IdImpuestoRetiene: embarque.data.m_arClsGuiaConceptos[i].m_nIdImpuestoRetiene,
                     ImporteRetiene: embarque.data.m_arClsGuiaConceptos[i].m_cImporteRetiene,
-                    Total: embarque.data.m_arClsGuiaConceptos[i].m_cTotal,
                     PorcentajeIva: embarque.data.m_arClsGuiaConceptos[i].m_cPorcentajeTraslada,
                     PorcentajeRetiene: embarque.data.m_arClsGuiaConceptos[i].m_cPorcentajeRetiene,
                     Total: embarque.data.m_arClsGuiaConceptos[i].m_cTotal,
@@ -2019,12 +2012,12 @@ function Guia(props) {
                                 <i className="fa fa-times-circle" /> Cancelar
               </a>
                         </li>
-                        <li>
-                            <ExportCSV csvData={data} fileName="Guia_Listado" />
-                        </li>
-                        <li>
-                            <ExportPDF data={data} column={columns} fileName="Guia" />
-                        </li>
+                        {/*<li>*/}
+                        {/*    <ExportCSV csvData={data} fileName="Guia_Listado" />*/}
+                        {/*</li>*/}
+                        {/*<li>*/}
+                        {/*    <ExportPDF data={data} column={columns} fileName="Guia" />*/}
+                        {/*</li>*/}
                     </ul>
 
                     <div className="row" className="tab-content">

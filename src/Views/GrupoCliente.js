@@ -381,12 +381,12 @@ function GrupoCliente() {
               </a>
             </li>
 
-            <li>
-              <ExportCSV csvData={data} fileName="GrupoCliente_Listado" />
-            </li>
-            <li>
-              <ExportPDF data={data} column={columns} fileName="GrupoCliente" />
-            </li>
+            {/*<li>*/}
+            {/*  <ExportCSV csvData={data} fileName="GrupoCliente_Listado" />*/}
+            {/*</li>*/}
+            {/*<li>*/}
+            {/*  <ExportPDF data={data} column={columns} fileName="GrupoCliente" />*/}
+            {/*</li>*/}
           </ul>
 
           <div className="row" className="tab-content">
