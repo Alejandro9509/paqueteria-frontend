@@ -357,7 +357,7 @@ function RemitenteDestinatario(props) {
     },
     {
       headerName: "Remitente-Destinatario",
-      field: "m_sFechaHoraDetalleRec",
+      field: "m_sNombre",
       width: 200,
     },
     {
@@ -367,7 +367,7 @@ function RemitenteDestinatario(props) {
     },
     {
       headerName: "Cliente",
-      field: "m_sZonaRecoleccion",
+      field: "m_sNombreFiscal",
       width: 150,
     },
     {

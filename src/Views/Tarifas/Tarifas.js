@@ -51,7 +51,7 @@ class Tarifas extends Component {
                 },
                 {
                     headerName: "Sucursal Origen",
-                    field: "m_nIdSucursal",
+                    field: "m_sSucursal",
                     width: 300,
                 }, {
                     headerName: "Destino",
