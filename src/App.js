@@ -30,6 +30,7 @@ render(){
         localStorage.getItem(ACCESS_TOKEN) ? (
           <Switch>
             <Route path="/Indicadores" component={Indicadores} />
+            <Route path="/Configuracion" component={Configuracion} />
             {dashboardRoutes.map((r, key) => {
                   return (<Route exact key={key} path={r.path} component={r.component} />)
               })}
