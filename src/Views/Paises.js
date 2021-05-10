@@ -60,8 +60,8 @@ function PaisesEstado() {
       "m_nIdMoneda": state.idMoneda,
       "m_sCodigo": state.codigo,
       "m_sPais": state.pais,
-      "CreadoPor": state.CreadoPor,
-      "ModificadoPor": state.ModificadoPor
+      "m_nCreadoPor": state.CreadoPor,
+      "m_nModificadoPor": state.ModificadoPor
     }
     console.log(params)
     if (state.idPais != 0) {

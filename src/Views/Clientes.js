@@ -1350,7 +1350,7 @@ function Clientes(props) {
                                             >
                                                 <div className="steps">
                                                     <span className="step-number">2</span>
-                                                    <p>Metodos de Pago y Crédito</p>
+                                                    <p>Métodos de Pago y Crédito</p>
                                                 </div>
                                             </div>
                                             <div
@@ -1706,7 +1706,7 @@ function Clientes(props) {
                                                                             onChange={handleChange}
                                                                             className="form-control"
                                                                             required
-                                                                            label="Dias de Crédito"
+                                                                            label="Días de Crédito"
                                                                             type="number"
                                                                             value={state.diasCredito}
                                                                             id="diasCredito"
@@ -1727,7 +1727,7 @@ function Clientes(props) {
                                                                         <TextField variant="outlined" margin="dense"
                                                                             onChange={handleChange}
                                                                             className="form-control"
-                                                                            label="Limite Credito"
+                                                                            label="Límite Crédito"
                                                                             type="number"
                                                                             value={state.credito}
                                                                             id="credito"
@@ -1773,7 +1773,7 @@ function Clientes(props) {
                                                                             onChange={handleChange}
                                                                             className="form-control"
                                                                             type="number"
-                                                                            label="Limite Credito"
+                                                                            label="Límite Crédito"
                                                                             value={state.creditoDlls}
                                                                             id="creditoDlls"
                                                                             name="creditoDlls"
@@ -1950,23 +1950,6 @@ function Clientes(props) {
                                                                                             </div>
                                                                                             <div className="col-sm-6 col-md-2-5 ">
                                                                                                 <label className="label">
-                                                                                                    Código Postal
-                                                </label>
-                                                                                                <div className="input">
-                                                                                                    <TextField variant="outlined" margin="dense"
-                                                                                                        onChange={handleChange}
-                                                                                                        className="form-control"
-                                                                                                        type="text"
-                                                                                                        placeholder=""
-                                                                                                        value={state.codigoPostal}
-                                                                                                        id="codigoPostal"
-                                                                                                        name="codigoPostal"
-                                                                                                    />
-                                                                                                </div>
-                                                                                            </div>
-
-                                                                                            <div className="col-sm-6 col-md-2-5 ">
-                                                                                                <label className="label">
                                                                                                     &nbsp;{" "}
                                                                                                 </label>
                                                                                                 <label className="input select">
@@ -1998,6 +1981,24 @@ function Clientes(props) {
                                                                                                     <i></i>
                                                                                                 </label>
                                                                                             </div>
+                                                                                            
+                                                                                            <div className="col-sm-6 col-md-2-5 ">
+                                                                                                <label className="label">
+                                                                                                    Código Postal
+                                                </label>
+                                                                                                <div className="input">
+                                                                                                    <TextField variant="outlined" margin="dense"
+                                                                                                        onChange={handleChange}
+                                                                                                        className="form-control"
+                                                                                                        type="text"
+                                                                                                        placeholder=""
+                                                                                                        value={state.codigoPostal}
+                                                                                                        id="codigoPostal"
+                                                                                                        name="codigoPostal"
+                                                                                                    />
+                                                                                                </div>
+                                                                                            </div>
+
                                                                                             <div className="col-sm-6 col-md-2-5 ">
                                                                                                 <label className="label">
                                                                                                     Municipio
@@ -2213,7 +2214,7 @@ function Clientes(props) {
                                                                                     <div className="col-md-12 unit">
                                                                                         <div className="w-section-header">
                                                                                             <h3>
-                                                                                                Envio de Estados de Cuentas
+                                                                                                Envío de Estados de Cuentas
                                               </h3>
                                                                                         </div>
                                                                                         <div className="row">
@@ -2226,7 +2227,7 @@ function Clientes(props) {
                                                                                                         className="form-control"
                                                                                                         type="text"
                                                                                                         fullWidth
-                                                                                                        label="Frecuencia de Envio (Dias)"
+                                                                                                        label="Frecuencia de Envio (Días)"
                                                                                                         value={
                                                                                                             state.frecuenciaEnvioDias
                                                                                                         }
@@ -2584,7 +2585,7 @@ function Clientes(props) {
                                                                                 value={state.PermitirSeguimiento}
                                                                             />
                                                                             <i />
-                                      Permitir Seguiiento de Viajes/Unidades
+                                      Permitir Seguimiento de Viajes/Unidades
                                     </label>
                                                                     </div>
                                                                 </div>

@@ -1,15 +1,8 @@
 import React, { useEffect, useState, useMemo } from "react";
-import DataTable from 'react-data-table-component';
-import DataTableExtensions from "react-data-table-component-extensions";
 import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import BasicTable from "./BasicTable";
-import ExportCSV from '../Components/Template/Export';
-import ExportPDF from "../Components/Template/ExportPDF";
-import * as XLSX from 'xlsx';
-import { useTable, useFilters, useSortBy } from 'react-table'
 import { makeStyles } from "@material-ui/core/styles";
 import { DataGrid } from '@material-ui/data-grid';
 import Noty from 'noty';
@@ -23,34 +16,25 @@ function showSuccess(mensaje) {
   }).show()
 }
 
-const styles = {
-  seleccionado: {
-    backgroundColor: "#FCC88F",
-  },
-  noSeleccionado: {
-    backgroundColor: "#FFFFFF",
-  }
-};
-const useStyles = makeStyles(styles);
-
 function Zonas() {
 
-  const classes = useStyles();
   const [data, setData] = React.useState([])
   const [dataSucursal, setDataSucursal] = React.useState([]);
   const [dataCiudad, setDataCiudad] = React.useState([]);
+  const [dataMunicipios, setDataMunicipios] = React.useState([]);
+  const [dataLocalidades, setDataLocalidades] = React.useState([]);
+  const [dataCodigoPostal, setDataCodigoPostal] = React.useState([]);
   const [state, setState] = React.useState({
-    idZona: 0,
     agregar: "Agregar",
+    idZona: 0,
+    idMunicipioSeleccionado: 0,
+    idCiudadSeleccionado: 0,
+    idCodigoPostalSeleccionado: 0,
     DerechoBorrar: 58,
-    codigoDepartamento: "",
-    descripcionDepartamento: "",
-    importar: "",
     CreadoPor: localStorage.getItem("UsuarioId"),
     ModificadoPor: localStorage.getItem("UsuarioId"),
     height: window.innerHeight
   })
-  const [fileUploaded, setFileUploaded] = React.useState([])
 
   const handleAceptar = (e) => {
     e.preventDefault()
@@ -215,10 +199,34 @@ function Zonas() {
 
   ]);
 
+  const columnsMunicipio = React.useMemo(() => [
+    {
+      headerName: "Municipios",
+      field: "m_sMunicipio",
+      width: "200",
+    },
+  ])
+
   const columnsCiudades = React.useMemo(() => [
     {
       headerName: "Ciudad",
       field: "m_sCiudad",
+      width: "200",
+    },
+  ])
+
+  const columnsCodigoPostal = React.useMemo(() => [
+    {
+      headerName: "CodigoPostal",
+      field: "m_sCP",
+      width: "200",
+    },
+  ])
+
+  const columnsLocalidades = React.useMemo(() => [
+    {
+      headerName: "Localidades",
+      field: "m_sLocalidad",
       width: "200",
     },
   ])
@@ -229,7 +237,9 @@ function Zonas() {
       window.location.replace("login");
       return;
     }
+    getAllMunicipios();
     getAllCiudades();
+    getAllCodigoPostal();
     getAllSucursalData();
     getAllData();
   }, []);
@@ -248,6 +258,13 @@ function Zonas() {
     });
   }
 
+  async function getAllMunicipios() {
+    const url = `${process.env.REACT_APP_API_URL}/Municipios/GetListado`;
+    await axios.get(url, { headers }).then((respuesta) => {
+      setDataMunicipios(respuesta.data);
+    });
+  }
+
   async function getAllCiudades() {
     const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
     await axios.get(url, { headers }).then((respuesta) => {
@@ -255,25 +272,28 @@ function Zonas() {
     });
   }
 
-  const handleUpload = (e) => {
-    e.preventDefault();
+  async function getAllCodigoPostal() {
+    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
+    await axios.get(url, { headers }).then((respuesta) => {
+      console.log(respuesta.data)
+      setDataCodigoPostal(respuesta.data);
+      getAllLocalidades(respuesta.data[0].m_nIdCP)
+    });
+  }
 
-    var files = e.target.files, f = files[0];
-    var reader = new FileReader();
-    console.log(e.target.files)
-    reader.onload = function (e) {
-      console.log("Nothing Happened")
-      var data = e.target.result;
-      let readedData = XLSX.read(data, { type: 'binary' });
-      const wsname = readedData.SheetNames[0];
-      const ws = readedData.Sheets[wsname];
+  async function getAllLocalidades(id) {
+    const url = `${process.env.REACT_APP_API_URL}/Asentamiento/GetListadoByCodigoPostal/${id}` ;
+    await axios.get(url, { headers }).then((respuesta) => {
+      setDataLocalidades(respuesta.data);
+    });
+  }
 
-      /* Convert array to json*/
-      const dataParse = XLSX.utils.sheet_to_json(ws, { header: 1 });
-      console.log("dataParse : " + dataParse)
-      setFileUploaded(dataParse);
-    };
-    reader.readAsBinaryString(f)
+  function handleSelectCodigoPostal(id){
+    setState({
+      ...state,
+      idCodigoPostalSeleccionado: id
+    })
+    getAllLocalidades(id)
   }
 
   const headers = {
@@ -326,11 +346,6 @@ function Zonas() {
             <li>
               <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
                 <i className="fa fa-plus-circle" /> {state.agregar}
-              </a>
-            </li>
-            <li>
-              <a data-toggle="tab" href="#Agregar">
-                Imprimir
               </a>
             </li>
           </ul>
@@ -420,8 +435,32 @@ function Zonas() {
                             </label>
                           </div>
                         </div>
-
+{/**
                         <div className="widget-wrap col-sm-6 col-md-3">
+                          <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                            {dataMunicipios.length != 0 ? (
+                              <DataGrid
+                                rows={dataMunicipios}
+                                columns={columnsMunicipio}
+                                hideFooterPagination="true"
+                                hideFooterSelectedRowCount="true"
+                                density="compact"
+                                getRowId={(row) => row.m_nIdMunicipio}
+                                checkboxSelection={true}
+                                onRowSelected={(row) => {
+                                  setState({
+                                    ...state,
+                                    idMunicipioSeleccionado: row.data.m_nIdMunicipio
+                                  })
+                                }}
+                              />
+                            ) : (
+                              <div>No se encontró ningún registro</div>
+                            )}
+                          </div>
+                        </div>
+*/}
+                        <div className="widget-wrap col-sm-6 col-md-4">
                           <div className="row" style={{ height: state.height - 250, width: '100%' }}>
                             {dataCiudad.length != 0 ? (
                               <DataGrid
@@ -435,7 +474,56 @@ function Zonas() {
                                 onRowSelected={(row) => {
                                   setState({
                                     ...state,
-                                    idZona: row.data.m_nIdCiudad
+                                    idCiudadSeleccionado: row.data.m_nIdCiudad,
+                                    idCodigoPostalSeleccionado: 0
+                                  })
+                                }}
+                                onSelectionModelChange={(newSelection) => {
+                                  console.log(newSelection);
+                              }}
+                              />
+                            ) : (
+                              <div>No se encontró ningún registro</div>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="widget-wrap col-sm-6 col-md-4">
+                          <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                            {dataCodigoPostal.length != 0 ? (
+                              <DataGrid
+                                rows={dataCodigoPostal.filter(cp => cp.m_nIdCiudad == state.idCiudadSeleccionado)}
+                                columns={columnsCodigoPostal}
+                                hideFooterPagination="true"
+                                hideFooterSelectedRowCount="true"
+                                density="compact"
+                                getRowId={(row) => row.m_nIdCP}
+                                checkboxSelection={true}
+                                onRowSelected={(row) => {
+                                  handleSelectCodigoPostal(row.data.m_nIdCP)
+                                }}
+                              />
+                            ) : (
+                              <div>No se encontró ningún registro</div>
+                            )}
+                          </div>
+
+                        </div>
+
+                        <div className="widget-wrap col-sm-6 col-md-4">
+                          <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                            {dataLocalidades.length != 0 ? (
+                              <DataGrid
+                                rows={dataLocalidades.filter(localidad => localidad.m_nIdCodigoPostal == state.idCodigoPostalSeleccionado)}
+                                columns={columnsLocalidades}
+                                hideFooterPagination="true"
+                                hideFooterSelectedRowCount="true"
+                                density="compact"
+                                getRowId={(row) => row.m_nIdLocalidad}
+                                checkboxSelection={true}
+                                onRowSelected={(row) => {
+                                  setState({
+                                    ...state,
                                   })
                                 }}
                               />
@@ -444,18 +532,6 @@ function Zonas() {
                             )}
                           </div>
                         </div>
-
-                        <div className="widget-wrap col-sm-6 col-md-3">
-                          Código Postal
-                            </div>
-
-                        <div className="widget-wrap col-sm-6 col-md-3">
-                          Localidades
-                            </div>
-
-                        <div className="widget-wrap col-sm-6 col-md-3">
-                          Colonias
-                            </div>
 
                         <div className="row">
                           <div className="form-footer" className="col-sm-12 col-md-12 unit">
@@ -470,42 +546,6 @@ function Zonas() {
                 </div>
               </div>
             </div>
-
-            <div className="widget-wrap" id="Importar" className="tab-pane fade">
-              <div className="widget-wrap">
-                <div className="widget-content">
-                  <div className="row">
-                    <div className="col-md-12">
-                      <form className="j-forms">
-                        <div className="form-content">
-                          <div className="col-sm-12 col-md-12 unit">
-                            <label className="label">
-                              Importar
-                          </label>
-                            <div className="input">
-                              <input
-                                onChange={handleUpload}
-                                className="form-control"
-                                type="file"
-                                placeholder="some text"
-                                id="importar"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <br></br>
-                        <div className="form-footer" className="col-md-12">
-                          <button className="btn btn-default btn-block ex-noty" data-layout="topCenter" data-type="information">Notificación</button>
-                          <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"> Cancelar</button>
-                          <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
           </div>
         </div>
 
