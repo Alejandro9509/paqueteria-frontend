@@ -3,35 +3,24 @@ import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import BasicTable from "./BasicTable";
-import { useTable, useFilters, useAsyncDebounce, useSortBy } from 'react-table'
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import TextField from "@material-ui/core/TextField";
+import { useTable, useFilters, useSortBy } from 'react-table'
 import { makeStyles } from "@material-ui/core/styles";
 import { DataGrid } from '@material-ui/data-grid';
 
 import Noty from 'noty';
 
-function showSuccess(mensaje){
+function showSuccess(mensaje) {
   new Noty({
-    type:"information",
-    layout:"topCenter",
+    type: "information",
+    layout: "topCenter",
     text: mensaje,
-    timeout:"3000"
+    timeout: "3000"
   }).show()
 }
-
-const styles = {
-  seleccionado: {
-    backgroundColor: "#FCC88F",
-  },
-  noSeleccionado: {
-    backgroundColor: "#FFFFFF",
-  }
-};
-const useStyles = makeStyles(styles);
-
 function Sucursal() {
 
-  const classes = useStyles();
   const [data, setData] = React.useState([])
   const [dataPais, setDataPais] = React.useState([])
   const [dataEstado, setDataEstado] = React.useState([])
@@ -42,10 +31,10 @@ function Sucursal() {
     sucursal: "",
     abreviacion: "",
     idPais: 0,
-    idEstado: 0,
+    idEstado: {},
     codigoPostal: 0,
     municipio: "",
-    DerechoBorrar:17,
+    DerechoBorrar: 17,
     localidad: "",
     colonia: "",
     calle: "",
@@ -55,8 +44,8 @@ function Sucursal() {
     zonaHoraria: "08:00|America/Tijuana",
     activo: false,
     height: window.innerHeight,
-    CreadoPor:localStorage.getItem("UsuarioId"),
-    ModificadoPor:localStorage.getItem("UsuarioId")
+    CreadoPor: localStorage.getItem("UsuarioId"),
+    ModificadoPor: localStorage.getItem("UsuarioId")
   })
 
 
@@ -73,11 +62,11 @@ function Sucursal() {
       "Colonia": state.colonia,
       "Localidad": state.localidad,
       "Municipio": state.municipio,
-      "IdEstado": state.idEstado,
+      "IdEstado": state.idEstado.m_nIdEstado,
       "IdImpuestoTraslado": state.iva,
       "Activa": state.activo,
       "CreadoPor": state.CreadoPor,
-      "ModificadoPor":state.ModificadoPor,
+      "ModificadoPor": state.ModificadoPor,
       "ZonaHoraria": state.zonaHoraria.split("|")[0],
       "DescripcionZonaHoraria": state.zonaHoraria.split("|")[1],
     }
@@ -113,10 +102,9 @@ function Sucursal() {
       //showSuccess(respuesta.data)
 
       derecho = respuesta.data;
-      if (derecho == false)
-      {
-        showSuccess ("El usuario no tiene derechos para realizar el proceso");
-        return; 
+      if (derecho == false) {
+        showSuccess("El usuario no tiene derechos para realizar el proceso");
+        return;
       }
       const url = `${process.env.REACT_APP_API_URL}/Sucursales/Eliminar/` + id;
       axios.delete(url, { headers }).then(respuesta => {
@@ -125,10 +113,10 @@ function Sucursal() {
       }).catch(err => {
         showSuccess(err)
       });
-  
-	}).catch(err => {
-    showSuccess(err)
-    });  
+
+    }).catch(err => {
+      showSuccess(err)
+    });
   }
 
   function handleShowModificar(id) {
@@ -166,8 +154,7 @@ function Sucursal() {
       sucursal: "",
       abreviacion: "",
       idPais: dataPais[0].m_nIdPais,
-      idEstado: 21,
-      codigoPostal: dataCodigoPostal[0].m_nIdCP,
+      idEstado: {},
       municipio: "",
       localidad: "",
       colonia: "",
@@ -202,6 +189,7 @@ function Sucursal() {
       idSucursal: id
     });
   }
+
   const handleSelectPais = event => {
     setState({
       ...state,
@@ -253,14 +241,14 @@ function Sucursal() {
   ]);
 
   useEffect(value => {
-    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0)
-    {
+    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
       showSuccess("Es necesario iniciar sesion para acceder a este proceso");
       window.location.replace("login");
       return;
     }
     getAllData();
     getAllPais();
+    getAllCodigosPostales();
   }, []);
 
   function getAllData() {
@@ -282,12 +270,11 @@ function Sucursal() {
     const url = `${process.env.REACT_APP_API_URL}/Estados/ByPais/${id}`;
     axios.get(url, { headers }).then((respuesta) => {
       setDataEstado(respuesta.data);
-      getAllCodigosPostales(21)
-    });
+   });
   }
 
-  function getAllCodigosPostales(id) {
-    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListadoPorEstado/${id}`;
+  function getAllCodigosPostales() {
+    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       setDataCodigoPostal(respuesta.data);
     });
@@ -296,105 +283,6 @@ function Sucursal() {
   const headers = {
     'Content-Type': 'application/json',
     //    'access-control-allow-origin': '*'
-  }
-
-  function DefaultColumnFilter({
-    column: { filterValue, preFilteredRows, setFilter },
-  }) {
-    const count = preFilteredRows.length
-
-    return (
-      <input
-        className="form-control"
-        value={filterValue || ''}
-        onChange={e => {
-          setFilter(e.target.value || undefined)
-        }}
-        placeholder={`Buscar ${count} registros...`}
-      />
-    )
-  }
-
-  function Table({ columns, data }) {
-
-    const defaultColumn = React.useMemo(
-      () => ({
-        // Default Filter UI
-        Filter: DefaultColumnFilter,
-      }),
-      []
-    )
-
-    const {
-      getTableProps,
-      getTableBodyProps,
-      headerGroups,
-      rows,
-      prepareRow,
-    } = useTable(
-      {
-        columns,
-        data,
-        defaultColumn
-      },
-      useFilters,
-      useSortBy
-    )
-
-    return (
-      <div className="col-md-12">
-        <table className="table" {...getTableProps()}>
-          <thead>
-            {headerGroups.map(headerGroup => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
-                {headerGroup.headers.map(column => (
-                  // Add the sorting props to control sorting. For this example
-                  // we can add them into the header props
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    {column.render('Name')}
-                    {/* Add a sort direction indicator */}
-                    <span>
-                      {column.isSorted
-                        ? column.isSortedDesc
-                          ? <i className="fa fa-caret-up" />
-                          : <i className="fa fa-caret-down" />
-                        : ''}
-                    </span>
-                    <div>{column.canFilter ? column.render('Filter') : null}</div>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map(
-              (row, i) => {
-                prepareRow(row);
-                return (
-                  <tr {...row.getRowProps()}
-                  onClick={handleSelectRow.bind(this, row.original.m_nIdSucursal)}
-                  className={state.idSucursal === row.original.m_nIdSucursal ? classes.seleccionado : classes.noSeleccionado}>
-                    <td>
-                      <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdSucursal))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{color:"#F9A03E"}} /></a>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdSucursal))} className="btn btn-default btn-sm"><i className="fa fa-eye" style={{color:"#F9A03E"}} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdSucursal))}><i className="zmdi zmdi-delete"  style={{color:"#F30B0B"}} /></a>
-                      </div>
-                    </td>
-                    {row.cells.map(cell => {
-                      return (
-                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                      )
-                    })}
-                  </tr>
-                )
-              }
-            )}
-          </tbody>
-        </table>
-      </div>
-    )
   }
 
   return (
@@ -450,13 +338,13 @@ function Sucursal() {
             <div className="widget-wrap" id="Listado" className="tab-pane fade in active">
               <div className="widget-wrap">
                 <div className="widget-content">
-                <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                  <div className="row" style={{ height: state.height - 250, width: '100%' }}>
                     {data.length != 0 ? (
                       <DataGrid
                         rows={data}
                         columns={columns}
                         density="compact"
-                        pageSize={ Math.floor((state.height - 310)/30)}
+                        pageSize={Math.floor((state.height - 310) / 30)}
                         getRowId={(row) => row.m_nIdSucursal}
                         onRowSelected={(row) => {
                           setState({
@@ -482,317 +370,334 @@ function Sucursal() {
                       <form className="j-forms" onSubmit={handleAceptar}>
                         <div className="form-content">
 
-<div className="row">
-                          <div className="col-sm-6 col-md-2-5 unit">
-                            <label className="label">
-                              Sucursal
+                          <div className="row">
+                            <div className="col-sm-6 col-md-2-5 unit">
+                              <label className="label">
+                                Sucursal
                           </label>
-                            <div className="input">
+                              <div className="input">
 
-                              <input
-                                onChange={handleChange}
-                                className="form-control"
-                                type="text"
-                                required
-                                value={state.sucursal}
-                                id="sucursal"
-                                maxLength="80"
-                              />
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  required
+                                  value={state.sucursal}
+                                  id="sucursal"
+                                  maxLength="80"
+                                />
+                              </div>
                             </div>
-                          </div>
 
-                         
 
-                          <div className="col-sm-6 col-md-2-5 unit unit">
-                            <label className="label">
-                              Abreviación
+
+                            <div className="col-sm-6 col-md-2-5 unit unit">
+                              <label className="label">
+                                Abreviación
                           </label>
-                            <div className="input">
-                              <input
-                                onChange={handleChange}
-                                className="form-control"
-                                type="text"
-                                required
-                                value={state.abreviacion}
-                                id="abreviacion"
-                                maxLength="50"
-                              />
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  required
+                                  value={state.abreviacion}
+                                  id="abreviacion"
+                                  maxLength="50"
+                                />
+                              </div>
                             </div>
-                          </div>
 
 
-                          <div className="col-sm-12 col-md-2-5 unit">
-                                    <label className="label">Estatus</label>
-                                    <label className="checkbox">
-                                      <input
-                                        onChange={
-                                          handleChangeBoolean
-                                        }
-                                        native
-                                        type="checkbox"
-                                        value={state.activo}
-                                        id="activo"
-                                        name="activo"
-                                      />
-                                      <i />
+                            <div className="col-sm-12 col-md-2-5 unit">
+                              <label className="label">Estatus</label>
+                              <label className="checkbox">
+                                <input
+                                  onChange={
+                                    handleChangeBoolean
+                                  }
+                                  native
+                                  type="checkbox"
+                                  value={state.activo}
+                                  id="activo"
+                                  name="activo"
+                                />
+                                <i />
                                     Activo
                                   </label>
-                                  </div>
-</div>
+                            </div>
+                          </div>
 
-<div className="row">
-                          <div className="col-sm-12 col-md-2-5 unit">
-                            <label className="label">
-                              País
+                          <div className="row">
+                            <div className="col-sm-12 col-md-2-5 unit">
+                              <label className="label">
+                                País
                             </label>
-                            <div className="input">
-                              <label className="input select">
-                                <select
-                                  className="form-control"
-                                  required
-                                  onChange={handleSelectPais}
-                                  value={state.idPais}
-                                  id="idPais"
-                                >
-                                  {
-                                    dataPais.length < 1 ?
+                              <div className="input">
+                                <label className="input select">
+                                  <select
+                                    className="form-control"
+                                    required
+                                    onChange={handleSelectPais}
+                                    value={state.idPais}
+                                    id="idPais"
+                                  >
+                                    {
+                                      dataPais.length < 1 ?
 
-                                      <option value="none">
-                                        País
+                                        <option value="none">
+                                          País
                                           </option>
-                                      :
-                                      dataPais.map((pais) => (
-                                        <option key={pais.m_nIdPais} value={pais.m_nIdPais}>
-                                          {pais.m_sPais}
-                                        </option>
-                                      ))
-                                  }
-                                </select>
-                                <i></i>
-                              </label>
+                                        :
+                                        dataPais.map((pais) => (
+                                          <option key={pais.m_nIdPais} value={pais.m_nIdPais}>
+                                            {pais.m_sPais}
+                                          </option>
+                                        ))
+                                    }
+                                  </select>
+                                  <i></i>
+                                </label>
+                              </div>
                             </div>
-                          </div>
 
-                          <div className="col-sm-12 col-md-2-5 unit">
-                            <label className="label">
-                              Estado
+                            <div className="col-sm-12 col-md-2-5 unit">
+                              <label className="label">
+                                Estado
                               </label>
-                            <div className="input">
+                              <div className="input">
+                                <Autocomplete
+                                  freeSolo
+                                  onChange={(event, newValue) =>
+                                    setState({
+                                      ...state,
+                                      idEstado: newValue,
+                                    })
+                                  }
+                                  value={state.idEstado}
+                                  disabled={
+                                    state.agregar === "Consultar"
+                                  }
+                                  id="idEstado"
+                                  disableClearable
+                                  forcePopupIcon={false}
+                                  options={dataEstado}
+                                  getOptionLabel={(option) =>
+                                    option.m_sEstado
+                                  }
+                                  variant="outlined"
+                                  style={{
+                                    transform: "translate(20px, 10px) scale(1) !important"
+                                  }}
+                                  renderInput={(params) => (
+                                    <div>
+                                      <TextField
+                                        required
+                                        margin="dense"
+                                        variant="outlined"
+                                        {...params}
+                                        InputProps={{
+                                          ...params.InputProps,
+                                          style: { height: 24 },
+                                          type: "search",
+                                          disabled:
+                                            state.agregar === "Consultar",
+                                        }}
+                                      />
+                                    </div>
+                                  )}
+                                />
+                              </div>
+                            </div>
+
+                            <div className="col-sm-12 col-md-2-5 unit">
+                              <label className="label">
+                                Código Postal
+                                  </label>
                               <label className="input select">
                                 <select
                                   className="form-control"
                                   required
-                                  onChange={handleSelectEstado}
-                                  value={state.idEstado}
-                                  id="idEstado"
+                                  value={state.codigoPostal}
+                                  onChange={handleChange}
+                                  id="codigoPostal"
                                 >
-                                  {
-                                    dataEstado.length < 1 ?
-
-                                      <option value="none">
-                                        Estados
-                                    </option>
-                                      :
-                                      dataEstado.map((estado) => (
-                                        <option value={estado.m_nIdEstado}>
-                                          {estado.m_sEstado}
-                                        </option>
-                                      ))
-                                  }
+                                  {dataCodigoPostal.filter( cp => cp.m_nIdEstado == state.idEstado.m_nIdEstado).map(
+                                    (codigoPostal) => (
+                                      <option key={codigoPostal.m_nIdCP} value={codigoPostal.m_nIdCP}>
+                                        {
+                                          codigoPostal.m_sCP
+                                        }
+                                      </option>
+                                    )
+                                  )}
                                 </select>
-                                <i></i>
+                                <i className="fa fa-arrow-down" />
                               </label>
                             </div>
-                          </div>
 
-                          <div className="col-sm-12 col-md-2-5 unit">
-                            <label className="label">
-                              Código Postal
-                                  </label>
-                            <label className="input select">
-                              <select
-                                className="form-control"
-                                required
-                                value={state.codigoPostal}
-                                onChange={handleChange}
-                                id="codigoPostal"
-                              >
-                                {dataCodigoPostal.map(
-                                  (codigoPostal) => (
-                                    <option key={codigoPostal.m_nIdCP} value={codigoPostal.m_nIdCP}>
-                                      {
-                                        codigoPostal.m_sCP
-                                      }
-                                    </option>
-                                  )
-                                )}
-                              </select>
-                              <i className="fa fa-arrow-down" />
-                            </label>
-                          </div>
-
-                          <div className="col-sm-12 col-md-2-5 unit">
-                            <label className="label">
-                              Municipio
+                            <div className="col-sm-12 col-md-2-5 unit">
+                              <label className="label">
+                                Municipio
                           </label>
-                            <div className="input">
+                              <div className="input">
 
-                              <input
-                                onChange={handleChange}
-                                className="form-control"
-                                type="text"
-                                required
-                                value={state.municipio}
-                                id="municipio"
-                                maxLength="80"
-                              />
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  required
+                                  value={state.municipio}
+                                  id="municipio"
+                                  maxLength="80"
+                                />
+                              </div>
                             </div>
-                          </div>
 
-                          <div className="col-sm-12 col-md-2-5 unit">
-                            <label className="label">
-                              Localidad
+                            <div className="col-sm-12 col-md-2-5 unit">
+                              <label className="label">
+                                Localidad
                           </label>
-                            <div className="input">
-                              <input
-                                onChange={handleChange}
-                                className="form-control"
-                                type="text"
-                                required
-                                value={state.localidad}
-                                id="localidad"
-                                maxLength="50"
-                              />
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  required
+                                  value={state.localidad}
+                                  id="localidad"
+                                  maxLength="50"
+                                />
+                              </div>
                             </div>
-                          </div>
 
                           </div>
-<div className="row">
-                          <div className="col-sm-12 col-md-2-5  unit">
-                            <label className="label">
-                              Colonia
+                          <div className="row">
+                            <div className="col-sm-12 col-md-2-5  unit">
+                              <label className="label">
+                                Colonia
                           </label>
-                            <div className="input">
-                              <input
-                                onChange={handleChange}
-                                className="form-control"
-                                type="text"
-                                required
-                                value={state.colonia}
-                                id="colonia"
-                                maxLength="50"
-                              />
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  required
+                                  value={state.colonia}
+                                  id="colonia"
+                                  maxLength="50"
+                                />
+                              </div>
                             </div>
-                          </div>
 
-                          <div className="col-sm-12 col-md-2-5  unit">
-                            <label className="label">
-                              Calle
+                            <div className="col-sm-12 col-md-2-5  unit">
+                              <label className="label">
+                                Calle
                           </label>
-                            <div className="input">
-                              <input
-                                onChange={handleChange}
-                                className="form-control"
-                                type="text"
-                                required
-                                value={state.calle}
-                                id="calle"
-                                maxLength="50"
-                              />
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  required
+                                  value={state.calle}
+                                  id="calle"
+                                  maxLength="50"
+                                />
+                              </div>
                             </div>
-                          </div>
 
-                          <div className="col-sm-12 col-md-2-5  unit">
-                            <label className="label">
-                              Num. Interior
+                            <div className="col-sm-12 col-md-2-5  unit">
+                              <label className="label">
+                                Num. Interior
                           </label>
-                            <div className="input">
-                              <input
-                                onChange={handleChange}
-                                className="form-control"
-                                type="text"
-                                required
-                                value={state.numInterior}
-                                id="numInterior"
-                                maxLength="50"
-                              />
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  required
+                                  value={state.numInterior}
+                                  id="numInterior"
+                                  maxLength="50"
+                                />
+                              </div>
                             </div>
-                          </div>
 
-                          <div className="col-sm-12 col-md-2-5 unit">
-                            <label className="label">
-                              Num. Exterior
+                            <div className="col-sm-12 col-md-2-5 unit">
+                              <label className="label">
+                                Num. Exterior
                           </label>
-                            <div className="input">
-                              <input
-                                onChange={handleChange}
-                                className="form-control"
-                                type="text"
-                                required
-                                value={state.numExterior}
-                                id="numExterior"
-                                maxLength="50"
-                              />
+                              <div className="input">
+                                <input
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  required
+                                  value={state.numExterior}
+                                  id="numExterior"
+                                  maxLength="50"
+                                />
+                              </div>
                             </div>
-                          </div>
 
                           </div>
                           <div className="row">
 
-                  
-                          <div className="col-sm-12 col-md-2-5  unit">
-                            <label className="label">
-                              IVA
-                            </label>
-                            <label className="input select">
-                              <select
-                                className="form-control"
-                                required
-                                value={state.iva}
-                                onChange={handleChange}
-                                id="iva"
-                              >
-                                <option value="18">
-                                  18%
-                              </option>
-                                <option value="16">
-                                  16%
-                              </option>
-                              </select>
-                              <i className="fa fa-arrow-down" />
-                            </label>
-                          </div>
 
-                          <div className="col-sm-12 col-md-2-5  unit">
-                            <label className="label">
-                              Zona Horaria
+                            <div className="col-sm-12 col-md-2-5  unit">
+                              <label className="label">
+                                IVA
                             </label>
-                            <label className="input select">
-                              <select
-                                className="form-control"
-                                required
-                                value={state.zonaHoraria}
-                                onChange={handleChange}
-                                id="zonaHoraria"
-                              >
-                                <option value="08:00|America/Tijuana">
-                                  America/Tijuana
+                              <label className="input select">
+                                <select
+                                  className="form-control"
+                                  required
+                                  value={state.iva}
+                                  onChange={handleChange}
+                                  id="iva"
+                                >
+                                  <option value="18">
+                                    18%
                               </option>
-                                <option value="06:00|America/Mexico_City">
-                                  America/Mexico_City
+                                  <option value="16">
+                                    16%
                               </option>
-                              </select>
-                              <i className="fa fa-arrow-down" />
+                                </select>
+                                <i className="fa fa-arrow-down" />
+                              </label>
+                            </div>
+
+                            <div className="col-sm-12 col-md-2-5  unit">
+                              <label className="label">
+                                Zona Horaria
                             </label>
+                              <label className="input select">
+                                <select
+                                  className="form-control"
+                                  required
+                                  value={state.zonaHoraria}
+                                  onChange={handleChange}
+                                  id="zonaHoraria"
+                                >
+                                  <option value="08:00|America/Tijuana">
+                                    America/Tijuana
+                              </option>
+                                  <option value="06:00|America/Mexico_City">
+                                    America/Mexico_City
+                              </option>
+                                </select>
+                                <i className="fa fa-arrow-down" />
+                              </label>
+                            </div>
                           </div>
-</div>
                         </div>
                         <br></br>
                         <div className="form-footer" className="col-md-12">
                           <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
                           >
-                            Cancelar</button> 
-                            {/** TODO Realizar correctamente el cancelar*/}
+                            Cancelar</button>
+                          {/** TODO Realizar correctamente el cancelar*/}
                           <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                         </div>
                       </form>
