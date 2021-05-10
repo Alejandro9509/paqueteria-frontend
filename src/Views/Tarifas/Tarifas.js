@@ -10,6 +10,8 @@ import { ReactComponent as Activo } from "../../iconos/Menu/palomita.svg";
 import { ReactComponent as NoActivo } from "../../iconos/Menu/cruz.svg";
 import { DataGrid } from '@material-ui/data-grid';
 import $ from "jquery";
+import { dataGridLocaleText } from '../../Constants';
+import { Tooltip } from '@material-ui/core';
 window.jQuery = window.$ = $;
 const headers = {
     'Content-Type': 'application/json',
@@ -38,13 +40,23 @@ class Tarifas extends Component {
             columns: [
                 {
                     headerName: "Acciones",
+                    sortable: false, filterable: false,
                     field: "",
                     renderCell: (row) => {
                         return (
                             <div>
-                                <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (this.handleShowModificar(row.row.m_nIdTarifa))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                                <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (this.handleShowConsultar(row.row.m_nIdTarifa))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                                <a href="#" className="btn btn-default btn-xs" onClick={() => (this.handleEliminar(row.row.m_nIdTarifa))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                                <Tooltip title="Modificar">
+                                    <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (this.handleShowModificar(row.row.m_nIdTarifa))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+
+                                </Tooltip>
+                                <Tooltip title="Consultar">
+                                    <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (this.handleShowConsultar(row.row.m_nIdTarifa))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+
+                                </Tooltip>
+                                <Tooltip title="Eliminar">
+                                    <a href="#" className="btn btn-default btn-xs" onClick={() => (this.handleEliminar(row.row.m_nIdTarifa))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                                </Tooltip>
+
                             </div>
                         )
                     }
@@ -198,7 +210,7 @@ class Tarifas extends Component {
             axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
                 showSuccess(respuesta.data)
                 this.getAllData()
-                this.setState({ openDialog: false, pantalla: 1 })
+                this.setState({ openDialog: false, pantalla: 1, agregar: "Agregar" })
                 $('.nav-tabs li ').removeClass('active');
                 $('.nav-tabs li').eq(0).addClass('active');
                 $('.tab-content div ').removeClass('in show');
@@ -212,7 +224,7 @@ class Tarifas extends Component {
             axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
                 showSuccess(respuesta.data)
                 this.getAllData()
-                this.setState({ openDialog: false, pantalla: 1 })
+                this.setState({ openDialog: false, pantalla: 1, agregar: "Agregar" })
                 $('.nav-tabs li ').removeClass('active');
                 $('.nav-tabs li').eq(0).addClass('active');
                 $('.tab-content div ').removeClass('in show');
@@ -232,7 +244,7 @@ class Tarifas extends Component {
     getAllData() {
         const url = `${process.env.REACT_APP_API_URL}/Tarifas/GetListado`;
         axios.get(url, { headers }).then(respuesta => {
-            this.setState({ data: respuesta.data, agregar:"Agregar" })
+            this.setState({ data: respuesta.data, agregar: "Agregar" })
         });
     }
 
@@ -241,9 +253,20 @@ class Tarifas extends Component {
         const { height, data, columns, edit, consult } = this.state
 
         return (
-            <div>
+            <div >
                 <header className="topbar clearfix">
-                    <Cabecera />
+                    <Cabecera titulo="Tarifas" >
+                        <div className="page-header">
+                            <ul className="list-page-breadcrumb">
+                                <li>
+                                    <a href="/Catalogos" className="color-mapeo">
+                                        Catálogos <i className="zmdi zmdi-chevron-right" />
+                                    </a>
+                                </li>
+                                <li className="active-page">Tarifas</li>
+                            </ul>
+                        </div>
+                    </Cabecera>
                 </header>
 
                 {/*Leftbar Start Here*/}
@@ -253,28 +276,11 @@ class Tarifas extends Component {
 
                 <section className="main-container">
                     <div className="container-fluid">
-                        <div className="page-header filled full-block light">
-                            <div className="row">
-                                <div className="col-md-6 col-sm-6">
-                                    <h2>Tarifas</h2>
-                                </div>
-                                <div className="col-md-6 col-sm-6">
-                                    <ul className="list-page-breadcrumb">
-                                        <li>
-                                            <a href="/Catalogos" className="color-mapeo">
-                                                Catálogos <i className="zmdi zmdi-chevron-right" />
-                                            </a>
-                                        </li>
-                                        <li className="active-page">Tarifas</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
 
 
                         <ul className="nav navStatica nav-tabs">
                             <li className="active">
-                                <a data-toggle="tab" data_id="1" href="#Listado" onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar"}); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
+                                <a data-toggle="tab" data_id="1" href="#Listado" onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
                                     <i className="fa fa-list" /> Listado
               </a>
                             </li>
@@ -307,6 +313,7 @@ class Tarifas extends Component {
                                         <div className="row" style={{ height: this.state.height - 250, width: '100%' }}>
                                             {data.length != 0 ? (
                                                 <DataGrid
+                                                    localeText={dataGridLocaleText}
                                                     rows={data}
                                                     columns={columns}
                                                     density="compact"
@@ -329,7 +336,7 @@ class Tarifas extends Component {
                             <div id="Agregar" className="tab-pane fade">
                                 {
                                     this.state.pantalla == 2 &&
-                                    <CrearTarifa edit={this.state.edit} select={this.state.selected} onSubmit={this.handleAceptar}></CrearTarifa>
+                                    <CrearTarifa edit={this.state.edit} select={this.state.selected} onSubmit={this.handleAceptar} onCancel={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}></CrearTarifa>
                                 }
 
                             </div>

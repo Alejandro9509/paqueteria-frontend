@@ -10,14 +10,16 @@ import { makeStyles } from "@material-ui/core/styles";
 import { DataGrid } from '@material-ui/data-grid';
 
 import Noty from 'noty';
+import { dataGridLocaleText } from "../Constants";
+import { Tooltip } from "@material-ui/core";
 
 function showSuccess(mensaje) {
-  new Noty({
-    type: "information",
-    layout: "topCenter",
-    text: mensaje,
-    timeout: "3000"
-  }).show()
+    new Noty({
+        type: "information",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000"
+    }).show()
 }
 function Sucursal() {
 
@@ -49,10 +51,10 @@ function Sucursal() {
   })
 
 
-  const handleAceptar = (e) => {
-    e.preventDefault()
-    console.log(state.zonaHoraria.split("|"))
-    var params = {
+    const handleAceptar = (e) => {
+        e.preventDefault()
+        console.log(state.zonaHoraria.split("|"))
+        var params = {
 
       "Sucursal": state.sucursal,
       "Abreviacion": state.abreviacion,
@@ -93,13 +95,13 @@ function Sucursal() {
       });
     }
 
-  }
+    }
 
-  function handleEliminar(id) {
-    var derecho;
-    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-    axios.get(urlDelete, { headers }).then(respuesta => {
-      //showSuccess(respuesta.data)
+    function handleEliminar(id) {
+        var derecho;
+        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
+        axios.get(urlDelete, { headers }).then(respuesta => {
+            //showSuccess(respuesta.data)
 
       derecho = respuesta.data;
       if (derecho == false) {
@@ -119,32 +121,32 @@ function Sucursal() {
     });
   }
 
-  function handleShowModificar(id) {
-    console.log(id)
-    const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetById/` + id;
-    axios.get(url, { headers }).then(respuesta => {
-      console.log(respuesta.data)
-      setState({
-        ...state,
-        agregar: "Modificar",
-        idSucursal: respuesta.data.m_nIdSucursal,
-        sucursal: respuesta.data.m_sSucursal,
-        abreviacion: respuesta.data.m_sAbreviacion,
-        idPais: 0,
-        idEstado: respuesta.data.m_nIdEstado,
-        codigoPostal: 0,
-        municipio: respuesta.data.m_sMunicipio,
-        localidad: respuesta.data.m_sLocalidad,
-        colonia: respuesta.data.m_sColonia,
-        calle: respuesta.data.m_sCalle,
-        numInterior: respuesta.data.m_sNoInterior,
-        numExterior: respuesta.data.m_sNoExterior,
-        iva: respuesta.data.m_sIdImpuestoTraslado,
-        zonaHoraria: respuesta.data.m_xZonaHoraria,
-        activo: respuesta.data.m_bActiva
-      })
-    });
-  }
+    function handleShowModificar(id) {
+        console.log(id)
+        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetById/` + id;
+        axios.get(url, { headers }).then(respuesta => {
+            console.log(respuesta.data)
+            setState({
+                ...state,
+                agregar: "Modificar",
+                idSucursal: respuesta.data.m_nIdSucursal,
+                sucursal: respuesta.data.m_sSucursal,
+                abreviacion: respuesta.data.m_sAbreviacion,
+                idPais: 0,
+                idEstado: respuesta.data.m_nIdEstado,
+                codigoPostal: 0,
+                municipio: respuesta.data.m_sMunicipio,
+                localidad: respuesta.data.m_sLocalidad,
+                colonia: respuesta.data.m_sColonia,
+                calle: respuesta.data.m_sCalle,
+                numInterior: respuesta.data.m_sNoInterior,
+                numExterior: respuesta.data.m_sNoExterior,
+                iva: respuesta.data.m_sIdImpuestoTraslado,
+                zonaHoraria: respuesta.data.m_xZonaHoraria,
+                activo: respuesta.data.m_bActiva
+            })
+        });
+    }
 
   function handleShowAgregar() {
     setState({
@@ -167,13 +169,13 @@ function Sucursal() {
     })
   }
 
-  const handleChange = event => {
-    console.log(event.target.id + " : " + event.target.value)
-    setState({
-      ...state,
-      [event.target.id]: event.target.value
-    });
-  };
+    const handleChange = event => {
+        console.log(event.target.id + " : " + event.target.value)
+        setState({
+            ...state,
+            [event.target.id]: event.target.value
+        });
+    };
 
   const handleSelectEstado = event => {
     setState({
@@ -198,47 +200,57 @@ function Sucursal() {
     getAllEstado(event.target.value)
   }
 
-  function handleChangeBoolean() {
-    setState({
-      ...state,
-      activo: !state.activo
-    });
-    console.log(state.activo)
-  }
-
-  const columns = React.useMemo(() => [
-    {
-      headerName: "Acciones",
-      field: "",
-      renderCell: (row) => {
-        return (
-          <div>
-            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdSucursal))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdSucursal))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdSucursal))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
-          </div>
-        )
-      }
-    },
-    {
-      headerName: "Abreviación",
-      field: "m_sAbreviacion",
-      width: 125
-    }, {
-      headerName: "Sucursal",
-      field: "m_sSucursal",
-      width: 400
-    }, {
-      headerName: "Ubicación",
-      field: "m_dtCreadoEl",
-      width: 400
-    }, {
-      headerName: "Activo",
-      field: "m_nCreadoPor",
-      width: 100
+    function handleChangeBoolean() {
+        setState({
+            ...state,
+            activo: !state.activo
+        });
+        console.log(state.activo)
     }
 
-  ]);
+    const columns = React.useMemo(() => [
+        {
+            headerName: "Acciones",
+            sortable: false, filterable: false,
+            field: "",
+            renderCell: (row) => {
+                return (
+                    <div>
+                        <Tooltip title="Modificar">
+                            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdSucursal))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+
+                        </Tooltip>
+                        <Tooltip title="Consultar">
+                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdSucursal))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+
+                        </Tooltip>
+                        <Tooltip title="Eliminar">
+                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdSucursal))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+
+                        </Tooltip>
+                    </div>
+                )
+            }
+        },
+        {
+            headerName: "Abreviación",
+            field: "m_sAbreviacion",
+            width: 125
+        }, {
+            headerName: "Sucursal",
+            field: "m_sSucursal",
+            width: 400
+        }, {
+            headerName: "Ubicación",
+            field: "m_dtCreadoEl",
+            width: 400
+        }, {
+            headerName: "Activo",
+            field: "m_nCreadoPor",
+            width: 100
+        }
+
+    ]);
 
   useEffect(value => {
     if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
@@ -251,20 +263,20 @@ function Sucursal() {
     getAllCodigosPostales();
   }, []);
 
-  function getAllData() {
-    const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-    axios.get(url, { headers }).then(respuesta => {
-      setData(respuesta.data)
-    });
-  };
+    function getAllData() {
+        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
+        axios.get(url, { headers }).then(respuesta => {
+            setData(respuesta.data)
+        });
+    };
 
-  function getAllPais() {
-    const url = `${process.env.REACT_APP_API_URL}/Pais/GetListado`;
-    axios.get(url, { headers }).then((respuesta) => {
-      setDataPais(respuesta.data);
-      getAllEstado(respuesta.data[0].m_nIdPais)
-    });
-  }
+    function getAllPais() {
+        const url = `${process.env.REACT_APP_API_URL}/Pais/GetListado`;
+        axios.get(url, { headers }).then((respuesta) => {
+            setDataPais(respuesta.data);
+            getAllEstado(respuesta.data[0].m_nIdPais)
+        });
+    }
 
   function getAllEstado(id) {
     const url = `${process.env.REACT_APP_API_URL}/Estados/ByPais/${id}`;
@@ -273,66 +285,59 @@ function Sucursal() {
    });
   }
 
-  function getAllCodigosPostales() {
-    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
-    axios.get(url, { headers }).then((respuesta) => {
-      setDataCodigoPostal(respuesta.data);
-    });
-  }
+    function getAllCodigosPostales() {
+        const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
+        axios.get(url, { headers }).then((respuesta) => {
+            setDataCodigoPostal(respuesta.data);
+        });
+    }
 
-  const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-  }
+    const headers = {
+        'Content-Type': 'application/json',
+        //    'access-control-allow-origin': '*'
+    }
 
   return (
     <div>
 
-      <header className="topbar clearfix">
-        <Cabecera />
-      </header>
+            <header className="topbar clearfix">
+                <Cabecera titulo="Sucursal" >
+                    <div className="page-header">
+                        <ul className="list-page-breadcrumb">
+                            <li>
+                                <a href="/Configuracion" className="color-mapeo">
+                                    Configuración <i className="zmdi zmdi-chevron-right" />
+                                </a>
+                            </li>
+                            <li className="active-page">Sucursal</li>
+                        </ul>
+                    </div>
+                </Cabecera>
+            </header>
 
-      {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
-        <BarraLateralIzquierda />
-      </aside>
-      {/*Leftbar End Here*/}
+            {/*Leftbar Start Here*/}
+            <aside className="iconic-leftbar">
+                <BarraLateralIzquierda />
+            </aside>
+            {/*Leftbar End Here*/}
 
-      {/*Page Container Start Here*/}
-      <section className="main-container">
+            {/*Page Container Start Here*/}
+            <section className="main-container">
 
-        <div className="container-fluid">
+                <div className="container-fluid">
 
-          <div className="page-header filled full-block light">
-            <div className="row">
-              <div className="col-md-6 col-sm-6">
-                <h2>Sucursal</h2>
-              </div>
-              <div className="col-md-6 col-sm-6">
-                <ul className="list-page-breadcrumb">
-                  <li>
-                    <a href="/Configuracion" className="color-mapeo">
-                      Configuración <i className="zmdi zmdi-chevron-right" />
-                    </a>
-                  </li>
-                  <li className="active-page">Sucursal</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <ul className="nav navStatica nav-tabs">
-            <li className="active">
-              <a data-toggle="tab" href="#Listado">
-                <i className="fa fa-list" /> Listado
+                    <ul className="nav navStatica nav-tabs">
+                        <li className="active">
+                            <a data-toggle="tab" href="#Listado">
+                                <i className="fa fa-list" /> Listado
             </a>
-            </li>
-            <li>
-              <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
-                <i className="fa fa-plus-circle" /> {state.agregar}
-              </a>
-            </li>
-          </ul>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
+                                <i className="fa fa-plus-circle" /> {state.agregar}
+                            </a>
+                        </li>
+                    </ul>
 
           <div className="row" className="tab-content">
             <div className="widget-wrap" id="Listado" className="tab-pane fade in active">
@@ -341,6 +346,7 @@ function Sucursal() {
                   <div className="row" style={{ height: state.height - 250, width: '100%' }}>
                     {data.length != 0 ? (
                       <DataGrid
+                          localeText={dataGridLocaleText}
                         rows={data}
                         columns={columns}
                         density="compact"
@@ -358,17 +364,17 @@ function Sucursal() {
                     )}
                   </div>
 
-                </div>
-              </div>
-            </div>
+                                </div>
+                            </div>
+                        </div>
 
-            <div className="widget-wrap" id="Agregar" className="tab-pane fade">
-              <div className="widget-wrap">
-                <div className="widget-content">
-                  <div className="row">
-                    <div className="col-md-12">
-                      <form className="j-forms" onSubmit={handleAceptar}>
-                        <div className="form-content">
+                        <div className="widget-wrap" id="Agregar" className="tab-pane fade">
+                            <div className="widget-wrap">
+                                <div className="widget-content">
+                                    <div className="row">
+                                        <div className="col-md-12">
+                                            <form className="j-forms" onSubmit={handleAceptar}>
+                                                <div className="form-content">
 
                           <div className="row">
                             <div className="col-sm-6 col-md-2-5 unit">
@@ -641,8 +647,8 @@ function Sucursal() {
                               </div>
                             </div>
 
-                          </div>
-                          <div className="row">
+                                                    </div>
+                                                    <div className="row">
 
 
                             <div className="col-sm-12 col-md-2-5  unit">
@@ -708,20 +714,20 @@ function Sucursal() {
             </div>
 
 
-          </div>
+                    </div>
+                </div>
+
+            </section>
+            {/*Page Container End Here*/}
+
+            {/*Rightbar Start Here*/}
+            <aside className="rightbar">
+                <BarraLateralDerecha />
+            </aside>
+
         </div>
 
-      </section>
-      {/*Page Container End Here*/}
-
-      {/*Rightbar Start Here*/}
-      <aside className="rightbar">
-        <BarraLateralDerecha />
-      </aside>
-
-    </div>
-
-  );
+    );
 }
 
 export default Sucursal;

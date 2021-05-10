@@ -359,14 +359,25 @@ function GrupoUnidades() {
     }
 
     return (
-        <div>
+        <div >
 
             <header className="topbar clearfix">
-                <Cabecera />
+                <Cabecera titulo="Grupo Unidades" >
+                    <div className="page-header">
+                        <ul className="list-page-breadcrumb">
+                            <li>
+                                <a href="/Catalogos" className="color-mapeo">
+                                    Catálogos <i className="zmdi zmdi-chevron-right" />
+                                </a>
+                            </li>
+                            <li className="active-page">Grupo Unidades</li>
+                        </ul>
+                    </div>
+                </Cabecera>
             </header>
 
             {/*Leftbar Start Here*/}
-            <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
+            <aside className="iconic-leftbar">
                 <BarraLateralIzquierda />
             </aside>
             {/*Leftbar End Here*/}
@@ -376,23 +387,7 @@ function GrupoUnidades() {
 
                 <div className="container-fluid">
 
-                    <div className="page-header filled full-block light">
-                        <div className="row">
-                            <div className="col-md-6 col-sm-6">
-                                <h2>Grupo Unidades</h2>
-                            </div>
-                            <div className="col-md-6 col-sm-6">
-                                <ul className="list-page-breadcrumb">
-                                    <li>
-                                        <a href="/Catalogos" className="color-mapeo">
-                                            Catálogos <i className="zmdi zmdi-chevron-right" />
-                                        </a>
-                                    </li>
-                                    <li className="active-page">Grupo Unidades</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+
 
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
@@ -449,7 +444,7 @@ function GrupoUnidades() {
                                                     </div>
                                                     {/*****************************************Color************************************************************/}
                                                     <div className="col-xs-4 col-sm-3 col-md-2-5 col-lg-2-5 unit">
-                                                       
+
                                                         <div className="input">
                                                             <TextField
                                                                 variant="outlined"
@@ -467,7 +462,7 @@ function GrupoUnidades() {
                                                     </div>
                                                     {/*****************************************GrupoUnidad*******************************************************/}
                                                     <div className="col-xs-4 col-sm-3 col-md-2-5 col-lg-2-5 unit">
-                                                        
+
                                                         <div className="input">
                                                             <TextField
                                                                 variant="outlined"
@@ -514,7 +509,7 @@ function GrupoUnidades() {
                                                     <br></br>
                                                     <div className="col-xs-6 col-sm-3 col-md-2-5 col-lg-2-5 unit">
                                                         <button className="btn btn-default btn-block ex-noty" data-layout="topCenter" data-type="information">Notificación</button>
-                                                        <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
+                                                        <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn" href="#Listado" role="tab" data-toggle="tab"
                                                         >
                                                             Cancelar</button>
                                                         <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>

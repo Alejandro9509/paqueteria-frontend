@@ -3,10 +3,17 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, Calibri, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
+    font-size: 18px !important;
   -webkit-font-smoothing: antialiased;
-  min-width: fit-content;
+  width: 100%;
+  min-height: 100%;
   -moz-osx-font-smoothing: grayscale;
 }
+html {
+    position: relative;
+    height: 100%;
+}
+
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',

@@ -9,70 +9,66 @@ window.jQuery = window.$ = $;
 
 function Catalogo() {
 
-  const [state, setState] = React.useState({
-    height: window.innerHeight
-  })
+    const [state, setState] = React.useState({
+        height: window.innerHeight
+    })
 
-  return (
-    <div>
-      <header className="topbar clearfix">
-        <Cabecera />
-      </header>
+    return (
+        <div >
 
-      {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
-        <BarraLateralIzquierda />
-      </aside>
-      {/*Leftbar End Here*/}
+            <header className="topbar clearfix">
+                <Cabecera titulo="Catálogos" >
+                    <div className="page-header">
+                        <ul className="list-page-breadcrumb">
+                            <li className="active-page">Catálogos</li>
+                        </ul>
+                    </div>
+                </Cabecera>
+            </header>
 
-      {/*Page Container Start Here*/}
-      <section className="main-container">
+            {/*Leftbar Start Here*/}
+            <aside className="iconic-leftbar">
+                <BarraLateralIzquierda />
+            </aside>
+            {/*Leftbar End Here*/}
 
-        <div className="container-fluid" style={{ paddingLeft: "-5px", paddingRight: "-15px", justifyContent: "flex-start" }}>
+            {/*Page Container Start Here*/}
+            <section className="main-container">
 
-          <div className="page-header filled full-block light" >
-            <div className="row">
-              <div className="col-md-6 col-sm-6">
-                <h2>Catálogos</h2>
-              </div>
-              <div className="col-md-6 col-sm-6">
-                <ul className="list-page-breadcrumb">
-                  <li className="active-page">Catálogos</li>
-                </ul>
-              </div>
-            </div>
-          </div>
+                <div className="container-fluid" style={{ paddingLeft: "-5px", paddingRight: "-15px", justifyContent: "flex-start" }}>
 
-          <div style={{ display: "flex", flexWrap: "wrap" }}>
-            {catalogRoutes.map((r, index) => {
-              return (
-                <Link to={r.path}>
-                  <div className="caja-boton">
-                    <button
-                      type="button"
-                      key={index}
-                      className="boton-de-catalogos">
-                      <SvgIcon
-                        style={{ position: "relative" }}
-                        component={r.icon}
-                        className="imagen-de-catalogos"
-                        viewBox="0 0 50 50"
-                      />
-                    </button>
-                    <br></br>
-                    <label style={{ alignSelf: "center", paddingTop: "10px"  }}>{r.name}</label>
-                    <br></br>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+
+
+                    <div style={{ display: "flex", flexWrap: "wrap" }}>
+                        {catalogRoutes.map((r, index) => {
+                            return (
+                                <Link to={r.path}>
+                                    <div className="caja-boton">
+                                        <button
+                                            type="button"
+                                            key={index}
+                                            className="boton-de-catalogos">
+                                            <SvgIcon
+                                                style={{ position: "relative" }}
+                                                component={r.icon}
+                                                className="imagen-de-catalogos"
+                                                viewBox="0 0 50 50"
+                                            />
+                                        </button>
+                                        <br></br>
+                                        <label style={{ alignSelf: "center", paddingTop: "10px" }}>{r.name}</label>
+                                        <br></br>
+                                    </div>
+                                </Link>
+                            );
+                        })}
+                    </div>
+                </div>
+            </section>
+            {/*Page Container End Here*/}
+
         </div>
-      </section>
-      {/*Page Container End Here*/}
-
-    </div>
-  );
+    );
 }
 
 export default Catalogo;

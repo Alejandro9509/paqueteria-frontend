@@ -1,7 +1,7 @@
 import React, { useEffect, useState, setData, useMemo, Component } from "react";
 import logo from "../logo.svg";
 import axios from "axios";
-import { Dialog, DialogActions, DialogContent, FormControl, IconButton, Input, InputAdornment, InputLabel } from "@material-ui/core";
+import { Dialog, DialogActions, DialogContent, FormControl, IconButton, Input, InputAdornment, InputLabel, Select, Tooltip } from "@material-ui/core";
 
 import DataTable from "react-data-table-component";
 import Cabecera from "../Components/Template/Cabecera";
@@ -20,6 +20,7 @@ import NavigationList from "../Components/Map/ListNavigation";
 import { SettingsEthernet } from "@material-ui/icons";
 import { useHistory } from "react-router";
 import { Button } from "bootstrap";
+import { dataGridLocaleText } from "../Constants";
 
 const XLocateClient = window.XLocateClient;
 const XRouteClient = window.XRouteClient;
@@ -90,8 +91,8 @@ function Rutas(props) {
         tipoModal: 0,
         tipoUnidad: null,
         tipoViaje: null,
-        trayecto:null,
-       // trayecto: "PERMANENTE",
+        trayecto: null,
+        // trayecto: "PERMANENTE",
         activa: false,
         CreadoPor: localStorage.getItem("UsuarioId"),
     })
@@ -189,17 +190,27 @@ function Rutas(props) {
     const columns = React.useMemo(() => [
         {
             headerName: "Acciones",
+            sortable: false, filterable: false,
             field: "",
             renderCell: (row) => {
-              return (
-                <div>
-                  <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdRuta))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                  <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdRuta))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                  <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdRuta))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
-                </div>
-              )
+                return (
+                    <div>
+                        <Tooltip title="Modificar">
+                            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdRuta))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+
+                        </Tooltip>
+                        <Tooltip title="Consultar">
+                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdRuta))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+
+                        </Tooltip>
+                        <Tooltip title="Eliminar">
+                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdRuta))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+
+                        </Tooltip>
+                    </div>
+                )
             }
-          },
+        },
         {
             headerName: "Folio",
             field: "m_sFolio",
@@ -713,14 +724,25 @@ function Rutas(props) {
     }
 
     return (
-        <div>
+        <div >
 
             <header className="topbar clearfix">
-                <Cabecera />
+                <Cabecera titulo="Rutas" >
+                    <div className="page-header">
+                        <ul className="list-page-breadcrumb">
+                            <li>
+                                <a href="/Catalogos" className="color-mapeo">
+                                    Catálogos <i className="zmdi zmdi-chevron-right" />
+                                </a>
+                            </li>
+                            <li className="active-page">Rutas</li>
+                        </ul>
+                    </div>
+                </Cabecera>
             </header>
 
             {/*Leftbar Start Here*/}
-            <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
+            <aside className="iconic-leftbar">
                 <BarraLateralIzquierda />
             </aside>
             {/*Leftbar End Here*/}
@@ -730,25 +752,6 @@ function Rutas(props) {
 
 
                 <div className="container-fluid">
-
-
-                    <div className="page-header filled full-block light">
-                        <div className="row">
-                            <div className="col-md-6 col-sm-6">
-                                <h2>Rutas</h2>
-                            </div>
-                            <div className="col-md-6 col-sm-6">
-                                <ul className="list-page-breadcrumb">
-                                    <li>
-                                        <a href="/Catalogos" className="color-mapeo">
-                                            Catálogos <i className="zmdi zmdi-chevron-right" />
-                                        </a>
-                                    </li>
-                                    <li className="active-page">Rutas</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
 
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
@@ -781,25 +784,26 @@ function Rutas(props) {
                         >
                             <div className="widget-wrap">
                                 <div className="widget-content">
-                                <div className="row" style={{ height: state.height - 250, width: '100%' }}>
-                    {data.length != 0 ? (
-                      <DataGrid
-                        rows={data}
-                        columns={columns}
-                        density="compact"
-                        pageSize={ Math.floor((state.height - 310)/30)}
-                        getRowId={(row) => row.m_nIdRuta}
-                        onRowSelected={(row) => {
-                          setState({
-                            ...state,
-                            idRuta: row.data.m_nIdRuta
-                          })
-                        }}
-                      />
-                    ) : (
-                      <div>No se encontró ningún registro</div>
-                    )}
-                  </div>
+                                    <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                                        {data.length != 0 ? (
+                                            <DataGrid
+                                                localeText={dataGridLocaleText}
+                                                rows={data}
+                                                columns={columns}
+                                                density="compact"
+                                                pageSize={Math.floor((state.height - 310) / 30)}
+                                                getRowId={(row) => row.m_nIdRuta}
+                                                onRowSelected={(row) => {
+                                                    setState({
+                                                        ...state,
+                                                        idRuta: row.data.m_nIdRuta
+                                                    })
+                                                }}
+                                            />
+                                        ) : (
+                                            <div>No se encontró ningún registro</div>
+                                        )}
+                                    </div>
 
                                 </div>
                             </div>
@@ -827,9 +831,8 @@ function Rutas(props) {
                                                                 <div className="col-md-12">
                                                                     <div className="row">
                                                                         <div className="col-md-2 unit">
-                                                                            <label className="label">Folio</label>
                                                                             <div className="input">
-                                                                                <input
+                                                                                <TextField variant="outlined" margin="dense" label="Folio"
                                                                                     type="text"
                                                                                     pattern="[0-9]*"
                                                                                     required
@@ -842,25 +845,30 @@ function Rutas(props) {
                                                                             </div>
                                                                         </div>
                                                                         <div className="col-md-4 unit">
-                                                                            <label className="label">Origen</label>
                                                                             <div className="input">
-                                                                            <Autocomplete
-                                                                                className="form-control"
+                                                                                <Autocomplete
+                                                                                    className="form-control"
                                                                                     freeSolo
-                                                                                    onChange={(event,value) => handleChangeOrigen(value, parseInt(value.slice(0, value.indexOf(" "))))}
+                                                                                    onChange={(event, value) => handleChangeOrigen(value, parseInt(value.slice(0, value.indexOf(" "))))}
                                                                                     value={state.origin}
                                                                                     id="origin"
                                                                                     name="origin"
-                                                                                    onInputChange={(event, value) => setState({...state, origin: value})}
+                                                                                    onInputChange={(event, value) => setState({ ...state, origin: value })}
                                                                                     disableClearable
-                                                                                    options={destinos.map((d,index) => `${index} ${d.m_sDescipcion}`)}
+                                                                                    options={destinos.map((d, index) => `${index} ${d.m_sDescipcion}`)}
+                                                                                    style={{
+                                                                                        transform: "translate(14px, 10px) scale(1) !important"
+                                                                                    }}
                                                                                     renderInput={(params) => (
                                                                                         <TextField
                                                                                             {...params}
+                                                                                            variant="outlined"
+                                                                                            label="Origen"
+                                                                                            margin="dense"
                                                                                             InputProps={{
                                                                                                 ...params.InputProps,
                                                                                                 type: "search",
-                                                                                                name:"origin",
+                                                                                                name: "origin",
                                                                                                 endAdornment: (
                                                                                                     <InputAdornment position="end">
                                                                                                         <IconButton
@@ -881,33 +889,38 @@ function Rutas(props) {
                                                                                                     </InputAdornment>
                                                                                                 )
                                                                                             }}
-                                                                                            
+
                                                                                         />
                                                                                     )}
                                                                                 />
-                                                                                
+
                                                                             </div>
                                                                         </div>
                                                                         <div className="col-md-4 unit">
-                                                                            <label className="label">Destino</label>
                                                                             <div className="input">
                                                                                 <Autocomplete
-                                                                                className="form-control"
+                                                                                    className="form-control"
                                                                                     freeSolo
-                                                                                    onChange={(event,value) => handleChangeDestino(value, parseInt(value.slice(0, value.indexOf(" "))))}
+                                                                                    onChange={(event, value) => handleChangeDestino(value, parseInt(value.slice(0, value.indexOf(" "))))}
                                                                                     value={state.destiny}
                                                                                     id="destiny"
                                                                                     name="destiny"
-                                                                                    onInputChange={(event, value) => setState({...state, destiny: value})}
+                                                                                    onInputChange={(event, value) => setState({ ...state, destiny: value })}
                                                                                     disableClearable
-                                                                                    options={destinos.map((d,index) => `${index} ${d.m_sDescipcion}`)}
+                                                                                    options={destinos.map((d, index) => `${index} ${d.m_sDescipcion}`)}
+                                                                                    style={{
+                                                                                        transform: "translate(14px, 10px) scale(1) !important"
+                                                                                    }}
                                                                                     renderInput={(params) => (
                                                                                         <TextField
+                                                                                            variant="outlined"
+                                                                                            label="Destino"
+                                                                                            margin="dense"
                                                                                             {...params}
                                                                                             InputProps={{
                                                                                                 ...params.InputProps,
                                                                                                 type: "search",
-                                                                                                name:"origin",
+                                                                                                name: "origin",
                                                                                                 endAdornment: (
                                                                                                     <InputAdornment position="end">
                                                                                                         <IconButton
@@ -928,20 +941,22 @@ function Rutas(props) {
                                                                                                     </InputAdornment>
                                                                                                 )
                                                                                             }}
-                                                                                            
+
                                                                                         />
                                                                                     )}
                                                                                 />
-                                                                                
+
                                                                             </div>
                                                                         </div>
                                                                         <div className="col-md-2 unit">
-                                                                            <label className="label">Descripción</label>
                                                                             <div className="input">
-                                                                                <input
+                                                                                <TextField variant="outlined" margin="dense" label="Descripción"
                                                                                     className="form-control"
                                                                                     type="text"
                                                                                     required
+                                                                                    InputLabelProps={{
+                                                                                        shrink: true,
+                                                                                    }}
                                                                                     value={state.description}
                                                                                     name={"description"}
                                                                                     onChange={handleChange}
@@ -955,74 +970,84 @@ function Rutas(props) {
 
                                                                         </div>
                                                                         <div className="col-md-4 unit">
-                                                                            <label className="label">
-                                                                                Tipo de viaje
-                                                </label>
+
                                                                             <label className="input select">
-                                                                                <select
-                                                                                    className="form-control"
-                                                                                    required
-                                                                                    value={state.tipoViaje}
-                                                                                    disabled={state.agregar == "Consultar"}
-                                                                                    onChange={handleChange}
-                                                                                    name="tipoViaje"
-                                                                                >
-                                                                                    <option value="0">Seleccionar</option>
-                                                                                    {tiposViaje.map((tipoViaje) => (
-                                                                                        <option
-                                                                                            key={tipoViaje.m_nIdTipoViaje}
-                                                                                            value={tipoViaje.m_nIdTipoViaje}
-                                                                                        >
-                                                                                            {tipoViaje.m_sTipoViaje}
-                                                                                        </option>
-                                                                                    ))}
-                                                                                </select>
-                                                                                <i></i>
+                                                                                <FormControl fullWidth variant="outlined"
+                                                                                    margin="dense">
+                                                                                    <InputLabel
+                                                                                        id="tipoViajeLabel">Tipo de viaje</InputLabel>
+                                                                                    <Select
+                                                                                        labelId="tipoViajeLabel"
+                                                                                        label="Tipo de viaje"
+                                                                                        className="form-control"
+                                                                                        required
+                                                                                        value={state.tipoViaje}
+                                                                                        disabled={state.agregar == "Consultar"}
+                                                                                        onChange={handleChange}
+                                                                                        name="tipoViaje"
+                                                                                    >
+                                                                                        <option value="0">Seleccionar</option>
+                                                                                        {tiposViaje.map((tipoViaje) => (
+                                                                                            <option
+                                                                                                key={tipoViaje.m_nIdTipoViaje}
+                                                                                                value={tipoViaje.m_nIdTipoViaje}
+                                                                                            >
+                                                                                                {tipoViaje.m_sTipoViaje}
+                                                                                            </option>
+                                                                                        ))}
+                                                                                    </Select>
+                                                                                </FormControl>
                                                                             </label>
                                                                         </div>
                                                                         <div className="col-md-4 unit">
-                                                                            <label className="label">
-                                                                                Clasificación de viaje
-                                                </label>
                                                                             <label className="input select">
-                                                                                <select
-                                                                                    className="form-control"
-                                                                                    required="false"
-                                                                                    value={state.clasificacion}
-                                                                                    disabled={state.agregar == "Consultar"}
-                                                                                    onChange={handleChange}
-                                                                                    name="clasificacion"
-                                                                                >
-                                                                                    <option value="0">Seleccionar</option>
+                                                                                <FormControl fullWidth variant="outlined"
+                                                                                    margin="dense">
+                                                                                    <InputLabel
+                                                                                        id="clasificacionLabel">Clasificación de viaje</InputLabel>
+                                                                                    <Select
+                                                                                        labelId="clasificacionLabel"
+                                                                                        label="Clasificación de viaje"
+                                                                                        className="form-control"
+                                                                                        required="false"
+                                                                                        value={state.clasificacion}
+                                                                                        disabled={state.agregar == "Consultar"}
+                                                                                        onChange={handleChange}
+                                                                                        name="clasificacion"
+                                                                                    >
+                                                                                        <option value="0">Seleccionar</option>
 
-                                                                                </select>
-                                                                                <i></i>
+                                                                                    </Select>
+                                                                                </FormControl>
                                                                             </label>
                                                                         </div>
                                                                         <div className="col-md-2 unit">
-                                                                            <label className="label">
-                                                                                Tipo de Unidad
-                                    </label>
                                                                             <label className="input select">
-                                                                                <select
-                                                                                    className="form-control"
-                                                                                    required
-                                                                                    value={state.tipoUnidad}
-                                                                                    disabled={state.agregar == "Consultar"}
-                                                                                    onChange={handleChange}
-                                                                                    name="tipoUnidad"
-                                                                                >
-                                                                                    <option value="0">Seleccionar</option>
-                                                                                    {dataTipoUnidad.map((tipoUnidad) => (
-                                                                                        <option
-                                                                                            key={tipoUnidad.m_nIdTipoUnidad}
-                                                                                            value={tipoUnidad.m_nIdTipoUnidad}
-                                                                                        >
-                                                                                            {tipoUnidad.m_sTipoUnidad}
-                                                                                        </option>
-                                                                                    ))}
-                                                                                </select>
-                                                                                <i></i>
+                                                                                <FormControl fullWidth variant="outlined"
+                                                                                    margin="dense">
+                                                                                    <InputLabel
+                                                                                        id="tipoUnidadLabel">Tipo de Unidad</InputLabel>
+                                                                                    <Select
+                                                                                        labelId="tipoUnidadLabel"
+                                                                                        label="Tipo de Unidad"
+                                                                                        className="form-control"
+                                                                                        required
+                                                                                        value={state.tipoUnidad}
+                                                                                        disabled={state.agregar == "Consultar"}
+                                                                                        onChange={handleChange}
+                                                                                        name="tipoUnidad"
+                                                                                    >
+                                                                                        <option value="0">Seleccionar</option>
+                                                                                        {dataTipoUnidad.map((tipoUnidad) => (
+                                                                                            <option
+                                                                                                key={tipoUnidad.m_nIdTipoUnidad}
+                                                                                                value={tipoUnidad.m_nIdTipoUnidad}
+                                                                                            >
+                                                                                                {tipoUnidad.m_sTipoUnidad}
+                                                                                            </option>
+                                                                                        ))}
+                                                                                    </Select>
+                                                                                </FormControl>
                                                                             </label>
                                                                         </div>
                                                                     </div>
@@ -1041,21 +1066,21 @@ function Rutas(props) {
                                                                                         //value="PERMANETE"
                                                                                         onChange={handleChange}
                                                                                         defaultChecked
-                                                                                       // checked={state.trayecto === 1}
-                                                                                        
+                                                                                    // checked={state.trayecto === 1}
+
                                                                                     />
                                                                                     <i />
                                                     Permanente
                                                   </label>
                                                                                 <label className="radio">
                                                                                     <input
-                                                                                       // value="EVENTUAL"
-                                                                                       value="0"
+                                                                                        // value="EVENTUAL"
+                                                                                        value="0"
                                                                                         type="radio"
                                                                                         onChange={handleChange}
                                                                                         name="trayecto"
-                                                                                        //checked={state.trayecto === "EVENTUAL"}
-                                                                                        //checked={state.trayecto === 0}
+                                                                                    //checked={state.trayecto === "EVENTUAL"}
+                                                                                    //checked={state.trayecto === 0}
                                                                                     />
                                                                                     <i />
                                                     Eventual
@@ -1064,9 +1089,8 @@ function Rutas(props) {
                                                                             </div>
                                                                         </div>
                                                                         <div className="col-md-1 ">
-                                                                            <label className="label">Horas</label>
                                                                             <div className="input">
-                                                                                <input
+                                                                                <TextField variant="outlined" margin="dense" label="Horas"
                                                                                     className="form-control"
                                                                                     type="number"
                                                                                     onChange={handleChange}
@@ -1076,9 +1100,8 @@ function Rutas(props) {
                                                                             </div>
                                                                         </div>
                                                                         <div className="col-md-1 ">
-                                                                            <label className="label">ETA</label>
                                                                             <div className="input">
-                                                                                <input
+                                                                                <TextField variant="outlined" margin="dense" label="ETA"
                                                                                     className="form-control"
                                                                                     type="text"
                                                                                     onChange={handleChange}
@@ -1088,9 +1111,8 @@ function Rutas(props) {
                                                                             </div>
                                                                         </div>
                                                                         <div className="col-md-1 ">
-                                                                            <label className="label">Kilometros</label>
                                                                             <div className="input">
-                                                                                <input
+                                                                                <TextField variant="outlined" margin="dense" label="Kilometros"
                                                                                     className="form-control"
                                                                                     type="number"
                                                                                     onChange={handleChange}
@@ -1100,9 +1122,8 @@ function Rutas(props) {
                                                                             </div>
                                                                         </div>
                                                                         <div className="col-md-1">
-                                                                            <label className="label">Millas</label>
                                                                             <div className="input">
-                                                                                <input
+                                                                                <TextField variant="outlined" margin="dense" label="Millas"
                                                                                     className="form-control"
                                                                                     type="number"
                                                                                     onChange={handleChange}
@@ -1113,11 +1134,11 @@ function Rutas(props) {
                                                                         </div>
                                                                         <div className="col-md-1">
 
-                                                                            <div className="inline-group">
-                                                                                <label className="label">
+                                                                            <div className="inline-group" style={{ display: "flex", alignItems: "center" }}>
+                                                                                <label className="label" style={{ paddingRight: "10px", marginBottom: "0px" }} >
                                                                                     Estatus
-                                                  </label>
-                                                                                <label className="checkbox">
+                                                                                        </label>
+                                                                                <label className="checkbox" >
                                                                                     <input
                                                                                         required
                                                                                         native="true"
@@ -1127,10 +1148,10 @@ function Rutas(props) {
                                                                                         type="checkbox"
                                                                                     />
                                                                                     <i />
-                                                    Activa
-                                                  </label>
-
+                                                                                        Activa
+                                                                                         </label>
                                                                             </div>
+
 
 
 
@@ -1139,11 +1160,13 @@ function Rutas(props) {
                                                                             <div align="right">
 
                                                                                 <button
+                                                                                    href="#Listado" role="tab" data-toggle="tab"
                                                                                     href="#Listado"
                                                                                     role="tab"
                                                                                     data-toggle="tab"
                                                                                     className="btn btn-secondary secondary-btn"
                                                                                 >
+
                                                                                     Cancelar
                                                                                     </button>
                                                                                 <button

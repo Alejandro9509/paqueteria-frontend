@@ -51,10 +51,13 @@ export function remove_array_element(array, index) {
 
 
 export async function cubicarGuias(guias, origin, destiny, remolque1, remolque2) {
-    console.log(guias)
+    guias = guias.filter(g => g.m_nIdCiudadDestino !== origin.m_nIdCiudad && origin.m_nIdCiudad === g.m_nIdCiudadOrigen)
     var locationOrigin = await searchLocation(origin.m_sCiudad)
     var locationDestiny = await searchLocation(destiny.m_sCiudad)
     var guiasCoordenadas = []
+    if(guias.length === 0){
+        return []
+    }
     for (var i = 0; i < guias.length; i++) {
         var g = guias[i]
         var location = await searchLocation(g.m_sCiudadDestino)

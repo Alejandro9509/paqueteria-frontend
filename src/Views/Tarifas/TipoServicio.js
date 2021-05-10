@@ -154,7 +154,7 @@ class TipoServicio extends Component {
                                         </div>
                                     </div>
                                     <div className="col-sm-12 col-md-12 unit">
-                                        <button className="btn btn-secondary secondary-btn"
+                                        <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
                                             onClick={this.handleClose}
                                         >
                                             Cancelar</button>

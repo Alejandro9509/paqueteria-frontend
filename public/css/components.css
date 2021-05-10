@@ -3590,7 +3590,6 @@ a.waves-effect .waves-ripple {
 }
 .j-forms .wizard-breadcrumb.number-style .steps p {
   color: #444;
-  font-size: 14px;
   padding: 10px 0px 0px 0px;
   margin-bottom: 0px;
 }
@@ -7990,8 +7989,8 @@ License: MIT
 }
 .sp-preview {
   position: relative;
-  width: 25px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
   border: solid 1px #222;
   margin-right: 5px;
   float: left;
@@ -8111,7 +8110,7 @@ License: MIT
   display: block;
   outline: none;
   padding-left: 16px;
-  padding-top: 13px;
+  padding-top: 10px;
   position: absolute;
   right: 0;
   top: 0;

@@ -130,9 +130,9 @@ export const dataGridLocaleText = {
     filterOperatorIs: 'igual a',
     filterOperatorNot: 'diferente a',
     filterOperatorAfter: 'después de',
-    filterOperatorOnOrAfter: 'is on or after',
-    filterOperatorBefore: 'is before',
-    filterOperatorOnOrBefore: 'is on or before',
+    filterOperatorOnOrAfter: 'está en o después',
+    filterOperatorBefore: 'es antes',
+    filterOperatorOnOrBefore: 'está en o antes',
 
     // Column menu text
     columnMenuLabel: 'Menú',

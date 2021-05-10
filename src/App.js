@@ -13,6 +13,7 @@ import catalogdRoutes from './routesCatalogos'
 import configuracionRoutes from './routesConfiguraciones'
 import "../node_modules/noty/lib/noty.css";  
 import "../node_modules/noty/lib/themes/mint.css"; 
+import Indicadores from './Views/Indicadores';
 
 
 class App extends Component {
@@ -28,7 +29,7 @@ render(){
       return(
         localStorage.getItem(ACCESS_TOKEN) ? (
           <Switch>
-            <Route path="/configuracion" component={Configuracion} />
+            <Route path="/Indicadores" component={Indicadores} />
             {dashboardRoutes.map((r, key) => {
                   return (<Route exact key={key} path={r.path} component={r.component} />)
               })}
@@ -38,7 +39,7 @@ render(){
               {configuracionRoutes.map((r, key) => {
                   return (<Route exact key={key} path={r.path} component={r.component} />)
               })}
-            <Redirect from="/" to="/Configuracion"/>
+            <Redirect from="/" to="/Indicadores"/>
           </Switch>
         ) : (
           <div className="app">

@@ -5,7 +5,7 @@ import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import configurationRoutes from '../routesConfiguraciones';
 import SvgIcon from "@material-ui/core/SvgIcon";
 import {
-  Link,
+    Link,
 } from 'react-router-dom';
 import $ from 'jquery';
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
@@ -27,7 +27,6 @@ function Configuracion() {
 
   return (
     <div>
-
         <Dialog open={state.openDialog} onClose={() => setState({...state, openDialog: false})} maxWidth={"sm"} fullWidth>
             <DialogTitle>
                 <h4>Configuración de Cuentas de Correo</h4>
@@ -37,33 +36,30 @@ function Configuracion() {
             </DialogContent>
         </Dialog>
 
-      <header className="topbar clearfix">
-        <Cabecera />
-      </header>
+            <header className="topbar clearfix">
+                <Cabecera titulo="Configuración" >
+                    <div className="page-header">
+                        <ul className="list-page-breadcrumb">
+                            <li className="active-page">Configuración</li>
+                        </ul>
+                    </div>
+                </Cabecera>
+            </header>
 
-      {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
-        <BarraLateralIzquierda />
-      </aside>
-      {/*Leftbar End Here*/}
 
-      {/*Page Container Start Here*/}
-      <section className="main-container">
 
-        <div className="container-fluid">
+            {/*Leftbar Start Here*/}
+            <aside className="iconic-leftbar">
+                <BarraLateralIzquierda />
+            </aside>
+            {/*Leftbar End Here*/}
 
-          <div className="page-header filled full-block light">
-            <div className="row">
-              <div className="col-md-6 col-sm-6">
-                <h2>Configuración</h2>
-              </div>
-              <div className="col-md-6 col-sm-6">
-                <ul className="list-page-breadcrumb">
-                  <li className="active-page">Configuración</li>
-                </ul>
-              </div>
-            </div>
-          </div>
+            {/*Page Container Start Here*/}
+            <section className="main-container">
+
+                <div className="container-fluid">
+
+
 
           <div style={{ display: "flex", flexWrap: "wrap" }}>
             {configurationRoutes.map((r, index) => {
@@ -112,17 +108,17 @@ function Configuracion() {
           </div>
         </div>
 
-      </section>
-      {/*Page Container End Here*/}
+            </section>
+            {/*Page Container End Here*/}
 
-      {/*Rightbar Start Here*/}
-      <aside className="rightbar">
-        <BarraLateralDerecha />
-      </aside>
+            {/*Rightbar Start Here*/}
+            <aside className="rightbar">
+                <BarraLateralDerecha />
+            </aside>
 
-    </div>
+        </div>
 
-  );
+    );
 }
 
 export default Configuracion;

@@ -25,7 +25,7 @@ import {
 } from "@material-ui/data-grid";
 import { dataGridLocaleText } from "../Constants/index";
 import Noty from "noty";
-import { InputLabel, Select, FormControl } from "@material-ui/core";
+import { InputLabel, Select, FormControl, Tooltip, Stepper, Step, StepLabel } from "@material-ui/core";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -66,38 +66,48 @@ function Clientes(props) {
     const columns = React.useMemo(() => [
         {
             headerName: "Acciones",
+            sortable: false, filterable: false,
             field: "",
             renderCell: (row) => {
                 return (
                     <div>
-                        <a
-                            href="#Agregar"
-                            role="tab"
-                            data-toggle="tab"
-                            onClick={() => handleShowModificar(row.row.m_nIdCliente)}
-                            className="btn btn-default btn-xs"
-                        >
-                            <i
-                                className="fa fa-pencil-square-o"
-                                style={{ color: "#F9A03E" }}
-                            />
-                        </a>
-                        <a
-                            href="#Agregar"
-                            role="tab"
-                            data-toggle="tab"
-                            className="btn btn-default btn-xs"
-                            onClick={() => handleShowModificar(row.row.m_nIdCliente)}
-                        >
-                            <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                        </a>
-                        <a
-                            href="#"
-                            className="btn btn-default btn-xs"
-                            onClick={() => handleEliminar(row.row.m_nIdCliente)}
-                        >
-                            <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
-                        </a>
+                        <Tooltip title="Modificar">
+                            <a
+                                href="#Agregar"
+                                role="tab"
+                                data-toggle="tab"
+                                onClick={() => handleShowModificar(row.row.m_nIdCliente)}
+                                className="btn btn-default btn-xs"
+                            >
+                                <i
+                                    className="fa fa-pencil-square-o"
+                                    style={{ color: "#F9A03E" }}
+                                />
+                            </a>
+                        </Tooltip>
+                        <Tooltip title="Consultar">
+                            <a
+                                href="#Agregar"
+                                role="tab"
+                                data-toggle="tab"
+                                className="btn btn-default btn-xs"
+                                onClick={() => handleShowModificar(row.row.m_nIdCliente)}
+                            >
+                                <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
+                            </a>
+                        </Tooltip>
+                        <Tooltip title="Eliminar">
+                            <a
+                                href="#"
+                                className="btn btn-default btn-xs"
+                                onClick={() => handleEliminar(row.row.m_nIdCliente)}
+                            >
+                                <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
+                            </a>
+                        </Tooltip>
+
+
+
                     </div>
                 );
             },
@@ -1146,18 +1156,9 @@ function Clientes(props) {
             default:
         }
 
-        var $welem = $section
-            .parentsUntil(".widget-action-bar")
-            .parentsUntil(".w-action")
-            .parents(".widget-header")
-            .next(".widget-container");
-
-        $welem.slideDown();
-        $section.children("a").children("i").removeClass("zmdi-chevron-up");
-        $section.children("a").children("i").addClass("zmdi-chevron-down");
         $("html, body").animate(
             {
-                scrollTop: parseInt($section.offset().top),
+                scrollTop: parseInt($section.offset().top - 150),
             },
             200
         );
@@ -1197,34 +1198,29 @@ function Clientes(props) {
     return (
         <div>
             <header className="topbar clearfix">
-                <Cabecera />
+                <Cabecera titulo="Clientes" >
+                    <div className="page-header">
+                        <ul className="list-page-breadcrumb">
+                            <li>
+                                <a href="/Catalogos" className="color-mapeo">
+                                    Catálogos <i className="zmdi zmdi-chevron-right" />
+                                </a>
+                            </li>
+                            <li className="active-page">Clientes</li>
+                        </ul>
+                    </div>
+                </Cabecera>
             </header>
             {/*Topbar End Here*/}
             {/*Leftbar Start Here*/}
-            <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
+            <aside className="iconic-leftbar">
                 <BarraLateralIzquierda />
             </aside>
             {/*Leftbar End Here*/}
             {/*Page Container Start Here*/}
             <section className="main-container">
                 <div className="container-fluid">
-                    <div className="page-header filled full-block light">
-                        <div className="row">
-                            <div className="col-md-6 col-sm-6">
-                                <h2>Clientes</h2>
-                            </div>
-                            <div className="col-md-6 col-sm-6">
-                                <ul className="list-page-breadcrumb">
-                                    <li>
-                                        <a href="/Catalogos" className="color-mapeo">
-                                            Catálogos <i className="zmdi zmdi-chevron-right" />
-                                        </a>
-                                    </li>
-                                    <li className="active-page">Clientes</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+
 
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
@@ -1321,7 +1317,7 @@ function Clientes(props) {
                                         className="wizard-breadcrumb number-style"
                                         style={{
                                             position: "sticky",
-                                            top: "150px",
+                                            top: "60px",
                                             padding: "5px",
                                             backgroundColor: "white",
                                             zIndex: 100,
@@ -1329,67 +1325,16 @@ function Clientes(props) {
                                         }}
                                     >
                                         <div className="row">
-                                            <div
-                                                className={
-                                                    "col-md-2-5 col-sm-3 step " +
-                                                    (stepActive == 1 && "active-step")
+                                            <Stepper activeStep={stepActive - 1}>
+                                                {
+                                                    ["Información General", "Metodos de Pago y Crédito", "Información Adicional del Pago", "Datos Generales", "Contacto"].map((s, index) => (
+                                                        <Step key={s} completed={false} onClick={() => openSection(index + 1)}>
+                                                            <StepLabel >{s}</StepLabel>
+                                                        </Step>
+                                                    ))
                                                 }
-                                                onClick={() => openSection(1)}
-                                            >
-                                                <div className={"steps"}>
-                                                    <span className={"step-number"}>1</span>
-                                                    <p>Información General</p>
-                                                </div>
-                                            </div>
-                                            <div
-                                                className={
-                                                    "col-md-2-5 col-sm-3 step " +
-                                                    (stepActive == 2 && "active-step")
-                                                }
-                                                onClick={() => openSection(2)}
-                                            >
-                                                <div className="steps">
-                                                    <span className="step-number">2</span>
-                                                    <p>Métodos de Pago y Crédito</p>
-                                                </div>
-                                            </div>
-                                            <div
-                                                className={
-                                                    "col-md-2-5 col-sm-3 step " +
-                                                    (stepActive == 3 && "active-step")
-                                                }
-                                                onClick={() => openSection(3)}
-                                            >
-                                                <div className="steps">
-                                                    <span className="step-number">3</span>
-                                                    <p>Información Adicional del pago</p>
-                                                </div>
-                                            </div>
+                                            </Stepper>
 
-                                            <div
-                                                className={
-                                                    "col-md-2-5 col-sm-2 step " +
-                                                    (stepActive == 4 && "active-step")
-                                                }
-                                                onClick={() => openSection(4)}
-                                            >
-                                                <div className="steps">
-                                                    <span className="step-number">4</span>
-                                                    <p>Datos Generales</p>
-                                                </div>
-                                            </div>
-                                            <div
-                                                className={
-                                                    "col-md-2-5 col-sm-2 step " +
-                                                    (stepActive == 5 && "active-step")
-                                                }
-                                                onClick={() => openSection(5)}
-                                            >
-                                                <div className="steps">
-                                                    <span className="step-number">5</span>
-                                                    <p>Contacto</p>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                     {/* end steps */}
@@ -1468,96 +1413,107 @@ function Clientes(props) {
 
                                                             <div className="col-sm-4 col-md-2-5 unit">
                                                                 <label className="input select">
-                                                                    <select
-                                                                        onChange={handleChange}
-                                                                        className="form-control"
-                                                                        value={state.tipoCliente}
-                                                                        required
-                                                                        label="Tipo de Cliente"
-                                                                        margin="dense"
-                                                                        native
-                                                                        name="tipoCliente"
-                                                                        id="tipoCliente"
-                                                                    >
-                                                                        <option value="">Tipo de Cliente</option>
-                                                                        <option value="1">Nacional</option>
-                                                                        <option value="2">Extranjero</option>
-                                                                    </select>
-                                                                    <i></i>
+                                                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                                                        <InputLabel id="tipoClienteLabel">Tipo de Cliente</InputLabel>
+                                                                        <Select
+                                                                            labelId="tipoClienteLabel"
+                                                                            label="Tipo de Cliente"
+                                                                            onChange={handleChange}
+                                                                            className="form-control"
+                                                                            value={state.tipoCliente}
+                                                                            required
+                                                                            label="Tipo de Cliente"
+                                                                            margin="dense"
+                                                                            native
+                                                                            name="tipoCliente"
+                                                                            id="tipoCliente"
+                                                                        >
+                                                                            <option value="1">Nacional</option>
+                                                                            <option value="2">Extranjero</option>
+                                                                        </Select>
+                                                                    </FormControl>
                                                                 </label>
                                                             </div>
 
                                                             <div className="col-sm-4 col-md-2-5 unit">
                                                                 <label className="input select">
-                                                                    <select
-                                                                        onChange={handleChange}
-                                                                        value={state.idSucursal}
-                                                                        id="idSucursal"
-                                                                        variant="outlined"
-                                                                        native
-                                                                        margin="dense"
-                                                                        className="form-control"
-                                                                        name="idSucursal"
-                                                                        required
-                                                                    >
-                                                                        <option value="">Sucursal</option>
+                                                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                                                        <InputLabel id="idSucursalLabel">Sucursal</InputLabel>
+                                                                        <Select
+                                                                            labelId="idSucursalLabel"
+                                                                            label="Sucursal"
+                                                                            onChange={handleChange}
+                                                                            value={state.idSucursal}
+                                                                            id="idSucursal"
+                                                                            variant="outlined"
+                                                                            native
+                                                                            margin="dense"
+                                                                            className="form-control"
+                                                                            name="idSucursal"
+                                                                            required
+                                                                        >
 
-                                                                        {dataSucursales.map((sucursal) => (
-                                                                            <option value={sucursal.m_nIdSucursal}>
-                                                                                {sucursal.m_sSucursal}
-                                                                            </option>
-                                                                        ))}
-                                                                    </select>
-                                                                    <i></i>
+                                                                            {dataSucursales.map((sucursal) => (
+                                                                                <option value={sucursal.m_nIdSucursal}>
+                                                                                    {sucursal.m_sSucursal}
+                                                                                </option>
+                                                                            ))}
+                                                                        </Select>
+                                                                    </FormControl>
                                                                 </label>
                                                             </div>
                                                             <div className="col-sm-4 col-md-2-5  unit">
                                                                 <label className="input select">
-                                                                    <select
-                                                                        onChange={handleChange}
-                                                                        value={state.idMoneda}
-                                                                        id="idMoneda"
-                                                                        variant="outlined"
-                                                                        margin="dense"
-                                                                        native
-                                                                        className="form-control"
-                                                                        name="idMoneda"
-                                                                        required
-                                                                    >
-                                                                        {dataTipoMoneda.map((moneda) => (
-                                                                            <option
-                                                                                key={moneda.m_nIdMoneda}
-                                                                                value={moneda.m_nIdMoneda}
-                                                                            >
-                                                                                {moneda.m_sMoneda}
-                                                                            </option>
-                                                                        ))}
-                                                                    </select>
-                                                                    <i></i>
+                                                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                                                        <InputLabel id="idMonedaLabel">Moneda</InputLabel>
+                                                                        <Select
+                                                                            labelId="idMonedaLabel"
+                                                                            label="Moneda"
+                                                                            onChange={handleChange}
+                                                                            value={state.idMoneda}
+                                                                            id="idMoneda"
+                                                                            variant="outlined"
+                                                                            margin="dense"
+                                                                            native
+                                                                            className="form-control"
+                                                                            name="idMoneda"
+                                                                            required
+                                                                        >
+                                                                            {dataTipoMoneda.map((moneda) => (
+                                                                                <option
+                                                                                    key={moneda.m_nIdMoneda}
+                                                                                    value={moneda.m_nIdMoneda}
+                                                                                >
+                                                                                    {moneda.m_sMoneda}
+                                                                                </option>
+                                                                            ))}
+                                                                        </Select>
+                                                                    </FormControl>
                                                                 </label>
                                                             </div>
                                                             <div className="col-sm-4 col-md-2-5 unit">
                                                                 <label className="input select">
-                                                                    <select
-                                                                        onChange={handleChange}
-                                                                        value={state.idImpuestoTransladado}
-                                                                        id="idImpuestoTransladado"
-                                                                        native
-                                                                        margin="dense"
-                                                                        variant="outlined"
-                                                                        className="form-control"
-                                                                        name="idImpuestoTransladado"
-                                                                        required
-                                                                    >
-                                                                        <option value="">IVA</option>
-
-                                                                        {dataImpuesto.map((impuesto) => (
-                                                                            <option value={impuesto.m_nIdImpuesto}>
-                                                                                {impuesto.m_sImpuesto}
-                                                                            </option>
-                                                                        ))}
-                                                                    </select>
-                                                                    <i></i>
+                                                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                                                        <InputLabel id="idImpuestoTransladadoLabel">IVA</InputLabel>
+                                                                        <Select
+                                                                            labelId="idImpuestoTransladadoLabel"
+                                                                            label="IVA"
+                                                                            onChange={handleChange}
+                                                                            value={state.idImpuestoTransladado}
+                                                                            id="idImpuestoTransladado"
+                                                                            margin="dense"
+                                                                            variant="outlined"
+                                                                            className="form-control"
+                                                                            name="idImpuestoTransladado"
+                                                                            required
+                                                                        >
+                                                                            {dataImpuesto.map((impuesto) => (
+                                                                                <option value={impuesto.m_nIdImpuesto}>
+                                                                                    {impuesto.m_sImpuesto}
+                                                                                </option>
+                                                                            ))}
+                                                                        </Select>
+                                                                    </FormControl>
                                                                 </label>
                                                             </div>
                                                             <div className="col-sm-4 col-md-2-5 unit">
@@ -1813,10 +1769,10 @@ function Clientes(props) {
                                                     </div>
 
                                                     <div className="col-sm-12 col-md-3 bordesizquierdo">
-                                                        <div className="w-section-header">
+                                                        <div className="w-section-header" style={{ paddingLeft: "10px" }}>
                                                             <h4>Información Adicional del Pago</h4>
                                                         </div>
-                                                        <div className="form-content">
+                                                        <div className="form-content" style={{ paddingLeft: "10px" }}>
                                                             {/* start text password */}
                                                             <div className="row">
                                                                 <div className="col-xs-6 col-ms-6 col-md-10 unit">
@@ -1920,92 +1876,83 @@ function Clientes(props) {
                                                                                     <div className="col-md-12 unit">
                                                                                         <div className="row">
                                                                                             <div className="col-sm-6 col-md-2-5 unit">
-                                                                                                <label className="label">
-                                                                                                    &nbsp;{" "}
-                                                                                                </label>
                                                                                                 <label className="input select">
-                                                                                                    <select
-                                                                                                        onChange={
-                                                                                                            handleSelectChange
-                                                                                                        }
-                                                                                                        className="form-control"
-                                                                                                        native
-                                                                                                        value={state.idPais}
-                                                                                                        id="idPais"
-                                                                                                        name="idPais"
-                                                                                                    >
-                                                                                                        <option value="">
-                                                                                                            Pais
-                                                    </option>
-                                                                                                        {dataPais.map((pais) => (
-                                                                                                            <option
-                                                                                                                value={pais.m_nIdPais}
-                                                                                                            >
-                                                                                                                {pais.m_sPais}
-                                                                                                            </option>
-                                                                                                        ))}
-                                                                                                    </select>
-                                                                                                    <i></i>
-                                                                                                </label>
-                                                                                            </div>
-                                                                                            <div className="col-sm-6 col-md-2-5 ">
-                                                                                                <label className="label">
-                                                                                                    &nbsp;{" "}
-                                                                                                </label>
-                                                                                                <label className="input select">
-                                                                                                    <select
-                                                                                                        onChange={handleChange}
-                                                                                                        className="form-control"
-                                                                                                        required
-                                                                                                        native
-                                                                                                        name="idEstado"
-                                                                                                        value={state.idEstado}
-                                                                                                        id="idEstado"
-                                                                                                    >
-                                                                                                        <option value="">
-                                                                                                            Estado
-                                                    </option>
-
-                                                                                                        {dataEstado.map(
-                                                                                                            (estado) => (
+                                                                                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                                                                                        <InputLabel id="idPaisLabel">Pais</InputLabel>
+                                                                                                        <Select
+                                                                                                            labelId="idPaisLabel"
+                                                                                                            label="Pais"
+                                                                                                            onChange={
+                                                                                                                handleSelectChange
+                                                                                                            }
+                                                                                                            className="form-control"
+                                                                                                            native
+                                                                                                            value={state.idPais}
+                                                                                                            id="idPais"
+                                                                                                            name="idPais"
+                                                                                                        >
+                                                                                                            {dataPais.map((pais) => (
                                                                                                                 <option
-                                                                                                                    value={
-                                                                                                                        estado.m_nIdEstado
-                                                                                                                    }
+                                                                                                                    value={pais.m_nIdPais}
                                                                                                                 >
-                                                                                                                    {estado.m_sEstado}
+                                                                                                                    {pais.m_sPais}
                                                                                                                 </option>
-                                                                                                            )
-                                                                                                        )}
-                                                                                                    </select>
-                                                                                                    <i></i>
+                                                                                                            ))}
+                                                                                                        </Select>
+                                                                                                    </FormControl>
                                                                                                 </label>
                                                                                             </div>
-                                                                                            
+
                                                                                             <div className="col-sm-6 col-md-2-5 ">
-                                                                                                <label className="label">
-                                                                                                    Código Postal
-                                                </label>
+                                                                                                <label className="input select">
+                                                                                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                                                                                        <InputLabel id="idEstadoLabel">Estado</InputLabel>
+                                                                                                        <Select
+                                                                                                            labelId="idEstadoLabel"
+                                                                                                            label="Estado"
+                                                                                                            onChange={handleChange}
+                                                                                                            className="form-control"
+                                                                                                            required
+                                                                                                            native
+                                                                                                            name="idEstado"
+                                                                                                            value={state.idEstado}
+                                                                                                            id="idEstado"
+                                                                                                        >
+                                                                                                            {dataEstado.map(
+                                                                                                                (estado) => (
+                                                                                                                    <option
+                                                                                                                        value={
+                                                                                                                            estado.m_nIdEstado
+                                                                                                                        }
+                                                                                                                    >
+                                                                                                                        {estado.m_sEstado}
+                                                                                                                    </option>
+                                                                                                                )
+                                                                                                            )}
+                                                                                                        </Select>
+                                                                                                    </FormControl>
+                                                                                                </label>
+                                                                                            </div>
+
+                                                                                            <div className="col-sm-6 col-md-2-5 ">
                                                                                                 <div className="input">
-                                                                                                    <TextField variant="outlined" margin="dense"
-                                                                                                        onChange={handleChange}
-                                                                                                        className="form-control"
-                                                                                                        type="text"
-                                                                                                        placeholder=""
-                                                                                                        value={state.codigoPostal}
-                                                                                                        id="codigoPostal"
-                                                                                                        name="codigoPostal"
+                                                                                                    <TextField variant="outlined" margin="dense" label="Código Postal"
+                                                                                                               onChange={handleChange}
+                                                                                                               className="form-control"
+                                                                                                               type="text"
+                                                                                                               placeholder=""
+                                                                                                               value={state.codigoPostal}
+                                                                                                               id="codigoPostal"
+                                                                                                               name="codigoPostal"
                                                                                                     />
                                                                                                 </div>
                                                                                             </div>
 
                                                                                             <div className="col-sm-6 col-md-2-5 ">
-                                                                                                <label className="label">
-                                                                                                    Municipio
-                                                </label>
                                                                                                 <div className="input">
                                                                                                     <div className="input">
                                                                                                         <TextField variant="outlined" margin="dense"
+                                                                                                            label="Municipio"
                                                                                                             onChange={handleChange}
                                                                                                             className="form-control"
                                                                                                             type="text"
@@ -2018,12 +1965,9 @@ function Clientes(props) {
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div className="col-sm-6 col-md-2-5 ">
-                                                                                                <label className="label">
-                                                                                                    Localidad
-                                                </label>
                                                                                                 <div className="input">
                                                                                                     <div className="input">
-                                                                                                        <TextField variant="outlined" margin="dense"
+                                                                                                        <TextField variant="outlined" margin="dense" label="Localidad"
                                                                                                             onChange={handleChange}
                                                                                                             className="form-control"
                                                                                                             type="text"
@@ -2038,11 +1982,8 @@ function Clientes(props) {
                                                                                         </div>
                                                                                         <div className="row">
                                                                                             <div className="col-sm-6 col-md-2-5 unit">
-                                                                                                <label className="label">
-                                                                                                    Colonia
-                                                </label>
                                                                                                 <div className="input">
-                                                                                                    <TextField variant="outlined" margin="dense"
+                                                                                                    <TextField variant="outlined" margin="dense" label="Colonia"
                                                                                                         onChange={handleChange}
                                                                                                         className="form-control"
                                                                                                         type="text"
@@ -2054,11 +1995,8 @@ function Clientes(props) {
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div className="col-sm-6 col-md-2-5 ">
-                                                                                                <label className="label">
-                                                                                                    Calle
-                                                </label>
                                                                                                 <div className="input">
-                                                                                                    <TextField variant="outlined" margin="dense"
+                                                                                                    <TextField variant="outlined" margin="dense" label="Calle"
                                                                                                         onChange={handleChange}
                                                                                                         className="form-control"
                                                                                                         type="text"
@@ -2071,12 +2009,9 @@ function Clientes(props) {
                                                                                             </div>
 
                                                                                             <div className="col-sm-6 col-md-2-5 ">
-                                                                                                <label className="label">
-                                                                                                    Núm. Exterior
-                                                </label>
                                                                                                 <div className="input">
                                                                                                     <div className="input">
-                                                                                                        <TextField variant="outlined" margin="dense"
+                                                                                                        <TextField variant="outlined" margin="dense" label="Núm. Exterior"
                                                                                                             onChange={handleChange}
                                                                                                             className="form-control"
                                                                                                             type="text"
@@ -2091,12 +2026,9 @@ function Clientes(props) {
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div className="col-sm-6 col-md-2-5 ">
-                                                                                                <label className="label">
-                                                                                                    Número Interior
-                                                </label>
                                                                                                 <div className="input">
                                                                                                     <div className="input">
-                                                                                                        <TextField variant="outlined" margin="dense"
+                                                                                                        <TextField variant="outlined" margin="dense" label="Número Interior"
                                                                                                             onChange={handleChange}
                                                                                                             className="form-control"
                                                                                                             type="text"
@@ -2111,12 +2043,9 @@ function Clientes(props) {
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div className="col-sm-6 col-md-2-5 ">
-                                                                                                <label className="label">
-                                                                                                    Teléfonos
-                                                </label>
                                                                                                 <div className="input">
                                                                                                     <div className="input">
-                                                                                                        <TextField variant="outlined" margin="dense"
+                                                                                                        <TextField variant="outlined" margin="dense" label="Teléfonos"
                                                                                                             onChange={handleChange}
                                                                                                             className="form-control"
                                                                                                             type="text"
@@ -2132,12 +2061,9 @@ function Clientes(props) {
 
                                                                                         <div className="row">
                                                                                             <div className="col-sm-6  col-md-2-5 unit">
-                                                                                                <label className="label">
-                                                                                                    Celular
-                                                </label>
                                                                                                 <div className="input">
                                                                                                     <div className="input">
-                                                                                                        <TextField variant="outlined" margin="dense"
+                                                                                                        <TextField variant="outlined" margin="dense" label="Celular"
                                                                                                             onChange={handleChange}
                                                                                                             className="form-control"
                                                                                                             type="text"
@@ -2150,12 +2076,9 @@ function Clientes(props) {
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div className="col-sm-6 col-md-2-5 unit">
-                                                                                                <label className="label">
-                                                                                                    Nextel
-                                                </label>
                                                                                                 <div className="input">
                                                                                                     <div className="input">
-                                                                                                        <TextField variant="outlined" margin="dense"
+                                                                                                        <TextField variant="outlined" margin="dense" label="Nextel"
                                                                                                             onChange={handleChange}
                                                                                                             className="form-control"
                                                                                                             type="text"
@@ -2168,12 +2091,9 @@ function Clientes(props) {
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div className="col-sm-6 col-md-2-5 unit">
-                                                                                                <label className="label">
-                                                                                                    Correo
-                                                </label>
                                                                                                 <div className="input">
                                                                                                     <div className="input">
-                                                                                                        <TextField variant="outlined" margin="dense"
+                                                                                                        <TextField variant="outlined" margin="dense" label="Correo"
                                                                                                             onChange={handleChange}
                                                                                                             className="form-control"
                                                                                                             type="text"
@@ -2249,7 +2169,7 @@ function Clientes(props) {
                                                                                                             type="datetime-local"
                                                                                                             InputLabelProps={{
                                                                                                                 shrink: true,
-                                                                                                              }}
+                                                                                                            }}
                                                                                                             fullWidth
                                                                                                             label="Enviar a partir de"
                                                                                                             value={
@@ -2324,37 +2244,38 @@ function Clientes(props) {
                                                                                 <div className="row">
                                                                                     <div className="col-md-12 unit">
                                                                                         <div className="unit ">
-                                                                                            <label className="label">
-                                                                                                Uso de CFDI
-                                              </label>
                                                                                             <label className="input select">
-                                                                                                <select
-                                                                                                    onChange={handleChange}
-                                                                                                    className="form-control"
-                                                                                                    required
-                                                                                                    native
-                                                                                                    name="idUSOCFDI"
-                                                                                                    value={state.idUSOCFDI}
-                                                                                                    id="idUSOCFDI"
-                                                                                                >
-                                                                                                    <option value="1">
-                                                                                                        1. Adqusicion de mercancias
+                                                                                                <FormControl fullWidth variant="outlined" margin="dense">
+                                                                                                    <InputLabel id="idUSOCFDILabel">Uso de CFDI</InputLabel>
+                                                                                                    <Select
+                                                                                                        labelId="idUSOCFDILabel"
+                                                                                                        label="Uso de CFDI"
+                                                                                                        onChange={handleChange}
+                                                                                                        className="form-control"
+                                                                                                        required
+                                                                                                        native
+                                                                                                        name="idUSOCFDI"
+                                                                                                        value={state.idUSOCFDI}
+                                                                                                        id="idUSOCFDI"
+                                                                                                    >
+                                                                                                        <option value="1">
+                                                                                                            1. Adqusicion de mercancias
                                                   </option>
-                                                                                                    <option value="2">
-                                                                                                        2. Devoluciones, descuentos
+                                                                                                        <option value="2">
+                                                                                                            2. Devoluciones, descuentos
                                                     o bonificaciones{" "}
-                                                                                                    </option>
-                                                                                                    <option value="3">
-                                                                                                        3. Gastos en general{" "}
-                                                                                                    </option>
-                                                                                                    <option value="4">
-                                                                                                        4. Construcciones{" "}
-                                                                                                    </option>
-                                                                                                    <option value="5">
-                                                                                                        5. Mobiliario y equipo{" "}
-                                                                                                    </option>
-                                                                                                </select>
-                                                                                                <i></i>
+                                                                                                        </option>
+                                                                                                        <option value="3">
+                                                                                                            3. Gastos en general{" "}
+                                                                                                        </option>
+                                                                                                        <option value="4">
+                                                                                                            4. Construcciones{" "}
+                                                                                                        </option>
+                                                                                                        <option value="5">
+                                                                                                            5. Mobiliario y equipo{" "}
+                                                                                                        </option>
+                                                                                                    </Select>
+                                                                                                </FormControl>
                                                                                             </label>
                                                                                         </div>
 
@@ -2477,9 +2398,8 @@ function Clientes(props) {
                                                             {/* start text password */}
                                                             <div className="row">
                                                                 <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                                    <label className="label">Contacto</label>
                                                                     <div className="input">
-                                                                        <TextField variant="outlined" margin="dense"
+                                                                        <TextField variant="outlined" margin="dense" label="Contacto"
                                                                             onChange={handleChange}
                                                                             value={state.contactoNombre}
                                                                             name="contactoNombre"
@@ -2515,9 +2435,9 @@ function Clientes(props) {
                                                             </div>
                                                             <div className="row">
                                                                 <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                                    <label className="label">Correo</label>
                                                                     <div className="input">
                                                                         <TextField variant="outlined" margin="dense"
+                                                                            label="Correo"
                                                                             onChange={handleChange}
                                                                             value={state.contactoCorreo}
                                                                             name="contactoCorreo"
@@ -2553,9 +2473,8 @@ function Clientes(props) {
                                                             </div>
                                                             <div className="row">
                                                                 <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                                    <label className="label">Teléfono</label>
                                                                     <div className="input">
-                                                                        <TextField variant="outlined" margin="dense"
+                                                                        <TextField variant="outlined" margin="dense" label="Teléfono"
                                                                             onChange={handleChange}
                                                                             value={state.contactoTelefono}
                                                                             name="contactoTelefono"
@@ -2670,6 +2589,7 @@ function Clientes(props) {
                                                     </div>
                                                     <div className="form-footer" className="col-md-12">
                                                         <button
+                                                            href="#Listado" role="tab" data-toggle="tab"
                                                             data-layout="topCenter"
                                                             data-type="information"
                                                             className="btn btn-secondary secondary-btn"
