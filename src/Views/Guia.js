@@ -20,7 +20,8 @@ import { DataGrid } from '@material-ui/data-grid';
 import Noty from 'noty';
 import { SignalCellularNoSimOutlined } from "@material-ui/icons";
 import ConceptosAdicionales from "./Tarifas/ConceptosAdicionales";
-import { FormControl, InputLabel, Select, TextField } from "@material-ui/core";
+import { FormControl, InputLabel, Select, Step, StepLabel, Stepper, TextField, Tooltip } from "@material-ui/core";
+import { dataGridLocaleText } from "../Constants";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -830,13 +831,23 @@ function Guia(props) {
     const columns = React.useMemo(() => [
         {
             headerName: "Acciones",
+            sortable: false, filterable: false,
             field: "",
             renderCell: (row) => {
                 return (
                     <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdGuia))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdGuia))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                        <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdGuia))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                        <Tooltip title="Modificar">
+                            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdGuia))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+
+                        </Tooltip>
+                        <Tooltip title="Consultar">
+                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdGuia))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+
+                        </Tooltip>
+                        <Tooltip title="Eliminar">
+                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdGuia))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+
+                        </Tooltip>
                     </div>
                 )
             }
@@ -1181,6 +1192,7 @@ function Guia(props) {
             var conceptosTemp = []
             var ivaTraslada = []
             var ivaRetiene = []
+            var flete = dataConcepto.find(c => c.m_nIdConceptosFacturacion === 22)
             axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetBySucursalDestino/${state.idSucursal}/${respuesta.data.m_nIdCiudadDestino}`, { headers }).then(tarifa => {
 
                 if (tarifa.data.length !== 0) {
@@ -1191,35 +1203,37 @@ function Guia(props) {
                     ivaTraslada = getUniqueListBy(conceptosTemp, "traslada").map(i => i.traslada);
                     ivaRetiene = getUniqueListBy(conceptosTemp, "retiene").map(i => i.retiene);
                 }
+
+                setState({
+                    ...state,
+                    idEmbarque: respuesta.data.m_nIdEmbarque,
+                    idEmbarque2: respuesta.data.m_nIdEmbarque,
+                    nombreRemitente: respuesta.data.m_sNOmbreRemitente,
+                    RFCRemitente: respuesta.data.m_sRFCRemitente,
+                    domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
+                    codigoPostalRemitente: respuesta.data.m_nIdCodigoPostalRemitente,
+                    ciudadRemitente: respuesta.data.m_sCiudadRemitente,
+                    correoRemitente: respuesta.data.m_sCorreoRemitente,
+                    tipoCambio: respuesta.data.m_cTIpoCambio,
+                    idTipoCobro: respuesta.data.m_nIdTIpoCobro,
+                    telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
+                    contactoRemitente: respuesta.data.m_sContactoRemitente,
+                    origenRemitente: respuesta.data.m_sCiudadRemitente,
+                    sNombreDestinatario: respuesta.data.m_sNombreDestinatario,
+                    sRFCDestinatario: respuesta.data.m_sRFCDestinatario,
+                    sDomicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
+                    idCodigoPostalDestinatario: respuesta.data.m_nIdCodigoPostalDestinatario,
+                    ciudadDestinatario: respuesta.data.m_sCIudadDestinatario,
+                    sCorreoDestinatario: respuesta.data.m_sCorreoDestinatario,
+                    sTelefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
+                    sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
+                    CiudadDestino: respuesta.data.m_sCIudadDestinatario,
+                    paquetes: paquetesTemp,
+                    sobres: sobresTemp,
+                    conceptosAdicionales: conceptosTemp, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada
+                })
             })
-            setState({
-                ...state,
-                idEmbarque: respuesta.data.m_nIdEmbarque,
-                idEmbarque2: respuesta.data.m_nIdEmbarque,
-                nombreRemitente: respuesta.data.m_sNOmbreRemitente,
-                RFCRemitente: respuesta.data.m_sRFCRemitente,
-                domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                codigoPostalRemitente: respuesta.data.m_nIdCodigoPostalRemitente,
-                ciudadRemitente: respuesta.data.m_sCiudadRemitente,
-                correoRemitente: respuesta.data.m_sCorreoRemitente,
-                tipoCambio: respuesta.data.m_cTIpoCambio,
-                idTipoCobro: respuesta.data.m_nIdTIpoCobro,
-                telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
-                contactoRemitente: respuesta.data.m_sContactoRemitente,
-                origenRemitente: respuesta.data.m_sCiudadRemitente,
-                sNombreDestinatario: respuesta.data.m_sNombreDestinatario,
-                sRFCDestinatario: respuesta.data.m_sRFCDestinatario,
-                sDomicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                idCodigoPostalDestinatario: respuesta.data.m_nIdCodigoPostalDestinatario,
-                ciudadDestinatario: respuesta.data.m_sCIudadDestinatario,
-                sCorreoDestinatario: respuesta.data.m_sCorreoDestinatario,
-                sTelefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
-                sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
-                CiudadDestino: respuesta.data.m_sCIudadDestinatario,
-                paquetes: paquetesTemp,
-                sobres: sobresTemp,
-                conceptosAdicionales: conceptosTemp, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada
-            })
+            
 
         });
     };
@@ -1477,19 +1491,9 @@ function Guia(props) {
             default:
         }
 
-        var $welem = $section.parentsUntil(".widget-action-bar").parentsUntil(".w-action").parents(".widget-header").next(".widget-container");
-
-        $welem.slideDown();
-        $section.children("a").children("i").removeClass("zmdi-chevron-up");
-        $section.children("a").children("i").addClass("zmdi-chevron-down");
         $('html, body').animate({
-            scrollTop: parseInt($section.offset().top - ($section.height() / 2))
+            scrollTop: parseInt($section.offset().top - 150)
         }, 200);
-        var $welem = $section
-            .parentsUntil(".widget-action-bar")
-            .parentsUntil(".w-action")
-            .parents(".widget-header")
-            .next(".widget-container");
 
     }
     //objeto de paquetes
@@ -1963,14 +1967,21 @@ function Guia(props) {
     }
 
     return (
-        <div>
+        <div >
 
             <header className="topbar clearfix">
-                <Cabecera />
+                <Cabecera titulo="Guías">
+                    <div className="page-header">
+                        <ul className="list-page-breadcrumb">
+                            <li className="active-page">Guías</li>
+                        </ul>
+                    </div>
+
+                </Cabecera>
             </header>
 
             {/*Leftbar Start Here*/}
-            <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
+            <aside className="iconic-leftbar">
                 <BarraLateralIzquierda />
             </aside>
             {/*Leftbar End Here*/}
@@ -1980,18 +1991,7 @@ function Guia(props) {
 
                 <div className="container-fluid">
 
-                    <div className="page-header filled full-block light">
-                        <div className="row">
-                            <div className="col-md-6 col-sm-6">
-                                <h2>Guías</h2>
-                            </div>
-                            <div className="col-md-6 col-sm-6">
-                                <ul className="list-page-breadcrumb">
-                                    <li className="active-page">Guías</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+
 
                     <ul className="nav navStatica nav-tabs">
                         <li className={props.location.idEmbarque != undefined ? "" : "active"}>
@@ -2074,7 +2074,6 @@ function Guia(props) {
                                                     <FormControl fullWidth variant="outlined" margin="dense">
                                                         <InputLabel id="sucursalListadoLabel">Sucursal</InputLabel>
                                                         <Select
-                                                            native
                                                             labelId="sucursalListadoLabel"
                                                             label="Sucursal"
                                                             className="form-control"
@@ -2134,6 +2133,7 @@ function Guia(props) {
                                     <div className="row" style={{ height: state.height - 250, width: '100%' }}>
                                         {data.length != 0 ? (
                                             <DataGrid
+                                                localeText={dataGridLocaleText}
                                                 rows={data}
                                                 columns={columns}
                                                 density="compact"
@@ -2162,7 +2162,7 @@ function Guia(props) {
                                         className="wizard-breadcrumb number-style"
                                         style={{
                                             position: "sticky",
-                                            top: "150px",
+                                            top: "60px",
                                             padding: "5px",
                                             backgroundColor: "white",
                                             zIndex: 100,
@@ -2171,67 +2171,15 @@ function Guia(props) {
                                     >
 
                                         <div className="row">
-                                            <div
-                                                className={
-                                                    "col-md-2-5 col-sm-3 step " +
-                                                    (stepActive == 1 && "active-step")
+                                            <Stepper activeStep={stepActive - 1}>
+                                                {
+                                                    ["Información General", "Remitentes/Destinatario", "Detalles de la Recolección", "Detalle de Facturación", "Conceptos de Facturación"].map((s, index) => (
+                                                        <Step key={s} completed={false} onClick={() => openSection(index + 1)}>
+                                                            <StepLabel >{s}</StepLabel>
+                                                        </Step>
+                                                    ))
                                                 }
-                                                onClick={() => openSection(1)}
-                                            >
-                                                <div className={"steps"}>
-                                                    <span className={"step-number"}>1</span>
-                                                    <p>Información General</p>
-                                                </div>
-                                            </div>
-                                            <div
-                                                className={
-                                                    "col-md-2-5 col-sm-3 step " +
-                                                    (stepActive == 2 && "active-step")
-                                                }
-                                                onClick={() => openSection(2)}
-                                            >
-                                                <div className="steps">
-                                                    <span className="step-number">2</span>
-                                                    <p>Remitentes / Destinatario</p>
-                                                </div>
-                                            </div>
-                                            <div
-                                                className={
-                                                    "col-md-2-5 col-sm-3 step " +
-                                                    (stepActive == 3 && "active-step")
-                                                }
-                                                onClick={() => openSection(3)}
-                                            >
-                                                <div className="steps">
-                                                    <span className="step-number">3</span>
-                                                    <p>Detalles de la Recolección</p>
-                                                </div>
-                                            </div>
-
-                                            <div
-                                                className={
-                                                    "col-md-2-5 col-sm-2 step " +
-                                                    (stepActive == 4 && "active-step")
-                                                }
-                                                onClick={() => openSection(4)}
-                                            >
-                                                <div className="steps">
-                                                    <span className="step-number">4</span>
-                                                    <p>Detalle de Facturación</p>
-                                                </div>
-                                            </div>
-                                            <div
-                                                className={
-                                                    "col-md-2-5 col-sm-2 step " +
-                                                    (stepActive == 5 && "active-step")
-                                                }
-                                                onClick={() => openSection(5)}
-                                            >
-                                                <div className="steps">
-                                                    <span className="step-number">5</span>
-                                                    <p>Conceptos de Facturación</p>
-                                                </div>
-                                            </div>
+                                            </Stepper>
                                         </div>
                                     </div>
 
@@ -3035,8 +2983,8 @@ function Guia(props) {
                                                     <div className="col-md-12">
                                                         <form className="j-forms">
                                                             {
-                                                                state.idEmbarque && 
-                                                                <ConceptosAdicionales conceptosAdicionales={state.conceptosAdicionales} addConcepto={addConcepto} removeConcepto={removeConcepto} ivaRetiene={state.ivaRetiene} ivaTraslada={state.ivaTraslada}>
+                                                                state.idEmbarque &&
+                                                                <ConceptosAdicionales guias={true} conceptosAdicionales={state.conceptosAdicionales} addConcepto={addConcepto} removeConcepto={removeConcepto} ivaRetiene={state.ivaRetiene} ivaTraslada={state.ivaTraslada}>
 
                                                                 </ConceptosAdicionales>
                                                             }
@@ -3097,7 +3045,7 @@ function Guia(props) {
                                                 <br></br>
                                                 <div className="form-footer" className="col-md-12">
                                                     <button className="btn btn-default btn-block ex-noty" data-layout="topCenter" data-type="information">Notificación</button>
-                                                    <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
+                                                    <button href="#Listado" role="tab" data-toggle="tab" data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
                                                     >
                                                         Cancelar</button>
                                                 </div>

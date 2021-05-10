@@ -1417,7 +1417,7 @@
   font-size: 16px;
 }
 .iconic-view {
-  padding-top: 60px;
+  padding-top: 0px;
 }
 .iconic-view.isMobile .left-toggle-switch,
 .iconic-view.isMobile .left-bar-switch {

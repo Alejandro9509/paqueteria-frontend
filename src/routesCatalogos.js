@@ -10,7 +10,6 @@ import EstatusUnidadPage from './Views/EstatusUnidad';
 import TipoCobroPage from './Views/TipoCobro';
 import TiposViaje from './Views/TipoViaje'
 import CasetaPage from './Views/Caseta';
-import ConceptosFacturacion from './Views/ConceptosFacturacion';
 import GrupoClientePage from './Views/GrupoCliente';
 import GrupoUnidadPage from './Views/GrupoUnidades';
 import ImpuestosPage from './Views/Impuestos';

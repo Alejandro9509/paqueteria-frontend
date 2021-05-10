@@ -65,7 +65,7 @@ class CrearConcepto extends Component {
                 impuestosSeleccionadosTraslado: array
             });
         } else {
-            array.splice(array.indexOf(a => a.m_nIdImpuesto === this.state.impuestos[index].m_nIdImpuesto), 1)
+            array.splice(array.findIndex(a => a.m_nIdImpuesto === this.state.impuestos[index].m_nIdImpuesto), 1)
             this.setState({
                 impuestosSeleccionadosTraslado: array
             });
@@ -91,7 +91,7 @@ class CrearConcepto extends Component {
                 impuestosSeleccionadosRetencion: array
             });
         } else {
-            array.splice(array.indexOf(a => a.m_nIdImpuesto === this.state.impuestosRetencion[index].m_nIdImpuesto), 1)
+            array.splice(array.findIndex(a => a.m_nIdImpuesto === this.state.impuestosRetencion[index].m_nIdImpuesto), 1)
             this.setState({
                 impuestosSeleccionadosRetencion: array
             });

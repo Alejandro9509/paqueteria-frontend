@@ -5,10 +5,11 @@ import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda"
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import { useTable, useFilters, useSortBy } from 'react-table'
 import { makeStyles } from "@material-ui/core/styles";
-import { Breadcrumbs, Link, TextField, Typography } from '@material-ui/core';
+import { Breadcrumbs, Link, TextField, Tooltip, Typography } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
 
 import Noty from 'noty';
+import { dataGridLocaleText } from "../Constants";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -268,13 +269,23 @@ function CiudadesCodigoPostal() {
     const columns = React.useMemo(() => [
         {
             headerName: "Acciones",
+            sortable: false, filterable: false,
             field: "",
             renderCell: (row) => {
                 return (
                     <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarCiudad(row.row.m_nIdCiudad))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultaCiudad(row.row.m_nIdCiudad))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                        <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminarCiudad(row.row.m_nIdCiudad))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                        <Tooltip title="Modificar">
+                            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarCiudad(row.row.m_nIdCiudad))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+
+                        </Tooltip>
+                        <Tooltip title="Consultar">
+                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultaCiudad(row.row.m_nIdCiudad))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+
+                        </Tooltip>
+                        <Tooltip title="Eliminar">
+                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminarCiudad(row.row.m_nIdCiudad))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+
+                        </Tooltip>
                     </div>
                 )
             }
@@ -302,13 +313,23 @@ function CiudadesCodigoPostal() {
     const columnsCodigoPostal = React.useMemo(() => [
         {
             headerName: "Acciones",
+            sortable: false, filterable: false,
             field: "",
             renderCell: (row) => {
                 return (
                     <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarCodigoPostal(row.row.m_nIdCP))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificarCodigoPostal(row.row.m_nIdCP))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                        <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminarCodigoPostal(row.row.m_nIdCP))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                        <Tooltip title="Modificar">
+                            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarCodigoPostal(row.row.m_nIdCP))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+
+                        </Tooltip>
+                        <Tooltip title="Consultar">
+                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificarCodigoPostal(row.row.m_nIdCP))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+
+                        </Tooltip>
+                        <Tooltip title="Eliminar">
+                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminarCodigoPostal(row.row.m_nIdCP))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+
+                        </Tooltip>
                     </div>
                 )
             }
@@ -550,14 +571,25 @@ function CiudadesCodigoPostal() {
     }
 
     return (
-        <div>
+        <div >
 
             <header className="topbar clearfix">
-                <Cabecera />
+                <Cabecera titulo="Ciudades/Código Postal" >
+                    <div className="page-header">
+                        <ul className="list-page-breadcrumb">
+                            <li>
+                                <a href="/Configuracion" className="color-mapeo">
+                                    Configuración <i className="zmdi zmdi-chevron-right" />
+                                </a>
+                            </li>
+                            <li className="active-page">Ciudades</li>
+                        </ul>
+                    </div>
+                </Cabecera>
             </header>
 
             {/*Leftbar Start Here*/}
-            <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
+            <aside className="iconic-leftbar">
                 <BarraLateralIzquierda />
             </aside>
             {/*Leftbar End Here*/}
@@ -567,23 +599,7 @@ function CiudadesCodigoPostal() {
 
                 <div className="container-fluid">
 
-                    <div className="page-header filled full-block light">
-                        <div className="row">
-                            <div className="col-md-6 col-sm-6">
-                                <h2>Ciudades/Código Postal</h2>
-                            </div>
-                            <div className="col-md-6 col-sm-6">
-                                <ul className="list-page-breadcrumb">
-                                    <li>
-                                        <a href="/Configuracion" className="color-mapeo">
-                                            Configuración <i className="zmdi zmdi-chevron-right" />
-                                        </a>
-                                    </li>
-                                    <li className="active-page">Ciudades</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+
 
                     <div className="row">
                         <div className="col-md-7" >
@@ -607,6 +623,7 @@ function CiudadesCodigoPostal() {
                                             <div className="row" style={{ height: state.height - 250, width: '100%' }}>
                                                 {data.length != 0 ? (
                                                     <DataGrid
+                                                        localeText={dataGridLocaleText}
                                                         rows={data}
                                                         columns={columns}
                                                         density="compact"
@@ -633,7 +650,7 @@ function CiudadesCodigoPostal() {
                                                         <div className="form-content">
 
                                                             <div className="col-sm-4 col-md-4 unit">
-                                                                
+
                                                                 <div className="input">
                                                                     <TextField variant="outlined" margin="dense"
                                                                         onChange={handleChange}
@@ -650,7 +667,7 @@ function CiudadesCodigoPostal() {
                                                             </div>
 
                                                             <div className="col-sm-4 col-md-4 unit">
-                                                                
+
                                                                 <div className="input">
                                                                     <TextField variant="outlined" margin="dense"
                                                                         onChange={handleChange}
@@ -666,7 +683,7 @@ function CiudadesCodigoPostal() {
                                                             </div>
 
                                                             <div className="col-sm-4 col-md-4 unit">
-                                                                
+
                                                                 <div className="input">
                                                                     <TextField variant="outlined" margin="dense"
                                                                         onChange={handleChange}
@@ -788,6 +805,7 @@ function CiudadesCodigoPostal() {
                                             <div className="row" style={{ height: state.height - 250, width: '100%' }}>
                                                 {dataCodigoPostal.length != 0 ? (
                                                     <DataGrid
+                                                        localeText={dataGridLocaleText}
                                                         rows={dataCodigoPostal}
                                                         columns={columnsCodigoPostal}
                                                         density="compact"
@@ -817,7 +835,7 @@ function CiudadesCodigoPostal() {
                                                         <div className="form-content">
 
                                                             <div className="col-sm-4 col-md-4 unit">
-                                                                
+
                                                                 <div className="input">
                                                                     <TextField variant="outlined" margin="dense"
                                                                         onChange={handleChange}
@@ -833,13 +851,13 @@ function CiudadesCodigoPostal() {
                                                             </div>
 
                                                             <div className="col-sm-4 col-md-4 unit">
-                                                                
+
                                                                 <div className="input">
                                                                     <TextField variant="outlined" margin="dense"
                                                                         onChange={handleChange}
                                                                         className="form-control"
                                                                         type="text"
-                                                                        label ="Zona"
+                                                                        label="Zona"
                                                                         required={true}
                                                                         readOnly={state.agregarCodigoPostal == "Consultar"}
                                                                         value={state.zona}

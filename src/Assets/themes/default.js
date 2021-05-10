@@ -183,6 +183,11 @@ export default {
         //     textTransform: "uppercase"
         //   }
         // },
+        MuiTooltip: {
+            tooltip: {
+              fontSize: "16px",
+            }
+          },
         MuiPickersDay: {
             daySelected: {
                 backgroundColor: "#0288D1",

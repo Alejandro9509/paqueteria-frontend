@@ -8,7 +8,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { DataGrid } from '@material-ui/data-grid';
 
 import Noty from 'noty';
-import { TextField } from "@material-ui/core";
+import { TextField, Tooltip } from "@material-ui/core";
+import { dataGridLocaleText } from "../Constants";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -200,13 +201,23 @@ function Caseta() {
     const columns = React.useMemo(() => [
         {
             headerName: "Acciones",
+            sortable: false, filterable: false,
             field: "",
             renderCell: (row) => {
                 return (
                     <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdCaseta))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdCaseta))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                        <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdCaseta))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                        <Tooltip title="Modificar">
+                            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdCaseta))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+
+                        </Tooltip>
+                        <Tooltip title="Consultar">
+                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdCaseta))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+
+                        </Tooltip>
+                        <Tooltip title="Eliminar">
+                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdCaseta))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+
+                        </Tooltip>
                     </div>
                 )
             }
@@ -373,14 +384,25 @@ function Caseta() {
     }
 
     return (
-        <div>
+        <div >
 
             <header className="topbar clearfix">
-                <Cabecera />
+                <Cabecera titulo="Caseta" >
+                    <div className="page-header">
+                        <ul className="list-page-breadcrumb">
+                            <li>
+                                <a href="/Catalogos" className="color-mapeo">
+                                    Configuración <i className="zmdi zmdi-chevron-right" />
+                                </a>
+                            </li>
+                            <li className="active-page">Caseta</li>
+                        </ul>
+                    </div>
+                </Cabecera>
             </header>
 
             {/*Leftbar Start Here*/}
-            <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
+            <aside className="iconic-leftbar">
                 <BarraLateralIzquierda />
             </aside>
             {/*Leftbar End Here*/}
@@ -390,23 +412,7 @@ function Caseta() {
 
                 <div className="container-fluid">
 
-                    <div className="page-header filled full-block light">
-                        <div className="row">
-                            <div className="col-md-6 col-sm-6">
-                                <h2>Caseta</h2>
-                            </div>
-                            <div className="col-md-6 col-sm-6">
-                                <ul className="list-page-breadcrumb">
-                                    <li>
-                                        <a href="/Catalogos" className="color-mapeo">
-                                            Configuración <i className="zmdi zmdi-chevron-right" />
-                                        </a>
-                                    </li>
-                                    <li className="active-page">Caseta</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+
 
 
                     <ul className="nav navStatica nav-tabs">
@@ -429,6 +435,7 @@ function Caseta() {
                                     <div className="row" style={{ height: state.height - 250, width: '100%' }}>
                                         {data.length != 0 ? (
                                             <DataGrid
+                                                localeText={dataGridLocaleText}
                                                 rows={data}
                                                 columns={columns}
                                                 density="compact"
@@ -475,7 +482,7 @@ function Caseta() {
                                                         </div>
                                                     </div>
 
-                                                    <div className="col-md-12 unit" style={{padding: "10px"}}>
+                                                    <div className="col-md-12 unit" style={{ padding: "10px" }}>
                                                         <div className="col-md-1">
                                                             Tarifas
                                                         </div>

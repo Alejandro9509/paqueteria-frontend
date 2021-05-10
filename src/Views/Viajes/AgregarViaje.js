@@ -13,6 +13,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import TableUnidadViajes from "./TablaUnidadViajes";
 import {DataGrid} from "@material-ui/data-grid";
+import { dataGridLocaleText } from "../../Constants";
 
 const headers = {
     'Content-Type': 'application/json',
@@ -995,6 +996,7 @@ class AgregarViaje extends Component {
                             <div className="row" style={{ height: this.state.height - 750, width: '100%' }}>
                                 {this.state.dataInformes.length != 0 ? (
                                     <DataGrid
+                                    localeText={dataGridLocaleText}
                                         rows={this.state.dataInformes}
                                         columns={columns}
                                         density="compact"

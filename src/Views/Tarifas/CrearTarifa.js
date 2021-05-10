@@ -119,9 +119,10 @@ class CrearTarifa extends Component {
     handleChangeChecboxTiposCobro(event, index, arrayTipos, all) {
         const array = this.state.tiposCobroSeleccionado
         if (all) {
+            let arrayAll = Object.assign([], arrayTipos)
             this.setState({
-                tiposCobroAll: true,
-                tiposCobroSeleccionado: arrayTipos
+                tiposCobroAll: !this.state.tiposCobroAll,
+                tiposCobroSeleccionado: !this.state.tiposCobroAll ? arrayAll : []
             });
             return
         }
@@ -131,7 +132,7 @@ class CrearTarifa extends Component {
                 tiposCobroSeleccionado: array
             });
         } else {
-            array.splice(array.indexOf(a => a.m_nIdTipoCobro === arrayTipos[index].m_nIdTipoCobro), 1)
+            array.splice(array.findIndex(a => a.m_nIdTipoCobro === arrayTipos[index].m_nIdTipoCobro), 1)
             this.setState({
                 tiposCobroAll: false,
                 tiposCobroSeleccionado: array
@@ -142,10 +143,12 @@ class CrearTarifa extends Component {
 
     handleChangeChecboxTiposServicio(event, index, arrayTipos, all) {
         const array = this.state.tiposServicioSeleccionado
+        
         if (all) {
+            let arrayAll = Object.assign([], arrayTipos)
             this.setState({
-                tiposServicioAll: true,
-                tiposServicioSeleccionado: arrayTipos
+                tiposServicioAll: !this.state.tiposServicioAll,
+                tiposServicioSeleccionado: !this.state.tiposServicioAll ? arrayAll : []
             });
             return
         }
@@ -155,7 +158,8 @@ class CrearTarifa extends Component {
                 tiposServicioSeleccionado: array
             });
         } else {
-            array.splice(array.indexOf(a => a.m_nIdTipoServicio === arrayTipos[index].m_nIdTipoServicio), 1)
+            var position = array.findIndex(a => a.m_nIdTipoServicio === arrayTipos[index].m_nIdTipoServicio)
+            array.splice(position, 1)
             this.setState({
                 tiposServicioAll: false,
                 tiposServicioSeleccionado: array
@@ -178,7 +182,7 @@ class CrearTarifa extends Component {
                             <div className="widget-wrap">
                                 <div className="widget-content">
                                     <div className="row">
-                                        <div className="col-md-12 col-sm-12">
+                                        <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
                                             <h4>Agregando Tarifas</h4>
                                         </div>
                                     </div>
@@ -314,8 +318,7 @@ class CrearTarifa extends Component {
                                                 <button
                                                     type="button"
                                                     className="btn btn-secondary secondary-btn"
-                                                    role="tab" data-toggle="tab"
-                                                    href="#Listado"
+                                                    onClick={this.props.onCancel}
                                                 >
                                                     Cancelar
                                     </button>
@@ -333,11 +336,11 @@ class CrearTarifa extends Component {
                             </div>
                         </div>
                         <div className="col-md-8 col-sm-12" >
-                            <div className="widget-wrap" style={{ margin: "0px", padding: "0px", minHeight: "500px" }}>
+                            <div className="widget-wrap" style={{ margin: "0px", padding: "0px" }}>
                                 <div className="widget-content">
                                     <Tabs value={this.state.tab} onChange={this.handleTabChange} aria-label="simple tabs example">
                                         <Tab label="Concetos Adicionales por Destino" {...this.a11yProps(0)} className={{ backgroundColor: "white !important" }} />
-                                        <Tab label="Condiciones de Precios por Destino" {...this.a11yProps(1)} />
+                                        <Tab label="Condiciones de Precios por Tipo de Cobro" {...this.a11yProps(1)} />
                                         <Tab label="Condiciones de Precio por Tipo de Servicio" {...this.a11yProps(2)} />
                                     </Tabs>
                                     <TabPanel value={this.state.tab} index={0}>

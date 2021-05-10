@@ -1,21 +1,25 @@
 import React, { useEffect, useState, setData, useMemo, Component } from "react";
 import { remove_array_element } from "../Util/Util";
 import {
-  ButtonBase,
-  Checkbox,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  FormControl,
-  Grid,
-  IconButton,
-  Input,
-  InputLabel,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemSecondaryAction,
-  ListItemText,
+    ButtonBase,
+    Checkbox,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    FormControl,
+    Grid,
+    IconButton,
+    Input,
+    InputLabel,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemSecondaryAction,
+    ListItemText,
+    Step,
+    StepLabel,
+    Stepper,
+    Tooltip,
 } from "@material-ui/core";
 
 import DataTable from "react-data-table-component";
@@ -41,1280 +45,1207 @@ import { render } from "react-dom";
 import SearchIcon from "@material-ui/icons/Search";
 import { DataGrid } from "@material-ui/data-grid";
 import Noty from "noty";
+import { dataGridLocaleText } from "../Constants";
 
 function showSuccess(mensaje) {
-  new Noty({
-    type: "information",
-    layout: "topCenter",
-    text: mensaje,
-    timeout: "3000",
-  }).show();
+    new Noty({
+        type: "information",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000",
+    }).show();
 }
 
 const stylesInformes = {
-  InformeCarrusel: {
-    height: "900px !important",
-  },
-  sobreCarrusel: {
-    height: "150px !important",
-  },
-  seleccionado: {
-    backgroundColor: "#FCC88F",
-  },
-  noSeleccionado: {
-    backgroundColor: "#FFFFFF",
-  },
-  disabled: {
-    pointerEvents: "none",
-    cursor: "default",
-  },
-  root: {
-    "& .super-app-theme--cell": {
-      backgroundColor: "rgba(224, 183, 60, 0.55)",
-      color: "#1a3e72",
-      fontWeight: "600",
+    InformeCarrusel: {
+        height: "900px !important",
     },
-    "& .super-app.esRecolecta": {
-      backgroundColor: "green",
+    sobreCarrusel: {
+        height: "150px !important",
     },
-    "& .super-app.noRecolecta": {
-      backgroundColor: "red",
+    seleccionado: {
+        backgroundColor: "#FCC88F",
     },
-  },
+    noSeleccionado: {
+        backgroundColor: "#FFFFFF",
+    },
+    disabled: {
+        pointerEvents: "none",
+        cursor: "default",
+    },
+    root: {
+        "& .super-app-theme--cell": {
+            backgroundColor: "rgba(224, 183, 60, 0.55)",
+            color: "#1a3e72",
+            fontWeight: "600",
+        },
+        "& .super-app.esRecolecta": {
+            backgroundColor: "green",
+        },
+        "& .super-app.noRecolecta": {
+            backgroundColor: "red",
+        },
+    },
 };
 
 const styles = {
-  seleccionado: {
-    backgroundColor: "#FCC88F",
-  },
-  noSeleccionado: {
-    backgroundColor: "#FFFFFF",
-  },
-  disabled: {
-    pointerEvents: "none",
-    cursor: "default",
-  },
+    seleccionado: {
+        backgroundColor: "#FCC88F",
+    },
+    noSeleccionado: {
+        backgroundColor: "#FFFFFF",
+    },
+    disabled: {
+        pointerEvents: "none",
+        cursor: "default",
+    },
 };
 const useStyles = makeStyles(styles);
 const useInformeStyles = makeStyles(stylesInformes);
 
 window.jQuery = window.$ = $;
 const headers = {
-  "Content-Type": "application/json",
+    "Content-Type": "application/json",
 };
 
 function Informes({ history }) {
-  const classes = useStyles();
-  const classesInforme = useInformeStyles();
-  const [stepActive, setStepActive] = React.useState(1);
-  const [data, setData] = React.useState([]);
-  const [dataRutas, setDataRutas] = React.useState([]);
+    const classes = useStyles();
+    const classesInforme = useInformeStyles();
+    const [stepActive, setStepActive] = React.useState(1);
+    const [data, setData] = React.useState([]);
+    const [dataRutas, setDataRutas] = React.useState([]);
 
-  const [Modal, open, close, isOpen] = useModal("root", {
-    preventScroll: true,
-  });
-  const [dataTipoUnidad, setDataTipoUnidad] = React.useState([]);
-  const [dataSucursal, setDataSucursal] = React.useState([]);
-  const [dataEstatusInformes, setEstatusInformes] = React.useState([]);
-  const [dataOperadores, setDataOperadores] = React.useState([]);
-  const [dataOrigenes, setDataOrigenes] = React.useState([]);
-  const [dataUnidades, setDataUnidades] = React.useState([]);
-  const [dataGuias, setDataGuias] = React.useState([]);
-  const [dataViajes, setDataViajes] = React.useState([]);
-  const [guias, setGuias] = React.useState([
-    {
-      folio: "FE-100",
-      estatus: "Documentada",
-      total: "$30",
-      destino: "Tijuana",
-      servicio: "Unidad Completa",
-      observaciones: "Los productos vienen sellados correctamente",
-    },
-    {
-      folio: "FE-100",
-      estatus: "Documentada",
-      total: "$30",
-      destino: "Tijuana",
-      servicio: "Unidad Completa",
-      observaciones: "Los productos vienen sellados correctamente",
-    },
-    {
-      folio: "FE-100",
-      estatus: "Documentada",
-      total: "$30",
-      destino: "Tijuana",
-      servicio: "Unidad Completa",
-      observaciones: "Los productos vienen sellados correctamente",
-    },
-    {
-      folio: "FE-100",
-      estatus: "Documentada",
-      total: "$30",
-      destino: "Tijuana",
-      servicio: "Unidad Completa",
-      observaciones: "Los productos vienen sellados correctamente",
-    },
-  ]);
-
-  function getAllDataRutas() {
-    const url = `${process.env.REACT_APP_API_URL}/Rutas/GetListado`;
-    axios.get(url, { headers }).then((respuesta) => {
-      console.log(respuesta.data);
-      setDataRutas(respuesta.data);
+    const [Modal, open, close, isOpen] = useModal("root", {
+        preventScroll: true,
     });
-  }
+    const [dataTipoUnidad, setDataTipoUnidad] = React.useState([]);
+    const [dataSucursal, setDataSucursal] = React.useState([]);
+    const [dataEstatusInformes, setEstatusInformes] = React.useState([]);
+    const [dataOperadores, setDataOperadores] = React.useState([]);
+    const [dataOrigenes, setDataOrigenes] = React.useState([]);
+    const [dataUnidades, setDataUnidades] = React.useState([]);
+    const [dataGuias, setDataGuias] = React.useState([]);
+    const [dataViajes, setDataViajes] = React.useState([]);
+    const [guias, setGuias] = React.useState([
+        {
+            folio: "FE-100",
+            estatus: "Documentada",
+            total: "$30",
+            destino: "Tijuana",
+            servicio: "Unidad Completa",
+            observaciones: "Los productos vienen sellados correctamente",
+        },
+        {
+            folio: "FE-100",
+            estatus: "Documentada",
+            total: "$30",
+            destino: "Tijuana",
+            servicio: "Unidad Completa",
+            observaciones: "Los productos vienen sellados correctamente",
+        },
+        {
+            folio: "FE-100",
+            estatus: "Documentada",
+            total: "$30",
+            destino: "Tijuana",
+            servicio: "Unidad Completa",
+            observaciones: "Los productos vienen sellados correctamente",
+        },
+        {
+            folio: "FE-100",
+            estatus: "Documentada",
+            total: "$30",
+            destino: "Tijuana",
+            servicio: "Unidad Completa",
+            observaciones: "Los productos vienen sellados correctamente",
+        },
+    ]);
 
-  const handleChange = (event) => {
-    console.log(event.target.id + " : " + event.target.value);
-    setState({
-      ...state,
-      [event.target.id]: event.target.value,
-    });
-  };
-
-  function handleSelectCP(id, cp) {
-    setState({
-      ...state,
-      [state.identificadorModal]: id,
-    });
-    console.log(id);
-    console.log(state.identificadorModal);
-  }
-
-  function handleSelectViaje() {
-    state.ruta2 = state.viaje.m_sRuta;
-    state.operador2 = state.viaje.m_sNombreCompletoOperador;
-    state.unidad2 = state.viaje.m_sTipoUnidad;
-    state.remolque2 = state.viaje.m_sDescripcionUnidad;
-  }
-
-  const columns2 = React.useMemo(() => [
-    {
-      Name: "Folio/Serie",
-      accessor: "m_nFolioInforme",
-    },
-    {
-      Name: "Fecha/Hora Elaboración",
-      accessor: "m_dFecha",
-    },
-    {
-      Name: "Viaje",
-      accessor: "m_nIdViaje",
-    },
-    {
-      Name: "Oficina Emisora",
-      accessor: "m_sSucursalEmisora",
-    },
-    {
-      Name: "Oficina Receptora",
-      accessor: "m_sSucursalReceptora",
-    },
-    {
-      Name: "Operador",
-      accessor: "m_sNombreCompleto",
-    },
-    {
-      Name: "Unidad",
-      accessor: "m_sCodigoUnidad",
-    },
-  ]);
-
-  const columns = React.useMemo(() => [
-    {
-      headerName: "Acciones",
-      field: "",
-      renderCell: (row) => {
-        return (
-          <div>
-            <a
-              href="#Agregar"
-              role="tab"
-              data-toggle="tab"
-              onClick={() => handleShowModificar(row.row.m_nIdInforme)}
-              className="btn btn-default btn-xs"
-            >
-              <i
-                className="fa fa-pencil-square-o"
-                style={{ color: "#F9A03E" }}
-              />
-            </a>
-            <a
-              href="#Agregar"
-              role="tab"
-              data-toggle="tab"
-              className="btn btn-default btn-xs"
-              onClick={() => handleShowModificar(row.row.m_nIdInforme)}
-            >
-              <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-            </a>
-            <a
-              href="#"
-              className="btn btn-default btn-xs"
-              onClick={() => handleEliminar(row.row.m_nIdInforme)}
-            >
-              <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
-            </a>
-          </div>
-        );
-      },
-    },
-    {
-      headerName: "Folio/Serie",
-      field: "m_nFolioInforme",
-      width: 125,
-    },
-    {
-      headerName: "Fecha/Hora Elaboración",
-      field: "m_dFecha",
-      width: 200,
-    },
-    {
-      headerName: "Viaje",
-      field: "m_nIdViaje",
-      width: 125,
-    },
-    {
-      headerName: "Oficina Emisora",
-      field: "m_sSucursalEmisora",
-      width: 150,
-    },
-    {
-      headerName: "Oficina Receptora",
-      field: "m_sSucursalReceptora",
-      width: 150,
-    },
-    {
-      headerName: "Operador",
-      field: "m_sNombreCompleto",
-      width: 250,
-    },
-    {
-      headerName: "Unidad",
-      field: "m_sCodigoUnidad",
-      width: 125,
-    },
-  ]);
-
-  const columnsCP = React.useMemo(() => [
-    {
-      Name: "Codigo",
-      accessor: "m_sCP",
-    },
-    {
-      Name: "Estado",
-      accessor: "m_sEstado",
-    },
-    {
-      Name: "Ciudad",
-      accessor: "m_sCiudad",
-    },
-  ]);
-
-  const columnsCiudades = React.useMemo(() => [
-    {
-      Name: "Codigo",
-      accessor: "m_nCodigo",
-    },
-    {
-      Name: "Ciudad",
-      accessor: "m_sCiudad",
-    },
-    {
-      Name: "Abreviacion",
-      accessor: "m_sAbreviacion",
-    },
-    {
-      Name: "Estado",
-      accessor: "m_nIdEstado",
-    },
-  ]);
-
-  const columnsOperadores = React.useMemo(() => [
-    {
-      Name: "Numero Operador",
-      accessor: "m_nNumeroOperador",
-    },
-    {
-      Name: "Nombre",
-      accessor: "m_sNombreCompleto",
-    },
-    {
-      Name: "Sucursal",
-      accessor: "m_nIdSucursal",
-    },
-    {
-      Name: "Activo",
-      accessor: "m_nIdEstado",
-    },
-  ]);
-
-  const columnsTipoUnidades = React.useMemo(() => [
-    {
-      Name: "Tipo de unidad",
-      accessor: "m_nIdTipoUnidad",
-    },
-    {
-      Name: "Identificador",
-      accessor: "m_nIdentificador",
-    },
-    {
-      Name: "Nomenclatura",
-      accessor: "m_sNomenclaturaSCT",
-    },
-    {
-      Name: "Estatus",
-      accessor: "m_bActivo",
-    },
-  ]);
-
-  const columnsUnidades = React.useMemo(() => [
-    {
-      Name: "Descripcion",
-      accessor: "m_sDescripcion",
-    },
-    {
-      Name: "Codigo",
-      accessor: "m_sCodigo",
-    },
-    {
-      Name: "Tipo de unidad",
-      accessor: "m_nIdTipoUnidad",
-    },
-    {
-      Name: "Estatus",
-      accessor: "m_bActivo",
-    },
-  ]);
-
-  function DefaultColumnFilter({
-    column: { filterValue, preFilteredRows, setFilter },
-  }) {
-    const count = preFilteredRows.length;
-
-    return (
-      <input
-        className="form-control"
-        value={filterValue || ""}
-        onChange={(e) => {
-          setFilter(e.target.value || undefined);
-        }}
-        placeholder={`Buscar ${count} registros...`}
-      />
-    );
-  }
-
-  function Table({ columns, data }) {
-    const defaultColumn = React.useMemo(
-      () => ({
-        // Default Filter UI
-        Filter: DefaultColumnFilter,
-      }),
-      []
-    );
-
-    const {
-      getTableProps,
-      getTableBodyProps,
-      headerGroups,
-      rows,
-      prepareRow,
-    } = useTable(
-      {
-        columns,
-        data,
-        defaultColumn,
-      },
-      useFilters,
-      useSortBy
-    );
-
-    return (
-      <div
-        className="col-md-12"
-        style={{ overflowX: "scroll", height: "100%" }}
-      >
-        <table className="table  tabla-listado" {...getTableProps()}>
-          <thead>
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
-                {headerGroup.headers.map((column) => (
-                  // Add the sorting props to control sorting. For this example
-                  // we can add them into the header props
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    {column.render("Name")}
-                    {/* Add a sort direction indicator */}
-                    <span>
-                      {column.isSorted ? (
-                        column.isSortedDesc ? (
-                          <i className="fa fa-caret-up" />
-                        ) : (
-                          <i className="fa fa-caret-down" />
-                        )
-                      ) : (
-                        ""
-                      )}
-                    </span>
-                    <div>
-                      {column.canFilter ? column.render("Filter") : null}
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-              prepareRow(row);
-              return (
-                <tr
-                  {...row.getRowProps()}
-                  onClick={handleSelectRow.bind(
-                    this,
-                    row.original.m_nIdInforme
-                  )}
-                  className={
-                    state.IdInforme === row.original.m_nIdInforme
-                      ? classes.seleccionado
-                      : classes.noSeleccionado
-                  }
-                >
-                  <td>
-                    <div>
-                      <a
-                        href="#Agregar"
-                        role="tab"
-                        data-toggle="tab"
-                        onClick={() =>
-                          handleShowModificar(row.original.m_nIdInforme)
-                        }
-                        className="btn btn-default btn-sm"
-                      >
-                        <i
-                          className="fa fa-pencil-square-o"
-                          style={{ color: "#F9A03E" }}
-                        />
-                      </a>
-                      <a
-                        href="#Agregar"
-                        role="tab"
-                        data-toggle="tab"
-                        className="btn btn-default btn-sm"
-                        onClick={() =>
-                          handleShowModificar(row.original.m_nIdInforme)
-                        }
-                      >
-                        <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                      </a>
-
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdInforme)
-                        }
-                      >
-                        <i
-                          className="zmdi zmdi-delete"
-                          style={{ color: "#F30B0B" }}
-                        />
-                      </a>
-                    </div>
-                  </td>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    );
-  }
-
-  function TableOperadores({ columns, data, select }) {
-    const defaultColumn = React.useMemo(
-      () => ({
-        // Default Filter UI
-        Filter: DefaultColumnFilter,
-      }),
-      []
-    );
-
-    const {
-      getTableProps,
-      getTableBodyProps,
-      headerGroups,
-      rows,
-      prepareRow,
-      state,
-    } = useTable(
-      {
-        columns,
-        data,
-        defaultColumn,
-      },
-      useFilters,
-      useSortBy
-    );
-
-    return (
-      <div
-        className="col-md-12"
-        style={{ maxHeight: "300px", overflow: "auto" }}
-      >
-        <table className="table" {...getTableProps()}>
-          <thead>
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
-                {headerGroup.headers.map((column) => (
-                  // Add the sorting props to control sorting. For this example
-                  // we can add them into the header props
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    {column.render("Name")}
-                    {/* Add a sort direction indicator */}
-                    <span>
-                      {column.isSorted ? (
-                        column.isSortedDesc ? (
-                          <i className="fa fa-caret-up" />
-                        ) : (
-                          <i className="fa fa-caret-down" />
-                        )
-                      ) : (
-                        ""
-                      )}
-                    </span>
-                    <div>
-                      {column.canFilter ? column.render("Filter") : null}
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-              prepareRow(row);
-              return (
-                <tr
-                  style={{
-                    backgroundColor:
-                      row.original.m_nIdOperador === select
-                        ? "#FCC88F"
-                        : "white",
-                  }}
-                  {...row.getRowProps()}
-                  onClick={handleSelectCP.bind(this, row.original)}
-                >
-                  <td>
-                    <div>
-                      <a
-                        href="#Agregar"
-                        role="tab"
-                        data-toggle="tab"
-                        onClick={() =>
-                          handleShowModificar(row.original.m_nIdRecoleccion)
-                        }
-                        className="btn btn-default"
-                      >
-                        <i
-                          className="fa fa-pencil-square-o"
-                          style={{ color: "#F9A03E" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i
-                          className="zmdi zmdi-delete"
-                          style={{ color: "#F30B0B" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                      </a>
-                    </div>
-                  </td>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    );
-  }
-
-  function TableCiudades({ columns, data, select }) {
-    const defaultColumn = React.useMemo(
-      () => ({
-        // Default Filter UI
-        Filter: DefaultColumnFilter,
-      }),
-      []
-    );
-
-    const {
-      getTableProps,
-      getTableBodyProps,
-      headerGroups,
-      rows,
-      prepareRow,
-      state,
-    } = useTable(
-      {
-        columns,
-        data,
-        defaultColumn,
-      },
-      useFilters,
-      useSortBy
-    );
-
-    return (
-      <div
-        className="col-md-12"
-        style={{ maxHeight: "300px", overflow: "auto" }}
-      >
-        <table className="table" {...getTableProps()}>
-          <thead>
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
-                {headerGroup.headers.map((column) => (
-                  // Add the sorting props to control sorting. For this example
-                  // we can add them into the header props
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    {column.render("Name")}
-                    {/* Add a sort direction indicator */}
-                    <span>
-                      {column.isSorted ? (
-                        column.isSortedDesc ? (
-                          <i className="fa fa-caret-up" />
-                        ) : (
-                          <i className="fa fa-caret-down" />
-                        )
-                      ) : (
-                        ""
-                      )}
-                    </span>
-                    <div>
-                      {column.canFilter ? column.render("Filter") : null}
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-              prepareRow(row);
-              return (
-                <tr
-                  style={{
-                    backgroundColor:
-                      row.original.m_nIdCiudad === select ? "#FCC88F" : "white",
-                  }}
-                  {...row.getRowProps()}
-                  onClick={handleSelectCP.bind(this, row.original)}
-                >
-                  <td>
-                    <div>
-                      <a
-                        href="#Agregar"
-                        role="tab"
-                        data-toggle="tab"
-                        onClick={() =>
-                          handleShowModificar(row.original.m_nIdRecoleccion)
-                        }
-                        className="btn btn-default"
-                      >
-                        <i
-                          className="fa fa-pencil-square-o"
-                          style={{ color: "#F9A03E" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i
-                          className="zmdi zmdi-delete"
-                          style={{ color: "#F30B0B" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                      </a>
-                    </div>
-                  </td>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    );
-  }
-
-  function TableOperadores({ columns, data, select }) {
-    const defaultColumn = React.useMemo(
-      () => ({
-        // Default Filter UI
-        Filter: DefaultColumnFilter,
-      }),
-      []
-    );
-
-    const {
-      getTableProps,
-      getTableBodyProps,
-      headerGroups,
-      rows,
-      prepareRow,
-      state,
-    } = useTable(
-      {
-        columns,
-        data,
-        defaultColumn,
-      },
-      useFilters,
-      useSortBy
-    );
-
-    return (
-      <div
-        className="col-md-12"
-        style={{ maxHeight: "300px", overflow: "auto" }}
-      >
-        <table className="table" {...getTableProps()}>
-          <thead>
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
-                {headerGroup.headers.map((column) => (
-                  // Add the sorting props to control sorting. For this example
-                  // we can add them into the header props
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    {column.render("Name")}
-                    {/* Add a sort direction indicator */}
-                    <span>
-                      {column.isSorted ? (
-                        column.isSortedDesc ? (
-                          <i className="fa fa-caret-up" />
-                        ) : (
-                          <i className="fa fa-caret-down" />
-                        )
-                      ) : (
-                        ""
-                      )}
-                    </span>
-                    <div>
-                      {column.canFilter ? column.render("Filter") : null}
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-              prepareRow(row);
-              return (
-                <tr
-                  style={{
-                    backgroundColor:
-                      row.original.m_nIdOperador === select
-                        ? "#FCC88F"
-                        : "white",
-                  }}
-                  {...row.getRowProps()}
-                  onClick={handleSelectCP.bind(this, row.original)}
-                >
-                  <td>
-                    <div>
-                      <a
-                        href="#Agregar"
-                        role="tab"
-                        data-toggle="tab"
-                        onClick={() =>
-                          handleShowModificar(row.original.m_nIdRecoleccion)
-                        }
-                        className="btn btn-default"
-                      >
-                        <i
-                          className="fa fa-pencil-square-o"
-                          style={{ color: "#F9A03E" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i
-                          className="zmdi zmdi-delete"
-                          style={{ color: "#F30B0B" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                      </a>
-                    </div>
-                  </td>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    );
-  }
-
-  function TableTipoUnidad({ columns, data, select }) {
-    const defaultColumn = React.useMemo(
-      () => ({
-        // Default Filter UI
-        Filter: DefaultColumnFilter,
-      }),
-      []
-    );
-
-    const {
-      getTableProps,
-      getTableBodyProps,
-      headerGroups,
-      rows,
-      prepareRow,
-      state,
-    } = useTable(
-      {
-        columns,
-        data,
-        defaultColumn,
-      },
-      useFilters,
-      useSortBy
-    );
-
-    return (
-      <div className="col-md-12">
-        <table className="table" {...getTableProps()}>
-          <thead>
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
-                {headerGroup.headers.map((column) => (
-                  // Add the sorting props to control sorting. For this example
-                  // we can add them into the header props
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    {column.render("Name")}
-                    {/* Add a sort direction indicator */}
-                    <span>
-                      {column.isSorted ? (
-                        column.isSortedDesc ? (
-                          <i className="fa fa-caret-up" />
-                        ) : (
-                          <i className="fa fa-caret-down" />
-                        )
-                      ) : (
-                        ""
-                      )}
-                    </span>
-                    <div>
-                      {column.canFilter ? column.render("Filter") : null}
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-              prepareRow(row);
-              return (
-                <tr
-                  style={{
-                    backgroundColor:
-                      row.original.m_nIdTipoUnidad === select
-                        ? "#FCC88F"
-                        : "white",
-                  }}
-                  {...row.getRowProps()}
-                  onClick={handleSelectCP.bind(this, row.original)}
-                >
-                  <td>
-                    <div>
-                      <a
-                        href="#Agregar"
-                        role="tab"
-                        data-toggle="tab"
-                        onClick={() =>
-                          handleShowModificar(row.original.m_nIdRecoleccion)
-                        }
-                        className="btn btn-default"
-                      >
-                        <i
-                          className="fa fa-pencil-square-o"
-                          style={{ color: "#F9A03E" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i
-                          className="zmdi zmdi-delete"
-                          style={{ color: "#F30B0B" }}
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm m-user-delete"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdRecoleccion)
-                        }
-                      >
-                        <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                      </a>
-                    </div>
-                  </td>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    );
-  }
-
-  function TableUnidad({ columns, data, select }) {
-    const defaultColumn = React.useMemo(
-      () => ({
-        // Default Filter UI
-        Filter: DefaultColumnFilter,
-      }),
-      []
-    );
-
-    const {
-      getTableProps,
-      getTableBodyProps,
-      headerGroups,
-      rows,
-      prepareRow,
-      state,
-    } = useTable(
-      {
-        columns,
-        data,
-        defaultColumn,
-      },
-      useFilters,
-      useSortBy
-    );
-
-    return (
-      <div
-        className="col-md-12"
-        style={{ maxHeight: "300px", overflow: "auto" }}
-      >
-        <table className="table" {...getTableProps()}>
-          <thead>
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
-                {headerGroup.headers.map((column) => (
-                  // Add the sorting props to control sorting. For this example
-                  // we can add them into the header props
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    {column.render("Name")}
-                    {/* Add a sort direction indicator */}
-                    <span>
-                      {column.isSorted ? (
-                        column.isSortedDesc ? (
-                          <i className="fa fa-caret-up" />
-                        ) : (
-                          <i className="fa fa-caret-down" />
-                        )
-                      ) : (
-                        ""
-                      )}
-                    </span>
-                    <div>
-                      {column.canFilter ? column.render("Filter") : null}
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  <td>
-                    <div>
-                      <a
-                        href="#Agregar"
-                        role="tab"
-                        data-toggle="tab"
-                        onClick={() =>
-                          handleShowModificar(row.original.m_nIdInforme)
-                        }
-                        className="btn btn-default btn-sm"
-                      >
-                        <i
-                          className="fa fa-pencil-square-o"
-                          style={{ color: "#F9A03E" }}
-                        />
-                      </a>
-                      <a
-                        href="#Agregar"
-                        role="tab"
-                        data-toggle="tab"
-                        className="btn btn-default btn-sm"
-                        onClick={() =>
-                          handleShowModificar(row.original.m_nIdInforme)
-                        }
-                      >
-                        <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                      </a>
-                      <a
-                        href="#"
-                        className="btn btn-default btn-sm"
-                        onClick={() =>
-                          handleEliminar(row.original.m_nIdInforme)
-                        }
-                      >
-                        <i
-                          className="zmdi zmdi-delete"
-                          style={{ color: "#F30B0B" }}
-                        />
-                      </a>
-                    </div>
-                  </td>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    );
-  }
-  const headers = {
-    "Content-Type": "application/json",
-  };
-
-  const headers2 = {
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  };
-
-  const [state, setState] = React.useState({
-    showPopUp: false,
-    identificadorModal: "",
-    openDialog: false,
-    viaje: {},
-    agregar: "Agregar",
-    height: window.innerHeight,
-
-    Informes: [
-      {
-        ruta2: "",
-        operador2: "",
-        unidad2: "",
-        remolque2: "",
-
-        tipoModal: 0,
-        IdInforme: 0,
-        FolioInforme: 0,
-        fechaHoraLlegada: "",
-        DerechoBorrar: 151,
-
-        IdEstatusInforme: 0,
-        IdViaje: 0,
-        IdSucursalEmisora: 0,
-        IdSucursalReceptora: 0,
-        IdOperador: {},
-        IdUnidad: {},
-        IdTipoUnidad: {},
-        IdRemolque: 0,
-        IdCiudadDestino: 0,
-        IdCiudadOrigen: 0,
-        IdRuta: 0,
-        IdSucursal: localStorage.getItem("Sucursal"),
-        CreadoPor: localStorage.getItem("UsuarioId"),
-        ModificadoPor: localStorage.getItem("UsuarioId"),
-        usuarioCancelacion: "",
-        estatusCancelacion: "",
-        Guias: [
-          {
-            m_nFolioGuia: "",
-            m_sEstatusGuia: "",
-            m_cValorDeclarado: "",
-            m_sCiudadDestinatario: "",
-            tipoServicio: "",
-            observaciones: "",
-          },
-        ],
-        FechaCancelacion: "",
-        motivoCancelacion: "",
-        sucursalCancelacion: {},
-        sePuedeCancelar: false,
-      },
-    ],
-  });
-  /* const [state, setState] = React.useState({
-    showPopUp: false,
-    identificadorModal: "",
-    openDialog: false,
-
-    ruta2: "",
-    operador2: "",
-    unidad2: "",
-    remolque2: "",
-    viaje: {},
-    tipoModal: 0,
-    IdInforme: 0,
-    FolioInforme: 0,
-    fechaHoraLlegada: "",
-    DerechoBorrar: 151,
-
-    IdEstatusInforme: 0,
-    IdViaje: 0,
-    IdSucursalEmisora: 0,
-    IdSucursalReceptora: 0,
-    IdOperador: {},
-    IdUnidad: {},
-    IdTipoUnidad: {},
-    IdRemolque: 0,
-    IdCiudadDestino: 0,
-    IdCiudadOrigen: 0,
-    IdRuta: 0,
-    usuarioCancelacion: "",
-    estatusCancelacion: "",
-    IdSucursal: localStorage.getItem("Sucursal"),
-    agregar: "Agregar",
-    height: window.innerHeight,
-    CreadoPor: localStorage.getItem("UsuarioId"),
-    ModificadoPor: localStorage.getItem("UsuarioId"),
-    Guias: [
-      {
-        m_nFolioGuia: "",
-        m_sEstatusGuia: "",
-        m_cValorDeclarado: "",
-        m_sCiudadDestinatario: "",
-        tipoServicio: "",
-        observaciones: "",
-      },
-    ],
-    FechaCancelacion: "",
-    motivoCancelacion: "",
-    sucursalCancelacion: {},
-    sePuedeCancelar: false,
-  });  */
-
-  const handleAceptar = (e) => {
-    e.preventDefault();
-
-    var params = {
-      m_arrClsInformesGuias: state.Informes,
-    };
-    console.log(JSON.stringify(params));
-    //debugger;
-    if (state.idEmbarque != 0) {
-      const url = `${process.env.REACT_APP_API_URL}/Informes/Modificar/${state.IdInforme}`;
-      axios
-        .put(url, Object.assign({}, params), { headers2 })
-        .then((respuesta) => {
-          showSuccess(respuesta.data);
-          getAllData();
-        })
-        .catch((err) => {
-          console.log(err);
-          showSuccess("El Usuario no tiene derecho para modificar");
-        });
-    } else {
-      const url = `${process.env.REACT_APP_API_URL}/Informes/Agregar`;
-      axios
-        .post(url, Object.assign({}, params), { headers })
-        .then((respuesta) => {
-          showSuccess(respuesta.data);
-          console.log(respuesta.data);
-          getAllData();
-        })
-        .catch((err) => {
-          console.log(err);
-          showSuccess(err);
+    function getAllDataRutas() {
+        const url = `${process.env.REACT_APP_API_URL}/Rutas/GetListado`;
+        axios.get(url, { headers }).then((respuesta) => {
+            console.log(respuesta.data);
+            setDataRutas(respuesta.data);
         });
     }
-  };
 
-  function addInformeGuia() {
-    const { Informes } = state;
-    Informes.push({
+    const handleChange = (event) => {
+        console.log(event.target.id + " : " + event.target.value);
+        setState({
+            ...state,
+            [event.target.id]: event.target.value,
+        });
+    };
+
+    function handleSelectCP(id, cp) {
+        setState({
+            ...state,
+            [state.identificadorModal]: id,
+        });
+        console.log(id);
+        console.log(state.identificadorModal);
+    }
+
+    function handleSelectViaje() {
+        state.ruta2 = state.viaje.m_sRuta;
+        state.operador2 = state.viaje.m_sNombreCompletoOperador;
+        state.unidad2 = state.viaje.m_sTipoUnidad;
+        state.remolque2 = state.viaje.m_sDescripcionUnidad;
+    }
+
+    const columns2 = React.useMemo(() => [
+        {
+            Name: "Folio/Serie",
+            accessor: "m_nFolioInforme",
+        },
+        {
+            Name: "Fecha/Hora Elaboración",
+            accessor: "m_dFecha",
+        },
+        {
+            Name: "Viaje",
+            accessor: "m_nIdViaje",
+        },
+        {
+            Name: "Oficina Emisora",
+            accessor: "m_sSucursalEmisora",
+        },
+        {
+            Name: "Oficina Receptora",
+            accessor: "m_sSucursalReceptora",
+        },
+        {
+            Name: "Operador",
+            accessor: "m_sNombreCompleto",
+        },
+        {
+            Name: "Unidad",
+            accessor: "m_sCodigoUnidad",
+        },
+    ]);
+
+    const columns = React.useMemo(() => [
+        {
+            headerName: "Acciones",
+            sortable: false, filterable: false,
+            field: "",
+            renderCell: (row) => {
+                return (
+                    <div>
+                        <Tooltip title="Modificar">
+                            <a
+                                href="#Agregar"
+                                role="tab"
+                                data-toggle="tab"
+                                onClick={() => handleShowModificar(row.row.m_nIdInforme)}
+                                className="btn btn-default btn-xs"
+                            >
+                                <i
+                                    className="fa fa-pencil-square-o"
+                                    style={{ color: "#F9A03E" }}
+                                />
+                            </a>
+                        </Tooltip>
+                        <Tooltip title="Consultar">
+                            <a
+                                href="#Agregar"
+                                role="tab"
+                                data-toggle="tab"
+                                className="btn btn-default btn-xs"
+                                onClick={() => handleShowModificar(row.row.m_nIdInforme)}
+                            >
+                                <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
+                            </a>
+                        </Tooltip>
+                        <Tooltip title="Eliminar">
+                            <a
+                                href="#"
+                                className="btn btn-default btn-xs"
+                                onClick={() => handleEliminar(row.row.m_nIdInforme)}
+                            >
+                                <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
+                            </a>
+                        </Tooltip>
+
+
+
+                    </div>
+                );
+            },
+        },
+        {
+            headerName: "Folio/Serie",
+            field: "m_nFolioInforme",
+            width: 125,
+        },
+        {
+            headerName: "Fecha/Hora Elaboración",
+            field: "m_dFecha",
+            width: 200,
+        },
+        {
+            headerName: "Viaje",
+            field: "m_nIdViaje",
+            width: 125,
+        },
+        {
+            headerName: "Oficina Emisora",
+            field: "m_sSucursalEmisora",
+            width: 150,
+        },
+        {
+            headerName: "Oficina Receptora",
+            field: "m_sSucursalReceptora",
+            width: 150,
+        },
+        {
+            headerName: "Operador",
+            field: "m_sNombreCompleto",
+            width: 250,
+        },
+        {
+            headerName: "Unidad",
+            field: "m_sCodigoUnidad",
+            width: 125,
+        },
+    ]);
+
+    const columnsCP = React.useMemo(() => [
+        {
+            Name: "Codigo",
+            accessor: "m_sCP",
+        },
+        {
+            Name: "Estado",
+            accessor: "m_sEstado",
+        },
+        {
+            Name: "Ciudad",
+            accessor: "m_sCiudad",
+        },
+    ]);
+
+    const columnsCiudades = React.useMemo(() => [
+        {
+            Name: "Codigo",
+            accessor: "m_nCodigo",
+        },
+        {
+            Name: "Ciudad",
+            accessor: "m_sCiudad",
+        },
+        {
+            Name: "Abreviacion",
+            accessor: "m_sAbreviacion",
+        },
+        {
+            Name: "Estado",
+            accessor: "m_nIdEstado",
+        },
+    ]);
+
+    const columnsOperadores = React.useMemo(() => [
+        {
+            Name: "Numero Operador",
+            accessor: "m_nNumeroOperador",
+        },
+        {
+            Name: "Nombre",
+            accessor: "m_sNombreCompleto",
+        },
+        {
+            Name: "Sucursal",
+            accessor: "m_nIdSucursal",
+        },
+        {
+            Name: "Activo",
+            accessor: "m_nIdEstado",
+        },
+    ]);
+
+    const columnsTipoUnidades = React.useMemo(() => [
+        {
+            Name: "Tipo de unidad",
+            accessor: "m_nIdTipoUnidad",
+        },
+        {
+            Name: "Identificador",
+            accessor: "m_nIdentificador",
+        },
+        {
+            Name: "Nomenclatura",
+            accessor: "m_sNomenclaturaSCT",
+        },
+        {
+            Name: "Estatus",
+            accessor: "m_bActivo",
+        },
+    ]);
+
+    const columnsUnidades = React.useMemo(() => [
+        {
+            Name: "Descripcion",
+            accessor: "m_sDescripcion",
+        },
+        {
+            Name: "Codigo",
+            accessor: "m_sCodigo",
+        },
+        {
+            Name: "Tipo de unidad",
+            accessor: "m_nIdTipoUnidad",
+        },
+        {
+            Name: "Estatus",
+            accessor: "m_bActivo",
+        },
+    ]);
+
+    function DefaultColumnFilter({
+        column: { filterValue, preFilteredRows, setFilter },
+    }) {
+        const count = preFilteredRows.length;
+
+        return (
+            <input
+                className="form-control"
+                value={filterValue || ""}
+                onChange={(e) => {
+                    setFilter(e.target.value || undefined);
+                }}
+                placeholder={`Buscar ${count} registros...`}
+            />
+        );
+    }
+
+    function Table({ columns, data }) {
+        const defaultColumn = React.useMemo(
+            () => ({
+                // Default Filter UI
+                Filter: DefaultColumnFilter,
+            }),
+            []
+        );
+
+        const {
+            getTableProps,
+            getTableBodyProps,
+            headerGroups,
+            rows,
+            prepareRow,
+        } = useTable(
+            {
+                columns,
+                data,
+                defaultColumn,
+            },
+            useFilters,
+            useSortBy
+        );
+
+        return (
+            <div
+                className="col-md-12"
+                style={{ overflowX: "scroll", height: "100%" }}
+            >
+                <table className="table  tabla-listado" {...getTableProps()}>
+                    <thead>
+                        {headerGroups.map((headerGroup) => (
+                            <tr {...headerGroup.getHeaderGroupProps()}>
+                                <th>Acciones</th>
+                                {headerGroup.headers.map((column) => (
+                                    // Add the sorting props to control sorting. For this example
+                                    // we can add them into the header props
+                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                        {column.render("Name")}
+                                        {/* Add a sort direction indicator */}
+                                        <span>
+                                            {column.isSorted ? (
+                                                column.isSortedDesc ? (
+                                                    <i className="fa fa-caret-up" />
+                                                ) : (
+                                                    <i className="fa fa-caret-down" />
+                                                )
+                                            ) : (
+                                                ""
+                                            )}
+                                        </span>
+                                        <div>
+                                            {column.canFilter ? column.render("Filter") : null}
+                                        </div>
+                                    </th>
+                                ))}
+                            </tr>
+                        ))}
+                    </thead>
+                    <tbody {...getTableBodyProps()}>
+                        {rows.map((row, i) => {
+                            prepareRow(row);
+                            return (
+                                <tr
+                                    {...row.getRowProps()}
+                                    onClick={handleSelectRow.bind(
+                                        this,
+                                        row.original.m_nIdInforme
+                                    )}
+                                    className={
+                                        state.IdInforme === row.original.m_nIdInforme
+                                            ? classes.seleccionado
+                                            : classes.noSeleccionado
+                                    }
+                                >
+                                    <td>
+                                        <div>
+                                            <a
+                                                href="#Agregar"
+                                                role="tab"
+                                                data-toggle="tab"
+                                                onClick={() =>
+                                                    handleShowModificar(row.original.m_nIdInforme)
+                                                }
+                                                className="btn btn-default btn-sm"
+                                            >
+                                                <i
+                                                    className="fa fa-pencil-square-o"
+                                                    style={{ color: "#F9A03E" }}
+                                                />
+                                            </a>
+                                            <a
+                                                href="#Agregar"
+                                                role="tab"
+                                                data-toggle="tab"
+                                                className="btn btn-default btn-sm"
+                                                onClick={() =>
+                                                    handleShowModificar(row.original.m_nIdInforme)
+                                                }
+                                            >
+                                                <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
+                                            </a>
+
+                                            <a
+                                                href="#"
+                                                className="btn btn-default btn-sm"
+                                                onClick={() =>
+                                                    handleEliminar(row.original.m_nIdInforme)
+                                                }
+                                            >
+                                                <i
+                                                    className="zmdi zmdi-delete"
+                                                    style={{ color: "#F30B0B" }}
+                                                />
+                                            </a>
+                                        </div>
+                                    </td>
+                                    {row.cells.map((cell) => {
+                                        return (
+                                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                        );
+                                    })}
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            </div>
+        );
+    }
+
+    function TableOperadores({ columns, data, select }) {
+        const defaultColumn = React.useMemo(
+            () => ({
+                // Default Filter UI
+                Filter: DefaultColumnFilter,
+            }),
+            []
+        );
+
+        const {
+            getTableProps,
+            getTableBodyProps,
+            headerGroups,
+            rows,
+            prepareRow,
+            state,
+        } = useTable(
+            {
+                columns,
+                data,
+                defaultColumn,
+            },
+            useFilters,
+            useSortBy
+        );
+
+        return (
+            <div
+                className="col-md-12"
+                style={{ maxHeight: "300px", overflow: "auto" }}
+            >
+                <table className="table" {...getTableProps()}>
+                    <thead>
+                        {headerGroups.map((headerGroup) => (
+                            <tr {...headerGroup.getHeaderGroupProps()}>
+                                <th>Acciones</th>
+                                {headerGroup.headers.map((column) => (
+                                    // Add the sorting props to control sorting. For this example
+                                    // we can add them into the header props
+                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                        {column.render("Name")}
+                                        {/* Add a sort direction indicator */}
+                                        <span>
+                                            {column.isSorted ? (
+                                                column.isSortedDesc ? (
+                                                    <i className="fa fa-caret-up" />
+                                                ) : (
+                                                    <i className="fa fa-caret-down" />
+                                                )
+                                            ) : (
+                                                ""
+                                            )}
+                                        </span>
+                                        <div>
+                                            {column.canFilter ? column.render("Filter") : null}
+                                        </div>
+                                    </th>
+                                ))}
+                            </tr>
+                        ))}
+                    </thead>
+                    <tbody {...getTableBodyProps()}>
+                        {rows.map((row, i) => {
+                            prepareRow(row);
+                            return (
+                                <tr
+                                    style={{
+                                        backgroundColor:
+                                            row.original.m_nIdOperador === select
+                                                ? "#FCC88F"
+                                                : "white",
+                                    }}
+                                    {...row.getRowProps()}
+                                    onClick={handleSelectCP.bind(this, row.original)}
+                                >
+                                    <td>
+                                        <div>
+                                            <a
+                                                href="#Agregar"
+                                                role="tab"
+                                                data-toggle="tab"
+                                                onClick={() =>
+                                                    handleShowModificar(row.original.m_nIdRecoleccion)
+                                                }
+                                                className="btn btn-default"
+                                            >
+                                                <i
+                                                    className="fa fa-pencil-square-o"
+                                                    style={{ color: "#F9A03E" }}
+                                                />
+                                            </a>
+                                            <a
+                                                href="#"
+                                                className="btn btn-default btn-sm m-user-delete"
+                                                onClick={() =>
+                                                    handleEliminar(row.original.m_nIdRecoleccion)
+                                                }
+                                            >
+                                                <i
+                                                    className="zmdi zmdi-delete"
+                                                    style={{ color: "#F30B0B" }}
+                                                />
+                                            </a>
+                                            <a
+                                                href="#"
+                                                className="btn btn-default btn-sm m-user-delete"
+                                                onClick={() =>
+                                                    handleEliminar(row.original.m_nIdRecoleccion)
+                                                }
+                                            >
+                                                <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
+                                            </a>
+                                        </div>
+                                    </td>
+                                    {row.cells.map((cell) => {
+                                        return (
+                                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                        );
+                                    })}
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            </div>
+        );
+    }
+
+    function TableCiudades({ columns, data, select }) {
+        const defaultColumn = React.useMemo(
+            () => ({
+                // Default Filter UI
+                Filter: DefaultColumnFilter,
+            }),
+            []
+        );
+
+        const {
+            getTableProps,
+            getTableBodyProps,
+            headerGroups,
+            rows,
+            prepareRow,
+            state,
+        } = useTable(
+            {
+                columns,
+                data,
+                defaultColumn,
+            },
+            useFilters,
+            useSortBy
+        );
+
+        return (
+            <div
+                className="col-md-12"
+                style={{ maxHeight: "300px", overflow: "auto" }}
+            >
+                <table className="table" {...getTableProps()}>
+                    <thead>
+                        {headerGroups.map((headerGroup) => (
+                            <tr {...headerGroup.getHeaderGroupProps()}>
+                                <th>Acciones</th>
+                                {headerGroup.headers.map((column) => (
+                                    // Add the sorting props to control sorting. For this example
+                                    // we can add them into the header props
+                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                        {column.render("Name")}
+                                        {/* Add a sort direction indicator */}
+                                        <span>
+                                            {column.isSorted ? (
+                                                column.isSortedDesc ? (
+                                                    <i className="fa fa-caret-up" />
+                                                ) : (
+                                                    <i className="fa fa-caret-down" />
+                                                )
+                                            ) : (
+                                                ""
+                                            )}
+                                        </span>
+                                        <div>
+                                            {column.canFilter ? column.render("Filter") : null}
+                                        </div>
+                                    </th>
+                                ))}
+                            </tr>
+                        ))}
+                    </thead>
+                    <tbody {...getTableBodyProps()}>
+                        {rows.map((row, i) => {
+                            prepareRow(row);
+                            return (
+                                <tr
+                                    style={{
+                                        backgroundColor:
+                                            row.original.m_nIdCiudad === select ? "#FCC88F" : "white",
+                                    }}
+                                    {...row.getRowProps()}
+                                    onClick={handleSelectCP.bind(this, row.original)}
+                                >
+                                    <td>
+                                        <div>
+                                            <a
+                                                href="#Agregar"
+                                                role="tab"
+                                                data-toggle="tab"
+                                                onClick={() =>
+                                                    handleShowModificar(row.original.m_nIdRecoleccion)
+                                                }
+                                                className="btn btn-default"
+                                            >
+                                                <i
+                                                    className="fa fa-pencil-square-o"
+                                                    style={{ color: "#F9A03E" }}
+                                                />
+                                            </a>
+                                            <a
+                                                href="#"
+                                                className="btn btn-default btn-sm m-user-delete"
+                                                onClick={() =>
+                                                    handleEliminar(row.original.m_nIdRecoleccion)
+                                                }
+                                            >
+                                                <i
+                                                    className="zmdi zmdi-delete"
+                                                    style={{ color: "#F30B0B" }}
+                                                />
+                                            </a>
+                                            <a
+                                                href="#"
+                                                className="btn btn-default btn-sm m-user-delete"
+                                                onClick={() =>
+                                                    handleEliminar(row.original.m_nIdRecoleccion)
+                                                }
+                                            >
+                                                <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
+                                            </a>
+                                        </div>
+                                    </td>
+                                    {row.cells.map((cell) => {
+                                        return (
+                                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                        );
+                                    })}
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            </div>
+        );
+    }
+
+    function TableOperadores({ columns, data, select }) {
+        const defaultColumn = React.useMemo(
+            () => ({
+                // Default Filter UI
+                Filter: DefaultColumnFilter,
+            }),
+            []
+        );
+
+        const {
+            getTableProps,
+            getTableBodyProps,
+            headerGroups,
+            rows,
+            prepareRow,
+            state,
+        } = useTable(
+            {
+                columns,
+                data,
+                defaultColumn,
+            },
+            useFilters,
+            useSortBy
+        );
+
+        return (
+            <div
+                className="col-md-12"
+                style={{ maxHeight: "300px", overflow: "auto" }}
+            >
+                <table className="table" {...getTableProps()}>
+                    <thead>
+                        {headerGroups.map((headerGroup) => (
+                            <tr {...headerGroup.getHeaderGroupProps()}>
+                                <th>Acciones</th>
+                                {headerGroup.headers.map((column) => (
+                                    // Add the sorting props to control sorting. For this example
+                                    // we can add them into the header props
+                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                        {column.render("Name")}
+                                        {/* Add a sort direction indicator */}
+                                        <span>
+                                            {column.isSorted ? (
+                                                column.isSortedDesc ? (
+                                                    <i className="fa fa-caret-up" />
+                                                ) : (
+                                                    <i className="fa fa-caret-down" />
+                                                )
+                                            ) : (
+                                                ""
+                                            )}
+                                        </span>
+                                        <div>
+                                            {column.canFilter ? column.render("Filter") : null}
+                                        </div>
+                                    </th>
+                                ))}
+                            </tr>
+                        ))}
+                    </thead>
+                    <tbody {...getTableBodyProps()}>
+                        {rows.map((row, i) => {
+                            prepareRow(row);
+                            return (
+                                <tr
+                                    style={{
+                                        backgroundColor:
+                                            row.original.m_nIdOperador === select
+                                                ? "#FCC88F"
+                                                : "white",
+                                    }}
+                                    {...row.getRowProps()}
+                                    onClick={handleSelectCP.bind(this, row.original)}
+                                >
+                                    <td>
+                                        <div>
+                                            <a
+                                                href="#Agregar"
+                                                role="tab"
+                                                data-toggle="tab"
+                                                onClick={() =>
+                                                    handleShowModificar(row.original.m_nIdRecoleccion)
+                                                }
+                                                className="btn btn-default"
+                                            >
+                                                <i
+                                                    className="fa fa-pencil-square-o"
+                                                    style={{ color: "#F9A03E" }}
+                                                />
+                                            </a>
+                                            <a
+                                                href="#"
+                                                className="btn btn-default btn-sm m-user-delete"
+                                                onClick={() =>
+                                                    handleEliminar(row.original.m_nIdRecoleccion)
+                                                }
+                                            >
+                                                <i
+                                                    className="zmdi zmdi-delete"
+                                                    style={{ color: "#F30B0B" }}
+                                                />
+                                            </a>
+                                            <a
+                                                href="#"
+                                                className="btn btn-default btn-sm m-user-delete"
+                                                onClick={() =>
+                                                    handleEliminar(row.original.m_nIdRecoleccion)
+                                                }
+                                            >
+                                                <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
+                                            </a>
+                                        </div>
+                                    </td>
+                                    {row.cells.map((cell) => {
+                                        return (
+                                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                        );
+                                    })}
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            </div>
+        );
+    }
+
+    function TableTipoUnidad({ columns, data, select }) {
+        const defaultColumn = React.useMemo(
+            () => ({
+                // Default Filter UI
+                Filter: DefaultColumnFilter,
+            }),
+            []
+        );
+
+        const {
+            getTableProps,
+            getTableBodyProps,
+            headerGroups,
+            rows,
+            prepareRow,
+            state,
+        } = useTable(
+            {
+                columns,
+                data,
+                defaultColumn,
+            },
+            useFilters,
+            useSortBy
+        );
+
+        return (
+            <div className="col-md-12">
+                <table className="table" {...getTableProps()}>
+                    <thead>
+                        {headerGroups.map((headerGroup) => (
+                            <tr {...headerGroup.getHeaderGroupProps()}>
+                                <th>Acciones</th>
+                                {headerGroup.headers.map((column) => (
+                                    // Add the sorting props to control sorting. For this example
+                                    // we can add them into the header props
+                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                        {column.render("Name")}
+                                        {/* Add a sort direction indicator */}
+                                        <span>
+                                            {column.isSorted ? (
+                                                column.isSortedDesc ? (
+                                                    <i className="fa fa-caret-up" />
+                                                ) : (
+                                                    <i className="fa fa-caret-down" />
+                                                )
+                                            ) : (
+                                                ""
+                                            )}
+                                        </span>
+                                        <div>
+                                            {column.canFilter ? column.render("Filter") : null}
+                                        </div>
+                                    </th>
+                                ))}
+                            </tr>
+                        ))}
+                    </thead>
+                    <tbody {...getTableBodyProps()}>
+                        {rows.map((row, i) => {
+                            prepareRow(row);
+                            return (
+                                <tr
+                                    style={{
+                                        backgroundColor:
+                                            row.original.m_nIdTipoUnidad === select
+                                                ? "#FCC88F"
+                                                : "white",
+                                    }}
+                                    {...row.getRowProps()}
+                                    onClick={handleSelectCP.bind(this, row.original)}
+                                >
+                                    <td>
+                                        <div>
+                                            <a
+                                                href="#Agregar"
+                                                role="tab"
+                                                data-toggle="tab"
+                                                onClick={() =>
+                                                    handleShowModificar(row.original.m_nIdRecoleccion)
+                                                }
+                                                className="btn btn-default"
+                                            >
+                                                <i
+                                                    className="fa fa-pencil-square-o"
+                                                    style={{ color: "#F9A03E" }}
+                                                />
+                                            </a>
+                                            <a
+                                                href="#"
+                                                className="btn btn-default btn-sm m-user-delete"
+                                                onClick={() =>
+                                                    handleEliminar(row.original.m_nIdRecoleccion)
+                                                }
+                                            >
+                                                <i
+                                                    className="zmdi zmdi-delete"
+                                                    style={{ color: "#F30B0B" }}
+                                                />
+                                            </a>
+                                            <a
+                                                href="#"
+                                                className="btn btn-default btn-sm m-user-delete"
+                                                onClick={() =>
+                                                    handleEliminar(row.original.m_nIdRecoleccion)
+                                                }
+                                            >
+                                                <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
+                                            </a>
+                                        </div>
+                                    </td>
+                                    {row.cells.map((cell) => {
+                                        return (
+                                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                        );
+                                    })}
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            </div>
+        );
+    }
+
+    function TableUnidad({ columns, data, select }) {
+        const defaultColumn = React.useMemo(
+            () => ({
+                // Default Filter UI
+                Filter: DefaultColumnFilter,
+            }),
+            []
+        );
+
+        const {
+            getTableProps,
+            getTableBodyProps,
+            headerGroups,
+            rows,
+            prepareRow,
+            state,
+        } = useTable(
+            {
+                columns,
+                data,
+                defaultColumn,
+            },
+            useFilters,
+            useSortBy
+        );
+
+        return (
+            <div
+                className="col-md-12"
+                style={{ maxHeight: "300px", overflow: "auto" }}
+            >
+                <table className="table" {...getTableProps()}>
+                    <thead>
+                        {headerGroups.map((headerGroup) => (
+                            <tr {...headerGroup.getHeaderGroupProps()}>
+                                <th>Acciones</th>
+                                {headerGroup.headers.map((column) => (
+                                    // Add the sorting props to control sorting. For this example
+                                    // we can add them into the header props
+                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                        {column.render("Name")}
+                                        {/* Add a sort direction indicator */}
+                                        <span>
+                                            {column.isSorted ? (
+                                                column.isSortedDesc ? (
+                                                    <i className="fa fa-caret-up" />
+                                                ) : (
+                                                    <i className="fa fa-caret-down" />
+                                                )
+                                            ) : (
+                                                ""
+                                            )}
+                                        </span>
+                                        <div>
+                                            {column.canFilter ? column.render("Filter") : null}
+                                        </div>
+                                    </th>
+                                ))}
+                            </tr>
+                        ))}
+                    </thead>
+                    <tbody {...getTableBodyProps()}>
+                        {rows.map((row, i) => {
+                            prepareRow(row);
+                            return (
+                                <tr {...row.getRowProps()}>
+                                    <td>
+                                        <div>
+                                            <a
+                                                href="#Agregar"
+                                                role="tab"
+                                                data-toggle="tab"
+                                                onClick={() =>
+                                                    handleShowModificar(row.original.m_nIdInforme)
+                                                }
+                                                className="btn btn-default btn-sm"
+                                            >
+                                                <i
+                                                    className="fa fa-pencil-square-o"
+                                                    style={{ color: "#F9A03E" }}
+                                                />
+                                            </a>
+                                            <a
+                                                href="#Agregar"
+                                                role="tab"
+                                                data-toggle="tab"
+                                                className="btn btn-default btn-sm"
+                                                onClick={() =>
+                                                    handleShowModificar(row.original.m_nIdInforme)
+                                                }
+                                            >
+                                                <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
+                                            </a>
+                                            <a
+                                                href="#"
+                                                className="btn btn-default btn-sm"
+                                                onClick={() =>
+                                                    handleEliminar(row.original.m_nIdInforme)
+                                                }
+                                            >
+                                                <i
+                                                    className="zmdi zmdi-delete"
+                                                    style={{ color: "#F30B0B" }}
+                                                />
+                                            </a>
+                                        </div>
+                                    </td>
+                                    {row.cells.map((cell) => {
+                                        return (
+                                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                        );
+                                    })}
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            </div>
+        );
+    }
+    const headers = {
+        "Content-Type": "application/json",
+    };
+
+    const headers2 = {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+    };
+
+    const [state, setState] = React.useState({
+        showPopUp: false,
+        identificadorModal: "",
+        openDialog: false,
+        viaje: {},
+        agregar: "Agregar",
+        height: window.innerHeight,
+
+        Informes: [
+            {
+                ruta2: "",
+                operador2: "",
+                unidad2: "",
+                remolque2: "",
+
+                tipoModal: 0,
+                IdInforme: 0,
+                FolioInforme: 0,
+                fechaHoraLlegada: "",
+                DerechoBorrar: 151,
+
+                IdEstatusInforme: 0,
+                IdViaje: 0,
+                IdSucursalEmisora: 0,
+                IdSucursalReceptora: 0,
+                IdOperador: {},
+                IdUnidad: {},
+                IdTipoUnidad: {},
+                IdRemolque: 0,
+                IdCiudadDestino: 0,
+                IdCiudadOrigen: 0,
+                IdRuta: 0,
+                IdSucursal: localStorage.getItem("Sucursal"),
+                CreadoPor: localStorage.getItem("UsuarioId"),
+                ModificadoPor: localStorage.getItem("UsuarioId"),
+                usuarioCancelacion: "",
+                estatusCancelacion: "",
+                Guias: [
+                    {
+                        m_nFolioGuia: "",
+                        m_sEstatusGuia: "",
+                        m_cValorDeclarado: "",
+                        m_sCiudadDestinatario: "",
+                        tipoServicio: "",
+                        observaciones: "",
+                    },
+                ],
+                FechaCancelacion: "",
+                motivoCancelacion: "",
+                sucursalCancelacion: {},
+                sePuedeCancelar: false,
+            },
+        ],
+    });
+    /* const [state, setState] = React.useState({
+      showPopUp: false,
+      identificadorModal: "",
+      openDialog: false,
+  
       ruta2: "",
       operador2: "",
       unidad2: "",
@@ -1325,7 +1256,7 @@ function Informes({ history }) {
       FolioInforme: 0,
       fechaHoraLlegada: "",
       DerechoBorrar: 151,
-
+  
       IdEstatusInforme: 0,
       IdViaje: 0,
       IdSucursalEmisora: 0,
@@ -1358,1913 +1289,1957 @@ function Informes({ history }) {
       motivoCancelacion: "",
       sucursalCancelacion: {},
       sePuedeCancelar: false,
-    });
-    console.log(Informes);
-    setState({ ...state, Informes: Informes });
-  }
+    });  */
 
-  function removeInformeGuia(index) {
-    var { Informes } = state;
-    Informes = remove_array_element(Informes, index);
-    console.log(Informes);
-    setState({ ...state, Informes: Informes });
-  }
+    const handleAceptar = (e) => {
+        e.preventDefault();
 
-  const handleChangeInformeGuia = (event, index) => {
-    var { Informes } = state;
-    Informes[index][event.target.name] = event.target.value;
-    setState({
-      ...state,
-      Informes: Informes,
-    });
-  };
-
-  const selectGuia = (index) => {
-    const newGuia = [...dataGuias];
-
-    newGuia[index]["select"] = newGuia[index].select ? false : true;
-    console.log(newGuia);
-    setDataGuias(newGuia);
-  };
-
-  function handleSelectRow(id, event) {
-    setState({
-      ...state,
-      IdInforme: id,
-    });
-  }
-
-  function handleShowCancelar() {
-    const url = `${process.env.REACT_APP_API_URL}/Informes/GetById/${state.IdInforme}`;
-    var today = new Date();
-    axios.get(url, { headers }).then((respuesta) => {
-      console.log(respuesta.data);
-      console.log(respuesta.data.m_nSePuedeCancelar);
-      setState({
-        ...state,
-        FolioInforme: respuesta.data.m_nIdInforme,
-        sucursalCancelacion: dataSucursal.find(
-          (o) => o.m_nIdSucursal == respuesta.data.m_nIdSucursalEmisora
-        ).m_sSucursal,
-        fechaCancelacion:
-          today.getFullYear() +
-          "-" +
-          (today.getMonth() + 1) +
-          "-" +
-          today.getDate(),
-        motivoCancelacion: respuesta.data.m_sMotivoCancelacion,
-        usuarioCancelacion:
-          respuesta.data.m_nIdUsuarioCancelacion != 0
-            ? respuesta.data.m_nIdUsuarioCancelacion
-            : localStorage.getItem("UsuarioId"),
-        estatusCancelacion: dataEstatusInformes[0].m_sEstatus, //dataEstatusInformes.find(o => o.m_nIdEstatusInforme == respuesta.data.m_nIdEstatusInforme),
-        sePuedeCancelar: false,
-      });
-      if (respuesta.data.m_nSePuedeCancelar == 0) {
-        state.sePuedeCancelar = true;
-        showSuccess("Informe no se puede cancelar");
-      }
-    });
-  }
-
-  const handleCancelar = (e) => {
-    e.preventDefault();
-    var params = {
-      motivoCancelacion: state.MotivoCancelacion,
-      usuarioCancelacion: localStorage.getItem("UsuarioId"),
-      fechaCancelacion: state.fechaCancelado,
-    };
-    const url = `${process.env.REACT_APP_API_URL}/Informes/Cancelar/${state.IdInforme}`;
-    axios.put(url, Object.assign({}, params), { headers }).then((respuesta) => {
-      console.log(respuesta.data);
-    });
-  };
-
-  function getAllGuiasFrom() {
-    const url =
-      `${process.env.REACT_APP_API_URL}/Guia/GetListadoPendientes/` +
-      state.IdCiudadOrigen.m_nIdCiudad +
-      "/" +
-      state.IdCiudadDestino.m_nIdCiudad;
-    axios.get(url, { headers }).then((respuesta) => {
-      console.log(respuesta.data);
-      setDataGuias(respuesta.data);
-    });
-  }
-
-  function getAllCiudades() {
-    const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
-    axios.get(url, { headers }).then((respuesta) => {
-      console.log(respuesta);
-
-      setDataOrigenes(respuesta.data);
-    });
-  }
-
-  function getAllTipoUnidad() {
-    const url = `${process.env.REACT_APP_API_URL}/TiposUnidades/GetListado`;
-    axios.get(url, { headers }).then((respuesta) => {
-      setDataTipoUnidad(respuesta.data);
-      getAllUnidades(respuesta.data[0].m_nIdTipoUnidad);
-    });
-  }
-
-  function getAllUnidades() {
-    const url = `${process.env.REACT_APP_API_URL}/Unidades/GetListado`;
-    axios.get(url, { headers }).then((respuesta) => {
-      console.log(respuesta);
-
-      setDataUnidades(respuesta.data);
-    });
-  }
-
-  function getAllOperadores() {
-    const url = `${process.env.REACT_APP_API_URL}/Operadores/GetListado`;
-    axios.get(url, { headers }).then((respuesta) => {
-      console.log(respuesta);
-
-      setDataOperadores(respuesta.data);
-    });
-  }
-
-  function getAllEstatusInformes() {
-    const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoInformes`;
-    axios.get(url, { headers }).then((respuesta) => {
-      setEstatusInformes(respuesta.data);
-    });
-  }
-
-  function getAllSucursales() {
-    const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-    axios.get(url, { headers }).then((respuesta) => {
-      setDataSucursal(respuesta.data);
-    });
-  }
-
-  function getAllViajesOrigenDestino(origen, destino) {
-    const url = `http://localhost/Informes/GetViajes/` + origen + `/` + destino;
-    axios.get(url, { headers }).then((respuesta) => {
-      console.log("servicio viajes");
-      console.log(origen);
-      console.log(destino);
-      console.log(respuesta.data);
-      setDataViajes(respuesta.data);
-    });
-  }
-
-  function handleShowAgregar() {
-    setState({
-      ...state,
-      agregar: "Agregar",
-      showPopUp: true,
-      IdGrupoUnidad: 0,
-      Codigo: 0,
-      GrupoUnidad: "",
-      Color: "",
-      IdOperador: 0,
-    });
-  }
-
-  function handleShowModificar(id) {
-    console.log(id);
-    const url = `${process.env.REACT_APP_API_URL}/Unidadd/GetById/` + id;
-    axios.get(url, { headers }).then((respuesta) => {
-      console.log(respuesta.data);
-      setState({
-        ...state,
-      });
-    });
-  }
-
-  function handleEliminar(id) {
-    var derecho;
-    const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-    axios
-      .get(urlDelete, { headers })
-      .then((respuesta) => {
-        //showSuccess(respuesta.data)
-
-        derecho = respuesta.data;
-        if (derecho == false) {
-          showSuccess("El usuario no tiene derechos para realizar el proceso");
-          return;
+        var params = {
+            m_arrClsInformesGuias: state.Informes,
+        };
+        console.log(JSON.stringify(params));
+        //debugger;
+        if (state.idEmbarque != 0) {
+            const url = `${process.env.REACT_APP_API_URL}/Informes/Modificar/${state.IdInforme}`;
+            axios
+                .put(url, Object.assign({}, params), { headers2 })
+                .then((respuesta) => {
+                    showSuccess(respuesta.data);
+                    getAllData();
+                })
+                .catch((err) => {
+                    console.log(err);
+                    showSuccess("El Usuario no tiene derecho para modificar");
+                });
+        } else {
+            const url = `${process.env.REACT_APP_API_URL}/Informes/Agregar`;
+            axios
+                .post(url, Object.assign({}, params), { headers })
+                .then((respuesta) => {
+                    showSuccess(respuesta.data);
+                    console.log(respuesta.data);
+                    getAllData();
+                })
+                .catch((err) => {
+                    console.log(err);
+                    showSuccess(err);
+                });
         }
+    };
 
-        const url = `${process.env.REACT_APP_API_URL}/Unidadd/Eliminar/` + id;
-        axios
-          .get(url, { headers })
-          .then((respuesta) => {
+    function addInformeGuia() {
+        const { Informes } = state;
+        Informes.push({
+            ruta2: "",
+            operador2: "",
+            unidad2: "",
+            remolque2: "",
+            viaje: {},
+            tipoModal: 0,
+            IdInforme: 0,
+            FolioInforme: 0,
+            fechaHoraLlegada: "",
+            DerechoBorrar: 151,
+
+            IdEstatusInforme: 0,
+            IdViaje: 0,
+            IdSucursalEmisora: 0,
+            IdSucursalReceptora: 0,
+            IdOperador: {},
+            IdUnidad: {},
+            IdTipoUnidad: {},
+            IdRemolque: 0,
+            IdCiudadDestino: 0,
+            IdCiudadOrigen: 0,
+            IdRuta: 0,
+            usuarioCancelacion: "",
+            estatusCancelacion: "",
+            IdSucursal: localStorage.getItem("Sucursal"),
+            agregar: "Agregar",
+            height: window.innerHeight,
+            CreadoPor: localStorage.getItem("UsuarioId"),
+            ModificadoPor: localStorage.getItem("UsuarioId"),
+            Guias: [
+                {
+                    m_nFolioGuia: "",
+                    m_sEstatusGuia: "",
+                    m_cValorDeclarado: "",
+                    m_sCiudadDestinatario: "",
+                    tipoServicio: "",
+                    observaciones: "",
+                },
+            ],
+            FechaCancelacion: "",
+            motivoCancelacion: "",
+            sucursalCancelacion: {},
+            sePuedeCancelar: false,
+        });
+        console.log(Informes);
+        setState({ ...state, Informes: Informes });
+    }
+
+    function removeInformeGuia(index) {
+        var { Informes } = state;
+        Informes = remove_array_element(Informes, index);
+        console.log(Informes);
+        setState({ ...state, Informes: Informes });
+    }
+
+    const handleChangeInformeGuia = (event, index) => {
+        var { Informes } = state;
+        Informes[index][event.target.name] = event.target.value;
+        setState({
+            ...state,
+            Informes: Informes,
+        });
+    };
+
+    const selectGuia = (index) => {
+        const newGuia = [...dataGuias];
+
+        newGuia[index]["select"] = newGuia[index].select ? false : true;
+        console.log(newGuia);
+        setDataGuias(newGuia);
+    };
+
+    function handleSelectRow(id, event) {
+        setState({
+            ...state,
+            IdInforme: id,
+        });
+    }
+
+    function handleShowCancelar() {
+        const url = `${process.env.REACT_APP_API_URL}/Informes/GetById/${state.IdInforme}`;
+        var today = new Date();
+        axios.get(url, { headers }).then((respuesta) => {
+            console.log(respuesta.data);
+            console.log(respuesta.data.m_nSePuedeCancelar);
+            setState({
+                ...state,
+                FolioInforme: respuesta.data.m_nIdInforme,
+                sucursalCancelacion: dataSucursal.find(
+                    (o) => o.m_nIdSucursal == respuesta.data.m_nIdSucursalEmisora
+                ).m_sSucursal,
+                fechaCancelacion:
+                    today.getFullYear() +
+                    "-" +
+                    (today.getMonth() + 1) +
+                    "-" +
+                    today.getDate(),
+                motivoCancelacion: respuesta.data.m_sMotivoCancelacion,
+                usuarioCancelacion:
+                    respuesta.data.m_nIdUsuarioCancelacion != 0
+                        ? respuesta.data.m_nIdUsuarioCancelacion
+                        : localStorage.getItem("UsuarioId"),
+                estatusCancelacion: dataEstatusInformes[0].m_sEstatus, //dataEstatusInformes.find(o => o.m_nIdEstatusInforme == respuesta.data.m_nIdEstatusInforme),
+                sePuedeCancelar: false,
+            });
+            if (respuesta.data.m_nSePuedeCancelar == 0) {
+                state.sePuedeCancelar = true;
+                showSuccess("Informe no se puede cancelar");
+            }
+        });
+    }
+
+    const handleCancelar = (e) => {
+        e.preventDefault();
+        var params = {
+            motivoCancelacion: state.MotivoCancelacion,
+            usuarioCancelacion: localStorage.getItem("UsuarioId"),
+            fechaCancelacion: state.fechaCancelado,
+        };
+        const url = `${process.env.REACT_APP_API_URL}/Informes/Cancelar/${state.IdInforme}`;
+        axios.put(url, Object.assign({}, params), { headers }).then((respuesta) => {
+            console.log(respuesta.data);
+        });
+    };
+
+    function getAllGuiasFrom() {
+        const url =
+            `${process.env.REACT_APP_API_URL}/Guia/GetListadoPendientes/` +
+            state.IdCiudadOrigen.m_nIdCiudad +
+            "/" +
+            state.IdCiudadDestino.m_nIdCiudad;
+        axios.get(url, { headers }).then((respuesta) => {
+            console.log(respuesta.data);
+            setDataGuias(respuesta.data);
+        });
+    }
+
+    function getAllCiudades() {
+        const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
+        axios.get(url, { headers }).then((respuesta) => {
             console.log(respuesta);
-          })
-          .catch((err) => {
-            showSuccess(err);
-          });
-      })
-      .catch((err) => {
-        showSuccess(err);
-      });
-  }
 
-  const handleChangeOrigenChange = (event) => {
-    console.log(event.target.value);
-
-    setState({
-      ...state,
-      idOrigen: event.target.value,
-    });
-    //Aqui hacer la peticion
-    //No se que peticion tienes que hacer, aqui lo haces
-  };
-
-  const handleChangeDestinoChange = (event) => {
-    console.log(state.IdCiudadDestino);
-    setState({
-      ...state,
-      idDestino: event.target.value,
-    });
-    getAllGuiasFrom();
-  };
-
-  useEffect((value) => {
-    if (
-      localStorage.getItem("UsuarioId") === null ||
-      localStorage.getItem("UsuarioId") <= 0
-    ) {
-      showSuccess("Es necesario iniciar sesion para acceder a este proceso");
-      window.location.replace("login");
-      return;
-    }
-    getAllData();
-    getAllEstatusInformes();
-    getAllSucursales();
-    getAllOperadores();
-    getAllCiudades();
-    getAllTipoUnidad();
-    getAllDataRutas();
-  }, []);
-
-  function getAllData() {
-    const url = `${process.env.REACT_APP_API_URL}/Informes/GetListado`;
-    axios.get(url, { headers }).then((respuesta) => {
-      setData(respuesta.data);
-    });
-  }
-
-  function openSection(index) {
-    // closeSeccions();
-    var $section;
-    switch (index) {
-      case 1:
-        setStepActive(1);
-        $section = $("#infogral");
-        break;
-      case 2:
-        setStepActive(2);
-        $section = $("#caracteristicas");
-
-        break;
-
-      case 3:
-        setStepActive(3);
-        $section = $("#seguros");
-        break;
-
-      default:
+            setDataOrigenes(respuesta.data);
+        });
     }
 
-    var $welem = $section
-      .parentsUntil(".widget-action-bar")
-      .parentsUntil(".w-action")
-      .parents(".widget-header")
-      .next(".widget-container");
+    function getAllTipoUnidad() {
+        const url = `${process.env.REACT_APP_API_URL}/TiposUnidades/GetListado`;
+        axios.get(url, { headers }).then((respuesta) => {
+            setDataTipoUnidad(respuesta.data);
+            getAllUnidades(respuesta.data[0].m_nIdTipoUnidad);
+        });
+    }
 
-    $welem.slideDown();
-    $section.children("a").children("i").removeClass("zmdi-chevron-up");
-    $section.children("a").children("i").addClass("zmdi-chevron-down");
-    $("html, body").animate(
-      {
-        scrollTop: parseInt($section.offset().top),
-      },
-      200
-    );
-  }
+    function getAllUnidades() {
+        const url = `${process.env.REACT_APP_API_URL}/Unidades/GetListado`;
+        axios.get(url, { headers }).then((respuesta) => {
+            console.log(respuesta);
 
-  function value(event) {
-    console.log(event.target.value);
-  }
+            setDataUnidades(respuesta.data);
+        });
+    }
 
-  function closeSeccions() {
-    //Cerrar todas las seciones
-    var $section = $(".widget-toggle");
-    $section.each(function () {
-      var $welem = $(this)
-        .parentsUntil(".widget-action-bar")
-        .parentsUntil(".w-action")
-        .parents(".widget-header")
-        .next(".widget-container");
-      $welem.slideUp();
-      $(this).children("a").children("i").removeClass("zmdi-chevron-down");
-      $(this).children("a").children("i").addClass("zmdi-chevron-up");
-    });
-  }
+    function getAllOperadores() {
+        const url = `${process.env.REACT_APP_API_URL}/Operadores/GetListado`;
+        axios.get(url, { headers }).then((respuesta) => {
+            console.log(respuesta);
 
-  useEffect((value) => {
-    //closeSeccions();
-  }, []);
+            setDataOperadores(respuesta.data);
+        });
+    }
 
-  const framesInformeGuia = state.Informes.map((p, index) => {
-    return (
-      <div key={`Informe${index}`}>
-        <div className="col-md-8">
-          <div className="widget-wrap">
-            <div className="widget-container margin-top-0">
-              <div className="widget-content">
-                <div className="widget-header block-header margin-bottom-0 clearfix">
-                  <div className="pull-left">
-                    <h3>Información De Envio</h3>
-                  </div>
-                </div>
+    function getAllEstatusInformes() {
+        const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoInformes`;
+        axios.get(url, { headers }).then((respuesta) => {
+            setEstatusInformes(respuesta.data);
+        });
+    }
 
-                <div className="widget-container">
-                  <div className="widget-content">
-                    <div className="row">
-                      <div className="col-md-12">
-                        <form action="#" className="j-forms" onSubmit={handleAceptar}>
-                          <div className="form-content">
-                            <div className="row">
-                              {/*****************************************Sucursal**********************************************************/}
-                              <div className="col-sm-6 col-md-3 unit">
-                                <label className="label">Sucursal</label>
-                                <label className="input select">
-                                  <select
-                                    className="form-control"
-                                    required
-                                    id="IdSucursal"
-                                    value={state.IdSucursal}
-                                    disabled
-                                  >
-                                    <option value="0">Todas</option>
-                                    {dataSucursal.map((sucursal) => (
-                                      <option
-                                        key={sucursal.m_nIdSucursal}
-                                        value={sucursal.m_nIdSucursal}
-                                      >
-                                        {sucursal.m_sSucursal}
-                                      </option>
-                                    ))}
-                                  </select>
-                                </label>
-                              </div>
-                              {/*****************************************Folio************************************************************/}
-                              <div className="col-sm-12 col-md-3 unit">
-                                <label className="label">Folio</label>
-                                <div className="input">
-                                  <input
-                                    className="form-control"
-                                    type="text"
-                                    id="Folio"
-                                    disabled
-                                  />
-                                </div>
-                              </div>
-                              {/*****************************************Fecha*******************************************************/}
-                              <div className="col-sm-12 col-md-6 unit">
-                                <label className="label">Fecha y Hora</label>
-                                <div className="input">
-                                  <input
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    type="datetime-local"
-                                    required
-                                    value={state.fechaHora}
-                                    disabled={state.agregar == "Consultar"}
-                                    id="fechaHora"
-                                  />
-                                </div>
-                              </div>
-                              {/*****************************************Hora*******************************************************/}
+    function getAllSucursales() {
+        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
+        axios.get(url, { headers }).then((respuesta) => {
+            setDataSucursal(respuesta.data);
+        });
+    }
 
-                              {/*****************************************Oficina Emisora***************************************************/}
-                              <div className="col-sm-6 col-md-3 unit">
-                                <label className="label">Oficina Emisora</label>
-                                <label className="input select">
-                                  <select
-                                    className="form-control"
-                                    required
-                                    id="Oficina Emisora"
-                                  >
-                                    <option value="0">Todas</option>
-                                    {dataSucursal.map((sucursal) => (
-                                      <option
-                                        key={sucursal.m_nIdSucursal}
-                                        value={sucursal.m_nIdSucursal}
-                                      >
-                                        {sucursal.m_sSucursal}
-                                      </option>
-                                    ))}
-                                  </select>
-                                </label>
-                              </div>
-                              {/*****************************************Oficina Receptora*************************************************/}
-                              <div className="col-sm-6 col-md-3 unit">
-                                <label className="label">
-                                  Oficina Receptora
-                                </label>
-                                <label className="input select">
-                                  <select
-                                    className="form-control"
-                                    required
-                                    id="Oficina Receptora"
-                                  >
-                                    <option value="0">Todas</option>
-                                    {dataSucursal.map((sucursal) => (
-                                      <option
-                                        key={sucursal.m_nIdSucursal}
-                                        value={sucursal.m_nIdSucursal}
-                                      >
-                                        {sucursal.m_sSucursal}
-                                      </option>
-                                    ))}
-                                  </select>
-                                </label>
-                              </div>
-                              {/*****************************************Estatus de Entrega*************************************************/}
-                              <div className="col-sm-6 col-md-3 unit">
-                                <label className="label">Estatus</label>
-                                <label className="input select">
-                                  <select
-                                    className="form-control"
-                                    required
-                                    id="estatus"
-                                  >
-                                    <option value="0">Todos</option>
-                                    {dataEstatusInformes.map((estatus) => (
-                                      <option
-                                        key={estatus.m_nIdEstatusRecoleccion}
-                                        value={estatus.m_nIdEstatusRecoleccion}
-                                      >
-                                        {estatus.m_sEstatus}
-                                      </option>
-                                    ))}
-                                  </select>
-                                </label>
-                              </div>
-                            </div>
+    function getAllViajesOrigenDestino(origen, destino) {
+        const url = `http://localhost/Informes/GetViajes/` + origen + `/` + destino;
+        axios.get(url, { headers }).then((respuesta) => {
+            console.log("servicio viajes");
+            console.log(origen);
+            console.log(destino);
+            console.log(respuesta.data);
+            setDataViajes(respuesta.data);
+        });
+    }
 
-                            {/*****************************************Operador*************************************************/}
+    function handleShowAgregar() {
+        setState({
+            ...state,
+            agregar: "Agregar",
+            showPopUp: true,
+            IdGrupoUnidad: 0,
+            Codigo: 0,
+            GrupoUnidad: "",
+            Color: "",
+            IdOperador: 0,
+        });
+    }
 
-                            <div className="row">
-                              <div className="col-sm-12 col-md-6 unit">
-                                <label className="label">Operador</label>
-                                {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
-                                <Autocomplete
-                                  freeSolo
-                                  value={state.IdOperador}
-                                  onChange={(event, newValue) =>
-                                    setState({
-                                      ...state,
-                                      IdOperador: newValue,
-                                    })
-                                  }
-                                  id="IdOperador"
-                                  disableClearable
-                                  forcePopupIcon={false}
-                                  options={dataOperadores}
-                                  getOptionLabel={(option) =>
-                                    option.m_sNombreCompleto
-                                  }
-                                  variant="outlined"
-                                  style={{
-                                    borderWidth: "1px",
-                                    borderColor: "#dddddd",
-                                    borderStyle: "solid",
-                                    borderRadius: "5px",
-                                  }}
-                                  renderInput={(params) => (
-                                    <div>
-                                      <TextField
-                                        {...params}
-                                        InputProps={{
-                                          ...params.InputProps,
-                                          style: {
-                                            height: 24,
-                                          },
-                                          type: "search",
-                                          disableUnderline: true,
-                                          endAdornment: (
-                                            <InputAdornment position="end">
-                                              <IconButton
-                                                padding="0px"
-                                                style={{
-                                                  paddingRight: "0px",
-                                                }}
-                                                onClick={() => {
-                                                  setState({
-                                                    ...state,
-                                                    identificadorModal:
-                                                      "IdOperador",
-                                                    tipoModal: 2,
-                                                    openDialog: true,
-                                                  });
-                                                }}
-                                              >
-                                                <PageviewIcon
-                                                  style={{
-                                                    color: "#F9A03E",
-                                                    fontSize: 32,
-                                                    paddingInlineEnd: 0,
-                                                    paddingRight: 0,
-                                                    paddingBlockEnd: 0,
-                                                    paddingLeft: 0,
-                                                    paddingBlock: 0,
-                                                  }}
-                                                />
-                                              </IconButton>
-                                            </InputAdornment>
-                                          ),
-                                        }}
-                                      />
-                                    </div>
-                                  )}
-                                />
-                              </div>
-                            </div>
-                            {/*****************************************tipo Unidad*************************************************/}
-                            <div className="row">
-                              <div className="col-sm-12 col-md-6 unit">
-                                <label className="label">Tipo de Unidad</label>
-                                <div className="input">
-                                  <Autocomplete
-                                    freeSolo
-                                    onChange={(event, newValue) =>
-                                      setState({
-                                        ...state,
-                                        IdTipoUnidad: newValue,
-                                      })
-                                    }
-                                    value={state.IdTipoUnidad}
-                                    id="IdTipoUnidad"
-                                    disableClearable
-                                    forcePopupIcon={false}
-                                    options={dataTipoUnidad}
-                                    getOptionLabel={(option) =>
-                                      option.m_sTipoUnidad
-                                    }
-                                    variant="outlined"
-                                    style={{
-                                      borderWidth: "1px",
-                                      borderColor: "#dddddd",
-                                      borderStyle: "solid",
-                                      borderRadius: "5px",
-                                    }}
-                                    renderInput={(params) => (
-                                      <div>
-                                        <TextField
-                                          {...params}
-                                          InputProps={{
-                                            ...params.InputProps,
-                                            style: {
-                                              height: 24,
-                                            },
-                                            type: "search",
-                                            disableUnderline: true,
-                                            endAdornment: (
-                                              <InputAdornment position="end">
-                                                <IconButton
-                                                  padding="0px"
-                                                  style={{
-                                                    paddingRight: "0px",
-                                                  }}
-                                                  onClick={() => {
-                                                    setState({
-                                                      ...state,
-                                                      identificadorModal:
-                                                        "IdTipoUnidad",
-                                                      tipoModal: 3,
-                                                      openDialog: true,
-                                                    });
-                                                  }}
-                                                >
-                                                  <PageviewIcon
-                                                    style={{
-                                                      color: "#F9A03E",
-                                                      fontSize: 32,
-                                                      paddingInlineEnd: 0,
-                                                      paddingRight: 0,
-                                                      paddingBlockEnd: 0,
-                                                      paddingLeft: 0,
-                                                      paddingBlock: 0,
-                                                    }}
-                                                  />
-                                                </IconButton>
-                                              </InputAdornment>
-                                            ),
-                                          }}
-                                        />
-                                      </div>
-                                    )}
-                                  />
-                                </div>
-                              </div>
+    function handleShowModificar(id) {
+        console.log(id);
+        const url = `${process.env.REACT_APP_API_URL}/Unidadd/GetById/` + id;
+        axios.get(url, { headers }).then((respuesta) => {
+            console.log(respuesta.data);
+            setState({
+                ...state,
+            });
+        });
+    }
 
-                              {/*****************************************Placa Int*************************************************/}
-                              <div className="col-sm-12 col-md-2 unit">
-                                <label className="label">Placa Int</label>
-                                <div className="input">
-                                  <input
-                                    className="form-control"
-                                    type="text"
-                                    id="Placa Int"
-                                  />
-                                </div>
-                              </div>
-                            </div>
+    function handleEliminar(id) {
+        var derecho;
+        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
+        axios
+            .get(urlDelete, { headers })
+            .then((respuesta) => {
+                //showSuccess(respuesta.data)
 
-                            {/*****************************************Remolque*************************************************/}
-                            <div className="row">
-                              <div className="col-sm-12 col-md-6 unit">
-                                <label className="label">Remolque</label>
-                                <div className="input">
-                                  <Autocomplete
-                                    freeSolo
-                                    value={state.IdUnidad}
-                                    onChange={(event, newValue) =>
-                                      setState({
-                                        ...state,
-                                        IdUnidad: newValue,
-                                      })
-                                    }
-                                    id="IdUnidad"
-                                    disableClearable
-                                    forcePopupIcon={false}
-                                    options={dataUnidades}
-                                    getOptionLabel={(option) =>
-                                      option.m_sDescripcion
-                                    }
-                                    variant="outlined"
-                                    style={{
-                                      borderWidth: "1px",
-                                      borderColor: "#dddddd",
-                                      borderStyle: "solid",
-                                      borderRadius: "5px",
-                                    }}
-                                    renderInput={(params) => (
-                                      <div>
-                                        <TextField
-                                          {...params}
-                                          InputProps={{
-                                            ...params.InputProps,
-                                            style: {
-                                              height: 24,
-                                            },
-                                            type: "search",
-                                            disableUnderline: true,
-                                            endAdornment: (
-                                              <InputAdornment position="end">
-                                                <IconButton
-                                                  padding="0px"
-                                                  style={{
-                                                    paddingRight: "0px",
-                                                  }}
-                                                  onClick={() => {
-                                                    setState({
-                                                      ...state,
-                                                      identificadorModal:
-                                                        "IdUnidad",
-                                                      tipoModal: 4,
-                                                      openDialog: true,
-                                                    });
-                                                  }}
-                                                >
-                                                  <PageviewIcon
-                                                    style={{
-                                                      color: "#F9A03E",
-                                                      fontSize: 32,
-                                                      paddingInlineEnd: 0,
-                                                      paddingRight: 0,
-                                                      paddingBlockEnd: 0,
-                                                      paddingLeft: 0,
-                                                      paddingBlock: 0,
-                                                    }}
-                                                  />
-                                                </IconButton>
-                                              </InputAdornment>
-                                            ),
-                                          }}
-                                        />
-                                      </div>
-                                    )}
-                                  />
-                                </div>
-                              </div>
-                              {/*****************************************Placa Int*************************************************/}
-                              <div className="col-sm-12 col-md-2 unit">
-                                <label className="label">Placa Int</label>
-                                <div className="input">
-                                  <input
-                                    className="form-control"
-                                    type="text"
-                                    id="Placa Int"
-                                  />
-                                </div>
-                              </div>
-                            </div>
+                derecho = respuesta.data;
+                if (derecho == false) {
+                    showSuccess("El usuario no tiene derechos para realizar el proceso");
+                    return;
+                }
 
-                            {/*****************************************Origen*************************************************/}
-                            <div className="row">
-                              <div className="col-sm-12 col-md-6 unit">
-                                <label className="label">Origen</label>
-                                <div className="input">
-                                  <Autocomplete
-                                    freeSolo
-                                    onChange={(event, newValue) =>
-                                      setState({
-                                        ...state,
-                                        IdCiudadOrigen: newValue,
-                                      })
-                                    }
-                                    value={state.IdCiudadOrigen}
-                                    id="IdCiudadOrigen"
-                                    disableClearable
-                                    forcePopupIcon={false}
-                                    options={dataOrigenes}
-                                    getOptionLabel={(option) =>
-                                      option.m_sCiudad
-                                    }
-                                    variant="outlined"
-                                    style={{
-                                      borderWidth: "1px",
-                                      borderColor: "#dddddd",
-                                      borderStyle: "solid",
-                                      borderRadius: "5px",
-                                    }}
-                                    renderInput={(params) => (
-                                      <div>
-                                        <TextField
-                                          {...params}
-                                          InputProps={{
-                                            ...params.InputProps,
-                                            style: {
-                                              height: 24,
-                                            },
-                                            type: "search",
-                                            disableUnderline: true,
-                                            endAdornment: (
-                                              <InputAdornment position="end">
-                                                <IconButton
-                                                  padding="0px"
-                                                  style={{
-                                                    paddingRight: "0px",
-                                                  }}
-                                                  onClick={() => {
-                                                    setState({
-                                                      ...state,
-                                                      identificadorModal:
-                                                        "IdCiudadOrigen",
-                                                      tipoModal: 1,
-                                                      openDialog: true,
-                                                    });
-                                                  }}
-                                                >
-                                                  <PageviewIcon
-                                                    style={{
-                                                      color: "#F9A03E",
-                                                      fontSize: 32,
-                                                      paddingInlineEnd: 0,
-                                                      paddingRight: 0,
-                                                      paddingBlockEnd: 0,
-                                                      paddingLeft: 0,
-                                                      paddingBlock: 0,
-                                                    }}
-                                                  />
-                                                </IconButton>
-                                              </InputAdornment>
-                                            ),
-                                          }}
-                                        />
-                                      </div>
-                                    )}
-                                  />
-                                </div>
-                              </div>
-                              {/*****************************************Destino*************************************************/}
-                              <div className="col-sm-12 col-md-6 unit">
-                                <label className="label">Destino</label>
-                                <div className="input">
-                                  <Autocomplete
-                                    freeSolo
-                                    onChange={(event, newValue) =>
-                                      setState({
-                                        ...state,
-                                        IdCiudadDestino: newValue,
-                                      })
-                                    }
-                                    onSelect={() => {
-                                      getAllGuiasFrom();
-                                      getAllViajesOrigenDestino(
-                                        state.IdCiudadOrigen.m_nIdCiudad,
-                                        state.IdCiudadDestino.m_nIdCiudad
-                                      );
-                                    }}
-                                    value={state.IdCiudadDestino}
-                                    id="IdCiudadDestino"
-                                    disableClearable
-                                    forcePopupIcon={false}
-                                    options={dataOrigenes}
-                                    getOptionLabel={(option) =>
-                                      option.m_sCiudad
-                                    }
-                                    variant="outlined"
-                                    style={{
-                                      borderWidth: "1px",
-                                      borderColor: "#dddddd",
-                                      borderStyle: "solid",
-                                      borderRadius: "5px",
-                                    }}
-                                    renderInput={(params) => (
-                                      <div>
-                                        <TextField
-                                          {...params}
-                                          InputProps={{
-                                            ...params.InputProps,
-                                            style: {
-                                              height: 24,
-                                            },
-                                            type: "search",
-                                            disableUnderline: true,
-                                            endAdornment: (
-                                              <InputAdornment position="end">
-                                                <IconButton
-                                                  padding="0px"
-                                                  style={{
-                                                    paddingRight: "0px",
-                                                  }}
-                                                  onClick={() => {
-                                                    setState({
-                                                      ...state,
-                                                      identificadorModal:
-                                                        "IdCiudadDestino",
-                                                      tipoModal: 1,
-                                                      openDialog: true,
-                                                    });
-                                                    getAllViajesOrigenDestino(
-                                                      state.IdCiudadOrigen
-                                                        .m_nIdCiudad,
-                                                      state.IdCiudadDestino
-                                                        .m_nIdCiudad
-                                                    );
-                                                    getAllGuiasFrom();
-                                                  }}
-                                                >
-                                                  <PageviewIcon
-                                                    style={{
-                                                      color: "#F9A03E",
-                                                      fontSize: 32,
-                                                      paddingInlineEnd: 0,
-                                                      paddingRight: 0,
-                                                      paddingBlockEnd: 0,
-                                                      paddingLeft: 0,
-                                                      paddingBlock: 0,
-                                                    }}
-                                                  />
-                                                </IconButton>
-                                              </InputAdornment>
-                                            ),
-                                          }}
-                                        />
-                                      </div>
-                                    )}
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                            {/*****************************************Ruta*************************************************/}
-                            <div className="row">
-                              <div className="col-sm-12 col-md-6 unit">
-                                <label className="label">Ruta</label>
-                                {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
-                                <div className="input">
-                                  <Autocomplete
-                                    freeSolo
-                                    onChange={(event, newValue) =>
-                                      setState({
-                                        ...state,
-                                        idRuta: newValue,
-                                      })
-                                    }
-                                    value={state.IdCiudadDestino}
-                                    id="idRuta"
-                                    disableClearable
-                                    forcePopupIcon={false}
-                                    options={dataRutas}
-                                    getOptionLabel={(option) =>
-                                      option.m_sDescripcion
-                                    }
-                                    variant="outlined"
-                                    style={{
-                                      borderWidth: "1px",
-                                      borderColor: "#dddddd",
-                                      borderStyle: "solid",
-                                      borderRadius: "5px",
-                                    }}
-                                    renderInput={(params) => (
-                                      <div>
-                                        <TextField
-                                          {...params}
-                                          InputProps={{
-                                            ...params.InputProps,
-                                            style: {
-                                              height: 24,
-                                            },
-                                            type: "search",
-                                            disableUnderline: true,
-                                            endAdornment: (
-                                              <InputAdornment position="end">
-                                                <IconButton
-                                                  padding="0px"
-                                                  style={{
-                                                    paddingRight: "0px",
-                                                  }}
-                                                  onClick={() => {
-                                                    setState({
-                                                      ...state,
-                                                      identificadorModal:
-                                                        "IdCiudadDestino",
-                                                      tipoModal: 1,
-                                                      openDialog: true,
-                                                    });
-                                                    getAllViajesOrigenDestino(
-                                                      state.IdCiudadOrigen
-                                                        .m_nIdCiudad,
-                                                      state.IdCiudadDestino
-                                                        .m_nIdCiudad
-                                                    );
-                                                    getAllGuiasFrom();
-                                                  }}
-                                                >
-                                                  <PageviewIcon
-                                                    style={{
-                                                      color: "#F9A03E",
-                                                      fontSize: 32,
-                                                      paddingInlineEnd: 0,
-                                                      paddingRight: 0,
-                                                      paddingBlockEnd: 0,
-                                                      paddingLeft: 0,
-                                                      paddingBlock: 0,
-                                                    }}
-                                                  />
-                                                </IconButton>
-                                              </InputAdornment>
-                                            ),
-                                          }}
-                                        />
-                                      </div>
-                                    )}
-                                  />
-                                </div>{" "}
-                              </div>
-                            </div>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                const url = `${process.env.REACT_APP_API_URL}/Unidadd/Eliminar/` + id;
+                axios
+                    .get(url, { headers })
+                    .then((respuesta) => {
+                        console.log(respuesta);
+                    })
+                    .catch((err) => {
+                        showSuccess(err);
+                    });
+            })
+            .catch((err) => {
+                showSuccess(err);
+            });
+    }
 
-                <div className="row">
-                  <div className="col-md-12">
+    const handleChangeOrigenChange = (event) => {
+        console.log(event.target.value);
+
+        setState({
+            ...state,
+            idOrigen: event.target.value,
+        });
+        //Aqui hacer la peticion
+        //No se que peticion tienes que hacer, aqui lo haces
+    };
+
+    const handleChangeDestinoChange = (event) => {
+        console.log(state.IdCiudadDestino);
+        setState({
+            ...state,
+            idDestino: event.target.value,
+        });
+        getAllGuiasFrom();
+    };
+
+    useEffect((value) => {
+        if (
+            localStorage.getItem("UsuarioId") === null ||
+            localStorage.getItem("UsuarioId") <= 0
+        ) {
+            showSuccess("Es necesario iniciar sesion para acceder a este proceso");
+            window.location.replace("login");
+            return;
+        }
+        getAllData();
+        getAllEstatusInformes();
+        getAllSucursales();
+        getAllOperadores();
+        getAllCiudades();
+        getAllTipoUnidad();
+        getAllDataRutas();
+    }, []);
+
+    function getAllData() {
+        const url = `${process.env.REACT_APP_API_URL}/Informes/GetListado`;
+        axios.get(url, { headers }).then((respuesta) => {
+            setData(respuesta.data);
+        });
+    }
+
+    function openSection(index) {
+        // closeSeccions();
+        var $section;
+        switch (index) {
+            case 1:
+                setStepActive(1);
+                $section = $("#infogral");
+                break;
+            case 2:
+                setStepActive(2);
+                $section = $("#caracteristicas");
+
+                break;
+
+            case 3:
+                setStepActive(3);
+                $section = $("#seguros");
+                break;
+
+            default:
+        }
+        $("html, body").animate(
+            {
+                scrollTop: parseInt($section.offset().top - 150),
+            },
+            200
+        );
+    }
+
+    function value(event) {
+        console.log(event.target.value);
+    }
+
+    function closeSeccions() {
+        //Cerrar todas las seciones
+        var $section = $(".widget-toggle");
+        $section.each(function () {
+            var $welem = $(this)
+                .parentsUntil(".widget-action-bar")
+                .parentsUntil(".w-action")
+                .parents(".widget-header")
+                .next(".widget-container");
+            $welem.slideUp();
+            $(this).children("a").children("i").removeClass("zmdi-chevron-down");
+            $(this).children("a").children("i").addClass("zmdi-chevron-up");
+        });
+    }
+
+    useEffect((value) => {
+        //closeSeccions();
+    }, []);
+
+    const framesInformeGuia = state.Informes.map((p, index) => {
+        return (
+            <div key={`Informe${index}`}>
+                <div className="col-md-8">
                     <div className="widget-wrap">
-                      <div className="widget-header block-header margin-bottom-0 clearfix">
-                        <div className="pull-left">
-                          <h3>Asignar a un Viaje</h3>
-                        </div>
-                      </div>
-                      <div className="widget-container">
-                        <div className="widget-content">
-                          <div className="row">
-                            <div className="col-md-12">
-                              <form action="#" className="j-forms" noValidate>
-                                <div className="form-content">
-                                  {/*****************************************Viaje*************************************************/}
-                                  <div className="row">
-                                    <div className="col-sm-12 col-md-6 unit">
-                                      <label className="label">Viaje</label>
-                                      <label className="input select">
-                                        <select
-                                          className="form-control"
-                                          required
-                                          id="viaje"
-                                          onSelect={handleSelectViaje()}
-                                        >
-                                          <option value="0">Seleccionar</option>
-                                          {dataViajes.map((viaje) => (
-                                            <option
-                                              key={viaje.m_nIdViaje}
-                                              value={viaje.m_nIdViaje}
-                                            >
-                                              {viaje.m_sFolioViaje}
-                                            </option>
-                                          ))}
-                                        </select>
-                                      </label>
+                        <div className="widget-container margin-top-0">
+                            <div className="widget-content">
+                                <div className="widget-header block-header margin-bottom-0 clearfix">
+                                    <div className="pull-left">
+                                        <h3>Información De Envio</h3>
                                     </div>
-
-                                    {/*****************************************Ruta2*************************************************/}
-                                    <div className="col-sm-12 col-md-6 unit">
-                                      <label className="label">Ruta</label>
-                                      <div className="input">
-                                        <input
-                                          className="form-control"
-                                          type="text"
-                                          value={state.ruta2}
-                                          id="ruta2"
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  {/*****************************************Operador2*************************************************/}
-                                  <div className="row">
-                                    <div className="col-sm-12 col-md-6 unit">
-                                      <label className="label">Operador</label>
-                                      <div className="input">
-                                        <input
-                                          className="form-control"
-                                          type="text"
-                                          value={state.operador2}
-                                          id="operador2"
-                                        />
-                                      </div>
-                                    </div>
-
-                                    {/*****************************************Unidad2*************************************************/}
-                                    <div className="col-sm-12 col-md-6 unit">
-                                      <label className="label">Unidad</label>
-                                      <div className="input">
-                                        <input
-                                          className="form-control"
-                                          type="text"
-                                          value={state.unidad2}
-                                          id="unidad2"
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  {/*****************************************Remolque2*************************************************/}
-                                  <div className="row">
-                                    <div className="col-sm-12 col-md-6 unit">
-                                      <label className="label">Remolque</label>
-                                      <div className="input">
-                                        <input
-                                          className="form-control"
-                                          type="text"
-                                          value={state.remolque2}
-                                          id="remolque2"
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
                                 </div>
-                              </form>
+
+                                <div className="widget-container">
+                                    <div className="widget-content">
+                                        <div className="row">
+                                            <div className="col-md-12">
+                                                <form action="#" className="j-forms" onSubmit={handleAceptar}>
+                                                    <div className="form-content">
+                                                        <div className="row">
+                                                            {/*****************************************Sucursal**********************************************************/}
+                                                            <div className="col-sm-6 col-md-3 unit">
+                                                                <label className="label">Sucursal</label>
+                                                                <label className="input select">
+                                                                    <select
+                                                                        className="form-control"
+                                                                        required
+                                                                        id="IdSucursal"
+                                                                        value={state.IdSucursal}
+                                                                        disabled
+                                                                    >
+                                                                        <option value="0">Todas</option>
+                                                                        {dataSucursal.map((sucursal) => (
+                                                                            <option
+                                                                                key={sucursal.m_nIdSucursal}
+                                                                                value={sucursal.m_nIdSucursal}
+                                                                            >
+                                                                                {sucursal.m_sSucursal}
+                                                                            </option>
+                                                                        ))}
+                                                                    </select>
+                                                                </label>
+                                                            </div>
+                                                            {/*****************************************Folio************************************************************/}
+                                                            <div className="col-sm-12 col-md-3 unit">
+                                                                <label className="label">Folio</label>
+                                                                <div className="input">
+                                                                    <input
+                                                                        className="form-control"
+                                                                        type="text"
+                                                                        id="Folio"
+                                                                        disabled
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            {/*****************************************Fecha*******************************************************/}
+                                                            <div className="col-sm-12 col-md-6 unit">
+                                                                <label className="label">Fecha y Hora</label>
+                                                                <div className="input">
+                                                                    <input
+                                                                        onChange={handleChange}
+                                                                        className="form-control"
+                                                                        type="datetime-local"
+                                                                        required
+                                                                        value={state.fechaHora}
+                                                                        disabled={state.agregar == "Consultar"}
+                                                                        id="fechaHora"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            {/*****************************************Hora*******************************************************/}
+
+                                                            {/*****************************************Oficina Emisora***************************************************/}
+                                                            <div className="col-sm-6 col-md-3 unit">
+                                                                <label className="label">Oficina Emisora</label>
+                                                                <label className="input select">
+                                                                    <select
+                                                                        className="form-control"
+                                                                        required
+                                                                        id="Oficina Emisora"
+                                                                    >
+                                                                        <option value="0">Todas</option>
+                                                                        {dataSucursal.map((sucursal) => (
+                                                                            <option
+                                                                                key={sucursal.m_nIdSucursal}
+                                                                                value={sucursal.m_nIdSucursal}
+                                                                            >
+                                                                                {sucursal.m_sSucursal}
+                                                                            </option>
+                                                                        ))}
+                                                                    </select>
+                                                                </label>
+                                                            </div>
+                                                            {/*****************************************Oficina Receptora*************************************************/}
+                                                            <div className="col-sm-6 col-md-3 unit">
+                                                                <label className="label">
+                                                                    Oficina Receptora
+                                </label>
+                                                                <label className="input select">
+                                                                    <select
+                                                                        className="form-control"
+                                                                        required
+                                                                        id="Oficina Receptora"
+                                                                    >
+                                                                        <option value="0">Todas</option>
+                                                                        {dataSucursal.map((sucursal) => (
+                                                                            <option
+                                                                                key={sucursal.m_nIdSucursal}
+                                                                                value={sucursal.m_nIdSucursal}
+                                                                            >
+                                                                                {sucursal.m_sSucursal}
+                                                                            </option>
+                                                                        ))}
+                                                                    </select>
+                                                                </label>
+                                                            </div>
+                                                            {/*****************************************Estatus de Entrega*************************************************/}
+                                                            <div className="col-sm-6 col-md-3 unit">
+                                                                <label className="label">Estatus</label>
+                                                                <label className="input select">
+                                                                    <select
+                                                                        className="form-control"
+                                                                        required
+                                                                        id="estatus"
+                                                                    >
+                                                                        <option value="0">Todos</option>
+                                                                        {dataEstatusInformes.map((estatus) => (
+                                                                            <option
+                                                                                key={estatus.m_nIdEstatusRecoleccion}
+                                                                                value={estatus.m_nIdEstatusRecoleccion}
+                                                                            >
+                                                                                {estatus.m_sEstatus}
+                                                                            </option>
+                                                                        ))}
+                                                                    </select>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        {/*****************************************Operador*************************************************/}
+
+                                                        <div className="row">
+                                                            <div className="col-sm-12 col-md-6 unit">
+                                                                <label className="label">Operador</label>
+                                                                {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
+                                                                <Autocomplete
+                                                                    freeSolo
+                                                                    value={state.IdOperador}
+                                                                    onChange={(event, newValue) =>
+                                                                        setState({
+                                                                            ...state,
+                                                                            IdOperador: newValue,
+                                                                        })
+                                                                    }
+                                                                    id="IdOperador"
+                                                                    disableClearable
+                                                                    forcePopupIcon={false}
+                                                                    options={dataOperadores}
+                                                                    getOptionLabel={(option) =>
+                                                                        option.m_sNombreCompleto
+                                                                    }
+                                                                    variant="outlined"
+                                                                    style={{
+                                                                        borderWidth: "1px",
+                                                                        borderColor: "#dddddd",
+                                                                        borderStyle: "solid",
+                                                                        borderRadius: "5px",
+                                                                    }}
+                                                                    renderInput={(params) => (
+                                                                        <div>
+                                                                            <TextField
+                                                                                {...params}
+                                                                                InputProps={{
+                                                                                    ...params.InputProps,
+                                                                                    style: {
+                                                                                        height: 24,
+                                                                                    },
+                                                                                    type: "search",
+                                                                                    disableUnderline: true,
+                                                                                    endAdornment: (
+                                                                                        <InputAdornment position="end">
+                                                                                            <IconButton
+                                                                                                padding="0px"
+                                                                                                style={{
+                                                                                                    paddingRight: "0px",
+                                                                                                }}
+                                                                                                onClick={() => {
+                                                                                                    setState({
+                                                                                                        ...state,
+                                                                                                        identificadorModal:
+                                                                                                            "IdOperador",
+                                                                                                        tipoModal: 2,
+                                                                                                        openDialog: true,
+                                                                                                    });
+                                                                                                }}
+                                                                                            >
+                                                                                                <PageviewIcon
+                                                                                                    style={{
+                                                                                                        color: "#F9A03E",
+                                                                                                        fontSize: 32,
+                                                                                                        paddingInlineEnd: 0,
+                                                                                                        paddingRight: 0,
+                                                                                                        paddingBlockEnd: 0,
+                                                                                                        paddingLeft: 0,
+                                                                                                        paddingBlock: 0,
+                                                                                                    }}
+                                                                                                />
+                                                                                            </IconButton>
+                                                                                        </InputAdornment>
+                                                                                    ),
+                                                                                }}
+                                                                            />
+                                                                        </div>
+                                                                    )}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        {/*****************************************tipo Unidad*************************************************/}
+                                                        <div className="row">
+                                                            <div className="col-sm-12 col-md-6 unit">
+                                                                <label className="label">Tipo de Unidad</label>
+                                                                <div className="input">
+                                                                    <Autocomplete
+                                                                        freeSolo
+                                                                        onChange={(event, newValue) =>
+                                                                            setState({
+                                                                                ...state,
+                                                                                IdTipoUnidad: newValue,
+                                                                            })
+                                                                        }
+                                                                        value={state.IdTipoUnidad}
+                                                                        id="IdTipoUnidad"
+                                                                        disableClearable
+                                                                        forcePopupIcon={false}
+                                                                        options={dataTipoUnidad}
+                                                                        getOptionLabel={(option) =>
+                                                                            option.m_sTipoUnidad
+                                                                        }
+                                                                        variant="outlined"
+                                                                        style={{
+                                                                            borderWidth: "1px",
+                                                                            borderColor: "#dddddd",
+                                                                            borderStyle: "solid",
+                                                                            borderRadius: "5px",
+                                                                        }}
+                                                                        renderInput={(params) => (
+                                                                            <div>
+                                                                                <TextField
+                                                                                    {...params}
+                                                                                    InputProps={{
+                                                                                        ...params.InputProps,
+                                                                                        style: {
+                                                                                            height: 24,
+                                                                                        },
+                                                                                        type: "search",
+                                                                                        disableUnderline: true,
+                                                                                        endAdornment: (
+                                                                                            <InputAdornment position="end">
+                                                                                                <IconButton
+                                                                                                    padding="0px"
+                                                                                                    style={{
+                                                                                                        paddingRight: "0px",
+                                                                                                    }}
+                                                                                                    onClick={() => {
+                                                                                                        setState({
+                                                                                                            ...state,
+                                                                                                            identificadorModal:
+                                                                                                                "IdTipoUnidad",
+                                                                                                            tipoModal: 3,
+                                                                                                            openDialog: true,
+                                                                                                        });
+                                                                                                    }}
+                                                                                                >
+                                                                                                    <PageviewIcon
+                                                                                                        style={{
+                                                                                                            color: "#F9A03E",
+                                                                                                            fontSize: 32,
+                                                                                                            paddingInlineEnd: 0,
+                                                                                                            paddingRight: 0,
+                                                                                                            paddingBlockEnd: 0,
+                                                                                                            paddingLeft: 0,
+                                                                                                            paddingBlock: 0,
+                                                                                                        }}
+                                                                                                    />
+                                                                                                </IconButton>
+                                                                                            </InputAdornment>
+                                                                                        ),
+                                                                                    }}
+                                                                                />
+                                                                            </div>
+                                                                        )}
+                                                                    />
+                                                                </div>
+                                                            </div>
+
+                                                            {/*****************************************Placa Int*************************************************/}
+                                                            <div className="col-sm-12 col-md-2 unit">
+                                                                <label className="label">Placa Int</label>
+                                                                <div className="input">
+                                                                    <input
+                                                                        className="form-control"
+                                                                        type="text"
+                                                                        id="Placa Int"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        {/*****************************************Remolque*************************************************/}
+                                                        <div className="row">
+                                                            <div className="col-sm-12 col-md-6 unit">
+                                                                <label className="label">Remolque</label>
+                                                                <div className="input">
+                                                                    <Autocomplete
+                                                                        freeSolo
+                                                                        value={state.IdUnidad}
+                                                                        onChange={(event, newValue) =>
+                                                                            setState({
+                                                                                ...state,
+                                                                                IdUnidad: newValue,
+                                                                            })
+                                                                        }
+                                                                        id="IdUnidad"
+                                                                        disableClearable
+                                                                        forcePopupIcon={false}
+                                                                        options={dataUnidades}
+                                                                        getOptionLabel={(option) =>
+                                                                            option.m_sDescripcion
+                                                                        }
+                                                                        variant="outlined"
+                                                                        style={{
+                                                                            borderWidth: "1px",
+                                                                            borderColor: "#dddddd",
+                                                                            borderStyle: "solid",
+                                                                            borderRadius: "5px",
+                                                                        }}
+                                                                        renderInput={(params) => (
+                                                                            <div>
+                                                                                <TextField
+                                                                                    {...params}
+                                                                                    InputProps={{
+                                                                                        ...params.InputProps,
+                                                                                        style: {
+                                                                                            height: 24,
+                                                                                        },
+                                                                                        type: "search",
+                                                                                        disableUnderline: true,
+                                                                                        endAdornment: (
+                                                                                            <InputAdornment position="end">
+                                                                                                <IconButton
+                                                                                                    padding="0px"
+                                                                                                    style={{
+                                                                                                        paddingRight: "0px",
+                                                                                                    }}
+                                                                                                    onClick={() => {
+                                                                                                        setState({
+                                                                                                            ...state,
+                                                                                                            identificadorModal:
+                                                                                                                "IdUnidad",
+                                                                                                            tipoModal: 4,
+                                                                                                            openDialog: true,
+                                                                                                        });
+                                                                                                    }}
+                                                                                                >
+                                                                                                    <PageviewIcon
+                                                                                                        style={{
+                                                                                                            color: "#F9A03E",
+                                                                                                            fontSize: 32,
+                                                                                                            paddingInlineEnd: 0,
+                                                                                                            paddingRight: 0,
+                                                                                                            paddingBlockEnd: 0,
+                                                                                                            paddingLeft: 0,
+                                                                                                            paddingBlock: 0,
+                                                                                                        }}
+                                                                                                    />
+                                                                                                </IconButton>
+                                                                                            </InputAdornment>
+                                                                                        ),
+                                                                                    }}
+                                                                                />
+                                                                            </div>
+                                                                        )}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            {/*****************************************Placa Int*************************************************/}
+                                                            <div className="col-sm-12 col-md-2 unit">
+                                                                <label className="label">Placa Int</label>
+                                                                <div className="input">
+                                                                    <input
+                                                                        className="form-control"
+                                                                        type="text"
+                                                                        id="Placa Int"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        {/*****************************************Origen*************************************************/}
+                                                        <div className="row">
+                                                            <div className="col-sm-12 col-md-6 unit">
+                                                                <label className="label">Origen</label>
+                                                                <div className="input">
+                                                                    <Autocomplete
+                                                                        freeSolo
+                                                                        onChange={(event, newValue) =>
+                                                                            setState({
+                                                                                ...state,
+                                                                                IdCiudadOrigen: newValue,
+                                                                            })
+                                                                        }
+                                                                        value={state.IdCiudadOrigen}
+                                                                        id="IdCiudadOrigen"
+                                                                        disableClearable
+                                                                        forcePopupIcon={false}
+                                                                        options={dataOrigenes}
+                                                                        getOptionLabel={(option) =>
+                                                                            option.m_sCiudad
+                                                                        }
+                                                                        variant="outlined"
+                                                                        style={{
+                                                                            borderWidth: "1px",
+                                                                            borderColor: "#dddddd",
+                                                                            borderStyle: "solid",
+                                                                            borderRadius: "5px",
+                                                                        }}
+                                                                        renderInput={(params) => (
+                                                                            <div>
+                                                                                <TextField
+                                                                                    {...params}
+                                                                                    InputProps={{
+                                                                                        ...params.InputProps,
+                                                                                        style: {
+                                                                                            height: 24,
+                                                                                        },
+                                                                                        type: "search",
+                                                                                        disableUnderline: true,
+                                                                                        endAdornment: (
+                                                                                            <InputAdornment position="end">
+                                                                                                <IconButton
+                                                                                                    padding="0px"
+                                                                                                    style={{
+                                                                                                        paddingRight: "0px",
+                                                                                                    }}
+                                                                                                    onClick={() => {
+                                                                                                        setState({
+                                                                                                            ...state,
+                                                                                                            identificadorModal:
+                                                                                                                "IdCiudadOrigen",
+                                                                                                            tipoModal: 1,
+                                                                                                            openDialog: true,
+                                                                                                        });
+                                                                                                    }}
+                                                                                                >
+                                                                                                    <PageviewIcon
+                                                                                                        style={{
+                                                                                                            color: "#F9A03E",
+                                                                                                            fontSize: 32,
+                                                                                                            paddingInlineEnd: 0,
+                                                                                                            paddingRight: 0,
+                                                                                                            paddingBlockEnd: 0,
+                                                                                                            paddingLeft: 0,
+                                                                                                            paddingBlock: 0,
+                                                                                                        }}
+                                                                                                    />
+                                                                                                </IconButton>
+                                                                                            </InputAdornment>
+                                                                                        ),
+                                                                                    }}
+                                                                                />
+                                                                            </div>
+                                                                        )}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            {/*****************************************Destino*************************************************/}
+                                                            <div className="col-sm-12 col-md-6 unit">
+                                                                <label className="label">Destino</label>
+                                                                <div className="input">
+                                                                    <Autocomplete
+                                                                        freeSolo
+                                                                        onChange={(event, newValue) =>
+                                                                            setState({
+                                                                                ...state,
+                                                                                IdCiudadDestino: newValue,
+                                                                            })
+                                                                        }
+                                                                        onSelect={() => {
+                                                                            getAllGuiasFrom();
+                                                                            getAllViajesOrigenDestino(
+                                                                                state.IdCiudadOrigen.m_nIdCiudad,
+                                                                                state.IdCiudadDestino.m_nIdCiudad
+                                                                            );
+                                                                        }}
+                                                                        value={state.IdCiudadDestino}
+                                                                        id="IdCiudadDestino"
+                                                                        disableClearable
+                                                                        forcePopupIcon={false}
+                                                                        options={dataOrigenes}
+                                                                        getOptionLabel={(option) =>
+                                                                            option.m_sCiudad
+                                                                        }
+                                                                        variant="outlined"
+                                                                        style={{
+                                                                            borderWidth: "1px",
+                                                                            borderColor: "#dddddd",
+                                                                            borderStyle: "solid",
+                                                                            borderRadius: "5px",
+                                                                        }}
+                                                                        renderInput={(params) => (
+                                                                            <div>
+                                                                                <TextField
+                                                                                    {...params}
+                                                                                    InputProps={{
+                                                                                        ...params.InputProps,
+                                                                                        style: {
+                                                                                            height: 24,
+                                                                                        },
+                                                                                        type: "search",
+                                                                                        disableUnderline: true,
+                                                                                        endAdornment: (
+                                                                                            <InputAdornment position="end">
+                                                                                                <IconButton
+                                                                                                    padding="0px"
+                                                                                                    style={{
+                                                                                                        paddingRight: "0px",
+                                                                                                    }}
+                                                                                                    onClick={() => {
+                                                                                                        setState({
+                                                                                                            ...state,
+                                                                                                            identificadorModal:
+                                                                                                                "IdCiudadDestino",
+                                                                                                            tipoModal: 1,
+                                                                                                            openDialog: true,
+                                                                                                        });
+                                                                                                        getAllViajesOrigenDestino(
+                                                                                                            state.IdCiudadOrigen
+                                                                                                                .m_nIdCiudad,
+                                                                                                            state.IdCiudadDestino
+                                                                                                                .m_nIdCiudad
+                                                                                                        );
+                                                                                                        getAllGuiasFrom();
+                                                                                                    }}
+                                                                                                >
+                                                                                                    <PageviewIcon
+                                                                                                        style={{
+                                                                                                            color: "#F9A03E",
+                                                                                                            fontSize: 32,
+                                                                                                            paddingInlineEnd: 0,
+                                                                                                            paddingRight: 0,
+                                                                                                            paddingBlockEnd: 0,
+                                                                                                            paddingLeft: 0,
+                                                                                                            paddingBlock: 0,
+                                                                                                        }}
+                                                                                                    />
+                                                                                                </IconButton>
+                                                                                            </InputAdornment>
+                                                                                        ),
+                                                                                    }}
+                                                                                />
+                                                                            </div>
+                                                                        )}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        {/*****************************************Ruta*************************************************/}
+                                                        <div className="row">
+                                                            <div className="col-sm-12 col-md-6 unit">
+                                                                <label className="label">Ruta</label>
+                                                                {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
+                                                                <div className="input">
+                                                                    <Autocomplete
+                                                                        freeSolo
+                                                                        onChange={(event, newValue) =>
+                                                                            setState({
+                                                                                ...state,
+                                                                                idRuta: newValue,
+                                                                            })
+                                                                        }
+                                                                        value={state.IdCiudadDestino}
+                                                                        id="idRuta"
+                                                                        disableClearable
+                                                                        forcePopupIcon={false}
+                                                                        options={dataRutas}
+                                                                        getOptionLabel={(option) =>
+                                                                            option.m_sDescripcion
+                                                                        }
+                                                                        variant="outlined"
+                                                                        style={{
+                                                                            borderWidth: "1px",
+                                                                            borderColor: "#dddddd",
+                                                                            borderStyle: "solid",
+                                                                            borderRadius: "5px",
+                                                                        }}
+                                                                        renderInput={(params) => (
+                                                                            <div>
+                                                                                <TextField
+                                                                                    {...params}
+                                                                                    InputProps={{
+                                                                                        ...params.InputProps,
+                                                                                        style: {
+                                                                                            height: 24,
+                                                                                        },
+                                                                                        type: "search",
+                                                                                        disableUnderline: true,
+                                                                                        endAdornment: (
+                                                                                            <InputAdornment position="end">
+                                                                                                <IconButton
+                                                                                                    padding="0px"
+                                                                                                    style={{
+                                                                                                        paddingRight: "0px",
+                                                                                                    }}
+                                                                                                    onClick={() => {
+                                                                                                        setState({
+                                                                                                            ...state,
+                                                                                                            identificadorModal:
+                                                                                                                "IdCiudadDestino",
+                                                                                                            tipoModal: 1,
+                                                                                                            openDialog: true,
+                                                                                                        });
+                                                                                                        getAllViajesOrigenDestino(
+                                                                                                            state.IdCiudadOrigen
+                                                                                                                .m_nIdCiudad,
+                                                                                                            state.IdCiudadDestino
+                                                                                                                .m_nIdCiudad
+                                                                                                        );
+                                                                                                        getAllGuiasFrom();
+                                                                                                    }}
+                                                                                                >
+                                                                                                    <PageviewIcon
+                                                                                                        style={{
+                                                                                                            color: "#F9A03E",
+                                                                                                            fontSize: 32,
+                                                                                                            paddingInlineEnd: 0,
+                                                                                                            paddingRight: 0,
+                                                                                                            paddingBlockEnd: 0,
+                                                                                                            paddingLeft: 0,
+                                                                                                            paddingBlock: 0,
+                                                                                                        }}
+                                                                                                    />
+                                                                                                </IconButton>
+                                                                                            </InputAdornment>
+                                                                                        ),
+                                                                                    }}
+                                                                                />
+                                                                            </div>
+                                                                        )}
+                                                                    />
+                                                                </div>{" "}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="row">
+                                    <div className="col-md-12">
+                                        <div className="widget-wrap">
+                                            <div className="widget-header block-header margin-bottom-0 clearfix">
+                                                <div className="pull-left">
+                                                    <h3>Asignar a un Viaje</h3>
+                                                </div>
+                                            </div>
+                                            <div className="widget-container">
+                                                <div className="widget-content">
+                                                    <div className="row">
+                                                        <div className="col-md-12">
+                                                            <form action="#" className="j-forms" noValidate>
+                                                                <div className="form-content">
+                                                                    {/*****************************************Viaje*************************************************/}
+                                                                    <div className="row">
+                                                                        <div className="col-sm-12 col-md-6 unit">
+                                                                            <label className="label">Viaje</label>
+                                                                            <label className="input select">
+                                                                                <select
+                                                                                    className="form-control"
+                                                                                    required
+                                                                                    id="viaje"
+                                                                                    onSelect={handleSelectViaje()}
+                                                                                >
+                                                                                    <option value="0">Seleccionar</option>
+                                                                                    {dataViajes.map((viaje) => (
+                                                                                        <option
+                                                                                            key={viaje.m_nIdViaje}
+                                                                                            value={viaje.m_nIdViaje}
+                                                                                        >
+                                                                                            {viaje.m_sFolioViaje}
+                                                                                        </option>
+                                                                                    ))}
+                                                                                </select>
+                                                                            </label>
+                                                                        </div>
+
+                                                                        {/*****************************************Ruta2*************************************************/}
+                                                                        <div className="col-sm-12 col-md-6 unit">
+                                                                            <label className="label">Ruta</label>
+                                                                            <div className="input">
+                                                                                <input
+                                                                                    className="form-control"
+                                                                                    type="text"
+                                                                                    value={state.ruta2}
+                                                                                    id="ruta2"
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    {/*****************************************Operador2*************************************************/}
+                                                                    <div className="row">
+                                                                        <div className="col-sm-12 col-md-6 unit">
+                                                                            <label className="label">Operador</label>
+                                                                            <div className="input">
+                                                                                <input
+                                                                                    className="form-control"
+                                                                                    type="text"
+                                                                                    value={state.operador2}
+                                                                                    id="operador2"
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+
+                                                                        {/*****************************************Unidad2*************************************************/}
+                                                                        <div className="col-sm-12 col-md-6 unit">
+                                                                            <label className="label">Unidad</label>
+                                                                            <div className="input">
+                                                                                <input
+                                                                                    className="form-control"
+                                                                                    type="text"
+                                                                                    value={state.unidad2}
+                                                                                    id="unidad2"
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    {/*****************************************Remolque2*************************************************/}
+                                                                    <div className="row">
+                                                                        <div className="col-sm-12 col-md-6 unit">
+                                                                            <label className="label">Remolque</label>
+                                                                            <div className="input">
+                                                                                <input
+                                                                                    className="form-control"
+                                                                                    type="text"
+                                                                                    value={state.remolque2}
+                                                                                    id="remolque2"
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                          </div>
                         </div>
-                      </div>
                     </div>
-                  </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-4">
-          <div className="widget-wrap">
-            <div className="widget-header block-header margin-bottom-0 clearfix">
-              <div className="pull-left">
-                <h3>Detalles de Guias</h3>
-              </div>
-            </div>
-            <div className="widget-container">
-              <div className="widget-content">
-                <div className="row">
-                  <div className="col-md-12">
-                    <form action="#" className="j-forms" noValidate>
-                      <div className="form-content">
-                        {dataGuias.map((value, index) => {
-                          return (
-                            <div>
-                              <br />
-                              <ButtonBase
-                                style={{
-                                  width: "100%",
-                                  borderRadius: "10px",
-                                }}
-                                onClick={() => selectGuia(index)}
-                              >
-                                <Grid container spacing={2}>
-                                  <Grid
-                                    item
-                                    sm={1}
-                                    justify="center"
-                                    alignItems="center"
-                                    style={{
-                                      display: "flex",
-                                      justifyContent: "center",
-                                      alignItems: "center",
-                                      textAlign: "center",
-                                      backgroundColor: value.select
-                                        ? "#F9A03E"
-                                        : "gray",
-                                    }}
-                                  >
-                                    {index + 1}
-                                  </Grid>
-                                  <Grid
-                                    item
-                                    sm={11}
-                                    style={{
-                                      width: "100%",
-                                      borderRadius: "10px",
-                                    }}
-                                  >
-                                    <Grid container spacing={2}>
-                                      <Grid item sm={12} md={4}>
-                                        <div className="input">
-                                          <label htmlFor={"folio-" + index}>
-                                            Folio Guía
-                                          </label>
-                                          <input
-                                            value={value.m_nFolioGuia}
-                                            className="form-control"
-                                            type="text"
-                                            disabled="true"
-                                            id={"folio-" + index}
-                                          />
-                                        </div>
-                                      </Grid>
-                                      <Grid item sm={12} md={4}>
-                                        <div className="input">
-                                          <label htmlFor={"estatus-" + index}>
-                                            Estatus Guía
-                                          </label>
-                                          <input
-                                            className="form-control"
-                                            type="text"
-                                            disabled="true"
-                                            value={value.m_sEstatusGuia}
-                                            id={"estatus-" + index}
-                                          />
-                                        </div>
-                                      </Grid>
-                                      <Grid item sm={12} md={4}>
-                                        <div className="input">
-                                          <label htmlFor={"total-" + index}>
-                                            Total
-                                          </label>
-                                          <input
-                                            value={value.total}
-                                            disabled="true"
-                                            className="form-control"
-                                            type="text"
-                                            id={"total-" + index}
-                                          />
-                                        </div>
-                                      </Grid>
-                                      <Grid item sm={12} md={6}>
-                                        <div className="input">
-                                          <label htmlFor={"destino-" + index}>
-                                            Destino
-                                          </label>
-                                          <input
-                                            value={value.destino}
-                                            className="form-control"
-                                            type="text"
-                                            disabled="true"
-                                            id={"destino-" + index}
-                                          />
-                                        </div>
-                                      </Grid>
-                                      <Grid item sm={12} md={6}>
-                                        <div className="input">
-                                          <label htmlFor={"servicio-" + index}>
-                                            Tipo de Servicio
-                                          </label>
-                                          <input
-                                            disabled="true"
-                                            value={value.servicio}
-                                            className="form-control"
-                                            type="text"
-                                            id={"servicio-" + index}
-                                          />
-                                        </div>
-                                      </Grid>
-                                      <Grid item sm={12} md={12}>
-                                        <div className="input">
-                                          <label
-                                            htmlFor={"observacion-" + index}
-                                          >
-                                            Observaciones
-                                          </label>
-                                          <input
-                                            disabled="true"
-                                            value={value.observaciones}
-                                            className="form-control"
-                                            type="text"
-                                            id={"observacion-" + index}
-                                          />
-                                        </div>
-                                      </Grid>
-                                    </Grid>
-                                  </Grid>
-                                </Grid>
-                              </ButtonBase>
-                              <br />
+                <div className="col-md-4">
+                    <div className="widget-wrap">
+                        <div className="widget-header block-header margin-bottom-0 clearfix">
+                            <div className="pull-left">
+                                <h3>Detalles de Guias</h3>
                             </div>
-                          );
-                        })}
-                        <br />
-                        <Grid
-                          container
-                          style={{
-                            borderStyle: "solid",
-                            borderRadius: "10px",
-                          }}
-                          spacing={1}
-                        >
-                          <Grid
-                            item
-                            sm={4}
-                            justify="center"
-                            alignItems="center"
-                            style={{
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              textAlign: "center",
-                            }}
-                          >
-                            Total de guías :{" "}
-                            {dataGuias.filter((g) => g.select).length}
-                          </Grid>
-                          <Grid
-                            item
-                            sm={8}
-                            style={{
-                              justifyContent: "left",
-                              alignItems: "left",
-                              textAlign: "left",
-                            }}
-                          >
-                            <Grid container>
-                              <Grid
-                                item
-                                sm={6}
-                                style={{
-                                  justifyContent: "left",
-                                  alignItems: "left",
-                                  textAlign: "left",
-                                }}
-                              >
-                                Total Por Cobrar Destinatario
+                        </div>
+                        <div className="widget-container">
+                            <div className="widget-content">
+                                <div className="row">
+                                    <div className="col-md-12">
+                                        <form action="#" className="j-forms" noValidate>
+                                            <div className="form-content">
+                                                {dataGuias.map((value, index) => {
+                                                    return (
+                                                        <div>
+                                                            <br />
+                                                            <ButtonBase
+                                                                style={{
+                                                                    width: "100%",
+                                                                    borderRadius: "10px",
+                                                                }}
+                                                                onClick={() => selectGuia(index)}
+                                                            >
+                                                                <Grid container spacing={2}>
+                                                                    <Grid
+                                                                        item
+                                                                        sm={1}
+                                                                        justify="center"
+                                                                        alignItems="center"
+                                                                        style={{
+                                                                            display: "flex",
+                                                                            justifyContent: "center",
+                                                                            alignItems: "center",
+                                                                            textAlign: "center",
+                                                                            backgroundColor: value.select
+                                                                                ? "#F9A03E"
+                                                                                : "gray",
+                                                                        }}
+                                                                    >
+                                                                        {index + 1}
+                                                                    </Grid>
+                                                                    <Grid
+                                                                        item
+                                                                        sm={11}
+                                                                        style={{
+                                                                            width: "100%",
+                                                                            borderRadius: "10px",
+                                                                        }}
+                                                                    >
+                                                                        <Grid container spacing={2}>
+                                                                            <Grid item sm={12} md={4}>
+                                                                                <div className="input">
+                                                                                    <label htmlFor={"folio-" + index}>
+                                                                                        Folio Guía
+                                          </label>
+                                                                                    <input
+                                                                                        value={value.m_nFolioGuia}
+                                                                                        className="form-control"
+                                                                                        type="text"
+                                                                                        disabled="true"
+                                                                                        id={"folio-" + index}
+                                                                                    />
+                                                                                </div>
+                                                                            </Grid>
+                                                                            <Grid item sm={12} md={4}>
+                                                                                <div className="input">
+                                                                                    <label htmlFor={"estatus-" + index}>
+                                                                                        Estatus Guía
+                                          </label>
+                                                                                    <input
+                                                                                        className="form-control"
+                                                                                        type="text"
+                                                                                        disabled="true"
+                                                                                        value={value.m_sEstatusGuia}
+                                                                                        id={"estatus-" + index}
+                                                                                    />
+                                                                                </div>
+                                                                            </Grid>
+                                                                            <Grid item sm={12} md={4}>
+                                                                                <div className="input">
+                                                                                    <label htmlFor={"total-" + index}>
+                                                                                        Total
+                                          </label>
+                                                                                    <input
+                                                                                        value={value.total}
+                                                                                        disabled="true"
+                                                                                        className="form-control"
+                                                                                        type="text"
+                                                                                        id={"total-" + index}
+                                                                                    />
+                                                                                </div>
+                                                                            </Grid>
+                                                                            <Grid item sm={12} md={6}>
+                                                                                <div className="input">
+                                                                                    <label htmlFor={"destino-" + index}>
+                                                                                        Destino
+                                          </label>
+                                                                                    <input
+                                                                                        value={value.destino}
+                                                                                        className="form-control"
+                                                                                        type="text"
+                                                                                        disabled="true"
+                                                                                        id={"destino-" + index}
+                                                                                    />
+                                                                                </div>
+                                                                            </Grid>
+                                                                            <Grid item sm={12} md={6}>
+                                                                                <div className="input">
+                                                                                    <label htmlFor={"servicio-" + index}>
+                                                                                        Tipo de Servicio
+                                          </label>
+                                                                                    <input
+                                                                                        disabled="true"
+                                                                                        value={value.servicio}
+                                                                                        className="form-control"
+                                                                                        type="text"
+                                                                                        id={"servicio-" + index}
+                                                                                    />
+                                                                                </div>
+                                                                            </Grid>
+                                                                            <Grid item sm={12} md={12}>
+                                                                                <div className="input">
+                                                                                    <label
+                                                                                        htmlFor={"observacion-" + index}
+                                                                                    >
+                                                                                        Observaciones
+                                          </label>
+                                                                                    <input
+                                                                                        disabled="true"
+                                                                                        value={value.observaciones}
+                                                                                        className="form-control"
+                                                                                        type="text"
+                                                                                        id={"observacion-" + index}
+                                                                                    />
+                                                                                </div>
+                                                                            </Grid>
+                                                                        </Grid>
+                                                                    </Grid>
+                                                                </Grid>
+                                                            </ButtonBase>
+                                                            <br />
+                                                        </div>
+                                                    );
+                                                })}
+                                                <br />
+                                                <Grid
+                                                    container
+                                                    style={{
+                                                        borderStyle: "solid",
+                                                        borderRadius: "10px",
+                                                    }}
+                                                    spacing={1}
+                                                >
+                                                    <Grid
+                                                        item
+                                                        sm={4}
+                                                        justify="center"
+                                                        alignItems="center"
+                                                        style={{
+                                                            display: "flex",
+                                                            justifyContent: "center",
+                                                            alignItems: "center",
+                                                            textAlign: "center",
+                                                        }}
+                                                    >
+                                                        Total de guías :{" "}
+                                                        {dataGuias.filter((g) => g.select).length}
+                                                    </Grid>
+                                                    <Grid
+                                                        item
+                                                        sm={8}
+                                                        style={{
+                                                            justifyContent: "left",
+                                                            alignItems: "left",
+                                                            textAlign: "left",
+                                                        }}
+                                                    >
+                                                        <Grid container>
+                                                            <Grid
+                                                                item
+                                                                sm={6}
+                                                                style={{
+                                                                    justifyContent: "left",
+                                                                    alignItems: "left",
+                                                                    textAlign: "left",
+                                                                }}
+                                                            >
+                                                                Total Por Cobrar Destinatario
                               </Grid>
-                              <Grid
-                                item
-                                sm={6}
-                                style={{
-                                  justifyContent: "right",
-                                  alignItems: "right",
-                                  textAlign: "right",
-                                }}
-                              >
-                                {"$350"}
+                                                            <Grid
+                                                                item
+                                                                sm={6}
+                                                                style={{
+                                                                    justifyContent: "right",
+                                                                    alignItems: "right",
+                                                                    textAlign: "right",
+                                                                }}
+                                                            >
+                                                                {"$350"}
+                                                            </Grid>
+                                                            <Grid
+                                                                item
+                                                                sm={6}
+                                                                style={{
+                                                                    justifyContent: "left",
+                                                                    alignItems: "left",
+                                                                    textAlign: "left",
+                                                                }}
+                                                            >
+                                                                Total Por Cobrar Remitente
                               </Grid>
-                              <Grid
-                                item
-                                sm={6}
-                                style={{
-                                  justifyContent: "left",
-                                  alignItems: "left",
-                                  textAlign: "left",
-                                }}
-                              >
-                                Total Por Cobrar Remitente
+                                                            <Grid
+                                                                item
+                                                                sm={6}
+                                                                style={{
+                                                                    justifyContent: "right",
+                                                                    alignItems: "right",
+                                                                    textAlign: "right",
+                                                                }}
+                                                            >
+                                                                {"$350"}
+                                                            </Grid>
+                                                            <Grid
+                                                                item
+                                                                sm={6}
+                                                                style={{
+                                                                    justifyContent: "left",
+                                                                    alignItems: "left",
+                                                                    textAlign: "left",
+                                                                }}
+                                                            >
+                                                                Total Pagado en Mostrador
                               </Grid>
-                              <Grid
-                                item
-                                sm={6}
-                                style={{
-                                  justifyContent: "right",
-                                  alignItems: "right",
-                                  textAlign: "right",
-                                }}
-                              >
-                                {"$350"}
+                                                            <Grid
+                                                                item
+                                                                sm={6}
+                                                                style={{
+                                                                    justifyContent: "right",
+                                                                    alignItems: "right",
+                                                                    textAlign: "right",
+                                                                }}
+                                                            >
+                                                                {"$350"}
+                                                            </Grid>
+                                                            <Grid
+                                                                item
+                                                                sm={6}
+                                                                style={{
+                                                                    justifyContent: "left",
+                                                                    alignItems: "left",
+                                                                    textAlign: "left",
+                                                                }}
+                                                            >
+                                                                Total Unidad Completa
                               </Grid>
-                              <Grid
-                                item
-                                sm={6}
-                                style={{
-                                  justifyContent: "left",
-                                  alignItems: "left",
-                                  textAlign: "left",
-                                }}
-                              >
-                                Total Pagado en Mostrador
+                                                            <Grid
+                                                                item
+                                                                sm={6}
+                                                                style={{
+                                                                    justifyContent: "right",
+                                                                    alignItems: "right",
+                                                                    textAlign: "right",
+                                                                }}
+                                                            >
+                                                                {"$350"}
+                                                            </Grid>
+                                                            <Grid
+                                                                item
+                                                                sm={6}
+                                                                style={{
+                                                                    justifyContent: "left",
+                                                                    alignItems: "left",
+                                                                    textAlign: "left",
+                                                                }}
+                                                            >
+                                                                Total Unidad Completa
                               </Grid>
-                              <Grid
-                                item
-                                sm={6}
-                                style={{
-                                  justifyContent: "right",
-                                  alignItems: "right",
-                                  textAlign: "right",
-                                }}
-                              >
-                                {"$350"}
-                              </Grid>
-                              <Grid
-                                item
-                                sm={6}
-                                style={{
-                                  justifyContent: "left",
-                                  alignItems: "left",
-                                  textAlign: "left",
-                                }}
-                              >
-                                Total Unidad Completa
-                              </Grid>
-                              <Grid
-                                item
-                                sm={6}
-                                style={{
-                                  justifyContent: "right",
-                                  alignItems: "right",
-                                  textAlign: "right",
-                                }}
-                              >
-                                {"$350"}
-                              </Grid>
-                              <Grid
-                                item
-                                sm={6}
-                                style={{
-                                  justifyContent: "left",
-                                  alignItems: "left",
-                                  textAlign: "left",
-                                }}
-                              >
-                                Total Unidad Completa
-                              </Grid>
-                              <Grid
-                                item
-                                sm={6}
-                                style={{
-                                  justifyContent: "right",
-                                  alignItems: "right",
-                                  textAlign: "right",
-                                }}
-                              >
-                                {"$350"}
-                              </Grid>
-                              <Grid
-                                item
-                                sm={6}
-                                style={{
-                                  justifyContent: "left",
-                                  alignItems: "left",
-                                  textAlign: "left",
-                                }}
-                              >
-                                <b style={{ fontWeight: "bold" }}>
-                                  Total General
+                                                            <Grid
+                                                                item
+                                                                sm={6}
+                                                                style={{
+                                                                    justifyContent: "right",
+                                                                    alignItems: "right",
+                                                                    textAlign: "right",
+                                                                }}
+                                                            >
+                                                                {"$350"}
+                                                            </Grid>
+                                                            <Grid
+                                                                item
+                                                                sm={6}
+                                                                style={{
+                                                                    justifyContent: "left",
+                                                                    alignItems: "left",
+                                                                    textAlign: "left",
+                                                                }}
+                                                            >
+                                                                <b style={{ fontWeight: "bold" }}>
+                                                                    Total General
                                 </b>
-                              </Grid>
-                              <Grid
-                                item
-                                sm={6}
-                                style={{
-                                  justifyContent: "right",
-                                  alignItems: "right",
-                                  textAlign: "right",
-                                }}
-                              >
-                                {"$350"}
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      </div>
-                      
-                    </form>
-                    
-                  </div>
-                  
-                </div>
-                
-              </div>
-              
-            </div>
-            
-          </div>
-          
-        </div>
-        {state.Informes.length !== 1 && (
-          <a
-            className="btn delete"
-            onClick={() => removeInformeGuia(index)}
-            disabled={state.agregar == "Consultar"}
-          >
-            <i className="zmdi zmdi-delete"></i> Eliminar Informe
-          </a>
-        )}
-        
-      </div>
-    );
-  });
+                                                            </Grid>
+                                                            <Grid
+                                                                item
+                                                                sm={6}
+                                                                style={{
+                                                                    justifyContent: "right",
+                                                                    alignItems: "right",
+                                                                    textAlign: "right",
+                                                                }}
+                                                            >
+                                                                {"$350"}
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Grid>
+                                                </Grid>
+                                            </div>
 
-  return (
-    <div>
-      <Dialog
-        open={state.openDialog}
-        onClose={() => setState({ ...state, openDialog: false })}
-      >
-        <DialogContent>
-          {state.tipoModal == 1 && (
-            <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
-              <div align="right">
-                <button
-                  onClick={() => {
-                    history.push("/Ciudades");
-                  }}
-                  className="btn btn-primary primary-btn"
-                >
-                  Agregar
-                </button>
-              </div>
+                                        </form>
 
-              {dataOrigenes.length != 0 ? (
-                <TableCiudades
-                  select={
-                    state[state.identificadorModal] &&
-                    state[state.identificadorModal].m_nIdCiudad
-                  }
-                  columns={columnsCiudades}
-                  data={dataOrigenes}
-                  identificadorModal={state.identificadorModal}
-                />
-              ) : (
-                <div>No se encontró ningún registro</div>
-              )}
-              <DialogActions style={{ justifyContent: "left" }}>
-                <button
-                  onClick={() => setState({ ...state, openDialog: false })}
-                  className="btn btn-secondary secondary-btn"
-                >
-                  Cerrar
-                </button>
-                <button
-                  onClick={() => setState({ ...state, openDialog: false })}
-                  className="btn btn-primary primary-btn"
-                >
-                  Aceptar
-                </button>
-              </DialogActions>
-            </div>
-          )}
-          {state.tipoModal == 2 && (
-            <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
-              <div align="right">
-                <button
-                  onClick={() => {
-                    history.push("/Operadores");
-                  }}
-                  className="btn btn-primary primary-btn"
-                >
-                  Agregar
-                </button>
-              </div>
+                                    </div>
 
-              {dataOperadores.length != 0 ? (
-                <TableOperadores
-                  select={
-                    state[state.identificadorModal] &&
-                    state[state.identificadorModal].m_nIdOperador
-                  }
-                  columns={columnsOperadores}
-                  data={dataOperadores}
-                  identificadorModal={state.identificadorModal}
-                />
-              ) : (
-                <div>No se encontró ningún registro</div>
-              )}
-              <DialogActions style={{ justifyContent: "left" }}>
-                <button
-                  onClick={() => setState({ ...state, openDialog: false })}
-                  className="btn btn-secondary secondary-btn"
-                >
-                  Cerrar
-                </button>
-                <button
-                  onClick={() => setState({ ...state, openDialog: false })}
-                  className="btn btn-primary primary-btn"
-                >
-                  Aceptar
-                </button>
-              </DialogActions>
-            </div>
-          )}
-          {state.tipoModal == 3 && (
-            <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
-              <div align="right">
-                <button
-                  onClick={() => {
-                    history.push("/TipoUnidad");
-                  }}
-                  className="btn btn-primary primary-btn"
-                >
-                  Agregar
-                </button>
-              </div>
-              {dataTipoUnidad.length != 0 ? (
-                <TableTipoUnidad
-                  select={
-                    state[state.identificadorModal] &&
-                    state[state.identificadorModal].m_nIdTipoUnidad
-                  }
-                  columns={columnsTipoUnidades}
-                  data={dataTipoUnidad}
-                  identificadorModal={state.identificadorModal}
-                />
-              ) : (
-                <div>No se encontró ningún registro</div>
-              )}
-              <DialogActions style={{ justifyContent: "left" }}>
-                <button
-                  onClick={() => setState({ ...state, openDialog: false })}
-                  className="btn btn-secondary secondary-btn"
-                >
-                  Cerrar
-                </button>
-                <button
-                  onClick={() => setState({ ...state, openDialog: false })}
-                  className="btn btn-primary primary-btn"
-                >
-                  Aceptar
-                </button>
-              </DialogActions>
-            </div>
-          )}
-          {state.tipoModal == 4 && (
-            <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
-              <div align="right">
-                <button
-                  onClick={() => {
-                    history.push("/Unidades");
-                  }}
-                  className="btn btn-primary primary-btn"
-                >
-                  Agregar
-                </button>
-              </div>
+                                </div>
 
-              {dataUnidades.length != 0 ? (
-                <TableUnidad
-                  object={state}
-                  select={
-                    state[state.identificadorModal] &&
-                    state[state.identificadorModal].m_nIdUnidad
-                  }
-                  columns={columnsUnidades}
-                  data={dataUnidades}
-                  identificadorModal={state.identificadorModal}
-                />
-              ) : (
-                <div>No se encontró ningún registro</div>
-              )}
-              <DialogActions style={{ justifyContent: "left" }}>
-                <button
-                  onClick={() => setState({ ...state, openDialog: false })}
-                  className="btn btn-secondary secondary-btn"
-                >
-                  Cerrar
-                </button>
-                <button
-                  onClick={() => setState({ ...state, openDialog: false })}
-                  className="btn btn-primary primary-btn"
-                >
-                  Aceptar
-                </button>
-              </DialogActions>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+                            </div>
 
-      <header className="topbar clearfix">
-        <Cabecera />
-      </header>
-      {/*Topbar End Here*/}
-      {/*Leftbar Start Here*/}
-      <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
-        <BarraLateralIzquierda />
-      </aside>
-
-      <section className="main-container">
-        <div className="container-fluid">
-          <div className="page-header filled full-block light">
-            <div className="row">
-              <div className="col-md-6 col-sm-6">
-                <h2>Informes</h2>
-              </div>
-              <div className="col-md-6 col-sm-6">
-                <ul className="list-page-breadcrumb">
-                  <li className="active-page"> Informes</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <ul className="nav navStatica nav-tabs">
-            <li className="active">
-              <a data-toggle="tab" href="#Listado">
-                <i className="fa fa-list" /> Listado
-              </a>
-            </li>
-            <li>
-              <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
-                <i className="fa fa-plus-circle" /> {state.agregar}
-              </a>
-            </li>
-
-            <li>
-              <a data-toggle="tab" href="#Imprimir">
-                <i className="fa fa-print" /> Imprimir
-              </a>
-            </li>
-
-            <li>
-              <a
-                data-toggle="tab"
-                href="#Cancelar"
-                onClick={handleShowCancelar}
-                className={state.IdInforme == 0 ? classes.disabled : ""}
-              >
-                <i className="fa fa-ban" /> Cancelar
-              </a>
-            </li>
-
-            <li>
-              <a data-toggle="tab" href="#Cubicar">
-                <i className="fa fa-adjust" /> Cubicar / Optimizar Rutas
-              </a>
-            </li>
-          </ul>
-
-          <div className="tab-content">
-            <div
-              className="widget-wrap"
-              id="Listado"
-              className="tab-pane fade in active"
-            >
-              <div className="widget-wrap">
-                <div className="widget-content">
-                  <div
-                    className="row"
-                    style={{ height: state.height - 250, width: "100%" }}
-                  >
-                    {data.length != 0 ? (
-                      <DataGrid
-                        rows={data}
-                        columns={columns}
-                        pageSize={ Math.floor((state.height - 310)/30)}
-                        getRowId={(row) => row.m_nIdInforme}
-                        onRowSelected={(row) => {
-                          setState({
-                            ...state,
-                            IdInforme: row.data.m_nIdInforme,
-                          });
-                        }}
-                      />
-                    ) : (
-                      <div>No se encontró ningún registro</div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div id="Imprimir" className="tab-pane fade ">
-              Imprimir
-            </div>
-            <div id="Importar" className="tab-pane fade ">
-              Importar
-            </div>
-            <div id="Agregar" className="tab-pane fade ">
-              {/*INICIO DE ESTRUCTURA */}
-
-              <form className="j-forms">
-                {/*Inicio de ejemplo*/}
-                <div className="form-content">
-                  {/* start steps */}
-                  <div
-                    className="wizard-breadcrumb number-style"
-                    style={{
-                      position: "sticky",
-                      top: "150px",
-                      padding: "5px",
-                      backgroundColor: "white",
-                      zIndex: 100,
-                      marginBottom: "10px",
-                    }}
-                  >
-                    <div className="row">
-                      <div
-                        className={
-                          "col-md-4 col-sm-2 step " +
-                          (stepActive == 1 && "active-step")
-                        }
-                        onClick={() => openSection(1)}
-                      >
-                        <div className={"steps"}>
-                          <span className={"step-number"}>1</span>
-                          <p>Información De Envio</p>
                         </div>
-                      </div>
-                      <div
-                        className={
-                          "col-md-4 col-sm-2 step " +
-                          (stepActive == 2 && "active-step")
-                        }
-                        onClick={() => openSection(2)}
-                      >
-                        <div className="steps">
-                          <span className="step-number">2</span>
-                          <p>Asignar a un Viaje</p>
-                        </div>
-                      </div>
-                      <div
-                        className={
-                          "col-md-4 col-sm-2 step " +
-                          (stepActive == 3 && "active-step")
-                        }
-                        onClick={() => openSection(3)}
-                      >
-                        <div className="steps">
-                          <span className="step-number">3</span>
-                          <p>Detalles de Guias</p>
-                        </div>
-                      </div>
+
                     </div>
-                  </div>
-                  {/* end steps */}
-                </div>
-              </form>
 
-              <div className="row">
-                <a
-                  className="btn"
-                  style={{ margin: "10px" }}
-                  onClick={() => addInformeGuia()}
-                  disabled={state.agregar == "Consultar"}
-                >
-                  <i className="zmdi zmdi-plus"></i> Agregar Informe
+                </div>
+                {state.Informes.length !== 1 && (
+                    <a
+                        className="btn delete"
+                        onClick={() => removeInformeGuia(index)}
+                        disabled={state.agregar == "Consultar"}
+                    >
+                        <i className="zmdi zmdi-delete"></i> Eliminar Informe
+                    </a>
+                )}
+
+            </div>
+        );
+    });
+
+    return (
+        <div >
+
+            <Dialog
+                open={state.openDialog}
+                onClose={() => setState({ ...state, openDialog: false })}
+            >
+                <DialogContent>
+                    {state.tipoModal == 1 && (
+                        <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
+                            <div align="right">
+                                <button
+                                    onClick={() => {
+                                        history.push("/Ciudades");
+                                    }}
+                                    className="btn btn-primary primary-btn"
+                                >
+                                    Agregar
+                </button>
+                            </div>
+
+                            {dataOrigenes.length != 0 ? (
+                                <TableCiudades
+                                    select={
+                                        state[state.identificadorModal] &&
+                                        state[state.identificadorModal].m_nIdCiudad
+                                    }
+                                    columns={columnsCiudades}
+                                    data={dataOrigenes}
+                                    identificadorModal={state.identificadorModal}
+                                />
+                            ) : (
+                                <div>No se encontró ningún registro</div>
+                            )}
+                            <DialogActions style={{ justifyContent: "left" }}>
+                                <button
+                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    className="btn btn-secondary secondary-btn"
+                                >
+                                    Cerrar
+                </button>
+                                <button
+                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    className="btn btn-primary primary-btn"
+                                >
+                                    Aceptar
+                </button>
+                            </DialogActions>
+                        </div>
+                    )}
+                    {state.tipoModal == 2 && (
+                        <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
+                            <div align="right">
+                                <button
+                                    onClick={() => {
+                                        history.push("/Operadores");
+                                    }}
+                                    className="btn btn-primary primary-btn"
+                                >
+                                    Agregar
+                </button>
+                            </div>
+
+                            {dataOperadores.length != 0 ? (
+                                <TableOperadores
+                                    select={
+                                        state[state.identificadorModal] &&
+                                        state[state.identificadorModal].m_nIdOperador
+                                    }
+                                    columns={columnsOperadores}
+                                    data={dataOperadores}
+                                    identificadorModal={state.identificadorModal}
+                                />
+                            ) : (
+                                <div>No se encontró ningún registro</div>
+                            )}
+                            <DialogActions style={{ justifyContent: "left" }}>
+                                <button
+                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    className="btn btn-secondary secondary-btn"
+                                >
+                                    Cerrar
+                </button>
+                                <button
+                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    className="btn btn-primary primary-btn"
+                                >
+                                    Aceptar
+                </button>
+                            </DialogActions>
+                        </div>
+                    )}
+                    {state.tipoModal == 3 && (
+                        <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
+                            <div align="right">
+                                <button
+                                    onClick={() => {
+                                        history.push("/TipoUnidad");
+                                    }}
+                                    className="btn btn-primary primary-btn"
+                                >
+                                    Agregar
+                </button>
+                            </div>
+                            {dataTipoUnidad.length != 0 ? (
+                                <TableTipoUnidad
+                                    select={
+                                        state[state.identificadorModal] &&
+                                        state[state.identificadorModal].m_nIdTipoUnidad
+                                    }
+                                    columns={columnsTipoUnidades}
+                                    data={dataTipoUnidad}
+                                    identificadorModal={state.identificadorModal}
+                                />
+                            ) : (
+                                <div>No se encontró ningún registro</div>
+                            )}
+                            <DialogActions style={{ justifyContent: "left" }}>
+                                <button
+                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    className="btn btn-secondary secondary-btn"
+                                >
+                                    Cerrar
+                </button>
+                                <button
+                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    className="btn btn-primary primary-btn"
+                                >
+                                    Aceptar
+                </button>
+                            </DialogActions>
+                        </div>
+                    )}
+                    {state.tipoModal == 4 && (
+                        <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
+                            <div align="right">
+                                <button
+                                    onClick={() => {
+                                        history.push("/Unidades");
+                                    }}
+                                    className="btn btn-primary primary-btn"
+                                >
+                                    Agregar
+                </button>
+                            </div>
+
+                            {dataUnidades.length != 0 ? (
+                                <TableUnidad
+                                    object={state}
+                                    select={
+                                        state[state.identificadorModal] &&
+                                        state[state.identificadorModal].m_nIdUnidad
+                                    }
+                                    columns={columnsUnidades}
+                                    data={dataUnidades}
+                                    identificadorModal={state.identificadorModal}
+                                />
+                            ) : (
+                                <div>No se encontró ningún registro</div>
+                            )}
+                            <DialogActions style={{ justifyContent: "left" }}>
+                                <button
+                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    className="btn btn-secondary secondary-btn"
+                                >
+                                    Cerrar
+                </button>
+                                <button
+                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    className="btn btn-primary primary-btn"
+                                >
+                                    Aceptar
+                </button>
+                            </DialogActions>
+                        </div>
+                    )}
+                </DialogContent>
+            </Dialog>
+
+            <header className="topbar clearfix">
+                <Cabecera titulo="Informes" >
+                    <div className="page-header">
+                        <ul className="list-page-breadcrumb">
+                            <li className="active-page"> Informes</li>
+                        </ul>
+                    </div>
+                </Cabecera>
+            </header>
+            {/*Topbar End Here*/}
+            {/*Leftbar Start Here*/}
+            <aside className="iconic-leftbar">
+                <BarraLateralIzquierda />
+            </aside>
+
+            <section className="main-container">
+                <div className="container-fluid">
+
+
+                    <ul className="nav navStatica nav-tabs">
+                        <li className="active">
+                            <a data-toggle="tab" href="#Listado">
+                                <i className="fa fa-list" /> Listado
+              </a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
+                                <i className="fa fa-plus-circle" /> {state.agregar}
+                            </a>
+                        </li>
+
+                        <li>
+                            <a data-toggle="tab" href="#Imprimir">
+                                <i className="fa fa-print" /> Imprimir
+              </a>
+                        </li>
+
+                        <li>
+                            <a
+                                data-toggle="tab"
+                                href="#Cancelar"
+                                onClick={handleShowCancelar}
+                                className={state.IdInforme == 0 ? classes.disabled : ""}
+                            >
+                                <i className="fa fa-ban" /> Cancelar
+              </a>
+                        </li>
+
+                        <li>
+                            <a data-toggle="tab" href="#Cubicar">
+                                <i className="fa fa-adjust" /> Cubicar / Optimizar Rutas
+              </a>
+                        </li>
+                    </ul>
+
+                    <div className="tab-content">
+                        <div
+                            className="widget-wrap"
+                            id="Listado"
+                            className="tab-pane fade in active"
+                        >
+                            <div className="widget-wrap">
+                                <div className="widget-content">
+                                    <div
+                                        className="row"
+                                        style={{ height: state.height - 250, width: "100%" }}
+                                    >
+                                        {data.length != 0 ? (
+                                            <DataGrid
+                                                localeText={dataGridLocaleText}
+                                                rows={data}
+                                                columns={columns}
+                                                pageSize={Math.floor((state.height - 310) / 30)}
+                                                getRowId={(row) => row.m_nIdInforme}
+                                                onRowSelected={(row) => {
+                                                    setState({
+                                                        ...state,
+                                                        IdInforme: row.data.m_nIdInforme,
+                                                    });
+                                                }}
+                                            />
+                                        ) : (
+                                            <div>No se encontró ningún registro</div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="Imprimir" className="tab-pane fade ">
+                            Imprimir
+            </div>
+                        <div id="Importar" className="tab-pane fade ">
+                            Importar
+            </div>
+                        <div id="Agregar" className="tab-pane fade ">
+                            {/*INICIO DE ESTRUCTURA */}
+
+                            <form className="j-forms">
+                                {/*Inicio de ejemplo*/}
+                                <div className="form-content">
+                                    {/* start steps */}
+                                    <div
+                                        className="wizard-breadcrumb number-style"
+                                        style={{
+                                            position: "sticky",
+                                            top: "60px",
+                                            padding: "5px",
+                                            backgroundColor: "white",
+                                            zIndex: 100,
+                                            marginBottom: "10px",
+                                        }}
+                                    >
+                                        <div className="row">
+                                            <Stepper activeStep={stepActive - 1}>
+                                                {
+                                                    ["Información General", "Asignar a un Viaje", "Detalles de Guias"].map((s, index) => (
+                                                        <Step key={s} completed={false} onClick={() => openSection(index + 1)}>
+                                                            <StepLabel >{s}</StepLabel>
+                                                        </Step>
+                                                    ))
+                                                }
+                                            </Stepper>
+                                        </div>
+                                    </div>
+                                    {/* end steps */}
+                                </div>
+                            </form>
+
+                            <div className="row">
+                                <a
+                                    className="btn"
+                                    style={{ margin: "10px" }}
+                                    onClick={() => addInformeGuia()}
+                                    disabled={state.agregar == "Consultar"}
+                                >
+                                    <i className="zmdi zmdi-plus"></i> Agregar Informe
                 </a>
 
-                <Carousel
-                  className={classesInforme.InformeCarrusel}
-                  widgets={[IndicatorDots, Buttons]}
-                  frames={framesInformeGuia}
-                ></Carousel>
+                                <Carousel
+                                    className={classesInforme.InformeCarrusel}
+                                    widgets={[IndicatorDots, Buttons]}
+                                    frames={framesInformeGuia}
+                                ></Carousel>
 
-<div className="form-footer" className="col-md-12">
-                  <button
-                    href="#Listado"
-                    role="tab"
-                    data-toggle="tab"
-                    className="btn btn-secondary secondary-btn"
-                  >
-                    Cancelar
+                                <div className="form-footer" className="col-md-12">
+                                    <button
+                                        href="#Listado"
+                                        role="tab"
+                                        data-toggle="tab"
+                                        className="btn btn-secondary secondary-btn"
+                                    >
+                                        Cancelar
                   </button>
-                  <button type="submit" className="btn btn-primary primary-btn" disabled={state.agregar == "Consultar"}>
-                    Aceptar
+                                    <button type="submit" className="btn btn-primary primary-btn" disabled={state.agregar == "Consultar"}>
+                                        Aceptar
                   </button>
-                </div>
-              </div>
-
-              {/* aqui va el form */}
-            </div>
-            <div id="Cancelar" className="tab-pane fade">
-              <div className="widget-wrap">
-                <div className="widget-container">
-                  <div className="widget-content">
-                    <div className="row">
-                      <form className="j-forms" onSubmit={handleCancelar}>
-                        <div className="form-content">
-                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                            <label className="label">Folio Informes</label>
-                            <div className="input">
-                              <input
-                                className="form-control"
-                                type="text"
-                                value={state.FolioInforme}
-                                id="FolioInforme"
-                                readOnly
-                              />
+                                </div>
                             </div>
-                          </div>
 
-                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                            <label className="label">Sucursal</label>
-                            <div className="input">
-                              <input
-                                className="form-control"
-                                type="text"
-                                value={state.sucursalCancelacion}
-                                id="sucursalCancelacion"
-                                readOnly
-                              />
-                            </div>
-                          </div>
-
-                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                            <label className="label">Fecha</label>
-                            <div className="input">
-                              <input
-                                className="form-control"
-                                type="text"
-                                value={state.fechaCancelacion}
-                                id="fechaCancelacion"
-                                readOnly
-                              />
-                            </div>
-                          </div>
-
-                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                            <label className="label">Usuario</label>
-                            <div className="input">
-                              <input
-                                className="form-control"
-                                type="text"
-                                value={state.usuarioCancelacion}
-                                id="usuarioCancelacion"
-                                readOnly
-                              />
-                            </div>
-                          </div>
-
-                          <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                            <label className="label">Estatus</label>
-                            <div className="input">
-                              <input
-                                className="form-control"
-                                type="text"
-                                value={state.estatusCancelacion}
-                                id="estatusCancelacion"
-                                readOnly
-                              />
-                            </div>
-                          </div>
-
-                          <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                            <label className="label">Motivo</label>
-                            <div className="input">
-                              <input
-                                className="form-control"
-                                type="text"
-                                value={state.motivoCancelacion}
-                                id="motivoCancelacion"
-                              />
-                            </div>
-                          </div>
-
-                          <div className="form-footer" className="col-md-12">
-                            <button
-                              href="#Listado"
-                              role="tab"
-                              data-toggle="tab"
-                              className="btn btn-secondary secondary-btn"
-                            >
-                              Cancelar
-                            </button>
-                            <button
-                              type="submit"
-                              className="btn btn-primary primary-btn"
-                            >
-                              Aceptar
-                            </button>
-                          </div>
+                            {/* aqui va el form */}
                         </div>
-                      </form>
+                        <div id="Cancelar" className="tab-pane fade">
+                            <div className="widget-wrap">
+                                <div className="widget-container">
+                                    <div className="widget-content">
+                                        <div className="row">
+                                            <form className="j-forms" onSubmit={handleCancelar}>
+                                                <div className="form-content">
+                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                                        <label className="label">Folio Informes</label>
+                                                        <div className="input">
+                                                            <input
+                                                                className="form-control"
+                                                                type="text"
+                                                                value={state.FolioInforme}
+                                                                id="FolioInforme"
+                                                                readOnly
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                                        <label className="label">Sucursal</label>
+                                                        <div className="input">
+                                                            <input
+                                                                className="form-control"
+                                                                type="text"
+                                                                value={state.sucursalCancelacion}
+                                                                id="sucursalCancelacion"
+                                                                readOnly
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                                        <label className="label">Fecha</label>
+                                                        <div className="input">
+                                                            <input
+                                                                className="form-control"
+                                                                type="text"
+                                                                value={state.fechaCancelacion}
+                                                                id="fechaCancelacion"
+                                                                readOnly
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                                        <label className="label">Usuario</label>
+                                                        <div className="input">
+                                                            <input
+                                                                className="form-control"
+                                                                type="text"
+                                                                value={state.usuarioCancelacion}
+                                                                id="usuarioCancelacion"
+                                                                readOnly
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                                        <label className="label">Estatus</label>
+                                                        <div className="input">
+                                                            <input
+                                                                className="form-control"
+                                                                type="text"
+                                                                value={state.estatusCancelacion}
+                                                                id="estatusCancelacion"
+                                                                readOnly
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="col-sm-12 col-md-12 col-lg-12 unit">
+                                                        <label className="label">Motivo</label>
+                                                        <div className="input">
+                                                            <input
+                                                                className="form-control"
+                                                                type="text"
+                                                                value={state.motivoCancelacion}
+                                                                id="motivoCancelacion"
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="form-footer" className="col-md-12">
+                                                        <button
+                                                            href="#Listado"
+                                                            role="tab"
+                                                            data-toggle="tab"
+                                                            className="btn btn-secondary secondary-btn"
+                                                        >
+                                                            Cancelar
+                            </button>
+                                                        <button
+                                                            type="submit"
+                                                            className="btn btn-primary primary-btn"
+                                                        >
+                                                            Aceptar
+                            </button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                  </div>
                 </div>
-              </div>
-            </div>
-          </div>
+            </section>
         </div>
-      </section>
-    </div>
-  );
+    );
 }
 
 export default Informes;

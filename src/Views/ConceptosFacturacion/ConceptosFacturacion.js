@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Cabecera from '../../Components/Template/Cabecera';
 import BarraLateralIzquierda from '../../Components/Template/BarraLateralIzquierda';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } from '@material-ui/core';
 import CrearConcepto from './CrearConcepto';
 import { DataGrid } from '@material-ui/data-grid';
 import SvgIcon from "@material-ui/core/SvgIcon";
@@ -10,19 +10,20 @@ import { ReactComponent as Activo } from "../../iconos/Menu/palomita.svg";
 import { ReactComponent as NoActivo } from "../../iconos/Menu/cruz.svg";
 import Noty from 'noty';
 import axios from "axios";
+import { dataGridLocaleText } from '../../Constants';
 
 const headers = {
     'Content-Type': 'application/json',
     //    'access-control-allow-origin': '*'
 }
-function showSuccess(mensaje){
+function showSuccess(mensaje) {
     new Noty({
-      type:"information",
-      layout:"topCenter",
-      text: mensaje,
-      timeout:"3000"
+        type: "information",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000"
     }).show()
-  }
+}
 
 class ConceptosFacturacion extends Component {
     constructor(props) {
@@ -38,13 +39,23 @@ class ConceptosFacturacion extends Component {
             columns: [
                 {
                     headerName: "Acciones",
+                    sortable: false, filterable: false,
                     field: "",
                     renderCell: (row) => {
                         return (
                             <div>
-                                <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (this.handleShowModificar(row.row.m_nIdConceptosFacturacion))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                                <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (this.handleShowConsultar(row.row.m_nIdConceptosFacturacion))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                                <a href="#" className="btn btn-default btn-xs" onClick={() => (this.handleEliminar(row.row.m_nIdConceptosFacturacion))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                                <Tooltip title="Modificar">
+                                    <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (this.handleShowModificar(row.row.m_nIdConceptosFacturacion))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+
+                                </Tooltip>
+                                <Tooltip title="Consultar">
+                                    <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (this.handleShowConsultar(row.row.m_nIdConceptosFacturacion))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+
+                                </Tooltip>
+                                <Tooltip title="Eliminar">
+                                    <a href="#" className="btn btn-default btn-xs" onClick={() => (this.handleEliminar(row.row.m_nIdConceptosFacturacion))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+
+                                </Tooltip>
                             </div>
                         )
                     }
@@ -67,10 +78,10 @@ class ConceptosFacturacion extends Component {
                                 style={{
                                     width: "100%",
                                     textAlign: "center",
-                                    color: row.row.arClsDetalle.length !== 0 ? "green" : "red",
+                                    color: row.row.arClsDetalle.filter(c => c.m_bTrasladado).length !== 0 ? "green" : "red",
                                 }}
                             >
-                                {row.row.arClsDetalle.length !== 0 ? (
+                                {row.row.arClsDetalle.filter(c => c.m_bTrasladado).length !== 0 ? (
                                     <SvgIcon component={Activo} />
                                 ) : (
                                     <SvgIcon component={NoActivo} />
@@ -83,16 +94,15 @@ class ConceptosFacturacion extends Component {
                     field: "m_nCreadoPor",
                     width: 150,
                     renderCell: (row) => {
-                        console.log(row.row.arClsDetalle.length)
                         return (
                             <div
                                 style={{
                                     width: "100%",
                                     textAlign: "center",
-                                    color: row.row.arClsDetalle.length !== 0 ? "green" : "red",
+                                    color: row.row.arClsDetalle.filter(c => !c.m_bTrasladado).length !== 0 ? "green" : "red",
                                 }}
                             >
-                                {row.row.arClsDetalle.length !== 0 ? (
+                                {row.row.arClsDetalle.filter(c => !c.m_bTrasladado).length !== 0 ? (
                                     <SvgIcon component={Activo} />
                                 ) : (
                                     <SvgIcon component={NoActivo} />
@@ -135,32 +145,32 @@ class ConceptosFacturacion extends Component {
     handleShowModificar(id) {
         const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/GetById/` + id;
         axios.get(url, { headers }).then(respuesta => {
-          console.log(respuesta.data)
-          this.setState({
-            openDialog: true,
-            edit: true,
-            consult: false,
-            selected: respuesta.data,
-          })
+            console.log(respuesta.data)
+            this.setState({
+                openDialog: true,
+                edit: true,
+                consult: false,
+                selected: respuesta.data,
+            })
         });
     }
 
     handleShowConsultar(id) {
         const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/GetById/` + id;
         axios.get(url, { headers }).then(respuesta => {
-          console.log(respuesta.data)
-          this.setState({
-            openDialog: true,
-            edit: true,
-            consult: true,
-            selected: respuesta.data,
-          })
+            console.log(respuesta.data)
+            this.setState({
+                openDialog: true,
+                edit: true,
+                consult: true,
+                selected: respuesta.data,
+            })
         });
     }
 
-    handleAceptar(data){
-        var arrayImpuestosTraslado = data.impuestosSeleccionadosTraslado.map(i => ({m_nIdImpuesto: i.m_nIdImpuesto, m_bPredeterminado: i.m_nIdImpuesto === data.predeterminadoSeleccionadosTraslado.m_nIdImpuesto}))
-        var arrayImpuestosRetencion= data.impuestosSeleccionadosRetencion.map(i => ({m_nIdImpuesto: i.m_nIdImpuesto, m_bPredeterminado: i.m_nIdImpuesto === data.predeterminadoSeleccionadosRetencion.m_nIdImpuesto}))
+    handleAceptar(data) {
+        var arrayImpuestosTraslado = data.impuestosSeleccionadosTraslado.map(i => ({ m_nIdImpuesto: i.m_nIdImpuesto, m_bPredeterminado: i.m_nIdImpuesto === data.predeterminadoSeleccionadosTraslado.m_nIdImpuesto }))
+        var arrayImpuestosRetencion = data.impuestosSeleccionadosRetencion.map(i => ({ m_nIdImpuesto: i.m_nIdImpuesto, m_bPredeterminado: i.m_nIdImpuesto === data.predeterminadoSeleccionadosRetencion.m_nIdImpuesto }))
         var arrayImpuestos = arrayImpuestosTraslado.concat(arrayImpuestosRetencion)
         var params = {
             m_sConcepto: data.concepto,
@@ -178,49 +188,48 @@ class ConceptosFacturacion extends Component {
         }
         console.log(params)
         if (this.state.edit) {
-          const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/Modificar/` + this.state.selected.idConceptosFacturacion;
-          axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
-            showSuccess(respuesta.data)
-            this.getAllData()
-            this.setState({openDialog: false})
-          }).catch(err => {
-            console.log(err)
-            showSuccess("err")
-          });
+            const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/Modificar/` + this.state.selected.idConceptosFacturacion;
+            axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+                showSuccess(respuesta.data)
+                this.getAllData()
+                this.setState({ openDialog: false })
+            }).catch(err => {
+                console.log(err)
+                showSuccess("err")
+            });
         } else {
-          const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/Agregar`;
-          axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
-            showSuccess(respuesta.data)
-            this.getAllData()
-            this.setState({openDialog: false})
-          }).catch(err => {
-            console.log(err)
-            showSuccess(err)
-          });
+            const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/Agregar`;
+            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+                showSuccess(respuesta.data)
+                this.getAllData()
+                this.setState({ openDialog: false })
+            }).catch(err => {
+                console.log(err)
+                showSuccess(err)
+            });
         }
-    
-      }
+
+    }
 
     handleEliminar(id) {
         var derecho;
         const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${this.state.CreadoPor}/${this.state.DerechoBorrar}/3`;
         axios.get(urlDelete, { headers }).then(respuesta => {
-          derecho = respuesta.data;
-          if (derecho == false)
-          {
-            showSuccess ("El usuario no tiene derechos para realizar el proceso");
-            return; 
-          }
+            derecho = respuesta.data;
+            if (derecho == false) {
+                showSuccess("El usuario no tiene derechos para realizar el proceso");
+                return;
+            }
 
-        const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/Eliminar/` + id;
-        axios.delete(url, { headers }).then(respuesta => {
-          console.log(respuesta);
-          this.getAllData();
+            const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/Eliminar/` + id;
+            axios.delete(url, { headers }).then(respuesta => {
+                console.log(respuesta);
+                this.getAllData();
+            }).catch(err => {
+                showSuccess(err)
+            });
         }).catch(err => {
-          showSuccess(err)
-        });
-        }).catch(err => {
-        showSuccess(err)
+            showSuccess(err)
         });
     }
     componentWillMount() {
@@ -243,9 +252,9 @@ class ConceptosFacturacion extends Component {
     }
 
     render() {
-        const { height, openDialog, data, columns,edit, consult } = this.state
+        const { height, openDialog, data, columns, edit, consult } = this.state
         return (
-            <div>
+            <div >
                 <Dialog open={openDialog} fullWidth maxWidth="lg" onClose={() => this.setState({ openDialog: false })}>
                     <DialogTitle>Agregando Concepto de Facturación</DialogTitle>
                     <DialogContent>
@@ -272,7 +281,18 @@ class ConceptosFacturacion extends Component {
                 </Dialog>
 
                 <header className="topbar clearfix">
-                    <Cabecera />
+                    <Cabecera titulo="Conceptos de Facturación" >
+                        <div className="page-header">
+                            <ul className="list-page-breadcrumb">
+                                <li>
+                                    <a href="/Catalogos" className="color-mapeo">
+                                        Catálogos <i className="zmdi zmdi-chevron-right" />
+                                    </a>
+                                </li>
+                                <li className="active-page">Conceptos de Facturación</li>
+                            </ul>
+                        </div>
+                    </Cabecera>
                 </header>
 
                 {/*Leftbar Start Here*/}
@@ -282,23 +302,6 @@ class ConceptosFacturacion extends Component {
                 {/*Leftbar End Here*/}
                 <section className="main-container">
                     <div className="container-fluid">
-                        <div className="page-header filled full-block light">
-                            <div className="row">
-                                <div className="col-md-6 col-sm-6">
-                                    <h2>Conceptos de Facturación</h2>
-                                </div>
-                                <div className="col-md-6 col-sm-6">
-                                    <ul className="list-page-breadcrumb">
-                                        <li>
-                                            <a href="/Catalogos" className="color-mapeo">
-                                                Catálogos <i className="zmdi zmdi-chevron-right" />
-                                            </a>
-                                        </li>
-                                        <li className="active-page">Conceptos de Facturación</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
 
                         <button
                             className="btn btn-primary primary-btn"
@@ -333,6 +336,7 @@ class ConceptosFacturacion extends Component {
                                 <div className="row" style={{ height: this.state.height - 250, width: '100%' }}>
                                     {data.length != 0 ? (
                                         <DataGrid
+                                            localeText={dataGridLocaleText}
                                             rows={data}
                                             columns={columns}
                                             density="compact"
