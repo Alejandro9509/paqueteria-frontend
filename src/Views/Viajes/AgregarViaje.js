@@ -46,6 +46,7 @@ class AgregarViaje extends Component {
             folioViaje: "",
             viajeCliente: "",
             fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + "T" + today.getHours() + ":" + today.getMinutes(),
+            fechaHoraRegistro:"",
             candadoOficial: "",
             identificadorViaje: "",
             estatusListado: 0,
@@ -127,7 +128,7 @@ class AgregarViaje extends Component {
     }
 
     getAllEstatusViaje() {
-        const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoViajes`;
+        const url = `${process.env.REACT_APP_API_URL_LOCAL}/SisEstatus/getListadoViajes`;
         axios.get(url, { headers }).then((respuesta) => {
             this.setState({dataEstatusViaje: respuesta.data})
         });
@@ -380,20 +381,25 @@ class AgregarViaje extends Component {
                                         </div>
                                     </div>
                                     {/* Fecha */}
-                                    <div className="col-sm-6 col-md-3 col-lg-3 unit">
-                                        <div className="input">
-                                            <TextField variant="outlined" margin="dense"
-                                                       onChange={this.handleChange}
-                                                       className="form-control"
-                                                       type="text"
-                                                       label="Fecha Elaboracion"
-                                                       value={this.state.fechaHoraCreacion}
-                                                       id="fechaHoraCreacion"
+                                    <div className="col-sm-6 col-md-2 col-lg-2 unit">
 
-                                                       disabled
-                                            />
-                                        </div>
-                                    </div>
+                                    <div className="input">
+                                                                <TextField variant="outlined" margin="dense"
+                                                                          // onChange={handleChange}
+                                                                           required
+                                                                           label="Fecha / Hora de Registro"
+                                                                           InputLabelProps={{
+                                                                               shrink: true,
+                                                                           }}
+                                                                           value={this.state.fechaHoraRegistro}
+                                                                           className="form-control"
+                                                                           id="fechaHoraRegistro"
+                                                                           type="datetime-local"
+                                                                           //disabled={state.agregar === "Consultar" || state.agregar === "Modificar"}
+
+                                                                />
+                                                            </div>
+                                                            </div>
                                     {/* Estatus viaje */}
                                     <div className="col-sm-6 col-md-2 col-lg-2 unit">
                                         <label className="input select">
@@ -409,10 +415,10 @@ class AgregarViaje extends Component {
                                                 >
                                                     {this.state.dataEstatusViaje.map((estatus) => (
                                                         <option
-                                                            key={estatus.m_nIdEstatusEmbarque}
-                                                            value={estatus.m_nIdEstatusEmbarque}
+                                                            key={estatus.m_nIdEstatusViaje}
+                                                            value={estatus.m_nIdEstatusViaje}
                                                         >
-                                                            {estatus.m_sEstatus}
+                                                            {estatus.m_sDescripcion}
                                                         </option>
                                                     ))}
                                                 </Select>

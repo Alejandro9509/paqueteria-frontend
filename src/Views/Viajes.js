@@ -69,10 +69,10 @@ function Viajes() {
   const [fileUploaded, setFileUploaded] = React.useState([])
 
     function getAllEstatusViaje() {
-        // const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoViajes`;
-        // axios.get(url, { headers }).then((respuesta) => {
-        //     setEstatusViaje(respuesta.data);
-        // });
+         const url = `${process.env.REACT_APP_API_URL_LOCAL}/SisEstatus/getListadoViajes`;
+        axios.get(url, { headers }).then((respuesta) => {
+             setEstatusViaje(respuesta.data);
+         });
     }
 
     function getAllEstatusDocumento() {
@@ -597,10 +597,10 @@ const handleEstatusFiltro = async (event) => {
                                                                 <option value="0">Todos</option>
                                                                 {dataEstatusViaje.map((estatus) => (
                                                                     <option
-                                                                        key={estatus.m_nIdEstatusEmbarque}
-                                                                        value={estatus.m_nIdEstatusEmbarque}
+                                                                        key={estatus.m_nIdEstatusViaje}
+                                                                        value={estatus.m_nIdEstatusViaje}
                                                                     >
-                                                                        {estatus.m_sEstatus}
+                                                                        {estatus.m_sDescripcion}
                                                                     </option>
                                                                 ))}
                                                             </Select>
