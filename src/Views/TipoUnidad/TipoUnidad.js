@@ -32,6 +32,7 @@ class TipoUnidad extends Component {
         super(props);
         this.state = {
             data: [],
+            DerechoBorrar:139,
             idTipoUnidad: null,
             agregar: "Agregar",
             openDialog: false,
@@ -100,14 +101,14 @@ class TipoUnidad extends Component {
     }
 
     handleEliminar(id) {
-        // var derecho;
-        // const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${this.state.CreadoPor}/${this.state.DerechoBorrar}/3`;
-        // axios.get(urlDelete, { headers }).then(respuesta => {
-        //     derecho = respuesta.data;
-        //     if (derecho === false) {
-        //         showSuccess("El usuario no tiene derechos para realizar el proceso");
-        //         return;
-        //     }
+         var derecho;
+         const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${this.state.CreadoPor}/${this.state.DerechoBorrar}/3`;
+         axios.get(urlDelete, { headers }).then(respuesta => {
+             derecho = respuesta.data;
+            if (derecho === false) {
+                 showSuccess("El usuario no tiene derechos para realizar el proceso");
+                 return;
+        }
             const url = `${process.env.REACT_APP_API_URL}/TipoUnidad/Eliminar/` + id;
             axios.delete(url, { headers }).then(respuesta => {
                 console.log(respuesta);
@@ -115,9 +116,9 @@ class TipoUnidad extends Component {
             }).catch(err => {
                 showSuccess(err)
             });
-        // }).catch(err => {
-        //     showSuccess(err)
-        // });
+         }).catch(err => {
+             showSuccess(err)
+         });
     }
 
     handleAceptarAgregar(data) {
@@ -133,7 +134,8 @@ class TipoUnidad extends Component {
             m_dtModificadoEl: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
             m_nModificadoPor: localStorage.getItem("UsuarioId")
         }
-
+        console.log(JSON.stringify(params));
+        debugger;
             const url = `${process.env.REACT_APP_API_URL}/TipoUnidad/Agregar`;
             axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
                 console.log(respuesta)

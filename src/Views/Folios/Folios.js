@@ -49,11 +49,11 @@ class Folios extends Component {
                         )
                     }
                 },
-                // {
-                //     headerName: "Folio",
-                //     field: "m_nFolio",
-                //     width: 300,
-                // },
+                 {
+                   headerName: "Folio",
+                   field: "m_sFolio",
+                    width: 300,
+                 },
                 {
                     headerName: "Serie",
                     field: "m_sSerie",
@@ -67,12 +67,12 @@ class Folios extends Component {
                     field: "m_sSucursal",
                     width: 125,
                 },
-                // {
-                //     headerName: "Estatus",
-                //     field: "m_nEstatus",
-                //     valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
-                //     width: 125,
-                // },
+                 {
+                    headerName: "Estatus",
+                     field: "m_nIdEstatus",
+                    valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
+                   width: 125,
+                },
 
             ]
         }
@@ -121,9 +121,11 @@ class Folios extends Component {
             m_nFolioInicial: parseInt(data.folioInicial),
             m_nFolioFinal: parseInt(data.folioFinal),
             m_dtCreadoEl: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
-            m_nCreadoPor: localStorage.getItem("UsuarioId")
+            m_nCreadoPor: localStorage.getItem("UsuarioId"),
+            m_nIdEstatus:1
         }
-
+        console.log(JSON.stringify(params));
+        debugger;
             const url = `${process.env.REACT_APP_API_URL}/Folios/Agregar`;
             axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
 

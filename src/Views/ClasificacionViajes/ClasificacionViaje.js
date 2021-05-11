@@ -146,6 +146,8 @@ class ClasificacionViaje extends Component {
             ModificadoEl: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
             ModificadoPor: localStorage.getItem("UsuarioId")
         }
+        console.log(JSON.stringify(params));
+        debugger;
 
             const url = `${process.env.REACT_APP_API_URL}/ClasificacionViajes/Agregar`;
             axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
@@ -172,7 +174,7 @@ class ClasificacionViaje extends Component {
         var params = {
             m_nIdTipoUnidad: data.idTipoUnidad,
             Codigo: parseInt(data.codigo),
-            TipoViaje: data.iipoViaje,
+            TipoViaje: data.tipoViaje,
             Activo: data.activo,
             ModificadoEl: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
             ModificadoPor: localStorage.getItem("UsuarioId")

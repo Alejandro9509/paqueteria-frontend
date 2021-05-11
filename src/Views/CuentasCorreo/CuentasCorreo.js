@@ -70,7 +70,8 @@ class CuentasCorreo extends Component {
             ModificadoPor: localStorage.getItem("UsuarioId")
         }
 
-        console.log(params)
+        console.log(JSON.stringify(params));
+        debugger;
 
         if (this.state.edit) {
             const url = `${process.env.REACT_APP_API_URL}/CuentasCorreo/Modificar/` + this.state.idCuenta;
