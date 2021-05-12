@@ -6,6 +6,7 @@ import CiudadesCodigoPostalPage from './Views/Ciudades';
 import ParametrosPage from './Views/Parametros';
 import SucursalesPage from './Views/Sucursal';
 import UsuariosPage from './Views/Usuarios';
+import FormatoImpresionPage from './Views/FormatosImpresion/FormatoImpresion';
 import ZonasPage from './Views/Zonas';
 
 import {ReactComponent as GParametroIcon} from './iconos/Configuracion/Icono Parametros/icono_parametro.svg';
@@ -28,84 +29,84 @@ const configurationRoutes = [
   {
     path: "/Parametros",
     name: "Parámetros",
-    icon:  GParametroIcon,
+    icon:  <GParametroIcon/>,
     component: ParametrosPage,
     isDialog: false
   },
   {
     path: "/Usuarios",
     name: "Usuarios",
-    icon:  GUsuarioIcon,
+    icon:  <GUsuarioIcon/>,
     component: UsuariosPage,
     isDialog: false
   },
   {
     path: "/Paises",
     name: "Países",
-    icon: GUsuarioIcon,
+    icon: <GUsuarioIcon/>,
     component: PaisesPage,
     isDialog: false
   },
   {
     path: "/Ciudades",
     name: "Ciudades",
-    icon:  GCiudadIcon,
+    icon:  <GCiudadIcon/>,
     component: CiudadesCodigoPostalPage,
     isDialog: false
   },
   {
     path: "/Sucursales",
     name: "Sucursales",
-    icon:  GSucursalIcon,
+    icon:  <GSucursalIcon/>,
     component: SucursalesPage,
     isDialog: false
   },
   {
     path: "/Zonas",
     name: "Zonas",
-    icon:  GZonasIcon,
+    icon:  <GZonasIcon/>,
     component: ZonasPage,
     isDialog: false
   },
   {
     path: "/FormatosImpresion",
     name: "Formatos Impresión",
-    icon:  GFormatosIcon,
-    component: DepartamentoPage,
+    icon:  <GFormatosIcon/>,
+    component: FormatoImpresionPage,
     isDialog: false
   },
   {
     path: "/Folios",
     name: "Folios",
-    icon:  GFoliosIcon,
+    icon:  <GFoliosIcon/>,
     component: Folios,
     isDialog: false
   },
   {
     path: "/TipoDeCambio",
     name: "Tipo de Cambio",
-    icon:  GTipoCambioIcon,
+    icon:  <GTipoCambioIcon/>,
     component: TipoCambio,
     isDialog: false
   },
   {
     path: "/Moneda",
     name: "Moneda",
-    icon:  GMonedaIcon,
+    icon:  <GMonedaIcon/>,
     component: MonedaPage,
     isDialog: false
   },
   {
     path: "/CuentasCorreo",
     name: "Cuentas Correo",
-    icon:  GCuentaCorreoIcon,
+    icon:  <GCuentaCorreoIcon/>,
     component: CuentasCorreo,
     isDialog: true
   },
   {
     path: "/BitacoraProcesos",
     name: "Bitácora Procesos",
-    icon:  GBitacoraIcon,
+    icon:  <GBitacoraIcon/>,
     component: DepartamentoPage,
     isDialog: false
   },

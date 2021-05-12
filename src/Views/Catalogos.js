@@ -48,12 +48,8 @@ function Catalogo() {
                                             type="button"
                                             key={index}
                                             className="boton-de-catalogos">
-                                            <SvgIcon
-                                                style={{ position: "relative" }}
-                                                component={r.icon}
-                                                className="imagen-de-catalogos"
-                                                viewBox="0 0 50 50"
-                                            />
+                                            {r.icon}
+                                                
                                         </button>
                                         <br></br>
                                         <label style={{ alignSelf: "center", paddingTop: "10px" }}>{r.name}</label>

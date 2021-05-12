@@ -54,7 +54,7 @@ function Login() {
           localStorage.setItem("Email", respuesta.data.m_sCorreoElectronico);
           localStorage.setItem("Usuario", respuesta.data.m_sUsuario);
           localStorage.setItem("Nombre", respuesta.data.m_sNombre);
-          window.location.replace("configuracion");
+          window.location.replace("indicadores");
         }
         else {
           showSuccess(respuesta.data);

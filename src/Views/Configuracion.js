@@ -8,33 +8,33 @@ import {
     Link,
 } from 'react-router-dom';
 import $ from 'jquery';
-import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
 import AgregarFolio from "./Folios/AgregarFolios";
 import CuentasCorreo from "./CuentasCorreo/CuentasCorreo";
 window.jQuery = window.$ = $;
 
 function Configuracion() {
 
-  const [state, setState] = React.useState({
-    height: window.innerHeight,
-      openDialog: false,
-  })
+    const [state, setState] = React.useState({
+        height: window.innerHeight,
+        openDialog: false,
+    })
 
-    function closeDialog () {
-      setState({...state, openDialog: false})
+    function closeDialog() {
+        setState({ ...state, openDialog: false })
     }
 
 
-  return (
-    <div>
-        <Dialog open={state.openDialog} onClose={() => setState({...state, openDialog: false})} maxWidth={"sm"} fullWidth>
-            <DialogTitle>
-                <h4>Configuración de Cuentas de Correo</h4>
-            </DialogTitle>
-            <DialogContent>
-                <CuentasCorreo closeDialog={closeDialog}/>
-            </DialogContent>
-        </Dialog>
+    return (
+        <div>
+            <Dialog open={state.openDialog} onClose={() => setState({ ...state, openDialog: false })} maxWidth={"sm"} fullWidth>
+                <DialogTitle>
+                    <h4>Configuración de Cuentas de Correo</h4>
+                </DialogTitle>
+                <DialogContent>
+                    <CuentasCorreo closeDialog={closeDialog} />
+                </DialogContent>
+            </Dialog>
 
             <header className="topbar clearfix">
                 <Cabecera titulo="Configuración" >
@@ -61,52 +61,42 @@ function Configuracion() {
 
 
 
-          <div style={{ display: "flex", flexWrap: "wrap" }}>
-            {configurationRoutes.map((r, index) => {
-              return (
-                r.isDialog ?
-                    <div className="caja-boton">
-                        <button
-                            type="button"
-                            key={index}
-                            style={{ textAlign: "center", alignContent: "center" }}
-                            className="boton-de-catalogos"
-                            onClick={() => setState({...state, openDialog: true})}>
-                            <SvgIcon
-                                style={{ position: "relative" }}
-                                component={r.icon}
-                                className="imagen-de-catalogos"
-                                viewBox="0 0 50 50"
-                            />
-                        </button>
-                        <br></br>
-                        <label style={{ alignSelf: "center", paddingTop: "10px" }}>{r.name}</label>
-                        <br></br>
+                    <div style={{ display: "flex", flexWrap: "wrap" }}>
+                        {configurationRoutes.map((r, index) => {
+                            return (
+                                r.isDialog ?
+                                    <div className="caja-boton">
+                                        <button
+                                            type="button"
+                                            key={index}
+                                            style={{ textAlign: "center", alignContent: "center" }}
+                                            className="boton-de-catalogos"
+                                            onClick={() => setState({ ...state, openDialog: true })}>
+                                            {r.icon}
+                                        </button>
+                                        <br></br>
+                                        <label style={{ alignSelf: "center", paddingTop: "10px" }}>{r.name}</label>
+                                        <br></br>
+                                    </div>
+                                    :
+                                    <Link to={r.path}>
+                                        <div className="caja-boton">
+                                            <button
+                                                type="button"
+                                                key={index}
+                                                style={{ textAlign: "center", alignContent: "center" }}
+                                                className="boton-de-catalogos">
+                                                {r.icon}
+                                            </button>
+                                            <br></br>
+                                            <label style={{ alignSelf: "center", paddingTop: "10px" }}>{r.name}</label>
+                                            <br></br>
+                                        </div>
+                                    </Link>
+                            );
+                        })}
                     </div>
-                    :
-                    <Link to={r.path}>
-                        <div className="caja-boton">
-                            <button
-                                type="button"
-                                key={index}
-                                style={{ textAlign: "center", alignContent: "center" }}
-                                className="boton-de-catalogos">
-                                <SvgIcon
-                                    style={{ position: "relative" }}
-                                    component={r.icon}
-                                    className="imagen-de-catalogos"
-                                    viewBox="0 0 50 50"
-                                />
-                            </button>
-                            <br></br>
-                            <label style={{ alignSelf: "center", paddingTop: "10px" }}>{r.name}</label>
-                            <br></br>
-                        </div>
-                    </Link>
-              );
-            })}
-          </div>
-        </div>
+                </div>
 
             </section>
             {/*Page Container End Here*/}

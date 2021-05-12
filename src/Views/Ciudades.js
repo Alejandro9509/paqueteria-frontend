@@ -5,7 +5,7 @@ import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda"
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import { useTable, useFilters, useSortBy } from 'react-table'
 import { makeStyles } from "@material-ui/core/styles";
-import { Breadcrumbs, Link, TextField, Tooltip, Typography } from '@material-ui/core';
+import { Breadcrumbs, FormControl, InputLabel, Link, Select, TextField, Tooltip, Typography } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
 
 import Noty from 'noty';
@@ -699,68 +699,70 @@ function CiudadesCodigoPostal() {
                                                             </div>
 
                                                             <div className="col-sm-4 col-md-4 unit">
-                                                                <label className="label">
-                                                                    País
-                              </label>
                                                                 <div className="input">
                                                                     <label className="input select">
-                                                                        <select
-                                                                            className="form-control"
-                                                                            required
-                                                                            onChange={handleSelectPais}
-                                                                            readOnly={state.agregar == "Consultar"}
-                                                                            value={state.idPais}
-                                                                            id="idPais"
-                                                                        >
-                                                                            {
-                                                                                dataPais.length < 1 ?
+                                                                        <FormControl fullWidth variant="outlined" margin="dense">
+                                                                            <InputLabel id="idPaisLabel">País</InputLabel>
+                                                                            <Select
+                                                                                labelId="idPaisLabel"
+                                                                                label="País"
+                                                                                className="form-control"
+                                                                                required
+                                                                                onChange={handleSelectPais}
+                                                                                readOnly={state.agregar == "Consultar"}
+                                                                                value={state.idPais}
+                                                                                id="idPais"
+                                                                            >
+                                                                                {
+                                                                                    dataPais.length < 1 ?
 
-                                                                                    <option value="none">
-                                                                                        País
+                                                                                        <option value="none">
+                                                                                            País
                                           </option>
-                                                                                    :
-                                                                                    dataPais.map((pais) => (
-                                                                                        <option key={pais.m_nIdPais} value={pais.m_nIdPais}>
-                                                                                            {pais.m_sPais}
-                                                                                        </option>
-                                                                                    ))
-                                                                            }
+                                                                                        :
+                                                                                        dataPais.map((pais) => (
+                                                                                            <option key={pais.m_nIdPais} value={pais.m_nIdPais}>
+                                                                                                {pais.m_sPais}
+                                                                                            </option>
+                                                                                        ))
+                                                                                }
 
-                                                                        </select>
-                                                                        <i></i>
+                                                                            </Select>
+                                                                        </FormControl>
                                                                     </label>
                                                                 </div>
                                                             </div>
 
                                                             <div className="col-sm-4 col-md-4 unit">
-                                                                <label className="label">
-                                                                    Estado
-                              </label>
                                                                 <div className="input">
                                                                     <label className="input select">
-                                                                        <select
-                                                                            className="form-control"
-                                                                            required
-                                                                            onChange={handleChange}
-                                                                            readOnly={state.agregar == "Consultar"}
-                                                                            value={state.idEstado}
-                                                                            id="idEstado"
-                                                                        >
-                                                                            {
-                                                                                dataEstado.length < 1 ?
+                                                                        <FormControl fullWidth variant="outlined" margin="dense">
+                                                                            <InputLabel id="idEstadoLabel">Estado</InputLabel>
+                                                                            <Select
+                                                                                labelId="idEstadoLabel"
+                                                                                label="Estado"
+                                                                                className="form-control"
+                                                                                required
+                                                                                onChange={handleChange}
+                                                                                readOnly={state.agregar == "Consultar"}
+                                                                                value={state.idEstado}
+                                                                                id="idEstado"
+                                                                            >
+                                                                                {
+                                                                                    dataEstado.length < 1 ?
 
-                                                                                    <option value="none">
-                                                                                        Estados
+                                                                                        <option value="none">
+                                                                                            Estados
                                     </option>
-                                                                                    :
-                                                                                    dataEstado.map((estado) => (
-                                                                                        <option value={estado.m_nIdEstado}>
-                                                                                            {estado.m_sEstado}
-                                                                                        </option>
-                                                                                    ))
-                                                                            }
-                                                                        </select>
-                                                                        <i></i>
+                                                                                        :
+                                                                                        dataEstado.map((estado) => (
+                                                                                            <option value={estado.m_nIdEstado}>
+                                                                                                {estado.m_sEstado}
+                                                                                            </option>
+                                                                                        ))
+                                                                                }
+                                                                            </Select>
+                                                                        </FormControl>
                                                                     </label>
                                                                 </div>
                                                             </div>

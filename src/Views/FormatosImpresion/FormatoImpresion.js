@@ -9,8 +9,8 @@ import { ReactComponent as Activo } from "../../iconos/Menu/palomita.svg";
 import { ReactComponent as NoActivo } from "../../iconos/Menu/cruz.svg";
 import { DataGrid } from '@material-ui/data-grid';
 import $ from "jquery";
-import { Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
-import AgregarFolio from "./AgregarFolios";
+import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
+import AgregarFormatoImpresion from "./AgregarFormatoImpresion";
 window.jQuery = window.$ = $;
 const headers = {
     'Content-Type': 'application/json',
@@ -26,7 +26,7 @@ function showSuccess(mensaje) {
 }
 
 
-class Folios extends Component {
+class FormatoImpresion extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -49,11 +49,11 @@ class Folios extends Component {
                         )
                     }
                 },
-                 {
-                   headerName: "Folio",
-                   field: "m_sFolio",
-                    width: 300,
-                 },
+                // {
+                //     headerName: "Folio",
+                //     field: "m_nFolio",
+                //     width: 300,
+                // },
                 {
                     headerName: "Serie",
                     field: "m_sSerie",
@@ -67,12 +67,12 @@ class Folios extends Component {
                     field: "m_sSucursal",
                     width: 125,
                 },
-                 {
-                    headerName: "Estatus",
-                     field: "m_nIdEstatus",
-                    valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
-                   width: 125,
-                },
+                // {
+                //     headerName: "Estatus",
+                //     field: "m_nEstatus",
+                //     valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
+                //     width: 125,
+                // },
 
             ]
         }
@@ -97,14 +97,14 @@ class Folios extends Component {
         //         return;
         //     }
 
-        const url = `${process.env.REACT_APP_API_URL}/Folios/Eliminar/` + id;
-        axios.delete(url, { headers }).then(respuesta => {
-            console.log(respuesta);
-            showSuccess(respuesta.data)
-            this.getAllData();
-        }).catch(err => {
-            showSuccess(err)
-        });
+            const url = `${process.env.REACT_APP_API_URL}/Folios/Eliminar/` + id;
+            axios.delete(url, { headers }).then(respuesta => {
+                console.log(respuesta);
+                showSuccess(respuesta.data)
+                this.getAllData();
+            }).catch(err => {
+                showSuccess(err)
+            });
         // }).catch(err => {
         //     showSuccess(err)
         // });
@@ -121,26 +121,24 @@ class Folios extends Component {
             m_nFolioInicial: parseInt(data.folioInicial),
             m_nFolioFinal: parseInt(data.folioFinal),
             m_dtCreadoEl: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
-            m_nCreadoPor: localStorage.getItem("UsuarioId"),
-            m_nIdEstatus:1
+            m_nCreadoPor: localStorage.getItem("UsuarioId")
         }
-        console.log(JSON.stringify(params));
-        debugger;
+
             const url = `${process.env.REACT_APP_API_URL}/Folios/Agregar`;
             axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
 
-            showSuccess(respuesta.data)
-            $('.nav-tabs li ').removeClass('active');
-            $('.nav-tabs li').eq(0).addClass('active');
-            $('.tab-content div ').removeClass('in show');
-            $('#Listado').addClass('in show');
+                showSuccess(respuesta.data)
+                $('.nav-tabs li ').removeClass('active');
+                $('.nav-tabs li').eq(0).addClass('active');
+                $('.tab-content div ').removeClass('in show');
+                $('#Listado').addClass('in show');
 
-            this.getAllData()
-            this.setState({ pantalla: 1 })
-        }).catch(err => {
-            console.log(err)
-            showSuccess(err)
-        });
+                this.getAllData()
+                this.setState({ pantalla: 1})
+            }).catch(err => {
+                console.log(err)
+                showSuccess(err)
+            });
 
     }
 
@@ -151,12 +149,12 @@ class Folios extends Component {
     getAllData() {
         const url = `${process.env.REACT_APP_API_URL}/Folios/GetListado`;
         axios.get(url, { headers }).then(respuesta => {
-            this.setState({ data: respuesta.data, agregar: "Agregar" })
+            this.setState({ data: respuesta.data, agregar:"Agregar" })
         });
     }
 
-    handleClose() {
-        this.setState({ openDialog: false })
+    handleClose () {
+        this.setState({openDialog: false})
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(0).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -179,20 +177,8 @@ class Folios extends Component {
                 {/*</Dialog>*/}
 
                 <header className="topbar clearfix">
-                    <Cabecera titulo="Folios" >
-                        <div className="page-header">
-                            <ul className="list-page-breadcrumb">
-                                <li>
-                                    <a href="/Configuraciones" className="color-mapeo">
-                                        Configuración <i className="zmdi zmdi-chevron-right" />
-                                    </a>
-                                </li>
-                                <li className="active-page">Folios</li>
-                            </ul>
-                        </div>
-                    </Cabecera>
+                    <Cabecera />
                 </header>
-
 
                 {/*Leftbar Start Here*/}
                 <aside className="iconic-leftbar" style={{ minHeight: this.state.height }}>
@@ -201,11 +187,28 @@ class Folios extends Component {
 
                 <section className="main-container">
                     <div className="container-fluid">
+                        <div className="page-header filled full-block light">
+                            <div className="row">
+                                <div className="col-md-6 col-sm-6">
+                                    <h2>Folios</h2>
+                                </div>
+                                <div className="col-md-6 col-sm-6">
+                                    <ul className="list-page-breadcrumb">
+                                        <li>
+                                            <a href="/Configuraciones" className="color-mapeo">
+                                                Configuración <i className="zmdi zmdi-chevron-right" />
+                                            </a>
+                                        </li>
+                                        <li className="active-page">Folios</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
 
 
                         <ul className="nav navStatica nav-tabs">
                             <li className="active">
-                                <a data-toggle="tab" data_id="1" href="#Listado" onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
+                                <a data-toggle="tab" data_id="1" href="#Listado" onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar"}); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
                                     <i className="fa fa-list" /> Listado
                                 </a>
                             </li>
@@ -251,7 +254,7 @@ class Folios extends Component {
                             <div id="Agregar" className="tab-pane fade">
                                 {
                                     this.state.pantalla === 2 &&
-                                    <AgregarFolio onSubmit={this.handleAceptar} onClose={this.handleClose} />
+                                    <AgregarFormatoImpresion onSubmit={this.handleAceptar} onClose={this.handleClose}/>
                                 }
 
                             </div>
@@ -264,8 +267,8 @@ class Folios extends Component {
     }
 }
 
-Folios.propTypes = {
+FormatoImpresion.propTypes = {
 
 };
 
-export default Folios;
+export default FormatoImpresion;
