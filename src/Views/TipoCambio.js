@@ -9,7 +9,7 @@ import { DataGrid } from '@material-ui/data-grid';
 
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
-import { Tooltip } from "@material-ui/core";
+import { TextField, Tooltip } from "@material-ui/core";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -376,14 +376,14 @@ function TipoCambio() {
                                                 <div className="form-content">
 
                                                     <div className="col-sm-12 col-md-12 unit">
-                                                        <label className="label">
-                                                            Fecha
-                          </label>
                                                         <div className="input">
-                                                            <input
+                                                            <TextField variant="outlined" margin="dense" label="Fecha"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 type="date"
+                                                                InputLabelProps={{
+                                                                    shrink: true,
+                                                                }}
                                                                 required={true}
                                                                 value={state.fecha}
                                                                 id="fecha"
@@ -392,11 +392,8 @@ function TipoCambio() {
                                                     </div>
 
                                                     <div className="col-sm-12 col-md-12 unit">
-                                                        <label className="label">
-                                                            Tipo de Cambio
-                          </label>
                                                         <div className="input">
-                                                            <input
+                                                            <TextField variant="outlined" margin="dense" label="Tipo de Cambio"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 type="number"

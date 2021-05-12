@@ -15,9 +15,10 @@ h2 {
 }
 
 .boton-de-catalogos {
-  height: 72px;
-  width: 72px;
+  height: 80px;
+  width: 80px;
   color: #f9a03e;
+  fill: #f9a03e;
   font-size: 20px;
   background: #ffffff 0% 0% no-repeat;
   box-shadow: 0px 3px 6px #0000004c;
@@ -30,6 +31,7 @@ h2 {
   background: #f9a03e 0% 0% no-repeat;
   box-shadow: 0px 3px 6px #0000004c;
   color: #ffffff;
+  fill: #ffffff;
   border-radius: 10px;
   opacity: 1;
   border-width: 0px;
@@ -39,6 +41,7 @@ h2 {
   margin-top: 15px;
   margin-bottom: 15px;
   width: 120px;
+  color: #686868;
   text-align: center;
   align-items: center;
   justify-content: center;
@@ -284,3 +287,4 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   .MuiDataGrid-root .MuiDataGrid-colCellMoving {
       background-color: white !important;
   }
+  

@@ -134,7 +134,8 @@ function Rutas(props) {
                 polygon: polygon,
                 description: (state.origin + " - " + state.destiny),
                 kilometros: (route.distance / 1000).toFixed(2),
-                millas: (route.distance / 1609).toFixed(2)
+                millas: (route.distance / 1609).toFixed(2),
+                horas: (route.travelTime / 60 / 60).toFixed(0)
             })
 
             if (!state.isManual) {
@@ -276,8 +277,8 @@ function Rutas(props) {
             "m_sDestino": state.destiny,
             "m_sDescripcion": state.description,
             "m_nIdTipoViaje": state.tipoViaje,
-            //"m_nIdClasificacionViaje": state.clasificacion,
-            "m_nIdClasificacionViaje": 1,
+            "m_nIdClasificacionViaje": state.clasificacion,
+            //"m_nIdClasificacionViaje": 1,
             "m_nIdTipoUnidad": state.tipoUnidad,
             "m_bTipoTrayecto": state.trayecto === "PERMANENTE" ? 1 : 0,
             "m_rHoras": state.horas,
@@ -1009,14 +1010,21 @@ function Rutas(props) {
                                                                                         labelId="clasificacionLabel"
                                                                                         label="Clasificación de viaje"
                                                                                         className="form-control"
-                                                                                        required="false"
+                                                                                        required="true"
                                                                                         value={state.clasificacion}
                                                                                         disabled={state.agregar == "Consultar"}
                                                                                         onChange={handleChange}
                                                                                         name="clasificacion"
                                                                                     >
                                                                                         <option value="0">Seleccionar</option>
-
+                                                                                        {calificaciones.map((tipoViaje) => (
+                                                                                            <option
+                                                                                                key={tipoViaje.m_nIdClasificacionViaje}
+                                                                                                value={tipoViaje.m_nIdClasificacionViaje}
+                                                                                            >
+                                                                                                {tipoViaje.m_sTipoViaje}
+                                                                                            </option>
+                                                                                        ))}
                                                                                     </Select>
                                                                                 </FormControl>
                                                                             </label>
@@ -1095,6 +1103,9 @@ function Rutas(props) {
                                                                                     type="number"
                                                                                     onChange={handleChange}
                                                                                     value={state.horas}
+                                                                                    InputLabelProps={{
+                                                                                        shrink: true,
+                                                                                    }}
                                                                                     name="horas"
                                                                                 />
                                                                             </div>
@@ -1117,6 +1128,9 @@ function Rutas(props) {
                                                                                     type="number"
                                                                                     onChange={handleChange}
                                                                                     value={state.kilometros}
+                                                                                    InputLabelProps={{
+                                                                                        shrink: true,
+                                                                                    }}
                                                                                     name="kilometros"
                                                                                 />
                                                                             </div>
@@ -1128,6 +1142,9 @@ function Rutas(props) {
                                                                                     type="number"
                                                                                     onChange={handleChange}
                                                                                     value={state.millas}
+                                                                                    InputLabelProps={{
+                                                                                        shrink: true,
+                                                                                    }}
                                                                                     name="millas"
                                                                                 />
                                                                             </div>
@@ -1141,7 +1158,6 @@ function Rutas(props) {
                                                                                 <label className="checkbox" >
                                                                                     <input
                                                                                         required
-                                                                                        native="true"
                                                                                         checked={state.activa}
                                                                                         name="activa"
                                                                                         onChange={(e) => setState({ ...state, activa: e.target.checked })}

@@ -21,9 +21,6 @@ function Cabecera({ titulo, children }) {
                         </li>
 
                     </ul>
-                    <Hidden xsUp implementation="css">
-                        Hola
-                    </Hidden>
                 </div>
             </div>
             <Hidden xsDown implementation="css">

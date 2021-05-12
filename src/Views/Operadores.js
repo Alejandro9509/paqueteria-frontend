@@ -1361,7 +1361,7 @@ function Operadores(props) {
                                                                             <div className="w-section-header">
                                                                                 <h3>Documentos</h3>
                                                                             </div>
-                                                                            <div className="col-md-8 unit">
+                                                                            <div className="col-md-6 unit">
                                                                                 <div className="input">
                                                                                     <TextField variant="outlined" margin="dense" label="Licencia"
                                                                                         onChange={handleChange}
@@ -1375,7 +1375,7 @@ function Operadores(props) {
                                                                                     />
                                                                                 </div>{" "}
                                                                             </div>
-                                                                            <div className="col-md-4 unit">
+                                                                            <div className="col-md-6 unit">
                                                                                 <div className="input">
                                                                                     <TextField variant="outlined" margin="dense" label="Vencimiento"
                                                                                         onChange={handleChange}
@@ -1435,7 +1435,7 @@ function Operadores(props) {
                                                                             </div>
                                                                         </div>
                                                                         <div className="row">
-                                                                            <div className="col-md-8 unit">
+                                                                            <div className="col-md-6 unit">
                                                                                 <div className="input">
                                                                                     <TextField variant="outlined" margin="dense" label="Pasaporte"
                                                                                         onChange={
@@ -1451,7 +1451,7 @@ function Operadores(props) {
                                                                                     />
                                                                                 </div>
                                                                             </div>
-                                                                            <div className="col-md-4 unit">
+                                                                            <div className="col-md-6 unit">
                                                                                 <div className="input">
                                                                                     <TextField variant="outlined" margin="dense" label="Vencimiento"
                                                                                         onChange={handleChange}
@@ -1473,7 +1473,7 @@ function Operadores(props) {
                                                                             <div className="w-section-header">
                                                                                 <h3>Datos Hospitalarios</h3>
                                                                             </div>
-                                                                            <div className="col-md-4">
+                                                                            <div className="col-md-4 unit">
                                                                                 <div className="input">
                                                                                     <TextField variant="outlined" margin="dense" label="Núm. IMSS"
                                                                                         onChange={handleChange}
@@ -1487,7 +1487,7 @@ function Operadores(props) {
                                                                                     />
                                                                                 </div>{" "}
                                                                             </div>
-                                                                            <div className="col-md-8">
+                                                                            <div className="col-md-8 unit">
 
                                                                                 <label className="input select">
                                                                                     <FormControl fullWidth variant="outlined"

@@ -384,7 +384,7 @@ function TiposServicio() {
                     <div className="page-header">
                         <ul className="list-page-breadcrumb">
                             <li>
-                                <a href="/Configuracion" className="color-mapeo">
+                                <a href="/Catalogos" className="color-mapeo">
                                     Catálogos <i className="zmdi zmdi-chevron-right" />
                                 </a>
                             </li>

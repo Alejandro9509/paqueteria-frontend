@@ -170,10 +170,10 @@ function RemitenteDestinatario(props) {
         console.log(state.identificadorModal);
     }
 
-  function getAllCodigosPostales(idEstado) {
-    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListadoPorEstado/` + idEstado;
-    axios.get(url, { headers }).then((respuesta) => {
-      console.log(respuesta);
+    function getAllCodigosPostales(idEstado) {
+        const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListadoPorEstado/` + idEstado;
+        axios.get(url, { headers }).then((respuesta) => {
+            console.log(respuesta);
 
             setDataCodigoPostal(respuesta.data);
         });
@@ -331,65 +331,65 @@ function RemitenteDestinatario(props) {
         });
     }
 
-  const columns = React.useMemo(() => [
-    {
-      headerName: "Acciones",
-      field: "",
-      renderCell: (row) => {
-        return (
-          <div>
-            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdRemitenteDestinatario))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdRemitenteDestinatario))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdRemitenteDestinatario))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
-          </div>
-        )
-      }
-    },
-    {
-      headerName: "Número",
-      field: "m_nNumero",
-      width: 125,
-    },
-    {
-      headerName: "RFC",
-      field: "m_sRFC",
-      width: 200,
-    },
-    {
-      headerName: "Remitente-Destinatario",
-      field: "m_sNombre",
-      width: 200,
-    },
-    {
-      headerName: "Núm. Cliente",
-      field: "m_nNumeroCliente",
-      width: 125,
-    },
-    {
-      headerName: "Cliente",
-      field: "m_sNombreFiscal",
-      width: 150,
-    },
-    {
-      headerName: "Activo",
-      field: "m_bActivo",
-      width: 125,
-      renderCell: (row) => {
-        return (
-          <div style={{ width: "100%", textAlign: "center", color: row.row.m_bActivo ? "green" : "red" }}>
-            {row.row.m_bActivo ?
-              <SvgIcon
-                component={Activo}
-              /> :
-              <SvgIcon
-                component={NoActivo}
-              />
+    const columns = React.useMemo(() => [
+        {
+            headerName: "Acciones",
+            field: "",
+            renderCell: (row) => {
+                return (
+                    <div>
+                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdRemitenteDestinatario))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdRemitenteDestinatario))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                        <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdRemitenteDestinatario))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                    </div>
+                )
             }
-          </div>
-        )
-      },
-    }
-  ]);
+        },
+        {
+            headerName: "Número",
+            field: "m_nNumero",
+            width: 125,
+        },
+        {
+            headerName: "RFC",
+            field: "m_sRFC",
+            width: 200,
+        },
+        {
+            headerName: "Remitente-Destinatario",
+            field: "m_sNombre",
+            width: 200,
+        },
+        {
+            headerName: "Núm. Cliente",
+            field: "m_nNumeroCliente",
+            width: 125,
+        },
+        {
+            headerName: "Cliente",
+            field: "m_sNombreFiscal",
+            width: 150,
+        },
+        {
+            headerName: "Activo",
+            field: "m_bActivo",
+            width: 125,
+            renderCell: (row) => {
+                return (
+                    <div style={{ width: "100%", textAlign: "center", color: row.row.m_bActivo ? "green" : "red" }}>
+                        {row.row.m_bActivo ?
+                            <SvgIcon
+                                component={Activo}
+                            /> :
+                            <SvgIcon
+                                component={NoActivo}
+                            />
+                        }
+                    </div>
+                )
+            },
+        }
+    ]);
 
     const columns2 = React.useMemo(() => [
         {
@@ -772,17 +772,17 @@ function RemitenteDestinatario(props) {
         );
     }
 
-  useEffect((value) => {
-    if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
-      showSuccess("Es necesario iniciar sesion para acceder a este proceso");
-      window.location.replace("login");
-      return;
-    }
-    getAllPaises();
-    getAllDataRemDes();
-    getAllClientes();
+    useEffect((value) => {
+        if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
+            showSuccess("Es necesario iniciar sesion para acceder a este proceso");
+            window.location.replace("login");
+            return;
+        }
+        getAllPaises();
+        getAllDataRemDes();
+        getAllClientes();
 
-  }, []);
+    }, []);
 
     function getAllDataRemDes() {
         const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/GetListado`;
@@ -882,26 +882,26 @@ function RemitenteDestinatario(props) {
                             <i className="fa fa-list" />
               Listado
             </a>
-          </li>
-          <li>
-            <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
-              <i className="fa fa-plus-circle" /> {state.agregar}
-            </a>
-          </li>
-          {/*<li>*/}
-          {/*  <ExportCSV*/}
-          {/*    csvData={data}*/}
-          {/*    fileName="RemitentesDestinatarios_Listado"*/}
-          {/*  />*/}
-          {/*</li>*/}
-          {/*<li>*/}
-          {/*  <ExportPDF*/}
-          {/*    data={data}*/}
-          {/*    column={columns2}*/}
-          {/*    fileName="Remitentes-Destinatarios"*/}
-          {/*  />*/}
-          {/*</li>*/}
-        </ul>
+                    </li>
+                    <li>
+                        <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
+                            <i className="fa fa-plus-circle" /> {state.agregar}
+                        </a>
+                    </li>
+                    {/*<li>*/}
+                    {/*  <ExportCSV*/}
+                    {/*    csvData={data}*/}
+                    {/*    fileName="RemitentesDestinatarios_Listado"*/}
+                    {/*  />*/}
+                    {/*</li>*/}
+                    {/*<li>*/}
+                    {/*  <ExportPDF*/}
+                    {/*    data={data}*/}
+                    {/*    column={columns2}*/}
+                    {/*    fileName="Remitentes-Destinatarios"*/}
+                    {/*  />*/}
+                    {/*</li>*/}
+                </ul>
 
                 <div className="tab-content">
                     <div
@@ -1097,137 +1097,141 @@ function RemitenteDestinatario(props) {
 
                                                                 <div className="row">
 
-                                  <div className="col-md-4 unit">
-                                    <label className="input select">
-                                      <FormControl fullWidth variant="outlined"
-                                                   margin="dense">
-                                        <InputLabel
-                                            id="idPaisLabel">País</InputLabel>
-                                        <Select
-                                            labelId="idPaisLabel"
-                                            label="País"
-                                        onChange={handleSelectChange}
-                                        className="form-control"
-                                        value={state.idPais}
-                                        id="idPais"
-                                        name="idPais"
-                                      >
-                                        {dataPais.length < 1 ? (
-                                          <option value="none">País</option>
-                                        ) : (
-                                          dataPais.map((pais) => (
-                                            <option
-                                              key={pais.m_nIdPais}
-                                              value={pais.m_nIdPais}
-                                            >
-                                              {pais.m_sPais}
-                                            </option>
-                                          ))
-                                        )}
-                                      </Select>
-                                      </FormControl>
-                                    </label>
-                                  </div>
-                                  <div className="col-md-4 unit">
-                                    <label className="label">Estado</label>
-                                    <label className="input select">
-                                      <select
-                                        onChange={handleSelectEstadoChange}
-                                        className="form-control"
-                                        required
-                                        native
-                                        name="idEstado"
-                                        value={state.idEstado}
-                                        id="idEstado"
-                                      >
-                                        {dataEstado.length < 1 ? (
-                                          <option value="none">Estados</option>
-                                        ) : (
-                                          dataEstado.map((estado) => (
-                                            <option value={estado.m_nIdEstado}>
-                                              {estado.m_sEstado}
-                                            </option>
-                                          ))
-                                        )}
-                                      </select>
-                                      <i></i>
-                                    </label>
-                                  </div>
-                                  <div className="col-md-4 unit">
-                                    <div className="input">
-                                      <Autocomplete
-                                        onSelect={handleSelectCodigoPostal()}
+                                                                    <div className="col-md-4 unit">
+                                                                        <label className="input select">
+                                                                            <FormControl fullWidth variant="outlined"
+                                                                                margin="dense">
+                                                                                <InputLabel
+                                                                                    id="idPaisLabel">País</InputLabel>
+                                                                                <Select
+                                                                                    labelId="idPaisLabel"
+                                                                                    label="País"
+                                                                                    onChange={handleSelectChange}
+                                                                                    className="form-control"
+                                                                                    value={state.idPais}
+                                                                                    id="idPais"
+                                                                                    name="idPais"
+                                                                                >
+                                                                                    {dataPais.length < 1 ? (
+                                                                                        <option value="none">País</option>
+                                                                                    ) : (
+                                                                                        dataPais.map((pais) => (
+                                                                                            <option
+                                                                                                key={pais.m_nIdPais}
+                                                                                                value={pais.m_nIdPais}
+                                                                                            >
+                                                                                                {pais.m_sPais}
+                                                                                            </option>
+                                                                                        ))
+                                                                                    )}
+                                                                                </Select>
+                                                                            </FormControl>
+                                                                        </label>
+                                                                    </div>
+                                                                    <div className="col-md-4 unit">
+                                                                        <label className="input select">
+                                                                            <FormControl fullWidth variant="outlined"
+                                                                                margin="dense">
+                                                                                <InputLabel id="idEstadoLabel">Estado</InputLabel>
+                                                                                <Select
+                                                                                    labelId="idEstadoLabel"
+                                                                                    label="Estado"
+                                                                                    onChange={handleSelectEstadoChange}
+                                                                                    className="form-control"
+                                                                                    required
+                                                                                    native
+                                                                                    name="idEstado"
+                                                                                    value={state.idEstado}
+                                                                                    id="idEstado"
+                                                                                >
+                                                                                    {dataEstado.length < 1 ? (
+                                                                                        <option value="none">Estados</option>
+                                                                                    ) : (
+                                                                                        dataEstado.map((estado) => (
+                                                                                            <option value={estado.m_nIdEstado}>
+                                                                                                {estado.m_sEstado}
+                                                                                            </option>
+                                                                                        ))
+                                                                                    )}
+                                                                                </Select>
+                                                                            </FormControl>
+                                                                        </label>
+                                                                    </div>
+                                                                    <div className="col-md-4 unit">
+                                                                        <div className="input">
+                                                                            <Autocomplete
+                                                                                onSelect={handleSelectCodigoPostal()}
 
-                                        value={state.codigoPostal}
-                                        freeSolo
-                                        onChange={(event, newValue) =>
-                                          setState({
-                                            ...state,
-                                            codigoPostal: newValue,
-                                          })
-                                        }
-                                        id="codigoPostal"
-                                        disableClearable
-                                        forcePopupIcon={false}
-                                        options={dataCodigoPostal}
-                                        getOptionLabel={(option) =>
-                                          option.m_sCP
-                                        }
-                                        variant="outlined"
-                                        style={{
-                                          transform: "translate(14px, 10px) scale(1) !important"
-                                        }}
-                                        renderInput={(params) => (
-                                          <div>
-                                            <TextField
-                                                variant="outlined"
-                                                label="Código Postal"
-                                                margin="dense"
-                                              {...params}
-                                              InputProps={{
-                                                ...params.InputProps,
-                                                style: { height: "33px", fontSize: "14px" },
-                                                type: "search",
-                                                disableUnderline: true,
-                                                endAdornment: (
-                                                  <InputAdornment position="end">
-                                                    <IconButton
-                                                      padding="0px"
-                                                      style={{
-                                                        paddingRight: "0px",
-                                                      }}
-                                                      onClick={() => {
-                                                        setState({
-                                                          ...state,
-                                                          identificadorModal:
-                                                            "codigoPostal",
-                                                          tipoModal: 1,
-                                                        });
-                                                        open();
-                                                      }}
-                                                    >
-                                                      <PageviewIcon
-                                                        style={{
-                                                          color: "#F9A03E",
-                                                          fontSize: 32,
-                                                          paddingInlineEnd: 0,
-                                                          paddingRight: 0,
-                                                          paddingBlockEnd: 0,
-                                                          paddingLeft: 0,
-                                                          paddingBlock: 0,
-                                                        }}
-                                                      />
-                                                    </IconButton>
-                                                  </InputAdornment>
-                                                ),
-                                              }}
-                                            />
-                                          </div>
-                                        )}
-                                      />
-                                    </div>
-                                  </div>
-                                </div>
+                                                                                value={state.codigoPostal}
+                                                                                freeSolo
+                                                                                onChange={(event, newValue) =>
+                                                                                    setState({
+                                                                                        ...state,
+                                                                                        codigoPostal: newValue,
+                                                                                    })
+                                                                                }
+                                                                                id="codigoPostal"
+                                                                                disableClearable
+                                                                                forcePopupIcon={false}
+                                                                                options={dataCodigoPostal}
+                                                                                getOptionLabel={(option) =>
+                                                                                    option.m_sCP
+                                                                                }
+                                                                                variant="outlined"
+                                                                                style={{
+                                                                                    transform: "translate(14px, 10px) scale(1) !important"
+                                                                                }}
+                                                                                renderInput={(params) => (
+                                                                                    <div>
+                                                                                        <TextField
+                                                                                            variant="outlined"
+                                                                                            label="Código Postal"
+                                                                                            margin="dense"
+                                                                                            {...params}
+                                                                                            InputProps={{
+                                                                                                ...params.InputProps,
+                                                                                                style: { height: "33px", fontSize: "14px" },
+                                                                                                type: "search",
+                                                                                                disableUnderline: true,
+                                                                                                endAdornment: (
+                                                                                                    <InputAdornment position="end">
+                                                                                                        <IconButton
+                                                                                                            padding="0px"
+                                                                                                            style={{
+                                                                                                                paddingRight: "0px",
+                                                                                                            }}
+                                                                                                            onClick={() => {
+                                                                                                                setState({
+                                                                                                                    ...state,
+                                                                                                                    identificadorModal:
+                                                                                                                        "codigoPostal",
+                                                                                                                    tipoModal: 1,
+                                                                                                                });
+                                                                                                                open();
+                                                                                                            }}
+                                                                                                        >
+                                                                                                            <PageviewIcon
+                                                                                                                style={{
+                                                                                                                    color: "#F9A03E",
+                                                                                                                    fontSize: 32,
+                                                                                                                    paddingInlineEnd: 0,
+                                                                                                                    paddingRight: 0,
+                                                                                                                    paddingBlockEnd: 0,
+                                                                                                                    paddingLeft: 0,
+                                                                                                                    paddingBlock: 0,
+                                                                                                                }}
+                                                                                                            />
+                                                                                                        </IconButton>
+                                                                                                    </InputAdornment>
+                                                                                                ),
+                                                                                            }}
+                                                                                        />
+                                                                                    </div>
+                                                                                )}
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
 
                                                                 <div class="row">
                                                                     <div class="col-md-4 unit">

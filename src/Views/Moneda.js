@@ -9,7 +9,7 @@ import { DataGrid } from '@material-ui/data-grid';
 
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
-import { Tooltip } from "@material-ui/core";
+import { TextField, Tooltip } from "@material-ui/core";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -427,11 +427,8 @@ function Moneda() {
                                                 <div className="form-content">
 
                                                     <div className="col-sm-12 col-md-8 unit">
-                                                        <label className="label">
-                                                            Código
-                          </label>
                                                         <div className="input">
-                                                            <input
+                                                            <TextField variant="outlined" margin="dense" label="Código"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 type="text"
@@ -444,11 +441,8 @@ function Moneda() {
                                                     </div>
 
                                                     <div className="col-sm-12 col-md-4 unit">
-                                                        <label className="label">
-                                                            Moneda
-                          </label>
                                                         <div className="input">
-                                                            <input
+                                                            <TextField variant="outlined" margin="dense" label="Moneda"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 type="text"
@@ -460,11 +454,8 @@ function Moneda() {
                                                     </div>
 
                                                     <div className="col-sm-12 col-md-8 unit">
-                                                        <label className="label">
-                                                            Símbolo
-                            </label>
                                                         <div className="input">
-                                                            <input
+                                                            <TextField variant="outlined" margin="dense" label="Símbolo"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 type="text"
@@ -477,11 +468,8 @@ function Moneda() {
                                                     </div>
 
                                                     <div className="col-sm-12 col-md-4 unit">
-                                                        <label className="label">
-                                                            Abreviación
-                          </label>
                                                         <div className="input">
-                                                            <input
+                                                            <TextField variant="outlined" margin="dense" label="Abreviación"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 required={true}

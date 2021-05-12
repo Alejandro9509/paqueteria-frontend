@@ -9,7 +9,7 @@ import { ReactComponent as ActivoIcon } from '../iconos/Menu/palomita.svg';
 import { ReactComponent as NoActivoIcon } from '../iconos/Menu/cruz.svg';
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
-import { TextField, Tooltip } from "@material-ui/core";
+import { FormControl, InputLabel, Select, TextField, Tooltip } from "@material-ui/core";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -329,7 +329,7 @@ function Impuestos() {
                                                 <div className="form-content">
                                                     <div className="row">
 
-                                                        <div className="col-xs-6 col-sm-6 col-md-4 col-lg-4 unit">
+                                                        <div className="col-xs-6 col-sm-6 col-md-4 col-lg-4 unit" style={{ paddingTop: "1px", marginBottom: "5px" }}>
 
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense" label="Impuesto"
@@ -344,7 +344,7 @@ function Impuestos() {
                                                             </div>
                                                         </div>
 
-                                                        <div className="col-xs-6 col-sm-6 col-md-4 col-lg-4 unit" style={{ paddingTop: "20px", marginBottom: "15px" }}>
+                                                        <div className="col-xs-6 col-sm-6 col-md-4 col-lg-4 unit" >
                                                             <label className="checkbox">
                                                                 <input
                                                                     disabled={state.agregar == "Consultar"}
@@ -359,7 +359,7 @@ function Impuestos() {
                               </label>
                                                         </div>
 
-                                                        <div className="col-xs-6 col-sm-6 col-md-4 col-lg-4 unit" style={{ paddingTop: "20px", marginBottom: "15px" }}>
+                                                        <div className="col-xs-6 col-sm-6 col-md-4 col-lg-4 unit">
                                                             <label className="checkbox">
                                                                 <input
                                                                     disabled={state.agregar == "Consultar"}
@@ -380,6 +380,8 @@ function Impuestos() {
                                 Impuesto Local
                               </label>
                                                         </div>
+                                                    </div>
+                                                    <div className="row">
 
                                                         <div className="col-xs-6 col-sm-6 col-md-4 col-lg-4 unit">
 
@@ -398,55 +400,60 @@ function Impuestos() {
                                                             </div>
                                                         </div>
 
+
                                                         <div className="col-xs-6 col-sm-6 col-md-4 col-lg-4 unit">
-                                                            <label className="label">
-                                                                Tipo de Cálculo
-                              </label>
                                                             <label className="input select">
-                                                                <select
-                                                                    className="form-control"
-                                                                    value={state.tipoDeCalculo}
-                                                                    disabled={state.agregar == "Consultar" || state.impuestoLocal || state.tipoImpuesto == 1 || state.tipoImpuesto == 3}
-                                                                    onChange={handleChange}
-                                                                    id="tipoDeCalculo"
-                                                                    name="tipoDeCalculo"
-                                                                >
-                                                                    <option value="1">
-                                                                        Retención
+                                                                <FormControl fullWidth variant="outlined"
+                                                                    margin="dense">
+                                                                    <InputLabel id="tipoDeCalculoLabel">Tipo de Cálculo</InputLabel>
+                                                                    <Select
+                                                                        labelId="tipoDeCalculoLabel"
+                                                                        label="Tipo de Cálculo"
+                                                                        className="form-control"
+                                                                        value={state.tipoDeCalculo}
+                                                                        disabled={state.agregar == "Consultar" || state.impuestoLocal || state.tipoImpuesto == 1 || state.tipoImpuesto == 3}
+                                                                        onChange={handleChange}
+                                                                        id="tipoDeCalculo"
+                                                                        name="tipoDeCalculo"
+                                                                    >
+                                                                        <option value="1">
+                                                                            Retención
                                   </option>
-                                                                    <option value="2">
-                                                                        Traslado
+                                                                        <option value="2">
+                                                                            Traslado
                                   </option>
-                                                                </select>
-                                                                <i className="fa fa-arrow-down" />
+                                                                    </Select>
+                                                                </FormControl>
                                                             </label>
                                                         </div>
 
                                                         {!state.impuestoLocal ?
                                                             <div className="col-xs-6 col-sm-6 col-md-4 col-lg-4 unit">
-                                                                <label className="label">
-                                                                    Tipo Impuesto
-                              </label>
                                                                 <label className="input select">
-                                                                    <select
-                                                                        className="form-control"
-                                                                        value={state.tipoImpuesto}
-                                                                        disabled={state.agregar == "Consultar"}
-                                                                        onChange={handleChangeTipoImpuesto}
-                                                                        id="tipoImpuesto"
-                                                                        name="tipoImpuesto"
-                                                                    >
-                                                                        <option value="2">
-                                                                            IVA
+                                                                    <FormControl fullWidth variant="outlined"
+                                                                        margin="dense">
+                                                                        <InputLabel id="tipoImpuestoLabel">Tipo Impuesto</InputLabel>
+                                                                        <Select
+                                                                            labelId="tipoImpuestoLabel"
+                                                                            label="Tipo Impuesto"
+                                                                            className="form-control"
+                                                                            value={state.tipoImpuesto}
+                                                                            disabled={state.agregar == "Consultar"}
+                                                                            onChange={handleChangeTipoImpuesto}
+                                                                            id="tipoImpuesto"
+                                                                            name="tipoImpuesto"
+                                                                        >
+                                                                            <option value="2">
+                                                                                IVA
                                   </option>
-                                                                        <option value="1">
-                                                                            ISR
+                                                                            <option value="1">
+                                                                                ISR
                                   </option>
-                                                                        <option value="3">
-                                                                            IEPS
+                                                                            <option value="3">
+                                                                                IEPS
                                   </option>
-                                                                    </select>
-                                                                    <i className="fa fa-arrow-down" />
+                                                                        </Select>
+                                                                    </FormControl>
                                                                 </label>
                                                             </div>
                                                             : <div></div>}

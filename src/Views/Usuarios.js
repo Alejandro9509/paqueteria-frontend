@@ -18,7 +18,7 @@ import { ReactComponent as NoActivoIcon } from '../iconos/Menu/cruz.svg';
 import Noty from 'noty';
 import IPut from 'iput';
 import { dataGridLocaleText } from "../Constants";
-import { Tooltip } from "@material-ui/core";
+import { FormControl, InputLabel, Select, TextField, Tooltip } from "@material-ui/core";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -570,24 +570,24 @@ function Usuarios() {
                             <a data-toggle="tab" href="#Listado">
                                 <i className="fa fa-list" /> Listado
             </a>
-            </li>
-            <li>
-              <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
-                <i className="fa fa-plus-circle" /> {state.agregar}
-              </a>
-            </li>
-            {/*<li>*/}
-            {/*  <a data-toggle="tab" href="#Importar">*/}
-            {/*    <i className="fa fa-upload" /> Importar*/}
-            {/*</a>*/}
-            {/*</li>*/}
-            {/*<li>*/}
-            {/*  <ExportCSV csvData={data} fileName="Departamento_Listado" />*/}
-            {/*</li>*/}
-            {/*<li>*/}
-            {/*  <ExportPDF data={data} column={columns} fileName="Departamento" />*/}
-            {/*</li>*/}
-          </ul>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
+                                <i className="fa fa-plus-circle" /> {state.agregar}
+                            </a>
+                        </li>
+                        {/*<li>*/}
+                        {/*  <a data-toggle="tab" href="#Importar">*/}
+                        {/*    <i className="fa fa-upload" /> Importar*/}
+                        {/*</a>*/}
+                        {/*</li>*/}
+                        {/*<li>*/}
+                        {/*  <ExportCSV csvData={data} fileName="Departamento_Listado" />*/}
+                        {/*</li>*/}
+                        {/*<li>*/}
+                        {/*  <ExportPDF data={data} column={columns} fileName="Departamento" />*/}
+                        {/*</li>*/}
+                    </ul>
 
                     <div className="tab-content">
                         <div id="Listado" className="tab-pane fade in active">
@@ -628,33 +628,34 @@ function Usuarios() {
                                                         <div className="col-xs-12 col-sm-12 col-md-7 col-lg-7" style={{ paddingRight: "0px", paddingLeft: "0px" }}>
 
                                                             <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 unit">
-                                                                <label className="label">
-                                                                    Sucursal
-                              </label>
                                                                 <label className="input select">
-                                                                    <select
-                                                                        className="form-control"
-                                                                        required
-                                                                        value={state.idSucursal}
-                                                                        onChange={handleChange}
-                                                                        disabled={state.agregar == "Consultar"}
-                                                                        id="idSucursal"
-                                                                    >
-                                                                        {dataSucursal.map((sucursal) => (
-                                                                            <option
-                                                                                key={sucursal.m_nIdSucursal}
-                                                                                value={sucursal.m_nIdSucursal}
-                                                                            >
-                                                                                {sucursal.m_sSucursal}
-                                                                            </option>
-                                                                        ))}
-                                                                    </select>
-                                                                    <i></i>
+                                                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                                                        <InputLabel id="idSucursalLabel">Sucursal</InputLabel>
+                                                                        <Select
+                                                                            labelId="idSucursalLabel"
+                                                                            label="Sucursal"
+                                                                            className="form-control"
+                                                                            required
+                                                                            value={state.idSucursal}
+                                                                            onChange={handleChange}
+                                                                            disabled={state.agregar == "Consultar"}
+                                                                            id="idSucursal"
+                                                                        >
+                                                                            {dataSucursal.map((sucursal) => (
+                                                                                <option
+                                                                                    key={sucursal.m_nIdSucursal}
+                                                                                    value={sucursal.m_nIdSucursal}
+                                                                                >
+                                                                                    {sucursal.m_sSucursal}
+                                                                                </option>
+                                                                            ))}
+                                                                        </Select>
+                                                                    </FormControl>
                                                                 </label>
 
                                                             </div>
 
-                                                            <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 inline-group" style={{ paddingTop: "20px", marginBottom: "15px" }}>
+                                                            <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 unit" >
                                                                 <label className="checkbox">
                                                                     <input
                                                                         disabled={state.agregar == "Consultar"}
@@ -670,11 +671,8 @@ function Usuarios() {
                                                             </div>
 
                                                             <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 unit">
-                                                                <label className="label">
-                                                                    Usuario
-                              </label>
                                                                 <div className="input">
-                                                                    <input
+                                                                    <TextField variant="outlined" margin="dense" label="Usuario"
                                                                         onChange={handleChange}
                                                                         className="form-control"
                                                                         type="text"
@@ -687,11 +685,8 @@ function Usuarios() {
                                                             </div>
 
                                                             <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 unit">
-                                                                <label className="label">
-                                                                    Nombre
-                              </label>
                                                                 <div className="input">
-                                                                    <input
+                                                                    <TextField variant="outlined" margin="dense" label="Nombre"
                                                                         onChange={handleChange}
                                                                         className="form-control"
                                                                         type="text"
@@ -703,11 +698,8 @@ function Usuarios() {
                                                             </div>
 
                                                             <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 unit">
-                                                                <label className="label">
-                                                                    Apellido Paterno
-                              </label>
                                                                 <div className="input">
-                                                                    <input
+                                                                    <TextField variant="outlined" margin="dense" label="Apellido Paterno"
                                                                         onChange={handleChange}
                                                                         className="form-control"
                                                                         type="text"
@@ -720,11 +712,8 @@ function Usuarios() {
                                                             </div>
 
                                                             <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 unit">
-                                                                <label className="label">
-                                                                    Apellido Materno
-                              </label>
                                                                 <div className="input">
-                                                                    <input
+                                                                    <TextField variant="outlined" margin="dense" label="Apellido Materno"
                                                                         onChange={handleChange}
                                                                         className="form-control"
                                                                         type="text"
@@ -736,11 +725,8 @@ function Usuarios() {
                                                             </div>
 
                                                             <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 unit">
-                                                                <label className="label">
-                                                                    Contraseña
-                              </label>
                                                                 <div className="input">
-                                                                    <input
+                                                                    <TextField variant="outlined" margin="dense" label="Contraseña"
                                                                         onChange={handleChange}
                                                                         className="form-control"
                                                                         type="password"
@@ -753,11 +739,8 @@ function Usuarios() {
                                                             </div>
 
                                                             <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 unit">
-                                                                <label className="label">
-                                                                    Confirmar Contraseña
-                              </label>
                                                                 <div className="input">
-                                                                    <input
+                                                                    <TextField variant="outlined" margin="dense" label="Confirmar Contraseña"
                                                                         onChange={handleChange}
                                                                         className="form-control"
                                                                         type="password"
@@ -769,11 +752,8 @@ function Usuarios() {
                                                             </div>
 
                                                             <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 unit">
-                                                                <label className="label">
-                                                                    Correo Electrónico
-                              </label>
                                                                 <div className="input">
-                                                                    <input
+                                                                    <TextField variant="outlined" margin="dense" label="Correo Electrónico"
                                                                         onChange={handleChange}
                                                                         className="form-control"
                                                                         type="email"
@@ -786,29 +766,30 @@ function Usuarios() {
                                                             </div>
 
                                                             <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 unit">
-                                                                <label className="label">
-                                                                    Tipo Usuario
-                              </label>
                                                                 <label className="input select">
-                                                                    <select
-                                                                        className="form-control"
-                                                                        required
-                                                                        value={state.sucursalListado}
-                                                                        onChange={handleChange}
-                                                                        disabled={state.agregar == "Consultar"}
-                                                                        id="sucursalListado"
-                                                                    >
-                                                                        <option value="0">Todas</option>
-                                                                        {dataSucursal.map((sucursal) => (
-                                                                            <option
-                                                                                key={sucursal.m_nIdSucursal}
-                                                                                value={sucursal.m_nIdSucursal}
-                                                                            >
-                                                                                {sucursal.m_sSucursal}
-                                                                            </option>
-                                                                        ))}
-                                                                    </select>
-                                                                    <i></i>
+                                                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                                                        <InputLabel id="sucursalListadoLabel">Tipo Usuario</InputLabel>
+                                                                        <Select
+                                                                            labelId="sucursalListadoLabel"
+                                                                            label="Tipo Usuario"
+                                                                            className="form-control"
+                                                                            required
+                                                                            value={state.sucursalListado}
+                                                                            onChange={handleChange}
+                                                                            disabled={state.agregar == "Consultar"}
+                                                                            id="sucursalListado"
+                                                                        >
+                                                                            <option value="0">Todas</option>
+                                                                            {dataSucursal.map((sucursal) => (
+                                                                                <option
+                                                                                    key={sucursal.m_nIdSucursal}
+                                                                                    value={sucursal.m_nIdSucursal}
+                                                                                >
+                                                                                    {sucursal.m_sSucursal}
+                                                                                </option>
+                                                                            ))}
+                                                                        </Select>
+                                                                    </FormControl>
                                                                 </label>
                                                             </div>
 

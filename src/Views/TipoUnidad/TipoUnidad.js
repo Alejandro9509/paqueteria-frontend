@@ -9,7 +9,7 @@ import { ReactComponent as Activo } from "../../iconos/Menu/palomita.svg";
 import { ReactComponent as NoActivo } from "../../iconos/Menu/cruz.svg";
 import { DataGrid } from '@material-ui/data-grid';
 import $ from "jquery";
-import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
 import AgregarFolio from "./AgregarTipoUnidad";
 import CrearTarifa from "../Tarifas/CrearTarifa";
 import AgregarTipoUnidad from "./AgregarTipoUnidad";
@@ -66,7 +66,7 @@ class TipoUnidad extends Component {
                     field: "m_cyTarifaPorKMSDlls",
                     valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
                     width: 200,
-                },{
+                }, {
                     headerName: "Creado El",
                     field: "m_dtCreadoEl",
                     width: 200,
@@ -108,13 +108,13 @@ class TipoUnidad extends Component {
         //         showSuccess("El usuario no tiene derechos para realizar el proceso");
         //         return;
         //     }
-            const url = `${process.env.REACT_APP_API_URL}/TipoUnidad/Eliminar/` + id;
-            axios.delete(url, { headers }).then(respuesta => {
-                console.log(respuesta);
-                this.getAllData();
-            }).catch(err => {
-                showSuccess(err)
-            });
+        const url = `${process.env.REACT_APP_API_URL}/TipoUnidad/Eliminar/` + id;
+        axios.delete(url, { headers }).then(respuesta => {
+            console.log(respuesta);
+            this.getAllData();
+        }).catch(err => {
+            showSuccess(err)
+        });
         // }).catch(err => {
         //     showSuccess(err)
         // });
@@ -134,21 +134,21 @@ class TipoUnidad extends Component {
             m_nModificadoPor: localStorage.getItem("UsuarioId")
         }
 
-            const url = `${process.env.REACT_APP_API_URL}/TipoUnidad/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
-                console.log(respuesta)
-                showSuccess(respuesta.data)
+        const url = `${process.env.REACT_APP_API_URL}/TipoUnidad/Agregar`;
+        axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+            console.log(respuesta)
+            showSuccess(respuesta.data)
 
-                $('.nav-tabs li ').removeClass('active');
-                $('.nav-tabs li').eq(0).addClass('active');
-                $('.tab-content div ').removeClass('in show');
-                $('#Listado').addClass('in show');
-                this.getAllData()
-                this.setState({ edit: false, agregar: 'Agregar', pantalla: 1, idTipoUnidad: null})
-            }).catch(err => {
-                console.log(err)
-                showSuccess(err)
-            });
+            $('.nav-tabs li ').removeClass('active');
+            $('.nav-tabs li').eq(0).addClass('active');
+            $('.tab-content div ').removeClass('in show');
+            $('#Listado').addClass('in show');
+            this.getAllData()
+            this.setState({ edit: false, agregar: 'Agregar', pantalla: 1, idTipoUnidad: null })
+        }).catch(err => {
+            console.log(err)
+            showSuccess(err)
+        });
 
     }
 
@@ -172,7 +172,7 @@ class TipoUnidad extends Component {
             console.log(respuesta)
             showSuccess(respuesta.data)
             this.getAllData()
-            this.setState({ edit: false, agregar: 'Agregar', pantalla: 1})
+            this.setState({ edit: false, agregar: 'Agregar', pantalla: 1 })
         }).catch(err => {
             console.log(err)
             showSuccess(err)
@@ -188,7 +188,7 @@ class TipoUnidad extends Component {
         }
     }
 
-    handleShowModificar(id){
+    handleShowModificar(id) {
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -203,11 +203,11 @@ class TipoUnidad extends Component {
     getAllData() {
         const url = `${process.env.REACT_APP_API_URL}/TiposUnidades/GetListado`;
         axios.get(url, { headers }).then(respuesta => {
-            this.setState({ data: respuesta.data})
+            this.setState({ data: respuesta.data })
         });
     }
 
-    handleClose () {
+    handleClose() {
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(0).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -222,7 +222,18 @@ class TipoUnidad extends Component {
             <div>
 
                 <header className="topbar clearfix">
-                    <Cabecera />
+                    <Cabecera titulo="Tipo Unidad" >
+                        <div className="page-header">
+                            <ul className="list-page-breadcrumb">
+                                <li>
+                                    <a href="/Catalogos" className="color-mapeo">
+                                        Catálogos <i className="zmdi zmdi-chevron-right" />
+                                    </a>
+                                </li>
+                                <li className="active-page">Tipo Unidad</li>
+                            </ul>
+                        </div>
+                    </Cabecera>
                 </header>
 
                 {/*Leftbar Start Here*/}
@@ -232,28 +243,11 @@ class TipoUnidad extends Component {
 
                 <section className="main-container">
                     <div className="container-fluid">
-                        <div className="page-header filled full-block light">
-                            <div className="row">
-                                <div className="col-md-6 col-sm-6">
-                                    <h2>Tipo Unidad</h2>
-                                </div>
-                                <div className="col-md-6 col-sm-6">
-                                    <ul className="list-page-breadcrumb">
-                                        <li>
-                                            <a href="/Catalogos" className="color-mapeo">
-                                                Catálogos <i className="zmdi zmdi-chevron-right" />
-                                            </a>
-                                        </li>
-                                        <li className="active-page">Tipo Unidad</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
 
 
                         <ul className="nav navStatica nav-tabs">
                             <li className="active">
-                                <a data-toggle="tab" data_id="1" href="#Listado" onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, agregar: "Agregar"}); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
+                                <a data-toggle="tab" data_id="1" href="#Listado" onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
                                     <i className="fa fa-list" /> Listado
                                 </a>
                             </li>
@@ -300,7 +294,7 @@ class TipoUnidad extends Component {
                                 {
                                     this.state.pantalla === 2 &&
 
-                                    <AgregarTipoUnidad  edit={this.state.edit} onSubmit={this.handleAceptar} onClose={this.handleClose} idTipoUnidad={this.state.idTipoUnidad}/>
+                                    <AgregarTipoUnidad edit={this.state.edit} onSubmit={this.handleAceptar} onClose={this.handleClose} idTipoUnidad={this.state.idTipoUnidad} />
                                 }
 
                             </div>

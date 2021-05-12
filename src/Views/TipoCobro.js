@@ -9,7 +9,7 @@ import { DataGrid } from '@material-ui/data-grid';
 
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
-import { Tooltip } from "@material-ui/core";
+import { TextField, Tooltip } from "@material-ui/core";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -392,11 +392,8 @@ function TipoCobro() {
                                                 <div className="form-content">
 
                                                     <div className="col-sm-12 col-md-12 unit">
-                                                        <label className="label">
-                                                            Código
-                          </label>
                                                         <div className="input">
-                                                            <input
+                                                            <TextField variant="outlined" margin="dense" label="Código"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 type="number"
@@ -408,11 +405,8 @@ function TipoCobro() {
                                                     </div>
 
                                                     <div className="col-sm-12 col-md-12 unit">
-                                                        <label className="label">
-                                                            Descripción
-                          </label>
                                                         <div className="input">
-                                                            <input
+                                                            <TextField variant="outlined" margin="dense" label="Descripción"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 type="text"

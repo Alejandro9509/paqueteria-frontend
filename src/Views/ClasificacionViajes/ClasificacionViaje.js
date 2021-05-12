@@ -9,7 +9,7 @@ import { ReactComponent as Activo } from "../../iconos/Menu/palomita.svg";
 import { ReactComponent as NoActivo } from "../../iconos/Menu/cruz.svg";
 import { DataGrid } from '@material-ui/data-grid';
 import $ from "jquery";
-import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
+import { Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } from "@material-ui/core";
 import AgregarFolio from "./AgregarClasificacionViaje";
 import CrearTarifa from "../Tarifas/CrearTarifa";
 import AgregarClasificacionViaje from "./AgregarClasificacionViaje";
@@ -46,21 +46,27 @@ class ClasificacionViaje extends Component {
                     renderCell: (row) => {
                         return (
                             <div>
-                                <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (this.handleShowModificar(row.row.m_nIdClasificacionViajes))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                                <a href="#" className="btn btn-default btn-xs" onClick={() => (this.handleEliminar(row.row.m_nIdClasificacionViajes))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                                <Tooltip title="Modificar">
+                                    <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (this.handleShowModificar(row.row.m_nIdClasificacionViajes))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+
+                                </Tooltip>
+                                <Tooltip title="Eliminar">
+                                    <a href="#" className="btn btn-default btn-xs" onClick={() => (this.handleEliminar(row.row.m_nIdClasificacionViajes))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+
+                                </Tooltip>
                             </div>
                         )
                     }
                 },
                 {
                     headerName: "Código",
-                    field: "Codigo",
+                    field: "m_nCodigo",
                     width: 250,
                 }, {
                     headerName: "Tipo de Viaje",
-                    field: "TipoViaje",
+                    field: "m_sTipoViaje",
                     width: 200,
-                },{
+                }, {
                     headerName: "Creado El",
                     field: "m_dtCreadoEl",
                     width: 200,
@@ -76,7 +82,7 @@ class ClasificacionViaje extends Component {
                     headerName: "Modificado Por",
                     field: "m_nModificadoPor",
                     width: 150,
-                } , {
+                }, {
                     headerName: "Activo",
                     field: "Activo",
                     width: 150,
@@ -122,13 +128,13 @@ class ClasificacionViaje extends Component {
         //         showSuccess("El usuario no tiene derechos para realizar el proceso");
         //         return;
         //     }
-            const url = `${process.env.REACT_APP_API_URL}/ClasificacionViajes/Eliminar/` + id;
-            axios.delete(url, { headers }).then(respuesta => {
-                console.log(respuesta);
-                this.getAllData();
-            }).catch(err => {
-                showSuccess(err)
-            });
+        const url = `${process.env.REACT_APP_API_URL}/ClasificacionViajes/Eliminar/` + id;
+        axios.delete(url, { headers }).then(respuesta => {
+            console.log(respuesta);
+            this.getAllData();
+        }).catch(err => {
+            showSuccess(err)
+        });
         // }).catch(err => {
         //     showSuccess(err)
         // });
@@ -147,21 +153,21 @@ class ClasificacionViaje extends Component {
             ModificadoPor: localStorage.getItem("UsuarioId")
         }
 
-            const url = `${process.env.REACT_APP_API_URL}/ClasificacionViajes/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
-                console.log(respuesta)
-                showSuccess(respuesta.data)
+        const url = `${process.env.REACT_APP_API_URL}/ClasificacionViajes/Agregar`;
+        axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+            console.log(respuesta)
+            showSuccess(respuesta.data)
 
-                $('.nav-tabs li ').removeClass('active');
-                $('.nav-tabs li').eq(0).addClass('active');
-                $('.tab-content div ').removeClass('in show');
-                $('#Listado').addClass('in show');
-                this.getAllData()
-                this.setState({ edit: false, agregar: 'Agregar', pantalla: 1, idTipoUnidad: null})
-            }).catch(err => {
-                console.log(err)
-                showSuccess(err)
-            });
+            $('.nav-tabs li ').removeClass('active');
+            $('.nav-tabs li').eq(0).addClass('active');
+            $('.tab-content div ').removeClass('in show');
+            $('#Listado').addClass('in show');
+            this.getAllData()
+            this.setState({ edit: false, agregar: 'Agregar', pantalla: 1, idTipoUnidad: null })
+        }).catch(err => {
+            console.log(err)
+            showSuccess(err)
+        });
 
     }
 
@@ -185,7 +191,7 @@ class ClasificacionViaje extends Component {
             console.log(respuesta)
             showSuccess(respuesta.data)
             this.getAllData()
-            this.setState({ edit: false, agregar: 'Agregar', pantalla: 1})
+            this.setState({ edit: false, agregar: 'Agregar', pantalla: 1 })
         }).catch(err => {
             console.log(err)
             showSuccess(err)
@@ -201,7 +207,7 @@ class ClasificacionViaje extends Component {
         }
     }
 
-    handleShowModificar(id){
+    handleShowModificar(id) {
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -216,11 +222,11 @@ class ClasificacionViaje extends Component {
     getAllData() {
         const url = `${process.env.REACT_APP_API_URL}/ClasificacionViajes/GetListado`;
         axios.get(url, { headers }).then(respuesta => {
-            this.setState({ data: respuesta.data})
+            this.setState({ data: respuesta.data })
         });
     }
 
-    handleClose () {
+    handleClose() {
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(0).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -235,7 +241,18 @@ class ClasificacionViaje extends Component {
             <div>
 
                 <header className="topbar clearfix">
-                    <Cabecera />
+                    <Cabecera titulo="Clasificación Viajes" >
+                        <div className="page-header">
+                            <ul className="list-page-breadcrumb">
+                                <li>
+                                    <a href="/Catalogos" className="color-mapeo">
+                                        Catálogos <i className="zmdi zmdi-chevron-right" />
+                                    </a>
+                                </li>
+                                <li className="active-page">Clasificación Viajes</li>
+                            </ul>
+                        </div>
+                    </Cabecera>
                 </header>
 
                 {/*Leftbar Start Here*/}
@@ -245,28 +262,11 @@ class ClasificacionViaje extends Component {
 
                 <section className="main-container">
                     <div className="container-fluid">
-                        <div className="page-header filled full-block light">
-                            <div className="row">
-                                <div className="col-md-6 col-sm-6">
-                                    <h2>Clasificación Viajes</h2>
-                                </div>
-                                <div className="col-md-6 col-sm-6">
-                                    <ul className="list-page-breadcrumb">
-                                        <li>
-                                            <a href="/Catalogos" className="color-mapeo">
-                                                Catálogos <i className="zmdi zmdi-chevron-right" />
-                                            </a>
-                                        </li>
-                                        <li className="active-page">Clasificación Viajes</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
 
 
                         <ul className="nav navStatica nav-tabs">
                             <li className="active">
-                                <a data-toggle="tab" data_id="1" href="#Listado" onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, agregar: "Agregar"}); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
+                                <a data-toggle="tab" data_id="1" href="#Listado" onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
                                     <i className="fa fa-list" /> Listado
                                 </a>
                             </li>
@@ -294,10 +294,10 @@ class ClasificacionViaje extends Component {
                                                     columns={columns}
                                                     density="compact"
                                                     pageSize={Math.floor((this.state.height - 310) / 30)}
-                                                    getRowId={(row) => row.m_nIdTipoUnidad}
+                                                    getRowId={(row) => row.m_nIdClasificacionViaje}
                                                     onRowSelected={(row) => {
                                                         this.setState({
-                                                            idTipoUnidad: row.data.m_nIdTipoUnidad
+                                                            idTipoUnidad: row.data.m_nIdClasificacionViaje
                                                         })
                                                     }}
                                                 />
@@ -313,7 +313,7 @@ class ClasificacionViaje extends Component {
                                 {
                                     this.state.pantalla === 2 &&
 
-                                    <AgregarClasificacionViaje  edit={this.state.edit} onSubmit={this.handleAceptar} onClose={this.handleClose} idTipoUnidad={this.state.idTipoUnidad}/>
+                                    <AgregarClasificacionViaje edit={this.state.edit} onSubmit={this.handleAceptar} onClose={this.handleClose} idTipoUnidad={this.state.idTipoUnidad} />
                                 }
 
                             </div>
