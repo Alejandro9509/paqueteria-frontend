@@ -6,7 +6,7 @@ import CiudadesCodigoPostalPage from './Views/Ciudades';
 import ParametrosPage from './Views/Parametros';
 import SucursalesPage from './Views/Sucursal';
 import UsuariosPage from './Views/Usuarios';
-import ZonasPage from './Views/Zonas';
+import ZonasPage from './Views/Zonas/Zonas';
 
 import {ReactComponent as GParametroIcon} from './iconos/Configuracion/Icono Parametros/icono_parametro.svg';
 import {ReactComponent as GUsuarioIcon} from './iconos/Configuracion/Icono Usuarios/icono_usuarios.svg';
