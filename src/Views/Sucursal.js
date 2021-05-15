@@ -51,7 +51,7 @@ function Sucursal() {
 
   const handleAceptar = (e) => {
     e.preventDefault()
-    console.log(state.zonaHoraria.split("|"))
+    console.log(state.zonaHoraria)
     var params = {
 
       "Sucursal": state.sucursal,
@@ -131,7 +131,7 @@ function Sucursal() {
         sucursal: respuesta.data.m_sSucursal,
         abreviacion: respuesta.data.m_sAbreviacion,
         idPais: 0,
-        idEstado: respuesta.data.m_nIdEstado,
+        idEstado: dataEstado.find( e => e.m_nIdEstado == respuesta.data.m_nIdEstado),
         codigoPostal: 0,
         municipio: respuesta.data.m_sMunicipio,
         localidad: respuesta.data.m_sLocalidad,
@@ -140,7 +140,7 @@ function Sucursal() {
         numInterior: respuesta.data.m_sNoInterior,
         numExterior: respuesta.data.m_sNoExterior,
         iva: respuesta.data.m_sIdImpuestoTraslado,
-        zonaHoraria: respuesta.data.m_xZonaHoraria,
+        zonaHoraria: respuesta.data.m_xZonaHoraria == 8 ? "08:00|America/Tijuana" : "06:00|America/Mexico_City",
         activo: respuesta.data.m_bActiva
       })
     });

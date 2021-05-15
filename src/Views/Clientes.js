@@ -1670,7 +1670,7 @@ function Clientes(props) {
                                                 <div className="row">
                                                     <div className="col-sm-12 col-md-8">
                                                         <div className="w-section-header ">
-                                                            <h4>Metodos de Pago y Crédito</h4>
+                                                            <h4>Métodos de Pago y Crédito</h4>
                                                         </div>
                                                         <div className="form-content">
                                                             {/* start text password */}
@@ -1765,7 +1765,7 @@ function Clientes(props) {
                                                             </div>
                                                             <div className="row">
                                                                 <div className="w-section-header">
-                                                                    <h5>Dolares</h5>
+                                                                    <h5>Dólares</h5>
                                                                 </div>
                                                                 <div className="col-sm-4  col-md-4 unit">
                                                                     <div className="input">
