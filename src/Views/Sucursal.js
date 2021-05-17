@@ -5,6 +5,9 @@ import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda"
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
+import PageviewIcon from "@material-ui/icons/Pageview";
+import IconButton from "@material-ui/core/IconButton";
+import InputAdornment from "@material-ui/core/InputAdornment";
 import { useTable, useFilters, useSortBy } from 'react-table'
 import { makeStyles } from "@material-ui/core/styles";
 import { DataGrid } from '@material-ui/data-grid';
@@ -131,7 +134,7 @@ function Sucursal() {
         sucursal: respuesta.data.m_sSucursal,
         abreviacion: respuesta.data.m_sAbreviacion,
         idPais: 0,
-        idEstado: dataEstado.find( e => e.m_nIdEstado == respuesta.data.m_nIdEstado),
+        idEstado: dataEstado.find(e => e.m_nIdEstado == respuesta.data.m_nIdEstado),
         codigoPostal: 0,
         municipio: respuesta.data.m_sMunicipio,
         localidad: respuesta.data.m_sLocalidad,
@@ -270,12 +273,13 @@ function Sucursal() {
     const url = `${process.env.REACT_APP_API_URL}/Estados/ByPais/${id}`;
     axios.get(url, { headers }).then((respuesta) => {
       setDataEstado(respuesta.data);
-   });
+    });
   }
 
   function getAllCodigosPostales() {
     const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
+      console.log("codigo")
       setDataCodigoPostal(respuesta.data);
     });
   }
@@ -511,29 +515,55 @@ function Sucursal() {
                             </div>
 
                             <div className="col-sm-12 col-md-2-5 unit">
-                              <label className="label">
+                            <label className="label">
                                 Código Postal
-                                  </label>
-                              <label className="input select">
-                                <select
-                                  className="form-control"
-                                  required
+                          </label>
+                              <div className="input">
+                                <Autocomplete
                                   value={state.codigoPostal}
-                                  onChange={handleChange}
+                                  freeSolo
+                                  onChange={(event, newValue) => {
+                                    console.log(
+                                      dataCodigoPostal.filter(cp => cp.m_nIdEstado == state.idEstado.m_nIdEstado))
+                                    setState({
+                                      ...state,
+                                      codigoPostal: newValue
+                                    })
+                                  }}
                                   id="codigoPostal"
-                                >
-                                  {dataCodigoPostal.filter( cp => cp.m_nIdEstado == state.idEstado.m_nIdEstado).map(
-                                    (codigoPostal) => (
-                                      <option key={codigoPostal.m_nIdCP} value={codigoPostal.m_nIdCP}>
-                                        {
-                                          codigoPostal.m_sCP
-                                        }
-                                      </option>
-                                    )
+                                  disableClearable
+                                  forcePopupIcon={false}
+                                  options={dataCodigoPostal.filter((cp) => cp.m_nIdEstado == state.idEstado.m_nIdEstado)}
+                                  disabled={state.agregar === "Consultar"}
+                                  getOptionLabel={(option) =>
+                                    option.m_sCP
+                                  }
+                                  variant="outlined"
+                                  style={{
+                                    transform: "translate(14px, 10px) scale(1) !important"
+                                  }}
+                                  renderInput={(params) => (
+                                    <div>
+                                      <TextField
+                                        variant="outlined"
+                                        margin="dense"
+                                        required
+                                        {...params}
+                                        InputProps={{
+                                          ...params.InputProps,
+                                          style: {
+                                            height: "33px",
+                                            fontSize: "14px"
+                                          },
+                                          type: "search",
+                                          disableUnderline: true,
+                                          disabled: state.agregar === "Consultar",
+                                        }}
+                                      />
+                                    </div>
                                   )}
-                                </select>
-                                <i className="fa fa-arrow-down" />
-                              </label>
+                                />
+                              </div>
                             </div>
 
                             <div className="col-sm-12 col-md-2-5 unit">
