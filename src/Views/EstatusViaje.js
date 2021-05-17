@@ -3,8 +3,7 @@ import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import ExportCSV from '../Components/Template/Export';
-import ExportPDF from "../Components/Template/ExportPDF";
+import { TextField } from '@material-ui/core';
 import { useTable, useFilters, useSortBy } from 'react-table'
 import { makeStyles } from "@material-ui/core/styles";
 import { DataGrid } from '@material-ui/data-grid';
@@ -34,20 +33,11 @@ function EstatusViaje() {
 
   const classes = useStyles();
   const [data, setData] = React.useState([])
-  const dataEstatus = [{
-    idEstatus: 1,
-    tipoEstatus: "Disponible"
-  }, {
-    idEstatus: 2,
-    tipoEstatus: "No Disponible"
-  }];
-
   const [state, setState] = React.useState({
     idEstatusViaje: 0,
     DerechoBorrar: 81,
     estatusViaje: "",
     abreviacionViaje: "",
-    tipoEstatusViaje: 0,
     colorViaje: "",
     noSeguimiento: false,
     archivo: false,
@@ -65,15 +55,18 @@ function EstatusViaje() {
 
       "Estatus": state.estatusViaje,
       "Color": state.colorViaje.slice(-6),
-      "ColorLetra": state.colorViaje.slice(-6),
       "Abreviacion": state.abreviacionViaje,
-      "TipoEstatus": state.tipoEstatusViaje,
+      "NoEnviarCorreo": state.noSeguimiento,
+      "ArchivoEDI": state.archivo,
+      "Carga": state.carga,
       "CreadoPor": state.CreadoPor,
-      "ModificadoPor": state.ModificadoPor
+      "CreadoEl": "",
+      "ModificadoPor": state.ModificadoPor,
+      "ModificadoEl": ""
     }
     console.log(params)
     if (state.idEstatusViaje != 0) {
-      const url = `${process.env.REACT_APP_API_URL}/Estatusviajes/Modificar/` + state.idEstatusViaje;
+      const url = `${process.env.REACT_APP_API_URL}/EstatusViajes/Modificar/` + state.idEstatusViaje;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         showSuccess(respuesta.data)
         getAllData();
@@ -82,7 +75,7 @@ function EstatusViaje() {
         showSuccess("err")
       });
     } else {
-      const url = `${process.env.REACT_APP_API_URL}/Estatusviajes/Agregar`;
+      const url = `${process.env.REACT_APP_API_URL}/EstatusViajes/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         showSuccess(respuesta.data)
         getAllData()
@@ -171,13 +164,6 @@ function EstatusViaje() {
     });
   };
 
-  function handleSelectRow(id, event) {
-    setState({
-      ...state,
-      idEstatusViaje: id
-    });
-  }
-
   const columns = React.useMemo(() => [
     {
       headerName: "Acciones",
@@ -186,7 +172,7 @@ function EstatusViaje() {
         return (
           <div>
             <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdEstatusViaje))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdEstatusViaje))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdEstatusViaje))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
             <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdEstatusViaje))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
           </div>
         )
@@ -238,7 +224,7 @@ function EstatusViaje() {
   }, []);
 
   function getAllData() {
-    const url = `${process.env.REACT_APP_API_URL}/Estatusviajes/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL}/EstatusViajes/GetListado`;
     axios.get(url, { headers }).then(respuesta => {
       setData(respuesta.data)
     });
@@ -247,105 +233,6 @@ function EstatusViaje() {
   const headers = {
     'Content-Type': 'application/json',
     //    'access-control-allow-origin': '*'
-  }
-
-  function DefaultColumnFilter({
-    column: { filterValue, preFilteredRows, setFilter },
-  }) {
-    const count = preFilteredRows.length
-
-    return (
-      <input
-        className="form-control"
-        value={filterValue || ''}
-        onChange={e => {
-          setFilter(e.target.value || undefined)
-        }}
-        placeholder={`Buscar ${count} registros...`}
-      />
-    )
-  }
-
-  function Table({ columns, data }) {
-
-    const defaultColumn = React.useMemo(
-      () => ({
-        // Default Filter UI
-        Filter: DefaultColumnFilter,
-      }),
-      []
-    )
-
-    const {
-      getTableProps,
-      getTableBodyProps,
-      headerGroups,
-      rows,
-      prepareRow,
-    } = useTable(
-      {
-        columns,
-        data,
-        defaultColumn
-      },
-      useFilters,
-      useSortBy
-    )
-
-    return (
-      <div className="col-md-12">
-        <table className="table" {...getTableProps()}>
-          <thead>
-            {headerGroups.map(headerGroup => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                <th>Acciones</th>
-                {headerGroup.headers.map(column => (
-                  // Add the sorting props to control sorting. For this example
-                  // we can add them into the header props
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    {column.render('Name')}
-                    {/* Add a sort direction indicator */}
-                    <span>
-                      {column.isSorted
-                        ? column.isSortedDesc
-                          ? <i className="fa fa-caret-up" />
-                          : <i className="fa fa-caret-down" />
-                        : ''}
-                    </span>
-                    <div>{column.canFilter ? column.render('Filter') : null}</div>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map(
-              (row, i) => {
-                prepareRow(row);
-                return (
-                  <tr {...row.getRowProps()}
-                    onClick={handleSelectRow.bind(this, row.original.m_nIdEstatusViaje)}
-                    className={state.idEstatusViaje === row.original.m_nIdEstatusViaje ? classes.seleccionado : classes.noSeleccionado}>
-                    <td>
-                      <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowModificar(row.original.m_nIdEstatusViaje))} ><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdEstatusViaje))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                        <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdEstatusViaje))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
-                      </div>
-                    </td>
-                    {row.cells.map(cell => {
-                      return (
-                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                      )
-                    })}
-                  </tr>
-                )
-              }
-            )}
-          </tbody>
-        </table>
-      </div>
-    )
   }
 
   return (
@@ -390,6 +277,11 @@ function EstatusViaje() {
                 <i className="fa fa-list" /> Listado
             </a>
             </li>
+            <li>
+              <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
+                <i className="fa fa-plus-circle" /> {state.agregar}
+              </a>
+            </li>
           </ul>
 
           <div className="row" className="tab-content">
@@ -402,7 +294,7 @@ function EstatusViaje() {
                         rows={data}
                         columns={columns}
                         density="compact"
-                        pageSize={ Math.floor((state.height - 310)/30)}
+                        pageSize={Math.floor((state.height - 310) / 30)}
                         getRowId={(row) => row.m_nIdEstatusViaje}
                         onRowSelected={(row) => {
                           setState({
@@ -427,54 +319,46 @@ function EstatusViaje() {
                       <form className="j-forms" onSubmit={handleAceptar}>
                         <div className="form-content">
 
-                          <div className="col-xs-6 col-sm-6 col-md-4 col-lg-4 unit">
-                            <label className="label">
-                              Estatus
-                          </label>
+                          <div className="col-xs-6 col-sm-6 col-md-4 col-lg-4" style={{ padding: "5px" }}>
+
                             <div className="input">
-                              <input
+                              <TextField variant="outlined" margin="dense"
                                 onChange={handleChange}
                                 className="form-control"
                                 type="text"
-                                maxLength="30"
-                                required={true}
+                                label="Estatus"
+                                required
                                 value={state.estatusViaje}
-                                readOnly={state.agregar == "Consultar"}
                                 id="estatusViaje"
                               />
                             </div>
                           </div>
 
-                          <div className="col-xs-6 col-sm-6 col-md-4 col-lg-4 unit">
-                            <label className="label">
-                              Abreviación
-                          </label>
+                          <div className="col-xs-6 col-sm-6 col-md-4 col-lg-4" style={{ padding: "5px" }}>
+
                             <div className="input">
-                              <input
+                              <TextField variant="outlined" margin="dense"
                                 onChange={handleChange}
                                 className="form-control"
                                 type="text"
-                                maxLength="5"
-                                required={true}
+                                label="Abreviación"
+                                required
                                 value={state.abreviacionViaje}
-                                readOnly={state.agregar == "Consultar"}
                                 id="abreviacionViaje"
                               />
                             </div>
                           </div>
 
-                          <div className="col-xs-6 col-sm-6 col-md-4 col-lg-4 unit">
-                            <label className="label">
-                              Color
-                            </label>
+                          <div className="col-xs-6 col-sm-6 col-md-4 col-lg-4" style={{ padding: "5px" }}>
+
                             <div className="input">
-                              <input
+                              <TextField variant="outlined" margin="dense"
                                 onChange={handleChange}
                                 className="form-control"
-                                required={true}
                                 type="color"
+                                label="Color"
+                                required
                                 value={state.colorViaje}
-                                readOnly={state.agregar == "Consultar"}
                                 id="colorViaje"
                               />
                             </div>
@@ -533,24 +417,6 @@ function EstatusViaje() {
                           <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                         </div>
                       </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="widget-wrap" id="Importar" className="tab-pane fade">
-              <div className="widget-wrap">
-                <div className="widget-content">
-                  <div className="row">
-                    <div className="col-md-12">
-                      <div className="form-footer" className="col-md-12">
-                        <button className="btn btn-default btn-block ex-noty" data-layout="topCenter" data-type="information">Notificación</button>
-                        <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
-                        >
-                          Cancelar</button>
-                        <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
-                      </div>
                     </div>
                   </div>
                 </div>
