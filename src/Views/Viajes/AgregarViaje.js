@@ -420,7 +420,7 @@ class AgregarViaje extends Component {
                                                             key={estatus.m_nIdEstatusViaje}
                                                             value={estatus.m_nIdEstatusViaje}
                                                         >
-                                                            {estatus.m_sDescripcion}
+                                                            {estatus.m_sEstatus}
                                                         </option>
                                                     ))}
                                                 </Select>
