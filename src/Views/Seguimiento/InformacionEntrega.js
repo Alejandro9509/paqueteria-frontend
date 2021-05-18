@@ -18,20 +18,20 @@ const useStyles = makeStyles((theme) =>({
 export default function InformacionEntrega(props){
     console.log(props.entrega);
     const classes = useStyles();
-    const destinationAddress = props.entrega.destinationAddress;
-    const id = props.entrega.id;
-    const date = props.entrega.date;
-    const serviceType = props.entrega.serviceType;
+    const destinatario = props.entrega.destinatario;
+    const folio = props.entrega.folio;
+    const fecha = props.entrega.fecha;
+    const tipoServicio = props.entrega.tipoServicio;
 
     return(
         <div>
             <h3>Dirección de entrega</h3>
-            <span className={classes.labelContainer}>{destinationAddress}</span>
+            <span className={classes.labelContainer}>{destinatario}</span>
             <h3>Detalle de Envío</h3>
             <div className={classes.detailsContainer}>
-                <div className={classes.labelContainer}><span className={classes.label}>Folio: </span><span>{id}</span></div>
-                <div className={classes.labelContainer}><span className={classes.label}>Fecha: </span><span>{date}</span></div>
-                <div className={classes.labelContainer}><span className={classes.label}>Tipo de servicio: </span><span>{serviceType}</span></div>
+                <div className={classes.labelContainer}><span className={classes.label}>Folio: </span><span>{folio}</span></div>
+                <div className={classes.labelContainer}><span className={classes.label}>Fecha: </span><span>{fecha}</span></div>
+                <div className={classes.labelContainer}><span className={classes.label}>Tipo de servicio: </span><span>{tipoServicio}</span></div>
             </div>
             
         </div>

@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect} from 'react';
 import InformacionEntrega from './InformacionEntrega';
 import logo from '../../iconos/LogoGM.png';
-import theme from '../../Assets/themes/default'
+import axios from "axios";
 
 import { makeStyles } from '@material-ui/core/styles';
 import { List,ListItem, ListItemText, Collapse, Button } from '@material-ui/core';
@@ -86,11 +86,83 @@ const useStyles = makeStyles((theme) => ({
     }
   }));
 
-export default function Tracking(){
+export default function Tracking(...props){
     console.log(entrega);
     const classes = useStyles();
     const [openGuia, setOpenGuia] = React.useState(true);
     const [openRastreo, setOpenRastreo] = React.useState(true);
+    const [guiaData, setGuiaData] = React.useState({
+        destinatario: "",
+        folio: "",
+        fechaEnvio: "",
+        tipoServicio: -1,
+        packages: [
+            {
+                id: 1,
+                weight: 100,
+                large: 10,
+                width: 14,
+                height: 5,
+                type: "Caja de madera",
+                value: 1500.00,
+                description: "Artículos de higiene personal",
+                observation: "Los productos estan sellados correctamente y no presentan daños.",
+                quantity: 1
+            },
+            {
+                id: 2,
+                weight: 200,
+                large: 20,
+                width: 24,
+                height: 25,
+                type: "Caja de madera",
+                value: 2500.00,
+                description: "Artículos de higiene personal",
+                observation: "Los productos estan sellados correctamente y no presentan daños.",
+                quantity: 2
+            },
+            {
+                id: 3,
+                weight: 300,
+                large: 30,
+                width: 34,
+                height: 35,
+                type: "Caja de madera",
+                value: 3500.00,
+                description: "Artículos de higiene personal",
+                observation: "Los productos estan sellados correctamente y no presentan daños.",
+                quantity: 3
+            }
+        ]
+
+    });
+
+    const headers = {
+        'Content-Type': 'application/json'
+    }
+    
+    useEffect(value =>{
+        const { match: { params } } = props[0];
+        handleShowConsultar(params.id)
+    }, []);
+
+    function handleShowConsultar(id) {
+        const url = `${process.env.REACT_APP_API_URL}/Guia/GetById/` + id;
+        axios.get(url, { headers }).then(respuesta => {
+            console.log(respuesta)
+
+            setGuiaData({
+                ...guiaData,
+                destinatario: respuesta.data.m_sDomicilioDestinatario,
+                folio: respuesta.data.m_nFolioGuia,
+                fechaEnvio: respuesta.data.m_dFechaSalida,
+                tipoServicio: respuesta.data.m_nIdTipoServicio,
+            })
+        }).catch(function (err) {
+            console.log(err.data)
+        });   
+
+    }
 
     const handleGuiaClick = () => {
         setOpenGuia(!openGuia);
@@ -107,12 +179,13 @@ export default function Tracking(){
                     className={classes.image} 
                     src={logo}/>
             </header>
-            <div 
-                className="widget-wrap" 
-                style={{margin: 10}}>
-                <InformacionEntrega 
-                    entrega = {entrega}/>
-                <List
+            <div className="widget-wrap" style={{margin:10}}>
+                <div className="widget-container">
+                    <div className="widget-content">
+                        <div className="row">
+                            <InformacionEntrega 
+                                entrega = {guiaData}/>
+                            <List
                     component="nav"
                     className={classes.root}>
                     <ListItem 
@@ -157,6 +230,9 @@ export default function Tracking(){
                         <DetallesSeguimiento/>
                     </Collapse>
                     </List>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     )

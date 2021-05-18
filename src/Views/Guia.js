@@ -508,6 +508,7 @@ function Guia(props) {
         const url = `${process.env.REACT_APP_API_URL}/Guia/GetById/` + id;
         axios.get(url, { headers }).then(respuesta => {
             // debugger;
+            console.log(respuesta)
             cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)
             handleEmbarqueModificar(respuesta)
             //valor2=respuesta.data.m_nIdEmbarque;

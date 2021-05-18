@@ -84,15 +84,16 @@ const dashboardRoutes = [
     component: ViajesPage,
     single: true,
     child:[]
-  },
-  {
-    path: "/Seguimiento",
-    name: "Seguimiento",
-    icon: viajeIcon,
-    component: Tracking,
-    single: true,
-    child:[]
   }
+  // ,
+  // {
+  //   path: "/Seguimiento",
+  //   name: "Seguimiento",
+  //   icon: viajeIcon,
+  //   component: Tracking,
+  //   single: true,
+  //   child:[]
+  // }
 ];
 
 export default dashboardRoutes;
