@@ -60,13 +60,8 @@ const useStyles = makeStyles((theme) => ({
       width: '100%',
       maxWidth: 360,
       backgroundColor: theme.palette.background.paper,
+      display: 'inline'
     },
-    nested: {
-      paddingLeft: theme.spacing(4),
-    },
-  }));
-
-const styles ={
     heading:{
         backgroundColor: theme.palette.primary.main,
         padding: '3px'
@@ -74,13 +69,14 @@ const styles ={
     image:{
         height: '40px'
     },
-    container:{
-        margin: '10px'
-    },
     listItem:{
         backgroundColor: theme.palette.secondary.main,
         color: 'white',
-        marginTop: '8px'
+        marginTop: '8px',
+        '&:hover': {
+            backgroundColor: theme.palette.secondary.main,
+            color: 'white',
+        }
     },
     collapseArrow:{
         backgroundColor: theme.palette.primary.main,
@@ -88,7 +84,7 @@ const styles ={
         height: 25,
         borderRadius: 25
     }
-}
+  }));
 
 export default function Tracking(){
     console.log(entrega);
@@ -105,41 +101,60 @@ export default function Tracking(){
     };
     return(
         <div>
-            <header style={styles.heading}>
-                <img style={styles.image} src={logo}></img>
+            <header 
+                className={classes.heading}>
+                <img 
+                    className={classes.image} 
+                    src={logo}/>
             </header>
-            <div className="widget-wrap" style={styles.container}>
-                <InformacionEntrega entrega = {entrega}/>
+            <div 
+                className="widget-wrap" 
+                style={{margin: 10}}>
+                <InformacionEntrega 
+                    entrega = {entrega}/>
                 <List
                     component="nav"
-                    className={classes.root}
-                    style={{display: 'inline'}}
-                    >
-                    <ListItem button onClick={handleGuiaClick} style={styles.listItem}>
-                        <ListItemText primary="Descripción Guía"/>
-                        {openGuia ? <ExpandLess style={styles.collapseArrow} /> : <ExpandMore style={styles.collapseArrow} />}
+                    className={classes.root}>
+                    <ListItem 
+                        button 
+                        onClick={handleGuiaClick} 
+                        className={classes.listItem}>
+                        <ListItemText 
+                            primary="Descripción Guía"/>
+                        {openGuia ? <ExpandLess className={classes.collapseArrow} /> : <ExpandMore className={classes.collapseArrow} />}
                     </ListItem>
-                    <Collapse in={openGuia} timeout="auto" unmountOnExit>
-                        <List component="div" disablePadding>{
-                        entrega.packages.map(
-                            p => (
-                            <ListItem className={classes.nested}>
-                                <InformacionPaquete package = {p} className={classes.nested}/>
-                            </ListItem>
+                    <Collapse 
+                        in={openGuia} 
+                        timeout="auto" 
+                        unmountOnExit>
+                        <List 
+                            component="div" 
+                            disablePadding>{
+                            entrega.packages.map(
+                                p => (
+                                <ListItem 
+                                    className={classes.nested}>
+                                    <InformacionPaquete 
+                                        package = {p}/>
+                                </ListItem>
+                                )
                             )
-                        )
                         }
                         </List>
                     </Collapse>
-                    <ListItem button onClick={handleRastreoClick} style={styles.listItem}>
-                        <ListItemText primary="Rastreo Envio" />
-                        {openRastreo ? <ExpandLess style={styles.collapseArrow} /> : <ExpandMore style={styles.collapseArrow} />}
+                    <ListItem 
+                        button 
+                        onClick={handleRastreoClick} 
+                        className={classes.listItem}>
+                        <ListItemText 
+                            primary="Rastreo Envio" />
+                        {openRastreo ? <ExpandLess className={classes.collapseArrow} /> : <ExpandMore className={classes.collapseArrow} />}
                     </ListItem>
-                    <Collapse in={openRastreo} timeout="auto" unmountOnExit>
-                        <List component="div" disablePadding>{
-                            <DetallesSeguimiento/>
-                        }
-                        </List>
+                    <Collapse 
+                        in={openRastreo} 
+                        timeout="auto" 
+                        unmountOnExit>
+                        <DetallesSeguimiento/>
                     </Collapse>
                     </List>
             </div>
