@@ -12,9 +12,6 @@ const useStyles = makeStyles((theme) =>({
     detailsContainer: {
         display: 'flex',
         flexDirection: 'row'
-    },
-    h3:{
-        margin: 0
     }
 }));
 
