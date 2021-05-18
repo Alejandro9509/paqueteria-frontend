@@ -24,6 +24,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
+import { obtenerGrupoUnidades } from "../Util/Contexts/GrupoUnidadesContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -591,8 +592,7 @@ function Unidades(props) {
         });
     }
     function getAllGruposUnidades() {
-        const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerGrupoUnidades().then((respuesta) => {
             setDataGruposUnidades(respuesta.data);
         });
     }

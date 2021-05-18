@@ -169,204 +169,208 @@ class ConceptosAdicionales extends Component {
                     </DialogContent>
 
                 </Dialog>
-                <div className="row">
-                    <div className="col-md-3 col-sm-6" style={{ padding: "5px" }}>
+                {
+                    !this.props.consult &&
+                    <div className="row">
+                        <div className="col-md-3 col-sm-6" style={{ padding: "5px" }}>
 
-                        <div className="input">
-                            <Autocomplete
-                                value={this.state.concepto}
-                                freeSolo
-                                onChange={(event, newValue) =>
-                                    this.setState({
-                                        concepto: newValue,
-                                        importeRet: "0",
-                                        retiene: 0,
-                                        traslada: 0,
-                                        importeIVA: "0"
-                                    })
-                                }
-                                id="concepto"
-                                disableClearable
-                                forcePopupIcon={false}
-                                disabled={this.state.agregar == "Consultar"}
-                                options={this.state.conceptos}
-                                getOptionLabel={(option) =>
-                                    option.m_sConcepto
-                                }
-                                variant="outlined"
-                                style={{
-                                    transform: "translate(14px, 10px) scale(1) !important"
-                                }}
-                                renderInput={(params) => (
-                                    <div>
-                                        <TextField
-                                            {...params}
-                                            variant="outlined"
-                                            label="Concepto"
-                                            className="form-control"
-                                            margin="dense"
-                                            InputProps={{
-                                                ...params.InputProps,
-                                                style: { height: "33px", fontSize: "14px" },
-                                                type: "search",
-                                                disableUnderline: true,
-                                                endAdornment: (
-                                                    <InputAdornment position="end">
-                                                        <IconButton
-                                                            padding="0px"
-                                                            style={{
-                                                                paddingRight: "0px",
-                                                            }}
-                                                            disabled={this.state.agregar == "Consultar"}
-                                                            onClick={() => {
-                                                                this.setState({
-                                                                    identificadorModal:
-                                                                        "concepto",
-                                                                    tipoModal: 1,
-                                                                    openDialog: true
-                                                                });
-                                                            }}
-                                                        >
-                                                            <PageviewIcon
+                            <div className="input">
+                                <Autocomplete
+                                    value={this.state.concepto}
+                                    freeSolo
+                                    onChange={(event, newValue) =>
+                                        this.setState({
+                                            concepto: newValue,
+                                            importeRet: "0",
+                                            retiene: 0,
+                                            traslada: 0,
+                                            importeIVA: "0"
+                                        })
+                                    }
+                                    id="concepto"
+                                    disableClearable
+                                    forcePopupIcon={false}
+                                    disabled={this.state.agregar == "Consultar"}
+                                    options={this.state.conceptos}
+                                    getOptionLabel={(option) =>
+                                        option.m_sConcepto
+                                    }
+                                    variant="outlined"
+                                    style={{
+                                        transform: "translate(14px, 10px) scale(1) !important"
+                                    }}
+                                    renderInput={(params) => (
+                                        <div>
+                                            <TextField
+                                                {...params}
+                                                variant="outlined"
+                                                label="Concepto"
+                                                className="form-control"
+                                                margin="dense"
+                                                InputProps={{
+                                                    ...params.InputProps,
+                                                    style: { height: "33px", fontSize: "14px" },
+                                                    type: "search",
+                                                    disableUnderline: true,
+                                                    endAdornment: (
+                                                        <InputAdornment position="end">
+                                                            <IconButton
+                                                                padding="0px"
                                                                 style={{
-                                                                    color: "#F9A03E",
-                                                                    fontSize: 32,
-                                                                    paddingInlineEnd: 0,
-                                                                    paddingRight: 0,
-                                                                    paddingBlockEnd: 0,
-                                                                    paddingLeft: 0,
-                                                                    paddingBlock: 0,
+                                                                    paddingRight: "0px",
                                                                 }}
-                                                            />
-                                                        </IconButton>
-                                                    </InputAdornment>
-                                                ),
-                                            }}
-                                        />
-                                    </div>
-                                )}
-                            />
+                                                                disabled={this.state.agregar == "Consultar"}
+                                                                onClick={() => {
+                                                                    this.setState({
+                                                                        identificadorModal:
+                                                                            "concepto",
+                                                                        tipoModal: 1,
+                                                                        openDialog: true
+                                                                    });
+                                                                }}
+                                                            >
+                                                                <PageviewIcon
+                                                                    style={{
+                                                                        color: "#F9A03E",
+                                                                        fontSize: 32,
+                                                                        paddingInlineEnd: 0,
+                                                                        paddingRight: 0,
+                                                                        paddingBlockEnd: 0,
+                                                                        paddingLeft: 0,
+                                                                        paddingBlock: 0,
+                                                                    }}
+                                                                />
+                                                            </IconButton>
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                            />
+                                        </div>
+                                    )}
+                                />
+                            </div>
                         </div>
-                    </div>
-                    <div className="col-md-1 col-sm-6" style={{ padding: "5px" }}>
+                        <div className="col-md-1 col-sm-6" style={{ padding: "5px" }}>
 
-                        <div className="input">
-                            <TextField variant="outlined" margin="dense"
-                                onChange={this.handleChange}
-                                className="form-control"
-                                type="number"
-                                label="Importe"
-                                style={{ textAlign: "right" }}
-                                step="1"
-                                min="0"
-                                value={this.state.importe}
-                                name="importe"
-                            />
-                        </div>
-                    </div>
-                    <div className="col-md-2 col-sm-6" style={{ padding: "5px" }}>
-                        <label className="input select" style={{ width: "100%" }}>
-                            <FormControl fullWidth variant="outlined" margin="dense">
-                                <InputLabel id="trasladaLabel">Traslada</InputLabel>
-                                <Select
-                                    labelId="trasladaLabel"
-                                    label="Traslada"
-                                    className="form-control"
-                                    value={this.state.traslada}
+                            <div className="input">
+                                <TextField variant="outlined" margin="dense"
                                     onChange={this.handleChange}
-                                    name="traslada"
-                                >
-                                    <option
-                                        key={0}
-                                        value={""}
-                                    >
-                                        Selecciona
-                                        </option>
-                                    {this.state.concepto &&
-                                        this.state.impuestos.filter(i => this.state.concepto.arClsDetalle.find(c => c.m_nIdImpuesto === i.m_nIdImpuesto && c.m_bTrasladado === true)).map((impuesto) => (
-                                            <option
-                                                key={impuesto.m_nIdImpuesto}
-                                                value={impuesto.m_nIdImpuesto}
-                                            >
-                                                {impuesto.m_sImpuesto}
-                                            </option>
-                                        ))}
-                                </Select>
-                            </FormControl>
-                        </label>
-                    </div>
-                    <div className="col-md-1 col-sm-6" style={{ padding: "5px" }}>
-
-                        <div className="input">
-                            <TextField variant="outlined" margin="dense"
-                                onChange={this.handleChange}
-                                className="form-control"
-                                type="number"
-                                style={{ textAlign: "right" }}
-                                disabled
-                                label="Importe IVA"
-                                step="1"
-                                min="0"
-                                value={this.state.importeIVA}
-                                name="importeIVA"
-                            />
-                        </div>
-                    </div>
-                    <div className="col-md-2 col-sm-6" style={{ padding: "5px" }}>
-                        <label className="input select" style={{ width: "100%" }}>
-                            <FormControl fullWidth variant="outlined" margin="dense">
-                                <InputLabel id="retieneLabel">Retiene</InputLabel>
-                                <Select
-                                    labelId="retieneLabel"
-                                    label="Retiene"
                                     className="form-control"
-                                    onChange={this.handleChange}
-                                    name="retiene"
-                                    value={this.state.retiene}
-                                >
-                                    <option
-                                        key={0}
-                                        value={""}
+                                    type="number"
+                                    label="Importe"
+                                    style={{ textAlign: "right" }}
+                                    step="1"
+                                    min="0"
+                                    value={this.state.importe}
+                                    name="importe"
+                                />
+                            </div>
+                        </div>
+                        <div className="col-md-2 col-sm-6" style={{ padding: "5px" }}>
+                            <label className="input select" style={{ width: "100%" }}>
+                                <FormControl fullWidth variant="outlined" margin="dense">
+                                    <InputLabel id="trasladaLabel">Traslada</InputLabel>
+                                    <Select
+                                        labelId="trasladaLabel"
+                                        label="Traslada"
+                                        className="form-control"
+                                        value={this.state.traslada}
+                                        onChange={this.handleChange}
+                                        name="traslada"
                                     >
-                                        Selecciona
+                                        <option
+                                            key={0}
+                                            value={""}
+                                        >
+                                            Selecciona
                                         </option>
-                                    {this.state.concepto &&
-                                        this.state.impuestos.filter(i => this.state.concepto.arClsDetalle.find(c => c.m_nIdImpuesto === i.m_nIdImpuesto && c.m_bTrasladado === false)).map((impuesto) => (
-                                            <option
-                                                key={impuesto.m_nIdImpuesto}
-                                                value={impuesto.m_nIdImpuesto}
-                                            >
-                                                {impuesto.m_sImpuesto}
-                                            </option>
-                                        ))}
-                                </Select>
-                            </FormControl>
-                        </label>
-                    </div>
+                                        {this.state.concepto &&
+                                            this.state.impuestos.filter(i => this.state.concepto.arClsDetalle.find(c => c.m_nIdImpuesto === i.m_nIdImpuesto && c.m_bTrasladado === true)).map((impuesto) => (
+                                                <option
+                                                    key={impuesto.m_nIdImpuesto}
+                                                    value={impuesto.m_nIdImpuesto}
+                                                >
+                                                    {impuesto.m_sImpuesto}
+                                                </option>
+                                            ))}
+                                    </Select>
+                                </FormControl>
+                            </label>
+                        </div>
+                        <div className="col-md-1 col-sm-6" style={{ padding: "5px" }}>
 
-                    <div className="col-md-2 col-sm-6" style={{ padding: "5px" }}>
+                            <div className="input">
+                                <TextField variant="outlined" margin="dense"
+                                    onChange={this.handleChange}
+                                    className="form-control"
+                                    type="number"
+                                    style={{ textAlign: "right" }}
+                                    disabled
+                                    label="Importe IVA"
+                                    step="1"
+                                    min="0"
+                                    value={this.state.importeIVA}
+                                    name="importeIVA"
+                                />
+                            </div>
+                        </div>
+                        <div className="col-md-2 col-sm-6" style={{ padding: "5px" }}>
+                            <label className="input select" style={{ width: "100%" }}>
+                                <FormControl fullWidth variant="outlined" margin="dense">
+                                    <InputLabel id="retieneLabel">Retiene</InputLabel>
+                                    <Select
+                                        labelId="retieneLabel"
+                                        label="Retiene"
+                                        className="form-control"
+                                        onChange={this.handleChange}
+                                        name="retiene"
+                                        value={this.state.retiene}
+                                    >
+                                        <option
+                                            key={0}
+                                            value={""}
+                                        >
+                                            Selecciona
+                                        </option>
+                                        {this.state.concepto &&
+                                            this.state.impuestos.filter(i => this.state.concepto.arClsDetalle.find(c => c.m_nIdImpuesto === i.m_nIdImpuesto && c.m_bTrasladado === false)).map((impuesto) => (
+                                                <option
+                                                    key={impuesto.m_nIdImpuesto}
+                                                    value={impuesto.m_nIdImpuesto}
+                                                >
+                                                    {impuesto.m_sImpuesto}
+                                                </option>
+                                            ))}
+                                    </Select>
+                                </FormControl>
+                            </label>
+                        </div>
 
-                        <div className="input">
-                            <TextField variant="outlined" margin="dense"
-                                onChange={this.handleChange}
-                                className="form-control"
-                                type="number"
-                                style={{ textAlign: "right" }}
-                                disabled
-                                label="Importe Ret"
-                                step="1"
-                                min="0"
-                                value={this.state.importeRet}
-                                name="importeRet"
-                            />
+                        <div className="col-md-2 col-sm-6" style={{ padding: "5px" }}>
+
+                            <div className="input">
+                                <TextField variant="outlined" margin="dense"
+                                    onChange={this.handleChange}
+                                    className="form-control"
+                                    type="number"
+                                    style={{ textAlign: "right" }}
+                                    disabled
+                                    label="Importe Ret"
+                                    step="1"
+                                    min="0"
+                                    value={this.state.importeRet}
+                                    name="importeRet"
+                                />
+                            </div>
+                        </div>
+                        <div className="col-md-1 col-sm-6" style={{ padding: "0px" }}>
+                            <IconButton onClick={this.onSubmit} style={{ padding: "0px" }}>
+                                <AddBoxIcon style={{ fill: "green", fontSize: "xx-large" }} />
+                            </IconButton>
                         </div>
                     </div>
-                    <div className="col-md-1 col-sm-6" style={{ padding: "0px" }}>
-                        <IconButton onClick={this.onSubmit} style={{ padding: "0px" }}>
-                            <AddBoxIcon style={{ fill: "green", fontSize: "xx-large" }} />
-                        </IconButton>
-                    </div>
-                </div>
+                }
+
                 <div className="row">
                     <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
                         {
@@ -401,14 +405,14 @@ class ConceptosAdicionales extends Component {
                         }
 
                     </div>
-                    <div className="col-md-12 col-sm-12" style={{ padding: "5px", backgroundColor: "white" , backgroundClip: "content-box" }}>
+                    <div className="col-md-12 col-sm-12" style={{ padding: "5px", backgroundColor: "white", backgroundClip: "content-box" }}>
 
                         <div className="col-md-12 col-sm-12" style={{ alignItems: "right", display: "inline-flex", justifyContent: "flex-end" }}>
                             <div style={{ margin: "5px", padding: "5px" }}>Subtotal</div> <div style={{ margin: "4px", padding: "4px", marginRight: "15px", backgroundColor: "white", backgroundClip: "border-box", borderStyle: "solid", borderColor: "gray", minWidth: "230px", textAlign: "right" }}> ${parseFloat(this.props.conceptosAdicionales.reduce((total, arg) => total + parseFloat(arg.importe), 0)).toFixed(2)}</div>
                         </div>
                         <div className="col-md-12 col-sm-12" style={{ alignItems: "right", display: "inline-flex", justifyContent: "flex-end" }}>
-                           
-                            <div style={{ margin: "4px", padding: "4px", marginRight: "15px", backgroundColor: "white", backgroundClip: "border-box", borderStyle: "solid", borderColor: "gray", minWidth: "230px", textAlign: "right" }}>  {  this.props.ivaTraslada.map(t => (<div>{`${this.state.impuestos.length !== 0 ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : "" : ""} `}  ${parseFloat(this.props.conceptosAdicionales.filter(c => c.traslada === t).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)).toFixed(2)}<br /></div>))} {  this.props.ivaRetiene.map(t => (<div>{`Retención ${this.state.impuestos.length !== 0 ? `${this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : ""}` : ""} `}  ${parseFloat(this.props.conceptosAdicionales.filter(c => c.retiene === t).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}<br /></div>))} </div>
+
+                            <div style={{ margin: "4px", padding: "4px", marginRight: "15px", backgroundColor: "white", backgroundClip: "border-box", borderStyle: "solid", borderColor: "gray", minWidth: "230px", textAlign: "right" }}>  {this.props.ivaTraslada.map(t => (<div>{`${this.state.impuestos.length !== 0 ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : "" : ""} `}  ${parseFloat(this.props.conceptosAdicionales.filter(c => c.traslada === t).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)).toFixed(2)}<br /></div>))} {this.props.ivaRetiene.map(t => (<div>{`Retención ${this.state.impuestos.length !== 0 ? `${this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : ""}` : ""} `}  ${parseFloat(this.props.conceptosAdicionales.filter(c => c.retiene === t).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}<br /></div>))} </div>
                         </div>
                         <div className="col-md-12 col-sm-12" style={{ alignItems: "right", display: "inline-flex", justifyContent: "flex-end" }}>
                             <div style={{ margin: "5px", padding: "5px" }}>Total</div> <div style={{ margin: "4px", padding: "4px", marginRight: "15px", backgroundColor: "white", backgroundClip: "border-box", borderStyle: "solid", borderColor: "gray", minWidth: "230px", textAlign: "right" }}> ${parseFloat(this.props.conceptosAdicionales.reduce((total, arg) => total + parseFloat(arg.importe), 0) + this.props.conceptosAdicionales.filter(c => this.props.ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0) + this.props.conceptosAdicionales.filter(c => this.props.ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}</div>

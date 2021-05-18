@@ -13,6 +13,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } from "@mat
 import AgregarFolio from "./AgregarClasificacionViaje";
 import CrearTarifa from "../Tarifas/CrearTarifa";
 import AgregarClasificacionViaje from "./AgregarClasificacionViaje";
+import { eliminarClasificacionViaje, agregarClasificacionViaje, modificarClasificacionViaje, obtenerClasificacionViaje } from '../../Util/Contexts/ClasificacionViajeContext';
 window.jQuery = window.$ = $;
 const headers = {
     'Content-Type': 'application/json',
@@ -128,8 +129,7 @@ class ClasificacionViaje extends Component {
         //         showSuccess("El usuario no tiene derechos para realizar el proceso");
         //         return;
         //     }
-        const url = `${process.env.REACT_APP_API_URL}/ClasificacionViajes/Eliminar/` + id;
-        axios.delete(url, { headers }).then(respuesta => {
+        eliminarClasificacionViaje(id).then(respuesta => {
             console.log(respuesta);
             this.getAllData();
         }).catch(err => {
@@ -152,11 +152,8 @@ class ClasificacionViaje extends Component {
             ModificadoEl: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
             ModificadoPor: localStorage.getItem("UsuarioId")
         }
-        console.log(JSON.stringify(params));
-        debugger;
 
-        const url = `${process.env.REACT_APP_API_URL}/ClasificacionViajes/Agregar`;
-        axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+        agregarClasificacionViaje(params).then(respuesta => {
             console.log(respuesta)
             showSuccess(respuesta.data)
 
@@ -186,10 +183,7 @@ class ClasificacionViaje extends Component {
             ModificadoPor: localStorage.getItem("UsuarioId")
         }
 
-        console.log(params)
-
-        const url = `${process.env.REACT_APP_API_URL}/ClasificacionViajes/Modificar`;
-        axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+        modificarClasificacionViaje(this.state.idClasificacionViaje, params).then(respuesta => {
             console.log(respuesta)
             showSuccess(respuesta.data)
             this.getAllData()
@@ -214,7 +208,7 @@ class ClasificacionViaje extends Component {
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
-        this.setState({ pantalla: 2, edit: true, agregar: "Modificar", idTipoUnidad: id });
+        this.setState({ pantalla: 2, edit: true, agregar: "Modificar", idClasificacionViaje: id });
     }
 
     cambiarPantalla(id) {
@@ -222,8 +216,7 @@ class ClasificacionViaje extends Component {
     }
 
     getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/ClasificacionViajes/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerClasificacionViaje().then(respuesta => {
             this.setState({ data: respuesta.data })
         });
     }
@@ -233,7 +226,7 @@ class ClasificacionViaje extends Component {
         $('.nav-tabs li').eq(0).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Listado').addClass('in show');
-        this.setState({ pantalla: 1, edit: false, agregar: "Agregar", idTipoUnidad: null });
+        this.setState({ pantalla: 1, edit: false, agregar: "Agregar", idClasificacionViaje: null });
     }
 
     render() {

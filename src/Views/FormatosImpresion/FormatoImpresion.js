@@ -177,7 +177,18 @@ class FormatoImpresion extends Component {
                 {/*</Dialog>*/}
 
                 <header className="topbar clearfix">
-                    <Cabecera />
+                    <Cabecera titulo="Formatos de Impresión" >
+                        <div className="page-header">
+                            <ul className="list-page-breadcrumb">
+                                <li>
+                                    <a href="/Configuraciones" className="color-mapeo">
+                                        Configuración <i className="zmdi zmdi-chevron-right" />
+                                    </a>
+                                </li>
+                                <li className="active-page">Formatos de Impresión</li>
+                            </ul>
+                        </div>
+                    </Cabecera>
                 </header>
 
                 {/*Leftbar Start Here*/}
@@ -187,23 +198,6 @@ class FormatoImpresion extends Component {
 
                 <section className="main-container">
                     <div className="container-fluid">
-                        <div className="page-header filled full-block light">
-                            <div className="row">
-                                <div className="col-md-6 col-sm-6">
-                                    <h2>Folios</h2>
-                                </div>
-                                <div className="col-md-6 col-sm-6">
-                                    <ul className="list-page-breadcrumb">
-                                        <li>
-                                            <a href="/Configuraciones" className="color-mapeo">
-                                                Configuración <i className="zmdi zmdi-chevron-right" />
-                                            </a>
-                                        </li>
-                                        <li className="active-page">Folios</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
 
 
                         <ul className="nav navStatica nav-tabs">

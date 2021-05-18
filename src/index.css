@@ -1,9 +1,7 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Calibri, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-    font-size: 18px !important;
+  font: normal normal bold 16px/14px Calibri;
+    font-size: 16px !important;
   -webkit-font-smoothing: antialiased;
   width: 100%;
   min-height: 100%;

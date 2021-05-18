@@ -12,6 +12,7 @@ import { DataGrid } from '@material-ui/data-grid';
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import { TextField, Tooltip } from "@material-ui/core";
+import { agregarEstatusViaje, eliminarEstatusViaje, modificarEstatusViaje, obtenerEstatusViajeId, obtenerEstatusViaje } from "../Util/Contexts/EstatusViajeContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -36,14 +37,6 @@ function EstatusViaje() {
 
     const classes = useStyles();
     const [data, setData] = React.useState([])
-    const dataEstatus = [{
-        idEstatus: 1,
-        tipoEstatus: "Disponible"
-    }, {
-        idEstatus: 2,
-        tipoEstatus: "No Disponible"
-    }];
-
     const [state, setState] = React.useState({
         idEstatusViaje: 0,
         DerechoBorrar: 81,
@@ -75,8 +68,7 @@ function EstatusViaje() {
         }
         console.log(params)
         if (state.idEstatusViaje != 0) {
-            const url = `${process.env.REACT_APP_API_URL}/Estatusviajes/Modificar/` + state.idEstatusViaje;
-            axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+            modificarEstatusViaje(state.idEstatusViaje, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData();
             }).catch(err => {
@@ -84,8 +76,7 @@ function EstatusViaje() {
                 showSuccess("err")
             });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/Estatusviajes/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+            agregarEstatusViaje(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
             }).catch(err => {
@@ -101,15 +92,12 @@ function EstatusViaje() {
         const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
         axios.get(urlDelete, { headers }).then(respuesta => {
             //showSuccess(respuesta.data)
-
             derecho = respuesta.data;
             if (derecho == false) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-
-            const url = `${process.env.REACT_APP_API_URL}/Estatusviajes/Eliminar/` + id;
-            axios.delete(url, { headers }).then(respuesta => {
+            eliminarEstatusViaje(id).then(respuesta => {
                 showSuccess(respuesta)
                 getAllData()
             }).catch(err => {
@@ -121,8 +109,7 @@ function EstatusViaje() {
     }
 
     function handleShowModificar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Estatusviajes/GetById/${id}`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerEstatusViajeId(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -138,8 +125,7 @@ function EstatusViaje() {
     }
 
     function handleShowConsultar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Estatusviajes/GetById/${id}`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerEstatusViajeId(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -250,8 +236,7 @@ function EstatusViaje() {
     }, []);
 
     function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/Estatusviajes/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerEstatusViaje().then(respuesta => {
             setData(respuesta.data)
         });
     };

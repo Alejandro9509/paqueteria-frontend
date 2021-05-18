@@ -168,7 +168,10 @@ class TipoServicio extends Component {
                 </thead>
                 <tr>
                     <th>
-                        <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.props.handleChange(event, 0, this.state.tiposServicio, true)} checked={this.props.all} />
+                        <label className="checkbox">
+                            <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.props.handleChange(event, 0, this.state.tiposServicio, true)} checked={this.props.all} />
+                            <i />
+                        </label>
 
                     </th>
                     <th>Código</th>
@@ -179,7 +182,10 @@ class TipoServicio extends Component {
                         return (
                             <tr key={i.m_nIdTipoServicio}>
                                 <td style={{ width: "50px" }}>
-                                    <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.props.handleChange(event, index, this.state.tiposServicio, false)} checked={this.props.tiposServicioSeleccionado.find(t => t.m_nIdTipoServicio === i.m_nIdTipoServicio) != null} />
+                                    <label className="checkbox">
+                                        <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.props.handleChange(event, index, this.state.tiposServicio, false)} checked={this.props.tiposServicioSeleccionado.find(t => t.m_nIdTipoServicio === i.m_nIdTipoServicio) != null} />
+                                        <i />
+                                    </label>
                                 </td>
                                 <td>{i.m_nIdTipoServicio}</td>
                                 <td><strong>{i.m_sDescripcion}</strong></td>

@@ -48,6 +48,12 @@ import {
     Tooltip
 } from "@material-ui/core";
 import { dataGridLocaleText } from "../Constants";
+import { obtenerCiudades } from "../Util/Contexts/CiudadesContext";
+import { obtenerCodigoPostal } from "../Util/Contexts/CodigoPostalContext";
+import { obtenerRemitentesDestinatarios } from "../Util/Contexts/RemitenteDestinatarioContext";
+import { obtenerEmbalajes } from "../Util/Contexts/EmbalajesContext";
+import { obtenerEstatusRecoleccion } from "../Util/Contexts/EstatusContext";
+import { obtenerMonedas } from "../Util/Contexts/MonedaContext";
 
 let timer;
 
@@ -1258,8 +1264,7 @@ function Recoleccion() {
 
 
     function getAllEmbalajes() {
-        const url = `${process.env.REACT_APP_API_URL}/Embalajes/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerEmbalajes().then((respuesta) => {
             setDataEmbalaje(respuesta.data);
         });
     }
@@ -1272,8 +1277,7 @@ function Recoleccion() {
     }
 
     function getAllEstatusRecoleccion() {
-        const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoRecoleccion`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerEstatusRecoleccion().then((respuesta) => {
             setEstatusRecoleccion(respuesta.data);
         });
     }
@@ -1286,15 +1290,13 @@ function Recoleccion() {
     }
 
     function getAllTipoMoneda() {
-        const url = `${process.env.REACT_APP_API_URL}/Moneda/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerMonedas().then((respuesta) => {
             setDataTipoMoneda(respuesta.data);
         });
     }
 
     function getAllCiudades() {
-        const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerCiudades().then((respuesta) => {
             setDataCiudad(respuesta.data);
         });
     }
@@ -1314,8 +1316,7 @@ function Recoleccion() {
     }
 
     async function getAllCodigosPostales() {
-        const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
-        await axios.get(url, {headers}).then((respuesta) => {
+        obtenerCodigoPostal().then((respuesta) => {
           console.log(respuesta.data)
             setDataCodigoPostal(respuesta.data);
         });
@@ -1374,29 +1375,11 @@ function Recoleccion() {
         });
     }
 
-    /*   function getAllCodigosPostalesRem(idCiudad) {
-          const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListadoPorCiudad/`+idCiudad;
-          axios.get(url, { headers }).then((respuesta) => {
-            console.log(respuesta);
-
-            setDataCodigoPostal(respuesta.data);
-          });
-        }
-   */
-    /*  function getAllCodigosPostalesDes(idCiudad) {
-       const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListadoPorCiudad/`+idCiudad;
-       axios.get(url, { headers }).then((respuesta) => {
-         console.log(respuesta);
-
-         setDataCodigoPostal(respuesta.data);
-       });
-     } */
 
 
 
     function getAllRemitentesDestinatarios() {
-        const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerRemitentesDestinatarios().then((respuesta) => {
             setDataRemitenteDestinatario(respuesta.data);
         });
     }
@@ -1412,7 +1395,7 @@ function Recoleccion() {
         const url = `${process.env.REACT_APP_API_URL}/TiposUnidades/GetListado`;
         axios.get(url, { headers }).then((respuesta) => {
             setDataTipoUnidad(respuesta.data);
-            getAllUnidades(respuesta.data[0].m_nIdTipoUnidad);
+            getAllUnidades(1);
         });
     }
 
@@ -3019,7 +3002,13 @@ function Recoleccion() {
                                                                         className="form-control"
                                                                         required
                                                                         value={state.tipoCambio}
-                                                                        onChange={handleChange}
+                                                                        onChange={(event) => {
+                                                                            event.preventDefault();
+                                                                            setState({
+                                                                                ...state,
+                                                                                tipoCambio: event.target.value,
+                                                                            });
+                                                                        }}
                                                                         disabled={state.agregar === "Consultar"}
                                                                         id="tipoCambio"
                                                                     >

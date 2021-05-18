@@ -12,6 +12,7 @@ import { DataGrid } from '@material-ui/data-grid';
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import { FormControl, InputLabel, Select, TextField, Tooltip } from "@material-ui/core";
+import { agregarEstatusUnidades, modificarEstatusUnidades, obtenerEstatusUnidades, eliminarEstatusUnidades, obtenerEstatusUnidadesId } from "../Util/Contexts/EstatusContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -72,8 +73,7 @@ function EstatusUnidad() {
         }
         console.log(params)
         if (state.idEstatusUnidad != 0) {
-            const url = `${process.env.REACT_APP_API_URL}/EstatusUnidades/Modificar/` + state.idEstatusUnidad;
-            axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+            modificarEstatusUnidades(state.idEstatusUnidad, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData();
             }).catch(err => {
@@ -81,8 +81,7 @@ function EstatusUnidad() {
                 showSuccess("err")
             });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/EstatusUnidades/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+            agregarEstatusUnidades().then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
             }).catch(err => {
@@ -105,8 +104,7 @@ function EstatusUnidad() {
                 return;
             }
 
-            const url = `${process.env.REACT_APP_API_URL}/EstatusUnidades/Eliminar/` + id;
-            axios.delete(url, { headers }).then(respuesta => {
+            eliminarEstatusUnidades(id).then(respuesta => {
                 showSuccess(respuesta)
                 getAllData()
             }).catch(err => {
@@ -118,8 +116,7 @@ function EstatusUnidad() {
     }
 
     function handleShowModificar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/EstatusUnidades/GetById/${id}`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerEstatusUnidadesId(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -135,8 +132,7 @@ function EstatusUnidad() {
     }
 
     function handleShowConsultar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/EstatusUnidades/GetById/${id}`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerEstatusUnidadesId(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -259,8 +255,7 @@ function EstatusUnidad() {
     }, []);
 
     function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/EstatusUnidades/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerEstatusUnidades().then(respuesta => {
             setData(respuesta.data)
         });
     };

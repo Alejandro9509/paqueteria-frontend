@@ -12,6 +12,7 @@ import { DataGrid } from '@material-ui/data-grid';
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import { FormControl, InputLabel, Select, Tooltip } from "@material-ui/core";
+import { obtenerCodigoPostal } from "../Util/Contexts/CodigoPostalContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -286,8 +287,7 @@ function Sucursal() {
     }
 
     function getAllCodigosPostales() {
-        const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerCodigoPostal().then((respuesta) => {
             setDataCodigoPostal(respuesta.data);
         });
     }

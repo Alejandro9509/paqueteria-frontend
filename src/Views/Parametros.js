@@ -7,6 +7,7 @@ import $ from "jquery";
 
 import Noty from 'noty';
 import { FormControl, InputLabel, Select, TextField } from "@material-ui/core";
+import { obtenerCodigoPostal } from "../Util/Contexts/CodigoPostalContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -137,8 +138,7 @@ function Parametros() {
     }
 
     function getAllCodigosPostales() {
-        const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerCodigoPostal().then((respuesta) => {
             setDataCodigoPostal(respuesta.data);
         });
     }

@@ -10,6 +10,7 @@ import { DataGrid } from '@material-ui/data-grid';
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import { FormControl, InputLabel, Select, TextField, Tooltip } from "@material-ui/core";
+import { obtenerMonedas } from "../Util/Contexts/MonedaContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -341,8 +342,7 @@ function PaisesEstado() {
     }
 
     function getAllMoneda() {
-        const url = `${process.env.REACT_APP_API_URL}/Moneda/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerMonedas().then((respuesta) => {
             setDataMoneda(respuesta.data);
         });
     }

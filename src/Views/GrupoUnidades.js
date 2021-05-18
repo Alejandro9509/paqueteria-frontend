@@ -9,6 +9,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import Noty from 'noty';
 import { TextField } from "@material-ui/core";
+import { agregarGrupoUnidades, eliminarGrupoUnidades, modificarGrupoUnidades, obtenerGrupoUnidades, obtenerGrupoUnidadesId } from "../Util/Contexts/GrupoUnidadesContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -62,8 +63,7 @@ function GrupoUnidades() {
         }
         console.log(params)
         if (state.IdGrupoUnidad != 0) {
-            const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/Modificar/` + state.IdGrupoUnidad;
-            axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+            modificarGrupoUnidades(state.IdGrupoUnidad, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData();
             }).catch(err => {
@@ -71,8 +71,7 @@ function GrupoUnidades() {
                 showSuccess("err")
             });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+            agregarGrupoUnidades(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData();
             }).catch(err => {
@@ -95,8 +94,7 @@ function GrupoUnidades() {
                 return;
             }
 
-            const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/Eliminar/` + id;
-            axios.delete(url, { headers }).then(respuesta => {
+            eliminarGrupoUnidades(id).then(respuesta => {
                 console.log(respuesta);
                 getAllData();
             }).catch(err => {
@@ -108,9 +106,7 @@ function GrupoUnidades() {
     }
 
     function handleShowModificar(id) {
-        console.log(id)
-        const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/GetById/` + id;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerGrupoUnidadesId(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -125,9 +121,7 @@ function GrupoUnidades() {
     }
 
     function handleShowConsultar(id) {
-        console.log(id)
-        const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/GetById/` + id;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerGrupoUnidadesId(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -201,8 +195,7 @@ function GrupoUnidades() {
     }, []);
 
     function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerGrupoUnidades().then(respuesta => {
             setData(respuesta.data)
         });
     };
@@ -242,9 +235,7 @@ function GrupoUnidades() {
         </>
     );
 
-    const getSubHeaderComponent = () => {
 
-    };
 
     const headers = {
         'Content-Type': 'application/json',

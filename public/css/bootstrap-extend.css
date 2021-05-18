@@ -759,11 +759,9 @@ a.badge:focus {
 }
 .label {
   display: inline;
-  padding: .2em .6em .3em;
-  font-size: 75%;
   font-weight: bold;
   line-height: 1;
-  color: #ffffff;
+  color: #717171;
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
@@ -771,7 +769,7 @@ a.badge:focus {
 }
 a.label:hover,
 a.label:focus {
-  color: #ffffff;
+  color: #717171;
   text-decoration: none;
   cursor: pointer;
 }
@@ -1976,7 +1974,6 @@ input[type="checkbox"] {
   color: red;
 }
 .label {
-  font-size: 14px;
   font-weight: 500;
 }
 .alert {

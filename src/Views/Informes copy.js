@@ -46,6 +46,8 @@ import SearchIcon from "@material-ui/icons/Search";
 import { DataGrid } from "@material-ui/data-grid";
 import Noty from "noty";
 import { dataGridLocaleText } from "../Constants";
+import { obtenerCiudades } from "../Util/Contexts/CiudadesContext";
+import { obtenerEstatusInforme } from "../Util/Contexts/EstatusContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -1468,8 +1470,7 @@ function Informes({ history }) {
     }
 
     function getAllCiudades() {
-        const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerCiudades().then((respuesta) => {
             console.log(respuesta);
 
             setDataOrigenes(respuesta.data);
@@ -1480,7 +1481,7 @@ function Informes({ history }) {
         const url = `${process.env.REACT_APP_API_URL}/TiposUnidades/GetListado`;
         axios.get(url, { headers }).then((respuesta) => {
             setDataTipoUnidad(respuesta.data);
-            getAllUnidades(respuesta.data[0].m_nIdTipoUnidad);
+            getAllUnidades(1);
         });
     }
 
@@ -1503,8 +1504,7 @@ function Informes({ history }) {
     }
 
     function getAllEstatusInformes() {
-        const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoInformes`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerEstatusInforme().then((respuesta) => {
             setEstatusInformes(respuesta.data);
         });
     }

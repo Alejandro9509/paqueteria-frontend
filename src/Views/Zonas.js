@@ -8,6 +8,8 @@ import { DataGrid } from '@material-ui/data-grid';
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import { Tooltip } from "@material-ui/core";
+import { obtenerCiudades } from "../Util/Contexts/CiudadesContext";
+import { obtenerCodigoPostal } from "../Util/Contexts/CodigoPostalContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -278,15 +280,13 @@ function Zonas() {
   }
 
   async function getAllCiudades() {
-    const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
-    await axios.get(url, { headers }).then((respuesta) => {
+    obtenerCiudades().then((respuesta) => {
       setDataCiudad(respuesta.data);
     });
   }
 
   async function getAllCodigoPostal() {
-    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
-    await axios.get(url, { headers }).then((respuesta) => {
+    obtenerCodigoPostal().then((respuesta) => {
       console.log(respuesta.data)
       setDataCodigoPostal(respuesta.data);
       getAllLocalidades(respuesta.data[0].m_nIdCP)

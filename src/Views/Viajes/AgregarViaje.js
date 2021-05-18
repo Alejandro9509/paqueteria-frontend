@@ -14,6 +14,8 @@ import Select from "@material-ui/core/Select";
 import TableUnidadViajes from "./TablaUnidadViajes";
 import {DataGrid} from "@material-ui/data-grid";
 import { dataGridLocaleText } from "../../Constants";
+import { obtenerCiudades } from "../../Util/Contexts/CiudadesContext";
+import { obtenerCodigoPostal } from "../../Util/Contexts/CodigoPostalContext";
 
 const headers = {
     'Content-Type': 'application/json',
@@ -108,8 +110,7 @@ class AgregarViaje extends Component {
     }
 
     getAllCiudades() {
-        const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerCiudades().then((respuesta) => {
             this.setState({dataCiudad: respuesta.data})
         });
     }
@@ -122,8 +123,7 @@ class AgregarViaje extends Component {
     }
 
     getAllCodigosPostales() {
-        const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerCodigoPostal().then((respuesta) => {
             this.setState({dataCodigoPostal: respuesta.data})
         });
     }

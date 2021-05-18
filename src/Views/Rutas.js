@@ -21,6 +21,7 @@ import { SettingsEthernet } from "@material-ui/icons";
 import { useHistory } from "react-router";
 import { Button } from "bootstrap";
 import { dataGridLocaleText } from "../Constants";
+import { obtenerClasificacionViaje } from "../Util/Contexts/ClasificacionViajeContext";
 
 const XLocateClient = window.XLocateClient;
 const XRouteClient = window.XRouteClient;
@@ -214,7 +215,7 @@ function Rutas(props) {
         },
         {
             headerName: "Folio",
-            field: "m_sFolio",
+            field: "m_nIdFolio",
             width: 150,
 
         },
@@ -305,6 +306,10 @@ function Rutas(props) {
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     getAllData();
+                    $('.nav-tabs li ').removeClass('active');
+                    $('.nav-tabs li').eq(0).addClass('active');
+                    $('.tab-content div ').removeClass('in show');
+                    $('#Listado').addClass('in show');
                 })
                 .catch((err) => {
                     console.log(err);
@@ -318,6 +323,10 @@ function Rutas(props) {
                     console.log(respuesta.data);
                     showSuccess(respuesta.data);
                     getAllData();
+                    $('.nav-tabs li ').removeClass('active');
+                    $('.nav-tabs li').eq(0).addClass('active');
+                    $('.tab-content div ').removeClass('in show');
+                    $('#Listado').addClass('in show');
                 })
                 .catch((err) => {
                     console.log(err);
@@ -335,8 +344,7 @@ function Rutas(props) {
     };
 
     function getCalificacionesData() {
-        const url = `${process.env.REACT_APP_API_URL}/ClasificacionViajes/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerClasificacionViaje().then(respuesta => {
             console.log(respuesta.data)
             setCalificaciones(respuesta.data)
         });
@@ -375,7 +383,8 @@ function Rutas(props) {
         })
     };
 
-    function showAgregar() {
+    function showAgregar(event) {
+        event.stopPropagation();
         setState({
             ...state,
             openDialog: false,
@@ -402,6 +411,7 @@ function Rutas(props) {
             activa: false,
             CreadoPor: localStorage.getItem("UsuarioId"),
         })
+        $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
     }
 
     useEffect(value => {
@@ -466,6 +476,10 @@ function Rutas(props) {
                 CreadoPor: localStorage.getItem("UsuarioId"),
 
             })
+            $('.nav-tabs li ').removeClass('active');
+            $('.nav-tabs li').eq(1).addClass('active');
+            $('.tab-content div ').removeClass('in show');
+            $('#Agregar').addClass('in show');
         });
     }
 
@@ -500,6 +514,10 @@ function Rutas(props) {
                 CreadoPor: localStorage.getItem("UsuarioId"),
 
             })
+            $('.nav-tabs li ').removeClass('active');
+            $('.nav-tabs li').eq(1).addClass('active');
+            $('.tab-content div ').removeClass('in show');
+            $('#Agregar').addClass('in show');
         });
 
     }
@@ -756,12 +774,12 @@ function Rutas(props) {
 
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
-                            <a data-toggle="tab" href="#Listado" onClick={() => setState({ ...state, showMap: false })}>
+                            <a data-toggle="tab" data_id="1" href="#Listado" onClick={(event) => { event.stopPropagation(); setState({ showMap: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
                                 Listado
             </a>
                         </li>
                         <li>
-                            <a data-toggle="tab" href="#Agregar" onClick={() => showAgregar()}>
+                            <a data-toggle="tab" href="#Agregar" onClick={(e) => showAgregar(e)}>
                                 {state.agregar}
                             </a>
                         </li>
@@ -781,7 +799,7 @@ function Rutas(props) {
                         <div
                             className="widget-wrap"
                             id="Listado"
-                            className="tab-pane fade in active"
+                            className="tab-pane fade in show"
                         >
                             <div className="widget-wrap">
                                 <div className="widget-content">
@@ -1176,10 +1194,7 @@ function Rutas(props) {
                                                                             <div align="right">
 
                                                                                 <button
-                                                                                    href="#Listado" role="tab" data-toggle="tab"
-                                                                                    href="#Listado"
-                                                                                    role="tab"
-                                                                                    data-toggle="tab"
+                                                                                    onClick={(event) => { event.stopPropagation(); setState({ showMap: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}
                                                                                     className="btn btn-secondary secondary-btn"
                                                                                 >
 

@@ -484,18 +484,26 @@ function TiposServicio() {
                                                         </div>
                                                     </div>
                                                     {/****************************************Activo*************************************************************/}
-                                                    <div className="col-sm-12 col-md-6 unit">
-                                                        <label className="label">
+                                                    <div className="col-sm-12 col-md-3 inline-group unit">
+                                                        <div className="inline-group">
+                                                            <label className="checkbox">
+                                                                <input
+                                                                    checked={state.activo}
+                                                                    onChange={(e) =>
+                                                                        setState({
+                                                                            ...state,
+                                                                            activo: e.target.checked,
+                                                                        })
+                                                                    }
+                                                                    native
+                                                                    name="activo"
+                                                                    type="checkbox"
+                                                                    id="activo"
+                                                                />
+                                                                <i />
                                                             Activo
-                          </label>
-                                                        <div className="input">
-                                                            <input
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="checkbox"
-                                                                placeholder={state.Activo}
-                                                                id="Activo"
-                                                            />
+                            </label>
+
                                                         </div>
                                                     </div>
 

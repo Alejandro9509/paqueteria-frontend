@@ -20,6 +20,7 @@ import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 import { dataGridLocaleText } from "../Constants";
 import { Tooltip } from "@material-ui/core";
+import { obtenerEstatusDocumentos } from "../Util/Contexts/EstatusContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -78,8 +79,7 @@ function Viajes() {
     }
 
     function getAllEstatusDocumento() {
-        const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoDocumentos`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerEstatusDocumentos().then((respuesta) => {
             setEstatusDocumento(respuesta.data);
         });
     }
