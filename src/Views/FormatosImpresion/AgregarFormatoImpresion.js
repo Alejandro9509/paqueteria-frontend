@@ -9,11 +9,12 @@ import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
 import {DataGrid} from '@material-ui/data-grid';
 import $ from "jquery";
-import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
+import {Dialog, DialogActions, DialogContent, DialogTitle, IconButton, InputAdornment} from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
 window.jQuery = window.$ = $;
 const headers = {
@@ -30,7 +31,6 @@ class AgregarFormatoImpresion extends Component {
             dataTipoDocumento: [],
             dataFormatoImpresion: [],
             data: [],
-            idTipoDocumentoAgregar: '',
             idSucursalAgregar: localStorage.getItem("Sucursal"),
             idFormatoImpresion: '',
             folioFinal: '',
@@ -151,28 +151,28 @@ class AgregarFormatoImpresion extends Component {
 
                                 <div className="col-sm-6 col-md-6 col-lg-6 unit">
                                     <label className="input select">
-                                        <FormControl fullWidth variant="outlined" margin="dense">
-                                            <InputLabel id="idFormatoImpresionLabel">Formato Impresión</InputLabel>
-                                            <Select
-                                                labelId="idFormatoImpresionLabel"
-                                                className="form-control"
-                                                required
-                                                value={this.state.idFormatoImpresion}
-                                                onChange={this.handleChange}
-                                                id="idFormatoImpresion"
-                                                name={"idFormatoImpresion"}
-                                                label="Formato Impresión"
-                                            >
-                                                {this.state.dataFormatoImpresion.map((sucursal) => (
-                                                    <option
-                                                        key={sucursal.m_nIdFormato}
-                                                        value={sucursal.m_nIdFormato}
-                                                    >
-                                                        {sucursal.m_sFormato}
-                                                    </option>
-                                                ))}
-                                            </Select>
-                                        </FormControl>
+                                    <input type="file" id="file" style={{display: "none"}} />
+                                    <TextField variant="outlined" margin="dense"
+                                                   onChange={this.handleChange}
+                                                   className="form-control"
+                                                   type="text"
+                                                   required
+                                                   label="Archivo WDE"
+                                                   value={this.state.nombre}
+                                                   name={"file"}
+                                                   InputProps={{
+                                                       endAdornment:
+                                                    <InputAdornment position="end">
+                                                      <IconButton
+                                                      onClick={() => document.getElementById("file").click()}
+                                                        edge="end"
+                                                      >
+                                                        <CloudUploadIcon color="primary" fontSize="large" />
+                                                      </IconButton>
+                                                    </InputAdornment>
+                                                  
+                                                }}
+                                        />
                                     </label>
                                 </div>
 
