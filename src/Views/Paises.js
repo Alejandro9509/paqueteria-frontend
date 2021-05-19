@@ -11,6 +11,8 @@ import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import { FormControl, InputLabel, Select, TextField, Tooltip } from "@material-ui/core";
 import { obtenerMonedas } from "../Util/Contexts/MonedaContext";
+import { agregarPaises, eliminarPaises, modificarPaises, obtenerPaises, obtenerPaisesId } from "../Util/Contexts/PaisesContext";
+import { agregarEstados, eliminarEstados, modificarEstados, obtenerEstadosId, obtenerEstadosPais } from "../Util/Contexts/EstadosContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -68,8 +70,7 @@ function PaisesEstado() {
     }
     console.log(params)
     if (state.idPais != 0) {
-      const url = `${process.env.REACT_APP_API_URL}/Pais/Modificar/` + state.idPais;
-      axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+      modificarPaises(state.idPais, params).then(respuesta => {
         showSuccess(respuesta.data)
         getAllData();
       }).catch(err => {
@@ -77,8 +78,7 @@ function PaisesEstado() {
         showSuccess("err")
       });
     } else {
-      const url = `${process.env.REACT_APP_API_URL}/Pais/Agregar`;
-      axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+      agregarPaises(params).then(respuesta => {
         showSuccess(respuesta.data)
         getAllData();
       }).catch(err => {
@@ -107,8 +107,7 @@ function PaisesEstado() {
         }
         console.log(params)
         if (state.idEstado != 0) {
-            const url = `${process.env.REACT_APP_API_URL}/Estado/Modificar/` + state.idEstado;
-            axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+            modificarEstados(state.idEstado, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData();
             }).catch(err => {
@@ -116,8 +115,7 @@ function PaisesEstado() {
                 showSuccess("err")
             });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/Estado/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+            agregarEstados(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 console.log(respuesta.data)
                 getAllData();
@@ -131,7 +129,6 @@ function PaisesEstado() {
 
     function handleEliminarPais(id) {
         var derecho;
-        //debugger;
         const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
         axios.get(urlDelete, { headers }).then(respuesta => {
             //showSuccess(respuesta.data)
@@ -141,8 +138,7 @@ function PaisesEstado() {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-            const url = `${process.env.REACT_APP_API_URL}/Pais/Eliminar/` + id;
-            axios.delete(url, { headers }).then(respuesta => {
+            eliminarPaises(id).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData();
             }).catch(err => {
@@ -155,8 +151,7 @@ function PaisesEstado() {
     }
 
     function handleEliminarEstado(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Estado/Eliminar/` + id;
-        axios.delete(url, { headers }).then(respuesta => {
+        eliminarEstados(id).then(respuesta => {
             showSuccess(respuesta.data)
             getAllEstado(state.idPais)
         }).catch(err => {
@@ -165,8 +160,7 @@ function PaisesEstado() {
     }
 
     function handleShowModificarPais(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Pais/ById/${id}`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerPaisesId(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -180,8 +174,7 @@ function PaisesEstado() {
     }
 
     function handleShowModificarEstado(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Estado/GetById/${id}`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerEstadosId(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -323,8 +316,7 @@ function PaisesEstado() {
     }, []);
 
     function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/Pais/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerPaises().then(respuesta => {
             setData(respuesta.data)
             getAllEstado(respuesta.data[0].m_nIdPais)
             setState({
@@ -335,8 +327,7 @@ function PaisesEstado() {
     };
 
     function getAllEstado(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Estados/ByPais/${id}`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerEstadosPais(id).then(respuesta => {
             setDataEstado(respuesta.data)
         });
     }
@@ -352,184 +343,8 @@ function PaisesEstado() {
         //    'access-control-allow-origin': '*'
     }
 
-    function DefaultColumnFilter({
-        column: { filterValue, preFilteredRows, setFilter },
-    }) {
-        const count = preFilteredRows.length
 
-        return (
-            <input
-                className="form-control"
-                value={filterValue || ''}
-                onChange={e => {
-                    setFilter(e.target.value || undefined)
-                }}
-                placeholder={`Buscar ${count} registros...`}
-            />
-        )
-    }
 
-    function Table({ columns, data }) {
-
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        )
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn
-            },
-            useFilters,
-            useSortBy,
-        )
-
-        return (
-            <div className="col-md-12">
-                <table className="table" {...getTableProps()}>
-                    <thead>
-                        {headerGroups.map(headerGroup => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                <th>Acciones</th>
-                                {headerGroup.headers.map(column => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render('Name')}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
-                                            {column.isSorted
-                                                ? column.isSortedDesc
-                                                    ? <i className="fa fa-caret-up" />
-                                                    : <i className="fa fa-caret-down" />
-                                                : ''}
-                                        </span>
-                                        <div>{column.canFilter ? column.render('Filter') : null}</div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                        {rows.map(
-                            (row, i) => {
-                                prepareRow(row);
-                                return (
-                                    <tr {...row.getRowProps()}
-                                        onClick={handleSelectPais.bind(this, row.original.m_nIdPais)}
-                                        className={state.idPais === row.original.m_nIdPais ? classes.seleccionado : classes.noSeleccionado}>
-                                        <td>
-                                            <div>
-                                                <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarPais(row.original.m_nIdPais))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                                                <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarPais(row.original.m_nIdPais))} className="btn btn-default btn-sm"><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                                                <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminarPais(row.original.m_nIdPais))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
-                                            </div>
-                                        </td>
-                                        {row.cells.map(cell => {
-                                            return (
-                                                <td {...cell.getCellProps()} >{cell.render('Cell')}</td>
-                                            )
-                                        })}
-                                    </tr>
-                                )
-                            }
-                        )}
-                    </tbody>
-                </table>
-            </div>
-        )
-    }
-
-    function TableEstados({ columns, data }) {
-
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        )
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn
-            },
-            useFilters,
-            useSortBy,
-        )
-
-        return (
-            <div className="col-md-12">
-                <table className="table" {...getTableProps()}>
-                    <thead>
-                        {headerGroups.map(headerGroup => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                <th>Acciones</th>
-                                {headerGroup.headers.map(column => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render('Name')}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
-                                            {column.isSorted
-                                                ? column.isSortedDesc
-                                                    ? <i className="fa fa-caret-up" />
-                                                    : <i className="fa fa-caret-down" />
-                                                : ''}
-                                        </span>
-                                        <div>{column.canFilter ? column.render('Filter') : null}</div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                        {rows.map(
-                            (row, i) => {
-                                prepareRow(row);
-                                return (
-                                    <tr {...row.getRowProps()}>
-                                        <td>
-                                            <div>
-                                                <a href="#AgregarEstado" role="tab" data-toggle="tab" onClick={() => (handleShowModificarEstado(row.original.m_nIdEstado))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                                                <a href="#AgregarEstado" role="tab" data-toggle="tab" className="btn btn-default btn-sm btn-sm" onClick={() => (handleShowModificarEstado(row.original.m_nIdEstado))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                                                <a href="#" className="btn btn-default btn-sm btn-sm" onClick={() => (handleEliminarEstado(row.original.m_nIdEstado))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
-                                            </div>
-                                        </td>
-                                        {row.cells.map(cell => {
-                                            return (
-                                                <td {...cell.getCellProps()} >{cell.render('Cell')}</td>
-                                            )
-                                        })}
-                                    </tr>
-                                )
-                            }
-                        )}
-                    </tbody>
-                </table>
-            </div>
-        )
-    }
 
     return (
         <div >

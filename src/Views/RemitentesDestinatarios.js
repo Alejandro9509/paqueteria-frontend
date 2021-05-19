@@ -31,6 +31,7 @@ import Noty from 'noty';
 import { obtenerCodigoPostalEstado } from "../Util/Contexts/CodigoPostalContext";
 import { obtenerCliente } from "../Util/Contexts/ClientesContext";
 import { agregarRemitentesDestinatarios, eliminarRemitentesDestinatarios, modificarRemitentesDestinatarios, obtenerRemitentesDestinatarios, obtenerRemitentesDestinatariosId, validarNumeroRemitente } from "../Util/Contexts/RemitenteDestinatarioContext";
+import { obtenerPaises } from "../Util/Contexts/PaisesContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -661,8 +662,7 @@ function RemitenteDestinatario(props) {
     }
 
     function getAllPaises() {
-        const url = `${process.env.REACT_APP_API_URL}/Pais/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerPaises().then((respuesta) => {
             setDataPais(respuesta.data);
             getAllEstados(respuesta.data[0].m_nIdPais);
         });

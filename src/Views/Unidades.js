@@ -25,6 +25,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import { obtenerGrupoUnidades } from "../Util/Contexts/GrupoUnidadesContext";
+import { obtenerOperadores } from "../Util/Contexts/OperadoresContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -572,8 +573,7 @@ function Unidades(props) {
     }
 
     function getAllOperadores() {
-        const url = `${process.env.REACT_APP_API_URL}/Operadores/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerOperadores().then((respuesta) => {
             setDataOperador(respuesta.data);
         });
     }

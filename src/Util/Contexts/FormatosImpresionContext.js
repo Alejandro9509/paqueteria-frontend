@@ -21,7 +21,7 @@ function eliminarFormatosImpresion(id){
 }
 
 function obtenerFormatosImpresion(){
-    const url = `${process.env.REACT_APP_API_URL}/FormatosImpresion/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL}/Formato/GetListado`;
     return axios.get(url, { headers })
 }
 

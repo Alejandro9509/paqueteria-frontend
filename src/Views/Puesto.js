@@ -10,6 +10,7 @@ import { DataGrid } from '@material-ui/data-grid';
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import { TextField, Tooltip } from "@material-ui/core";
+import { agregarPuestos, eliminarPuestos, modificarPuestos, obtenerPuestos, obtenerPuestosId } from "../Util/Contexts/PuestoContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -58,8 +59,7 @@ function Puesto() {
         }
         console.log(params)
         if (state.idPuesto != 0) {
-            const url = `${process.env.REACT_APP_API_URL}/Puesto/Modificar/` + state.idPuesto;
-            axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+            modificarPuestos(state.idPuesto, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData();
             }).catch(err => {
@@ -67,8 +67,7 @@ function Puesto() {
                 showSuccess("err")
             });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/Puesto/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+            agregarPuestos(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData();
             }).catch(err => {
@@ -91,8 +90,7 @@ function Puesto() {
                 return;
             }
 
-            const url = `${process.env.REACT_APP_API_URL}/Puesto/Eliminar/` + id;
-            axios.delete(url, { headers }).then(respuesta => {
+            eliminarPuestos(id).then(respuesta => {
                 console.log(respuesta)
                 getAllData();
             }).catch(err => {
@@ -105,8 +103,7 @@ function Puesto() {
 
     function handleShowModificar(id) {
         console.log()
-        const url = `${process.env.REACT_APP_API_URL}/Puesto/GetById/` + id;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerPuestosId(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -209,8 +206,7 @@ function Puesto() {
     }, []);
 
     async function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/Puesto/GetListado`;
-        await axios.get(url, { headers }).then(respuesta => {
+        obtenerPuestos().then(respuesta => {
             setData(respuesta.data)
         });
     };
@@ -220,104 +216,6 @@ function Puesto() {
         //    'access-control-allow-origin': '*'
     }
 
-    function DefaultColumnFilter({
-        column: { filterValue, preFilteredRows, setFilter },
-    }) {
-        const count = preFilteredRows.length
-
-        return (
-            <input
-                className="form-control"
-                value={filterValue || ''}
-                onChange={e => {
-                    setFilter(e.target.value || undefined)
-                }}
-                placeholder={`Buscar ${count} registros...`}
-            />
-        )
-    }
-
-    function Table({ columns, data }) {
-
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        )
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn
-            },
-            useFilters,
-            useSortBy
-        )
-
-        return (
-            <div className="col-md-12">
-                <table className="table" {...getTableProps()}>
-                    <thead>
-                        {headerGroups.map(headerGroup => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                <th>Acciones</th>
-                                {headerGroup.headers.map(column => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render('Name')}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
-                                            {column.isSorted
-                                                ? column.isSortedDesc
-                                                    ? <i className="fa fa-caret-up" />
-                                                    : <i className="fa fa-caret-down" />
-                                                : ''}
-                                        </span>
-                                        <div>{column.canFilter ? column.render('Filter') : null}</div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                        {rows.map(
-                            (row, i) => {
-                                prepareRow(row);
-                                return (
-                                    <tr {...row.getRowProps()}
-                                        onClick={handleSelectRow.bind(this, row.original.m_nIdPuesto)}
-                                        className={state.idPuesto === row.original.m_nIdPuesto ? classes.seleccionado : classes.noSeleccionado}>
-                                        <td>
-                                            <div>
-                                                <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdPuesto))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                                                <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdPuesto))} className="btn btn-default btn-sm"><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                                                <a href="#" className="btn btn-default btn-sm btn-sm" onClick={() => (handleEliminar(row.original.m_nIdPuesto))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
-                                            </div>
-                                        </td>
-                                        {row.cells.map(cell => {
-                                            return (
-                                                <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                                            )
-                                        })}
-                                    </tr>
-                                )
-                            }
-                        )}
-                    </tbody>
-                </table>
-            </div>
-        )
-    }
 
     return (
         <div >

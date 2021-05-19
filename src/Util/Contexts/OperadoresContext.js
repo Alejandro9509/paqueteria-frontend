@@ -16,12 +16,12 @@ function modificarOperadores(id, params) {
 function agregarOperadores(params) {
     const url = `${process.env.REACT_APP_API_URL}/Operador/Agregar`;
     return axios
-                .post(url, Object.assign({}, params), { headers })
+        .post(url, Object.assign({}, params), { headers })
 }
 
 function eliminarOperadores(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Operadores/Eliminar/` + id;
-    return axios.delete(url, { headers })
+    const url = `${process.env.REACT_APP_API_URL}/Operador/Eliminar/` + id;
+    return axios.get(url, { headers })
 }
 
 function obtenerOperadores() {
@@ -29,9 +29,16 @@ function obtenerOperadores() {
     return axios.get(url, { headers })
 }
 
-function obtenerOperadoresId(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Operadores/GetById/${id}`;
+function validarNumeroOperadores(id) {
+    const url = `${process.env.REACT_APP_API_URL}/Operadores/ValidaNumeroOperador/` + id;
     return axios.get(url, { headers })
 }
 
-export { modificarOperadores, agregarOperadores, eliminarOperadores, obtenerOperadoresId, obtenerOperadores }
+function obtenerOperadoresId(id) {
+    const url =
+            `${process.env.REACT_APP_API_URL}/Operador/GetById/` +
+            id;
+    return axios.get(url, { headers })
+}
+
+export { modificarOperadores, agregarOperadores, eliminarOperadores, obtenerOperadoresId, obtenerOperadores, validarNumeroOperadores }

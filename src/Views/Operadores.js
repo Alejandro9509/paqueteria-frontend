@@ -23,7 +23,9 @@ import $ from "jquery";
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import { obtenerDepartamentos } from "../Util/Contexts/DepartamentoContext";
-import { agregarOperadores, modificarOperadores } from "../Util/Contexts/OperadoresContext";
+import { agregarOperadores, eliminarOperadores, modificarOperadores, obtenerOperadores, obtenerOperadoresId, validarNumeroOperadores } from "../Util/Contexts/OperadoresContext";
+import { obtenerPaises } from "../Util/Contexts/PaisesContext";
+import { obtenerPuestos } from "../Util/Contexts/PuestoContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -375,10 +377,7 @@ function Operadores(props) {
 
 
     const handleChangeNumero = (event) => {
-        const url =
-            `${process.env.REACT_APP_API_URL}/Operadores/ValidaNumeroOperador/` + state.NumeroOperador;
-        axios
-            .get(url, { headers })
+        validarNumeroOperadores(state.NumeroOperador)
             .then((respuesta) => {
                 if (respuesta.data != "") {
                     showSuccess(respuesta.data.m_sMensaje);
@@ -446,10 +445,7 @@ function Operadores(props) {
 
     function handleShowModificar(id) {
         console.log(id);
-        const url =
-            `${process.env.REACT_APP_API_URL}/Operador/GetById/` +
-            id;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerOperadoresId(id).then((respuesta) => {
             console.log(respuesta.data);
             setState({
                 ...state,
@@ -518,8 +514,7 @@ function Operadores(props) {
     }
 
     function getAllOperadores() {
-        const url = `${process.env.REACT_APP_API_URL}/Operadores/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerOperadores().then((respuesta) => {
             console.log(respuesta);
 
             setDataOperador(respuesta.data);
@@ -535,8 +530,7 @@ function Operadores(props) {
     }
 
     function getAllPuestos() {
-        const url = `${process.env.REACT_APP_API_URL}/Puesto/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerPuestos().then((respuesta) => {
             console.log(respuesta);
 
             setDataPuesto(respuesta.data);
@@ -551,8 +545,7 @@ function Operadores(props) {
     }
 
     function getAllPaises() {
-        const url = `${process.env.REACT_APP_API_URL}/Pais/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerPaises().then((respuesta) => {
             console.log(respuesta);
 
             setDataPais(respuesta.data);
@@ -570,9 +563,7 @@ function Operadores(props) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-            const url = `${process.env.REACT_APP_API_URL}/Operador/Eliminar/` + id;
-            axios
-                .get(url, { headers })
+            eliminarOperadores(id)
                 .then((respuesta) => {
                     console.log(respuesta);
                     getAllOperadores();

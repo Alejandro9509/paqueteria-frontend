@@ -21,6 +21,15 @@ const headers = {
     'Content-Type': 'application/json',
     //    'access-control-allow-origin': '*'
 }
+function showSuccess(mensaje) {
+    new Noty({
+        type: "information",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000"
+    }).show()
+}
+
 
 class AgregarFormatoImpresion extends Component {
 
@@ -123,7 +132,7 @@ class AgregarFormatoImpresion extends Component {
 
                                 <div className="col-sm-6 col-md-6 col-lg-6 unit">
                                     <label className="input">
-                                    <input type="file" id="file" onChange={(e) => this.setState({file: e.target.files})} style={{display: "none"}} />
+                                    <input type="file" id="file" accept=".WDE, .wde" onChange={(e) => {if(e.target.files.length > 1) { showSuccess("Debe adjuntar solo un archivo")}else { this.setState({file: e.target.files})}}} style={{display: "none"}} />
                                     <TextField variant="outlined" margin="dense"
                                                    onChange={this.handleChange}
                                                    className="form-control"
@@ -131,7 +140,7 @@ class AgregarFormatoImpresion extends Component {
                                                    required
                                                    disabled={true}
                                                    label="Archivo WDE"
-                                                   value={this.state.nombre}
+                                                   value={this.state.file.length !== 0 ? this.state.file[0].name : ""}
                                                    name={"file"}
                                                    InputProps={{
                                                        endAdornment:
@@ -172,14 +181,14 @@ class AgregarFormatoImpresion extends Component {
 
                                 <div className="col-sm-6 col-md-6 col-lg-6 unit">
                                     <div className="input">
-                                    <input type="file" id="image" onChange={(e) => this.setState({image: e.target.files})} style={{display: "none"}} />
+                                    <input type="file" id="image" accept="image/*" onChange={(e) => {if(e.target.files.length > 1) { showSuccess("Debe adjuntar solo una imagen")}else { this.setState({image: e.target.files})}}}  style={{display: "none"}} />
                                         <TextField variant="outlined" margin="dense"
                                                    className="form-control"
                                                    type="text"
                                                    disabled={true}
                                                    required
                                                    label="Archivo Imagen"
-                                                   value={this.state.nombreImagen}
+                                                   value={this.state.image.length !== 0 ? this.state.image[0].name : ""}
                                                    name={"nombreImagen"}
                                                    InputProps={{
                                                     endAdornment:

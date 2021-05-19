@@ -12,6 +12,7 @@ import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import { modificarCiudad, agregarCiudad, eliminarCiudad, obtenerCiudadId, obtenerCiudades } from "../Util/Contexts/CiudadesContext";
 import { agregarCodigoPostal, modificarCodigoPostal, obtenerCodigoPostalCiudad, obtenerCodigoPostalId, eliminarCodigoPostal } from "../Util/Contexts/CodigoPostalContext";
+import { obtenerPaises } from "../Util/Contexts/PaisesContext";
 
 window.jQuery = window.$ = $;
 
@@ -375,8 +376,7 @@ function CiudadesCodigoPostal() {
     }
 
     function getAllPais() {
-        const url = `${process.env.REACT_APP_API_URL}/Pais/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerPaises().then((respuesta) => {
             setDataPais(respuesta.data);
             getAllEstado(respuesta.data[0].m_nIdPais)
         });

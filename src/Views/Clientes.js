@@ -29,6 +29,7 @@ import { InputLabel, Select, FormControl, Tooltip, Stepper, Step, StepLabel } fr
 import { agregarCliente, eliminarCliente, modificarCliente, obtenerCliente, obtenerClienteId, validarNumeroCliente } from "../Util/Contexts/ClientesContext";
 import { obtenerGrupoClientes } from "../Util/Contexts/GrupoClientesContext";
 import { obtenerMonedas } from "../Util/Contexts/MonedaContext";
+import { obtenerPaises } from "../Util/Contexts/PaisesContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -543,8 +544,7 @@ function Clientes(props) {
     }
 
     function getAllPaises() {
-        const url = `${process.env.REACT_APP_API_URL}/Pais/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerPaises().then((respuesta) => {
             setDataPais(respuesta.data);
         });
     }

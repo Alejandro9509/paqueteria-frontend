@@ -12,7 +12,7 @@ import $ from "jquery";
 import { Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
 import AgregarFormatoImpresion from "./AgregarFormatoImpresion";
 import { toBase64 } from '../../Util/GlobalFunctions';
-import { agregarFormatosImpresion } from '../../Util/Contexts/FormatosImpresionContext';
+import { agregarFormatosImpresion, obtenerFormatosImpresion } from '../../Util/Contexts/FormatosImpresionContext';
 window.jQuery = window.$ = $;
 const headers = {
     'Content-Type': 'application/json',
@@ -59,18 +59,30 @@ class FormatoImpresion extends Component {
                 //     width: 300,
                 // },
                 {
-                    headerName: "Serie",
-                    field: "m_sSerie",
+                    headerName: "Formato",
+                    field: "m_sFormato",
                     width: 300,
                 }, {
-                    headerName: "Documento",
-                    field: "m_nIdTipoDocumento",
+                    headerName: "Tipo Proceso",
+                    field: "m_nTipoProceso",
                     width: 200,
                 }, {
-                    headerName: "Sucursal",
-                    field: "m_sSucursal",
+                    headerName: "Creado El",
+                    field: "m_dtCreadoEl",
+                    width: 200,
+                }, {
+                    headerName: "Creado Por",
+                    field: "m_nCreadoPor",
                     width: 125,
-                },
+                }, {
+                    headerName: "Modificado El",
+                    field: "m_dtModificadoEl",
+                    width: 200,
+                }, {
+                    headerName: "Modificado Por",
+                    field: "m_nModificadoPor",
+                    width: 150,
+                }
                 // {
                 //     headerName: "Estatus",
                 //     field: "m_nEstatus",
@@ -150,11 +162,10 @@ class FormatoImpresion extends Component {
     }
 
     getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/Folios/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerFormatosImpresion().then(respuesta => {
             this.setState({ data: respuesta.data, agregar: "Agregar" })
         });
-    }
+    } 
 
     handleClose() {
         this.setState({ openDialog: false })
@@ -233,10 +244,10 @@ class FormatoImpresion extends Component {
                                                     columns={columns}
                                                     density="compact"
                                                     pageSize={Math.floor((this.state.height - 310) / 30)}
-                                                    getRowId={(row) => row.m_nIdFolio}
+                                                    getRowId={(row) => row.m_nIdFormato}
                                                     onRowSelected={(row) => {
                                                         this.setState({
-                                                            idTarifa: row.data.m_nIdFolio
+                                                            idTarifa: row.data.m_nIdFormato
                                                         })
                                                     }}
                                                 />

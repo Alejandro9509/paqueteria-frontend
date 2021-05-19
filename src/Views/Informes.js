@@ -51,6 +51,7 @@ import { dataGridLocaleText } from "../Constants";
 import { obtenerCiudades } from "../Util/Contexts/CiudadesContext";
 import { obtenerEstatusInforme } from "../Util/Contexts/EstatusContext";
 import { obtenerGuia, obtenerGuiaPendientes } from "../Util/Contexts/GuiaContext";
+import { obtenerOperadores } from "../Util/Contexts/OperadoresContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -1433,8 +1434,7 @@ function Informes({ history }) {
     }
 
     function getAllOperadores() {
-        const url = `${process.env.REACT_APP_API_URL}/Operadores/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerOperadores().then((respuesta) => {
             setDataOperadores(respuesta.data);
         });
     }

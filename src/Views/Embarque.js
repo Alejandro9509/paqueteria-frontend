@@ -44,6 +44,7 @@ import { obtenerRemitentesDestinatarios } from "../Util/Contexts/RemitenteDestin
 import { obtenerEmbalajes } from "../Util/Contexts/EmbalajesContext";
 import { cancelarEmbarque, eliminarEmbarques, obtenerEmbarquesId, obtenerUltimoFolioEmbarques, obtenerEmbarqueCancelado, agregarEmbarques, modificarEmbarques, obtenerEmbarquesFiltro } from "../Util/Contexts/EmbarquesContext";
 import { obtenerMonedas } from "../Util/Contexts/MonedaContext";
+import { obtenerOperadores } from "../Util/Contexts/OperadoresContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -1362,8 +1363,7 @@ function Embarque(props) {
     }
 
     async function getAllOperadores() {
-        const url = `${process.env.REACT_APP_API_URL}/Operadores/GetListado`;
-        await axios.get(url, { headers }).then((respuesta) => {
+        obtenerOperadores().then((respuesta) => {
             setDataOperador(respuesta.data);
         });
     }
