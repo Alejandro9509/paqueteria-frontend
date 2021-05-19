@@ -203,7 +203,7 @@ function GrupoCliente() {
             width: 200,
         }, {
             headerName: "Creado El",
-            field: "m_dtCreadoEl",
+            field: "m_sCreadoEl",
             width: 200,
         }, {
             headerName: "Creado Por",
@@ -211,7 +211,7 @@ function GrupoCliente() {
             width: 150,
         }, {
             headerName: "Modificado El",
-            field: "m_dtModificadoEl",
+            field: "m_sModificadoEl",
             width: 200,
         }, {
             headerName: "Modificado Por",
