@@ -71,7 +71,7 @@ class Zonas extends Component {
         },
         {
           headerName: "Creado El",
-          field: "m_dtCreadoEl",
+          field: "m_sCreadoEl",
           width: 200,
         },
         {
@@ -81,7 +81,7 @@ class Zonas extends Component {
         },
         {
           headerName: "Modificado El",
-          field: "m_dtModificadoEl",
+          field: "m_sModificadoEl",
           width: 200,
         },
         {
@@ -181,7 +181,7 @@ class Zonas extends Component {
     $('.nav-tabs li').eq(1).addClass('active');
     $('.tab-content div ').removeClass('in show');
     $('#Agregar').addClass('in show');
-    const url = `${process.env.REACT_APP_API_URL}/Departamento/GetById/` + id;
+    const url = `${process.env.REACT_APP_API_URL}/Zonas/GetById/` + id;
     axios.get(url, { headers }).then(respuesta => {
       console.log(respuesta.data)
       this.setState({
@@ -199,7 +199,7 @@ class Zonas extends Component {
     $('.nav-tabs li').eq(1).addClass('active');
     $('.tab-content div ').removeClass('in show');
     $('#Agregar').addClass('in show');
-    const url = `${process.env.REACT_APP_API_URL}/Departamento/GetById/` + id;
+    const url = `${process.env.REACT_APP_API_URL}/Zonas/GetById/` + id;
     axios.get(url, { headers }).then(respuesta => {
       console.log(respuesta.data)
       this.setState({
@@ -237,7 +237,18 @@ class Zonas extends Component {
       <div>
 
         <header className="topbar clearfix">
-          <Cabecera />
+          <Cabecera titulo="Zonas" >
+            <div className="page-header">
+              <ul className="list-page-breadcrumb">
+                <li>
+                  <a href="/Catalogos" className="color-mapeo">
+                    Configuración <i className="zmdi zmdi-chevron-right" />
+                  </a>
+                </li>
+                <li className="active-page">Zonas</li>
+              </ul>
+            </div>
+          </Cabecera>
         </header>
 
         {/*Leftbar Start Here*/}
@@ -250,24 +261,6 @@ class Zonas extends Component {
         <section className="main-container">
 
           <div className="container-fluid">
-
-            <div className="page-header filled full-block light">
-              <div className="row">
-                <div className="col-md-6 col-sm-6">
-                  <h2>Zonas</h2>
-                </div>
-                <div className="col-md-6 col-sm-6">
-                  <ul className="list-page-breadcrumb">
-                    <li>
-                      <a href="/Catalogos" className="color-mapeo">
-                        Configuración <i className="zmdi zmdi-chevron-right" />
-                      </a>
-                    </li>
-                    <li className="active-page">Zonas</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
 
             <ul className="nav navStatica nav-tabs">
               <li className="active">
