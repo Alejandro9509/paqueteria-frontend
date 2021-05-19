@@ -22,7 +22,8 @@ import EstatusInformePage from './Views/EstatusInforme';
 import EstatusDocumentoPage from './Views/EstatusDocumento';
 import ConceptosFacturacionPage from './Views/ConceptosFacturacion/ConceptosFacturacion';
 import TarifasPage from './Views/Tarifas/Tarifas';
-import ClasificacionViajePage from './Views/ClasificacionViajes/ClasificacionViaje'
+import ClasificacionViajePage from './Views/ClasificacionViajes/ClasificacionViaje';
+import ConfigSeguimiento from './Views/ConfigSeguimiento';
 
 import {ReactComponent as GClienteIcon} from './iconos/Catalogos/Icono Grupo Clientes/icono_grupo_cliente.svg';
 import {ReactComponent as BancoIcon} from './iconos/Catalogos/Icono Banco/icono_banco.svg';
@@ -222,6 +223,12 @@ const catalogRoutes = [
     name: "Parámetros Configuración",
     icon: <PConfiguracionIcon/>,
     component: EmbalajesPage,
+  },
+  {
+    path: "/ConfigSeguimiento",
+    name: "Configurar Seguimiento",
+    icon: <PConfiguracionIcon/>,
+    component: ConfigSeguimiento,
   },
 ];
 
