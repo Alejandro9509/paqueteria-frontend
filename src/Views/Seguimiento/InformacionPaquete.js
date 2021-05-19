@@ -25,16 +25,16 @@ const useStyles = makeStyles((theme) => ({
 export default function InformacionPaquete(props){
     console.log(props.package);
     const classes = useStyles();
-    const packId = props.package.id;
-    const weight = props.package.weight;
-    const large = props.package.large;
-    const width = props.package.width;
-    const height = props.package.height;
-    const type = props.package.type;
-    const value = props.package.value;
-    const description = props.package.description;
-    const observation = props.package.observation;
-    const quantity = props.package.quantity;
+    const packId = props.package.m_nIdEmbarque;
+    const weight = props.package.m_xPeso;
+    const large = props.package.m_xLargo;
+    const width = props.package.m_xAncho;
+    const height = props.package.m_xAlto;
+    const type = props.package.m_nTipo;
+    const value = props.package.m_cValorDeclarado;
+    const description = props.package.m_sDescripcion;
+    const observation = props.package.m_sObservaciones;
+    const quantity = props.package.ctd;
 
     return(
         <div>

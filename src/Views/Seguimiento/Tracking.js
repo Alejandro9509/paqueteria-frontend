@@ -96,45 +96,8 @@ export default function Tracking(...props){
         folio: "",
         fechaEnvio: "",
         tipoServicio: -1,
-        packages: [
-            {
-                id: 1,
-                weight: 100,
-                large: 10,
-                width: 14,
-                height: 5,
-                type: "Caja de madera",
-                value: 1500.00,
-                description: "Artículos de higiene personal",
-                observation: "Los productos estan sellados correctamente y no presentan daños.",
-                quantity: 1
-            },
-            {
-                id: 2,
-                weight: 200,
-                large: 20,
-                width: 24,
-                height: 25,
-                type: "Caja de madera",
-                value: 2500.00,
-                description: "Artículos de higiene personal",
-                observation: "Los productos estan sellados correctamente y no presentan daños.",
-                quantity: 2
-            },
-            {
-                id: 3,
-                weight: 300,
-                large: 30,
-                width: 34,
-                height: 35,
-                type: "Caja de madera",
-                value: 3500.00,
-                description: "Artículos de higiene personal",
-                observation: "Los productos estan sellados correctamente y no presentan daños.",
-                quantity: 3
-            }
-        ]
-
+        paquetes: [],
+        estatusGuia: 0
     });
 
     const headers = {
@@ -157,6 +120,8 @@ export default function Tracking(...props){
                 folio: respuesta.data.m_nFolioGuia,
                 fechaEnvio: respuesta.data.m_dFechaSalida,
                 tipoServicio: respuesta.data.m_nIdTipoServicio,
+                paquetes: respuesta.data.m_arrClsDetalle,
+                estatusGuia: respuesta.data.m_nIdEstatusGuia
             })
         }).catch(function (err) {
             console.log(err.data)
@@ -203,7 +168,7 @@ export default function Tracking(...props){
                         <List 
                             component="div" 
                             disablePadding>{
-                            entrega.packages.map(
+                            guiaData.paquetes.map(
                                 p => (
                                 <ListItem 
                                     className={classes.nested}>
@@ -227,7 +192,7 @@ export default function Tracking(...props){
                         in={openRastreo} 
                         timeout="auto" 
                         unmountOnExit>
-                        <DetallesSeguimiento/>
+                        <DetallesSeguimiento estatusGuia = {guiaData.estatusGuia}/>
                     </Collapse>
                     </List>
                         </div>
