@@ -114,7 +114,7 @@ class FormatoImpresion extends Component {
         // });
     }
 
-    handleAceptar(data) {
+    async handleAceptar(data) {
         let file = await toBase64(data.file[0])
         let image = await toBase64(data.image[0])
         var params = {
