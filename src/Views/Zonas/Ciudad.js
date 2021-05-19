@@ -60,13 +60,9 @@ class Ciudad extends Component {
 
     return (
       <table style={{ overflow: "scroll", width: "100%" }}>
-        <thead>
-          <th></th>
-          <th>Ciudades</th>
-        </thead>
         <tr>
           <th>
-            <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.props.handleChange(event, 0, this.props.dataCiudades, true)} checked={this.props.all} />
+            <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.props.handleChangeChecboxCiudad(event, 0, this.props.dataCiudades, !this.props.all)} checked={this.props.all} />
           </th>
           <th>Ciudades</th>
         </tr>

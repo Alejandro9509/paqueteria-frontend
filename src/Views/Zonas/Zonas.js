@@ -103,7 +103,6 @@ class Zonas extends Component {
     this.getAllData = this.getAllData.bind(this)
     this.getAllMunicipios = this.getAllMunicipios.bind(this);
     this.getAllCiudades = this.getAllCiudades.bind(this);
-    this.getAllCodigoPostal = this.getAllCodigoPostal.bind(this);
     this.getAllSucursalData = this.getAllSucursalData.bind(this);
     this.cambiarPantalla = this.cambiarPantalla.bind(this)
     this.handleShowModificar = this.handleShowModificar.bind(this)
@@ -120,7 +119,6 @@ class Zonas extends Component {
     this.getAllData()
     this.getAllMunicipios();
     this.getAllCiudades();
-    this.getAllCodigoPostal();
     this.getAllSucursalData();
   }
 
@@ -128,14 +126,13 @@ class Zonas extends Component {
 
   }
 
-  handleAceptar(e) {
-    e.preventDefault()
+  handleAceptar(data) {
     var params = {
 
       "m_arrZonasCiudades": [],
 
-      "CreadoPor": this.state.CreadoPor,
-      "ModificadoPor": this.state.ModificadoPor
+      "CreadoPor": data.CreadoPor,
+      "ModificadoPor": data.ModificadoPor
     }
     console.log(params)
     if (this.state.idDepartamento != 0) {
@@ -255,15 +252,6 @@ class Zonas extends Component {
     const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
     axios.get(url, { headers }).then((respuesta) => {
       this.setState({ dataCiudad: respuesta.data })
-    });
-  }
-
-  getAllCodigoPostal() {
-    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
-    axios.get(url, { headers }).then((respuesta) => {
-      console.log(respuesta.data)
-      this.setState({ dataCodigoPostal: respuesta.data })
-      this.getAllLocalidades(respuesta.data[0].m_nIdCP)
     });
   }
 

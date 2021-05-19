@@ -48,6 +48,7 @@ class ZonasAgregar extends Component {
     this.handleTabChange = this.handleTabChange.bind(this)
     this.handleChangeChecboxCiudad = this.handleChangeChecboxCiudad.bind(this)
     this.handleChangeChecboxCodigoPostal = this.handleChangeChecboxCodigoPostal.bind(this)
+    this.handleChangeChecboxLocalidad = this.handleChangeChecboxLocalidad.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
   }
 
@@ -91,7 +92,6 @@ class ZonasAgregar extends Component {
 
   handleCodigoPostalRowClick(event, id) {
     event.preventDefault()
-    console.log(id)
     this.setState({
       idCodigoPostalSeleccionado: id
     });
@@ -128,22 +128,32 @@ class ZonasAgregar extends Component {
     this.setState({ tab: newValue });
   }
 
-  handleChangeChecboxCiudad(event, index, arrayCiudades, all) {
+  handleChangeChecboxCiudad(event, ciudad, arrayCiudades, all) {
     const array = this.state.ciudadesSeleccionado
-    if (all) {
-      this.setState({
-        ciudadesAll: true,
-        ciudadesSeleccionado: arrayCiudades
-      });
-      return
+    if(ciudad == 0){
+      if (all) {
+        this.setState({
+          ciudadesAll: true,
+          ciudadesSeleccionado: arrayCiudades
+        });
+        return
+      } else {
+        this.setState({
+          ciudadesAll: false,
+          ciudadesSeleccionado: []
+        });
+        return
+      }
     }
     if (event.target.checked) {
-      array.push(arrayCiudades[index])
+      array.push(ciudad)
+      console.log(array)
       this.setState({
         ciudadesSeleccionado: array
       });
     } else {
-      array.splice(array.indexOf(a => a.m_nIdCiudad === arrayCiudades[index].m_nIdCiudad), 1)
+      array.splice(array.indexOf(ciudad), 1)
+      console.log(array)
       this.setState({
         ciudadesAll: false,
         ciudadesSeleccionado: array
@@ -152,25 +162,70 @@ class ZonasAgregar extends Component {
 
   }
 
-  handleChangeChecboxCodigoPostal(event, index, arrayTipos, all) {
+  handleChangeChecboxCodigoPostal(event, codigoPostal, arrayCodigoPostal, all) {
     const array = this.state.codigoPostalesSeleccionado
-    if (all) {
-      this.setState({
-        codigoPostalAll: true,
-        codigoPostalesSeleccionado: arrayTipos
-      });
-      return
+    console.log(all)
+    if(codigoPostal == 0){
+      if (all) {
+        this.setState({
+          codigoPostalesAll: all,
+          codigoPostalesSeleccionado: arrayCodigoPostal
+        });
+        return
+      } else {
+        this.setState({
+          codigoPostalesAll: all,
+          codigoPostalesSeleccionado: []
+        });
+        return
+      }
     }
+    
+    console.log(event.target)
     if (event.target.checked) {
-      array.push(arrayTipos[index])
+      array.push(codigoPostal)
       this.setState({
         codigoPostalesSeleccionado: array
       });
     } else {
-      array.splice(array.indexOf(a => a.m_nIdCP === arrayTipos[index].m_nIdCP), 1)
+      console.log(array)
+      array.splice(array.indexOf(codigoPostal), 1)
       this.setState({
-        codigoPostalAll: false,
+        codigoPostalesAll: false,
         codigoPostalesSeleccionado: array
+      });
+    }
+
+  }
+
+  handleChangeChecboxLocalidad(event, localidad, arrayLocalidad, all) {
+    const array = this.state.localidadesSeleccionado
+    if(localidad == 0){
+      if (all) {
+        this.setState({
+          localidadesAll: true,
+          localidadesSeleccionado: arrayLocalidad
+        });
+        return
+      } else {
+        this.setState({
+          localidadesAll: false,
+          localidadesSeleccionado: []
+        });
+        return
+      }
+    }
+
+    if (event.target.checked) {
+      array.push(localidad)
+      this.setState({
+        localidadesSeleccionado: array
+      });
+    } else {
+      array.splice(array.indexOf(localidad), 1)
+      this.setState({
+        localidadesAll: false,
+        localidadesSeleccionado: array
       });
     }
 
@@ -279,7 +334,7 @@ class ZonasAgregar extends Component {
                         <CodigoPostal
                           idCiudadSeleccionado={this.state.idCiudadSeleccionado}
                           codigoPostalesSeleccionado={this.state.codigoPostalesSeleccionado}
-                          handleChange={this.handleChangeChecboxEstado}
+                          handleChange={this.handleChangeChecboxCodigoPostal}
                           handleCodigoPostalRowClick={this.handleCodigoPostalRowClick}
                           all={this.state.codigoPostalesAll}
                         >
@@ -294,7 +349,7 @@ class ZonasAgregar extends Component {
                         <Localidad
                           localidadesSeleccionado={this.state.localidadesSeleccionado}
                           idCodigoPostalSeleccionado={this.state.idCodigoPostalSeleccionado}
-                          handleChange={this.handleChangeChecboxEstado}
+                          handleChange={this.handleChangeChecboxLocalidad}
                           all={this.state.localidadesAll}
                         >
                         </Localidad>

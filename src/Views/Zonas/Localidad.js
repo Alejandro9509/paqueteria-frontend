@@ -66,13 +66,9 @@ class Localidad extends Component {
 
     return (
       <table style={{ overflow: "scroll", width: "100%" }}>
-        <thead style={{ width: "100%" }}>
-          <th></th>
-          <th>Localidad</th>
-        </thead>
-        <tr>
+         <tr>
           <th>
-            <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.props.handleChange(event, 0, this.state.dataLocalidades, true)} checked={this.props.all} />
+            <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.props.handleChange(event, 0, this.state.dataLocalidades, !this.props.all)} checked={this.props.all} />
           </th>
           <th>Localidad</th>
         </tr>
@@ -81,7 +77,7 @@ class Localidad extends Component {
             return (
               <tr key={index}>
                 <td style={{ width: "50px" }}>
-                  <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.props.handleChange(event, index, this.props.dataLocalidades, false)} checked={this.props.localidadesSeleccionado.find(t => t.m_nIdLocalidad === i.m_nIdLocalidad) != null} />
+                  <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.props.handleChange(event, i, this.props.dataLocalidades, false)} checked={this.props.localidadesSeleccionado.find(t => t.m_nIdLocalidad === i.m_nIdLocalidad) != null} />
                 </td>
                 <td><strong>{i.m_sLocalidad}</strong></td>
               </tr>
