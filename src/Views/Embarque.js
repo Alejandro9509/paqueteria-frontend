@@ -92,6 +92,7 @@ function Embarque(props) {
     const [dataEstatusEmbarque, setEstatusEmbarque] = React.useState([]);
     const [dataTipoMoneda, setDataTipoMoneda] = React.useState([]);
     const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
+    const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
     const [dataCiudad, setDataCiudad] = React.useState([]);
     const [dataCodigoPostal, setDataCodigoPostal] = React.useState([]);
     const [dataOperador, setDataOperador] = React.useState([]);
@@ -799,7 +800,6 @@ function Embarque(props) {
     }
 
     const handleChange = (event) => {
-        console.log(event.target.name + " : " + event.target.value);
         setState({
             ...state,
             [event.target.name]: event.target.value,
@@ -1342,6 +1342,7 @@ function Embarque(props) {
         getAllRemitentesDestinatarios();
         getAllEmbalajes();
         getUltimoFolioEmbarque();
+        getTipoCambio();
     }
 
     async function getAllEmbarque() {
@@ -1420,7 +1421,6 @@ function Embarque(props) {
         await axios.get(url, { headers }).then((respuesta) => {
             setDataUnidad(respuesta.data);
         });
-        console.log(dataUnidad);
     }
 
     async function getAllEmbalajes() {
@@ -1429,6 +1429,18 @@ function Embarque(props) {
             setDataEmbalaje(respuesta.data);
         });
     }
+
+    async function getTipoCambio() {
+        const url = `${process.env.REACT_APP_API_URL}/TipoCambio/GetListado`;
+        await axios.get(url, { headers }).then(respuesta => {
+            console.log(respuesta.data[0].m_cTipoCambio)
+            setDataTipoCambio(respuesta.data)
+            setState({
+                ...state,
+                tipoCambio: respuesta.data[0].m_cTipoCambio
+            })
+        });
+    };
 
     const headers = {
         "Content-Type": "application/json",
@@ -2961,7 +2973,7 @@ function Embarque(props) {
                                                                     required
                                                                     value={state.tipoCambio}
                                                                     disabled={state.agregar === "Consultar"}
-                                                                    id="tipoCambio"
+                                                                    name="tipoCambio"
                                                                 />
                                                             </div>
                                                         </div>
@@ -3832,20 +3844,20 @@ function Embarque(props) {
                                                                 </div>
 
                                                                 <div className="col-sm-12 col-md-12  unit">
-                                                                    <label className="label">
+                                                                    <label className="checkbox">
                                                                         Entrega en Diferente Domicilio
-                                                                    </label>
-                                                                    <div className="input">
                                                                         <input
                                                                             onChange={handleEntregaCheckboxChange}
                                                                             className="form-control"
                                                                             type="checkbox"
                                                                             checked={state.diferenteEntrega}
                                                                             value={state.diferenteEntrega}
+                                                                            style={{ height: "20px" }}
                                                                             disabled={state.agregar === "Consultar"}
                                                                             id="diferenteEntrega"
                                                                         />
-                                                                    </div>
+                                                                        <i />
+                                                                    </label>
                                                                 </div>
                                                             </div>
                                                         </div>
