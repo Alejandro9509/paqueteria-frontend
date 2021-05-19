@@ -99,15 +99,15 @@ function EstatusViaje() {
         return;
       }
 
-      const url = `${process.env.REACT_APP_API_URL}/Estatusviajes/Eliminar/` + id;
+      const url = `${process.env.REACT_APP_API_URL}/EstatusViajes/Eliminar/` + id;
       axios.delete(url, { headers }).then(respuesta => {
-        showSuccess(respuesta)
+        showSuccess(respuesta.data)
         getAllData()
       }).catch(err => {
-        showSuccess(err)
+        showSuccess(err.data)
       });
     }).catch(err => {
-      showSuccess(err)
+      showSuccess(err.data)
     });
   }
 
@@ -183,7 +183,6 @@ function EstatusViaje() {
       field: "m_sAbreviacion",
       width: 125,
       renderCell: (row) => {
-        console.log(row.row.m_sColor)
         return (
           <div style={{ backgroundColor: "#" + row.row.m_sColor, width: "100%", textAlign: "center" }}>
             {row.row.m_sAbreviacion}
