@@ -9,8 +9,10 @@ import { ReactComponent as Activo } from "../../iconos/Menu/palomita.svg";
 import { ReactComponent as NoActivo } from "../../iconos/Menu/cruz.svg";
 import { DataGrid } from '@material-ui/data-grid';
 import $ from "jquery";
-import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
 import AgregarFormatoImpresion from "./AgregarFormatoImpresion";
+import { toBase64 } from '../../Util/GlobalFunctions';
+import { agregarFormatosImpresion } from '../../Util/Contexts/FormatosImpresionContext';
 window.jQuery = window.$ = $;
 const headers = {
     'Content-Type': 'application/json',
@@ -34,6 +36,8 @@ class FormatoImpresion extends Component {
             agregar: "Agregar",
             openDialog: false,
             height: window.innerHeight,
+            CreadoPor: localStorage.getItem("UsuarioId"),
+            ModificadoPor: localStorage.getItem("UsuarioId"),
             pantalla: 1,
             selected: {},
             dataSucursal: [],
@@ -97,48 +101,47 @@ class FormatoImpresion extends Component {
         //         return;
         //     }
 
-            const url = `${process.env.REACT_APP_API_URL}/Folios/Eliminar/` + id;
-            axios.delete(url, { headers }).then(respuesta => {
-                console.log(respuesta);
-                showSuccess(respuesta.data)
-                this.getAllData();
-            }).catch(err => {
-                showSuccess(err)
-            });
+        const url = `${process.env.REACT_APP_API_URL}/Folios/Eliminar/` + id;
+        axios.delete(url, { headers }).then(respuesta => {
+            console.log(respuesta);
+            showSuccess(respuesta.data)
+            this.getAllData();
+        }).catch(err => {
+            showSuccess(err)
+        });
         // }).catch(err => {
         //     showSuccess(err)
         // });
     }
 
     handleAceptar(data) {
-        const today = new Date();
-
+        let file = await toBase64(data.file[0])
+        let image = await toBase64(data.image[0])
         var params = {
-            m_nIdSucursal: data.idSucursalAgregar,
-            m_nIdTipoDocumento: data.idTipoDocumentoAgregar,
-            m_nIdFormato: data.idFormatoImpresion,
-            m_sSerie: data.serie,
-            m_nFolioInicial: parseInt(data.folioInicial),
-            m_nFolioFinal: parseInt(data.folioFinal),
-            m_dtCreadoEl: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
-            m_nCreadoPor: localStorage.getItem("UsuarioId")
+            m_sFormato: data.formato,
+            m_nTipoProceso: data.idTipoProcesoAgregar,
+            m_sFormatoWDE: file,
+            m_sNombreArchivo: data.nombre,
+            m_sImagen: image,
+            m_dActivo: 1,
+            "m_nCreadoPor": this.state.CreadoPor,
+            "m_nModificadoPor": this.state.ModificadoPor
         }
 
-            const url = `${process.env.REACT_APP_API_URL}/Folios/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+        agregarFormatosImpresion(params).then(respuesta => {
 
-                showSuccess(respuesta.data)
-                $('.nav-tabs li ').removeClass('active');
-                $('.nav-tabs li').eq(0).addClass('active');
-                $('.tab-content div ').removeClass('in show');
-                $('#Listado').addClass('in show');
+            showSuccess(respuesta.data)
+            $('.nav-tabs li ').removeClass('active');
+            $('.nav-tabs li').eq(0).addClass('active');
+            $('.tab-content div ').removeClass('in show');
+            $('#Listado').addClass('in show');
 
-                this.getAllData()
-                this.setState({ pantalla: 1})
-            }).catch(err => {
-                console.log(err)
-                showSuccess(err)
-            });
+            this.getAllData()
+            this.setState({ pantalla: 1 })
+        }).catch(err => {
+            console.log(err)
+            showSuccess(err)
+        });
 
     }
 
@@ -149,12 +152,12 @@ class FormatoImpresion extends Component {
     getAllData() {
         const url = `${process.env.REACT_APP_API_URL}/Folios/GetListado`;
         axios.get(url, { headers }).then(respuesta => {
-            this.setState({ data: respuesta.data, agregar:"Agregar" })
+            this.setState({ data: respuesta.data, agregar: "Agregar" })
         });
     }
 
-    handleClose () {
-        this.setState({openDialog: false})
+    handleClose() {
+        this.setState({ openDialog: false })
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(0).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -202,7 +205,7 @@ class FormatoImpresion extends Component {
 
                         <ul className="nav navStatica nav-tabs">
                             <li className="active">
-                                <a data-toggle="tab" data_id="1" href="#Listado" onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar"}); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
+                                <a data-toggle="tab" data_id="1" href="#Listado" onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
                                     <i className="fa fa-list" /> Listado
                                 </a>
                             </li>
@@ -248,7 +251,7 @@ class FormatoImpresion extends Component {
                             <div id="Agregar" className="tab-pane fade">
                                 {
                                     this.state.pantalla === 2 &&
-                                    <AgregarFormatoImpresion onSubmit={this.handleAceptar} onClose={this.handleClose}/>
+                                    <AgregarFormatoImpresion onSubmit={this.handleAceptar} onClose={this.handleClose} />
                                 }
 
                             </div>

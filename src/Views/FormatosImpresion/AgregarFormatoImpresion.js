@@ -27,53 +27,25 @@ class AgregarFormatoImpresion extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            dataSucursal: [],
+            formato: "",
             dataTipoDocumento: [],
-            dataFormatoImpresion: [],
-            data: [],
-            idSucursalAgregar: localStorage.getItem("Sucursal"),
-            idFormatoImpresion: '',
-            folioFinal: '',
-            folioInicial: '',
-            serie: ''
+            file: [],
+            image: []
         }
 
         this.handleChange = this.handleChange.bind(this);
-        this.getAllDataFormato = this.getAllDataFormato.bind(this)
-        this.getAllSucursales = this.getAllSucursales.bind(this)
-        this.getAllFormatoImpresion = this.getAllFormatoImpresion.bind(this)
         this.getAllTipoDocumento = this.getAllTipoDocumento.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
     }
 
 
     componentDidMount() {
-        this.getAllDataFormato()
-        this.getAllSucursales()
-        this.getAllFormatoImpresion()
         this.getAllTipoDocumento()
     }
 
-    getAllDataFormato() {
-        const url = `${process.env.REACT_APP_API_URL}/Formato/GetListado`;
-        axios.get(url, {headers}).then(respuesta => {
-            this.setState({dataFormatoImpresion: respuesta.data})
-        });
-    }
 
-    getAllSucursales() {
-        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-        axios.get(url, {headers}).then((respuesta) => {
-            this.setState({dataSucursal: respuesta.data})
-        });
-    }
 
-    getAllFormatoImpresion() {
-        const url = `${process.env.REACT_APP_API_URL}/Formato/GetListado`;
-        axios.get(url, {headers}).then((respuesta) => {
-            this.setState({dataFormatoImpresion: respuesta.data})
-        });
-    }
+  
 
     getAllTipoDocumento() {
         const url = `${process.env.REACT_APP_API_URL}/TipoDocumento/GetListado`;
@@ -111,9 +83,9 @@ class AgregarFormatoImpresion extends Component {
                                                    type="text"
                                                    required
                                                    label="Formato"
-                                                   value={this.state.formtao}
-                                                   name={"serie"}
-                                                   id="formtao"
+                                                   value={this.state.formato}
+                                                   name={"formato"}
+                                                   id="formato"
                                         />
                                     </label>
                                 </div>
@@ -150,13 +122,14 @@ class AgregarFormatoImpresion extends Component {
                             <div className="row">
 
                                 <div className="col-sm-6 col-md-6 col-lg-6 unit">
-                                    <label className="input select">
-                                    <input type="file" id="file" style={{display: "none"}} />
+                                    <label className="input">
+                                    <input type="file" id="file" onChange={(e) => this.setState({file: e.target.files})} style={{display: "none"}} />
                                     <TextField variant="outlined" margin="dense"
                                                    onChange={this.handleChange}
                                                    className="form-control"
                                                    type="text"
                                                    required
+                                                   disabled={true}
                                                    label="Archivo WDE"
                                                    value={this.state.nombre}
                                                    name={"file"}
@@ -178,15 +151,18 @@ class AgregarFormatoImpresion extends Component {
 
                                 <div className="col-sm-6 col-md-6 col-lg-6 unit">
                                     <div className="input">
+                                    
                                         <TextField variant="outlined" margin="dense"
                                                    onChange={this.handleChange}
                                                    className="form-control"
                                                    type="text"
                                                    required
-                                                   label="Nombre del archivo"
+                                                   label="Nombre del Archivo WDE"
                                                    value={this.state.nombre}
                                                    name={"nombre"}
                                                    id="nombre"
+
+
                                         />
                                     </div>
                                 </div>
@@ -196,33 +172,31 @@ class AgregarFormatoImpresion extends Component {
 
                                 <div className="col-sm-6 col-md-6 col-lg-6 unit">
                                     <div className="input">
+                                    <input type="file" id="image" onChange={(e) => this.setState({image: e.target.files})} style={{display: "none"}} />
                                         <TextField variant="outlined" margin="dense"
-                                                   onChange={this.handleChange}
                                                    className="form-control"
-                                                   type="number"
+                                                   type="text"
+                                                   disabled={true}
                                                    required
-                                                   label="Folio Inicial"
-                                                   value={this.state.folioInicial}
-                                                   name={"folioInicial"}
-                                                   id="folioInicial"
+                                                   label="Archivo Imagen"
+                                                   value={this.state.nombreImagen}
+                                                   name={"nombreImagen"}
+                                                   InputProps={{
+                                                    endAdornment:
+                                                 <InputAdornment position="end">
+                                                   <IconButton
+                                                   onClick={() => document.getElementById("image").click()}
+                                                     edge="end"
+                                                   >
+                                                     <CloudUploadIcon color="primary" fontSize="large" />
+                                                   </IconButton>
+                                                 </InputAdornment>
+                                               
+                                             }}
                                         />
                                     </div>
                                 </div>
 
-                                <div className="col-sm-6 col-md-6 col-lg-6 unit">
-                                    <div className="input">
-                                        <TextField variant="outlined" margin="dense"
-                                                   onChange={this.handleChange}
-                                                   className="form-control"
-                                                   type="number"
-                                                   required
-                                                   label="Folio Final"
-                                                   value={this.state.folioFinal}
-                                                   name={"folioFinal"}
-                                                   id="folioFinal"
-                                        />
-                                    </div>
-                                </div>
                             </div>
 
                             {/*<div className="row" >*/}
