@@ -23,7 +23,7 @@ class ZonasAgregar extends Component {
     this.state = {
       height: window.innerHeight,
       dataSucursal: [],
-      dataCiudades: [],
+      idEstadoSucursal: 0,
       tab: 0,
       ciudadesAll: false,
       codigoPostalesAll: false,
@@ -106,6 +106,7 @@ class ZonasAgregar extends Component {
     const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetByEstado/${idEstado}`;
     axios.get(url, { headers }).then((respuesta) => {
       this.setState({
+        idEstadoSucursal: idEstado,
         dataCiudades: respuesta.data,
         idCiudadSeleccionado: 0,
         idCodigoPostalSeleccionado: 0
@@ -128,32 +129,25 @@ class ZonasAgregar extends Component {
     this.setState({ tab: newValue });
   }
 
-  handleChangeChecboxCiudad(event, ciudad, arrayCiudades, all) {
+  handleChangeChecboxCiudad(event, index, arrayCiudades, all) {
     const array = this.state.ciudadesSeleccionado
-    if(ciudad == 0){
-      if (all) {
-        this.setState({
-          ciudadesAll: true,
-          ciudadesSeleccionado: arrayCiudades
-        });
-        return
-      } else {
-        this.setState({
-          ciudadesAll: false,
-          ciudadesSeleccionado: []
-        });
-        return
-      }
+
+    if (all) {
+      let arrayAll = Object.assign([], arrayCiudades)
+      this.setState({
+        ciudadesAll: !this.state.ciudadesAll,
+        ciudadesSeleccionado: !this.state.ciudadesAll ? arrayAll : []
+      });
+      return
     }
     if (event.target.checked) {
-      array.push(ciudad)
-      console.log(array)
+      array.push(arrayCiudades[index])
       this.setState({
         ciudadesSeleccionado: array
       });
     } else {
-      array.splice(array.indexOf(ciudad), 1)
-      console.log(array)
+      var position = array.findIndex(a => a.m_nIdCiudad === arrayCiudades[index].m_nIdCiudad)
+      array.splice(position, 1)
       this.setState({
         ciudadesAll: false,
         ciudadesSeleccionado: array
@@ -162,34 +156,25 @@ class ZonasAgregar extends Component {
 
   }
 
-  handleChangeChecboxCodigoPostal(event, codigoPostal, arrayCodigoPostal, all) {
+  handleChangeChecboxCodigoPostal(event, index, arrayCodigoPostales, all) {
     const array = this.state.codigoPostalesSeleccionado
-    console.log(all)
-    if(codigoPostal == 0){
-      if (all) {
-        this.setState({
-          codigoPostalesAll: all,
-          codigoPostalesSeleccionado: arrayCodigoPostal
-        });
-        return
-      } else {
-        this.setState({
-          codigoPostalesAll: all,
-          codigoPostalesSeleccionado: []
-        });
-        return
-      }
+
+    if (all) {
+      let arrayAll = Object.assign([], arrayCodigoPostales)
+      this.setState({
+        codigoPostalesAll: !this.state.codigoPostalesAll,
+        codigoPostalesSeleccionado: !this.state.codigoPostalesAll ? arrayAll : []
+      });
+      return
     }
-    
-    console.log(event.target)
     if (event.target.checked) {
-      array.push(codigoPostal)
+      array.push(arrayCodigoPostales[index])
       this.setState({
         codigoPostalesSeleccionado: array
       });
     } else {
-      console.log(array)
-      array.splice(array.indexOf(codigoPostal), 1)
+      var position = array.findIndex(a => a.m_nIdCP === arrayCodigoPostales[index].m_nIdCP)
+      array.splice(position, 1)
       this.setState({
         codigoPostalesAll: false,
         codigoPostalesSeleccionado: array
@@ -198,31 +183,26 @@ class ZonasAgregar extends Component {
 
   }
 
-  handleChangeChecboxLocalidad(event, localidad, arrayLocalidad, all) {
+  handleChangeChecboxLocalidad(event, index, arrayLocalidades, all) {
     const array = this.state.localidadesSeleccionado
-    if(localidad == 0){
-      if (all) {
-        this.setState({
-          localidadesAll: true,
-          localidadesSeleccionado: arrayLocalidad
-        });
-        return
-      } else {
-        this.setState({
-          localidadesAll: false,
-          localidadesSeleccionado: []
-        });
-        return
-      }
-    }
 
+    if (all) {
+      let arrayAll = Object.assign([], arrayLocalidades)
+      this.setState({
+        localidadesAll: !this.state.localidadesAll,
+        localidadesSeleccionado: !this.state.localidadesAll ? arrayAll : []
+      });
+      return
+    }
     if (event.target.checked) {
-      array.push(localidad)
+      console.log(index)
+      array.push(arrayLocalidades[index])
       this.setState({
         localidadesSeleccionado: array
       });
     } else {
-      array.splice(array.indexOf(localidad), 1)
+      var position = array.findIndex(a => a.m_nIdLocalidad === arrayLocalidades[index].m_nIdLocalidad)
+      array.splice(position, 1)
       this.setState({
         localidadesAll: false,
         localidadesSeleccionado: array
@@ -315,7 +295,7 @@ class ZonasAgregar extends Component {
                     <div className="col-md-4 col-sm-12" style={{ height: this.state.height - 375, overflowY: "auto", padding: "5px" }}>
                       {this.state.sucursal != 0 ?
                         <Ciudad
-                          dataCiudades={this.state.dataCiudades}
+                          idEstadoSucursal = {this.state.idEstadoSucursal}
                           ciudadesSeleccionado={this.state.ciudadesSeleccionado}
                           handleChangeChecboxCiudad={this.handleChangeChecboxCiudad}
                           handleCiudadRowClick={this.handleCiudadRowClick}

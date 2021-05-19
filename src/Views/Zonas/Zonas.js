@@ -32,8 +32,6 @@ class Zonas extends Component {
     this.state = {
       agregar: "Agregar",
       idZona: 0,
-      idMunicipioSeleccionado: 0,
-      idCiudadSeleccionado: 0,
       idCodigoPostalSeleccionado: 0,
       DerechoBorrar: 58,
       CreadoPor: localStorage.getItem("UsuarioId"),
@@ -42,11 +40,6 @@ class Zonas extends Component {
       selected: {},
       edit: true,
       data: [],
-      dataSucursal: [],
-      dataMunicipio: [],
-      dataCiudad: [],
-      dataLocalidad: [],
-      dataCodigoPostal: [],
       columns: [
         {
           headerName: "Acciones",
@@ -101,9 +94,6 @@ class Zonas extends Component {
 
     }
     this.getAllData = this.getAllData.bind(this)
-    this.getAllMunicipios = this.getAllMunicipios.bind(this);
-    this.getAllCiudades = this.getAllCiudades.bind(this);
-    this.getAllSucursalData = this.getAllSucursalData.bind(this);
     this.cambiarPantalla = this.cambiarPantalla.bind(this)
     this.handleShowModificar = this.handleShowModificar.bind(this)
     this.handleShowConsultar = this.handleShowConsultar.bind(this)
@@ -117,9 +107,6 @@ class Zonas extends Component {
 
   componentDidMount() {
     this.getAllData()
-    this.getAllMunicipios();
-    this.getAllCiudades();
-    this.getAllSucursalData();
   }
 
   componentWillUnmount() {
@@ -127,16 +114,25 @@ class Zonas extends Component {
   }
 
   handleAceptar(data) {
+    console.log(data)
     var params = {
-
+      "m_nFolio": data.folio,
+      "m_sDescripcion": data.descripcion,
+      "m_nIdSucursal": data.sucursal,
+      "m_cyCostoRecolectar": data.costoRecolectar,
+      "m_cyCostoEntregar": data.costoEntregar,
       "m_arrZonasCiudades": [],
 
-      "CreadoPor": data.CreadoPor,
-      "ModificadoPor": data.ModificadoPor
+      "m_nCreadoPor": localStorage.getItem("UsuarioId"),
+      "m_nModificadoPor": localStorage.getItem("UsuarioId"),
+
+      "m_arrZonasCiudades": data.ciudadesSeleccionado,
+      "m_arrZonasCodigoPostales": data.codigoPostalesSeleccionado,
+      "m_arrZonasLocalidades": data.localidadesSeleccionado
     }
-    console.log(params)
-    if (this.state.idDepartamento != 0) {
-      const url = `${process.env.REACT_APP_API_URL}/Departamento/Modificar/` + this.state.idDepartamento;
+    console.log(JSON.stringify(params))
+    if (this.state.idZona != 0) {
+      const url = `${process.env.REACT_APP_API_URL}/Zonas/Modificar/` + this.state.idZona;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         showSuccess(respuesta.data)
         this.getAllData()
@@ -145,7 +141,7 @@ class Zonas extends Component {
         showSuccess("err")
       });
     } else {
-      const url = `${process.env.REACT_APP_API_URL}/Departamento/Agregar`;
+      const url = `${process.env.REACT_APP_API_URL}/Zonas/Agregar`;
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         showSuccess(respuesta.data)
         this.getAllData()
@@ -167,8 +163,9 @@ class Zonas extends Component {
         return;
       }
 
-      const url = `${process.env.REACT_APP_API_URL}/Departamento/Eliminar/` + id;
+      const url = `${process.env.REACT_APP_API_URL}/Zonas/Eliminar/` + id;
       axios.delete(url, { headers }).then(respuesta => {
+        showSuccess(respuesta.data)
         console.log(respuesta);
         this.getAllData();
       }).catch(err => {
@@ -233,42 +230,6 @@ class Zonas extends Component {
       this.setState({ data: respuesta.data })
     });
   };
-
-  getAllSucursalData() {
-    const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-    axios.get(url, { headers }).then((respuesta) => {
-      this.setState({ dataSucursal: respuesta.data })
-    });
-  }
-
-  getAllMunicipios() {
-    const url = `${process.env.REACT_APP_API_URL}/Municipios/GetListado`;
-    axios.get(url, { headers }).then((respuesta) => {
-      this.setState({ dataMunicipio: respuesta.data })
-    });
-  }
-
-  getAllCiudades() {
-    const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
-    axios.get(url, { headers }).then((respuesta) => {
-      this.setState({ dataCiudad: respuesta.data })
-    });
-  }
-
-  getAllLocalidades(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Asentamiento/GetListadoByCodigoPostal/${id}`;
-    axios.get(url, { headers }).then((respuesta) => {
-      this.setState({ dataLocalidad: respuesta.data })
-    });
-  }
-
-  handleSelectCodigoPostal(id) {
-    this.setState({
-      idCodigoPostalSeleccionado: id
-    })
-    this.getAllLocalidades(id)
-  }
-
 
   render() {
     const { height, data, columns, edit, consult } = this.state

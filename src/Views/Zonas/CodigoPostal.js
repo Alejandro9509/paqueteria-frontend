@@ -64,7 +64,7 @@ class CodigoPostal extends Component {
       <table style={{ overflowY: "scroll", width: "100%" }}>
         <tr>
           <th>
-            <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.props.handleChange(event, 0, this.state.dataCodigoPostales, !this.props.all)} checked={this.props.all} />
+            <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.props.handleChange(event, 0, this.state.dataCodigoPostales, true)} checked={this.props.all} />
           </th>
           <th>Código Postales</th>
         </tr>
@@ -73,7 +73,10 @@ class CodigoPostal extends Component {
             return (
               <tr key={index} onClick={(event) => this.props.handleCodigoPostalRowClick(event, i.m_nIdCP)}>
                 <td style={{ width: "50px" }}>
-                  <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.props.handleChange(event, i, this.state.dataCodigoPostales, false)} checked={this.props.codigoPostalesSeleccionado.find(t => t.m_nIdCP === i.m_nIdCP) != null} />
+                  <input disabled={this.props.consult} type="checkbox" 
+                    onChange={(event) => this.props.handleChange(event, index, this.state.dataCodigoPostales, false)}
+                    checked={this.props.codigoPostalesSeleccionado.find(t => t.m_nIdCP === i.m_nIdCP) != null} 
+                  />
                 </td>
                 <td><strong>{i.m_sCP}</strong></td>
               </tr>
