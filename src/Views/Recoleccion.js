@@ -3453,11 +3453,8 @@ function Recoleccion() {
                                                                     </div>
                                                                     {/* --------------------------------------- RecoleccionDD ------------------------------------------------- */}
                                                                     <div className="col-sm-12 col-md-12 unit">
-                                                                        <label className="label">
-                                                                            Recolección en Diferente Domicilio
-                                                                        </label>
-                                                                        <div className="form">
-                                                                            <input
+                                                                        <label className="checkbox">
+                                                                        <input
                                                                                 onChange={
                                                                                     handleRecoleccionCheckboxChange
                                                                                 }
@@ -3468,7 +3465,9 @@ function Recoleccion() {
                                                                                 style={{ height: "20px" }}
                                                                                 id="diferenteRecoleccion"
                                                                             />
-                                                                        </div>
+                                                                            <i />
+                                                                            Recolección en Diferente Domicilio
+                                                                        </label>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -3835,20 +3834,20 @@ function Recoleccion() {
                                                                 </div>
 
                                                                 <div className="col-sm-12 col-md-12  unit">
-                                                                    <label className="label">
-                                                                        Entrega en Diferente Domicilio
-                                                                    </label>
-                                                                    <div className="input">
+                                                                    <label className="checkbox">
                                                                         <input
                                                                             onChange={handleEntregaCheckboxChange}
                                                                             className="form-control"
                                                                             disabled={state.agregar === "Consultar"}
+                                                                            value={state.diferenteEntrega}
                                                                             checked={state.diferenteEntrega}
                                                                             type="checkbox"
                                                                             style={{ height: "20px" }}
                                                                             id="diferenteEntrega"
                                                                         />
-                                                                    </div>
+                                                                    <i />
+                                                                        Entrega en Diferente Domicilio
+                                                                    </label>
                                                                 </div>
                                                             </div>
                                                         </div>

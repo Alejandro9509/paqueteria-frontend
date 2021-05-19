@@ -33,8 +33,8 @@ class ZonasAgregar extends Component {
       ciudadesSeleccionado: props.edit ? props.select.m_arrZonasCiudades : [],
       codigoPostalesSeleccionado: props.edit ? props.select.m_arrZonasCodigoPostal : [],
       localidadesSeleccionado: props.edit ? props.select.m_arrZonasLocalidades : [],
-      sucursal: 0,
-      folio: props.edit ? props.select.m_sFolio : "0",
+      sucursal: props.edit ? props.select.m_nIdSucursal : 0,
+      folio: props.edit ? props.select.m_nFolio : "0",
       descripcion: props.edit ? props.select.m_sDescripcion : "",
       costoRecolectar: props.edit ? props.select.m_cMontoMinimo : "",
       costoEntregar: props.edit ? props.select.m_cPrecioKilo : "",
@@ -50,10 +50,15 @@ class ZonasAgregar extends Component {
     this.handleChangeChecboxCodigoPostal = this.handleChangeChecboxCodigoPostal.bind(this)
     this.handleChangeChecboxLocalidad = this.handleChangeChecboxLocalidad.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
+    this.setEstadoId = this.setEstadoId.bind(this)
   }
 
   componentWillMount() {
-    this.getAllSucursales()
+    this.getAllSucursales().then( o => {
+      if(this.state.sucursal){
+        this.setEstadoId()
+      }
+    })
   }
 
   a11yProps(index) {
@@ -66,6 +71,15 @@ class ZonasAgregar extends Component {
   componentDidMount() {
     this.getAllSucursales()
     this.getAllCiudades()
+  }
+
+  setEstadoId(){
+    var idEstado = this.state.dataSucursal.find(s => s.m_nIdSucursal == this.state.sucursal).m_nIdEstado
+      this.setState({
+        idEstadoSucursal: idEstado,
+        idCiudadSeleccionado: 0,
+        idCodigoPostalSeleccionado: 0
+      });
   }
 
   async getAllSucursales() {
@@ -103,15 +117,11 @@ class ZonasAgregar extends Component {
       sucursal: event.target.value
     });
     var idEstado = this.state.dataSucursal.find(s => s.m_nIdSucursal == event.target.value).m_nIdEstado
-    const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetByEstado/${idEstado}`;
-    axios.get(url, { headers }).then((respuesta) => {
       this.setState({
         idEstadoSucursal: idEstado,
-        dataCiudades: respuesta.data,
         idCiudadSeleccionado: 0,
         idCodigoPostalSeleccionado: 0
       });
-    });
   }
 
   getAllCiudades() {
@@ -226,7 +236,7 @@ class ZonasAgregar extends Component {
                 <div className="widget-content">
                   <div className="row">
                     <div className="col-md-12 col-sm-12">
-                      <h4>Agregando Tarifas</h4>
+                      <h4>Agregando Zonas</h4>
                     </div>
                   </div>
                   <div className="row">
