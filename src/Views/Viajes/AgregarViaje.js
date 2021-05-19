@@ -154,7 +154,7 @@ class AgregarViaje extends Component {
     handleChange = (event) => {
         event.preventDefault();
         this.setState({
-            [event.target.id]: event.target.value,
+            [event.target.name]: event.target.value,
         });
     };
 
@@ -339,6 +339,7 @@ class AgregarViaje extends Component {
                                                     onChange={this.handleChange}
                                                     id="idSucursalAgregar"
                                                     label="Sucursal"
+                                                    name="idSucursalAgregar"
                                                 >
                                                     {this.state.dataSucursal.map((sucursal) => (
                                                         <option
@@ -362,7 +363,7 @@ class AgregarViaje extends Component {
                                                        label="Folio Viaje"
                                                        value={this.state.folioViaje}
                                                        id="folioViaje"
-
+                                                       name="folioViaje"
                                                        disabled
                                             />
                                         </div>
@@ -377,6 +378,7 @@ class AgregarViaje extends Component {
                                                        label="Núm. Viaje Cliente"
                                                        value={this.state.viajeCliente}
                                                        id="viajeCliente"
+                                                       name="viajeCliente"
 
                                             />
                                         </div>
@@ -396,6 +398,7 @@ class AgregarViaje extends Component {
                                                                            className="form-control"
                                                                            id="fechaHoraRegistro"
                                                                            type="datetime-local"
+                                                                           name="fechaHoraRegistro"
                                                                            //disabled={state.agregar === "Consultar" || state.agregar === "Modificar"}
 
                                                                 />
@@ -414,6 +417,10 @@ class AgregarViaje extends Component {
                                                     id="estatusListado"
                                                     label="Estatus Viaje"
                                                     name={"estatusListado"}
+                                                    InputProps={{
+                                                        id:"estatusListado",
+                                                        name:"estatusListado"
+                                                    }}
                                                 >
                                                     {this.state.dataEstatusViaje.map((estatus) => (
                                                         <option
@@ -436,7 +443,7 @@ class AgregarViaje extends Component {
                                                        type="text"
                                                        label="Candado Oficial"
                                                        value={this.state.candadoOficial}
-                                                       id="candadoOficial"
+                                                       name="candadoOficial"
                                             />
                                         </div>
                                     </div>
@@ -449,7 +456,7 @@ class AgregarViaje extends Component {
                                                        type="text"
                                                        label="Identificador"
                                                        value={this.state.identificadorViaje}
-                                                       id="identificadorViaje"
+                                                       name="identificadorViaje"
                                             />
                                         </div>
                                     </div>
@@ -762,7 +769,7 @@ class AgregarViaje extends Component {
                                                            type="text"
                                                            label="Placas Int"
                                                            value={this.state.placasRemolque1}
-                                                           id="placasRemolque1"
+                                                           name="placasRemolque1"
                                                 />
                                             </div>
                                         </div>
@@ -776,7 +783,7 @@ class AgregarViaje extends Component {
                                                            type="text"
                                                            label="Estatus"
                                                            value={this.state.estatusRemolque2}
-                                                           id="estatusRemolque2"
+                                                           name="estatusRemolque2"
                                                 />
                                             </div>
                                         </div>
@@ -869,7 +876,7 @@ class AgregarViaje extends Component {
                                                            type="text"
                                                            label="Placas Int"
                                                            value={this.state.placasRemolque2}
-                                                           id="placasRemolque2"
+                                                           name="placasRemolque2"
                                                 />
                                             </div>
                                         </div>
@@ -883,7 +890,7 @@ class AgregarViaje extends Component {
                                                            type="text"
                                                            label="Estatus"
                                                            value={this.state.estatusRemolque2}
-                                                           id="estatusRemolque2"
+                                                           name="estatusRemolque2"
                                                 />
                                             </div>
                                         </div>
@@ -979,7 +986,7 @@ class AgregarViaje extends Component {
                                                            type="text"
                                                            label="Placas Int"
                                                            value={this.state.placasDolly}
-                                                           id="placasDolly"
+                                                           name="placasDolly"
                                                 />
                                             </div>
                                         </div>

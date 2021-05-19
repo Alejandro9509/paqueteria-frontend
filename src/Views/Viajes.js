@@ -228,6 +228,8 @@ function Viajes() {
     }
 
     const handleEstatusFiltro = async (event) => {
+        event.preventDefault()
+        console.log(event.target.value)
         setState({
             ...state,
             estatusListado: event.target.value,
