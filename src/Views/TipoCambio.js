@@ -10,6 +10,7 @@ import { DataGrid } from '@material-ui/data-grid';
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import { TextField, Tooltip } from "@material-ui/core";
+import { agregarTipoCambio, eliminarTipoCambio, modificarTipoCambio, obtenerTipoCambio, obtenerTipoCambioId } from "../Util/Contexts/TipoCambioContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -56,8 +57,7 @@ function TipoCambio() {
         }
         console.log(params)
         if (state.idTipoCambio != 0) {
-            const url = `${process.env.REACT_APP_API_URL}/TipoCambio/Modificar/` + state.idTipoCambio;
-            axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+            modificarTipoCambio(state.idTipoCambio, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData();
             }).catch(err => {
@@ -65,8 +65,7 @@ function TipoCambio() {
                 showSuccess("err")
             });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/TipoCambio/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+            agregarTipoCambio(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData();
             }).catch(err => {
@@ -88,8 +87,7 @@ function TipoCambio() {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-            const url = `${process.env.REACT_APP_API_URL}/TipoCambio/Eliminar/` + id;
-            axios.delete(url, { headers }).then(respuesta => {
+            eliminarTipoCambio(id).then(respuesta => {
                 showSuccess(respuesta)
                 getAllData();
             }).catch(err => {
@@ -102,9 +100,7 @@ function TipoCambio() {
     }
 
     function handleShowModificar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/TipoCambio/GetById/${id}`;
-        axios.get(url, { headers }).then(respuesta => {
-            console.log(respuesta.data)
+        obtenerTipoCambioId(id).then(respuesta => {
             setState({
                 ...state,
                 agregar: "Modificar",
@@ -187,8 +183,7 @@ function TipoCambio() {
     }, []);
 
     function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/TipoCambio/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerTipoCambio().then(respuesta => {
             setData(respuesta.data)
         });
     };

@@ -15,6 +15,7 @@ import { FormControl, InputLabel, Select, Tooltip } from "@material-ui/core";
 import { obtenerCodigoPostal } from "../Util/Contexts/CodigoPostalContext";
 import { obtenerPaises } from "../Util/Contexts/PaisesContext";
 import { obtenerEstadosPais } from "../Util/Contexts/EstadosContext";
+import { agregarSucursales, eliminarSucursales, modificarSucursales, obtenerSucursales, obtenerSucursalesId } from "../Util/Contexts/SucursalContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -75,10 +76,8 @@ function Sucursal() {
             "ZonaHoraria": state.zonaHoraria.split("|")[0],
             "DescripcionZonaHoraria": state.zonaHoraria.split("|")[1],
         }
-        console.log(params)
         if (state.idSucursal != 0) {
-            const url = `${process.env.REACT_APP_API_URL}/Sucursales/Modificar/` + state.idSucursal;
-            axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+            modificarSucursales(state.idSucursal, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData();
                 //window.location.reload();
@@ -87,8 +86,7 @@ function Sucursal() {
                 showSuccess("err")
             });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/Sucursales/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+            agregarSucursales(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData();
                 //window.location.reload();
@@ -111,8 +109,7 @@ function Sucursal() {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-            const url = `${process.env.REACT_APP_API_URL}/Sucursales/Eliminar/` + id;
-            axios.delete(url, { headers }).then(respuesta => {
+            eliminarSucursales(id).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData();
             }).catch(err => {
@@ -125,9 +122,7 @@ function Sucursal() {
     }
 
     function handleShowModificar(id) {
-        console.log(id)
-        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetById/` + id;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerSucursalesId(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -180,20 +175,6 @@ function Sucursal() {
         });
     };
 
-    const handleSelectEstado = event => {
-        setState({
-            ...state,
-            idEstado: event.target.value
-        });
-        getAllCodigosPostales(event.target.value)
-    }
-
-    function handleSelectRow(id, event) {
-        setState({
-            ...state,
-            idSucursal: id
-        });
-    }
 
     const handleSelectPais = event => {
         setState({
@@ -267,8 +248,7 @@ function Sucursal() {
     }, []);
 
     function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+       obtenerSucursales().then(respuesta => {
             setData(respuesta.data)
         });
     };

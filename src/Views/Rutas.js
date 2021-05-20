@@ -22,6 +22,7 @@ import { useHistory } from "react-router";
 import { Button } from "bootstrap";
 import { dataGridLocaleText } from "../Constants";
 import { obtenerClasificacionViaje } from "../Util/Contexts/ClasificacionViajeContext";
+import { agregarRutas, eliminarRutas, modificarRutas, obtenerRutas, obtenerRutasId, obtenerRutasOrigenes } from "../Util/Contexts/RutasContext";
 
 const XLocateClient = window.XLocateClient;
 const XRouteClient = window.XRouteClient;
@@ -99,13 +100,9 @@ function Rutas(props) {
     })
     const [map, setMap] = useState(null)
 
-    function conDatos() {
-        return data.length != 0;
-    }
 
     function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/Rutas/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerRutas().then((respuesta) => {
             console.log(respuesta.data);
             setData(respuesta.data);
 
@@ -113,8 +110,7 @@ function Rutas(props) {
     }
 
     function getDestinos() {
-        const url = `${process.env.REACT_APP_API_URL}/Rutas/GetListadoCoordenadas`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerRutasOrigenes().then((respuesta) => {
             setDestinos(respuesta.data.filter(d => d.m_bPermanente));
 
         });
@@ -177,8 +173,7 @@ function Rutas(props) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-            const url = `${process.env.REACT_APP_API_URL}/Rutas/Eliminar/` + id;
-            axios.delete(url, { headers }).then(respuesta => {
+            eliminarRutas(id).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
             }).catch(err => {
@@ -297,12 +292,8 @@ function Rutas(props) {
             "m_arrClsTrazoLibre": state.points,
 
         }
-        console.log(JSON.stringify(params));
-        console.log(params)
         if (state.idRuta != 0) {
-            const url = `${process.env.REACT_APP_API_URL}/Rutas/Modificar/${state.idRuta}`;
-            axios
-                .put(url, Object.assign({}, params), { headers })
+            modificarRutas(state.idRuta, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     getAllData();
@@ -316,9 +307,7 @@ function Rutas(props) {
                     showSuccess("err");
                 });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/Rutas/Agregar`;
-            axios
-                .post(url, Object.assign({}, params), { headers })
+            agregarRutas(params)
                 .then((respuesta) => {
                     console.log(respuesta.data);
                     showSuccess(respuesta.data);
@@ -446,8 +435,7 @@ function Rutas(props) {
     }
 
     function handleShowConsultar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Rutas/GetById/${id}`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerRutasId(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -484,9 +472,7 @@ function Rutas(props) {
     }
 
     function handleShowModificar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Rutas/GetById/${id}`;
-        axios.get(url, { headers }).then(respuesta => {
-            console.log(respuesta.data)
+        obtenerRutasId(id).then(respuesta => {
             setState({
                 ...state,
                 agregar: "Modificar",
@@ -607,8 +593,6 @@ function Rutas(props) {
                     setState({ ...state, destinyLocation: response.results[0], points: points })
                     map.flyTo(points[points.length - 1].location, 15)
                 }
-
-
             }
         } else {
             console.log(exception)
