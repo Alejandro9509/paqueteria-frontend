@@ -10,6 +10,8 @@ import { DataGrid } from '@material-ui/data-grid';
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import { TextField, Tooltip } from "@material-ui/core";
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
 function showSuccess(mensaje) {
     new Noty({
@@ -93,7 +95,7 @@ function Puesto() {
 
             const url = `${process.env.REACT_APP_API_URL}/Puesto/Eliminar/` + id;
             axios.delete(url, { headers }).then(respuesta => {
-                console.log(respuesta)
+                showSuccess(respuesta.data)
                 getAllData();
             }).catch(err => {
                 showSuccess(err)
@@ -164,7 +166,19 @@ function Puesto() {
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
-                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdPuesto))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                            <a href="#" className="btn btn-default btn-xs" onClick={() => confirmAlert({
+                                    title: 'Confirmar Eliminar',
+                                    message: 'Está seguro de eliminar Puesto?',
+                                    buttons: [
+                                      {
+                                        label: 'Si',
+                                        onClick: () => handleEliminar(row.row.m_nIdPuesto)
+                                      },
+                                      {
+                                        label: 'No',
+                                      }
+                                    ]
+                                  })}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
 
                         </Tooltip>
                     </div>

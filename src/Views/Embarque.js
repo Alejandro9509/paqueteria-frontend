@@ -38,6 +38,8 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import { dataGridLocaleText } from "../Constants";
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
 function showSuccess(mensaje) {
     new Noty({
@@ -47,6 +49,30 @@ function showSuccess(mensaje) {
         timeout: "3000",
     }).show();
 }
+
+const options = {
+    title: 'Title',
+    message: 'Message',
+    buttons: [
+      {
+        label: 'Yes',
+        onClick: () => alert('Click Yes')
+      },
+      {
+        label: 'No',
+        onClick: () => alert('Click No')
+      }
+    ],
+    childrenElement: () => <div />,
+    customUI: ({ onClose }) => <div>Custom UI</div>,
+    closeOnEscape: true,
+    closeOnClickOutside: true,
+    willUnmount: () => {},
+    afterClose: () => {},
+    onClickOutside: () => {},
+    onKeypressEscape: () => {},
+    overlayClassName: "overlay-custom-class-name"
+  };
 
 window.jQuery = window.$ = $;
 
@@ -469,15 +495,17 @@ function Embarque(props) {
 
     const handleCancelar = (e) => {
         e.preventDefault();
+
         var params = {
             motivoCancelacion: state.motivoCancelacion,
             usuarioCancelacion: localStorage.getItem("UsuarioId"),
             fechaCancelacion: state.fechaCancelacion,
         };
         const url = `${process.env.REACT_APP_API_URL}/Embarques/Cancelar/${state.idEmbarque}`;
-        axios.put(url, Object.assign({}, params), { headers }).then((respuesta) => {
-            console.log(respuesta.data);
-        });
+        console.log(url)
+        //axios.put(url, Object.assign({}, params), { headers }).then((respuesta) => {
+        //    console.log(respuesta.data);
+        //});
     };
 
     function handleShowCancelar() {
@@ -516,6 +544,22 @@ function Embarque(props) {
             if (respuesta.data.m_nSePuedeCancelar === 0)
                 showSuccess("Embarque no se puede cancelar");
         });
+    }
+
+    function handleShowCancelarConfirmacion (){
+        confirmAlert({
+            title: 'Confirmar Eliminar',
+            message: 'Está seguro de cancelar Embarque?',
+            buttons: [
+              {
+                label: 'Si',
+                onClick: () => handleCancelar
+              },
+              {
+                label: 'No',
+              }
+            ]
+          })
     }
 
     function handleShowModificar(id) {
@@ -959,7 +1003,19 @@ function Embarque(props) {
                             <a
                                 href="#"
                                 className="btn btn-default btn-xs"
-                                onClick={() => handleEliminar(row.row.m_nIdEmbarque)}
+                                onClick={() => confirmAlert({
+                                    title: 'Confirmar Eliminar',
+                                    message: 'Está seguro de eliminar Embarque?',
+                                    buttons: [
+                                      {
+                                        label: 'Si',
+                                        onClick: () => handleEliminar(row.row.m_nIdEmbarque)
+                                      },
+                                      {
+                                        label: 'No',
+                                      }
+                                    ]
+                                  })}
                             >
                                 <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
                             </a>
@@ -4246,7 +4302,7 @@ function Embarque(props) {
                                 <div className="widget-container">
                                     <div className="widget-content">
                                         <div className="row">
-                                            <form className="j-forms" onSubmit={handleCancelar}>
+                                            <form className="j-forms" onSubmit={handleShowCancelarConfirmacion}>
                                                 <div className="form-content">
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
