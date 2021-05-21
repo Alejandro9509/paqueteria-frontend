@@ -47,7 +47,7 @@ function Usuarios() {
     const classes = useStyles();
     const [data, setData] = React.useState([])
     const [state, setState] = React.useState({
-        DerechoBorrar: 58,
+        DerechoBorrar: 58, //TODO: Definir id
         agregar: "Agregar",
         idUsuario: 0,
         idSucursal: 0,

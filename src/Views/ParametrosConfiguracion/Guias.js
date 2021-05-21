@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import axios from "axios";
 import { FormControl, InputLabel, List, ListItem, Select } from '@material-ui/core';
 import "../../App.css";
+import { obtenerConceptosFacturacion } from '../../Util/Contexts/ConceptosFacturacionContext';
 
 const headers = {
     'Content-Type': 'application/json',
@@ -24,8 +25,7 @@ class Guias extends Component {
     }
 
     getAllConceptos() {
-        const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerConceptosFacturacion().then(respuesta => {
             this.setState({ conceptos: respuesta.data })
         });
     }

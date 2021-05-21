@@ -41,7 +41,7 @@ function TipoViaje() {
 
     const [state, setState] = React.useState({
         idTipoViaje: 0,
-        DerechoBorrar: 81,
+        DerechoBorrar: 90,
         agregar: "Agregar",
         Codigo: "",
         TipoViaje: "",

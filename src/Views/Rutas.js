@@ -97,6 +97,7 @@ function Rutas(props) {
         tipoUnidad: null,
         tipoViaje: null,
         trayecto: null,
+        DerechoBorrar: 117,
         // trayecto: "PERMANENTE",
         activa: false,
         CreadoPor: localStorage.getItem("UsuarioId"),

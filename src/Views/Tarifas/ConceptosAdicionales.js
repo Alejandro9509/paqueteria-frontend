@@ -12,6 +12,7 @@ import {
     useAsyncDebounce,
     useSortBy,
 } from "react-table";
+import { obtenerConceptosFacturacion } from '../../Util/Contexts/ConceptosFacturacionContext';
 
 const headers = {
     'Content-Type': 'application/json',
@@ -69,8 +70,7 @@ class ConceptosAdicionales extends Component {
     };
 
     getAllConceptos() {
-        const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerConceptosFacturacion().then(respuesta => {
             if (this.props.edit) {
                 this.props.select.m_arrArConceptos.forEach(element => {
                     this.props.addConcepto({ concepto: respuesta.data.find(c => c.m_nIdConceptosFacturacion === element.m_nIdConceptoFacturacion), importe: element.m_cImporte, traslada: element.m_nIdImpuestoTraslada, importeIVA: element.m_cImporteIva, retiene: element.m_nIdImpuestoRetiene, importeRet: element.m_cImporteRetiene })

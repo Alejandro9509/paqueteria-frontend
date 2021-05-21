@@ -22,19 +22,7 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-const styles = {
-    seleccionado: {
-        backgroundColor: "#FCC88F",
-    },
-    noSeleccionado: {
-        backgroundColor: "#FFFFFF",
-    }
-};
-const useStyles = makeStyles(styles);
-
 function Puesto() {
-
-    const classes = useStyles();
 
     const [data, setData] = React.useState([])
     const [state, setState] = React.useState({

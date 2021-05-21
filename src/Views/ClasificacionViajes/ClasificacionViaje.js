@@ -14,6 +14,7 @@ import AgregarFolio from "./AgregarClasificacionViaje";
 import CrearTarifa from "../Tarifas/CrearTarifa";
 import AgregarClasificacionViaje from "./AgregarClasificacionViaje";
 import { eliminarClasificacionViaje, agregarClasificacionViaje, modificarClasificacionViaje, obtenerClasificacionViaje } from '../../Util/Contexts/ClasificacionViajeContext';
+import { validarPermisos } from '../../Util/Contexts/UsuarioContext';
 window.jQuery = window.$ = $;
 const headers = {
     'Content-Type': 'application/json',
@@ -40,6 +41,7 @@ class ClasificacionViaje extends Component {
             pantalla: 1,
             selected: {},
             edit: false,
+            DerechoBorrar: 101,
             columns: [
                 {
                     headerName: "Acciones",
@@ -121,23 +123,22 @@ class ClasificacionViaje extends Component {
     }
 
     handleEliminar(id) {
-        // var derecho;
-        // const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${this.state.CreadoPor}/${this.state.DerechoBorrar}/3`;
-        // axios.get(urlDelete, { headers }).then(respuesta => {
-        //     derecho = respuesta.data;
-        //     if (derecho === false) {
-        //         showSuccess("El usuario no tiene derechos para realizar el proceso");
-        //         return;
-        //     }
+         var derecho;
+         validarPermisos(this.state).then(respuesta => {
+             derecho = respuesta.data;
+             if (derecho === false) {
+                 showSuccess("El usuario no tiene derechos para realizar el proceso");
+                 return;
+             }
         eliminarClasificacionViaje(id).then(respuesta => {
             console.log(respuesta);
             this.getAllData();
         }).catch(err => {
             showSuccess(err)
         });
-        // }).catch(err => {
-        //     showSuccess(err)
-        // });
+         }).catch(err => {
+             showSuccess(err)
+         });
     }
 
     handleAceptarAgregar(data) {

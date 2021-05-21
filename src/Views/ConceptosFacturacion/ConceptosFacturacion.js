@@ -12,6 +12,7 @@ import Noty from 'noty';
 import axios from "axios";
 import { dataGridLocaleText } from '../../Constants';
 import { agregarConceptosFacturacion, eliminarConceptosFacturacion, modificarConceptosFacturacion, obtenerConceptosFacturacionId, obtenerConceptosFacturacion } from '../../Util/Contexts/ConceptosFacturacionContext';
+import { validarPermisos } from '../../Util/Contexts/UsuarioContext';
 
 const headers = {
     'Content-Type': 'application/json',
@@ -30,7 +31,7 @@ class ConceptosFacturacion extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            DerechoBorrar: 1,
+            DerechoBorrar: 112,
             CreadoPor: localStorage.getItem("UsuarioId"),
             height: window.innerHeight,
             openDialog: false,
@@ -209,8 +210,7 @@ class ConceptosFacturacion extends Component {
 
     handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${this.state.CreadoPor}/${this.state.DerechoBorrar}/3`;
-        axios.get(urlDelete, { headers }).then(respuesta => {
+        validarPermisos(this.state).then(respuesta => {
             derecho = respuesta.data;
             if (derecho == false) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");

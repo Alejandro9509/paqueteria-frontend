@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from "axios";
 import { Checkbox, FormControlLabel, List, ListItem, TextField } from '@material-ui/core';
+import { obtenerImpuestos } from '../../Util/Contexts/ImpuestosContext';
 
 const headers = {
     'Content-Type': 'application/json',
@@ -41,8 +42,7 @@ class CrearConcepto extends Component {
     }
 
     getAllImpuestos() {
-        const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerImpuestos().then(respuesta => {
             this.setState({ impuestos: respuesta.data.filter(i => i.m_nTIpoCalculo === 0), impuestosRetencion: respuesta.data.filter(i => i.m_nTIpoCalculo === 1) })
         });
     };

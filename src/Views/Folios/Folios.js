@@ -12,6 +12,7 @@ import $ from "jquery";
 import { Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
 import AgregarFolio from "./AgregarFolios";
 import { agregarFolios, eliminarFolios, obtenerFolios } from '../../Util/Contexts/FoliosContext';
+import { validarPermisos } from '../../Util/Contexts/UsuarioContext';
 window.jQuery = window.$ = $;
 const headers = {
     'Content-Type': 'application/json',
@@ -38,6 +39,7 @@ class Folios extends Component {
             pantalla: 1,
             selected: {},
             dataSucursal: [],
+            DerechoBorrar:  1,//TODO: Definir id 
             columns: [
                 {
                     headerName: "Acciones",
@@ -89,14 +91,13 @@ class Folios extends Component {
     }
 
     handleEliminar(id) {
-        // var derecho;
-        // const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${this.state.CreadoPor}/${this.state.DerechoBorrar}/3`;
-        // axios.get(urlDelete, { headers }).then(respuesta => {
-        //     derecho = respuesta.data;
-        //     if (derecho === false) {
-        //         showSuccess("El usuario no tiene derechos para realizar el proceso");
-        //         return;
-        //     }
+         var derecho;
+         validarPermisos(this.state).then(respuesta => {
+             derecho = respuesta.data;
+             if (derecho === false) {
+                 showSuccess("El usuario no tiene derechos para realizar el proceso");
+                 return;
+             }
 
         eliminarFolios(id).then(respuesta => {
             console.log(respuesta);
@@ -105,9 +106,9 @@ class Folios extends Component {
         }).catch(err => {
             showSuccess(err)
         });
-        // }).catch(err => {
-        //     showSuccess(err)
-        // });
+         }).catch(err => {
+             showSuccess(err)
+         });
     }
 
     handleAceptar(data) {

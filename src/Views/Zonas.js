@@ -35,7 +35,7 @@ function Zonas() {
     idMunicipioSeleccionado: 0,
     idCiudadSeleccionado: 0,
     idCodigoPostalSeleccionado: 0,
-    DerechoBorrar: 58,
+    DerechoBorrar: 21,
     CreadoPor: localStorage.getItem("UsuarioId"),
     ModificadoPor: localStorage.getItem("UsuarioId"),
     height: window.innerHeight

@@ -27,7 +27,7 @@ function Impuestos() {
     const [data, setData] = React.useState([])
     const [state, setState] = React.useState({
         idImpuestos: 0,
-        DerechoBorrar: 58,
+        DerechoBorrar: 109,
         descripcionImpuestos: "",
         impuestoLocal: false,
         porcentajeImpuesto: 0,

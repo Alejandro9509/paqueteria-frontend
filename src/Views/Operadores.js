@@ -39,23 +39,9 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-const styles = {
-    seleccionado: {
-        backgroundColor: "#FCC88F",
-    },
-    noSeleccionado: {
-        backgroundColor: "#FFFFFF",
-    }
-};
-const useStyles = makeStyles(styles);
-
 window.jQuery = window.$ = $;
-const headers = {
-    "Content-Type": "application/json",
-};
 
 function Operadores(props) {
-    const classes = useStyles();
 
     const columns = React.useMemo(() => [
         {
@@ -120,13 +106,6 @@ function Operadores(props) {
     ]);
 
     
-    
-
-    
-
-
-
-
     const [state, setState] = React.useState({
 
         agregar: "Agregar",
@@ -191,7 +170,8 @@ function Operadores(props) {
         AppPaqueteria: false,
         UsuarioPaqueteria: "",
         ContraseñaPaqueteria: "",
-        height: window.innerHeight
+        height: window.innerHeight,
+        DerechoBorrar: 63,
     });
 
     function handleShowAgregar() {

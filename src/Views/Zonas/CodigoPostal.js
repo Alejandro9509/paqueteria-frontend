@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from "axios";
+import { obtenerCodigoPostalCiudad } from '../../Util/Contexts/CodigoPostalContext';
 
 const headers = {
   'Content-Type': 'application/json',
@@ -42,8 +43,7 @@ class CodigoPostal extends Component {
   }
 
   getAllCodigoPostales() {
-    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListadoPorCiudad/${this.props.idCiudadSeleccionado}`;
-    axios.get(url, { headers }).then(respuesta => {
+    obtenerCodigoPostalCiudad(this.props.idCiudadSeleccionado).then(respuesta => {
       this.setState({ dataCodigoPostales: respuesta.data, anchorEl: null })
     });
   }

@@ -4,6 +4,7 @@ import axios from "axios";
 import Noty from 'noty';
 import { List, ListItem, Popover, TextField } from '@material-ui/core';
 import { TrafficOutlined } from '@material-ui/icons';
+import { agregarTipoServicio, obtenerTipoServicio } from '../../Util/Contexts/TipoServiciosContext';
 
 const headers = {
     'Content-Type': 'application/json',
@@ -43,8 +44,7 @@ class TipoServicio extends Component {
     }
 
     getAllTipos() {
-        const url = `${process.env.REACT_APP_API_URL}/TipoServicio/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerTipoServicio().then(respuesta => {
             this.setState({ tiposServicio: respuesta.data })
         });
     }
@@ -69,8 +69,7 @@ class TipoServicio extends Component {
             "ModificadoPor": localStorage.getItem("UsuarioId")
         }
         console.log(params)
-        const url = `${process.env.REACT_APP_API_URL}/TipoServicio/Agregar`;
-        axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+        agregarTipoServicio(params).then(respuesta => {
             showSuccess(respuesta.data)
             this.getAllTipos();
         }).catch(err => {

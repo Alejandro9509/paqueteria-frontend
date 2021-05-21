@@ -44,23 +44,9 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-const styles = {
-    seleccionado: {
-        backgroundColor: "#FCC88F",
-    },
-    noSeleccionado: {
-        backgroundColor: "#FFFFFF",
-    }
-};
-const useStyles = makeStyles(styles);
 
 window.jQuery = window.$ = $;
-const headers = {
-    "Content-Type": "application/json",
-};
 function RemitenteDestinatario(props) {
-
-    const classes = useStyles();
 
     const [dataPais, setDataPais] = React.useState([]);
     const [dataEstado, setDataEstado] = React.useState([]);

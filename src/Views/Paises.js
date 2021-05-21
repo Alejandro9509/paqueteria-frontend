@@ -24,19 +24,8 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-const styles = {
-    seleccionado: {
-        backgroundColor: "#FCC88F",
-    },
-    noSeleccionado: {
-        backgroundColor: "#FFFFFF",
-    }
-};
-const useStyles = makeStyles(styles);
-
 function PaisesEstado() {
 
-    const classes = useStyles();
     const [data, setData] = React.useState([])
     const [dataEstado, setDataEstado] = React.useState([])
     const [dataMoneda, setDataMoneda] = React.useState([])

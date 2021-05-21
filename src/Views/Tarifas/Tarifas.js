@@ -12,6 +12,7 @@ import { DataGrid } from '@material-ui/data-grid';
 import $ from "jquery";
 import { dataGridLocaleText } from '../../Constants';
 import { Tooltip } from '@material-ui/core';
+import { validarPermisos } from '../../Util/Contexts/UsuarioContext';
 window.jQuery = window.$ = $;
 const headers = {
     'Content-Type': 'application/json',
@@ -36,6 +37,7 @@ class Tarifas extends Component {
             height: window.innerHeight,
             pantalla: 1,
             selected: {},
+            DerechoBorrar: 1, //TODO: Definir id
             dataSucursal: [],
             columns: [
                 {
@@ -173,8 +175,7 @@ class Tarifas extends Component {
 
     handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${this.state.CreadoPor}/${this.state.DerechoBorrar}/3`;
-        axios.get(urlDelete, { headers }).then(respuesta => {
+        validarPermisos(state).then(respuesta => {
             derecho = respuesta.data;
             if (derecho == false) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");

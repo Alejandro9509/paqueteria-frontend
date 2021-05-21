@@ -38,7 +38,7 @@ function EstatusViaje() {
     const [data, setData] = React.useState([])
     const [state, setState] = React.useState({
         idEstatusViaje: 0,
-        DerechoBorrar: 81,
+        DerechoBorrar: 93,
         estatusViaje: "",
         abreviacionViaje: "",
         tipoEstatusViaje: 0,

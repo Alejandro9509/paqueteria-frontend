@@ -4,6 +4,7 @@ import axios from "axios";
 import Noty from 'noty';
 import { List, ListItem, Popover, TextField, Typography } from '@material-ui/core';
 import { TrafficOutlined } from '@material-ui/icons';
+import { agregarTipoCobro, obtenerTipoCobro } from '../../Util/Contexts/TipoCobroContext';
 
 const headers = {
     'Content-Type': 'application/json',
@@ -43,8 +44,7 @@ class TipoCobro extends Component {
     }
 
     getAllTipos() {
-        const url = `${process.env.REACT_APP_API_URL}/TipoCobro/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerTipoCobro().then(respuesta => {
             this.setState({ tiposCobro: respuesta.data, anchorEl: null })
         });
     }
@@ -63,8 +63,7 @@ class TipoCobro extends Component {
             "ModificadoPor": localStorage.getItem("UsuarioId")
         }
         console.log(params)
-        const url = `${process.env.REACT_APP_API_URL}/TipoCobro/Agregar`;
-        axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+        agregarTipoCobro(params).then(respuesta => {
             showSuccess(respuesta.data)
             this.getAllTipos();
         }).catch(err => {

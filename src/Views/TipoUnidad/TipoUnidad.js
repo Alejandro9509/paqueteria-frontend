@@ -14,6 +14,7 @@ import AgregarFolio from "./AgregarTipoUnidad";
 import CrearTarifa from "../Tarifas/CrearTarifa";
 import AgregarTipoUnidad from "./AgregarTipoUnidad";
 import { agregarTipoUnidades, eliminarTipoUnidades, obtenerTipoUnidades, modificarTipoUnidades } from '../../Util/Contexts/TipoUnidadContext';
+import { validarPermisos } from '../../Util/Contexts/UsuarioContext';
 window.jQuery = window.$ = $;
 const headers = {
     'Content-Type': 'application/json',
@@ -33,7 +34,7 @@ class TipoUnidad extends Component {
         super(props);
         this.state = {
             data: [],
-            DerechoBorrar:139,
+            DerechoBorrar:67,
             idTipoUnidad: null,
             agregar: "Agregar",
             openDialog: false,
@@ -103,8 +104,7 @@ class TipoUnidad extends Component {
 
     handleEliminar(id) {
          var derecho;
-         const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${this.state.CreadoPor}/${this.state.DerechoBorrar}/3`;
-         axios.get(urlDelete, { headers }).then(respuesta => {
+         validarPermisos(this.state).then(respuesta => {
              derecho = respuesta.data;
             if (derecho === false) {
                  showSuccess("El usuario no tiene derechos para realizar el proceso");
