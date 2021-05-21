@@ -320,7 +320,13 @@ class AgregarViaje extends Component {
                         )}
                         </DialogContent>
                 </Dialog>
-
+                <Dialog
+                    fullWidth={true}
+                    maxWidth={"md"}
+                    open={this.state.openHistoryDialog}
+                    onClose={() => this.setState({openHistoryDialog: false })}>
+                    <Historial/>
+                </Dialog>
                 <div className="widget-wrap">
                     <div className="widget-content">
 
@@ -1018,7 +1024,7 @@ class AgregarViaje extends Component {
                                 ) : (
                                     <div>No se encontró ningún registro</div>
                                 )}
-                                <Button>Historial</Button>
+                                <Button onClick={() => this.setState({openHistoryDialog: true })}>Historial</Button>
                             </div>
                         </div>
                     </div>

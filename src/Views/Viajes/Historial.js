@@ -52,6 +52,9 @@ const useStyles = makeStyles({
     cardListContent:{
        padding: 0,
        margin:0,
+    },
+    input:{
+       marginRight: 15
     }
 });
 
@@ -103,87 +106,85 @@ export default function Historial(){
     }
 
     return(
-        <Card className={classes.root} style={{padding:0}}>
-            <CardContent className={classes.cardListContent} style={{margin:0, padding: 0}}>
-                    <div className="row" style={{ paddingLeft: "8px" }}>
-                        <h1 className={classes.headerText}>Historial de cambios del viaje</h1>
-                        <form className="j-forms">
-                            <div className="row" style={{ display: "flex" }}>
-                                <div className="col-sm-6 col-md-2 " style={{ paddingLeft: "0px" }}>
-                                    <div className="input">
-                                        <TextField
-                                            autoFocus
-                                            type="date"
-                                            margin="dense"
-                                            label="Fecha Inicial"
-                                            variant="outlined"
-                                            className="form-control"
-                                            InputLabelProps={{
-                                                shrink: true,
-                                            }}
-                                            value={selectedStartDate}
-                                            onChange={handleStartDateChange}
-                                            id="fechaInicial"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="col-sm-6 col-md-2 " style={{ paddingLeft: "0px" }}>
-                                    <div className="input">
-                                        <TextField
-                                            autoFocus
-                                            type="date"
-                                            margin="dense"
-                                            label="Fecha Final"
-                                            variant="outlined"
-                                            className="form-control"
-                                            InputLabelProps={{
-                                                shrink: true,
-                                            }}
-                                            value={selectedEndDate}
-                                            onChange={handleEndDateChange}
-                                            id="fechaFinal"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="col-sm-6 col-md-2 " style={{ paddingLeft: "0px" }}>
-                                    <label className="input select">
-                                        <FormControl fullWidth variant="outlined" margin="dense">
-                                            <InputLabel id="idChangeTypeLabel">Tipo de cambio</InputLabel>
-                                            <Select
-                                                labelId="idChangeTypeLabel"
-                                                className="form-control"
-                                                required
-                                                value={changeType}
-                                                onChange={handleTypeChange}
-                                                id="idTypeChange"
-                                                label="Tipo de cambio">
-                                                <option value="0">Todos</option>
-                                                {types.map((tipo) => (
-                                                    <option key={tipo.id} value={tipo.id}>
-                                                        {tipo.value}
-                                                    </option>
-                                                ))}
-                                            </Select>
-                                        </FormControl>
-                                    </label>
-                                </div>
+        <div>
+            <div className="row" style={{ paddingLeft: "8px" }}>
+                <h1 className={classes.headerText}>Historial de cambios del viaje</h1>
+                <form className="j-forms">
+                    <div className="row" style={{ display: "flex", justifyContent:'flex-start' }}>
+                        <div >
+                            <div className="input" style={{marginRight: 15}}>
+                                <TextField
+                                    autoFocus
+                                    type="date"
+                                    margin="dense"
+                                    label="Fecha Inicial"
+                                    variant="outlined"
+                                    className="form-control"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    value={selectedStartDate}
+                                    onChange={handleStartDateChange}
+                                    id="fechaInicial"
+                                />
                             </div>
-                        </form>
-                    </div>
-                    {conDatos() ? (
-                        <Card className={classes.root}>
-                            <CardContent className={classes.cardListContent}>
-                                <div className="row" style={{height: window.innerHeight - 250, width: '100%', padding: 0, margin: 0}}>
-                        <DataGrid columns={columns} rows={data}/>
-                                </div>
-                            </CardContent>
-                        </Card>
-                        ) : (
-                        <div className="row" style={{height: window.innerHeight - 250, width: '100%', padding: 0, margin: 0}}>
-                            <div style={{margin:20}}>No se encontró ningún registro</div>
                         </div>
-                    )}
-            </CardContent>
-        </Card>
+                        <div>
+                            <div className="input" style={{marginRight: 15}}>
+                                <TextField
+                                    autoFocus
+                                    type="date"
+                                    margin="dense"
+                                    label="Fecha Final"
+                                    variant="outlined"
+                                    className="form-control"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    value={selectedEndDate}
+                                    onChange={handleEndDateChange}
+                                    id="fechaFinal"/>
+                            </div>
+                        </div>
+                        <div>
+                            <label className="input select" style={{marginRight: 15}}>
+                                <FormControl fullWidth variant="outlined" margin="dense">
+                                    <InputLabel id="idChangeTypeLabel">Tipo de cambio</InputLabel>
+                                    <Select
+                                        style={{minWidth: 150}}
+                                        labelId="idChangeTypeLabel"
+                                        className="form-control"
+                                        required
+                                        value={changeType}
+                                        onChange={handleTypeChange}
+                                        id="idTypeChange"
+                                        label="Tipo de cambio">
+                                        <option value="0">Todos</option>
+                                        {types.map((tipo) => (
+                                            <option key={tipo.id} value={tipo.id}>
+                                                {tipo.value}
+                                            </option>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            {conDatos() ? (
+                <Card className={classes.root}>
+                    <CardContent className={classes.cardListContent}>
+                        <div className="row" style={{height: window.innerHeight - 250, width: '100%', padding: 0, margin: 0}}>
+                <DataGrid columns={columns} rows={data}/>
+                        </div>
+                    </CardContent>
+                </Card>
+                ) : (
+                <div className="row" style={{height: window.innerHeight - 250, width: '100%', padding: 0, margin: 0}}>
+                    <div style={{margin:20}}>No se encontró ningún registro</div>
+                </div>
+            )}
+        </div>
     )
 }
