@@ -1,18 +1,18 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import axios from "axios";
 import PageviewIcon from "@material-ui/icons/Pageview";
-import {Dialog, DialogActions, DialogContent} from "@material-ui/core";
+import { Dialog, DialogActions, DialogContent } from "@material-ui/core";
 import TableCiudades from "./TableCiudades";
 import TableCiudadesViajes from "./TableCiudades";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import TableUnidadViajes from "./TablaUnidadViajes";
-import {DataGrid} from "@material-ui/data-grid";
+import { DataGrid } from "@material-ui/data-grid";
 import { dataGridLocaleText } from "../../Constants";
 import { ContactsOutlined } from "@material-ui/icons";
 
@@ -32,8 +32,8 @@ class AgregarViaje extends Component {
 
         this.state = {
             origen: {},
-            destino:{},
-            IdRemolque1:  {},
+            destino: {},
+            IdRemolque1: {},
             IdRemolque2: {},
             IdDolly: {},
             idRuta: {},
@@ -49,9 +49,9 @@ class AgregarViaje extends Component {
             tipoModal: 0,
             idSucursalAgregar: localStorage.getItem("Sucursal"),
             folioViaje: "",
-           viajeCliente: "",
+            viajeCliente: "",
             fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + "T" + today.getHours() + ":" + today.getMinutes(),
-            fechaHoraRegistro:"",
+            fechaHoraRegistro: "",
             candadoOficial: "",
             identificadorViaje: "",
             estatusListado: '',
@@ -107,53 +107,53 @@ class AgregarViaje extends Component {
     getAllSucursales() {
         const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
         axios.get(url, { headers }).then((respuesta) => {
-            this.setState({dataSucursal: respuesta.data})
+            this.setState({ dataSucursal: respuesta.data })
         });
     }
 
     getAllCiudades() {
         const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
         axios.get(url, { headers }).then((respuesta) => {
-            this.setState({dataCiudad: respuesta.data})
+            this.setState({ dataCiudad: respuesta.data })
         });
     }
 
     getAllRutas() {
         const url = `${process.env.REACT_APP_API_URL}/Rutas/GetListado`;
         axios.get(url, { headers }).then((respuesta) => {
-            this.setState({dataRuta: respuesta.data})
+            this.setState({ dataRuta: respuesta.data })
         });
     }
 
     getAllCodigosPostales() {
         const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
         axios.get(url, { headers }).then((respuesta) => {
-            this.setState({dataCodigoPostal: respuesta.data})
+            this.setState({ dataCodigoPostal: respuesta.data })
         });
     }
 
     getAllEstatusViaje() {
         const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoViajes`;
         axios.get(url, { headers }).then((respuesta) => {
-            this.setState({dataEstatusViaje: respuesta.data})
+            this.setState({ dataEstatusViaje: respuesta.data })
         });
     }
 
     getAllUnidades() {
         const url = `${process.env.REACT_APP_API_URL}/Unidades/GetListado`;
         axios.get(url, { headers }).then((respuesta) => {
-            this.setState({dataUnidades: respuesta.data})
+            this.setState({ dataUnidades: respuesta.data })
         });
     }
 
-    getInformesByFiltro (nIdRuta,nIdCiudadOrigen, nIdCiudadDestino, nIdRemolque1, nIdRemolque2,nIdDolly) {
-        const url = `${process.env.REACT_APP_API_URL}/Informes/GetByFiltro` + "/" +nIdRuta+ "/"+
-            nIdCiudadOrigen + "/" + nIdCiudadDestino + "/" + nIdRemolque1 + "/" + nIdRemolque2 + "/" + nIdDolly ;
-      console.log(url)
-           
-            axios.get(url, { headers }).then((respuesta) => {
-            
-            this.setState({dataInformes: respuesta.data})
+    getInformesByFiltro(nIdRuta, nIdCiudadOrigen, nIdCiudadDestino, nIdRemolque1, nIdRemolque2, nIdDolly) {
+        const url = `${process.env.REACT_APP_API_URL}/Informes/GetByFiltro` + "/" + nIdRuta + "/" +
+            nIdCiudadOrigen + "/" + nIdCiudadDestino + "/" + nIdRemolque1 + "/" + nIdRemolque2 + "/" + nIdDolly;
+        console.log(url)
+
+        axios.get(url, { headers }).then((respuesta) => {
+
+            this.setState({ dataInformes: respuesta.data })
         });
     }
 
@@ -164,57 +164,65 @@ class AgregarViaje extends Component {
         });
     };
 
-    handleRutaFiltro = async (event) => {
+    handleRutaFiltro (event, newValue) {
         event.preventDefault();
-        this.setState({idRuta: event.target.value});
-
-        this.getInformesByFiltro(event.target.value.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
-            this.state.IdRemolque1.m_nIdUnidad, this.state.IdRemolque2.m_nIdUnidad, this.state.IdDolly.m_nIdUnidad)
-    console.log(this.state.origen.m_nIdCiudad)
-    debugger;
+        console.log(event)
+        this.setState({ idRuta: newValue });
+        if (newValue.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
+            this.getInformesByFiltro(event.target.value.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
+                this.state.IdRemolque1.m_nIdUnidad, this.state.IdRemolque2.m_nIdUnidad, this.state.IdDolly.m_nIdUnidad)
+            
         }
-
-    handleOrigenFiltro = async (event) => {
-        event.preventDefault();
-        this.setState({origen: event.target.value});
-
-        this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, event.target.value.m_nIdCiudad, this.state.destino.m_nIdCiudad,
-            this.state.IdRemolque1.m_nIdUnidad, this.state.IdRemolque2.m_nIdUnidad, this.state.IdDolly.m_nIdUnidad)
     }
 
-    handleDestinoFiltro = async (event) => {
+    handleOrigenFiltro (event, newValue) {
         event.preventDefault();
-        this.setState({destino: event.target.value});
+        this.setState({ origen: newValue });
+        if (this.state.idRuta.m_nIdRuta && newValue.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
 
-        this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, event.target.value.m_nIdCiudad,
+        this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, newValue.m_nIdCiudad, this.state.destino.m_nIdCiudad,
             this.state.IdRemolque1.m_nIdUnidad, this.state.IdRemolque2.m_nIdUnidad, this.state.IdDolly.m_nIdUnidad)
+        }
     }
 
-    handleRemolqueUnoFiltro = async (event) => {
+    handleDestinoFiltro (event, newValue) {
         event.preventDefault();
-        let newValue = event.target.value
-        this.setState({IdRemolque1: newValue, placasRemolque1: newValue.m_sPlacas})
+        this.setState({ destino: newValue });
+        if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && newValue.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
+
+        this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, newValue.m_nIdCiudad,
+            this.state.IdRemolque1.m_nIdUnidad, this.state.IdRemolque2.m_nIdUnidad, this.state.IdDolly.m_nIdUnidad)
+        }
+    }
+
+    handleRemolqueUnoFiltro (event, newValue)  {
+        event.preventDefault();
+        this.setState({ IdRemolque1: newValue, placasRemolque1: newValue.m_sPlacas })
+        if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && newValue.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
 
         this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
             newValue.m_nIdUnidad, this.state.IdRemolque2.m_nIdUnidad, this.state.IdDolly.m_nIdUnidad)
+        }
     }
 
-    handleRemolqueDosFiltro = async (event) => {
+    handleRemolqueDosFiltro(event, newValue)  {
         event.preventDefault();
-        let newValue = event.target.value
-        this.setState({IdRemolque2: newValue, placasRemolque2: newValue.m_sPlacas})
+        this.setState({ IdRemolque2: newValue, placasRemolque2: newValue.m_sPlacas })
+        if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && newValue.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
 
         this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
             this.state.IdRemolque1.m_nIdUnidad, newValue.m_nIdUnidad, this.state.IdDolly.m_nIdUnidad)
+        }
     }
 
-    handleDollyFiltro = async (event) => {
+    handleDollyFiltro(event, newValue) {
         event.preventDefault();
-        let newValue = event.target.value
-        this.setState({IdDolly: newValue, placasDolly: newValue.m_sPlacas})
+        this.setState({ IdDolly: newValue, placasDolly: newValue.m_sPlacas })
+        if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && newValue.m_nIdUnidad) {
 
         this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
             this.state.IdRemolque1.m_nIdUnidad, this.state.IdRemolque2.m_nIdUnidad, newValue.m_nIdUnidad)
+        }
     }
 
     render() {
@@ -245,35 +253,35 @@ class AgregarViaje extends Component {
                 field: "m_sNombreCompleto",
                 width: 250,
             },
-          
+
         ];
 
         return (
 
             <div>
-                <Dialog open={this.state.openDialog} onClose={() => this.setState({openDialog: false })}>
+                <Dialog open={this.state.openDialog} onClose={() => this.setState({ openDialog: false })}>
                     <DialogContent>
                         {this.state.tipoModal === 1 &&
-                        <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-                            <div align="right">
-                                <button onClick={() => { this.props.history.push("/Ciudades") }} className="btn btn-primary primary-btn">Agregar</button>
+                            <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+                                <div align="right">
+                                    <button onClick={() => { this.props.history.push("/Ciudades") }} className="btn btn-primary primary-btn">Agregar</button>
+                                </div>
+
+                                {this.state.dataCiudad.length !== 0 ? <TableCiudadesViajes object={this.state}
+                                    select={this.state[this.state.identificadorModal]
+                                        && this.state[this.state.identificadorModal].m_nIdCiudad}
+                                    data={this.state.dataCiudad} identificadorModal={this.state.identificadorModal}
+                                    func={() => this.handleSelectCP} />
+                                    : <div>No se encontró ningún registro</div>}
+
+
+                                <DialogActions style={{ justifyContent: "left" }}>
+
+                                    <button onClick={() => this.setState({ openDialog: false })} className="btn btn-primary primary-btn">Aceptar</button>
+                                    <button onClick={() => this.setState({ openDialog: false })} className="btn btn-secondary secondary-btn">Cerrar</button>
+
+                                </DialogActions>
                             </div>
-
-                            {this.state.dataCiudad.length !== 0 ? <TableCiudadesViajes object={this.state}
-                                                                                select={this.state[this.state.identificadorModal]
-                                                                                && this.state[this.state.identificadorModal].m_nIdCiudad}
-                                                                                 data={this.state.dataCiudad} identificadorModal={this.state.identificadorModal}
-                                                                                       func={() => this.handleSelectCP} />
-                                                                                : <div>No se encontró ningún registro</div>}
-
-
-                            <DialogActions style={{ justifyContent: "left" }}>
-
-                                <button onClick={() => this.setState({ openDialog: false })} className="btn btn-primary primary-btn">Aceptar</button>
-                                <button onClick={() => this.setState({ openDialog: false })} className="btn btn-secondary secondary-btn">Cerrar</button>
-
-                            </DialogActions>
-                        </div>
                         }
                         {this.state.tipoModal === 4 && (
                             <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
@@ -303,7 +311,7 @@ class AgregarViaje extends Component {
                                 )}
                                 <DialogActions style={{ justifyContent: "left" }}>
                                     <button
-                                        onClick={() => this.setState({openDialog: false })}
+                                        onClick={() => this.setState({ openDialog: false })}
                                         className="btn btn-secondary secondary-btn"
                                     >
                                         Cerrar
@@ -317,7 +325,7 @@ class AgregarViaje extends Component {
                                 </DialogActions>
                             </div>
                         )}
-                        </DialogContent>
+                    </DialogContent>
                 </Dialog>
 
                 <div className="widget-wrap">
@@ -357,14 +365,14 @@ class AgregarViaje extends Component {
                                     <div className="col-sm-6 col-md-2 col-lg-2 unit">
                                         <div className="input">
                                             <TextField variant="outlined" margin="dense"
-                                                       onChange={this.handleChange}
-                                                       className="form-control"
-                                                       type="text"
-                                                       label="Folio Viaje"
-                                                       value={this.state.folioViaje}
-                                                       id="folioViaje"
-                                                       name="folioViaje"
-                                                       disabled
+                                                onChange={this.handleChange}
+                                                className="form-control"
+                                                type="text"
+                                                label="Folio Viaje"
+                                                value={this.state.folioViaje}
+                                                id="folioViaje"
+                                                name="folioViaje"
+                                                disabled
                                             />
                                         </div>
                                     </div>
@@ -372,13 +380,13 @@ class AgregarViaje extends Component {
                                     <div className="col-sm-6 col-md-2 col-lg-2 unit">
                                         <div className="input">
                                             <TextField variant="outlined" margin="dense"
-                                                       onChange={this.handleChange}
-                                                       className="form-control"
-                                                       type="text"
-                                                       label="Núm. Viaje Cliente"
-                                                       value={this.state.viajeCliente}
-                                                       id="viajeCliente"
-                                                       name="viajeCliente"
+                                                onChange={this.handleChange}
+                                                className="form-control"
+                                                type="text"
+                                                label="Núm. Viaje Cliente"
+                                                value={this.state.viajeCliente}
+                                                id="viajeCliente"
+                                                name="viajeCliente"
 
                                             />
                                         </div>
@@ -386,24 +394,24 @@ class AgregarViaje extends Component {
                                     {/* Fecha */}
                                     <div className="col-sm-6 col-md-2 col-lg-2 unit">
 
-                                    <div className="input">
-                                                                <TextField variant="outlined" margin="dense"
-                                                                           onChange={this.handleChange}
-                                                                           required
-                                                                           label="Fecha / Hora de Registro"
-                                                                           InputLabelProps={{
-                                                                               shrink: true,
-                                                                           }}
-                                                                           value={this.state.fechaHoraRegistro}
-                                                                           className="form-control"
-                                                                           id="fechaHoraRegistro"
-                                                                           type="datetime-local"
-                                                                           name="fechaHoraRegistro"
-                                                                           //disabled={state.agregar === "Consultar" || state.agregar === "Modificar"}
+                                        <div className="input">
+                                            <TextField variant="outlined" margin="dense"
+                                                onChange={this.handleChange}
+                                                required
+                                                label="Fecha / Hora de Registro"
+                                                InputLabelProps={{
+                                                    shrink: true,
+                                                }}
+                                                value={this.state.fechaHoraRegistro}
+                                                className="form-control"
+                                                id="fechaHoraRegistro"
+                                                type="datetime-local"
+                                                name="fechaHoraRegistro"
+                                            //disabled={state.agregar === "Consultar" || state.agregar === "Modificar"}
 
-                                                                />
-                                                            </div>
-                                                            </div>
+                                            />
+                                        </div>
+                                    </div>
                                     {/* Estatus viaje */}
                                     <div className="col-sm-6 col-md-2 col-lg-2 unit">
                                         <label className="input select">
@@ -418,8 +426,8 @@ class AgregarViaje extends Component {
                                                     label="Estatus Viaje"
                                                     name={"estatusListado"}
                                                     InputProps={{
-                                                        id:"estatusListado",
-                                                        name:"estatusListado"
+                                                        id: "estatusListado",
+                                                        name: "estatusListado"
                                                     }}
                                                 >
                                                     {this.state.dataEstatusViaje.map((estatus) => (
@@ -438,12 +446,12 @@ class AgregarViaje extends Component {
                                     <div className="col-sm-6 col-md-2 col-lg-2 unit">
                                         <div className="input">
                                             <TextField variant="outlined" margin="dense"
-                                                       onChange={this.handleChange}
-                                                       className="form-control"
-                                                       type="text"
-                                                       label="Candado Oficial"
-                                                       value={this.state.candadoOficial}
-                                                       name="candadoOficial"
+                                                onChange={this.handleChange}
+                                                className="form-control"
+                                                type="text"
+                                                label="Candado Oficial"
+                                                value={this.state.candadoOficial}
+                                                name="candadoOficial"
                                             />
                                         </div>
                                     </div>
@@ -451,12 +459,12 @@ class AgregarViaje extends Component {
                                     <div className="col-sm-6 col-md-2 col-lg-2 unit">
                                         <div className="input">
                                             <TextField variant="outlined" margin="dense"
-                                                       onChange={this.handleChange}
-                                                       className="form-control"
-                                                       type="text"
-                                                       label="Identificador"
-                                                       value={this.state.identificadorViaje}
-                                                       name="identificadorViaje"
+                                                onChange={this.handleChange}
+                                                className="form-control"
+                                                type="text"
+                                                label="Identificador"
+                                                value={this.state.identificadorViaje}
+                                                name="identificadorViaje"
                                             />
                                         </div>
                                     </div>
@@ -579,7 +587,8 @@ class AgregarViaje extends Component {
                                                                                     identificadorModal:
                                                                                         "origen",
                                                                                     tipoModal: 1,
-                                                                                    openDialog: true})
+                                                                                    openDialog: true
+                                                                                })
                                                                             }}
                                                                         >
                                                                             <PageviewIcon
@@ -764,12 +773,12 @@ class AgregarViaje extends Component {
                                         <div className="col-sm-12 col-md-3 unit">
                                             <div className="input">
                                                 <TextField variant="outlined" margin="dense"
-                                                           onChange={this.handleChange}
-                                                           className="form-control"
-                                                           type="text"
-                                                           label="Placas Int"
-                                                           value={this.state.placasRemolque1}
-                                                           name="placasRemolque1"
+                                                    onChange={this.handleChange}
+                                                    className="form-control"
+                                                    type="text"
+                                                    label="Placas Int"
+                                                    value={this.state.placasRemolque1}
+                                                    name="placasRemolque1"
                                                 />
                                             </div>
                                         </div>
@@ -778,12 +787,12 @@ class AgregarViaje extends Component {
                                         <div className="col-sm-12 col-md-3 unit">
                                             <div className="input">
                                                 <TextField variant="outlined" margin="dense"
-                                                           onChange={this.handleChange}
-                                                           className="form-control"
-                                                           type="text"
-                                                           label="Estatus"
-                                                           value={this.state.estatusRemolque2}
-                                                           name="estatusRemolque2"
+                                                    onChange={this.handleChange}
+                                                    className="form-control"
+                                                    type="text"
+                                                    label="Estatus"
+                                                    value={this.state.estatusRemolque2}
+                                                    name="estatusRemolque2"
                                                 />
                                             </div>
                                         </div>
@@ -871,12 +880,12 @@ class AgregarViaje extends Component {
                                         <div className="col-sm-12 col-md-3 unit">
                                             <div className="input">
                                                 <TextField variant="outlined" margin="dense"
-                                                           onChange={this.handleChange}
-                                                           className="form-control"
-                                                           type="text"
-                                                           label="Placas Int"
-                                                           value={this.state.placasRemolque2}
-                                                           name="placasRemolque2"
+                                                    onChange={this.handleChange}
+                                                    className="form-control"
+                                                    type="text"
+                                                    label="Placas Int"
+                                                    value={this.state.placasRemolque2}
+                                                    name="placasRemolque2"
                                                 />
                                             </div>
                                         </div>
@@ -885,12 +894,12 @@ class AgregarViaje extends Component {
                                         <div className="col-sm-12 col-md-3 unit">
                                             <div className="input">
                                                 <TextField variant="outlined" margin="dense"
-                                                           onChange={this.handleChange}
-                                                           className="form-control"
-                                                           type="text"
-                                                           label="Estatus"
-                                                           value={this.state.estatusRemolque2}
-                                                           name="estatusRemolque2"
+                                                    onChange={this.handleChange}
+                                                    className="form-control"
+                                                    type="text"
+                                                    label="Estatus"
+                                                    value={this.state.estatusRemolque2}
+                                                    name="estatusRemolque2"
                                                 />
                                             </div>
                                         </div>
@@ -981,12 +990,12 @@ class AgregarViaje extends Component {
                                         <div className="col-sm-12 col-md-3 unit">
                                             <div className="input">
                                                 <TextField variant="outlined" margin="dense"
-                                                           onChange={this.handleChange}
-                                                           className="form-control"
-                                                           type="text"
-                                                           label="Placas Int"
-                                                           value={this.state.placasDolly}
-                                                           name="placasDolly"
+                                                    onChange={this.handleChange}
+                                                    className="form-control"
+                                                    type="text"
+                                                    label="Placas Int"
+                                                    value={this.state.placasDolly}
+                                                    name="placasDolly"
                                                 />
                                             </div>
                                         </div>
@@ -1010,11 +1019,11 @@ class AgregarViaje extends Component {
                             <div className="row" style={{ height: this.state.height - 750, width: '100%' }}>
                                 {this.state.dataInformes.length != 0 ? (
                                     <DataGrid
-                                    localeText={dataGridLocaleText}
+                                        localeText={dataGridLocaleText}
                                         rows={this.state.dataInformes}
                                         columns={columns}
                                         density="compact"
-                                        pageSize={ Math.floor((this.state.height - 310)/30)}
+                                        pageSize={Math.floor((this.state.height - 310) / 30)}
                                         getRowId={(row) => row.m_nIdInforme}
                                         onRowSelected={(row) => {
                                             this.setState({
