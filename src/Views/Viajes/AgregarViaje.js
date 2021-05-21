@@ -5,7 +5,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import axios from "axios";
 import PageviewIcon from "@material-ui/icons/Pageview";
-import {Dialog, DialogActions, DialogContent} from "@material-ui/core";
+import {Button, Dialog, DialogActions, DialogContent} from "@material-ui/core";
 import TableCiudades from "./TableCiudades";
 import TableCiudadesViajes from "./TableCiudades";
 import FormControl from "@material-ui/core/FormControl";
@@ -14,6 +14,7 @@ import Select from "@material-ui/core/Select";
 import TableUnidadViajes from "./TablaUnidadViajes";
 import {DataGrid} from "@material-ui/data-grid";
 import { dataGridLocaleText } from "../../Constants";
+import Historial from "./Historial";
 
 const headers = {
     'Content-Type': 'application/json',
@@ -1017,6 +1018,7 @@ class AgregarViaje extends Component {
                                 ) : (
                                     <div>No se encontró ningún registro</div>
                                 )}
+                                <Button>Historial</Button>
                             </div>
                         </div>
                     </div>

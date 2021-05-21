@@ -8,7 +8,7 @@ import ViajesPage from './Views/Viajes'
 import CatalogosPage from './Views/Catalogos';
 import ConfiguracionPage from './Views/Configuracion';
 import InicadoresPage from './Views/Indicadores';
-import Tracking from './Views/Seguimiento/Tracking';
+import Historial from './Views/Viajes/Historial';
 
 import {ReactComponent as ConfiguracionIcon} from './iconos/Menu/IconoConfiguraciones/iconoConfiguraciones.svg';
 import {ReactComponent as IndicadoresIcon} from './iconos/Menu/IconoIndicadores/iconoIndicadores.svg';
@@ -84,16 +84,15 @@ const dashboardRoutes = [
     component: ViajesPage,
     single: true,
     child:[]
+  },
+  {
+    path: "/Historial",
+    name: "Historial",
+    icon: viajeIcon,
+    component: Historial,
+    single: true,
+    child:[]
   }
-  // ,
-  // {
-  //   path: "/Seguimiento",
-  //   name: "Seguimiento",
-  //   icon: viajeIcon,
-  //   component: Tracking,
-  //   single: true,
-  //   child:[]
-  // }
 ];
 
 export default dashboardRoutes;

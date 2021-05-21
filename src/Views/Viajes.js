@@ -20,6 +20,7 @@ import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 import { dataGridLocaleText } from "../Constants";
 import { Tooltip } from "@material-ui/core";
+import Historial from "./Viajes/Historial";
 
 function showSuccess(mensaje) {
     new Noty({
