@@ -7,6 +7,9 @@ import $ from "jquery";
 
 import Noty from 'noty';
 import { FormControl, InputLabel, Select, TextField } from "@material-ui/core";
+import { obtenerCodigoPostal } from "../Util/Contexts/CodigoPostalContext";
+import { obtenerEstadosPais } from "../Util/Contexts/EstadosContext";
+import { obtenerPaises } from "../Util/Contexts/PaisesContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -85,7 +88,6 @@ function Parametros() {
             "CreadoPor": state.CreadoPor,
             "ModificadoPor": state.ModificadoPor
         }
-        console.log(params)
         const url = `${process.env.REACT_APP_API_URL}/Pais/Modificar/` + state.idPais;
         axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
             showSuccess(respuesta.data)
@@ -122,23 +124,20 @@ function Parametros() {
     }, []);
 
     function getAllPais() {
-        const url = `${process.env.REACT_APP_API_URL}/Pais/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerPaises().then((respuesta) => {
             setDataPais(respuesta.data);
             getAllEstado(respuesta.data[0].m_nIdPais);
         });
     }
 
     function getAllEstado(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Estados/ByPais/${id}`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerEstadosPais(id).then((respuesta) => {
             setDataEstado(respuesta.data);
         });
     }
 
     function getAllCodigosPostales() {
-        const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerCodigoPostal().then((respuesta) => {
             setDataCodigoPostal(respuesta.data);
         });
     }

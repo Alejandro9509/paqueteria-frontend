@@ -36,10 +36,6 @@ class CrearConcepto extends Component {
 
     }
 
-    componentWillMount() {
-
-    }
-
     componentDidMount() {
         this.getAllImpuestos()
     }
@@ -102,12 +98,10 @@ class CrearConcepto extends Component {
 
     onSubmit(event) {
         event.preventDefault()
+        console.log("hola")
         this.props.onSubmit(this.state)
     }
 
-    componentWillUnmount() {
-
-    }
 
     render() {
         const { impuestos, impuestosRetencion } = this.state
@@ -195,10 +189,16 @@ class CrearConcepto extends Component {
                                                             </label>
                                                         </div>
                                                         <div className="col-sm-4 col-md-4 col-lg-4 unit" style={{ padding: "2px" }}>
-                                                            <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.handleChangeChecboxTraslado(event, index)} checked={this.state.impuestosSeleccionadosTraslado.find(t => t.m_nIdImpuesto === i.m_nIdImpuesto) != null} />
+                                                            <label className="checkbox">
+                                                                <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.handleChangeChecboxTraslado(event, index)} checked={this.state.impuestosSeleccionadosTraslado.find(t => t.m_nIdImpuesto === i.m_nIdImpuesto) != null} />
+                                                                <i />
+                                                            </label>
                                                         </div>
                                                         <div className="col-sm-4 col-md-4 col-lg-4 unit" style={{ padding: "2px" }}>
-                                                            <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.handleChangeChecboxTrasladoPredeterminado(event, index)} checked={i.m_nIdImpuesto === this.state.predeterminadoSeleccionadosTraslado.m_nIdImpuesto} />
+                                                            <label className="checkbox">
+                                                                <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.handleChangeChecboxTrasladoPredeterminado(event, index)} checked={i.m_nIdImpuesto === this.state.predeterminadoSeleccionadosTraslado.m_nIdImpuesto} />
+                                                                <i />
+                                                            </label>
                                                         </div>
                                                     </div>
                                                 </ListItem>
@@ -247,10 +247,16 @@ class CrearConcepto extends Component {
                                                             </label>
                                                         </div>
                                                         <div className="col-sm-4 col-md-4 col-lg-4 unit" style={{ padding: "2px" }}>
-                                                            <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.handleChangeChecboxRetencion(event, index)} checked={this.state.impuestosSeleccionadosRetencion.find(t => t.m_nIdImpuesto === i.m_nIdImpuesto) != null} />
+                                                            <label className="checkbox">
+                                                                <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.handleChangeChecboxRetencion(event, index)} checked={this.state.impuestosSeleccionadosRetencion.find(t => t.m_nIdImpuesto === i.m_nIdImpuesto) != null} />
+                                                                <i />
+                                                            </label>
                                                         </div>
                                                         <div className="col-sm-4 col-md-4 col-lg-4 unit" style={{ padding: "2px" }}>
-                                                            <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.handleChangeChecboxRetencionPredeterminado(event, index)} checked={i.m_nIdImpuesto === this.state.predeterminadoSeleccionadosRetencion.m_nIdImpuesto} />
+                                                            <label className="checkbox">
+                                                                <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.handleChangeChecboxRetencionPredeterminado(event, index)} checked={i.m_nIdImpuesto === this.state.predeterminadoSeleccionadosRetencion.m_nIdImpuesto} />
+                                                                <i />
+                                                            </label>
                                                         </div>
                                                     </div>
                                                 </ListItem>
@@ -272,9 +278,9 @@ class CrearConcepto extends Component {
                         </div>
                         <div className="row" style={{ margin: "0px" }}>
                             <div className="col-sm-12 col-md-4 col-lg-4 unit" style={{ padding: "2px" }}>
-                                <FormControlLabel
-                                    control={<input
-                                        required
+                                <label className="checkbox">
+                                    <input
+                                        
                                         disabled={this.props.consult}
                                         native="true"
                                         name="activo"
@@ -282,14 +288,16 @@ class CrearConcepto extends Component {
                                         onChange={(e) => this.setState({ activo: e.target.checked })}
                                         style={{ margin: "10px" }}
                                         type="checkbox"
-                                    />}
-                                    label="Activo"
-                                />
+                                    />
+                                    <i />
+                                    Activo
+                                </label>
+
                             </div>
                             <div className="col-sm-12 col-md-8 col-lg-8 unit" style={{ padding: "2px" }}>
-                                <FormControlLabel
-                                    control={<input
-                                        required
+                                <label className="checkbox">
+                                    <input
+                                        
                                         native="true"
                                         disabled={this.props.consult}
                                         checked={this.state.incluirIngresosLiquidacion}
@@ -297,14 +305,17 @@ class CrearConcepto extends Component {
                                         name="incluirIngresosLiquidacion"
                                         style={{ margin: "10px" }}
                                         type="checkbox"
-                                    />}
-                                    label="Incluir en el Cálculo de los Ingresos en la Liquidación"
-                                />
+                                    />
+
+                                    <i />
+                                    Incluir en el Cálculo de los Ingresos en la Liquidación
+                                </label>
+
                             </div>
                             <div className="col-sm-12 col-md-12 col-lg-12 unit" style={{ padding: "2px" }}>
-                                <FormControlLabel
-                                    control={<input
-                                        required
+                                <label className="checkbox">
+                                    <input
+                                        
                                         native="true"
                                         disabled={this.props.consult}
                                         name="incluirLiquidacionFlete"
@@ -312,9 +323,11 @@ class CrearConcepto extends Component {
                                         onChange={(e) => this.setState({ incluirLiquidacionFlete: e.target.checked })}
                                         style={{ margin: "10px" }}
                                         type="checkbox"
-                                    />}
-                                    label="Incluir en el Cálculo de la Liquidación % Sobre Importe Flete"
-                                />
+                                    />
+                                    <i />
+                                    Incluir en el Cálculo de la Liquidación % Sobre Importe Flete
+                                    </label>
+
                             </div>
                         </div>
                         <div className="row" style={{ margin: "0px" }}>

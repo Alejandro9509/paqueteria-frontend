@@ -15,8 +15,8 @@ h2 {
 }
 
 .boton-de-catalogos {
-  height: 80px;
-  width: 80px;
+  height: 90px;
+  width: 90px;
   color: #f9a03e;
   fill: #f9a03e;
   font-size: 20px;
@@ -235,8 +235,12 @@ h2 {
 }
 
 .MuiTypography-body2 {
-  font-size: large !important;
+  font-size: var(--font-size) !important;
 }
+.MuiStepIcon-text {
+  font-size: var(--font-size) !important;
+}
+
 
 .MuiTablePagination-actions > .MuiSvgIcon-root {
   font-size: var(--font-size) !important;
@@ -268,23 +272,25 @@ h2 {
   height: 100%;
 }
 input[type="date"]::-webkit-calendar-picker-indicator {
-    background-image:  url(../images/calendar.png)
-  }
-  
-  .MuiDataGrid-root .MuiDataGrid-columnsContainer {
-    border-bottom: 1px solid gray !important;
-    border-bottom-color: gray !important;
+  background-image: url(../images/calendar.png);
+}
 
-  }
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  background-image: url(../images/calendar.png);
+}
 
-  .MuiStepLabel-active {
-      font-size: inherit !important;
-  }
+.MuiDataGrid-root .MuiDataGrid-columnsContainer {
+  border-bottom: 1px solid gray !important;
+  border-bottom-color: gray !important;
+}
 
-  .MuiStepper-root {
-      overflow-x: scroll;
-  }
-  .MuiDataGrid-root .MuiDataGrid-colCellMoving {
-      background-color: white !important;
-  }
-  
+.MuiStepLabel-active {
+  font-size: inherit !important;
+}
+
+.MuiStepper-root {
+  overflow-x: auto;
+}
+.MuiDataGrid-root .MuiDataGrid-colCellMoving {
+  background-color: white !important;
+}

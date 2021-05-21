@@ -7,9 +7,16 @@ import { useTable, useFilters, useSortBy } from 'react-table'
 import { makeStyles } from "@material-ui/core/styles";
 import { Breadcrumbs, FormControl, InputLabel, Link, Select, TextField, Tooltip, Typography } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
-
+import $ from "jquery";
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
+import { modificarCiudad, agregarCiudad, eliminarCiudad, obtenerCiudadId, obtenerCiudades } from "../Util/Contexts/CiudadesContext";
+import { agregarCodigoPostal, modificarCodigoPostal, obtenerCodigoPostalCiudad, obtenerCodigoPostalId, eliminarCodigoPostal } from "../Util/Contexts/CodigoPostalContext";
+import { obtenerPaises } from "../Util/Contexts/PaisesContext";
+import { obtenerEstadosPais } from "../Util/Contexts/EstadosContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
+
+window.jQuery = window.$ = $;
 
 function showSuccess(mensaje) {
     new Noty({
@@ -66,21 +73,23 @@ function CiudadesCodigoPostal() {
             "m_nCreadoPor": state.CreadoPor,
             "m_nModificadoPor": state.ModificadoPor
         }
-        console.log(params)
         if (state.idCiudad != 0) {
-            const url = `${process.env.REACT_APP_API_URL}/Ciudades/Modificar/` + state.idCiudad;
-            axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+            modificarCiudad(state.idCiudad, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
-            }).catch(err => {
-                console.log(err)
-                showSuccess("err")
+                $('#ciudadTabs li ').removeClass('active');
+                $('#ciudadTabs li').eq(1).addClass('active');
+                $('#ciudadContentTabs div ').removeClass('in show');
+                $('#Agregar').addClass('in show');
             });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/Ciudades/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+            agregarCiudad().then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
+                $('#ciudadTabs li ').removeClass('active');
+                $('#ciudadTabs li').eq(1).addClass('active');
+                $('#ciudadContentTabs div ').removeClass('in show');
+                $('#Agregar').addClass('in show');
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
@@ -100,10 +109,9 @@ function CiudadesCodigoPostal() {
             "m_nCreadoPor": state.CreadoPor,
             "m_nModificadoPor": state.ModificadoPor
         }
-        console.log(params)
+        
         if (state.idCodigoPostal != 0) {
-            const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/Modificar/` + state.idCodigoPostal;
-            axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+            modificarCodigoPostal(state.idCodigoPostal, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
             }).catch(err => {
@@ -111,8 +119,7 @@ function CiudadesCodigoPostal() {
                 showSuccess("err")
             });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+            agregarCodigoPostal(params).then(respuesta => {
                 showSuccess(respuesta.data)
             }).catch(err => {
                 console.log(err)
@@ -123,8 +130,7 @@ function CiudadesCodigoPostal() {
     }
 
     function handleEliminarCiudad(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Ciudades/Eliminar/` + id;
-        axios.delete(url, { headers }).then(respuesta => {
+        eliminarCiudad(id).then(respuesta => {
             showSuccess(respuesta.data)
             getAllData();
         }).catch(err => {
@@ -134,8 +140,7 @@ function CiudadesCodigoPostal() {
 
     function handleEliminarCodigoPostal(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        axios.get(urlDelete, { headers }).then(respuesta => {
+        validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
 
             derecho = respuesta.data;
@@ -143,8 +148,7 @@ function CiudadesCodigoPostal() {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-            const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/Eliminar/` + id;
-            axios.delete(url, { headers }).then(respuesta => {
+            eliminarCodigoPostal(id).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllCodigoPostal();
             }).catch(err => {
@@ -157,9 +161,7 @@ function CiudadesCodigoPostal() {
     }
 
     function handleShowModificarCiudad(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetById/${id}`;
-        axios.get(url, { headers }).then(respuesta => {
-            console.log(respuesta.data)
+        obtenerCiudadId(id).then(respuesta => {
             setState({
                 ...state,
                 agregar: "Modificar",
@@ -171,11 +173,11 @@ function CiudadesCodigoPostal() {
 
             })
         });
+        $('#ciudadTabs li ').removeClass('active'); $('#ciudadTabs li').eq(1).addClass('active'); $('#ciudadContentTabs div').removeClass('in show'); $('#Agregar').addClass('in show');
     }
 
     function handleShowConsultaCiudad(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetById/${id}`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerCiudadId(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -188,12 +190,11 @@ function CiudadesCodigoPostal() {
 
             })
         });
+        $('#ciudadTabs li ').removeClass('active'); $('#ciudadTabs li').eq(1).addClass('active'); $('#ciudadContentTabs div').removeClass('in show'); $('#Agregar').addClass('in show');
     }
 
     function handleShowModificarCodigoPostal(id) {
-        const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetById/${id}`;
-        axios.get(url, { headers }).then(respuesta => {
-            console.log(respuesta.data)
+        obtenerCodigoPostalId(id).then(respuesta => {
             setState({
                 ...state,
                 agregarCodigoPostal: "Modificar",
@@ -202,12 +203,12 @@ function CiudadesCodigoPostal() {
                 zona: respuesta.data.m_sCiudad,
             })
         });
+        $('#codigoTabs li ').removeClass('active'); $('#codigoTabs li').eq(1).addClass('active'); $('#codigoContentTabs div').removeClass('in show'); $('#AgregarCP').addClass('in show');
+
     }
 
     function handleConsultarCodigoPostal(id) {
-        const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetById/${id}`;
-        axios.get(url, { headers }).then(respuesta => {
-            console.log(respuesta.data)
+        obtenerCodigoPostalId(id).then(respuesta => {
             setState({
                 ...state,
                 agregarCodigoPostal: "Consultar",
@@ -216,6 +217,9 @@ function CiudadesCodigoPostal() {
                 zona: respuesta.data.m_sCiudad,
             })
         });
+        $('#codigoTabs li ').removeClass('active'); $('#codigoTabs li').eq(1).addClass('active'); $('#codigoContentTabs div').removeClass('in show'); $('#AgregarCP').addClass('in show');
+
+        
     }
 
     function handleShowAgregarCiudad() {
@@ -229,6 +233,7 @@ function CiudadesCodigoPostal() {
             idEstado: dataEstado[0].m_nIdEstado,
             idPais: dataPais[0].m_nIdPais,
         })
+        $('#ciudadTabs li ').removeClass('active'); $('#ciudadTabs li').eq(1).addClass('active'); $('#ciudadContentTabs div').removeClass('in show'); $('#Agregar').addClass('in show');
     }
 
     function handleShowAgregarCodigoPostal() {
@@ -239,6 +244,8 @@ function CiudadesCodigoPostal() {
             codigoPostal: "",
             zona: "",
         })
+        $('#codigoTabs li ').removeClass('active'); $('#codigoTabs li').eq(1).addClass('active'); $('#codigoContentTabs div').removeClass('in show'); $('#AgregarCP').addClass('in show');
+
     }
 
     const handleChange = event => {
@@ -275,11 +282,11 @@ function CiudadesCodigoPostal() {
                 return (
                     <div>
                         <Tooltip title="Modificar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarCiudad(row.row.m_nIdCiudad))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                            <a  onClick={() => (handleShowModificarCiudad(row.row.m_nIdCiudad))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
 
                         </Tooltip>
                         <Tooltip title="Consultar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultaCiudad(row.row.m_nIdCiudad))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                            <a  className="btn btn-default btn-xs" onClick={() => (handleShowConsultaCiudad(row.row.m_nIdCiudad))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
@@ -319,11 +326,11 @@ function CiudadesCodigoPostal() {
                 return (
                     <div>
                         <Tooltip title="Modificar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificarCodigoPostal(row.row.m_nIdCP))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                            <a onClick={() => (handleShowModificarCodigoPostal(row.row.m_nIdCP))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
 
                         </Tooltip>
                         <Tooltip title="Consultar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificarCodigoPostal(row.row.m_nIdCP))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                            <a className="btn btn-default btn-xs" onClick={() => (handleShowModificarCodigoPostal(row.row.m_nIdCP))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
@@ -352,8 +359,7 @@ function CiudadesCodigoPostal() {
     }, []);
 
     function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerCiudades().then(respuesta => {
             setData(respuesta.data)
             getAllCodigoPostal(respuesta.data[0].m_nIdCiudad)
             setState({
@@ -365,23 +371,20 @@ function CiudadesCodigoPostal() {
     };
 
     function getAllCodigoPostal(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListadoCP/` + id;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerCodigoPostalCiudad(id).then(respuesta => {
             setDataCodigoPostal(respuesta.data)
         });
     }
 
     function getAllPais() {
-        const url = `${process.env.REACT_APP_API_URL}/Pais/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerPaises().then((respuesta) => {
             setDataPais(respuesta.data);
             getAllEstado(respuesta.data[0].m_nIdPais)
         });
     }
 
     function getAllEstado(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Estados/ByPais/${id}`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerEstadosPais(id).then((respuesta) => {
             setDataEstado(respuesta.data);
         });
     }
@@ -470,8 +473,8 @@ function CiudadesCodigoPostal() {
                                         className={state.idCiudad === row.original.m_nIdCiudad ? classes.seleccionado : classes.noSeleccionado}>
                                         <td>
                                             <div>
-                                                <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowModificarCiudad(row.original.m_nIdCiudad))}><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                                                <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultaCiudad(row.original.m_nIdCiudad))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                                                <a  className="btn btn-default btn-sm" onClick={() => (handleShowModificarCiudad(row.original.m_nIdCiudad))}><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                                                <a className="btn btn-default btn-sm" onClick={() => (handleShowConsultaCiudad(row.original.m_nIdCiudad))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
                                                 <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminarCiudad(row.original.m_nIdCiudad))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
                                             </div>
                                         </td>
@@ -550,9 +553,9 @@ function CiudadesCodigoPostal() {
                                     <tr {...row.getRowProps()}>
                                         <td>
                                             <div>
-                                                <a href="#AgregarCP" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowModificarCodigoPostal(row.original.m_nIdCP))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                                                <a href="#AgregarCP" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleConsultarCodigoPostal(row.original.m_nIdCP))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                                                <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminarCodigoPostal(row.original.m_nIdCP))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                                                <a  className="btn btn-default btn-sm" onClick={() => (handleShowModificarCodigoPostal(row.original.m_nIdCP))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                                                <a  className="btn btn-default btn-sm" onClick={() => (handleConsultarCodigoPostal(row.original.m_nIdCP))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                                                <a  onClick={() => (handleEliminarCodigoPostal(row.original.m_nIdCP))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
                                             </div>
                                         </td>
                                         {row.cells.map(cell => {
@@ -603,21 +606,21 @@ function CiudadesCodigoPostal() {
 
                     <div className="row">
                         <div className="col-md-7" >
-                            <ul className="nav navStatica nav-tabs">
+                            <ul className="nav navStatica nav-tabs" id="ciudadTabs">
                                 <li className="active">
-                                    <a data-toggle="tab" href="#Listado">
+                                    <a onClick={(event) => { event.stopPropagation(); setState({...state, agregarCiudad: "Agregar" }); $('#ciudadTabs li ').removeClass('active'); $('#ciudadTabs li').eq(0).addClass('active'); $('#ciudadContentTabs div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
                                         <i className="fa fa-list" /> Listado
             </a>
                                 </li>
                                 <li>
-                                    <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregarCiudad}>
+                                    <a onClick={handleShowAgregarCiudad}>
                                         <i className="fa fa-plus-circle" /> {state.agregarCiudad}
                                     </a>
                                 </li>
                             </ul>
 
-                            <div className="tab-content">
-                                <div className="widget-wrap" id="Listado" className="tab-pane fade in active">
+                            <div className="tab-content" id="ciudadContentTabs">
+                                <div className="widget-wrap" id="Listado" className="tab-pane fade in show">
                                     <div className="widget-wrap">
                                         <div className="widget-content">
                                             <div className="row" style={{ height: state.height - 250, width: '100%' }}>
@@ -771,7 +774,7 @@ function CiudadesCodigoPostal() {
                                                         </div>
                                                         <br></br>
                                                         <div className="form-footer" className="col-md-12">
-                                                            <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
+                                                            <button type="button" onClick={(event) => { event.stopPropagation(); setState({...state, agregarCiudad: "Agregar" }); $('#ciudadTabs li ').removeClass('active'); $('#ciudadTabs li').eq(0).addClass('active'); $('#ciudadContentTabs div ').removeClass('in show'); $('#Listado').addClass('in show'); }} className="btn btn-secondary secondary-btn"
                                                             >
                                                                 Cancelar</button>
                                                             <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
@@ -787,21 +790,21 @@ function CiudadesCodigoPostal() {
                         </div>
 
                         <div className="col-md-5" >
-                            <ul className="nav navStatica nav-tabs">
+                            <ul className="nav navStatica nav-tabs" id="codigoTabs">
                                 <li className="active">
-                                    <a data-toggle="tab" href="#ListadoEstado">
+                                    <a onClick={(event) => { event.stopPropagation(); setState({...state, agregarCodigoPostal: "Agregar" }); $('#codigoTabs li ').removeClass('active'); $('#codigoTabs li').eq(0).addClass('active'); $('#codigoContentTabs div ').removeClass('in show'); $('#ListadoEstado').addClass('in show'); }}>
                                         <i className="fa fa-list" /> Listado
                 </a>
                                 </li>
                                 <li>
-                                    <a data-toggle="tab" href="#AgregarCP" onClick={handleShowAgregarCodigoPostal}>
+                                    <a  onClick={handleShowAgregarCodigoPostal}>
                                         <i className="fa fa-plus-circle" /> {state.agregarCodigoPostal}
                                     </a>
                                 </li>
                             </ul>
 
-                            <div className="tab-content">
-                                <div className="widget-wrap" id="ListadoEstado" className="tab-pane fade in active">
+                            <div className="tab-content" id="codigoContentTabs">
+                                <div className="widget-wrap" id="ListadoEstado" className="tab-pane fade in show">
                                     <div className="widget-wrap">
                                         <div className="widget-content">
                                             <div className="row" style={{ height: state.height - 250, width: '100%' }}>
@@ -871,7 +874,7 @@ function CiudadesCodigoPostal() {
                                                         </div>
                                                         <br></br>
                                                         <div className="form-footer" className="col-md-12">
-                                                            <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
+                                                            <button type="button" onClick={(event) => { event.stopPropagation(); setState({...state, agregarCodigoPostal: "Agregar" }); $('#codigoTabs li ').removeClass('active'); $('#codigoTabs li').eq(0).addClass('active'); $('#codigoContentTabs div ').removeClass('in show'); $('#ListadoEstado').addClass('in show'); }} className="btn btn-secondary secondary-btn"
                                                             >
                                                                 Cancelar</button>
                                                             <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>

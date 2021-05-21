@@ -1,6 +1,4 @@
 import React, { useEffect, useState, useMemo } from "react";
-import DataTable from 'react-data-table-component';
-import DataTableExtensions from "react-data-table-component-extensions";
 import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
@@ -9,7 +7,6 @@ import BasicTable from "./BasicTable";
 import ExportCSV from '../Components/Template/Export';
 import ExportPDF from "../Components/Template/ExportPDF";
 import * as XLSX from 'xlsx';
-import { useTable, useFilters, useSortBy } from 'react-table'
 import { makeStyles } from "@material-ui/core/styles";
 import { DataGrid } from '@material-ui/data-grid';
 import SvgIcon from "@material-ui/core/SvgIcon";
@@ -19,6 +16,8 @@ import Noty from 'noty';
 import IPut from 'iput';
 import { dataGridLocaleText } from "../Constants";
 import { FormControl, InputLabel, Select, TextField, Tooltip } from "@material-ui/core";
+import { eliminarUsuarios, modificarUsuarios, obtenerUsuarios, obtenerUsuariosId, validarPermisos } from "../Util/Contexts/UsuarioContext";
+import { agregarUnidades } from "../Util/Contexts/UnidadesContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -162,10 +161,8 @@ function Usuarios() {
             "CreadoPor": localStorage.getItem("UsuarioId"),
             "ModificadoPor": localStorage.getItem("UsuarioId")
         }
-        console.log(params)
         if (state.idUsuario != 0) {
-            const url = `${process.env.REACT_APP_API_URL}/Usuarios/Modificar/` + state.idUsuario;
-            axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+            modificarUsuarios(state.idUsuario, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
             }).catch(err => {
@@ -173,8 +170,7 @@ function Usuarios() {
                 showSuccess("err")
             });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/Usuarios/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+            agregarUnidades(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
             }).catch(err => {
@@ -187,16 +183,14 @@ function Usuarios() {
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        axios.get(urlDelete, { headers }).then(respuesta => {
+        validarPermisos(state).then(respuesta => {
             derecho = respuesta.data;
             if (derecho == false) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
 
-            const url = `${process.env.REACT_APP_API_URL}/Usuarios/Eliminar/` + id;
-            axios.delete(url, { headers }).then(respuesta => {
+            eliminarUsuarios(id).then(respuesta => {
                 console.log(respuesta);
                 getAllData();
             }).catch(err => {
@@ -208,8 +202,7 @@ function Usuarios() {
     }
 
     function handleShowModificar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Usuarios/GetById/` + id;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerUsuariosId(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -267,8 +260,7 @@ function Usuarios() {
     }
 
     function handleShowConsultar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Usuarios/GetById/` + id;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerUsuariosId(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -482,8 +474,7 @@ function Usuarios() {
     }, []);
 
     async function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/Usuarios/GetListado`;
-        await axios.get(url, { headers }).then(respuesta => {
+        obtenerUsuarios().then(respuesta => {
             setData(respuesta.data)
         });
     };

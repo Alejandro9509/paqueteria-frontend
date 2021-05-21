@@ -11,6 +11,7 @@ import { ReactComponent as NoActivo } from "../../iconos/Menu/cruz.svg";
 import Noty from 'noty';
 import axios from "axios";
 import { dataGridLocaleText } from '../../Constants';
+import { agregarConceptosFacturacion, eliminarConceptosFacturacion, modificarConceptosFacturacion, obtenerConceptosFacturacionId, obtenerConceptosFacturacion } from '../../Util/Contexts/ConceptosFacturacionContext';
 
 const headers = {
     'Content-Type': 'application/json',
@@ -143,8 +144,7 @@ class ConceptosFacturacion extends Component {
     }
 
     handleShowModificar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/GetById/` + id;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerConceptosFacturacionId(id).then(respuesta => {
             console.log(respuesta.data)
             this.setState({
                 openDialog: true,
@@ -156,8 +156,7 @@ class ConceptosFacturacion extends Component {
     }
 
     handleShowConsultar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/GetById/` + id;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerConceptosFacturacionId(id).then(respuesta => {
             console.log(respuesta.data)
             this.setState({
                 openDialog: true,
@@ -186,10 +185,8 @@ class ConceptosFacturacion extends Component {
             m_nModificadoPor: localStorage.getItem("UsuarioId"),
             arClsDetalle: arrayImpuestos
         }
-        console.log(params)
         if (this.state.edit) {
-            const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/Modificar/` + this.state.selected.idConceptosFacturacion;
-            axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+            modificarConceptosFacturacion(this.state.selected.idConceptosFacturacion, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 this.getAllData()
                 this.setState({ openDialog: false })
@@ -198,8 +195,7 @@ class ConceptosFacturacion extends Component {
                 showSuccess("err")
             });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+            agregarConceptosFacturacion(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 this.getAllData()
                 this.setState({ openDialog: false })
@@ -221,8 +217,7 @@ class ConceptosFacturacion extends Component {
                 return;
             }
 
-            const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/Eliminar/` + id;
-            axios.delete(url, { headers }).then(respuesta => {
+        eliminarConceptosFacturacion(id).then(respuesta => {
                 console.log(respuesta);
                 this.getAllData();
             }).catch(err => {
@@ -232,21 +227,14 @@ class ConceptosFacturacion extends Component {
             showSuccess(err)
         });
     }
-    componentWillMount() {
-
-    }
 
     componentDidMount() {
         this.getAllData()
     }
 
-    componentWillUnmount() {
-
-    }
 
     getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerConceptosFacturacion().then(respuesta => {
             this.setState({ data: respuesta.data })
         });
     }

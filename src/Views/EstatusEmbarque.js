@@ -4,9 +4,10 @@ import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import { DataGrid } from '@material-ui/data-grid';
-
+import {obtenerEstatusEmbarque} from "../Util/Contexts/EstatusContext"
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
+
 
 function showSuccess(mensaje) {
     new Noty({
@@ -63,8 +64,7 @@ function EstatusEmbarque() {
     }, []);
 
     function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/SisEstatus/GetListadoEmbarque`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerEstatusEmbarque().then(respuesta => {
             setData(respuesta.data)
         });
     };

@@ -7,10 +7,12 @@ import * as XLSX from 'xlsx';
 import { useTable, useFilters, useAsyncDebounce, useSortBy } from 'react-table'
 import { makeStyles } from "@material-ui/core/styles";
 import { DataGrid } from '@material-ui/data-grid';
-
+import $ from "jquery";
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import { TextField, Tooltip } from "@material-ui/core";
+import { agregarEmbalajes, modificarEmbalajes, eliminarEmbalajes, obtenerEmbalajesId, obtenerEmbalajes } from "../Util/Contexts/EmbalajesContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -30,7 +32,7 @@ const styles = {
     }
 };
 const useStyles = makeStyles(styles);
-
+window.jQuery = window.$ = $;
 function Embalaje() {
 
     const classes = useStyles();
@@ -63,19 +65,25 @@ function Embalaje() {
         }
         console.log(params)
         if (state.IdEmbalaje != 0) {
-            const url = `${process.env.REACT_APP_API_URL}/Embalaje/Modificar/` + state.IdEmbalaje;
-            axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+            modificarEmbalajes(state.IdEmbalaje, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
+                $('.nav-tabs li ').removeClass('active');
+                $('.nav-tabs li').eq(0).addClass('active');
+                $('.tab-content div ').removeClass('in show');
+                $('#Listado').addClass('in show');
             }).catch(err => {
                 console.log(err)
                 showSuccess("err")
             });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/Embalaje/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+            agregarEmbalajes(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
+                $('.nav-tabs li ').removeClass('active');
+                $('.nav-tabs li').eq(0).addClass('active');
+                $('.tab-content div ').removeClass('in show');
+                $('#Listado').addClass('in show');
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
@@ -86,8 +94,7 @@ function Embalaje() {
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        axios.get(urlDelete, { headers }).then(respuesta => {
+        validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
 
             derecho = respuesta.data;
@@ -96,8 +103,7 @@ function Embalaje() {
                 return;
             }
 
-            const url = `${process.env.REACT_APP_API_URL}/Embalaje/Eliminar/` + id;
-            axios.delete(url, { headers }).then(respuesta => {
+            eliminarEmbalajes(id).then(respuesta => {
                 console.log(respuesta)
                 getAllData()
             }).catch(err => {
@@ -110,9 +116,7 @@ function Embalaje() {
 
     function handleShowModificar(id) {
         console.log(id)
-        const url = `${process.env.REACT_APP_API_URL}/Embalaje/GetById/` + id;
-        axios.get(url, { headers }).then(respuesta => {
-            console.log(respuesta.data)
+        obtenerEmbalajesId(id).then(respuesta => {
             setState({
                 ...state,
                 agregar: "Modificar",
@@ -121,13 +125,13 @@ function Embalaje() {
                 NombreEmbalaje: respuesta.data.m_sNombre,
                 DescripcionEmbalaje: respuesta.data.m_sDescripcion
             })
+            $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
+
         });
     }
 
     function handleShowConsultar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Embalaje/GetById/` + id;
-        axios.get(url, { headers }).then(respuesta => {
-            console.log(respuesta.data)
+        obtenerEmbalajesId(id).then(respuesta => {
             setState({
                 ...state,
                 agregar: "Consultar",
@@ -136,6 +140,8 @@ function Embalaje() {
                 NombreEmbalaje: respuesta.data.m_sNombre,
                 DescripcionEmbalaje: respuesta.data.m_sDescripcion
             })
+            $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
+
         });
     }
 
@@ -149,6 +155,8 @@ function Embalaje() {
             CodigoEmbalaje: 0,
             DescripcionEmbalaje: ""
         })
+        $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
+
     }
 
     const handleChange = event => {
@@ -159,13 +167,6 @@ function Embalaje() {
         });
     };
 
-    function handleSelectRow(id, event) {
-        setState({
-            ...state,
-            IdEmbalaje: id
-        });
-    }
-
     const columns = React.useMemo(() => [
         {
             headerName: "Acciones",
@@ -175,11 +176,11 @@ function Embalaje() {
                 return (
                     <div>
                         <Tooltip title="Modificar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdEmbalaje))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                            <a  onClick={() => (handleShowModificar(row.row.m_nIdEmbalaje))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
 
                         </Tooltip>
                         <Tooltip title="Consultar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdEmbalaje))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                            <a  className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdEmbalaje))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
@@ -232,8 +233,7 @@ function Embalaje() {
     }, []);
 
     function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/Embalajes/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerEmbalajes().then(respuesta => {
             setData(respuesta.data)
         });
     };
@@ -259,129 +259,9 @@ function Embalaje() {
         reader.readAsBinaryString(f)
     }
 
-    const FilterComponent = ({ filterText, onFilter, onClear }) => (
-        <>
-            <input
-                id="search"
-                type="text"
-                value="Filter By Name"
-                aria-label="Search Input"
-                value={filterText}
-                onChange={handleChange} />
-            <button type="button" onClick={onClear}>X</button>
-        </>
-    );
-
-    const getSubHeaderComponent = () => {
-
-    };
-
     const headers = {
         'Content-Type': 'application/json',
         //    'access-control-allow-origin': '*'
-    }
-
-    function DefaultColumnFilter({
-        column: { filterValue, preFilteredRows, setFilter },
-    }) {
-        const count = preFilteredRows.length
-
-        return (
-            <input
-                className="form-control"
-                value={filterValue || ''}
-                onChange={e => {
-                    setFilter(e.target.value || undefined)
-                }}
-                placeholder={`Buscar ${count} registros...`}
-            />
-        )
-    }
-
-    function Table({ columns, data }) {
-
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        )
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn
-            },
-            useFilters,
-            useSortBy
-        )
-
-        return (
-            <div className="col-md-12">
-
-                {/*AQUI MODIFICAS LO QUE NECESITES*/}
-
-                <table className="table" {...getTableProps()}>
-                    <thead>
-                        {headerGroups.map(headerGroup => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                <th>Acciones</th>
-                                {headerGroup.headers.map(column => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render('Name')}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
-                                            {column.isSorted
-                                                ? column.isSortedDesc
-                                                    ? <i className="fa fa-caret-up" />
-                                                    : <i className="fa fa-caret-down" />
-                                                : ''}
-                                        </span>
-                                        <div>{column.canFilter ? column.render('Filter') : null}</div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                        {rows.map(
-                            (row, i) => {
-                                prepareRow(row);
-                                return (
-                                    <tr {...row.getRowProps()}
-                                        onClick={handleSelectRow.bind(this, row.original.m_nIdEmbalaje)}
-                                        className={state.IdEmbalaje === row.original.m_nIdEmbalaje ? classes.seleccionado : classes.noSeleccionado}>
-
-                                        <td>
-                                            <div>
-                                                <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdEmbalaje))} className="btn btn-default  btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                                                <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdEmbalaje))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                                                <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdEmbalaje))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
-                                            </div>
-                                        </td>
-                                        {row.cells.map(cell => {
-                                            return (
-                                                <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                                            )
-                                        })}
-                                    </tr>
-                                )
-                            }
-                        )}
-                    </tbody>
-                </table>
-            </div>
-        )
     }
 
     return (
@@ -417,7 +297,7 @@ function Embalaje() {
 
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
-                            <a data-toggle="tab" href="#Listado">
+                        <a onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
                                 <i className="fa fa-list" /> Listado
             </a>
                         </li>
@@ -431,7 +311,7 @@ function Embalaje() {
                     </ul>
 
                     <div className="row" className="tab-content">
-                        <div className="widget-wrap" id="Listado" className="tab-pane fade in active">
+                        <div className="widget-wrap" id="Listado" className="tab-pane fade in show">
                             <div className="widget-wrap">
                                 <div className="widget-content">
                                     <div className="row" style={{ height: state.height - 250, width: '100%' }}>
@@ -515,7 +395,7 @@ function Embalaje() {
                                                 </div>
                                                 <br></br>
                                                 <div className="form-footer" className="col-12 col-sm-9 col-md-7 unit">
-                                                    <button href="#Listado" role="tab" data-toggle="tab" data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"> Cancelar</button>
+                                                    <button type="button" onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }} className="btn btn-secondary secondary-btn"> Cancelar</button>
                                                     <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                                                 </div>
                                             </form>

@@ -11,6 +11,7 @@ import { DataGrid } from '@material-ui/data-grid';
 import $ from "jquery";
 import { Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
 import AgregarFolio from "./AgregarFolios";
+import { agregarFolios, eliminarFolios, obtenerFolios } from '../../Util/Contexts/FoliosContext';
 window.jQuery = window.$ = $;
 const headers = {
     'Content-Type': 'application/json',
@@ -97,8 +98,7 @@ class Folios extends Component {
         //         return;
         //     }
 
-        const url = `${process.env.REACT_APP_API_URL}/Folios/Eliminar/` + id;
-        axios.delete(url, { headers }).then(respuesta => {
+        eliminarFolios(id).then(respuesta => {
             console.log(respuesta);
             showSuccess(respuesta.data)
             this.getAllData();
@@ -126,8 +126,7 @@ class Folios extends Component {
         }
         console.log(JSON.stringify(params));
         debugger;
-            const url = `${process.env.REACT_APP_API_URL}/Folios/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+           agregarFolios(params).then(respuesta => {
 
             showSuccess(respuesta.data)
             $('.nav-tabs li ').removeClass('active');
@@ -149,8 +148,7 @@ class Folios extends Component {
     }
 
     getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/Folios/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerFolios().then(respuesta => {
             this.setState({ data: respuesta.data, agregar: "Agregar" })
         });
     }

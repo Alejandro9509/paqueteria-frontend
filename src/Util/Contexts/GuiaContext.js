@@ -1,0 +1,110 @@
+import axios from "axios";
+import { trackPromise } from "react-promise-tracker";
+
+const headers = {
+    'Content-Type': 'application/json',
+    //    'access-control-allow-origin': '*'
+}
+
+function modificarGuia(id, params) {
+    const url = `${process.env.REACT_APP_API_URL}/Guia/Modificar/` + id;
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, params), { headers })
+        );
+    return result
+}
+
+function agregarGuia(params) {
+    const url = `${process.env.REACT_APP_API_URL}/Guia/Agregar`;
+    let result;
+    trackPromise(
+        result =  axios.post(url, Object.assign({}, params), { headers })
+        );
+    return result
+}
+
+function eliminarGuia(id) {
+    const url = `${process.env.REACT_APP_API_URL}/Guia/Eliminar/` + id;
+    let result;
+    trackPromise(
+        result =  axios.delete(url, { headers })
+        );
+    return result
+}
+function cancelarGuia(id, params) {
+    const url = `${process.env.REACT_APP_API_URL}/Guia/Cancelar/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, params), { headers })
+        );
+    return result
+}
+
+function obtenerGuia() {
+    const url = `${process.env.REACT_APP_API_URL}/Guia/GetListado`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
+}
+
+function obtenerGuiaPendientes(idOrigen, idDestino) {
+    const url = `${process.env.REACT_APP_API_URL}/Guia/GetListadoPendientes/` +
+        idOrigen +
+        "/" +
+        idDestino
+        ;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
+}
+
+function ultimoFolioGuia() {
+    const url = `${process.env.REACT_APP_API_URL}/Guia/GetUltimoFolio`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
+}
+
+function obtenerGuiaId(id) {
+    const url = `${process.env.REACT_APP_API_URL}/Guia/GetById/` + id;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
+}
+
+function imprimirGuia(id) {
+    const url = `${process.env.REACT_APP_API_URL}/Guia/GetImpresion/` + id;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
+}
+
+function obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado) {
+    const url =
+        `${process.env.REACT_APP_API_URL}/Guias/GetByFiltro/` +
+        fechaInicial +
+        "/" +
+        fechaFinal +
+        "/" +
+        sucursalListado +
+        "/" +
+        estatusListado;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
+}
+
+export { modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId, obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia }

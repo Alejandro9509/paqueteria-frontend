@@ -10,6 +10,8 @@ import { ReactComponent as NoActivoIcon } from '../iconos/Menu/cruz.svg';
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import { FormControl, InputLabel, Select, TextField, Tooltip } from "@material-ui/core";
+import { agregarImpuestos, eliminarImpuestos, modificarImpuestos, obtenerImpuestosId, obtenerImpuestos } from "../Util/Contexts/ImpuestosContext"
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -54,8 +56,7 @@ function Impuestos() {
         }
         console.log(params)
         if (state.idImpuestos != 0) {
-            const url = `${process.env.REACT_APP_API_URL}/Impuestos/Modificar/` + state.idImpuestos;
-            axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+            modificarImpuestos(state.idImpuestos, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
             }).catch(err => {
@@ -63,8 +64,7 @@ function Impuestos() {
                 showSuccess("err")
             });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/Impuestos/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+            agregarImpuestos(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
             }).catch(err => {
@@ -77,16 +77,14 @@ function Impuestos() {
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        axios.get(urlDelete, { headers }).then(respuesta => {
+        validarPermisos(state).then(respuesta => {
             derecho = respuesta.data;
             if (derecho == false) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
 
-            const url = `${process.env.REACT_APP_API_URL}/Impuestos/Eliminar/` + id;
-            axios.delete(url, { headers }).then(respuesta => {
+            eliminarImpuestos(id).then(respuesta => {
                 console.log(respuesta);
                 getAllData();
             }).catch(err => {
@@ -98,8 +96,7 @@ function Impuestos() {
     }
 
     function handleShowModificar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetById/` + id;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerImpuestosId(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -117,8 +114,7 @@ function Impuestos() {
     }
 
     function handleShowConsultar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetById/` + id;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerImpuestosId(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -238,8 +234,7 @@ function Impuestos() {
     }, []);
 
     function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerImpuestos().then(respuesta => {
             setData(respuesta.data)
             console.log(respuesta.data)
         });

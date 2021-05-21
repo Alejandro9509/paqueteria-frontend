@@ -26,6 +26,15 @@ import {
 import { dataGridLocaleText } from "../Constants/index";
 import Noty from "noty";
 import { InputLabel, Select, FormControl, Tooltip, Stepper, Step, StepLabel } from "@material-ui/core";
+import { agregarCliente, eliminarCliente, modificarCliente, obtenerCliente, obtenerClienteId, validarNumeroCliente } from "../Util/Contexts/ClientesContext";
+import { obtenerGrupoClientes } from "../Util/Contexts/GrupoClientesContext";
+import { obtenerMonedas } from "../Util/Contexts/MonedaContext";
+import { obtenerPaises } from "../Util/Contexts/PaisesContext";
+import { obtenerFormatosImpresion } from "../Util/Contexts/FormatosImpresionContext";
+import { obtenerImpuestos } from "../Util/Contexts/ImpuestosContext";
+import { obtenerSucursales } from "../Util/Contexts/SucursalContext";
+import { obtenerEstadosPais } from "../Util/Contexts/EstadosContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -35,16 +44,6 @@ function showSuccess(mensaje) {
         timeout: "3000",
     }).show();
 }
-
-const styles = {
-    seleccionado: {
-        backgroundColor: "#FCC88F",
-    },
-    noSeleccionado: {
-        backgroundColor: "#FFFFFF",
-    },
-};
-const useStyles = makeStyles(styles);
 
 window.jQuery = window.$ = $;
 const headers = {
@@ -56,13 +55,6 @@ function Clientes(props) {
         "Content-Type": "application/json",
     };
 
-    const headers2 = {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-    };
-    const classes = useStyles();
-
     const columns = React.useMemo(() => [
         {
             headerName: "Acciones",
@@ -73,9 +65,6 @@ function Clientes(props) {
                     <div>
                         <Tooltip title="Modificar">
                             <a
-                                href="#Agregar"
-                                role="tab"
-                                data-toggle="tab"
                                 onClick={() => handleShowModificar(row.row.m_nIdCliente)}
                                 className="btn btn-default btn-xs"
                             >
@@ -87,9 +76,6 @@ function Clientes(props) {
                         </Tooltip>
                         <Tooltip title="Consultar">
                             <a
-                                href="#Agregar"
-                                role="tab"
-                                data-toggle="tab"
                                 className="btn btn-default btn-xs"
                                 onClick={() => handleShowModificar(row.row.m_nIdCliente)}
                             >
@@ -98,7 +84,6 @@ function Clientes(props) {
                         </Tooltip>
                         <Tooltip title="Eliminar">
                             <a
-                                href="#"
                                 className="btn btn-default btn-xs"
                                 onClick={() => handleEliminar(row.row.m_nIdCliente)}
                             >
@@ -176,19 +161,6 @@ function Clientes(props) {
             accessor: "m_nTipoProceso",
         },
     ]);
-
-    const locale = {
-        toolbarExport: "Exportar",
-        toolbarExportLabel: "Exportar",
-        toolbarExportCSV: "Descargar como CSV",
-
-        // Columns panel text
-        columnsPanelTextFieldLabel: "Buscar columna",
-        columnsPanelTextFieldPlaceholder: "Columna title",
-        columnsPanelDragIconLabel: "Reorder columna",
-        columnsPanelShowAllButton: "Mostrar todo",
-        columnsPanelHideAllButton: "Ocultar todo",
-    };
 
     function DefaultColumnFilter2({
         column: { filterValue, preFilteredRows, setFilter },
@@ -295,157 +267,6 @@ function Clientes(props) {
         );
     }
 
-    function DefaultColumnFilter({
-        column: { filterValue, preFilteredRows, setFilter },
-    }) {
-        const count = preFilteredRows.length;
-
-        return (
-            <input
-                className="form-control"
-                value={filterValue || ""}
-                onChange={(e) => {
-                    setFilter(e.target.value || undefined);
-                }}
-                placeholder={`Buscar ${count} registros...`}
-            />
-        );
-    }
-
-    function Table({ columns, data }) {
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        );
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn,
-            },
-            useFilters,
-            useSortBy
-        );
-
-        return (
-            <div className="" style={{ height: state.height - 270 }}>
-                <div className="">
-                    <table className="table tabla-listado" {...getTableProps()}>
-                        <thead>
-                            {headerGroups.map((headerGroup) => (
-                                <tr {...headerGroup.getHeaderGroupProps()}>
-                                    <th>Acciones</th>
-                                    {headerGroup.headers.map((column) => (
-                                        // Add the sorting props to control sorting. For this example
-                                        // we can add them into the header props
-                                        <th
-                                            {...column.getHeaderProps(column.getSortByToggleProps())}
-                                        >
-                                            {column.render("Name")}
-                                            {/* Add a sort direction indicator */}
-                                            <span>
-                                                {column.isSorted ? (
-                                                    column.isSortedDesc ? (
-                                                        <i className="fa fa-caret-up" />
-                                                    ) : (
-                                                        <i className="fa fa-caret-down" />
-                                                    )
-                                                ) : (
-                                                    ""
-                                                )}
-                                            </span>
-                                            <div>
-                                                {column.canFilter ? column.render("Filter") : null}
-                                            </div>
-                                        </th>
-                                    ))}
-                                </tr>
-                            ))}
-                        </thead>
-                        <tbody {...getTableBodyProps()}>
-                            {rows.map((row, i) => {
-                                prepareRow(row);
-                                return (
-                                    <tr
-                                        {...row.getRowProps()}
-                                        onClick={handleSelectRow.bind(
-                                            this,
-                                            row.original.m_nIdCliente
-                                        )}
-                                        className={
-                                            state.idCliente === row.original.m_nIdCliente
-                                                ? classes.seleccionado
-                                                : classes.noSeleccionado
-                                        }
-                                    >
-                                        <td>
-                                            <div>
-                                                <a
-                                                    href="#Agregar"
-                                                    role="tab"
-                                                    data-toggle="tab"
-                                                    onClick={() =>
-                                                        handleShowModificar(row.original.m_nIdCliente)
-                                                    }
-                                                    className="btn btn-default  btn-sm"
-                                                >
-                                                    <i
-                                                        className="fa fa-pencil-square-o"
-                                                        style={{ color: "#F9A03E" }}
-                                                    />
-                                                </a>
-                                                <a
-                                                    href="#Agregar"
-                                                    role="tab"
-                                                    data-toggle="tab"
-                                                    className="btn btn-default btn-sm"
-                                                    onClick={() =>
-                                                        handleShowModificar(row.original.m_nIdCliente)
-                                                    }
-                                                >
-                                                    <i
-                                                        className="fa fa-eye"
-                                                        style={{ color: "#F9A03E" }}
-                                                    />
-                                                </a>
-                                                <a
-                                                    href="#"
-                                                    className="btn btn-default btn-sm"
-                                                    onClick={() =>
-                                                        handleEliminar(row.original.m_nIdCliente)
-                                                    }
-                                                >
-                                                    <i
-                                                        className="zmdi zmdi-delete"
-                                                        style={{ color: "#F30B0B" }}
-                                                    />
-                                                </a>
-                                            </div>
-                                        </td>
-                                        {row.cells.map((cell) => {
-                                            return (
-                                                <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                            );
-                                        })}
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        );
-    }
 
     const [dataPais, setDataPais] = React.useState([]);
     const [dataEstado, setDataEstado] = React.useState([]);
@@ -614,18 +435,17 @@ function Clientes(props) {
             PermitirVerPortal: 0,
             RecibirCartaPorte: 0,
         });
+        $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
+
     }
 
     function handleShowModificar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Clientes/GetById/` + id;
-        axios.get(url, { headers }).then((respuesta) => {
-            console.log(respuesta.data);
+        obtenerClienteId(id).then((respuesta) => {
+
             setState({
-                getAllEstados,
                 ...state,
                 //idCliente: id,
                 agregar: "Modificar",
-
                 idCliente: respuesta.data.m_nIdCliente,
                 numeroCliente: respuesta.data.m_nNumeroCliente,
                 tipoCliente: respuesta.data.m_nTipoCliente,
@@ -645,7 +465,6 @@ function Clientes(props) {
                 idGrupoCliente: dataGrupoClientes.find(
                     (o) => o.m_nIdGrupoCliente == respuesta.data.m_nIdGrupoCliente
                 ),
-
                 metodoPago: respuesta.data.m_sMetodoPago,
                 diasCredito: respuesta.data.m_nDiasCredito,
                 credito: respuesta.data.m_cyCredito,
@@ -680,6 +499,9 @@ function Clientes(props) {
                     respuesta.data.m_bPermitirAgruparCantidadPorConcepto,
                 ajustarImporte2Dec: respuesta.data.m_bAjustarImportes2DecimalesXML,
             });
+            getAllEstados()
+            $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
+
         });
     }
 
@@ -702,8 +524,7 @@ function Clientes(props) {
     }, []);
 
     function getAllGrupoClientes() {
-        const url = `${process.env.REACT_APP_API_URL}/GruposClientes/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerGrupoClientes().then((respuesta) => {
             console.log(respuesta);
 
             setDataGrupoClientes(respuesta.data);
@@ -711,8 +532,7 @@ function Clientes(props) {
     }
 
     function getAllFormatos() {
-        const url = `${process.env.REACT_APP_API_URL}/Formato/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerFormatosImpresion().then((respuesta) => {
             console.log(respuesta);
 
             setDataFormatos(respuesta.data);
@@ -720,8 +540,7 @@ function Clientes(props) {
     }
 
     function getAllClientes() {
-        const url = `${process.env.REACT_APP_API_URL}/Clientes/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerCliente().then((respuesta) => {
             console.log(respuesta);
 
             setDataListadoClientes(respuesta.data);
@@ -729,15 +548,13 @@ function Clientes(props) {
     }
 
     function getAllPaises() {
-        const url = `${process.env.REACT_APP_API_URL}/Pais/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerPaises().then((respuesta) => {
             setDataPais(respuesta.data);
         });
     }
 
     function getAllTipoMoneda() {
-        const url = `${process.env.REACT_APP_API_URL}/Moneda/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerMonedas().then((respuesta) => {
             setDataTipoMoneda(respuesta.data);
         });
     }
@@ -749,8 +566,7 @@ function Clientes(props) {
 
     function getAllEstados(id) {
         console.log(id);
-        const url = `${process.env.REACT_APP_API_URL}/Estados/ByPais/` + id;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerEstadosPais(id).then((respuesta) => {
             console.log(respuesta.data);
             setDataEstado(respuesta.data);
         });
@@ -758,8 +574,7 @@ function Clientes(props) {
     }
 
     function getAllImpuestos() {
-        const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerImpuestos().then((respuesta) => {
             console.log(respuesta.data);
             setDataImpuesto(respuesta.data);
         });
@@ -767,113 +582,10 @@ function Clientes(props) {
     }
 
     function getAllSucursales() {
-        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerSucursales().then((respuesta) => {
             setDataSucursales(respuesta.data);
         });
     }
-
-    function getAllGruposClientes() {
-        const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => { });
-    }
-
-    const handleChangeActivoCheckboxChange = (event) => {
-        setState({
-            ...state,
-            activo: !state.activo,
-        });
-        console.log(event.target.name + " " + state.activo);
-    };
-
-    const handleChangeAjustarImporte2Dec = (event) => {
-        setState({
-            ...state,
-            ajustarImporte2Dec: !state.ajustarImporte2Dec,
-        });
-        console.log(event.target.name + " " + state.ajustarImporte2Dec);
-    };
-
-    const handleChangeAgruparCantidadConcepto = (event) => {
-        setState({
-            ...state,
-            agruparCantidadPorConcepto: !state.agruparCantidadPorConcepto,
-        });
-        console.log(event.target.name + " " + state.agruparCantidadPorConcepto);
-    };
-
-    const handleChangeAplicarDetalleCadaViaje = (event) => {
-        setState({
-            ...state,
-            aplicarDetalleMaterialesCadaViajeXML: !state.aplicarDetalleMaterialesCadaViajeXML,
-        });
-        console.log(
-            event.target.name + " " + state.aplicarDetalleMaterialesCadaViajeXML
-        );
-    };
-
-    const handleChangeAplicarConcepto = (event) => {
-        setState({
-            ...state,
-            aplicarDetalleConceptoCadaViajeXML: !state.aplicarDetalleConceptoCadaViajeXML,
-        });
-        console.log(
-            event.target.name + " " + state.aplicarDetalleConceptoCadaViajeXML
-        );
-    };
-
-    const handleChangeEnvioAutoSeguimientoViajes = (event) => {
-        setState({
-            ...state,
-            envioAutomaticoSeguimiento: !state.envioAutomaticoSeguimiento,
-        });
-        console.log(event.target.name + " " + state.envioAutomaticoSeguimiento);
-    };
-
-    const handleChangeRecibirFactura = (event) => {
-        setState({
-            ...state,
-            RecibirFactura: !state.RecibirFactura,
-        });
-        console.log(event.target.name + " " + state.RecibirFactura);
-    };
-    const handleChangeRecibirEstadoCuenta = (event) => {
-        setState({
-            ...state,
-            activo: !state.RecibirEstadoCuenta,
-        });
-        console.log(event.target.name + " " + state.RecibirEstadoCuenta);
-    };
-
-    const handleChangePermitirSeguimiento = (event) => {
-        setState({
-            ...state,
-            PermitirSeguimiento: !state.PermitirSeguimiento,
-        });
-        console.log(event.target.name + " " + state.PermitirSeguimiento);
-    };
-    const handleChangeUsoServicioWeb = (event) => {
-        setState({
-            ...state,
-            UsoServicioWeb: !state.UsoServicioWeb,
-        });
-        console.log(event.target.name + " " + state.UsoServicioWeb);
-    };
-    const handlechangePermitirVerPortal = (event) => {
-        setState({
-            ...state,
-            PermitirVerPortal: !state.PermitirVerPortal,
-        });
-        console.log(event.target.name + " " + state.PermitirVerPortal);
-    };
-
-    const HandleChangePermitirRecibirCartaPorte = (event) => {
-        setState({
-            ...state,
-            RecibirCartaPorte: !state.RecibirCartaPorte,
-        });
-        console.log(event.target.name + " " + state.RecibirCartaPorte);
-    };
 
     const handleChangeFormatoSelectCheckboxChange = (event) => {
         setState({
@@ -883,27 +595,11 @@ function Clientes(props) {
         console.log(event.target.name + " " + state.activo);
     };
 
-    const handleChangeExcluirNodo = (event) => {
-        console.log(event.target.name + " " + state.excluirNodo);
-        setState({
-            ...state,
-            excluirNodo: !state.excluirNodo,
-        });
-    };
 
-    const handleChangeOperadorLogistico = (event) => {
-        console.log(event.target.name + " " + state.operadorLogistico);
-        setState({
-            ...state,
-            operadorLogistico: !state.operadorLogistico,
-        });
-    };
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.creadoPor}/${state.DerechoBorrar}/3`;
-        axios
-            .get(urlDelete, { headers })
+        validarPermisos(state)
             .then((respuesta) => {
                 //showSuccess(respuesta.data)
 
@@ -913,9 +609,7 @@ function Clientes(props) {
                     return;
                 }
 
-                const url = `${process.env.REACT_APP_API_URL}/Clientes/Eliminar/` + id;
-                axios
-                    .delete(url, { headers })
+                eliminarCliente(id)
                     .then((respuesta) => {
                         showSuccess(respuesta.data);
                         getAllClientes();
@@ -939,10 +633,8 @@ function Clientes(props) {
     };
 
     const handleChangeCodigo = (event) => {
-        const url =
-            `${process.env.REACT_APP_API_URL}/Clientes/ValidaNumeroCliente/` + state.numeroCliente + `/${state.idCliente}`;
-        axios
-            .get(url, { headers })
+        event.preventDefault()
+        validarNumeroCliente(state)
             .then((respuesta) => {
                 if (respuesta.data != "") {
                     showSuccess(respuesta.data.m_sMensaje);
@@ -959,32 +651,6 @@ function Clientes(props) {
                 showSuccess(err);
             });
     };
-
-    const handleChangeDocumento = (event, index) => {
-        var { documentos } = state;
-        documentos[index][event.target.name] = event.target.value;
-
-        setState({
-            ...state,
-            documentos: documentos,
-        });
-    };
-
-    const handleChangeFotosDocs = (event, index) => {
-        var { fotosDocs } = state;
-        fotosDocs[index][event.target.name] = event.target.value;
-        setState({
-            ...state,
-            fotosDocs: fotosDocs,
-        });
-    };
-
-    function handleSelectRow(id, event) {
-        setState({
-            ...state,
-            idCliente: id,
-        });
-    }
 
     const handleAceptar = (e) => {
         e.preventDefault();
@@ -1057,18 +723,14 @@ function Clientes(props) {
             agregar: "Agregar",
             importar: "",
         };
-        console.log(JSON.stringify(params));
-        debugger;
         if (state.idCliente != 0) {
-            const url =
-                `${process.env.REACT_APP_API_URL}/Clientes/Modificar/` +
-                state.idCliente;
-            axios
-                .put(url, Object.assign({}, params), { headers })
-
+            modificarCliente(state.idCliente, params)
                 .then((respuesta) => {
                     alert(respuesta.data);
-
+                    $('.nav-tabs li ').removeClass('active');
+                    $('.nav-tabs li').eq(0).addClass('active');
+                    $('.tab-content div ').removeClass('in show');
+                    $('#Listado').addClass('in show');
                     // window.location.reload();
                 })
                 .catch((err) => {
@@ -1076,11 +738,13 @@ function Clientes(props) {
                     alert("err");
                 });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/Clientes/Agregar`;
-            axios
-                .post(url, Object.assign({}, params), { headers })
+            agregarCliente(params)
                 .then((respuesta) => {
                     alert(respuesta.data);
+                    $('.nav-tabs li ').removeClass('active');
+                    $('.nav-tabs li').eq(0).addClass('active');
+                    $('.tab-content div ').removeClass('in show');
+                    $('#Listado').addClass('in show');
                     //window.location.reload();
                 })
                 .catch((err) => {
@@ -1090,39 +754,6 @@ function Clientes(props) {
         }
     };
 
-    function addDocumento() {
-        const { documentos } = state;
-        documentos.push({
-            numDocumento: "",
-            documento: "",
-            fechaDocumento: "",
-        });
-        console.log(documentos);
-        setState({ ...state, documentos: documentos });
-    }
-
-    function addFotosDoc() {
-        const { fotosDocs } = state;
-        fotosDocs.push({
-            descripcion: "",
-            file: "",
-        });
-        console.log(fotosDocs);
-        setState({ ...state, fotosDocs: fotosDocs });
-    }
-
-    function removeDocumento(index) {
-        var { documentos } = state;
-        documentos = remove_array_element(documentos, index);
-        console.log(documentos);
-        setState({ ...state, documentos: documentos });
-    }
-    function removeFotosDoc(index) {
-        var { fotosDocs } = state;
-        fotosDocs = remove_array_element(fotosDocs, index);
-        console.log(fotosDocs);
-        setState({ ...state, fotosDocs: fotosDocs });
-    }
 
     const [stepActive, setStepActive] = React.useState(1);
 
@@ -1172,28 +803,7 @@ function Clientes(props) {
         );
     }
 
-    function value(event) {
-        console.log(event.target.value);
-    }
 
-    function closeSeccions() {
-        //Cerrar todas las seciones
-        var $section = $(".widget-toggle");
-        $section.each(function () {
-            var $welem = $(this)
-                .parentsUntil(".widget-action-bar")
-                .parentsUntil(".w-action")
-                .parents(".widget-header")
-                .next(".widget-container");
-            $welem.slideUp();
-            $(this).children("a").children("i").removeClass("zmdi-chevron-down");
-            $(this).children("a").children("i").addClass("zmdi-chevron-up");
-        });
-    }
-
-    useEffect((value) => {
-        //closeSeccions();
-    }, []);
 
     return (
         <div>
@@ -1224,35 +834,19 @@ function Clientes(props) {
 
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
-                            <a data-toggle="tab" href="#Listado">
+                            <a onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
                                 <i className="fa fa-list" /> Listado
               </a>
                         </li>
                         <li>
-                            <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
+                            <a  onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>
-                        {/*<li>*/}
-                        {/*    <a*/}
-                        {/*        data-toggle="tab"*/}
-                        {/*        href="#Imprimir"*/}
-                        {/*        onClick={console.log(selectedRows)}*/}
-                        {/*    >*/}
-                        {/*        <i className="fa fa-plus-circle" /> Imprimir*/}
-                        {/*    </a>*/}
-                        {/*</li>*/}
-                        {/*<li>*/}
-                        {/*    <ExportPDF*/}
-                        {/*        data={dataListadoClientes}*/}
-                        {/*        column={columns}*/}
-                        {/*        fileName="Unidades"*/}
-                        {/*    />*/}
-                        {/*</li>*/}
                     </ul>
 
                     <div className="tab-content">
-                        <div id="Listado" className="tab-pane fade in active">
+                        <div id="Listado" className="tab-pane fade in show">
                             <div className="widget-wrap">
                                 <div className="widget-content">
                                     <div
@@ -1296,7 +890,6 @@ function Clientes(props) {
                                                 pageSize={Math.floor((state.height - 310) / 30)}
                                                 getRowId={(row) => row.m_nIdCliente}
                                                 onSelectionModelChange={(newSelection) => {
-                                                    console.log(newSelection);
                                                     setSelectedRows(newSelection.rows);
                                                 }}
                                             />
@@ -1583,7 +1176,6 @@ function Clientes(props) {
                                                                 name="operadorLogistico"
                                                                 type="checkbox"
                                                                 id="operadorLogistico"
-                                                                value={state.operadorLogistico}
                                                             />
                                                             <i />
                               Operador Lógistico
@@ -1937,13 +1529,13 @@ function Clientes(props) {
                                                                                             <div className="col-sm-6 col-md-2-5 ">
                                                                                                 <div className="input">
                                                                                                     <TextField variant="outlined" margin="dense" label="Código Postal"
-                                                                                                               onChange={handleChange}
-                                                                                                               className="form-control"
-                                                                                                               type="text"
-                                                                                                               placeholder=""
-                                                                                                               value={state.codigoPostal}
-                                                                                                               id="codigoPostal"
-                                                                                                               name="codigoPostal"
+                                                                                                        onChange={handleChange}
+                                                                                                        className="form-control"
+                                                                                                        type="text"
+                                                                                                        placeholder=""
+                                                                                                        value={state.codigoPostal}
+                                                                                                        id="codigoPostal"
+                                                                                                        name="codigoPostal"
                                                                                                     />
                                                                                                 </div>
                                                                                             </div>
@@ -2141,19 +1733,19 @@ function Clientes(props) {
                                                                                             <div className="col-md-2-5 col-sm-2-5 col-lg-2-5">
 
                                                                                                 <div className="input" style={{ padding: "10px" }}>
-                                                                                                <div className="input" >
-                                                                                                    <TextField  variant="outlined" margin="dense"
-                                                                                                        onChange={handleChange}
-                                                                                                        className="form-control"
-                                                                                                        type="text"
-                                                                                                        fullWidth
-                                                                                                        label="Frecuencia de Envio (Días)"
-                                                                                                        value={
-                                                                                                            state.frecuenciaEnvioDias
-                                                                                                        }
-                                                                                                        id="frecuenciaEnvioDias"
-                                                                                                        name="frecuenciaEnvioDias"
-                                                                                                    />
+                                                                                                    <div className="input" >
+                                                                                                        <TextField variant="outlined" margin="dense"
+                                                                                                            onChange={handleChange}
+                                                                                                            className="form-control"
+                                                                                                            type="text"
+                                                                                                            fullWidth
+                                                                                                            label="Frecuencia de Envio (Días)"
+                                                                                                            value={
+                                                                                                                state.frecuenciaEnvioDias
+                                                                                                            }
+                                                                                                            id="frecuenciaEnvioDias"
+                                                                                                            name="frecuenciaEnvioDias"
+                                                                                                        />
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
@@ -2589,9 +2181,7 @@ function Clientes(props) {
                                                     </div>
                                                     <div className="form-footer" className="col-md-12">
                                                         <button
-                                                            href="#Listado" role="tab" data-toggle="tab"
-                                                            data-layout="topCenter"
-                                                            data-type="information"
+                                                            type="button" onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}
                                                             className="btn btn-secondary secondary-btn"
                                                         >
                                                             Cancelar
