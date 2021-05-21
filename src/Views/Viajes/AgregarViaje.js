@@ -14,6 +14,7 @@ import Select from "@material-ui/core/Select";
 import TableUnidadViajes from "./TablaUnidadViajes";
 import {DataGrid} from "@material-ui/data-grid";
 import { dataGridLocaleText } from "../../Constants";
+import { ContactsOutlined } from "@material-ui/icons";
 
 const headers = {
     'Content-Type': 'application/json',
@@ -30,9 +31,12 @@ class AgregarViaje extends Component {
         const today = new Date();
 
         this.state = {
-            origen: 0,
-            destino: 0,
-            idRuta: 0,
+            origen: {},
+            destino:{},
+            IdRemolque1:  {},
+            IdRemolque2: {},
+            IdDolly: {},
+            idRuta: {},
             dataCiudad: [],
             dataRutas: [],
             dataCodigoPostal: [],
@@ -142,11 +146,13 @@ class AgregarViaje extends Component {
         });
     }
 
-    getInformesByFiltro (nIdCiudadOrigen, nIdCiudadDestino, nIdRemolque1, nIdRemolque2, sPlacasRemolque1, sPlacasRemolque2, sPlacasDolly) {
-        const url = `${process.env.REACT_APP_API_URL}/Informes/GetByFiltro` + "/" +
-            nIdCiudadOrigen + "/" + nIdCiudadDestino + "/" + nIdRemolque1 + "/" + nIdRemolque2 + "/" + sPlacasRemolque1 +
-            + "/" + sPlacasRemolque2 + "/" + sPlacasDolly;
-        axios.get(url, { headers }).then((respuesta) => {
+    getInformesByFiltro (nIdRuta,nIdCiudadOrigen, nIdCiudadDestino, nIdRemolque1, nIdRemolque2,nIdDolly) {
+        const url = `${process.env.REACT_APP_API_URL}/Informes/GetByFiltro` + "/" +nIdRuta+ "/"+
+            nIdCiudadOrigen + "/" + nIdCiudadDestino + "/" + nIdRemolque1 + "/" + nIdRemolque2 + "/" + nIdDolly ;
+      console.log(url)
+           
+            axios.get(url, { headers }).then((respuesta) => {
+            
             this.setState({dataInformes: respuesta.data})
         });
     }
@@ -164,7 +170,9 @@ class AgregarViaje extends Component {
 
         this.getInformesByFiltro(event.target.value.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
             this.state.IdRemolque1.m_nIdUnidad, this.state.IdRemolque2.m_nIdUnidad, this.state.IdDolly.m_nIdUnidad)
-    }
+    console.log(this.state.origen.m_nIdCiudad)
+    debugger;
+        }
 
     handleOrigenFiltro = async (event) => {
         event.preventDefault();
@@ -237,15 +245,7 @@ class AgregarViaje extends Component {
                 field: "m_sNombreCompleto",
                 width: 250,
             },
-            {
-                Name: "Unidad",
-                accessor: "m_sCodigoUnidad",
-            },
-            {
-                headerName: "Remolque",
-                field: "m_sRemolque1",
-                width: 125,
-            }
+          
         ];
 
         return (
@@ -388,7 +388,7 @@ class AgregarViaje extends Component {
 
                                     <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
-                                                                          // onChange={handleChange}
+                                                                           onChange={this.handleChange}
                                                                            required
                                                                            label="Fecha / Hora de Registro"
                                                                            InputLabelProps={{
