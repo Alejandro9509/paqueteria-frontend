@@ -1021,10 +1021,16 @@ class AgregarViaje extends Component {
                                             })
                                         }}
                                     />
+
                                 ) : (
                                     <div>No se encontró ningún registro</div>
                                 )}
-                                <Button onClick={() => this.setState({openHistoryDialog: true })}>Historial</Button>
+                                {this.state.dataInformes.length != 0 ? (
+                                    <button
+                                        type="submit"
+                                        className="btn btn-primary primary-btn"
+                                        onClick={() => this.setState({openHistoryDialog: true })}>Historial</button>
+                                ): (<div/>)}
                             </div>
                         </div>
                     </div>

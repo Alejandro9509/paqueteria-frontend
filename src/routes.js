@@ -85,14 +85,14 @@ const dashboardRoutes = [
     single: true,
     child:[]
   },
-  {
+  /*{
     path: "/Historial",
     name: "Historial",
     icon: viajeIcon,
     component: Historial,
     single: true,
     child:[]
-  }
+  }*/
 ];
 
 export default dashboardRoutes;

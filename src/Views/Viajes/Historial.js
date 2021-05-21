@@ -8,16 +8,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 
-const data = [
-    {
-        id:0,
-        user: "Esteban",
-        fecha: "2010/10/10",
-        cambio: "Operador",
-        actual: "Paco",
-        anterior: "Pedroo"
-    }
-]
+const data = []
 const types = [
     {
         id: 1,
@@ -60,8 +51,8 @@ const useStyles = makeStyles({
 
 export default function Historial(){
     const classes = useStyles();
-    const [selectedStartDate, setSelectedStartDate] = React.useState(new Date('2014-08-18T21:11:54'));
-    const [selectedEndDate, setSelectedEndDate] = React.useState(new Date('2015-03-14T21:11:54'));
+    const [selectedStartDate, setSelectedStartDate] = React.useState();
+    const [selectedEndDate, setSelectedEndDate] = React.useState();
     const [changeType, setChangeType] = React.useState(0);
     const handleStartDateChange = (date) => {
         setSelectedStartDate(date.target.value);
