@@ -1,4 +1,5 @@
 import axios from "axios";
+import { trackPromise } from "react-promise-tracker";
 
 const headers = {
     'Content-Type': 'application/json',
@@ -9,36 +10,60 @@ function modificarOperadores(id, params) {
     const url =
         `${process.env.REACT_APP_API_URL}/Operador/Modificar/` +
         id;
-    return axios
+    let result;
+    trackPromise(
+        result =  axios
         .put(url, Object.assign({}, params), { headers })
+        );
+    return result
 }
 
 function agregarOperadores(params) {
     const url = `${process.env.REACT_APP_API_URL}/Operador/Agregar`;
-    return axios
+    let result;
+    trackPromise(
+        result =  axios
         .post(url, Object.assign({}, params), { headers })
+        );
+    return result
 }
 
 function eliminarOperadores(id) {
     const url = `${process.env.REACT_APP_API_URL}/Operador/Eliminar/` + id;
-    return axios.get(url, { headers })
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
 }
 
 function obtenerOperadores() {
     const url = `${process.env.REACT_APP_API_URL}/Operadores/GetListado`;
-    return axios.get(url, { headers })
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
 }
 
 function validarNumeroOperadores(id) {
     const url = `${process.env.REACT_APP_API_URL}/Operadores/ValidaNumeroOperador/` + id;
-    return axios.get(url, { headers })
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
 }
 
 function obtenerOperadoresId(id) {
     const url =
             `${process.env.REACT_APP_API_URL}/Operador/GetById/` +
             id;
-    return axios.get(url, { headers })
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
 }
 
 export { modificarOperadores, agregarOperadores, eliminarOperadores, obtenerOperadoresId, obtenerOperadores, validarNumeroOperadores }

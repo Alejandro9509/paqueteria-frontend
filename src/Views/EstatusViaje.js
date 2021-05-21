@@ -13,6 +13,7 @@ import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import { TextField, Tooltip } from "@material-ui/core";
 import { agregarEstatusViaje, eliminarEstatusViaje, modificarEstatusViaje, obtenerEstatusViajeId, obtenerEstatusViaje } from "../Util/Contexts/EstatusViajeContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -89,8 +90,7 @@ function EstatusViaje() {
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        axios.get(urlDelete, { headers }).then(respuesta => {
+        validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
             derecho = respuesta.data;
             if (derecho == false) {

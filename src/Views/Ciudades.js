@@ -13,6 +13,8 @@ import { dataGridLocaleText } from "../Constants";
 import { modificarCiudad, agregarCiudad, eliminarCiudad, obtenerCiudadId, obtenerCiudades } from "../Util/Contexts/CiudadesContext";
 import { agregarCodigoPostal, modificarCodigoPostal, obtenerCodigoPostalCiudad, obtenerCodigoPostalId, eliminarCodigoPostal } from "../Util/Contexts/CodigoPostalContext";
 import { obtenerPaises } from "../Util/Contexts/PaisesContext";
+import { obtenerEstadosPais } from "../Util/Contexts/EstadosContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 
 window.jQuery = window.$ = $;
 
@@ -138,8 +140,7 @@ function CiudadesCodigoPostal() {
 
     function handleEliminarCodigoPostal(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        axios.get(urlDelete, { headers }).then(respuesta => {
+        validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
 
             derecho = respuesta.data;
@@ -383,8 +384,7 @@ function CiudadesCodigoPostal() {
     }
 
     function getAllEstado(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Estados/ByPais/${id}`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerEstadosPais(id).then((respuesta) => {
             setDataEstado(respuesta.data);
         });
     }

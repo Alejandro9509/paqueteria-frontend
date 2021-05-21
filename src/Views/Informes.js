@@ -22,7 +22,6 @@ import {
     Stepper,
 } from "@material-ui/core";
 
-import { trackPromise } from "react-promise-tracker";
 
 import DataTable from "react-data-table-component";
 import $ from "jquery";
@@ -52,6 +51,11 @@ import { obtenerCiudades } from "../Util/Contexts/CiudadesContext";
 import { obtenerEstatusInforme } from "../Util/Contexts/EstatusContext";
 import { obtenerGuia, obtenerGuiaPendientes } from "../Util/Contexts/GuiaContext";
 import { obtenerOperadores } from "../Util/Contexts/OperadoresContext";
+import { obtenerUnidadesTipo } from "../Util/Contexts/UnidadesContext";
+import { obtenerRutas } from "../Util/Contexts/RutasContext";
+import { agregarInformes, cancelarInformes, eliminarInformes, modificarInformes, obtenerInformes, obtenerInformesId } from "../Util/Contexts/InformesContext";
+import { obtenerSucursales } from "../Util/Contexts/SucursalContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -136,8 +140,7 @@ function Informes({ history }) {
     const [dataGuiasCubicar, setDataGuiasCubicar] = React.useState([]);
 
     function getAllDataRutas() {
-        const url = `${process.env.REACT_APP_API_URL}/Rutas/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerRutas().then((respuesta) => {
             setDataRutas(respuesta.data);
         });
     }
@@ -426,132 +429,6 @@ function Informes({ history }) {
         );
     }
 
-    function Table({ columns, data }) {
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        );
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn,
-            },
-            useFilters,
-            useSortBy
-        );
-
-        return (
-            <div
-                className="col-md-12"
-                style={{ overflowX: "scroll", height: "100%" }}
-            >
-                <table className="table  tabla-listado" {...getTableProps()}>
-                    <thead>
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                <th>Acciones</th>
-                                {headerGroup.headers.map((column) => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render("Name")}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
-                                            {column.isSorted ? (
-                                                column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up" />
-                                                ) : (
-                                                    <i className="fa fa-caret-down" />
-                                                )
-                                            ) : (
-                                                ""
-                                            )}
-                                        </span>
-                                        <div>
-                                            {column.canFilter ? column.render("Filter") : null}
-                                        </div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                        {rows.map((row, i) => {
-                            prepareRow(row);
-                            return (
-                                <tr
-                                    {...row.getRowProps()}
-                                    onClick={handleSelectRow.bind(
-                                        this,
-                                        row.original.m_nIdInforme
-                                    )}
-                                    className={
-                                        state.IdInforme === row.original.m_nIdInforme
-                                            ? classes.seleccionado
-                                            : classes.noSeleccionado
-                                    }
-                                >
-                                    <td>
-                                        <div>
-                                            <a
-                                                onClick={() =>
-                                                    handleShowModificar(row.original.m_nIdInforme)
-                                                }
-                                                className="btn btn-default btn-sm"
-                                            >
-                                                <i
-                                                    className="fa fa-pencil-square-o"
-                                                    style={{ color: "#F9A03E" }}
-                                                />
-                                            </a>
-                                            <a
-                                                className="btn btn-default btn-sm"
-                                                onClick={() =>
-                                                    handleShowModificar(row.original.m_nIdInforme)
-                                                }
-                                            >
-                                                <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                                            </a>
-
-                                            <a
-                                                href="#"
-                                                className="btn btn-default btn-sm"
-                                                onClick={() =>
-                                                    handleEliminar(row.original.m_nIdInforme)
-                                                }
-                                            >
-                                                <i
-                                                    className="zmdi zmdi-delete"
-                                                    style={{ color: "#F30B0B" }}
-                                                />
-                                            </a>
-                                        </div>
-                                    </td>
-                                    {row.cells.map((cell) => {
-                                        return (
-                                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                        );
-                                    })}
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
-            </div>
-        );
-    }
-
     function TableOperadores({ columns, data, select }) {
         const defaultColumn = React.useMemo(
             () => ({
@@ -770,12 +647,8 @@ function Informes({ history }) {
             m_nCreadoPor: state.CreadoPor,
             m_arrClsProInformeGuia: dataGuias,
         };
-        console.log(JSON.stringify(params));
-        //debugger;
         if (state.IdInforme != 0) {
-            const url = `${process.env.REACT_APP_API_URL}/Informes/Modificar/${state.IdInforme}`;
-            axios
-                .put(url, Object.assign({}, params), { headers2 })
+            modificarInformes(state.IdInforme, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     getAllData();
@@ -789,9 +662,7 @@ function Informes({ history }) {
                     showSuccess("El Usuario no tiene derecho para modificar");
                 });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/Informes/Agregar`;
-            axios
-                .post(url, Object.assign({}, params), { headers })
+            agregarInformes(params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     console.log(respuesta.data);
@@ -1333,9 +1204,8 @@ function Informes({ history }) {
 
     function handleShowCancelar(event) {
         event.stopPropagation()
-        const url = `${process.env.REACT_APP_API_URL}/Informes/GetById/${state.IdInforme}`;
         var today = new Date();
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerInformesId(state.IdInforme).then((respuesta) => {
             setState({
                 ...state,
                 FolioInforme: respuesta.data.m_nIdInforme,
@@ -1376,8 +1246,7 @@ function Informes({ history }) {
             usuarioCancelacion: localStorage.getItem("UsuarioId"),
             fechaCancelacion: state.fechaCancelado,
         };
-        const url = `${process.env.REACT_APP_API_URL}/Informes/Cancelar/${state.IdInforme}`;
-        axios.put(url, Object.assign({}, params), { headers }).then((respuesta) => {
+        cancelarInformes(state.IdInforme).then((respuesta) => {
             console.log(respuesta.data);
         });
     };
@@ -1420,16 +1289,9 @@ function Informes({ history }) {
         });
       }
      */
-    async function getAllUnidadesRemolques(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Unidades/ByTipoUnidad/${id}`;
-        await axios.get(url, { headers }).then((respuesta) => {
+     function getAllUnidadesTipo(id) {
+        obtenerUnidadesTipo(id).then((respuesta) => {
             setDataUnidadesRem(respuesta.data);
-        });
-    }
-    async function getAllUnidadesDolly(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Unidades/ByTipoUnidad/${id}`;
-        await axios.get(url, { headers }).then((respuesta) => {
-            setDataUnidadesDol(respuesta.data);
         });
     }
 
@@ -1446,8 +1308,7 @@ function Informes({ history }) {
     }
 
     function getAllSucursales() {
-        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerSucursales().then((respuesta) => {
             setDataSucursal(respuesta.data);
         });
     }
@@ -1479,8 +1340,7 @@ function Informes({ history }) {
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
-        const url = `${process.env.REACT_APP_API_URL}/Unidadd/GetById/` + id;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerInformesId(id).then((respuesta) => {
             setState({
                 ...state,
                 agregar: "Modificar"
@@ -1490,9 +1350,7 @@ function Informes({ history }) {
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        axios
-            .get(urlDelete, { headers })
+        validarPermisos(state)
             .then((respuesta) => {
                 //showSuccess(respuesta.data)
 
@@ -1502,9 +1360,7 @@ function Informes({ history }) {
                     return;
                 }
 
-                const url = `${process.env.REACT_APP_API_URL}/Unidadd/Eliminar/` + id;
-                axios
-                    .get(url, { headers })
+                eliminarInformes(id)
                     .then((respuesta) => {
                         console.log(respuesta);
                     })
@@ -1532,15 +1388,14 @@ function Informes({ history }) {
         getAllSucursales();
         getAllOperadores();
         getAllCiudades();
-        getAllUnidadesRemolques(8);
-        getAllUnidadesDolly(9);
+        getAllUnidadesTipo(8);
+        getAllUnidadesTipo(9);
         //getAllTipoUnidad();
         getAllDataRutas();
     }, []);
 
     function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/Informes/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerInformes().then((respuesta) => {
             setData(respuesta.data);
         });
     }

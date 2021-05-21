@@ -1,4 +1,5 @@
 import axios from "axios";
+import { trackPromise } from "react-promise-tracker";
 
 const headers = {
     'Content-Type': 'application/json',
@@ -7,27 +8,56 @@ const headers = {
 
 function modificarUsuarios(id, params){
     const url = `${process.env.REACT_APP_API_URL}/Usuarios/Modificar/` + id;
-    return axios.put(url, Object.assign({}, params), { headers })
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, params), { headers })
+        );
+    return result
 }
 
 function agregarUsuarios( params){
     const url = `${process.env.REACT_APP_API_URL}/Usuarios/Agregar`;
-    return axios.post(url, Object.assign({}, params), { headers })
+    let result;
+    trackPromise(
+        result =  axios.post(url, Object.assign({}, params), { headers })
+        );
+    return result
 }
 
 function eliminarUsuarios(id){
     const url = `${process.env.REACT_APP_API_URL}/Usuarios/Eliminar/` + id;
-    return axios.delete(url, { headers })
+    let result;
+    trackPromise(
+        result =  axios.delete(url, { headers })
+        );
+    return result
 }
 
 function obtenerUsuarios(){
     const url = `${process.env.REACT_APP_API_URL}/Usuarios/GetListado`;
-    return axios.get(url, { headers })
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
 }
 
 function obtenerUsuariosId(id){
-    const url = `${process.env.REACT_APP_API_URL}/Usuarios/GetById/${id}`;
-    return axios.get(url, { headers })
+    const url = `${process.env.REACT_APP_API_URL}/Usuarios/GetById/` + id;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
 }
 
-export {modificarUsuarios, agregarUsuarios, eliminarUsuarios, obtenerUsuarios, obtenerUsuariosId}
+function validarPermisos(state){
+    const url = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${localStorage.getItem("UsuarioId")}/${state.DerechoBorrar}/3`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
+}
+
+export {modificarUsuarios, agregarUsuarios, eliminarUsuarios, obtenerUsuarios, obtenerUsuariosId, validarPermisos}

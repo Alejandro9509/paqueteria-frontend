@@ -55,7 +55,13 @@ import { obtenerEmbalajes } from "../Util/Contexts/EmbalajesContext";
 import { obtenerEstatusRecoleccion } from "../Util/Contexts/EstatusContext";
 import { obtenerMonedas } from "../Util/Contexts/MonedaContext";
 import { obtenerOperadores } from "../Util/Contexts/OperadoresContext";
-import { agregarRecoleccion, modificarRecoleccion, obtenerRecoleccionCancelada, cancelarRecoleccion, eliminarRecoleccion, obtenerRecoleccionId, obtenerRecoleccionFiltro } from "../Util/Contexts/RecoleccionContext";
+import { agregarRecoleccion, modificarRecoleccion, obtenerRecoleccionCancelada, cancelarRecoleccion, eliminarRecoleccion, obtenerRecoleccionId, obtenerRecoleccionFiltro, obtenerRecoleccion } from "../Util/Contexts/RecoleccionContext";
+import { obtenerTipoUnidades } from "../Util/Contexts/TipoUnidadContext";
+import { obtenerUnidadesTipo } from "../Util/Contexts/UnidadesContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
+import { obtenerTipoCambio } from "../Util/Contexts/TipoCambioContext";
+import { obtenerSucursales } from "../Util/Contexts/SucursalContext";
+import { obtenerTipoCobro } from "../Util/Contexts/TipoCobroContext";
 
 let timer;
 
@@ -399,8 +405,7 @@ function Recoleccion() {
     };
 
     function getTipoCambio() {
-        const url = `${process.env.REACT_APP_API_URL}/TipoCambio/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerTipoCambio().then(respuesta => {
             setDataTipoCambio(respuesta.data)
         });
     };
@@ -531,9 +536,7 @@ function Recoleccion() {
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        axios
-            .get(urlDelete, { headers })
+       validarPermisos(state)
             .then((respuesta) => {
                 //showSuccess(respuesta.data)
 
@@ -557,20 +560,7 @@ function Recoleccion() {
             });
     }
 
-    function handleShowCiudadRemitente(id) {
-        console.log(id);
-        const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetByCP/${id}`;
-        axios.get(url, { headers }).then((respuesta) => {
-            console.log(respuesta.data);
-            setState({
-                ...state,
-                //ciudadRemitente: respuesta.data.m_nIdCiudad
-                ciudadRemitente: dataCiudad.find(
-                    (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudad
-                ),
-            });
-        });
-    }
+    
 
     function handleShowModificar(id) {
         $('.nav-tabs li ').removeClass('active');
@@ -1234,8 +1224,7 @@ function Recoleccion() {
     }, []);
 
     function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerRecoleccion().then((respuesta) => {
             console.log(respuesta.data);
             setData(respuesta.data);
         });
@@ -1249,8 +1238,7 @@ function Recoleccion() {
     }
 
     function getAllSucursales() {
-        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerSucursales().then((respuesta) => {
             setDataSucursal(respuesta.data);
         });
     }
@@ -1262,8 +1250,7 @@ function Recoleccion() {
     }
 
     function getAllTipoCobro() {
-        const url = `${process.env.REACT_APP_API_URL}/TipoCobro/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+       obtenerTipoCobro().then((respuesta) => {
             setDataTipoCobro(respuesta.data);
         });
     }
@@ -1370,17 +1357,14 @@ function Recoleccion() {
     }
 
     function getAllTipoUnidad() {
-        const url = `${process.env.REACT_APP_API_URL}/TiposUnidades/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerTipoUnidades().then((respuesta) => {
             setDataTipoUnidad(respuesta.data);
             getAllUnidades(1);
         });
     }
 
     function getAllUnidades(id) {
-        console.log(id);
-        const url = `${process.env.REACT_APP_API_URL}/Unidades/ByTipoUnidad/${id}`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerUnidadesTipo(id).then((respuesta) => {
             console.log(respuesta.data);
             setDataUnidad(respuesta.data);
         });

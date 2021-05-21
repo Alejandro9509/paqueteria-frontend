@@ -16,6 +16,7 @@ import { obtenerCodigoPostal } from "../Util/Contexts/CodigoPostalContext";
 import { obtenerPaises } from "../Util/Contexts/PaisesContext";
 import { obtenerEstadosPais } from "../Util/Contexts/EstadosContext";
 import { agregarSucursales, eliminarSucursales, modificarSucursales, obtenerSucursales, obtenerSucursalesId } from "../Util/Contexts/SucursalContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -100,8 +101,7 @@ function Sucursal() {
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        axios.get(urlDelete, { headers }).then(respuesta => {
+        validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
 
             derecho = respuesta.data;

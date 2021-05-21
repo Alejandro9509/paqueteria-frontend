@@ -13,6 +13,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/
 import AgregarFolio from "./AgregarTipoUnidad";
 import CrearTarifa from "../Tarifas/CrearTarifa";
 import AgregarTipoUnidad from "./AgregarTipoUnidad";
+import { agregarTipoUnidades, eliminarTipoUnidades, obtenerTipoUnidades, modificarTipoUnidades } from '../../Util/Contexts/TipoUnidadContext';
 window.jQuery = window.$ = $;
 const headers = {
     'Content-Type': 'application/json',
@@ -109,9 +110,7 @@ class TipoUnidad extends Component {
                  showSuccess("El usuario no tiene derechos para realizar el proceso");
                  return;
         }
-            const url = `${process.env.REACT_APP_API_URL}/TipoUnidad/Eliminar/` + id;
-            axios.delete(url, { headers }).then(respuesta => {
-                console.log(respuesta);
+            eliminarTipoUnidades(id).then(respuesta => {
                 this.getAllData();
             }).catch(err => {
                 showSuccess(err)
@@ -136,8 +135,7 @@ class TipoUnidad extends Component {
         }
         console.log(JSON.stringify(params));
         debugger;
-            const url = `${process.env.REACT_APP_API_URL}/TipoUnidad/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+            agregarTipoUnidades(params).then(respuesta => {
                 console.log(respuesta)
                 showSuccess(respuesta.data)
 
@@ -155,7 +153,6 @@ class TipoUnidad extends Component {
     }
 
     handleAceptarModificar(data) {
-        console.log(data)
         const today = new Date();
 
         var params = {
@@ -169,8 +166,7 @@ class TipoUnidad extends Component {
 
         console.log(params)
 
-        const url = `${process.env.REACT_APP_API_URL}/TipoUnidad/Modificar`;
-        axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+        modificarTipoUnidades(data.idTipoUnidad, params).then(respuesta => {
             console.log(respuesta)
             showSuccess(respuesta.data)
             this.getAllData()
@@ -203,8 +199,7 @@ class TipoUnidad extends Component {
     }
 
     getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/TiposUnidades/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerTipoUnidades().then(respuesta => {
             this.setState({ data: respuesta.data })
         });
     }

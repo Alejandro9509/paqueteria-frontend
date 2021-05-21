@@ -22,6 +22,7 @@ import { dataGridLocaleText } from "../Constants";
 import { obtenerGrupoUnidades } from "../Util/Contexts/GrupoUnidadesContext";
 import { obtenerOperadores } from "../Util/Contexts/OperadoresContext";
 import { obtenerUnidades, obtenerUnidadesId, eliminarUnidades, validaCodigoUnidad, modificarUnidades, agregarUnidades } from "../Util/Contexts/UnidadesContext";
+import { obtenerTipoUnidades } from "../Util/Contexts/TipoUnidadContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -442,8 +443,7 @@ function Unidades(props) {
     }
 
     function getAllTipoUnidades() {
-        const url = `${process.env.REACT_APP_API_URL}/TiposUnidades/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerTipoUnidades().then((respuesta) => {
             setDataTiposUnidad(respuesta.data);
         });
     }

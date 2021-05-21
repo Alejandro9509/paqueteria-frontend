@@ -30,6 +30,11 @@ import { agregarCliente, eliminarCliente, modificarCliente, obtenerCliente, obte
 import { obtenerGrupoClientes } from "../Util/Contexts/GrupoClientesContext";
 import { obtenerMonedas } from "../Util/Contexts/MonedaContext";
 import { obtenerPaises } from "../Util/Contexts/PaisesContext";
+import { obtenerFormatosImpresion } from "../Util/Contexts/FormatosImpresionContext";
+import { obtenerImpuestos } from "../Util/Contexts/ImpuestosContext";
+import { obtenerSucursales } from "../Util/Contexts/SucursalContext";
+import { obtenerEstadosPais } from "../Util/Contexts/EstadosContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -527,8 +532,7 @@ function Clientes(props) {
     }
 
     function getAllFormatos() {
-        const url = `${process.env.REACT_APP_API_URL}/Formato/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerFormatosImpresion().then((respuesta) => {
             console.log(respuesta);
 
             setDataFormatos(respuesta.data);
@@ -562,8 +566,7 @@ function Clientes(props) {
 
     function getAllEstados(id) {
         console.log(id);
-        const url = `${process.env.REACT_APP_API_URL}/Estados/ByPais/` + id;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerEstadosPais(id).then((respuesta) => {
             console.log(respuesta.data);
             setDataEstado(respuesta.data);
         });
@@ -571,8 +574,7 @@ function Clientes(props) {
     }
 
     function getAllImpuestos() {
-        const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerImpuestos().then((respuesta) => {
             console.log(respuesta.data);
             setDataImpuesto(respuesta.data);
         });
@@ -580,8 +582,7 @@ function Clientes(props) {
     }
 
     function getAllSucursales() {
-        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerSucursales().then((respuesta) => {
             setDataSucursales(respuesta.data);
         });
     }
@@ -598,9 +599,7 @@ function Clientes(props) {
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.creadoPor}/${state.DerechoBorrar}/3`;
-        axios
-            .get(urlDelete, { headers })
+        validarPermisos(state)
             .then((respuesta) => {
                 //showSuccess(respuesta.data)
 

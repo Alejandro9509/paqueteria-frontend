@@ -13,6 +13,7 @@ import { FormControl, InputLabel, Select, TextField, Tooltip } from "@material-u
 import { obtenerMonedas } from "../Util/Contexts/MonedaContext";
 import { agregarPaises, eliminarPaises, modificarPaises, obtenerPaises, obtenerPaisesId } from "../Util/Contexts/PaisesContext";
 import { agregarEstados, eliminarEstados, modificarEstados, obtenerEstadosId, obtenerEstadosPais } from "../Util/Contexts/EstadosContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -129,8 +130,7 @@ function PaisesEstado() {
 
     function handleEliminarPais(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        axios.get(urlDelete, { headers }).then(respuesta => {
+        validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
 
             derecho = respuesta.data;

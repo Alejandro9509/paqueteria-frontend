@@ -25,8 +25,15 @@ import { dataGridLocaleText } from "../Constants";
 import { obtenerCiudades } from "../Util/Contexts/CiudadesContext";
 import { obtenerEstatusGuia } from "../Util/Contexts/EstatusContext";
 import { obtenerEmbarquesId, obtenerEmbarqueMoneda } from "../Util/Contexts/EmbarquesContext";
-import { ultimoFolioGuia, eliminarGuia, obtenerGuiaId, cancelarGuia, obtenerGuiasFiltro, obtenerGuia } from "../Util/Contexts/GuiaContext";
+import { ultimoFolioGuia, eliminarGuia, obtenerGuiaId, cancelarGuia, obtenerGuiasFiltro, obtenerGuia, modificarGuia, agregarGuia, imprimirGuia } from "../Util/Contexts/GuiaContext";
 import { obtenerMonedas } from "../Util/Contexts/MonedaContext";
+import { obtenerTipoCambio } from "../Util/Contexts/TipoCambioContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
+import { obtenerSucursales } from "../Util/Contexts/SucursalContext";
+import { obtenerConceptosFacturacion } from "../Util/Contexts/ConceptosFacturacionContext";
+import { obtenerTipoCobro } from "../Util/Contexts/TipoCobroContext";
+import { obtenerTipoServicio } from "../Util/Contexts/TipoServiciosContext";
+import { obtenerImpuestosTipo } from "../Util/Contexts/ImpuestosContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -345,8 +352,7 @@ function Guia(props) {
 
         }
         if (state.idGuia != 0) {
-            const url = `${process.env.REACT_APP_API_URL}/Guia/Modificar/` + state.idGuia;
-            axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+            modificarGuia(state.idGuia, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
             }).catch(err => {
@@ -354,9 +360,7 @@ function Guia(props) {
                 showSuccess(err)
             });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/Guia/Agregar`;
-            //debugger;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+            agregarGuia(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 //window.location.reload();
                 var resp = respuesta.data;
@@ -379,8 +383,7 @@ function Guia(props) {
     async function getImpresion(id) {
         //showSuccess (state.nGuiaId);		
         //if (state.muestraPaquetes === true) return;		
-        const url = `${process.env.REACT_APP_API_URL}/Guia/GetImpresion/` + id;
-        await axios.get(url, { headers }).then(respuesta => {
+        imprimirGuia(id).then(respuesta => {
             setState({
                 ...state,
                 paquetesI: [],
@@ -431,16 +434,14 @@ function Guia(props) {
     };
 
     function getTipoCambio() {
-        const url = `${process.env.REACT_APP_API_URL}/TipoCambio/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerTipoCambio().then(respuesta => {
             setDataTipoCambio(respuesta.data)
         });
     };
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.creadoPor}/${state.DerechoBorrar}/3`;
-        axios.get(urlDelete, { headers }).then(respuesta => {
+        validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
 
             derecho = respuesta.data;
@@ -466,8 +467,7 @@ function Guia(props) {
         //console.log(row.original.m_nIdGuia)
         //TODO
         //var valor2="";
-        const url = `${process.env.REACT_APP_API_URL}/Guia/GetById/` + id;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerGuiaId(id).then(respuesta => {
             //console.log(respuesta.data)
             // debugger;
             cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)
@@ -774,42 +774,6 @@ function Guia(props) {
         });
     };
 
-    const columns2 = React.useMemo(() => [
-        {
-            Name: "Fecha/Hora Elaboración",
-            accessor: "m_sFechaHora",
-        }, {
-            Name: "Sucursal",
-            accessor: "m_sSucursal",
-        }, {
-            Name: "Estatus Guia",
-            accessor: "m_sEstatusGuia",
-        }, {
-            Name: "Origen",
-            accessor: "m_sCiudadOrigen",
-        }, {
-            Name: "Destino",
-            accessor: "m_sCiudadDestino",
-        }, {
-            Name: "Folio Guia",
-            accessor: "m_nFolioGuia",
-        }, {
-            Name: "Folio Informe",
-            accessor: "m_sFolioInforme",
-        }, {
-            Name: "Folio Embarque",
-            accessor: "m_sFolioEmbarque",
-        },
-        {
-            Name: "Fecha de Cancelacion",
-            accessor: "m_dtFechaCancelacion"
-        },
-        {
-            Name: "Usuario de Cancelacion",
-            accessor: "m_nUsuarioCancelacion"
-        }
-
-    ]);
 
     const columns = React.useMemo(() => [
         {
@@ -1020,29 +984,25 @@ function Guia(props) {
     }
 
     async function getAllDataSucursal() {
-        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-        await axios.get(url, { headers }).then(respuesta => {
+        obtenerSucursales().then(respuesta => {
             setDataSucursal(respuesta.data)
         });
     };
 
     async function getAllConceptos() {
-        const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/GetListado`;
-        await axios.get(url, { headers }).then(respuesta => {
+        obtenerConceptosFacturacion().then(respuesta => {
             setDataConcepto(respuesta.data)
         });
     };
 
     async function getAllImpuestosRetiene() {
-        const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetListadoByTipoImpuesto/2`;
-        await axios.get(url, { headers }).then(respuesta => {
+        obtenerImpuestosTipo(2).then(respuesta => {
             setDataImpuestoRetiene(respuesta.data)
         });
     };
 
     async function getAllImpuestosTraslado() {
-        const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetListadoByTipoImpuesto/1`;
-        await axios.get(url, { headers }).then(respuesta => {
+        obtenerImpuestosTipo(1).then(respuesta => {
             setDataImpuestoTraslado(respuesta.data)
         });
     };
@@ -1054,15 +1014,13 @@ function Guia(props) {
     };
 
     async function getAllDataTipoCobro() {
-        const url = `${process.env.REACT_APP_API_URL}/TipoCobro/GetListado`;
-        await axios.get(url, { headers }).then(respuesta => {
+        obtenerTipoCobro().then(respuesta => {
             setDataTipoCobro(respuesta.data)
         });
     };
 
     async function getAllDataTipoServicio() {
-        const url = `${process.env.REACT_APP_API_URL}/TipoServicio/GetListado`;
-        await axios.get(url, { headers }).then(respuesta => {
+        obtenerTipoServicio().then(respuesta => {
             setDataTipoServicio(respuesta.data)
         });
     };
@@ -1209,8 +1167,7 @@ function Guia(props) {
     };
 
     function handleEmbarqueModificar(embarque) {
-        const url = `${process.env.REACT_APP_API_URL}/Embarques/GetById/` + embarque.data.m_nIdEmbarque;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerEmbarquesId(embarque.data.m_nIdEmbarque).then(respuesta => {
             //setDataEmbarque(respuesta.data)
             const paquetesTemp = state.paquetes;
             const sobresTemp = state.sobres;

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { trackPromise } from "react-promise-tracker";
 
 const headers = {
     'Content-Type': 'application/json',
@@ -7,22 +8,38 @@ const headers = {
 
 function modificarEmbarques(id, params){
     const url = `${process.env.REACT_APP_API_URL}/Embarques/Modificar/` + id;
-    return axios.put(url, Object.assign({}, params), { headers })
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, params), { headers })
+        );
+    return result
 }
 
 function agregarEmbarques( params){
     const url = `${process.env.REACT_APP_API_URL}/Embarques/Agregar`;
-    return axios.post(url, Object.assign({}, params), { headers })
+    let result;
+    trackPromise(
+        result =  axios.post(url, Object.assign({}, params), { headers })
+        );
+    return result
 }
 
 function eliminarEmbarques(id){
     const url = `${process.env.REACT_APP_API_URL}/Embarques/Eliminar/` + id;
-    return axios.delete(url, { headers })
+    let result;
+    trackPromise(
+        result =  axios.delete(url, { headers })
+        );
+    return result
 }
 
 function obtenerEmbarques(){
     const url = `${process.env.REACT_APP_API_URL}/Embarques/GetListado`;
-    return axios.get(url, { headers })
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
 }
 
 function obtenerEmbarquesFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado) {
@@ -35,30 +52,54 @@ function obtenerEmbarquesFiltro(fechaInicial, fechaFinal, sucursalListado, estat
         sucursalListado +
         "/" +
         estatusListado;
-    return axios.get(url, { headers })
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
 }
 
 function obtenerUltimoFolioEmbarques(){
     const url = `${process.env.REACT_APP_API_URL}/Embarques/GetUltimoFolio`;
-    return axios.get(url, { headers })
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
 }
 
 function cancelarEmbarque(state, params){
     const url = `${process.env.REACT_APP_API_URL}/Embarques/Cancelar/${state.idEmbarque}`;
-    return axios.put(url, Object.assign({}, params), { headers })
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, params), { headers })
+        );
+    return result
 }
 function obtenerEmbarqueCancelado(state){
     const url = `${process.env.REACT_APP_API_URL}/Embarques/GetCancelarById/${state.idEmbarque}`;
-    return axios.get(url, { headers })
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
 }
 function obtenerEmbarquesId(id){
     const url = `${process.env.REACT_APP_API_URL}/Embarques/GetById/${id}`;
-    return axios.get(url, { headers })
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
 }
 
 function obtenerEmbarqueMoneda(valor, idMoneda, idGuia){
     const url = `${process.env.REACT_APP_API_URL}/Embarques/GetBySucursalMoneda/` + valor + "/" + idMoneda + "/" + idGuia;
-    return axios.get(url, { headers })
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
 }
 
 export {modificarEmbarques, agregarEmbarques, eliminarEmbarques, obtenerEmbarques, obtenerEmbarquesId, obtenerUltimoFolioEmbarques, cancelarEmbarque, obtenerEmbarqueCancelado, obtenerEmbarquesFiltro, obtenerEmbarqueMoneda}

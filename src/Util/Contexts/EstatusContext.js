@@ -1,4 +1,5 @@
 import axios from "axios";
+import { trackPromise } from "react-promise-tracker";
 
 const headers = {
     'Content-Type': 'application/json',
@@ -7,51 +8,91 @@ const headers = {
 
 function obtenerEstatusDocumentos(){
     const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoDocumentos`;
-    return axios.get(url, { headers })
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
 }
 
 function obtenerEstatusEmbarque(){
     const url = `${process.env.REACT_APP_API_URL}/SisEstatus/GetListadoEmbarque`;
-    return axios.get(url, { headers })
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
 }
 
 function obtenerEstatusGuia(){
     const url = `${process.env.REACT_APP_API_URL}/EstatusGuia/GetListado`;
-    return axios.get(url, { headers })
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
 }
 
 function obtenerEstatusInforme(){
     const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoInformes`;
-    return axios.get(url, { headers })
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
 }
 function obtenerEstatusRecoleccion(){
     const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoRecoleccion`;
-    return axios.get(url, { headers })
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
 }
 
 function obtenerEstatusUnidades(){
     const url = `${process.env.REACT_APP_API_URL}/EstatusUnidades/GetListado`;
-    return axios.get(url, { headers })
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
 }
 
 function obtenerEstatusUnidadesId(id){
     const url = `${process.env.REACT_APP_API_URL}/EstatusUnidades/GetById/${id}`;
-    return axios.get(url, { headers })
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
 }
 
 function eliminarEstatusUnidades(id){
     const url = `${process.env.REACT_APP_API_URL}/EstatusUnidades/Eliminar/` + id;
-    return axios.delete(url, { headers })
+    let result;
+    trackPromise(
+        result =  axios.delete(url, { headers })
+        );
+    return result
 }
 
 function agregarEstatusUnidades(params){
     const url = `${process.env.REACT_APP_API_URL}/EstatusUnidades/Agregar`;
-    return axios.post(url, Object.assign({}, params), { headers })
+    let result;
+    trackPromise(
+        result =  axios.post(url, Object.assign({}, params), { headers })
+        );
+    return result
 }
 
 function modificarEstatusUnidades(id, params){
     const url = `${process.env.REACT_APP_API_URL}/EstatusUnidades/Modificar/` + id;
-    return axios.put(url, Object.assign({}, params), { headers })
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, params), { headers })
+        );
+    return result
 }
 
 

@@ -26,6 +26,9 @@ import { obtenerDepartamentos } from "../Util/Contexts/DepartamentoContext";
 import { agregarOperadores, eliminarOperadores, modificarOperadores, obtenerOperadores, obtenerOperadoresId, validarNumeroOperadores } from "../Util/Contexts/OperadoresContext";
 import { obtenerPaises } from "../Util/Contexts/PaisesContext";
 import { obtenerPuestos } from "../Util/Contexts/PuestoContext";
+import { obtenerUnidadesId } from "../Util/Contexts/UnidadesContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
+import { obtenerSucursales } from "../Util/Contexts/SucursalContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -538,8 +541,7 @@ function Operadores(props) {
     }
 
     function getAllSucursales() {
-        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerSucursales().then((respuesta) => {
             setDataSucursales(respuesta.data);
         });
     }
@@ -554,8 +556,7 @@ function Operadores(props) {
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        axios.get(urlDelete, { headers }).then(respuesta => {
+        validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
 
             derecho = respuesta.data;
@@ -605,8 +606,7 @@ function Operadores(props) {
     };
 
     const getModificar = (id) => {
-        const url = `${process.env.REACT_APP_API_URL}/Unidad/GetById/` + id;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerUnidadesId(id).then((respuesta) => {
             console.log(respuesta.data);
 
             setState({

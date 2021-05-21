@@ -17,6 +17,7 @@ import { dataGridLocaleText } from "../Constants";
 import { TextField, Tooltip } from "@material-ui/core";
 import $ from "jquery";
 import { agregarDepartamentos, eliminarDepartamentos, modificarDepartamentos, obtenerDepartamentos, obtenerDepartamentosId } from "../Util/Contexts/DepartamentoContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -99,8 +100,7 @@ function Departamento() {
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        axios.get(urlDelete, { headers }).then(respuesta => {
+        validarPermisos(state).then(respuesta => {
             derecho = respuesta.data;
             if (derecho == false) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");

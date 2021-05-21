@@ -3,15 +3,13 @@ import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import { useTable, useFilters, useSortBy } from 'react-table'
-import { makeStyles } from "@material-ui/core/styles";
 import { DataGrid } from '@material-ui/data-grid';
 
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import { TextField, Tooltip } from "@material-ui/core";
-import { agregarTipoCobro, eliminarTipoCobro, modificarTipoCobro, obtenerTipoCobroId } from "../Util/Contexts/TipoCobroContext";
-import { agregarTipoCambio } from "../Util/Contexts/TipoCambioContext";
+import { agregarTipoCobro, eliminarTipoCobro, modificarTipoCobro, obtenerTipoCobroId, obtenerTipoCobro } from "../Util/Contexts/TipoCobroContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -22,19 +20,8 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-const styles = {
-    seleccionado: {
-        backgroundColor: "#FCC88F",
-    },
-    noSeleccionado: {
-        backgroundColor: "#FFFFFF",
-    }
-};
-const useStyles = makeStyles(styles);
-
 function TipoCobro() {
 
-    const classes = useStyles();
     const [data, setData] = React.useState([])
     const [state, setState] = React.useState({
         idTipoCobro: 0,
@@ -79,8 +66,7 @@ function TipoCobro() {
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        axios.get(urlDelete, { headers }).then(respuesta => {
+        validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
 
             derecho = respuesta.data;

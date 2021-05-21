@@ -10,6 +10,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Noty from 'noty';
 import { TextField } from "@material-ui/core";
 import { agregarGrupoUnidades, eliminarGrupoUnidades, modificarGrupoUnidades, obtenerGrupoUnidades, obtenerGrupoUnidadesId } from "../Util/Contexts/GrupoUnidadesContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -84,8 +85,7 @@ function GrupoUnidades() {
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        axios.get(urlDelete, { headers }).then(respuesta => {
+        validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
 
             derecho = respuesta.data;

@@ -23,6 +23,9 @@ import { Button } from "bootstrap";
 import { dataGridLocaleText } from "../Constants";
 import { obtenerClasificacionViaje } from "../Util/Contexts/ClasificacionViajeContext";
 import { agregarRutas, eliminarRutas, modificarRutas, obtenerRutas, obtenerRutasId, obtenerRutasOrigenes } from "../Util/Contexts/RutasContext";
+import { obtenerTipoUnidades } from "../Util/Contexts/TipoUnidadContext";
+import { obtenerTipoViaje } from "../Util/Contexts/TipoViajeContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 
 const XLocateClient = window.XLocateClient;
 const XRouteClient = window.XRouteClient;
@@ -163,9 +166,7 @@ function Rutas(props) {
 
     function handleEliminar(id) {
         var derecho;
-        //debugger;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        axios.get(urlDelete, { headers }).then(respuesta => {
+        validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
 
             derecho = respuesta.data;
@@ -254,8 +255,7 @@ function Rutas(props) {
     }
 
     function getAllTipoUnidad() {
-        const url = `${process.env.REACT_APP_API_URL}/TiposUnidades/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerTipoUnidades().then((respuesta) => {
             console.log(respuesta.data)
             setDataTipoUnidad(respuesta.data);
         });
@@ -325,8 +325,7 @@ function Rutas(props) {
     };
 
     function getTiposViajeData() {
-        const url = `${process.env.REACT_APP_API_URL}/TipoViaje/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerTipoViaje().then(respuesta => {
             console.log(respuesta.data)
             setTiposViaje(respuesta.data)
         });

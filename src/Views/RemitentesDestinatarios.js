@@ -32,6 +32,8 @@ import { obtenerCodigoPostalEstado } from "../Util/Contexts/CodigoPostalContext"
 import { obtenerCliente } from "../Util/Contexts/ClientesContext";
 import { agregarRemitentesDestinatarios, eliminarRemitentesDestinatarios, modificarRemitentesDestinatarios, obtenerRemitentesDestinatarios, obtenerRemitentesDestinatariosId, validarNumeroRemitente } from "../Util/Contexts/RemitenteDestinatarioContext";
 import { obtenerPaises } from "../Util/Contexts/PaisesContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
+import { obtenerEstadosPais } from "../Util/Contexts/EstadosContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -269,8 +271,7 @@ function RemitenteDestinatario(props) {
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.creadoPor}/${state.DerechoBorrar}/3`;
-        axios.get(urlDelete, { headers }).then(respuesta => {
+        validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
 
             derecho = respuesta.data;
@@ -686,8 +687,7 @@ function RemitenteDestinatario(props) {
 
     function getAllEstados(id) {
         console.log(id);
-        const url = `${process.env.REACT_APP_API_URL}/Estados/ByPais/` + id;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerEstadosPais(id).then((respuesta) => {
             console.log(respuesta.data);
             setDataEstado(respuesta.data);
             getAllCodigosPostales(21)

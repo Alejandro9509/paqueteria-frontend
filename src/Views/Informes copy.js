@@ -49,6 +49,8 @@ import { dataGridLocaleText } from "../Constants";
 import { obtenerCiudades } from "../Util/Contexts/CiudadesContext";
 import { obtenerEstatusInforme } from "../Util/Contexts/EstatusContext";
 import { obtenerOperadores } from "../Util/Contexts/OperadoresContext";
+import { obtenerTipoUnidades } from "../Util/Contexts/TipoUnidadContext";
+import { obtenerUnidades } from "../Util/Contexts/UnidadesContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -1479,16 +1481,14 @@ function Informes({ history }) {
     }
 
     function getAllTipoUnidad() {
-        const url = `${process.env.REACT_APP_API_URL}/TiposUnidades/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerTipoUnidades().then((respuesta) => {
             setDataTipoUnidad(respuesta.data);
             getAllUnidades(1);
         });
     }
 
     function getAllUnidades() {
-        const url = `${process.env.REACT_APP_API_URL}/Unidades/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerUnidades().then((respuesta) => {
             console.log(respuesta);
 
             setDataUnidades(respuesta.data);

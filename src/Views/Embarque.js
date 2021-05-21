@@ -42,9 +42,17 @@ import { obtenerCiudades } from "../Util/Contexts/CiudadesContext";
 import { obtenerCodigoPostal } from "../Util/Contexts/CodigoPostalContext";
 import { obtenerRemitentesDestinatarios } from "../Util/Contexts/RemitenteDestinatarioContext";
 import { obtenerEmbalajes } from "../Util/Contexts/EmbalajesContext";
-import { cancelarEmbarque, eliminarEmbarques, obtenerEmbarquesId, obtenerUltimoFolioEmbarques, obtenerEmbarqueCancelado, agregarEmbarques, modificarEmbarques, obtenerEmbarquesFiltro } from "../Util/Contexts/EmbarquesContext";
+import { cancelarEmbarque, eliminarEmbarques, obtenerEmbarquesId, obtenerUltimoFolioEmbarques, obtenerEmbarqueCancelado, agregarEmbarques, modificarEmbarques, obtenerEmbarquesFiltro, obtenerEmbarques } from "../Util/Contexts/EmbarquesContext";
 import { obtenerMonedas } from "../Util/Contexts/MonedaContext";
 import { obtenerOperadores } from "../Util/Contexts/OperadoresContext";
+import { obtenerTipoUnidades } from "../Util/Contexts/TipoUnidadContext";
+import { obtenerUnidadesTipo } from "../Util/Contexts/UnidadesContext";
+import { obtenerTipoCambio } from "../Util/Contexts/TipoCambioContext";
+import { obtenerRecoleccionId } from "../Util/Contexts/RecoleccionContext";
+import { obtenerSucursales } from "../Util/Contexts/SucursalContext";
+import { obtenerEstatusEmbarque } from "../Util/Contexts/EstatusContext";
+import { obtenerTipoCobro } from "../Util/Contexts/TipoCobroContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -396,8 +404,7 @@ function Embarque(props) {
     }
 
     function getTipoCambio() {
-        const url = `${process.env.REACT_APP_API_URL}/TipoCambio/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerTipoCambio().then(respuesta => {
             setDataTipoCambio(respuesta.data)
         });
     }
@@ -455,9 +462,7 @@ function Embarque(props) {
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        axios
-            .get(urlDelete, { headers })
+        validarPermisos(state)
             .then((respuesta) => {
                 //showSuccess(respuesta.data)
 
@@ -1148,9 +1153,7 @@ function Embarque(props) {
     useEffect(
         async (value) => {
             if (props.location.idRecoleccion != undefined) {
-                const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetById/${props.location.idRecoleccion}`;
-                await axios
-                    .get(url, { headers })
+                obtenerRecoleccionId(props.location.idRecoleccion)
                     .then((respuesta) => {
 
                         var paquetesModificado = respuesta.data.m_parrPaquetes;
@@ -1311,8 +1314,7 @@ function Embarque(props) {
     }
 
     async function getAllEmbarque() {
-        const url = `${process.env.REACT_APP_API_URL}/Embarques/GetListado`;
-        await axios.get(url, { headers }).then((respuesta) => {
+        obtenerEmbarques().then((respuesta) => {
             setData(respuesta.data);
         });
     }
@@ -1324,22 +1326,19 @@ function Embarque(props) {
     }
 
     async function getAllSucursales() {
-        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-        await axios.get(url, { headers }).then((respuesta) => {
+        obtenerSucursales().then((respuesta) => {
             setDataSucursal(respuesta.data);
         });
     }
 
     async function getAllEstatusEmbarque() {
-        const url = `${process.env.REACT_APP_API_URL}/SisEstatus/GetListadoEmbarque`;
-        await axios.get(url, { headers }).then((respuesta) => {
+        obtenerEstatusEmbarque().then((respuesta) => {
             setEstatusEmbarque(respuesta.data);
         });
     }
 
     async function getAllTipoCobro() {
-        const url = `${process.env.REACT_APP_API_URL}/TipoCobro/GetListado`;
-        await axios.get(url, { headers }).then((respuesta) => {
+        obtenerTipoCobro().then((respuesta) => {
             setDataTipoCobro(respuesta.data);
         });
     }
@@ -1369,16 +1368,14 @@ function Embarque(props) {
     }
 
     async function getAllTipoUnidad() {
-        const url = `${process.env.REACT_APP_API_URL}/TiposUnidades/GetListado`;
-        await axios.get(url, { headers }).then((respuesta) => {
+        obtenerTipoUnidades().then((respuesta) => {
             setDataTipoUnidad(respuesta.data);
             getAllUnidades(1);
         });
     }
 
     async function getAllUnidades(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Unidades/ByTipoUnidad/${id}`;
-        await axios.get(url, { headers }).then((respuesta) => {
+        obtenerUnidadesTipo(id).then((respuesta) => {
             setDataUnidad(respuesta.data);
         });
         console.log(dataUnidad);
