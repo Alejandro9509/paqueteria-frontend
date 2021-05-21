@@ -175,7 +175,7 @@ class Tarifas extends Component {
 
     handleEliminar(id) {
         var derecho;
-        validarPermisos(state).then(respuesta => {
+        validarPermisos(this.state).then(respuesta => {
             derecho = respuesta.data;
             if (derecho == false) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
