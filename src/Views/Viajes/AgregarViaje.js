@@ -37,12 +37,14 @@ class AgregarViaje extends Component {
             IdRemolque2: {},
             IdDolly: {},
             idRuta: {},
+         
             dataCiudad: [],
             dataRutas: [],
             dataCodigoPostal: [],
             dataSucursal: [],
             dataEstatusViaje: [],
             dataInformes: [],
+            dataInformesSeleccionados: [],
             showPopUp: false,
             showDialog: false,
             identificadorModal: "",
@@ -58,7 +60,8 @@ class AgregarViaje extends Component {
             placasDolly: "",
             placasRemolque1: "",
             placasRemolque2: "",
-            height: window.innerHeight
+            height: window.innerHeight,
+            idInforme:0
         }
 
         this.getAllCiudades = this.getAllCiudades.bind(this);
@@ -255,6 +258,36 @@ class AgregarViaje extends Component {
             },
 
         ];
+
+        const columns2 = [
+            {
+                headerName: "Folio/Serie",
+                field: "m_sFolioInforme",
+                width: 125,
+            },
+            {
+                headerName: "Ruta",
+                field: "m_sRuta",
+                width: 150,
+            },
+            {
+                headerName: "Origen",
+                field: "m_sCiudadOrigen",
+                width: 125,
+            },
+            {
+                headerName: "Destino",
+                field: "m_sCiudadDestino",
+                width: 125,
+            },
+            {
+                headerName: "Operador",
+                field: "m_sNombreCompleto",
+                width: 250,
+            },
+
+        ];
+
 
         return (
 
@@ -1016,12 +1049,45 @@ class AgregarViaje extends Component {
                                 <h2 color={'#717171'} >Informes para asignación</h2>
                             </div>
 
-                            <div className="row" style={{ height: this.state.height - 750, width: '100%' }}>
+                            <div className="row" style={{ height: this.state.height - 650, width: '100%' }}>
                                 {this.state.dataInformes.length != 0 ? (
                                     <DataGrid
                                         localeText={dataGridLocaleText}
                                         rows={this.state.dataInformes}
                                         columns={columns}
+                                        density="compact"
+                                        pageSize={Math.floor((this.state.height - 310) / 30)}
+                                        getRowId={(row) => row.m_nIdInforme}
+                                        onRowSelected={(row) => {
+                                            this.setState({
+                                                idInforme: row.data.m_nIdInforme
+                                               
+                                            })
+                                            console.log(this.idInforme)
+                                        }}
+                                    />
+                                ) : (
+                                    <div>No se encontró ningún registro</div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+{/* 
+                <div className="row">
+                    <div className="col-md-12">
+                        <div className="widget-wrap">
+                            <div className="widget-header">
+                                <h2 color={'#717171'} >Detalle de paradas</h2>
+                            </div>
+
+                            <div className="row" style={{ height: this.state.height - 650, width: '100%' }}>
+                                {this.state.dataInformesSeleccionados.length != 0 ? (
+                                    <DataGrid
+                                        localeText={dataGridLocaleText}
+                                        rows={this.state.dataInformesSeleccionados}
+                                        columns={columns2}
                                         density="compact"
                                         pageSize={Math.floor((this.state.height - 310) / 30)}
                                         getRowId={(row) => row.m_nIdInforme}
@@ -1037,7 +1103,7 @@ class AgregarViaje extends Component {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>  */}
             </div>
 
         );
