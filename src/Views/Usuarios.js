@@ -589,7 +589,7 @@ function Usuarios() {
 
                     <div className="tab-content">
                         <div id="Derechos" className="tab-pane fade">
-                            <Derechos userId={}/>
+                            <Derechos />
                         </div>
                         <div id="Listado" className="tab-pane fade in active">
                             <div className="widget-wrap">
