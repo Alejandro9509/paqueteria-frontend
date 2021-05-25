@@ -31,8 +31,8 @@ class ZonasAgregar extends Component {
       idCiudadSeleccionado: 0,
       idCodigoPostalSeleccionado: 0,
       ciudadesSeleccionado: props.edit ? props.select.m_arrZonasCiudades : [],
-      codigoPostalesSeleccionado: props.edit ? props.select.m_arrZonasCodigoPostal : [],
-      localidadesSeleccionado: props.edit ? props.select.m_arrZonasLocalidades : [],
+      codigoPostalesSeleccionado: props.edit ? props.select.m_arrZonasCodigoPostales : [],
+      localidadesSeleccionado: props.edit ? props.select.m_arrZonasLocalidad : [],
       sucursal: props.edit ? props.select.m_nIdSucursal : 0,
       folio: props.edit ? props.select.m_nFolio : "0",
       descripcion: props.edit ? props.select.m_sDescripcion : "",
@@ -55,6 +55,9 @@ class ZonasAgregar extends Component {
 
   componentWillMount() {
     this.getAllSucursales().then( o => {
+      console.log(this.state.ciudadesSeleccionado)
+      console.log(this.state.codigoPostalesSeleccionado)
+      console.log(this.state.localidadesSeleccionado)
       if(this.state.sucursal){
         this.setEstadoId()
       }
