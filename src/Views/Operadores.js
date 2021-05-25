@@ -22,6 +22,13 @@ import $ from "jquery";
 
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
+import { obtenerDepartamentos } from "../Util/Contexts/DepartamentoContext";
+import { agregarOperadores, eliminarOperadores, modificarOperadores, obtenerOperadores, obtenerOperadoresId, validarNumeroOperadores } from "../Util/Contexts/OperadoresContext";
+import { obtenerPaises } from "../Util/Contexts/PaisesContext";
+import { obtenerPuestos } from "../Util/Contexts/PuestoContext";
+import { obtenerUnidadesId } from "../Util/Contexts/UnidadesContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
+import { obtenerSucursales } from "../Util/Contexts/SucursalContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -32,23 +39,9 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-const styles = {
-    seleccionado: {
-        backgroundColor: "#FCC88F",
-    },
-    noSeleccionado: {
-        backgroundColor: "#FFFFFF",
-    }
-};
-const useStyles = makeStyles(styles);
-
 window.jQuery = window.$ = $;
-const headers = {
-    "Content-Type": "application/json",
-};
 
 function Operadores(props) {
-    const classes = useStyles();
 
     const columns = React.useMemo(() => [
         {
@@ -112,135 +105,7 @@ function Operadores(props) {
         },
     ]);
 
-    function DefaultColumnFilter({
-        column: { filterValue, preFilteredRows, setFilter },
-    }) {
-        const count = preFilteredRows.length;
-
-        return (
-            <input
-                className="form-control"
-                value={filterValue || ""}
-                onChange={(e) => {
-                    setFilter(e.target.value || undefined);
-                }}
-                placeholder={`Buscar ${count} registros...`}
-            />
-        );
-    }
-
-    function Table({ columns, data }) {
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        );
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn,
-            },
-            useFilters,
-            useSortBy
-        );
-
-        return (
-            <div className="col-md-12">
-                <table className="table" {...getTableProps()}>
-                    <thead>
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                <th>Acciones</th>
-                                {headerGroup.headers.map((column) => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render("Name")}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
-                                            {column.isSorted ? (
-                                                column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up" />
-                                                ) : (
-                                                    <i className="fa fa-caret-down" />
-                                                )
-                                            ) : (
-                                                ""
-                                            )}
-                                        </span>
-                                        <div>
-                                            {column.canFilter ? column.render("Filter") : null}
-                                        </div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                        {rows.map((row, i) => {
-                            prepareRow(row);
-                            return (
-                                <tr {...row.getRowProps()}
-                                    onClick={handleSelectRow.bind(this, row.original.m_nIdOperador)}
-                                    className={state.IdOperador === row.original.m_nIdOperador ? classes.seleccionado : classes.noSeleccionado}>
-                                    <td>
-                                        <div>
-                                            <a
-                                                href="#Agregar"
-                                                role="tab"
-                                                data-toggle="tab"
-                                                onClick={() => handleShowModificar(row.original.m_nIdOperador)}
-                                                className="btn btn-default btn-sm"
-                                            >
-                                                <i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} />
-                                            </a>
-                                            <a
-                                                href="#Agregar"
-                                                role="tab"
-                                                data-toggle="tab"
-                                                onClick={() => handleShowModificar(row.original.m_nIdOperador)}
-                                                className="btn btn-default btn-sm"
-                                            >
-                                                <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                                            </a>
-                                            <a
-                                                href="#"
-                                                className="btn btn-default btn-sm"
-                                                onClick={() =>
-                                                    handleEliminar(row.original.m_nIdOperador)
-                                                }
-                                            >
-                                                <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
-                                            </a>
-                                        </div>
-                                    </td>
-                                    {row.cells.map((cell) => {
-                                        return (
-                                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                        );
-                                    })}
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
-            </div>
-        );
-    }
-
-
-
-
+    
     const [state, setState] = React.useState({
 
         agregar: "Agregar",
@@ -305,7 +170,8 @@ function Operadores(props) {
         AppPaqueteria: false,
         UsuarioPaqueteria: "",
         ContraseñaPaqueteria: "",
-        height: window.innerHeight
+        height: window.innerHeight,
+        DerechoBorrar: 63,
     });
 
     function handleShowAgregar() {
@@ -444,12 +310,8 @@ function Operadores(props) {
         };
 
         console.log(params);
-        if (state.idUnidad != 0) {
-            const url =
-                `${process.env.REACT_APP_API_URL}/Operador/Modificar/` +
-                state.IdOperador;
-            axios
-                .put(url, Object.assign({}, params), { headers })
+        if (state.IdOperador != 0) {
+            modificarOperadores(state.IdOperador, params)
 
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -461,9 +323,7 @@ function Operadores(props) {
                     showSuccess("err");
                 });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/Operador/Agregar`;
-            axios
-                .post(url, Object.assign({}, params), { headers })
+            agregarOperadores(params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     getAllOperadores();
@@ -500,10 +360,7 @@ function Operadores(props) {
 
 
     const handleChangeNumero = (event) => {
-        const url =
-            `${process.env.REACT_APP_API_URL}/Operadores/ValidaNumeroOperador/` + state.NumeroOperador;
-        axios
-            .get(url, { headers })
+        validarNumeroOperadores(state.NumeroOperador)
             .then((respuesta) => {
                 if (respuesta.data != "") {
                     showSuccess(respuesta.data.m_sMensaje);
@@ -571,10 +428,7 @@ function Operadores(props) {
 
     function handleShowModificar(id) {
         console.log(id);
-        const url =
-            `${process.env.REACT_APP_API_URL}/Operador/GetById/` +
-            id;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerOperadoresId(id).then((respuesta) => {
             console.log(respuesta.data);
             setState({
                 ...state,
@@ -643,8 +497,7 @@ function Operadores(props) {
     }
 
     function getAllOperadores() {
-        const url = `${process.env.REACT_APP_API_URL}/Operadores/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerOperadores().then((respuesta) => {
             console.log(respuesta);
 
             setDataOperador(respuesta.data);
@@ -652,8 +505,7 @@ function Operadores(props) {
     }
 
     function getAllDepartamentos() {
-        const url = `${process.env.REACT_APP_API_URL}/Departamento/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerDepartamentos().then((respuesta) => {
             console.log(respuesta);
 
             setDataDepartamento(respuesta.data);
@@ -661,8 +513,7 @@ function Operadores(props) {
     }
 
     function getAllPuestos() {
-        const url = `${process.env.REACT_APP_API_URL}/Puesto/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerPuestos().then((respuesta) => {
             console.log(respuesta);
 
             setDataPuesto(respuesta.data);
@@ -670,15 +521,13 @@ function Operadores(props) {
     }
 
     function getAllSucursales() {
-        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerSucursales().then((respuesta) => {
             setDataSucursales(respuesta.data);
         });
     }
 
     function getAllPaises() {
-        const url = `${process.env.REACT_APP_API_URL}/Pais/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerPaises().then((respuesta) => {
             console.log(respuesta);
 
             setDataPais(respuesta.data);
@@ -687,8 +536,7 @@ function Operadores(props) {
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        axios.get(urlDelete, { headers }).then(respuesta => {
+        validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
 
             derecho = respuesta.data;
@@ -696,9 +544,7 @@ function Operadores(props) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-            const url = `${process.env.REACT_APP_API_URL}/Operador/Eliminar/` + id;
-            axios
-                .get(url, { headers })
+            eliminarOperadores(id)
                 .then((respuesta) => {
                     console.log(respuesta);
                     getAllOperadores();
@@ -740,8 +586,7 @@ function Operadores(props) {
     };
 
     const getModificar = (id) => {
-        const url = `${process.env.REACT_APP_API_URL}/Unidad/GetById/` + id;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerUnidadesId(id).then((respuesta) => {
             console.log(respuesta.data);
 
             setState({
@@ -810,25 +655,7 @@ function Operadores(props) {
         );
     }
 
-    function value(event) {
-        console.log(event.target.value);
-    }
-
-    function closeSeccions() {
-        //Cerrar todas las seciones
-        var $section = $(".widget-toggle");
-        $section.each(function () {
-            var $welem = $(this)
-                .parentsUntil(".widget-action-bar")
-                .parentsUntil(".w-action")
-                .parents(".widget-header")
-                .next(".widget-container");
-            $welem.slideUp();
-            $(this).children("a").children("i").removeClass("zmdi-chevron-down");
-            $(this).children("a").children("i").addClass("zmdi-chevron-up");
-        });
-    }
-
+    
     useEffect((value) => {
         if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
             showSuccess("Es necesario iniciar sesion para acceder a este proceso");
@@ -919,7 +746,7 @@ function Operadores(props) {
 
                         <div id="Agregar" className="tab-pane fade">
 
-                            <form className="j-forms j-multistep" id="j-forms">
+                            <form  onSubmit={handleAceptar} className="j-forms j-multistep" id="j-forms">
                                 {/*Inicio de ejemplo*/}
                                 <div className="form-content">
 
@@ -2465,7 +2292,7 @@ function Operadores(props) {
                                     {/*Fin de ejemplo*/}
                                 </div>
                                 <div class="btn-ex-container">
-                                    <button className="btn btn-primary primary-btn">
+                                    <button type="submit" className="btn btn-primary primary-btn">
                                         Aceptar
                               </button>
                                 </div>

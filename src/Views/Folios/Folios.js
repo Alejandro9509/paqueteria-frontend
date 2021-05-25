@@ -11,6 +11,8 @@ import { DataGrid } from '@material-ui/data-grid';
 import $ from "jquery";
 import { Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
 import AgregarFolio from "./AgregarFolios";
+import { agregarFolios, eliminarFolios, obtenerFolios } from '../../Util/Contexts/FoliosContext';
+import { validarPermisos } from '../../Util/Contexts/UsuarioContext';
 window.jQuery = window.$ = $;
 const headers = {
     'Content-Type': 'application/json',
@@ -37,6 +39,7 @@ class Folios extends Component {
             pantalla: 1,
             selected: {},
             dataSucursal: [],
+            DerechoBorrar:  1,//TODO: Definir id 
             columns: [
                 {
                     headerName: "Acciones",
@@ -88,26 +91,24 @@ class Folios extends Component {
     }
 
     handleEliminar(id) {
-        // var derecho;
-        // const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${this.state.CreadoPor}/${this.state.DerechoBorrar}/3`;
-        // axios.get(urlDelete, { headers }).then(respuesta => {
-        //     derecho = respuesta.data;
-        //     if (derecho === false) {
-        //         showSuccess("El usuario no tiene derechos para realizar el proceso");
-        //         return;
-        //     }
+         var derecho;
+         validarPermisos(this.state).then(respuesta => {
+             derecho = respuesta.data;
+             if (derecho === false) {
+                 showSuccess("El usuario no tiene derechos para realizar el proceso");
+                 return;
+             }
 
-        const url = `${process.env.REACT_APP_API_URL}/Folios/Eliminar/` + id;
-        axios.delete(url, { headers }).then(respuesta => {
+        eliminarFolios(id).then(respuesta => {
             console.log(respuesta);
             showSuccess(respuesta.data)
             this.getAllData();
         }).catch(err => {
             showSuccess(err)
         });
-        // }).catch(err => {
-        //     showSuccess(err)
-        // });
+         }).catch(err => {
+             showSuccess(err)
+         });
     }
 
     handleAceptar(data) {
@@ -126,8 +127,7 @@ class Folios extends Component {
         }
         console.log(JSON.stringify(params));
         debugger;
-            const url = `${process.env.REACT_APP_API_URL}/Folios/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+           agregarFolios(params).then(respuesta => {
 
             showSuccess(respuesta.data)
             $('.nav-tabs li ').removeClass('active');
@@ -149,8 +149,7 @@ class Folios extends Component {
     }
 
     getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/Folios/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerFolios().then(respuesta => {
             this.setState({ data: respuesta.data, agregar: "Agregar" })
         });
     }

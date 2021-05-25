@@ -11,6 +11,8 @@ import { DataGrid } from '@material-ui/data-grid';
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import { TextField, Tooltip } from "@material-ui/core";
+import { agregarTipoServicio, eliminarTipoServicio, modificarTipoServicio, obtenerTipoServicio, obtenerTipoServicioId } from "../Util/Contexts/TipoServiciosContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -64,8 +66,7 @@ function TiposServicio() {
         }
         console.log(params)
         if (state.IdTipoServicio != 0) {
-            const url = `${process.env.REACT_APP_API_URL}/TipoServicio/Modificar/` + state.IdTipoServicio;
-            axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+            modificarTipoServicio(state.IdTipoServicio, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData();
             }).catch(err => {
@@ -73,8 +74,7 @@ function TiposServicio() {
                 showSuccess("err")
             });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/TipoServicio/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+            agregarTipoServicio(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData();
             }).catch(err => {
@@ -87,8 +87,7 @@ function TiposServicio() {
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        axios.get(urlDelete, { headers }).then(respuesta => {
+        validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
 
             derecho = respuesta.data;
@@ -97,8 +96,7 @@ function TiposServicio() {
                 return;
             }
 
-            const url = `${process.env.REACT_APP_API_URL}/TipoServicio/Eliminar/` + id;
-            axios.delete(url, { headers }).then(respuesta => {
+            eliminarTipoServicio(id).then(respuesta => {
                 console.log(respuesta)
                 getAllData();
             }).catch(err => {
@@ -111,8 +109,7 @@ function TiposServicio() {
 
     function handleShowModificar(id) {
         console.log(id)
-        const url = `${process.env.REACT_APP_API_URL}/TipoServicio/GetById/` + id;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerTipoServicioId(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -221,8 +218,7 @@ function TiposServicio() {
     }, []);
 
     function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/TipoServicio/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerTipoServicio().then(respuesta => {
             setData(respuesta.data)
         });
     };
@@ -248,22 +244,8 @@ function TiposServicio() {
         reader.readAsBinaryString(f)
     }
 
-    const FilterComponent = ({ filterText, onFilter, onClear }) => (
-        <>
-            <input
-                id="search"
-                type="text"
-                placeholder="Filter By Name"
-                aria-label="Search Input"
-                value={filterText}
-                onChange={handleChange} />
-            <button type="button" onClick={onClear}>X</button>
-        </>
-    );
 
-    const getSubHeaderComponent = () => {
-
-    };
+    
 
     const headers = {
         'Content-Type': 'application/json',
@@ -484,18 +466,26 @@ function TiposServicio() {
                                                         </div>
                                                     </div>
                                                     {/****************************************Activo*************************************************************/}
-                                                    <div className="col-sm-12 col-md-6 unit">
-                                                        <label className="label">
+                                                    <div className="col-sm-12 col-md-3 inline-group unit">
+                                                        <div className="inline-group">
+                                                            <label className="checkbox">
+                                                                <input
+                                                                    checked={state.activo}
+                                                                    onChange={(e) =>
+                                                                        setState({
+                                                                            ...state,
+                                                                            activo: e.target.checked,
+                                                                        })
+                                                                    }
+                                                                    native
+                                                                    name="activo"
+                                                                    type="checkbox"
+                                                                    id="activo"
+                                                                />
+                                                                <i />
                                                             Activo
-                          </label>
-                                                        <div className="input">
-                                                            <input
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="checkbox"
-                                                                placeholder={state.Activo}
-                                                                id="Activo"
-                                                            />
+                            </label>
+
                                                         </div>
                                                     </div>
 

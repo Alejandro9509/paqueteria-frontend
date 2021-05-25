@@ -9,71 +9,52 @@ import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
 import {DataGrid} from '@material-ui/data-grid';
 import $ from "jquery";
-import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
+import {Dialog, DialogActions, DialogContent, DialogTitle, IconButton, InputAdornment} from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
 window.jQuery = window.$ = $;
 const headers = {
     'Content-Type': 'application/json',
     //    'access-control-allow-origin': '*'
 }
+function showSuccess(mensaje) {
+    new Noty({
+        type: "information",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000"
+    }).show()
+}
+
 
 class AgregarFormatoImpresion extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            dataSucursal: [],
+            formato: "",
             dataTipoDocumento: [],
-            dataFormatoImpresion: [],
-            data: [],
-            idTipoDocumentoAgregar: '',
-            idSucursalAgregar: localStorage.getItem("Sucursal"),
-            idFormatoImpresion: '',
-            folioFinal: '',
-            folioInicial: '',
-            serie: ''
+            file: [],
+            image: []
         }
 
         this.handleChange = this.handleChange.bind(this);
-        this.getAllDataFormato = this.getAllDataFormato.bind(this)
-        this.getAllSucursales = this.getAllSucursales.bind(this)
-        this.getAllFormatoImpresion = this.getAllFormatoImpresion.bind(this)
         this.getAllTipoDocumento = this.getAllTipoDocumento.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
     }
 
 
     componentDidMount() {
-        this.getAllDataFormato()
-        this.getAllSucursales()
-        this.getAllFormatoImpresion()
         this.getAllTipoDocumento()
     }
 
-    getAllDataFormato() {
-        const url = `${process.env.REACT_APP_API_URL}/Formato/GetListado`;
-        axios.get(url, {headers}).then(respuesta => {
-            this.setState({dataFormatoImpresion: respuesta.data})
-        });
-    }
 
-    getAllSucursales() {
-        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-        axios.get(url, {headers}).then((respuesta) => {
-            this.setState({dataSucursal: respuesta.data})
-        });
-    }
 
-    getAllFormatoImpresion() {
-        const url = `${process.env.REACT_APP_API_URL}/Formato/GetListado`;
-        axios.get(url, {headers}).then((respuesta) => {
-            this.setState({dataFormatoImpresion: respuesta.data})
-        });
-    }
+  
 
     getAllTipoDocumento() {
         const url = `${process.env.REACT_APP_API_URL}/TipoDocumento/GetListado`;
@@ -111,9 +92,9 @@ class AgregarFormatoImpresion extends Component {
                                                    type="text"
                                                    required
                                                    label="Formato"
-                                                   value={this.state.formtao}
-                                                   name={"serie"}
-                                                   id="formtao"
+                                                   value={this.state.formato}
+                                                   name={"formato"}
+                                                   id="formato"
                                         />
                                     </label>
                                 </div>
@@ -150,43 +131,47 @@ class AgregarFormatoImpresion extends Component {
                             <div className="row">
 
                                 <div className="col-sm-6 col-md-6 col-lg-6 unit">
-                                    <label className="input select">
-                                        <FormControl fullWidth variant="outlined" margin="dense">
-                                            <InputLabel id="idFormatoImpresionLabel">Formato Impresión</InputLabel>
-                                            <Select
-                                                labelId="idFormatoImpresionLabel"
-                                                className="form-control"
-                                                required
-                                                value={this.state.idFormatoImpresion}
-                                                onChange={this.handleChange}
-                                                id="idFormatoImpresion"
-                                                name={"idFormatoImpresion"}
-                                                label="Formato Impresión"
-                                            >
-                                                {this.state.dataFormatoImpresion.map((sucursal) => (
-                                                    <option
-                                                        key={sucursal.m_nIdFormato}
-                                                        value={sucursal.m_nIdFormato}
-                                                    >
-                                                        {sucursal.m_sFormato}
-                                                    </option>
-                                                ))}
-                                            </Select>
-                                        </FormControl>
+                                    <label className="input">
+                                    <input type="file" id="file" accept=".WDE, .wde" onChange={(e) => {if(e.target.files.length > 1) { showSuccess("Debe adjuntar solo un archivo")}else { this.setState({file: e.target.files})}}} style={{display: "none"}} />
+                                    <TextField variant="outlined" margin="dense"
+                                                   onChange={this.handleChange}
+                                                   className="form-control"
+                                                   type="text"
+                                                   required
+                                                   disabled={true}
+                                                   label="Archivo WDE"
+                                                   value={this.state.file.length !== 0 ? this.state.file[0].name : ""}
+                                                   name={"file"}
+                                                   InputProps={{
+                                                       endAdornment:
+                                                    <InputAdornment position="end">
+                                                      <IconButton
+                                                      onClick={() => document.getElementById("file").click()}
+                                                        edge="end"
+                                                      >
+                                                        <CloudUploadIcon color="primary" fontSize="large" />
+                                                      </IconButton>
+                                                    </InputAdornment>
+                                                  
+                                                }}
+                                        />
                                     </label>
                                 </div>
 
                                 <div className="col-sm-6 col-md-6 col-lg-6 unit">
                                     <div className="input">
+                                    
                                         <TextField variant="outlined" margin="dense"
                                                    onChange={this.handleChange}
                                                    className="form-control"
                                                    type="text"
                                                    required
-                                                   label="Nombre del archivo"
+                                                   label="Nombre del Archivo WDE"
                                                    value={this.state.nombre}
                                                    name={"nombre"}
                                                    id="nombre"
+
+
                                         />
                                     </div>
                                 </div>
@@ -196,33 +181,31 @@ class AgregarFormatoImpresion extends Component {
 
                                 <div className="col-sm-6 col-md-6 col-lg-6 unit">
                                     <div className="input">
+                                    <input type="file" id="image" accept="image/*" onChange={(e) => {if(e.target.files.length > 1) { showSuccess("Debe adjuntar solo una imagen")}else { this.setState({image: e.target.files})}}}  style={{display: "none"}} />
                                         <TextField variant="outlined" margin="dense"
-                                                   onChange={this.handleChange}
                                                    className="form-control"
-                                                   type="number"
+                                                   type="text"
+                                                   disabled={true}
                                                    required
-                                                   label="Folio Inicial"
-                                                   value={this.state.folioInicial}
-                                                   name={"folioInicial"}
-                                                   id="folioInicial"
+                                                   label="Archivo Imagen"
+                                                   value={this.state.image.length !== 0 ? this.state.image[0].name : ""}
+                                                   name={"nombreImagen"}
+                                                   InputProps={{
+                                                    endAdornment:
+                                                 <InputAdornment position="end">
+                                                   <IconButton
+                                                   onClick={() => document.getElementById("image").click()}
+                                                     edge="end"
+                                                   >
+                                                     <CloudUploadIcon color="primary" fontSize="large" />
+                                                   </IconButton>
+                                                 </InputAdornment>
+                                               
+                                             }}
                                         />
                                     </div>
                                 </div>
 
-                                <div className="col-sm-6 col-md-6 col-lg-6 unit">
-                                    <div className="input">
-                                        <TextField variant="outlined" margin="dense"
-                                                   onChange={this.handleChange}
-                                                   className="form-control"
-                                                   type="number"
-                                                   required
-                                                   label="Folio Final"
-                                                   value={this.state.folioFinal}
-                                                   name={"folioFinal"}
-                                                   id="folioFinal"
-                                        />
-                                    </div>
-                                </div>
                             </div>
 
                             {/*<div className="row" >*/}

@@ -4,6 +4,7 @@ import axios from "axios";
 import Noty from 'noty';
 import { List, ListItem, Popover, TextField, Typography } from '@material-ui/core';
 import { TrafficOutlined } from '@material-ui/icons';
+import { agregarTipoCobro, obtenerTipoCobro } from '../../Util/Contexts/TipoCobroContext';
 
 const headers = {
     'Content-Type': 'application/json',
@@ -43,8 +44,7 @@ class TipoCobro extends Component {
     }
 
     getAllTipos() {
-        const url = `${process.env.REACT_APP_API_URL}/TipoCobro/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerTipoCobro().then(respuesta => {
             this.setState({ tiposCobro: respuesta.data, anchorEl: null })
         });
     }
@@ -57,23 +57,22 @@ class TipoCobro extends Component {
     handleAceptar(e) {
         e.preventDefault()
         var params = {
-          "Codigo": this.state.codigo,
-          "Descripcion": this.state.descripcion,
-          "CreadoPor": localStorage.getItem("UsuarioId"),
-          "ModificadoPor": localStorage.getItem("UsuarioId")
+            "Codigo": this.state.codigo,
+            "Descripcion": this.state.descripcion,
+            "CreadoPor": localStorage.getItem("UsuarioId"),
+            "ModificadoPor": localStorage.getItem("UsuarioId")
         }
         console.log(params)
-          const url = `${process.env.REACT_APP_API_URL}/TipoCobro/Agregar`;
-          axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+        agregarTipoCobro(params).then(respuesta => {
             showSuccess(respuesta.data)
             this.getAllTipos();
-          }).catch(err => {
+        }).catch(err => {
             console.log(err)
             showSuccess(err)
-          });
-        
+        });
 
-      }
+
+    }
 
     componentWillUnmount() {
 
@@ -121,7 +120,7 @@ class TipoCobro extends Component {
                                 <div style={{ padding: "10px" }} className="j-forms">
                                     <h5>Agregando Tipo de Cobro</h5>
                                     <div className="col-sm-12 col-md-12 unit">
-                                        
+
                                         <div className="input">
                                             <TextField variant="outlined" margin="dense"
                                                 onChange={this.handleChange}
@@ -136,7 +135,7 @@ class TipoCobro extends Component {
                                     </div>
 
                                     <div className="col-sm-12 col-md-12 unit">
-                                       
+
                                         <div className="input">
                                             <TextField variant="outlined" margin="dense"
                                                 onChange={this.handleChange}
@@ -152,7 +151,7 @@ class TipoCobro extends Component {
                                     </div>
                                     <div className="col-sm-12 col-md-12 unit">
                                         <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
-                                        onClick={this.handleClose}
+                                            onClick={this.handleClose}
                                         >
                                             Cancelar</button>
                                         <button onClick={this.handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
@@ -165,7 +164,10 @@ class TipoCobro extends Component {
                 </thead>
                 <tr>
                     <th>
-                        <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.props.handleChange(event, 0, this.state.tiposCobro, true)} checked={this.props.all} />
+                        <label className="checkbox">
+                            <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.props.handleChange(event, 0, this.state.tiposCobro, true)} checked={this.props.all} />
+                            <i />
+                        </label>
 
                     </th>
                     <th>Código</th>
@@ -176,7 +178,10 @@ class TipoCobro extends Component {
                         return (
                             <tr key={i.m_nIdTipoCobro}>
                                 <td style={{ width: "50px" }}>
-                                    <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.props.handleChange(event, index, this.state.tiposCobro, false)} checked={this.props.tiposCobroSeleccionado.find(t => t.m_nIdTipoCobro === i.m_nIdTipoCobro) != null} />
+                                    <label className="checkbox">
+                                        <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.props.handleChange(event, index, this.state.tiposCobro, false)} checked={this.props.tiposCobroSeleccionado.find(t => t.m_nIdTipoCobro === i.m_nIdTipoCobro) != null} />
+                                        <i />
+                                    </label>
                                 </td>
                                 <td>{i.m_nCodigo}</td>
                                 <td><strong>{i.m_sDescripcion}</strong></td>

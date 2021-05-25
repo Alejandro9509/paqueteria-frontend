@@ -6,10 +6,14 @@ import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import { useTable, useFilters, useSortBy } from 'react-table'
 import { makeStyles } from "@material-ui/core/styles";
 import { DataGrid } from '@material-ui/data-grid';
-
+import $ from "jquery";
 import Noty from 'noty';
 import { TextField, Tooltip } from "@material-ui/core";
 import { dataGridLocaleText } from "../Constants";
+import { agregarCaseta, eliminarCaseta, modificarCaseta, obtenerCaseta, obtenerCasetaId } from "../Util/Contexts/CasetaContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
+window.jQuery = window.$ = $;
+
 
 function showSuccess(mensaje) {
     new Noty({
@@ -20,19 +24,8 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-const styles = {
-    seleccionado: {
-        backgroundColor: "#FCC88F",
-    },
-    noSeleccionado: {
-        backgroundColor: "#FFFFFF",
-    }
-};
-const useStyles = makeStyles(styles);
-
 function Caseta() {
 
-    const classes = useStyles();
     const [data, setData] = React.useState([])
     const [state, setState] = React.useState({
         idCaseta: 0,
@@ -70,22 +63,26 @@ function Caseta() {
             "m_nCreadoPor": state.CreadoPor,
             "m_nModificadoPor": state.ModificadoPor
         }
-        console.log(params)
         if (state.idCaseta != 0) {
-            const url = `${process.env.REACT_APP_API_URL}/Casetas/Modificar/` + state.idCaseta;
-            axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+            modificarCaseta(state.idCaseta, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
+                $('.nav-tabs li ').removeClass('active');
+                $('.nav-tabs li').eq(0).addClass('active');
+                $('.tab-content div ').removeClass('in show');
+                $('#Listado').addClass('in show');
             }).catch(err => {
                 console.log(err)
                 showSuccess("err")
             });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/Casetas/Agregar`;
-            //showSuccess(state.CreadoPor);
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+            agregarCaseta(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
+                $('.nav-tabs li ').removeClass('active');
+                $('.nav-tabs li').eq(0).addClass('active');
+                $('.tab-content div ').removeClass('in show');
+                $('#Listado').addClass('in show');
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
@@ -96,8 +93,7 @@ function Caseta() {
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        axios.get(urlDelete, { headers }).then(respuesta => {
+        validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
 
             derecho = respuesta.data;
@@ -105,8 +101,7 @@ function Caseta() {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-            const url = `${process.env.REACT_APP_API_URL}/Casetas/Eliminar/` + id;
-            axios.delete(url, { headers }).then(respuesta => {
+           eliminarCaseta(id).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
             }).catch(err => {
@@ -122,8 +117,7 @@ function Caseta() {
 
     function handleShowConsultar(id) {
 
-        const url = `${process.env.REACT_APP_API_URL}/Casetas/GetById/${id}`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerCasetaId(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -140,13 +134,16 @@ function Caseta() {
                 tarifaEje9: respuesta.data.m_cTarifaEje9,
 
             })
+            $('.nav-tabs li ').removeClass('active');
+            $('.nav-tabs li').eq(1).addClass('active');
+            $('.tab-content div ').removeClass('in show');
+            $('#Agregar').addClass('in show');
         });
 
     }
 
     function handleShowModificar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Casetas/GetById/${id}`;
-        axios.get(url, { headers }).then(respuesta => {
+       obtenerCasetaId(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -163,10 +160,15 @@ function Caseta() {
                 tarifaEje9: respuesta.data.m_cTarifaEje9,
 
             })
+            $('.nav-tabs li ').removeClass('active');
+            $('.nav-tabs li').eq(1).addClass('active');
+            $('.tab-content div ').removeClass('in show');
+            $('#Agregar').addClass('in show');
         });
     }
 
-    function handleShowAgregar() {
+    function handleShowAgregar(event) {
+        event.stopPropagation()
         setState({
             ...state,
             agregar: "Agregar",
@@ -181,6 +183,7 @@ function Caseta() {
             tarifaEje8: "",
             tarifaEje9: "",
         })
+        $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show'); 
     }
 
     const handleChange = event => {
@@ -191,12 +194,6 @@ function Caseta() {
         });
     };
 
-    function handleSelectRow(id, event) {
-        setState({
-            ...state,
-            idCaseta: id
-        });
-    }
 
     const columns = React.useMemo(() => [
         {
@@ -207,11 +204,11 @@ function Caseta() {
                 return (
                     <div>
                         <Tooltip title="Modificar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdCaseta))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                            <a  onClick={() => (handleShowModificar(row.row.m_nIdCaseta))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
 
                         </Tooltip>
                         <Tooltip title="Consultar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdCaseta))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                            <a  className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdCaseta))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
@@ -273,8 +270,7 @@ function Caseta() {
     }, []);
 
     function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/Casetas/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerCaseta().then(respuesta => {
             setData(respuesta.data)
         });
     };
@@ -284,104 +280,8 @@ function Caseta() {
         //    'access-control-allow-origin': '*'
     }
 
-    function DefaultColumnFilter({
-        column: { filterValue, preFilteredRows, setFilter },
-    }) {
-        const count = preFilteredRows.length
+    
 
-        return (
-            <input
-                className="form-control"
-                value={filterValue || ''}
-                onChange={e => {
-                    setFilter(e.target.value || undefined)
-                }}
-                placeholder={`Buscar ${count} registros...`}
-            />
-        )
-    }
-
-    function Table({ columns, data }) {
-
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        )
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn
-            },
-            useFilters,
-            useSortBy
-        )
-
-        return (
-            <div className="col-md-12">
-                <table className="table" {...getTableProps()}>
-                    <thead>
-                        {headerGroups.map(headerGroup => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                <th>Acciones</th>
-                                {headerGroup.headers.map(column => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render('Name')}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
-                                            {column.isSorted
-                                                ? column.isSortedDesc
-                                                    ? <i className="fa fa-caret-up" />
-                                                    : <i className="fa fa-caret-down" />
-                                                : ''}
-                                        </span>
-                                        <div>{column.canFilter ? column.render('Filter') : null}</div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                        {rows.map(
-                            (row, i) => {
-                                prepareRow(row);
-                                return (
-                                    <tr {...row.getRowProps()}
-                                        onClick={handleSelectRow.bind(this, row.original.m_nIdCaseta)}
-                                        className={state.idCaseta === row.original.m_nIdCaseta ? classes.seleccionado : classes.noSeleccionado}>
-                                        <td>
-                                            <div>
-                                                <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowModificar(row.original.m_nIdCaseta))}><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                                                <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdCaseta))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                                                <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdCaseta))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
-                                            </div>
-                                        </td>
-                                        {row.cells.map(cell => {
-                                            return (
-                                                <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                                            )
-                                        })}
-                                    </tr>
-                                )
-                            }
-                        )}
-                    </tbody>
-                </table>
-            </div>
-        )
-    }
 
     return (
         <div >
@@ -417,19 +317,19 @@ function Caseta() {
 
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
-                            <a data-toggle="tab" href="#Listado">
+                            <a  onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
                                 <i className="fa fa-list" /> Listado
             </a>
                         </li>
                         <li>
-                            <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
+                            <a  onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>
                     </ul>
 
                     <div className="row" className="tab-content">
-                        <div className="widget-wrap" id="Listado" className="tab-pane fade in active">
+                        <div className="widget-wrap" id="Listado" className="tab-pane fade in show">
                             <div className="widget-wrap">
                                 <div className="widget-content">
                                     <div className="row" style={{ height: state.height - 250, width: '100%' }}>
@@ -643,7 +543,7 @@ function Caseta() {
                                                 </div>
                                                 <br></br>
                                                 <div className="form-footer" className="col-md-12">
-                                                    <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
+                                                    <button type="button" onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }} className="btn btn-secondary secondary-btn"
                                                     >
                                                         Cancelar</button>
                                                     <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>

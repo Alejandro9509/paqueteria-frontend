@@ -40,6 +40,21 @@ import Select from "@material-ui/core/Select";
 import { dataGridLocaleText } from "../Constants";
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+import { obtenerCiudades } from "../Util/Contexts/CiudadesContext";
+import { obtenerCodigoPostal } from "../Util/Contexts/CodigoPostalContext";
+import { obtenerRemitentesDestinatarios } from "../Util/Contexts/RemitenteDestinatarioContext";
+import { obtenerEmbalajes } from "../Util/Contexts/EmbalajesContext";
+import { cancelarEmbarque, eliminarEmbarques, obtenerEmbarquesId, obtenerUltimoFolioEmbarques, obtenerEmbarqueCancelado, agregarEmbarques, modificarEmbarques, obtenerEmbarquesFiltro, obtenerEmbarques } from "../Util/Contexts/EmbarquesContext";
+import { obtenerMonedas } from "../Util/Contexts/MonedaContext";
+import { obtenerOperadores } from "../Util/Contexts/OperadoresContext";
+import { obtenerTipoUnidades } from "../Util/Contexts/TipoUnidadContext";
+import { obtenerUnidadesTipo } from "../Util/Contexts/UnidadesContext";
+import { obtenerTipoCambio } from "../Util/Contexts/TipoCambioContext";
+import { obtenerRecoleccionId } from "../Util/Contexts/RecoleccionContext";
+import { obtenerSucursales } from "../Util/Contexts/SucursalContext";
+import { obtenerEstatusEmbarque } from "../Util/Contexts/EstatusContext";
+import { obtenerTipoCobro } from "../Util/Contexts/TipoCobroContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -351,28 +366,30 @@ function Embarque(props) {
             m_tFechaDetalleEntrega: state.fechaEntrega.split("T")[0],
             m_tHoraDetalleEntrega: state.fechaEntrega.split("T")[1],
         };
-        console.log(JSON.stringify(params));
-        debugger;
         if (state.idEmbarque != 0) {
-            const url = `${process.env.REACT_APP_API_URL}/Embarques/Modificar/${state.idEmbarque}`;
-            axios
-                .put(url, Object.assign({}, params), { headers2 })
+            modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     getAllEmbarque();
+                    $('.nav-tabs li ').removeClass('active');
+                    $('.nav-tabs li').eq(0).addClass('active');
+                    $('.tab-content div ').removeClass('in show');
+                    $('#Listado').addClass('in show');
                 })
                 .catch((err) => {
                     console.log(err);
                     showSuccess("El Usuario no tiene derecho para modificar");
                 });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/Embarques/Agregar`;
-            axios
-                .post(url, Object.assign({}, params), { headers })
+            agregarEmbarques(params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     console.log(respuesta.data);
                     getAllEmbarque();
+                    $('.nav-tabs li ').removeClass('active');
+                    $('.nav-tabs li').eq(0).addClass('active');
+                    $('.tab-content div ').removeClass('in show');
+                    $('#Listado').addClass('in show');
                 })
                 .catch((err) => {
                     console.log(err);
@@ -410,6 +427,16 @@ function Embarque(props) {
             ...state,
             paquetes: paquetes,
             countPaquetes: state.countPaquetes + 1,
+        });
+    }
+
+    function getTipoCambio() {
+        obtenerTipoCambio().then(respuesta => {
+            setDataTipoCambio(respuesta.data)
+            setState({
+                ...state,
+                tipoCambio: respuesta.data[0].m_cTipoCambio
+            })
         });
     }
 
@@ -466,9 +493,7 @@ function Embarque(props) {
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        axios
-            .get(urlDelete, { headers })
+        validarPermisos(state)
             .then((respuesta) => {
                 //showSuccess(respuesta.data)
 
@@ -478,9 +503,7 @@ function Embarque(props) {
                     return;
                 }
 
-                const url = `${process.env.REACT_APP_API_URL}/Embarques/Eliminar/${id}`;
-                axios
-                    .delete(url, { headers })
+                eliminarEmbarques(id)
                     .then((respuesta) => {
                         showSuccess(respuesta.data);
                         getAllEmbarque();
@@ -502,11 +525,11 @@ function Embarque(props) {
             usuarioCancelacion: localStorage.getItem("UsuarioId"),
             fechaCancelacion: state.fechaCancelacion,
         };
-        const url = `${process.env.REACT_APP_API_URL}/Embarques/Cancelar/${state.idEmbarque}`;
-        console.log(url)
-        //axios.put(url, Object.assign({}, params), { headers }).then((respuesta) => {
-        //    console.log(respuesta.data);
-        //});
+        cancelarEmbarque(state, params).then((respuesta) => {
+            console.log(respuesta.data);
+        });
+        $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(2).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Cancelar').addClass('in show');
+
     };
 
     function handleShowCancelar() {
@@ -518,8 +541,7 @@ function Embarque(props) {
         hours = hours ? hours : 12; // the hour '0' should be '12'
         minutes = minutes < 10 ? "0" + minutes : minutes;
         var strTime = hours + ":" + minutes + " " + ampm;
-        const url = `${process.env.REACT_APP_API_URL}/Embarques/GetCancelarById/${state.idEmbarque}`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerEmbarqueCancelado(state).then((respuesta) => {
             console.log(respuesta.data.m_nSePuedeCancelar);
             setState({
                 ...state,
@@ -542,8 +564,11 @@ function Embarque(props) {
                 ).m_sEstatus,
                 motivoCancelacion: respuesta.data.m_sMotivoCancelacion,
             });
-            if (respuesta.data.m_nSePuedeCancelar === 0)
+            if (respuesta.data.m_nSePuedeCancelar === 0) {
                 showSuccess("Embarque no se puede cancelar");
+            } else {
+
+            }
         });
     }
 
@@ -565,8 +590,7 @@ function Embarque(props) {
 
     function handleShowModificar(id) {
         console.log(id);
-        const url = `${process.env.REACT_APP_API_URL}/Embarques/GetById/${id}`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerEmbarquesId(id).then((respuesta) => {
             setState({
                 ...state,
                 agregar: "Modificar",
@@ -658,13 +682,13 @@ function Embarque(props) {
                 ),
                 paquetes: respuesta.data.m_arrPaquetes,
             });
+            $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
+
         });
     }
 
     function handleShowConsultar(id) {
-        console.log(id);
-        const url = `${process.env.REACT_APP_API_URL}/Embarques/GetById/${id}`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerEmbarquesId(id).then((respuesta) => {
             setState({
                 ...state,
                 agregar: "Consultar",
@@ -748,6 +772,8 @@ function Embarque(props) {
                 datosAdicionalesEntrega: respuesta.data.DatosAdicionalesis,
                 paquetes: respuesta.data.m_arrPaquetes,
             });
+            $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
+
         });
     }
 
@@ -783,14 +809,14 @@ function Embarque(props) {
                 today.getHours() +
                 ":" +
                 today.getMinutes(),
-            moneda: dataTipoMoneda[0].m_nIdMoneda,
+            moneda: dataTipoMoneda ? dataTipoMoneda.length > 0 ? dataTipoMoneda[0].m_nIdMoneda : 0 : 0,
             tipoCambio: "",
-            tipoCobro: dataTipoCobro[0].m_nIdTipoCobro,
-            estatusEmbarque: dataEstatusEmbarque[0].m_nIdEstatusEmbarque,
+            tipoCobro: dataTipoCobro ? dataTipoCobro.length > 0 ? dataTipoCobro[0].m_nIdTipoCobro : 0 : 0,
+            estatusEmbarque: dataEstatusEmbarque ? dataEstatusEmbarque.length > 0 ? dataEstatusEmbarque[0].m_nIdEstatusEmbarque : 0 : 0,
             nombreRemitente: {},
             RFCRemitente: "",
             domicilioRemitente: "",
-            codigoPostalRemitente: dataCodigoPostal[0],
+            codigoPostalRemitente: dataCodigoPostal ? dataCodigoPostal.length > 0 ? dataCodigoPostal[0] : {} : {},
             ciudadRemitente: {},
             correoRemitente: "",
             telefonoRemitente: "",
@@ -799,7 +825,7 @@ function Embarque(props) {
             nombreDestinatario: {},
             RFCDestinatario: "",
             domicilioDestinatario: "",
-            codigoPostalDestinatario: dataCodigoPostal[0],
+            codigoPostalDestinatario: dataCodigoPostal ? dataCodigoPostal.length > 0 ? dataCodigoPostal[0] : {} : {},
             ciudadDestino: {},
             correoDestinatario: "",
             telefonoDestinatario: "",
@@ -828,18 +854,19 @@ function Embarque(props) {
                     m_cValorDeclarado: "",
                     m_sDescripcion: "",
                     ctd: "",
-                    m_nTipo: dataEmbalaje[0].m_nIdEmbalaje,
+                    m_nTipo: dataEmbalaje ? dataEmbalaje.length > 0 ? dataEmbalaje[0].m_nIdEmbalaje : 0 : 0,
                     m_sObservaciones: "",
                 },
             ],
             cantidadDePaquetes: 0,
             cantidadDeSobres: 0,
         });
+        $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
+
     }
 
     function getUltimoFolioEmbarque() {
-        const url = `${process.env.REACT_APP_API_URL}/Embarques/GetUltimoFolio`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerUltimoFolioEmbarques().then((respuesta) => {
             SetDataFolioEmbarque(respuesta.data);
         });
     }
@@ -872,19 +899,9 @@ function Embarque(props) {
             ...state,
             fechaInicial: event.target.value,
         });
-        const url =
-            `${process.env.REACT_APP_API_URL}/Embarques/GetByFiltro/` +
-            event.target.value +
-            "/" +
-            state.fechaFinal +
-            "/" +
-            state.sucursalListado +
-            "/" +
-            state.estatusListado;
-        await axios.get(url, { headers }).then((respuesta) => {
+        obtenerEmbarquesFiltro(event.target.value, state.fechaInicial, state.sucursalListado, state.estatusListado).then((respuesta) => {
             setData(respuesta.data);
         });
-        console.log(url);
     };
 
     const handleFechaFinalFiltro = async (event) => {
@@ -892,19 +909,9 @@ function Embarque(props) {
             ...state,
             fechaFinal: event.target.value,
         });
-        const url =
-            `${process.env.REACT_APP_API_URL}/Embarques/GetByFiltro/` +
-            state.fechaInicial +
-            "/" +
-            event.target.value +
-            "/" +
-            state.sucursalListado +
-            "/" +
-            state.estatusListado;
-        await axios.get(url, { headers }).then((respuesta) => {
+        obtenerEmbarquesFiltro(state.fechaInicial, event.target.value, state.sucursalListado, state.estatusListado).then((respuesta) => {
             setData(respuesta.data);
         });
-        console.log(url);
     };
 
     const handleSucursalFiltro = async (event) => {
@@ -912,19 +919,9 @@ function Embarque(props) {
             ...state,
             sucursalListado: event.target.value,
         });
-        const url =
-            `${process.env.REACT_APP_API_URL}/Embarques/GetByFiltro/` +
-            state.fechaInicial +
-            "/" +
-            state.fechaFinal +
-            "/" +
-            event.target.value +
-            "/" +
-            state.estatusListado;
-        await axios.get(url, { headers }).then((respuesta) => {
+        obtenerEmbarquesFiltro(state.fechaInicial, state.fechaFinal, event.target.value, state.estatusListado).then((respuesta) => {
             setData(respuesta.data);
         });
-        console.log(url);
     };
 
     const handleEstatusFiltro = async (event) => {
@@ -932,24 +929,11 @@ function Embarque(props) {
             ...state,
             estatusListado: event.target.value,
         });
-        const url =
-            `${process.env.REACT_APP_API_URL}/Embarques/GetByFiltro/` +
-            state.fechaInicial +
-            "/" +
-            state.fechaFinal +
-            "/" +
-            state.sucursalListado +
-            "/" +
-            event.target.value;
-        await axios.get(url, { headers }).then((respuesta) => {
+        obtenerEmbarquesFiltro(state.fechaInicial, state.fechaFinal, state.sucursalListado, event.target.value).then((respuesta) => {
             setData(respuesta.data);
         });
-        console.log(url);
     };
 
-    const handleSelectChange = (event) => {
-        getAllUnidades(event.target.value);
-    };
 
     function handleSelectDatos(id, cp) {
         setState({
@@ -960,12 +944,6 @@ function Embarque(props) {
         console.log(state.identificadorModal);
     }
 
-    function handleSelectRow(id, event) {
-        setState({
-            ...state,
-            idEmbarque: id,
-        });
-    }
 
     const columns = React.useMemo(() => [
         {
@@ -977,9 +955,6 @@ function Embarque(props) {
                     <div>
                         <Tooltip title="Modificar">
                             <a
-                                href="#Agregar"
-                                role="tab"
-                                data-toggle="tab"
                                 onClick={() => handleShowModificar(row.row.m_nIdEmbarque)}
                                 className="btn btn-default btn-xs"
                             >
@@ -991,9 +966,6 @@ function Embarque(props) {
                         </Tooltip>
                         <Tooltip title="Consultar">
                             <a
-                                href="#Agregar"
-                                role="tab"
-                                data-toggle="tab"
                                 className="btn btn-default btn-xs"
                                 onClick={() => handleShowConsultar(row.row.m_nIdEmbarque)}
                             >
@@ -1245,9 +1217,7 @@ function Embarque(props) {
     useEffect(
         async (value) => {
             if (props.location.idRecoleccion != undefined) {
-                const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetById/${props.location.idRecoleccion}`;
-                await axios
-                    .get(url, { headers })
+                obtenerRecoleccionId(props.location.idRecoleccion)
                     .then((respuesta) => {
 
                         var paquetesModificado = respuesta.data.m_parrPaquetes;
@@ -1404,105 +1374,83 @@ function Embarque(props) {
         getAllRemitentesDestinatarios();
         getAllEmbalajes();
         getUltimoFolioEmbarque();
-        getTipoCambio();
+        getTipoCambio()
     }
 
     async function getAllEmbarque() {
-        const url = `${process.env.REACT_APP_API_URL}/Embarques/GetListado`;
-        await axios.get(url, { headers }).then((respuesta) => {
+        obtenerEmbarques().then((respuesta) => {
             setData(respuesta.data);
         });
     }
 
     async function getAllRemitentesDestinatarios() {
-        const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/GetListado`;
-        await axios.get(url, { headers }).then((respuesta) => {
+        obtenerRemitentesDestinatarios().then((respuesta) => {
             setDataRemitenteDestinatario(respuesta.data);
         });
     }
 
     async function getAllSucursales() {
-        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-        await axios.get(url, { headers }).then((respuesta) => {
+        obtenerSucursales().then((respuesta) => {
             setDataSucursal(respuesta.data);
         });
     }
 
     async function getAllEstatusEmbarque() {
-        const url = `${process.env.REACT_APP_API_URL}/SisEstatus/GetListadoEmbarque`;
-        await axios.get(url, { headers }).then((respuesta) => {
+        obtenerEstatusEmbarque().then((respuesta) => {
             setEstatusEmbarque(respuesta.data);
         });
     }
 
     async function getAllTipoCobro() {
-        const url = `${process.env.REACT_APP_API_URL}/TipoCobro/GetListado`;
-        await axios.get(url, { headers }).then((respuesta) => {
+        obtenerTipoCobro().then((respuesta) => {
             setDataTipoCobro(respuesta.data);
         });
     }
 
     async function getAllTipoMoneda() {
-        const url = `${process.env.REACT_APP_API_URL}/Moneda/GetListado`;
-        await axios.get(url, { headers }).then((respuesta) => {
+        obtenerMonedas().then((respuesta) => {
             setDataTipoMoneda(respuesta.data);
         });
     }
 
     async function getAllCiudades() {
-        const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
-        await axios.get(url, { headers }).then((respuesta) => {
+        obtenerCiudades().then((respuesta) => {
             setDataCiudad(respuesta.data);
         });
     }
 
     async function getAllCodigosPostales() {
-        const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
-        await axios.get(url, { headers }).then((respuesta) => {
+        obtenerCodigoPostal().then((respuesta) => {
             setDataCodigoPostal(respuesta.data);
         });
     }
 
     async function getAllOperadores() {
-        const url = `${process.env.REACT_APP_API_URL}/Operadores/GetListado`;
-        await axios.get(url, { headers }).then((respuesta) => {
+        obtenerOperadores().then((respuesta) => {
             setDataOperador(respuesta.data);
         });
     }
 
     async function getAllTipoUnidad() {
-        const url = `${process.env.REACT_APP_API_URL}/TiposUnidades/GetListado`;
-        await axios.get(url, { headers }).then((respuesta) => {
+        obtenerTipoUnidades().then((respuesta) => {
             setDataTipoUnidad(respuesta.data);
-            getAllUnidades(respuesta.data[0].m_nIdTipoUnidad);
+            getAllUnidades(1);
         });
     }
 
     async function getAllUnidades(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Unidades/ByTipoUnidad/${id}`;
-        await axios.get(url, { headers }).then((respuesta) => {
+        obtenerUnidadesTipo(id).then((respuesta) => {
             setDataUnidad(respuesta.data);
         });
     }
 
     async function getAllEmbalajes() {
-        const url = `${process.env.REACT_APP_API_URL}/Embalajes/GetListado`;
-        await axios.get(url, { headers }).then((respuesta) => {
+        obtenerEmbalajes().then((respuesta) => {
             setDataEmbalaje(respuesta.data);
         });
     }
 
-    async function getTipoCambio() {
-        const url = `${process.env.REACT_APP_API_URL}/TipoCambio/GetListado`;
-        await axios.get(url, { headers }).then(respuesta => {
-            console.log(respuesta.data[0].m_cTipoCambio)
-            setDataTipoCambio(respuesta.data)
-            setState({
-                ...state,
-                tipoCambio: respuesta.data[0].m_cTipoCambio
-            })
-        });
-    };
+
 
     const headers = {
         "Content-Type": "application/json",
@@ -2602,20 +2550,15 @@ function Embarque(props) {
 
                     <ul className="nav navStatica nav-tabs">
                         <li
-                            className={
-                                props.location.idRecoleccion != undefined ? "" : "active"
-                            }
+                            className="active"
                         >
-                            <a data-toggle="tab" href="#Listado">
+                            <a onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
                                 <i className="fa fa-list" /> Listado
                             </a>
                         </li>
                         <li
-                            className={
-                                props.location.idRecoleccion != undefined ? "active" : ""
-                            }
                         >
-                            <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
+                            <a onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>
@@ -2624,8 +2567,7 @@ function Embarque(props) {
                         </li>
                         <li>
                             <a
-                                data-toggle="tab"
-                                href="#Cancelar"
+
                                 onClick={handleShowCancelar}
                                 className={state.idEmbarque === 0 ? classes.disabled : ""}
                             >
@@ -2634,8 +2576,6 @@ function Embarque(props) {
                         </li>
                         <li style={{ float: "right" }}>
                             <a
-                                data-toggle="tab"
-                                href="#"
                                 className={state.idEmbarque === 0 ? classes.disabled : ""}
                                 style={{ textAlign: "right" }}
                                 onClick={() => setRedirect(true)}
@@ -2648,11 +2588,7 @@ function Embarque(props) {
                     <div className="row tab-content">
                         <div
                             id="Listado"
-                            className={
-                                props.location.idRecoleccion !== undefined
-                                    ? "tab-pane fade"
-                                    : "tab-pane fade in active"
-                            }
+                            className="tab-pane fade in show"
                         >
                             <div className="widget-wrap">
                                 <div className="widget-content">
@@ -2803,11 +2739,7 @@ function Embarque(props) {
 
                         <div
                             id="Agregar"
-                            className={
-                                props.location.idRecoleccion != undefined
-                                    ? "tab-pane fade in active"
-                                    : "tab-pane fade"
-                            }
+                            className="tab-pane fade"
                         >
                             <form className="j-forms row" onSubmit={handleAceptar}>
                                 <div className="form-content">
@@ -3025,18 +2957,37 @@ function Embarque(props) {
 
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5  unit">
                                                             <div className="input">
-                                                                <TextField variant="outlined" margin="dense"
-                                                                    label="Tipo de Cambio"
-                                                                    onChange={handleChange}
-                                                                    className="form-control"
-                                                                    type="number"
-                                                                    min="0"
-                                                                    step="0.01"
-                                                                    required
-                                                                    value={state.tipoCambio}
-                                                                    disabled={state.agregar === "Consultar"}
-                                                                    name="tipoCambio"
-                                                                />
+                                                            <FormControl fullWidth variant="outlined"
+                                                                    margin="dense">
+                                                                    <InputLabel id="tipoCambioLabel">Tipo de
+                                                                        Cambio</InputLabel>
+                                                                    <Select
+                                                                        labelId="tipoCambioLabel"
+                                                                        label="Tipo de Cambio"
+                                                                        className="form-control"
+                                                                        required
+                                                                        value={state.tipoCambio}
+                                                                        onChange={(event) => {
+                                                                            event.preventDefault();
+                                                                            setState({
+                                                                                ...state,
+                                                                                tipoCambio: event.target.value,
+                                                                            });
+                                                                        }}
+                                                                        disabled={state.agregar === "Consultar"}
+                                                                        id="tipoCambio"
+                                                                    >
+                                                                        <option value="0">Seleccionar</option>
+                                                                        {dataTipoCambio.map((cambio) => (
+                                                                            <option
+                                                                                key={cambio.m_nIdTipoCambio}
+                                                                                value={cambio.m_nIdTipoCambio}
+                                                                            >
+                                                                                {cambio.m_cTipoCambio}
+                                                                            </option>
+                                                                        ))}
+                                                                    </Select>
+                                                                </FormControl>
                                                             </div>
                                                         </div>
 
@@ -3053,9 +3004,16 @@ function Embarque(props) {
                                                                         required
                                                                         value={state.tipoCobro}
                                                                         disabled={state.agregar === "Consultar"}
-                                                                        onChange={handleChange}
+                                                                        onChange={(event) => {
+                                                                            event.preventDefault();
+                                                                            setState({
+                                                                                ...state,
+                                                                                tipoCobro: event.target.value,
+                                                                            });
+                                                                        }}
                                                                         id="tipoCobro"
                                                                         InputProps={{
+                                                                            id:"tipoCobro",
                                                                             name: "tipoCobro"
                                                                         }}
                                                                     >
@@ -4285,9 +4243,8 @@ function Embarque(props) {
                                 </div>
                                 <div className="form-footer ol-md-12">
                                     <button
-                                        href="#Listado"
-                                        role="tab"
-                                        data-toggle="tab"
+                                        type="button"
+                                        onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}
                                         className="btn btn-secondary secondary-btn"
                                     >
                                         Cancelar
@@ -4394,9 +4351,8 @@ function Embarque(props) {
 
                                                     <div className="form-footer col-md-12">
                                                         <button
-                                                            href="#Listado"
-                                                            role="tab"
-                                                            data-toggle="tab"
+                                                            type="button"
+                                                            onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}
                                                             className="btn btn-secondary secondary-btn"
                                                         >
                                                             Cancelar

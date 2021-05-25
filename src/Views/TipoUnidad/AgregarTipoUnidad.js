@@ -14,6 +14,7 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
+import { obtenerTipoUnidadesId } from '../../Util/Contexts/TipoUnidadContext';
 window.jQuery = window.$ = $;
 const headers = {
     'Content-Type': 'application/json',
@@ -56,8 +57,7 @@ class AgregarTipoUnidad extends Component {
     };
 
     handleShowConsultar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/TipoUnidad/GetById/` + id;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerTipoUnidadesId(id).then(respuesta => {
             console.log(respuesta.data)
             this.setState({
                 tarifaKMSDolares: respuesta.data.m_cyTarifaPorKMS,

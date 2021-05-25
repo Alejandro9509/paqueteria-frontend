@@ -12,6 +12,7 @@ import { DataGrid } from '@material-ui/data-grid';
 import $ from "jquery";
 import { dataGridLocaleText } from '../../Constants';
 import { Tooltip } from '@material-ui/core';
+import { validarPermisos } from '../../Util/Contexts/UsuarioContext';
 window.jQuery = window.$ = $;
 const headers = {
     'Content-Type': 'application/json',
@@ -36,6 +37,7 @@ class Tarifas extends Component {
             height: window.innerHeight,
             pantalla: 1,
             selected: {},
+            DerechoBorrar: 1, //TODO: Definir id
             dataSucursal: [],
             columns: [
                 {
@@ -130,11 +132,9 @@ class Tarifas extends Component {
         this.getAllData()
     }
 
+
     handleShowModificar(id) {
-        $('.nav-tabs li ').removeClass('active');
-        $('.nav-tabs li').eq(1).addClass('active');
-        $('.tab-content div ').removeClass('in show');
-        $('#Agregar').addClass('in show');
+
         const url = `${process.env.REACT_APP_API_URL}/Tarifas/GetById/` + id;
         axios.get(url, { headers }).then(respuesta => {
             console.log(respuesta.data)
@@ -146,14 +146,15 @@ class Tarifas extends Component {
                 consult: false,
                 selected: respuesta.data,
             })
+            $('.nav-tabs li ').removeClass('active');
+            $('.nav-tabs li').eq(1).addClass('active');
+            $('.tab-content div ').removeClass('in show');
+            $('#Agregar').addClass('in show');
         });
     }
 
     handleShowConsultar(id) {
-        $('.nav-tabs li ').removeClass('active');
-        $('.nav-tabs li').eq(1).addClass('active');
-        $('.tab-content div ').removeClass('in show');
-        $('#Agregar').addClass('in show');
+
         const url = `${process.env.REACT_APP_API_URL}/Tarifas/GetById/` + id;
         axios.get(url, { headers }).then(respuesta => {
             console.log(respuesta.data)
@@ -165,13 +166,16 @@ class Tarifas extends Component {
                 consult: true,
                 selected: respuesta.data,
             })
+            $('.nav-tabs li ').removeClass('active');
+            $('.nav-tabs li').eq(1).addClass('active');
+            $('.tab-content div ').removeClass('in show');
+            $('#Agregar').addClass('in show');
         });
     }
 
     handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${this.state.CreadoPor}/${this.state.DerechoBorrar}/3`;
-        axios.get(urlDelete, { headers }).then(respuesta => {
+        validarPermisos(this.state).then(respuesta => {
             derecho = respuesta.data;
             if (derecho == false) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
@@ -280,12 +284,12 @@ class Tarifas extends Component {
 
                         <ul className="nav navStatica nav-tabs">
                             <li className="active">
-                                <a data-toggle="tab" data_id="1" href="#Listado" onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
+                                <a  onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
                                     <i className="fa fa-list" /> Listado
               </a>
                             </li>
                             <li >
-                                <a data-toggle="tab" data_id="2" href="#Agregar" onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 2, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show'); }}>
+                                <a  onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 2, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show'); }}>
                                     <i className="fa fa-plus-circle" /> {this.state.agregar}
                                 </a>
                             </li>
@@ -336,7 +340,7 @@ class Tarifas extends Component {
                             <div id="Agregar" className="tab-pane fade">
                                 {
                                     this.state.pantalla == 2 &&
-                                    <CrearTarifa edit={this.state.edit} select={this.state.selected} onSubmit={this.handleAceptar} onCancel={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}></CrearTarifa>
+                                    <CrearTarifa edit={edit} consult={consult} select={this.state.selected} onSubmit={this.handleAceptar} onCancel={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}></CrearTarifa>
                                 }
 
                             </div>

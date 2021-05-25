@@ -50,6 +50,20 @@ import {
     Tooltip
 } from "@material-ui/core";
 import { dataGridLocaleText } from "../Constants";
+import { obtenerCiudades } from "../Util/Contexts/CiudadesContext";
+import { obtenerCodigoPostal } from "../Util/Contexts/CodigoPostalContext";
+import { obtenerRemitentesDestinatarios } from "../Util/Contexts/RemitenteDestinatarioContext";
+import { obtenerEmbalajes } from "../Util/Contexts/EmbalajesContext";
+import { obtenerEstatusRecoleccion } from "../Util/Contexts/EstatusContext";
+import { obtenerMonedas } from "../Util/Contexts/MonedaContext";
+import { obtenerOperadores } from "../Util/Contexts/OperadoresContext";
+import { agregarRecoleccion, modificarRecoleccion, obtenerRecoleccionCancelada, cancelarRecoleccion, eliminarRecoleccion, obtenerRecoleccionId, obtenerRecoleccionFiltro, obtenerRecoleccion } from "../Util/Contexts/RecoleccionContext";
+import { obtenerTipoUnidades } from "../Util/Contexts/TipoUnidadContext";
+import { obtenerUnidadesTipo } from "../Util/Contexts/UnidadesContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
+import { obtenerTipoCambio } from "../Util/Contexts/TipoCambioContext";
+import { obtenerSucursales } from "../Util/Contexts/SucursalContext";
+import { obtenerTipoCobro } from "../Util/Contexts/TipoCobroContext";
 
 let timer;
 
@@ -360,12 +374,8 @@ function Recoleccion() {
             "m_nModificadoPor": state.ModificadoPor
 
         }
-        console.log(JSON.stringify(params));
-        debugger;
         if (state.idRecoleccion != 0) {
-            const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Modificar/${state.idRecoleccion}`;
-            axios
-                .put(url, Object.assign({}, params), { headers })
+            modificarRecoleccion(state.idRecoleccion, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     getAllData();
@@ -379,10 +389,7 @@ function Recoleccion() {
                     showSuccess("err");
                 });
         } else {
-            //debugger;
-            const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Agregar`;
-            axios
-                .post(url, Object.assign({}, params), { headers })
+            agregarRecoleccion(params)
                 .then((respuesta) => {
                     console.log(respuesta.data);
                     showSuccess(respuesta.data);
@@ -400,8 +407,7 @@ function Recoleccion() {
     };
 
     function getTipoCambio() {
-        const url = `${process.env.REACT_APP_API_URL}/TipoCambio/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerTipoCambio().then(respuesta => {
             setDataTipoCambio(respuesta.data)
         });
     };
@@ -436,8 +442,7 @@ function Recoleccion() {
         hours = hours ? hours : 12; // the hour '0' should be '12'
         minutes = minutes < 10 ? '0' + minutes : minutes;
         var strTime = hours + ':' + minutes + ' ' + ampm;
-        const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetCancelarById/${state.idRecoleccion}`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerRecoleccionCancelada(state.idRecoleccion).then((respuesta) => {
             setState({
                 ...state,
                 folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
@@ -462,8 +467,7 @@ function Recoleccion() {
             "usuarioCancelacion": localStorage.getItem("UsuarioId"),
             "fechaCancelacion": state.fechaCancelacion
         }
-        const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Cancelar/${state.idRecoleccion}`;
-        axios.put(url, Object.assign({}, params), { headers }).then((respuesta) => {
+        cancelarRecoleccion(state.idRecoleccion, params).then((respuesta) => {
             showSuccess(respuesta.data)
         })
     }
@@ -534,9 +538,7 @@ function Recoleccion() {
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        axios
-            .get(urlDelete, { headers })
+       validarPermisos(state)
             .then((respuesta) => {
                 //showSuccess(respuesta.data)
 
@@ -546,10 +548,7 @@ function Recoleccion() {
                     return;
                 }
 
-                const url =
-                    `${process.env.REACT_APP_API_URL}/Recoleccion/Eliminar/` + id;
-                axios
-                    .delete(url, { headers })
+                eliminarRecoleccion(id)
                     .then((respuesta) => {
                         showSuccess(respuesta.data);
                         getAllData();
@@ -563,28 +562,14 @@ function Recoleccion() {
             });
     }
 
-    function handleShowCiudadRemitente(id) {
-        console.log(id);
-        const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetByCP/${id}`;
-        axios.get(url, { headers }).then((respuesta) => {
-            console.log(respuesta.data);
-            setState({
-                ...state,
-                //ciudadRemitente: respuesta.data.m_nIdCiudad
-                ciudadRemitente: dataCiudad.find(
-                    (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudad
-                ),
-            });
-        });
-    }
+    
 
     function handleShowModificar(id) {
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
-        const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetById/${id}`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerRecoleccionId(id).then((respuesta) => {
             console.log(respuesta.data);
             debugger;
             setState({
@@ -691,8 +676,7 @@ function Recoleccion() {
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
-        const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetById/${id}`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerRecoleccionId(id).then((respuesta) => {
             console.log(respuesta.data);
             setState({
                 ...state,
@@ -787,8 +771,7 @@ function Recoleccion() {
     }
 
     function handleShowSalidaLlegada(type) {
-        const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetById/${state.idRecoleccion}`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerRecoleccionId(state.idRecoleccion).then((respuesta) => {
             console.log(respuesta.data);
             setState({
                 ...state,
@@ -960,9 +943,7 @@ function Recoleccion() {
             ...state,
             fechaInicial: event.target.value,
         })
-        const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
-            event.target.value + "/" + state.fechaFinal + "/" + state.sucursalListado + "/" + state.estatusListado;
-        await axios.get(url, { headers }).then(respuesta => {
+        obtenerRecoleccionFiltro(event.target.value, state.fechaInicial, state.sucursalListado, state.estatusListado).then(respuesta => {
             setData(respuesta.data)
         })
     }
@@ -973,9 +954,7 @@ function Recoleccion() {
             ...state,
             fechaFinal: event.target.value,
         })
-        const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
-            state.fechaInicial + "/" + event.target.value + "/" + state.sucursalListado + "/" + state.estatusListado;
-        await axios.get(url, { headers }).then(respuesta => {
+        obtenerRecoleccionFiltro(state.fechaInicial, event.target.value, state.sucursalListado, state.estatusListado).then(respuesta => {
             setData(respuesta.data)
         })
     }
@@ -986,9 +965,7 @@ function Recoleccion() {
             ...state,
             sucursalListado: event.target.value,
         })
-        const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
-            state.fechaInicial + "/" + state.fechaFinal + "/" + event.target.value + "/" + state.estatusListado;
-        await axios.get(url, { headers }).then(respuesta => {
+        obtenerRecoleccionFiltro(state.fechaInicial, state.fechaFinal, event.target.value, state.estatusListado).then(respuesta => {
             setData(respuesta.data)
         })
     }
@@ -999,9 +976,7 @@ function Recoleccion() {
             ...state,
             estatusListado: event.target.value,
         })
-        const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
-            state.fechaInicial + "/" + state.fechaFinal + "/" + state.sucursalListado + "/" + event.target.value;
-        await axios.get(url, { headers }).then(respuesta => {
+        obtenerRecoleccionFiltro(state.fechaInicial, state.fechaFinal, state.sucursalListado, event.target.value).then(respuesta => {
             setData(respuesta.data)
         })
     }
@@ -1263,8 +1238,7 @@ function Recoleccion() {
     }, []);
 
     function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerRecoleccion().then((respuesta) => {
             console.log(respuesta.data);
             setData(respuesta.data);
         });
@@ -1272,43 +1246,37 @@ function Recoleccion() {
 
 
     function getAllEmbalajes() {
-        const url = `${process.env.REACT_APP_API_URL}/Embalajes/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerEmbalajes().then((respuesta) => {
             setDataEmbalaje(respuesta.data);
         });
     }
 
     function getAllSucursales() {
-        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerSucursales().then((respuesta) => {
             setDataSucursal(respuesta.data);
         });
     }
 
     function getAllEstatusRecoleccion() {
-        const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoRecoleccion`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerEstatusRecoleccion().then((respuesta) => {
             setEstatusRecoleccion(respuesta.data);
         });
     }
 
     function getAllTipoCobro() {
-        const url = `${process.env.REACT_APP_API_URL}/TipoCobro/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+       obtenerTipoCobro().then((respuesta) => {
             setDataTipoCobro(respuesta.data);
         });
     }
 
     function getAllTipoMoneda() {
-        const url = `${process.env.REACT_APP_API_URL}/Moneda/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerMonedas().then((respuesta) => {
             setDataTipoMoneda(respuesta.data);
         });
     }
 
     function getAllCiudades() {
-        const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerCiudades().then((respuesta) => {
             setDataCiudad(respuesta.data);
         });
     }
@@ -1328,8 +1296,7 @@ function Recoleccion() {
     }
 
     async function getAllCodigosPostales() {
-        const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
-        await axios.get(url, {headers}).then((respuesta) => {
+        obtenerCodigoPostal().then((respuesta) => {
           console.log(respuesta.data)
             setDataCodigoPostal(respuesta.data);
         });
@@ -1388,52 +1355,30 @@ function Recoleccion() {
         });
     }
 
-    /*   function getAllCodigosPostalesRem(idCiudad) {
-          const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListadoPorCiudad/`+idCiudad;
-          axios.get(url, { headers }).then((respuesta) => {
-            console.log(respuesta);
-
-            setDataCodigoPostal(respuesta.data);
-          });
-        }
-   */
-    /*  function getAllCodigosPostalesDes(idCiudad) {
-       const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListadoPorCiudad/`+idCiudad;
-       axios.get(url, { headers }).then((respuesta) => {
-         console.log(respuesta);
-
-         setDataCodigoPostal(respuesta.data);
-       });
-     } */
 
 
 
     function getAllRemitentesDestinatarios() {
-        const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerRemitentesDestinatarios().then((respuesta) => {
             setDataRemitenteDestinatario(respuesta.data);
         });
     }
 
     function getAllOperadores() {
-        const url = `${process.env.REACT_APP_API_URL}/Operadores/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerOperadores().then((respuesta) => {
             setDataOperador(respuesta.data);
         });
     }
 
     function getAllTipoUnidad() {
-        const url = `${process.env.REACT_APP_API_URL}/TiposUnidades/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerTipoUnidades().then((respuesta) => {
             setDataTipoUnidad(respuesta.data);
-            getAllUnidades(respuesta.data[0].m_nIdTipoUnidad);
+            getAllUnidades(1);
         });
     }
 
     function getAllUnidades(id) {
-        console.log(id);
-        const url = `${process.env.REACT_APP_API_URL}/Unidades/ByTipoUnidad/${id}`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerUnidadesTipo(id).then((respuesta) => {
             console.log(respuesta.data);
             setDataUnidad(respuesta.data);
         });
@@ -3033,7 +2978,13 @@ function Recoleccion() {
                                                                         className="form-control"
                                                                         required
                                                                         value={state.tipoCambio}
-                                                                        onChange={handleChange}
+                                                                        onChange={(event) => {
+                                                                            event.preventDefault();
+                                                                            setState({
+                                                                                ...state,
+                                                                                tipoCambio: event.target.value,
+                                                                            });
+                                                                        }}
                                                                         disabled={state.agregar === "Consultar"}
                                                                         id="tipoCambio"
                                                                     >

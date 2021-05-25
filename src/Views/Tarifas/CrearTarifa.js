@@ -8,6 +8,7 @@ import TipoServicio from './TipoServicio';
 import SvgIcon from "@material-ui/core/SvgIcon";
 import { getUniqueListBy } from '../../Util/Util';
 import { PowerInputSharp } from '@material-ui/icons';
+import { obtenerCiudades } from '../../Util/Contexts/CiudadesContext';
 
 const headers = {
     'Content-Type': 'application/json',
@@ -91,7 +92,7 @@ class CrearTarifa extends Component {
         conceptosAdicionales.push({ concepto: data.concepto, importe: data.importe, retiene: data.retiene, traslada: data.traslada, importeRet: data.importeRet, importeIVA: data.importeIVA })
         ivaTraslada = getUniqueListBy(conceptosAdicionales, "traslada").map(i => i.traslada);
         ivaRetiene = getUniqueListBy(conceptosAdicionales, "retiene").map(i => i.retiene);
-        
+
         this.setState({ conceptosAdicionales: conceptosAdicionales, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
     }
 
@@ -102,8 +103,7 @@ class CrearTarifa extends Component {
     }
 
     getAllCiudades() {
-        const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerCiudades().then((respuesta) => {
             this.setState({ ciudades: respuesta.data });
         });
     }
@@ -143,7 +143,7 @@ class CrearTarifa extends Component {
 
     handleChangeChecboxTiposServicio(event, index, arrayTipos, all) {
         const array = this.state.tiposServicioSeleccionado
-        
+
         if (all) {
             let arrayAll = Object.assign([], arrayTipos)
             this.setState({
@@ -199,6 +199,7 @@ class CrearTarifa extends Component {
                                                         required
                                                         onChange={this.handleChange}
                                                         value={this.state.sucursal}
+                                                        disabled={this.props.consult}
                                                         name="sucursal"
                                                         id="sucursal"
                                                     >
@@ -231,6 +232,7 @@ class CrearTarifa extends Component {
                                                         labelId="destinoLabel"
                                                         className="form-control"
                                                         required
+                                                        disabled={this.props.consult}
                                                         value={this.state.destino}
                                                         onChange={this.handleChange}
                                                         name="destino"
@@ -262,6 +264,7 @@ class CrearTarifa extends Component {
                                                     type="number"
                                                     label={<div>Precio m<sup>3</sup></div>}
                                                     step="1"
+                                                    disabled={this.props.consult}
                                                     value={this.state.precioM3}
                                                     name="precioM3"
                                                 />
@@ -277,6 +280,7 @@ class CrearTarifa extends Component {
                                                     label="Precio Kilo"
                                                     required
                                                     step="2"
+                                                    disabled={this.props.consult}
                                                     value={this.state.precioKilo}
                                                     name="precioKilo"
                                                 />
@@ -292,6 +296,7 @@ class CrearTarifa extends Component {
                                                     required
                                                     label="Flete Minimo"
                                                     step="1"
+                                                    disabled={this.props.consult}
                                                     value={this.state.precioFlete}
                                                     name="precioFlete"
                                                 />
@@ -306,6 +311,7 @@ class CrearTarifa extends Component {
                                                     type="number"
                                                     label="Precio Minimo"
                                                     required
+                                                    disabled={this.props.consult}
                                                     step="2"
                                                     value={this.state.precioMinimo}
                                                     name="precioMinimo"
@@ -322,12 +328,16 @@ class CrearTarifa extends Component {
                                                 >
                                                     Cancelar
                                     </button>
-                                                <button
-                                                    type="submit"
-                                                    className="btn btn-primary primary-btn"
-                                                >
-                                                    Aceptar
-                                    </button>
+                                                {!this.props.consult &&
+                                                    <button
+                                                        type="submit"
+
+                                                        className="btn btn-primary primary-btn"
+                                                    >
+                                                        Aceptar
+                                                    </button>
+                                                }
+
                                             </div>
                                         </div>
                                     </div>
@@ -344,17 +354,17 @@ class CrearTarifa extends Component {
                                         <Tab label="Condiciones de Precio por Tipo de Servicio" {...this.a11yProps(2)} />
                                     </Tabs>
                                     <TabPanel value={this.state.tab} index={0}>
-                                        <ConceptosAdicionales edit={this.props.edit} select={this.props.select} conceptosAdicionales={this.state.conceptosAdicionales} addConcepto={this.addConcepto} removeConcepto={this.removeConcepto} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada}>
+                                        <ConceptosAdicionales consult={this.props.consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={this.state.conceptosAdicionales} addConcepto={this.addConcepto} removeConcepto={this.removeConcepto} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada}>
 
                                         </ConceptosAdicionales>
                                     </TabPanel>
                                     <TabPanel value={this.state.tab} index={1}>
-                                        <TipoCobro tiposCobroSeleccionado={this.state.tiposCobroSeleccionado} handleChange={this.handleChangeChecboxTiposCobro} all={this.state.tiposCobroAll}>
+                                        <TipoCobro consult={this.props.consult} tiposCobroSeleccionado={this.state.tiposCobroSeleccionado} handleChange={this.handleChangeChecboxTiposCobro} all={this.state.tiposCobroAll}>
 
                                         </TipoCobro>
                                     </TabPanel>
                                     <TabPanel value={this.state.tab} index={2}>
-                                        <TipoServicio tiposServicioSeleccionado={this.state.tiposServicioSeleccionado} handleChange={this.handleChangeChecboxTiposServicio} all={this.state.tiposServicioAll}>
+                                        <TipoServicio consult={this.props.consult} tiposServicioSeleccionado={this.state.tiposServicioSeleccionado} handleChange={this.handleChangeChecboxTiposServicio} all={this.state.tiposServicioAll}>
 
                                         </TipoServicio>
                                     </TabPanel>

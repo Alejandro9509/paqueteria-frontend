@@ -1,8 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="46" height="46.106" viewBox="0 0 46 46.106">
-<defs><style>.a{fill:#f9a03e;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style></defs>
-<g transform="translate(4.5 6.989)">
-<path d="M24.75,14.1,11.25,6.315"/>
-<path d="M48.5,33.8V16.2a4.342,4.342,0,0,0-2.444-3.807l-17.111-8.8a5.362,5.362,0,0,0-4.889,0l-17.111,8.8A4.342,4.342,0,0,0,4.5,16.2V33.8a4.342,4.342,0,0,0,2.444,3.807l17.111,8.8a5.362,5.362,0,0,0,4.889,0l17.111-8.8A4.342,4.342,0,0,0,48.5,33.8Z" transform="translate(-8 -8.939)"/>
-<path d="M-1.9,5.873,18,18.015,38.967,5.873"/>
-<path d="M18,37.061V18" transform="translate(0 1.003)"/>
-</g></svg>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.1.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 44 44" width="60" height="60" style="enable-background:new 0 0 44 44;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:currentColor;}
+</style>
+<g>
+	<g>
+		<path class="st0" d="M41.57,33.58L24.43,43.91c-0.4,0.24-0.9-0.05-0.9-0.51V24.96c0-0.21,0.11-0.4,0.29-0.51l17.14-10.33
+			c0.4-0.24,0.9,0.05,0.9,0.51v18.44C41.85,33.28,41.74,33.47,41.57,33.58z"/>
+		<path class="st0" d="M2.43,33.58l17.14,10.33c0.4,0.24,0.9-0.05,0.9-0.51V24.96c0-0.21-0.11-0.4-0.29-0.51L3.05,14.12
+			c-0.4-0.24-0.9,0.05-0.9,0.51v18.44C2.15,33.28,2.26,33.47,2.43,33.58z"/>
+		<path class="st0" d="M21.54,0.09L3.47,9.97c-0.52,0.28-0.54,1.03-0.03,1.33l18.08,10.98c0.24,0.15,0.55,0.15,0.79,0.01
+			l17.71-10.42c0.51-0.3,0.51-1.03,0-1.33L22.3,0.11C22.06-0.03,21.78-0.04,21.54,0.09z"/>
+	</g>
+</g>
+</svg>

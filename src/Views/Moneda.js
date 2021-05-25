@@ -10,6 +10,8 @@ import { DataGrid } from '@material-ui/data-grid';
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import { TextField, Tooltip } from "@material-ui/core";
+import { agregarMonedas, eliminarMonedas, modificarMonedas, obtenerMonedas, obtenerMonedasId } from "../Util/Contexts/MonedaContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -60,10 +62,8 @@ function Moneda() {
             "CreadoPor": state.CreadoPor,
             "ModificadoPor": state.ModificadoPor
         }
-        console.log(params)
         if (state.idMoneda != 0) {
-            const url = `${process.env.REACT_APP_API_URL}/Moneda/Modificar/` + state.idMoneda;
-            axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+            modificarMonedas(state.idMoneda, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 window.location.reload();
             }).catch(err => {
@@ -71,8 +71,7 @@ function Moneda() {
                 showSuccess("err")
             });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/Moneda/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+            agregarMonedas(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 window.location.reload();
             }).catch(err => {
@@ -87,8 +86,7 @@ function Moneda() {
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        axios.get(urlDelete, { headers }).then(respuesta => {
+        validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
 
             derecho = respuesta.data;
@@ -96,8 +94,7 @@ function Moneda() {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-            const url = `${process.env.REACT_APP_API_URL}/Moneda/Eliminar/` + id;
-            axios.delete(url, { headers }).then(respuesta => {
+            eliminarMonedas(id).then(respuesta => {
                 showSuccess(respuesta)
                 window.location.reload();
             }).catch(err => {
@@ -110,8 +107,7 @@ function Moneda() {
     }
 
     function handleShowModificar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Moneda/GetById/${id}`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerMonedasId(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -145,12 +141,6 @@ function Moneda() {
         });
     };
 
-    function handleSelectRow(id, event) {
-        setState({
-            ...state,
-            idMoneda: id
-        });
-    }
 
     const columns = React.useMemo(() => [
         {
@@ -222,8 +212,7 @@ function Moneda() {
     }, []);
 
     function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/Moneda/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerMonedas().then(respuesta => {
             setData(respuesta.data)
         });
     };
@@ -233,118 +222,8 @@ function Moneda() {
         //    'access-control-allow-origin': '*'
     }
 
-    function DefaultColumnFilter({
-        column: { filterValue, preFilteredRows, setFilter },
-    }) {
-        const count = preFilteredRows.length
+    
 
-        return (
-            <input
-                className="form-control"
-                value={filterValue || ''}
-                onChange={e => {
-                    setFilter(e.target.value || undefined)
-                }}
-                placeholder={`Buscar ${count} registros...`}
-            />
-        )
-    }
-
-    function Table({ columns, data }) {
-
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        )
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn
-            },
-            useFilters,
-            useSortBy
-        )
-
-        return (
-            <div className="col-md-12">
-                <table className="table" {...getTableProps()}>
-                    <thead>
-                        {headerGroups.map(headerGroup => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                <th>Acciones</th>
-                                {headerGroup.headers.map(column => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render('Name')}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
-                                            {column.isSorted
-                                                ? column.isSortedDesc
-                                                    ? <i className="fa fa-caret-up" />
-                                                    : <i className="fa fa-caret-down" />
-                                                : ''}
-                                        </span>
-                                        <div>{column.canFilter ? column.render('Filter') : null}</div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                        {rows.map(
-                            (row, i) => {
-                                prepareRow(row);
-                                return (
-                                    <tr {...row.getRowProps()}
-                                        onClick={handleSelectRow.bind(this, row.original.m_nIdMoneda)}
-                                        className={state.idMoneda === row.original.m_nIdMoneda ? classes.seleccionado : classes.noSeleccionado}>
-
-                                        <td>
-                                            <div>
-                                                <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdMoneda))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                                                <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdMoneda))} className="btn btn-default btn-sm"><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                                                <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdMoneda))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
-                                            </div>
-                                        </td>
-                                        {row.cells.map(cell => {
-                                            return (
-                                                <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                                            )
-                                        })}
-                                    </tr>
-                                )
-                            }
-                        )}
-                    </tbody>
-                </table>
-            </div>
-        )
-    }
-
-    const ruta = [
-        {
-            actual: false,
-            nombre: "Configuración",
-            ruta: "/Configuracion"
-        },
-        {
-            actual: true,
-            nombre: "Moneda",
-            ruta: "/Moneda"
-        },
-    ];
 
     return (
         <div >

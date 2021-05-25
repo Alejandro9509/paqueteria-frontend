@@ -1961,7 +1961,6 @@ a.waves-effect .waves-ripple {
   margin-bottom: 0;
 }
 .j-forms .label {
-  font-size: 14px;
   margin-bottom: 6px;
   line-height: 14px;
   height: 14px;
@@ -1999,7 +1998,7 @@ a.waves-effect .waves-ripple {
 .j-forms .checkbox,
 .j-forms .inline-group .radio,
 .j-forms .inline-group .checkbox {
-  padding: 9px 0 8px 32px;
+  padding: 10px 0 8px 32px;
 }
 .j-forms .radio-toggle,
 .j-forms .checkbox-toggle,

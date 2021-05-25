@@ -9,8 +9,10 @@ import { ReactComponent as Activo } from "../../iconos/Menu/palomita.svg";
 import { ReactComponent as NoActivo } from "../../iconos/Menu/cruz.svg";
 import { DataGrid } from '@material-ui/data-grid';
 import $ from "jquery";
-import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
 import AgregarFormatoImpresion from "./AgregarFormatoImpresion";
+import { toBase64 } from '../../Util/GlobalFunctions';
+import { agregarFormatosImpresion, obtenerFormatosImpresion } from '../../Util/Contexts/FormatosImpresionContext';
 window.jQuery = window.$ = $;
 const headers = {
     'Content-Type': 'application/json',
@@ -34,6 +36,8 @@ class FormatoImpresion extends Component {
             agregar: "Agregar",
             openDialog: false,
             height: window.innerHeight,
+            CreadoPor: localStorage.getItem("UsuarioId"),
+            ModificadoPor: localStorage.getItem("UsuarioId"),
             pantalla: 1,
             selected: {},
             dataSucursal: [],
@@ -55,18 +59,30 @@ class FormatoImpresion extends Component {
                 //     width: 300,
                 // },
                 {
-                    headerName: "Serie",
-                    field: "m_sSerie",
+                    headerName: "Formato",
+                    field: "m_sFormato",
                     width: 300,
                 }, {
-                    headerName: "Documento",
-                    field: "m_nIdTipoDocumento",
+                    headerName: "Tipo Proceso",
+                    field: "m_nTipoProceso",
                     width: 200,
                 }, {
-                    headerName: "Sucursal",
-                    field: "m_sSucursal",
+                    headerName: "Creado El",
+                    field: "m_dtCreadoEl",
+                    width: 200,
+                }, {
+                    headerName: "Creado Por",
+                    field: "m_nCreadoPor",
                     width: 125,
-                },
+                }, {
+                    headerName: "Modificado El",
+                    field: "m_dtModificadoEl",
+                    width: 200,
+                }, {
+                    headerName: "Modificado Por",
+                    field: "m_nModificadoPor",
+                    width: 150,
+                }
                 // {
                 //     headerName: "Estatus",
                 //     field: "m_nEstatus",
@@ -97,48 +113,47 @@ class FormatoImpresion extends Component {
         //         return;
         //     }
 
-            const url = `${process.env.REACT_APP_API_URL}/Folios/Eliminar/` + id;
-            axios.delete(url, { headers }).then(respuesta => {
-                console.log(respuesta);
-                showSuccess(respuesta.data)
-                this.getAllData();
-            }).catch(err => {
-                showSuccess(err)
-            });
+        const url = `${process.env.REACT_APP_API_URL}/Folios/Eliminar/` + id;
+        axios.delete(url, { headers }).then(respuesta => {
+            console.log(respuesta);
+            showSuccess(respuesta.data)
+            this.getAllData();
+        }).catch(err => {
+            showSuccess(err)
+        });
         // }).catch(err => {
         //     showSuccess(err)
         // });
     }
 
-    handleAceptar(data) {
-        const today = new Date();
-
+    async handleAceptar(data) {
+        let file = await toBase64(data.file[0])
+        let image = await toBase64(data.image[0])
         var params = {
-            m_nIdSucursal: data.idSucursalAgregar,
-            m_nIdTipoDocumento: data.idTipoDocumentoAgregar,
-            m_nIdFormato: data.idFormatoImpresion,
-            m_sSerie: data.serie,
-            m_nFolioInicial: parseInt(data.folioInicial),
-            m_nFolioFinal: parseInt(data.folioFinal),
-            m_dtCreadoEl: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
-            m_nCreadoPor: localStorage.getItem("UsuarioId")
+            m_sFormato: data.formato,
+            m_nTipoProceso: data.idTipoProcesoAgregar,
+            m_sFormatoWDE: file,
+            m_sNombreArchivo: data.nombre,
+            m_sImagen: image,
+            m_dActivo: 1,
+            "m_nCreadoPor": this.state.CreadoPor,
+            "m_nModificadoPor": this.state.ModificadoPor
         }
 
-            const url = `${process.env.REACT_APP_API_URL}/Folios/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+        agregarFormatosImpresion(params).then(respuesta => {
 
-                showSuccess(respuesta.data)
-                $('.nav-tabs li ').removeClass('active');
-                $('.nav-tabs li').eq(0).addClass('active');
-                $('.tab-content div ').removeClass('in show');
-                $('#Listado').addClass('in show');
+            showSuccess(respuesta.data)
+            $('.nav-tabs li ').removeClass('active');
+            $('.nav-tabs li').eq(0).addClass('active');
+            $('.tab-content div ').removeClass('in show');
+            $('#Listado').addClass('in show');
 
-                this.getAllData()
-                this.setState({ pantalla: 1})
-            }).catch(err => {
-                console.log(err)
-                showSuccess(err)
-            });
+            this.getAllData()
+            this.setState({ pantalla: 1 })
+        }).catch(err => {
+            console.log(err)
+            showSuccess(err)
+        });
 
     }
 
@@ -147,14 +162,13 @@ class FormatoImpresion extends Component {
     }
 
     getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/Folios/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
-            this.setState({ data: respuesta.data, agregar:"Agregar" })
+        obtenerFormatosImpresion().then(respuesta => {
+            this.setState({ data: respuesta.data, agregar: "Agregar" })
         });
-    }
+    } 
 
-    handleClose () {
-        this.setState({openDialog: false})
+    handleClose() {
+        this.setState({ openDialog: false })
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(0).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -177,7 +191,18 @@ class FormatoImpresion extends Component {
                 {/*</Dialog>*/}
 
                 <header className="topbar clearfix">
-                    <Cabecera />
+                    <Cabecera titulo="Formatos de Impresión" >
+                        <div className="page-header">
+                            <ul className="list-page-breadcrumb">
+                                <li>
+                                    <a href="/Configuraciones" className="color-mapeo">
+                                        Configuración <i className="zmdi zmdi-chevron-right" />
+                                    </a>
+                                </li>
+                                <li className="active-page">Formatos de Impresión</li>
+                            </ul>
+                        </div>
+                    </Cabecera>
                 </header>
 
                 {/*Leftbar Start Here*/}
@@ -187,28 +212,11 @@ class FormatoImpresion extends Component {
 
                 <section className="main-container">
                     <div className="container-fluid">
-                        <div className="page-header filled full-block light">
-                            <div className="row">
-                                <div className="col-md-6 col-sm-6">
-                                    <h2>Folios</h2>
-                                </div>
-                                <div className="col-md-6 col-sm-6">
-                                    <ul className="list-page-breadcrumb">
-                                        <li>
-                                            <a href="/Configuraciones" className="color-mapeo">
-                                                Configuración <i className="zmdi zmdi-chevron-right" />
-                                            </a>
-                                        </li>
-                                        <li className="active-page">Folios</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
 
 
                         <ul className="nav navStatica nav-tabs">
                             <li className="active">
-                                <a data-toggle="tab" data_id="1" href="#Listado" onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar"}); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
+                                <a data-toggle="tab" data_id="1" href="#Listado" onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
                                     <i className="fa fa-list" /> Listado
                                 </a>
                             </li>
@@ -236,10 +244,10 @@ class FormatoImpresion extends Component {
                                                     columns={columns}
                                                     density="compact"
                                                     pageSize={Math.floor((this.state.height - 310) / 30)}
-                                                    getRowId={(row) => row.m_nIdFolio}
+                                                    getRowId={(row) => row.m_nIdFormato}
                                                     onRowSelected={(row) => {
                                                         this.setState({
-                                                            idTarifa: row.data.m_nIdFolio
+                                                            idTarifa: row.data.m_nIdFormato
                                                         })
                                                     }}
                                                 />
@@ -254,7 +262,7 @@ class FormatoImpresion extends Component {
                             <div id="Agregar" className="tab-pane fade">
                                 {
                                     this.state.pantalla === 2 &&
-                                    <AgregarFormatoImpresion onSubmit={this.handleAceptar} onClose={this.handleClose}/>
+                                    <AgregarFormatoImpresion onSubmit={this.handleAceptar} onClose={this.handleClose} />
                                 }
 
                             </div>

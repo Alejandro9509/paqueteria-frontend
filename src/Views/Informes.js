@@ -22,7 +22,6 @@ import {
     Stepper,
 } from "@material-ui/core";
 
-import { trackPromise } from "react-promise-tracker";
 
 import DataTable from "react-data-table-component";
 import $ from "jquery";
@@ -48,6 +47,15 @@ import SearchIcon from "@material-ui/icons/Search";
 import { DataGrid } from "@material-ui/data-grid";
 import Noty from "noty";
 import { dataGridLocaleText } from "../Constants";
+import { obtenerCiudades } from "../Util/Contexts/CiudadesContext";
+import { obtenerEstatusInforme } from "../Util/Contexts/EstatusContext";
+import { obtenerGuia, obtenerGuiaPendientes } from "../Util/Contexts/GuiaContext";
+import { obtenerOperadores } from "../Util/Contexts/OperadoresContext";
+import { obtenerUnidadesTipo } from "../Util/Contexts/UnidadesContext";
+import { obtenerRutas } from "../Util/Contexts/RutasContext";
+import { agregarInformes, cancelarInformes, eliminarInformes, modificarInformes, obtenerInformes, obtenerInformesId } from "../Util/Contexts/InformesContext";
+import { obtenerSucursales } from "../Util/Contexts/SucursalContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -132,8 +140,7 @@ function Informes({ history }) {
     const [dataGuiasCubicar, setDataGuiasCubicar] = React.useState([]);
 
     function getAllDataRutas() {
-        const url = `${process.env.REACT_APP_API_URL}/Rutas/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerRutas().then((respuesta) => {
             setDataRutas(respuesta.data);
         });
     }
@@ -261,8 +268,7 @@ function Informes({ history }) {
     ]);
 
     function getAllGuias() {
-        const url = `${process.env.REACT_APP_API_URL}/Guia/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerGuia().then((respuesta) => {
             setGuias(respuesta.data);
         });
     }
@@ -420,132 +426,6 @@ function Informes({ history }) {
                 }}
                 placeholder={`Buscar ${count} registros...`}
             />
-        );
-    }
-
-    function Table({ columns, data }) {
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        );
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn,
-            },
-            useFilters,
-            useSortBy
-        );
-
-        return (
-            <div
-                className="col-md-12"
-                style={{ overflowX: "scroll", height: "100%" }}
-            >
-                <table className="table  tabla-listado" {...getTableProps()}>
-                    <thead>
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                <th>Acciones</th>
-                                {headerGroup.headers.map((column) => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render("Name")}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
-                                            {column.isSorted ? (
-                                                column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up" />
-                                                ) : (
-                                                    <i className="fa fa-caret-down" />
-                                                )
-                                            ) : (
-                                                ""
-                                            )}
-                                        </span>
-                                        <div>
-                                            {column.canFilter ? column.render("Filter") : null}
-                                        </div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                        {rows.map((row, i) => {
-                            prepareRow(row);
-                            return (
-                                <tr
-                                    {...row.getRowProps()}
-                                    onClick={handleSelectRow.bind(
-                                        this,
-                                        row.original.m_nIdInforme
-                                    )}
-                                    className={
-                                        state.IdInforme === row.original.m_nIdInforme
-                                            ? classes.seleccionado
-                                            : classes.noSeleccionado
-                                    }
-                                >
-                                    <td>
-                                        <div>
-                                            <a
-                                                onClick={() =>
-                                                    handleShowModificar(row.original.m_nIdInforme)
-                                                }
-                                                className="btn btn-default btn-sm"
-                                            >
-                                                <i
-                                                    className="fa fa-pencil-square-o"
-                                                    style={{ color: "#F9A03E" }}
-                                                />
-                                            </a>
-                                            <a
-                                                className="btn btn-default btn-sm"
-                                                onClick={() =>
-                                                    handleShowModificar(row.original.m_nIdInforme)
-                                                }
-                                            >
-                                                <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                                            </a>
-
-                                            <a
-                                                href="#"
-                                                className="btn btn-default btn-sm"
-                                                onClick={() =>
-                                                    handleEliminar(row.original.m_nIdInforme)
-                                                }
-                                            >
-                                                <i
-                                                    className="zmdi zmdi-delete"
-                                                    style={{ color: "#F30B0B" }}
-                                                />
-                                            </a>
-                                        </div>
-                                    </td>
-                                    {row.cells.map((cell) => {
-                                        return (
-                                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                        );
-                                    })}
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
-            </div>
         );
     }
 
@@ -767,12 +647,8 @@ function Informes({ history }) {
             m_nCreadoPor: state.CreadoPor,
             m_arrClsProInformeGuia: dataGuias,
         };
-        console.log(JSON.stringify(params));
-        //debugger;
         if (state.IdInforme != 0) {
-            const url = `${process.env.REACT_APP_API_URL}/Informes/Modificar/${state.IdInforme}`;
-            axios
-                .put(url, Object.assign({}, params), { headers2 })
+            modificarInformes(state.IdInforme, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     getAllData();
@@ -786,9 +662,7 @@ function Informes({ history }) {
                     showSuccess("El Usuario no tiene derecho para modificar");
                 });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/Informes/Agregar`;
-            axios
-                .post(url, Object.assign({}, params), { headers })
+            agregarInformes(params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     console.log(respuesta.data);
@@ -898,7 +772,7 @@ function Informes({ history }) {
             PlacasRemolque2: state.IdRemolque2 ? state.IdRemolque2.m_sPlacas : "",
             PlacasDolly: state.IdTipoUnidad ? state.IdTipoUnidad.m_sPlacas : ""
         })
-    },[state.IdRemolque1, state.IdRemolque2, state.IdTipoUnidad])
+    }, [state.IdRemolque1, state.IdRemolque2, state.IdTipoUnidad])
 
     function TableOperadores({ columns, data, select }) {
         const defaultColumn = React.useMemo(
@@ -1330,9 +1204,8 @@ function Informes({ history }) {
 
     function handleShowCancelar(event) {
         event.stopPropagation()
-        const url = `${process.env.REACT_APP_API_URL}/Informes/GetById/${state.IdInforme}`;
         var today = new Date();
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerInformesId(state.IdInforme).then((respuesta) => {
             setState({
                 ...state,
                 FolioInforme: respuesta.data.m_nIdInforme,
@@ -1373,22 +1246,18 @@ function Informes({ history }) {
             usuarioCancelacion: localStorage.getItem("UsuarioId"),
             fechaCancelacion: state.fechaCancelado,
         };
-        const url = `${process.env.REACT_APP_API_URL}/Informes/Cancelar/${state.IdInforme}`;
-        axios.put(url, Object.assign({}, params), { headers }).then((respuesta) => {
+        cancelarInformes(state.IdInforme).then((respuesta) => {
             console.log(respuesta.data);
         });
     };
 
     function getAllGuiasFrom(cubicar) {
-        const url = !cubicar
-            ? `${process.env.REACT_APP_API_URL}/Guia/GetListadoPendientes/` +
-            state.IdCiudadOrigen.m_nIdCiudad +
-            "/" +
-            state.IdCiudadDestino.m_nIdCiudad
-            : `${process.env.REACT_APP_API_URL}/Guia/GetListado`;
-
-        trackPromise(
-            axios.get(url, { headers }).then(async (respuesta) => {
+        if (!cubicar) {
+            obtenerGuiaPendientes(state.IdCiudadOrigen.m_nIdCiudad, state.IdCiudadDestino.m_nIdCiudad).then((respuesta) => {
+                setDataGuias(respuesta.data);
+            })
+        } else {
+            obtenerGuia().then(async (respuesta) => {
                 setDataGuias(respuesta.data);
                 if (cubicar) {
                     let array = await cubicarGuias(
@@ -1401,12 +1270,13 @@ function Informes({ history }) {
                     setInformes(array);
                 }
             })
-        );
+        }
+
+
     }
 
     function getAllCiudades() {
-        const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerCiudades().then((respuesta) => {
             setDataOrigenes(respuesta.data);
         });
     }
@@ -1419,36 +1289,26 @@ function Informes({ history }) {
         });
       }
      */
-    async function getAllUnidadesRemolques(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Unidades/ByTipoUnidad/${id}`;
-        await axios.get(url, { headers }).then((respuesta) => {
+     function getAllUnidadesTipo(id) {
+        obtenerUnidadesTipo(id).then((respuesta) => {
             setDataUnidadesRem(respuesta.data);
-        });
-    }
-    async function getAllUnidadesDolly(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Unidades/ByTipoUnidad/${id}`;
-        await axios.get(url, { headers }).then((respuesta) => {
-            setDataUnidadesDol(respuesta.data);
         });
     }
 
     function getAllOperadores() {
-        const url = `${process.env.REACT_APP_API_URL}/Operadores/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerOperadores().then((respuesta) => {
             setDataOperadores(respuesta.data);
         });
     }
 
     function getAllEstatusInformes() {
-        const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoInformes`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerEstatusInforme().then((respuesta) => {
             setEstatusInformes(respuesta.data);
         });
     }
 
     function getAllSucursales() {
-        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerSucursales().then((respuesta) => {
             setDataSucursal(respuesta.data);
         });
     }
@@ -1480,8 +1340,7 @@ function Informes({ history }) {
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
-        const url = `${process.env.REACT_APP_API_URL}/Unidadd/GetById/` + id;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerInformesId(id).then((respuesta) => {
             setState({
                 ...state,
                 agregar: "Modificar"
@@ -1491,9 +1350,7 @@ function Informes({ history }) {
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        axios
-            .get(urlDelete, { headers })
+        validarPermisos(state)
             .then((respuesta) => {
                 //showSuccess(respuesta.data)
 
@@ -1503,9 +1360,7 @@ function Informes({ history }) {
                     return;
                 }
 
-                const url = `${process.env.REACT_APP_API_URL}/Unidadd/Eliminar/` + id;
-                axios
-                    .get(url, { headers })
+                eliminarInformes(id)
                     .then((respuesta) => {
                         console.log(respuesta);
                     })
@@ -1533,15 +1388,14 @@ function Informes({ history }) {
         getAllSucursales();
         getAllOperadores();
         getAllCiudades();
-        getAllUnidadesRemolques(8);
-        getAllUnidadesDolly(9);
+        getAllUnidadesTipo(8);
+        getAllUnidadesTipo(9);
         //getAllTipoUnidad();
         getAllDataRutas();
     }, []);
 
     function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/Informes/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerInformes().then((respuesta) => {
             setData(respuesta.data);
         });
     }
@@ -2802,79 +2656,79 @@ function Informes({ history }) {
                                                                                             <div className="col-sm-12 col-md-6 unit">
 
                                                                                                 <div className="input">
-                                                                                                <Autocomplete
-                                                                                        freeSolo
-                                                                                        value={state.IdRemolque2}
-                                                                                        onChange={(event, newValue) =>
-                                                                                            setState({
-                                                                                                ...state,
-                                                                                                IdRemolque2: newValue,
-                                                                                            })
-                                                                                        }
-                                                                                        id="IdRemolque2Viaje"
-                                                                                        disableClearable
-                                                                                        forcePopupIcon={false}
-                                                                                        options={dataUnidadesRem}
-                                                                                        getOptionLabel={(option) =>
-                                                                                            option.m_sDescripcion
-                                                                                        }
-                                                                                        variant="outlined"
-                                                                                        style={{
-                                                                                            transform: "translate(14px, 10px) scale(1) !important"
-                                                                                        }}
-                                                                                        renderInput={(params) => (
-                                                                                            <div>
-                                                                                                <TextField
-                                                                                                    variant="outlined"
-                                                                                                    label="Remolque 2"
-                                                                                                    margin="dense"
-                                                                                                    className="form-control"
-                                                                                                    {...params}
-                                                                                                    InputProps={{
-                                                                                                        ...params.InputProps,
-                                                                                                        style: {
-                                                                                                            height: 24,
-                                                                                                        },
-                                                                                                        type: "search",
-                                                                                                        disableUnderline: true,
-                                                                                                        endAdornment: (
-                                                                                                            <InputAdornment position="end">
-                                                                                                                <IconButton
-                                                                                                                    padding="0px"
-                                                                                                                    style={{
-                                                                                                                        paddingRight:
-                                                                                                                            "0px",
+                                                                                                    <Autocomplete
+                                                                                                        freeSolo
+                                                                                                        value={state.IdRemolque2}
+                                                                                                        onChange={(event, newValue) =>
+                                                                                                            setState({
+                                                                                                                ...state,
+                                                                                                                IdRemolque2: newValue,
+                                                                                                            })
+                                                                                                        }
+                                                                                                        id="IdRemolque2Viaje"
+                                                                                                        disableClearable
+                                                                                                        forcePopupIcon={false}
+                                                                                                        options={dataUnidadesRem}
+                                                                                                        getOptionLabel={(option) =>
+                                                                                                            option.m_sDescripcion
+                                                                                                        }
+                                                                                                        variant="outlined"
+                                                                                                        style={{
+                                                                                                            transform: "translate(14px, 10px) scale(1) !important"
+                                                                                                        }}
+                                                                                                        renderInput={(params) => (
+                                                                                                            <div>
+                                                                                                                <TextField
+                                                                                                                    variant="outlined"
+                                                                                                                    label="Remolque 2"
+                                                                                                                    margin="dense"
+                                                                                                                    className="form-control"
+                                                                                                                    {...params}
+                                                                                                                    InputProps={{
+                                                                                                                        ...params.InputProps,
+                                                                                                                        style: {
+                                                                                                                            height: 24,
+                                                                                                                        },
+                                                                                                                        type: "search",
+                                                                                                                        disableUnderline: true,
+                                                                                                                        endAdornment: (
+                                                                                                                            <InputAdornment position="end">
+                                                                                                                                <IconButton
+                                                                                                                                    padding="0px"
+                                                                                                                                    style={{
+                                                                                                                                        paddingRight:
+                                                                                                                                            "0px",
+                                                                                                                                    }}
+                                                                                                                                    onClick={() => {
+                                                                                                                                        setState({
+                                                                                                                                            ...state,
+                                                                                                                                            identificadorModal:
+                                                                                                                                                "IdRemolque2",
+                                                                                                                                            tipoModal: 4,
+                                                                                                                                            openDialog: true,
+                                                                                                                                        });
+                                                                                                                                    }}
+                                                                                                                                >
+                                                                                                                                    <PageviewIcon
+                                                                                                                                        style={{
+                                                                                                                                            color:
+                                                                                                                                                "#F9A03E",
+                                                                                                                                            fontSize: 32,
+                                                                                                                                            paddingInlineEnd: 0,
+                                                                                                                                            paddingRight: 0,
+                                                                                                                                            paddingBlockEnd: 0,
+                                                                                                                                            paddingLeft: 0,
+                                                                                                                                            paddingBlock: 0,
+                                                                                                                                        }}
+                                                                                                                                    />
+                                                                                                                                </IconButton>
+                                                                                                                            </InputAdornment>
+                                                                                                                        ),
                                                                                                                     }}
-                                                                                                                    onClick={() => {
-                                                                                                                        setState({
-                                                                                                                            ...state,
-                                                                                                                            identificadorModal:
-                                                                                                                                "IdRemolque2",
-                                                                                                                            tipoModal: 4,
-                                                                                                                            openDialog: true,
-                                                                                                                        });
-                                                                                                                    }}
-                                                                                                                >
-                                                                                                                    <PageviewIcon
-                                                                                                                        style={{
-                                                                                                                            color:
-                                                                                                                                "#F9A03E",
-                                                                                                                            fontSize: 32,
-                                                                                                                            paddingInlineEnd: 0,
-                                                                                                                            paddingRight: 0,
-                                                                                                                            paddingBlockEnd: 0,
-                                                                                                                            paddingLeft: 0,
-                                                                                                                            paddingBlock: 0,
-                                                                                                                        }}
-                                                                                                                    />
-                                                                                                                </IconButton>
-                                                                                                            </InputAdornment>
-                                                                                                        ),
-                                                                                                    }}
-                                                                                                />
-                                                                                            </div>
-                                                                                        )}
-                                                                                    />
+                                                                                                                />
+                                                                                                            </div>
+                                                                                                        )}
+                                                                                                    />
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
@@ -3893,7 +3747,7 @@ function Informes({ history }) {
                         </button>
 
                                                 <button
-                                                    onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar", guias:[] }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}
+                                                    onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar", guias: [] }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}
                                                     className="btn btn-secondary primary-btn"
                                                     style={{ margin: "10px" }}
                                                 >

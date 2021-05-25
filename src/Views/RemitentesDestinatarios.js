@@ -28,6 +28,12 @@ import { DataGrid, GridToolbarExport, GridToolbarContainer } from '@material-ui/
 import { dataGridLocaleText } from '../Constants/index'
 
 import Noty from 'noty';
+import { obtenerCodigoPostalEstado } from "../Util/Contexts/CodigoPostalContext";
+import { obtenerCliente } from "../Util/Contexts/ClientesContext";
+import { agregarRemitentesDestinatarios, eliminarRemitentesDestinatarios, modificarRemitentesDestinatarios, obtenerRemitentesDestinatarios, obtenerRemitentesDestinatariosId, validarNumeroRemitente } from "../Util/Contexts/RemitenteDestinatarioContext";
+import { obtenerPaises } from "../Util/Contexts/PaisesContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
+import { obtenerEstadosPais } from "../Util/Contexts/EstadosContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -38,23 +44,9 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-const styles = {
-    seleccionado: {
-        backgroundColor: "#FCC88F",
-    },
-    noSeleccionado: {
-        backgroundColor: "#FFFFFF",
-    }
-};
-const useStyles = makeStyles(styles);
 
 window.jQuery = window.$ = $;
-const headers = {
-    "Content-Type": "application/json",
-};
 function RemitenteDestinatario(props) {
-
-    const classes = useStyles();
 
     const [dataPais, setDataPais] = React.useState([]);
     const [dataEstado, setDataEstado] = React.useState([]);
@@ -125,10 +117,11 @@ function RemitenteDestinatario(props) {
             agregar: "Agregar",
             importar: "",
         });
+        $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
+
     }
     function getAllClientes() {
-        const url = `${process.env.REACT_APP_API_URL}/Clientes/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerCliente().then((respuesta) => {
             console.log(respuesta);
 
             setDataClientes(respuesta.data);
@@ -171,8 +164,7 @@ function RemitenteDestinatario(props) {
     }
 
     function getAllCodigosPostales(idEstado) {
-        const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListadoPorEstado/` + idEstado;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerCodigoPostalEstado(idEstado).then((respuesta) => {
             console.log(respuesta);
 
             setDataCodigoPostal(respuesta.data);
@@ -180,10 +172,8 @@ function RemitenteDestinatario(props) {
     }
 
     const handleChangeNumero = (event) => {
-        const url =
-            `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/ValidaNumeroRemDes/` +
-            state.numero;
-        axios.get(url, { headers }).then((respuesta) => {
+        event.preventDefault()
+        validarNumeroRemitente(state).then((respuesta) => {
             if (respuesta.data != "") {
                 showSuccess(respuesta.data.m_sMensaje);
                 console.log(respuesta.data);
@@ -232,17 +222,15 @@ function RemitenteDestinatario(props) {
             agregar: "Agregar",
             importar: "",
         };
-        console.log(JSON.stringify(params));
-        debugger;
         if (state.idRemitenteDestinatario != 0) {
-            const url =
-                `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/Modificar/` +
-                state.idRemitenteDestinatario;
-            axios
-                .put(url, Object.assign({}, params), { headers })
+            modificarRemitentesDestinatarios(state.idRemitenteDestinatario, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     getAllDataRemDes();
+                    $('.nav-tabs li ').removeClass('active');
+                    $('.nav-tabs li').eq(0).addClass('active');
+                    $('.tab-content div ').removeClass('in show');
+                    $('#Listado').addClass('in show');
                     //window.location.reload();
                 })
                 .catch((err) => {
@@ -250,11 +238,13 @@ function RemitenteDestinatario(props) {
                     showSuccess("err");
                 });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/Agregar`;
-            axios
-                .post(url, Object.assign({}, params), { headers })
+            agregarRemitentesDestinatarios(params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
+                    $('.nav-tabs li ').removeClass('active');
+                    $('.nav-tabs li').eq(0).addClass('active');
+                    $('.tab-content div ').removeClass('in show');
+                    $('#Listado').addClass('in show');
                     getAllDataRemDes();
                     //window.location.reload();
                 })
@@ -267,8 +257,7 @@ function RemitenteDestinatario(props) {
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.creadoPor}/${state.DerechoBorrar}/3`;
-        axios.get(urlDelete, { headers }).then(respuesta => {
+        validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
 
             derecho = respuesta.data;
@@ -277,10 +266,7 @@ function RemitenteDestinatario(props) {
                 return;
             }
 
-            const url =
-                `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/Eliminar/` + id;
-            axios
-                .delete(url, { headers })
+            eliminarRemitentesDestinatarios(id)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     getAllDataRemDes();
@@ -294,11 +280,7 @@ function RemitenteDestinatario(props) {
     }
 
     function handleShowModificar(id) {
-        console.log(id);
-        const url =
-            `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/GetById/` + id;
-        axios.get(url, { headers }).then((respuesta) => {
-            console.log(respuesta.data);
+        obtenerRemitentesDestinatariosId(id).then((respuesta) => {
             getAllEstados(respuesta.data.m_nIdPais);
             setState({
                 ...state,
@@ -328,6 +310,8 @@ function RemitenteDestinatario(props) {
                 correoElectronico: respuesta.data.m_sCorreoElectronico,
                 telefono: respuesta.data.m_sTelefono,
             });
+            $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
+
         });
     }
 
@@ -338,9 +322,18 @@ function RemitenteDestinatario(props) {
             renderCell: (row) => {
                 return (
                     <div>
-                        <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdRemitenteDestinatario))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                        <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdRemitenteDestinatario))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                        <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdRemitenteDestinatario))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                        <Tooltip title="Modificar">
+                            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdRemitenteDestinatario))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+
+                        </Tooltip>
+                        <Tooltip title="Consultar">
+                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdRemitenteDestinatario))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+
+                        </Tooltip>
+                        <Tooltip title="Eliminar">
+                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdRemitenteDestinatario))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+
+                        </Tooltip>
                     </div>
                 )
             }
@@ -391,28 +384,6 @@ function RemitenteDestinatario(props) {
         }
     ]);
 
-    const columns2 = React.useMemo(() => [
-        {
-            Name: "Número",
-            accessor: "m_nNumero",
-        },
-        {
-            Name: "RFC",
-            accessor: "m_sRFC",
-        },
-        {
-            Name: "Remitente-Destinatario",
-            accessor: "m_sNombre",
-        },
-        {
-            Name: "Núm.Cliente",
-            accessor: "m_nNumeroCliente",
-        },
-        {
-            Name: "Cliente",
-            accessor: "m_sNombreFiscal",
-        },
-    ]);
 
     const columnsCP = React.useMemo(() => [
         {
@@ -576,119 +547,6 @@ function RemitenteDestinatario(props) {
         );
     }
 
-    function Table({ columns, data }) {
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        );
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn,
-            },
-            useFilters,
-            useSortBy
-        );
-
-        return (
-            <div className="col-md-12">
-                <table className="table" {...getTableProps()}>
-                    <thead>
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                <th>Acciones</th>
-                                {headerGroup.headers.map((column) => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render("Name")}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
-                                            {column.isSorted ? (
-                                                column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up" />
-                                                ) : (
-                                                    <i className="fa fa-caret-down" />
-                                                )
-                                            ) : (
-                                                ""
-                                            )}
-                                        </span>
-                                        <div>
-                                            {column.canFilter ? column.render("Filter") : null}
-                                        </div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                        {rows.map((row, i) => {
-                            prepareRow(row);
-                            return (
-                                <tr {...row.getRowProps()}
-                                    onClick={handleSelectRow.bind(this, row.original.m_nIdRemitenteDestinatario)}
-                                    className={state.idRemitenteDestinatario === row.original.m_nIdRemitenteDestinatario ? classes.seleccionado : classes.noSeleccionado}>
-                                    <td>
-                                        <div>
-                                            <a
-                                                href="#Agregar"
-                                                role="tab"
-                                                data-toggle="tab"
-                                                onClick={() => handleShowModificar(row.original.m_nIdRemitenteDestinatario)}
-                                                className="btn btn-default btn-sm"
-                                            >
-                                                <i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} />
-                                            </a>
-
-                                            <a
-                                                href="#"
-                                                className="btn btn-default btn-sm"
-                                                onClick={() =>
-                                                    handleShowAgregar(
-                                                        row.original.m_nIdRemitenteDestinatario
-                                                    )
-                                                }
-                                            >
-                                                <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                                            </a>
-                                            <a
-                                                href="#"
-                                                className="btn btn-default btn-sm"
-                                                onClick={() =>
-                                                    handleEliminar(
-                                                        row.original.m_nIdRemitenteDestinatario
-                                                    )
-                                                }
-                                            >
-                                                <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
-                                            </a>
-                                        </div>
-                                    </td>
-                                    {row.cells.map((cell) => {
-                                        return (
-                                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                        );
-                                    })}
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
-            </div>
-        );
-    }
 
     function TableClientes({ columns, data, select }) {
         const defaultColumn = React.useMemo(
@@ -785,15 +643,13 @@ function RemitenteDestinatario(props) {
     }, []);
 
     function getAllDataRemDes() {
-        const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerRemitentesDestinatarios().then((respuesta) => {
             setData(respuesta.data);
         });
     }
 
     function getAllPaises() {
-        const url = `${process.env.REACT_APP_API_URL}/Pais/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerPaises().then((respuesta) => {
             setDataPais(respuesta.data);
             getAllEstados(respuesta.data[0].m_nIdPais);
         });
@@ -817,8 +673,7 @@ function RemitenteDestinatario(props) {
 
     function getAllEstados(id) {
         console.log(id);
-        const url = `${process.env.REACT_APP_API_URL}/Estados/ByPais/` + id;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerEstadosPais(id).then((respuesta) => {
             console.log(respuesta.data);
             setDataEstado(respuesta.data);
             getAllCodigosPostales(21)
@@ -878,7 +733,7 @@ function RemitenteDestinatario(props) {
 
                 <ul className="nav navStatica nav-tabs">
                     <li className="active">
-                        <a data-toggle="tab" href="#Listado">
+                        <a onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
                             <i className="fa fa-list" />
               Listado
             </a>
@@ -907,7 +762,7 @@ function RemitenteDestinatario(props) {
                     <div
                         className="widget-wrap"
                         id="Listado"
-                        className="tab-pane fade in active"
+                        className="tab-pane fade in show"
                     >
                         <div className="widget-wrap">
                             <div className="widget-content">
@@ -1345,9 +1200,8 @@ function RemitenteDestinatario(props) {
                                                                         className="col-md-12"
                                                                     >
                                                                         <button
-                                                                            href="#Listado" role="tab" data-toggle="tab"
-                                                                            data-layout="topCenter"
-                                                                            data-type="information"
+                                                                            type="button"
+                                                                            onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}
                                                                             className="btn btn-secondary secondary-btn"
                                                                         >
                                                                             Cancelar

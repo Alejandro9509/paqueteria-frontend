@@ -10,6 +10,8 @@ import { DataGrid } from '@material-ui/data-grid';
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import { TextField, Tooltip } from "@material-ui/core";
+import { agregarEstatusViaje, eliminarEstatusViaje, modificarEstatusViaje, obtenerEstatusViajeId, obtenerEstatusViaje } from "../Util/Contexts/EstatusViajeContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -34,17 +36,9 @@ function EstatusViaje() {
 
     const classes = useStyles();
     const [data, setData] = React.useState([])
-    const dataEstatus = [{
-        idEstatus: 1,
-        tipoEstatus: "Disponible"
-    }, {
-        idEstatus: 2,
-        tipoEstatus: "No Disponible"
-    }];
-
     const [state, setState] = React.useState({
         idEstatusViaje: 0,
-        DerechoBorrar: 81,
+        DerechoBorrar: 93,
         estatusViaje: "",
         abreviacionViaje: "",
         tipoEstatusViaje: 0,
@@ -76,8 +70,7 @@ function EstatusViaje() {
         }
         console.log(params)
         if (state.idEstatusViaje != 0) {
-            const url = `${process.env.REACT_APP_API_URL}/EstatusViajes/Modificar/` + state.idEstatusViaje;
-            axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+            modificarEstatusViaje(state.idEstatusViaje, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData();
             }).catch(err => {
@@ -85,8 +78,7 @@ function EstatusViaje() {
                 showSuccess("err")
             });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/EstatusViajes/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+            agregarEstatusViaje(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
             }).catch(err => {
@@ -99,19 +91,15 @@ function EstatusViaje() {
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        axios.get(urlDelete, { headers }).then(respuesta => {
+        validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
-
             derecho = respuesta.data;
             if (derecho == false) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-
-            const url = `${process.env.REACT_APP_API_URL}/EstatusViajes/Eliminar/` + id;
-            axios.delete(url, { headers }).then(respuesta => {
-                showSuccess(respuesta.data)
+            eliminarEstatusViaje(id).then(respuesta => {
+                showSuccess(respuesta)
                 getAllData()
             }).catch(err => {
                 showSuccess(err)
@@ -122,8 +110,8 @@ function EstatusViaje() {
     }
 
     function handleShowModificar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/EstatusViajes/GetById/${id}`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerEstatusViajeId(id).then(respuesta => {
+            console.log(respuesta.data)
             setState({
                 ...state,
                 agregar: "Modificar",
@@ -141,8 +129,7 @@ function EstatusViaje() {
     }
 
     function handleShowConsultar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/EstatusViajes/GetById/${id}`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerEstatusViajeId(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -258,8 +245,7 @@ function EstatusViaje() {
     }, []);
 
     function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/EstatusViajes/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerEstatusViaje().then(respuesta => {
             setData(respuesta.data)
         });
     };

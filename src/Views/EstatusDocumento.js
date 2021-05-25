@@ -6,6 +6,7 @@ import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import { DataGrid } from '@material-ui/data-grid';
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
+import {obtenerEstatusDocumentos} from "../Util/Contexts/EstatusContext"
 
 function showSuccess(mensaje) {
     new Noty({
@@ -61,8 +62,7 @@ function EstatusDocumento() {
     }, []);
 
     function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoDocumentos`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerEstatusDocumentos().then(respuesta => {
             setData(respuesta.data)
         });
     };
@@ -110,7 +110,7 @@ function EstatusDocumento() {
                     </ul>
 
                     <div className="row" className="tab-content">
-                        <div className="widget-wrap" id="Listado" className="tab-pane fade in active">
+                        <div className="widget-wrap" id="Listado" className="tab-pane fade in show">
                             <div className="widget-wrap">
                                 <div className="widget-content">
                                     <div className="row" style={{ height: state.height - 250, width: '100%' }}>

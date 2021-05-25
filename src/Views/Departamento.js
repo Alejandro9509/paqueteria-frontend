@@ -15,6 +15,9 @@ import { DataGrid } from '@material-ui/data-grid';
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import { TextField, Tooltip } from "@material-ui/core";
+import $ from "jquery";
+import { agregarDepartamentos, eliminarDepartamentos, modificarDepartamentos, obtenerDepartamentos, obtenerDepartamentosId } from "../Util/Contexts/DepartamentoContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -33,6 +36,9 @@ const styles = {
         backgroundColor: "#FFFFFF",
     }
 };
+
+window.jQuery = window.$ = $;
+
 const useStyles = makeStyles(styles);
 
 function Departamento() {
@@ -64,21 +70,26 @@ function Departamento() {
             "CreadoPor": state.CreadoPor,
             "ModificadoPor": state.ModificadoPor
         }
-        console.log(params)
         if (state.idDepartamento != 0) {
-            const url = `${process.env.REACT_APP_API_URL}/Departamento/Modificar/` + state.idDepartamento;
-            axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+            modificarDepartamentos(state.idDepartamentom, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
+                $('.nav-tabs li ').removeClass('active');
+                $('.nav-tabs li').eq(0).addClass('active');
+                $('.tab-content div ').removeClass('in show');
+                $('#Listado').addClass('in show');
             }).catch(err => {
                 console.log(err)
                 showSuccess("err")
             });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/Departamento/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+           agregarDepartamentos(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
+                $('.nav-tabs li ').removeClass('active');
+                $('.nav-tabs li').eq(0).addClass('active');
+                $('.tab-content div ').removeClass('in show');
+                $('#Listado').addClass('in show');
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
@@ -89,16 +100,14 @@ function Departamento() {
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        axios.get(urlDelete, { headers }).then(respuesta => {
+        validarPermisos(state).then(respuesta => {
             derecho = respuesta.data;
             if (derecho == false) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
 
-            const url = `${process.env.REACT_APP_API_URL}/Departamento/Eliminar/` + id;
-            axios.delete(url, { headers }).then(respuesta => {
+            eliminarDepartamentos(id).then(respuesta => {
                 console.log(respuesta);
                 getAllData();
             }).catch(err => {
@@ -110,8 +119,7 @@ function Departamento() {
     }
 
     function handleShowModificar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Departamento/GetById/` + id;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerDepartamentosId(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -121,12 +129,12 @@ function Departamento() {
                 codigoDepartamento: respuesta.data.m_nCodigo,
                 descripcionDepartamento: respuesta.data.m_sDescripcion
             })
+            $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
         });
     }
 
     function handleShowConsultar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Departamento/GetById/` + id;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerDepartamentosId(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -136,6 +144,7 @@ function Departamento() {
                 codigoDepartamento: respuesta.data.m_nCodigo,
                 descripcionDepartamento: respuesta.data.m_sDescripcion
             })
+            $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
         });
     }
 
@@ -148,6 +157,8 @@ function Departamento() {
             codigoDepartamento: "",
             descripcionDepartamento: ""
         })
+        $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
+
     }
 
     const handleChange = event => {
@@ -158,12 +169,6 @@ function Departamento() {
         });
     };
 
-    function handleSelectRow(id, event) {
-        setState({
-            ...state,
-            idDepartamento: id
-        });
-    }
 
     const columns = React.useMemo(() => [
         {
@@ -227,8 +232,7 @@ function Departamento() {
     }, []);
 
     function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/Departamento/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerDepartamentos().then(respuesta => {
             setData(respuesta.data)
         });
     };
@@ -254,22 +258,8 @@ function Departamento() {
         reader.readAsBinaryString(f)
     }
 
-    const FilterComponent = ({ filterText, onFilter, onClear }) => (
-        <>
-            <input
-                id="search"
-                type="text"
-                placeholder="Filter By Name"
-                aria-label="Search Input"
-                value={filterText}
-                onChange={handleChange} />
-            <button type="button" onClick={onClear}>X</button>
-        </>
-    );
 
-    const getSubHeaderComponent = () => {
 
-    };
 
     const headers = {
         'Content-Type': 'application/json',
@@ -293,88 +283,6 @@ function Departamento() {
         )
     }
 
-    function Table({ columns, data }) {
-
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        )
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn
-            },
-            useFilters,
-            useSortBy
-        )
-
-        return (
-            <div className="col-md-12">
-
-                <table className="table" {...getTableProps()}>
-                    <thead>
-                        {headerGroups.map(headerGroup => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                <th>Acciones</th>
-                                {headerGroup.headers.map(column => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render('Name')}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
-                                            {column.isSorted
-                                                ? column.isSortedDesc
-                                                    ? <i className="fa fa-caret-up" />
-                                                    : <i className="fa fa-caret-down" />
-                                                : ''}
-                                        </span>
-                                        <div>{column.canFilter ? column.render('Filter') : null}</div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                        {rows.map(
-                            (row, i) => {
-                                prepareRow(row);
-                                return (
-                                    <tr {...row.getRowProps()}
-                                        onClick={handleSelectRow.bind(this, row.original.m_nIdDepartamento)}
-                                        className={state.idDepartamento === row.original.m_nIdDepartamento ? classes.seleccionado : classes.noSeleccionado}>
-                                        <td>
-                                            <div>
-                                                <a href="#Agregar" className="btn btn-default btn-sm" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdDepartamento))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                                                <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdDepartamento))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                                                <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdDepartamento))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
-                                            </div>
-                                        </td>
-                                        {row.cells.map(cell => {
-                                            return (
-                                                <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                                            )
-                                        })}
-                                    </tr>
-                                )
-                            }
-                        )}
-                    </tbody>
-                </table>
-            </div>
-        )
-    }
 
     return (
         <div >
@@ -408,30 +316,30 @@ function Departamento() {
 
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
-                            <a data-toggle="tab" href="#Listado">
+                            <a onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
                                 <i className="fa fa-list" /> Listado
             </a>
-            </li>
-            <li>
-              <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
-                <i className="fa fa-plus-circle" /> {state.agregar}
-              </a>
-            </li>
-            {/*<li>*/}
-            {/*  <a data-toggle="tab" href="#Importar">*/}
-            {/*    <i className="fa fa-upload" /> Importar*/}
-            {/*</a>*/}
-            {/*</li>*/}
-            {/*<li>*/}
-            {/*  <ExportCSV csvData={data} fileName="Departamento_Listado" />*/}
-            {/*</li>*/}
-            {/*<li>*/}
-            {/*  <ExportPDF data={data} column={columns} fileName="Departamento" />*/}
-            {/*</li>*/}
-          </ul>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
+                                <i className="fa fa-plus-circle" /> {state.agregar}
+                            </a>
+                        </li>
+                        {/*<li>*/}
+                        {/*  <a data-toggle="tab" href="#Importar">*/}
+                        {/*    <i className="fa fa-upload" /> Importar*/}
+                        {/*</a>*/}
+                        {/*</li>*/}
+                        {/*<li>*/}
+                        {/*  <ExportCSV csvData={data} fileName="Departamento_Listado" />*/}
+                        {/*</li>*/}
+                        {/*<li>*/}
+                        {/*  <ExportPDF data={data} column={columns} fileName="Departamento" />*/}
+                        {/*</li>*/}
+                    </ul>
 
                     <div className="row" className="tab-content">
-                        <div className="widget-wrap" id="Listado" className="tab-pane fade in active">
+                        <div className="widget-wrap" id="Listado" className="tab-pane fade in show">
                             <div className="widget-wrap">
                                 <div className="widget-content">
                                     <div className="row" style={{ height: state.height - 250, width: '100%' }}>
@@ -503,7 +411,7 @@ function Departamento() {
                                                     </div>
                                                     <div className="row">
                                                         <div className="form-footer" className="col-sm-6 col-md-5 unit">
-                                                            <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"> Cancelar</button>
+                                                            <button type="button" onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }} className="btn btn-secondary secondary-btn"> Cancelar</button>
                                                             <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                                                         </div>
 
@@ -542,7 +450,7 @@ function Departamento() {
                                                 <br></br>
                                                 <div className="form-footer" className="col-md-12">
                                                     <button className="btn btn-default btn-block ex-noty" data-layout="topCenter" data-type="information">Notificación</button>
-                                                    <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"> Cancelar</button>
+                                                    <button type="button" onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }} className="btn btn-secondary secondary-btn"> Cancelar</button>
                                                     <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
                                                 </div>
                                             </form>
