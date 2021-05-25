@@ -72,7 +72,7 @@ class ConceptosFacturacion extends Component {
                     width: 300,
                 }, {
                     headerName: "Traslado IVA",
-                    field: "m_dtCreadoEl",
+                    field: "m_sCreadoEl",
                     width: 150,
                     renderCell: (row) => {
                         return (
@@ -93,7 +93,7 @@ class ConceptosFacturacion extends Component {
                     },
                 }, {
                     headerName: "Retiene IVA",
-                    field: "m_nCreadoPor",
+                    field: "m_sCreadoPor",
                     width: 150,
                     renderCell: (row) => {
                         return (

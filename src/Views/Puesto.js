@@ -184,7 +184,7 @@ function Puesto() {
             width: 200,
         }, {
             headerName: "Creado Por",
-            field: "m_nCreadoPor",
+            field: "m_sCreadoPor",
             width: 150,
         }, {
             headerName: "Modificado El",
@@ -192,7 +192,7 @@ function Puesto() {
             width: 200,
         }, {
             headerName: "Modificado Por",
-            field: "m_nModificadoPor",
+            field: "m_sModificadoPor",
             width: 150,
         }
 

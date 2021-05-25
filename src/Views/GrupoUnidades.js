@@ -8,7 +8,9 @@ import { useTable, useFilters, useAsyncDebounce, useSortBy } from 'react-table'
 import { makeStyles } from "@material-ui/core/styles";
 
 import Noty from 'noty';
-import { TextField } from "@material-ui/core";
+import { TextField, Tooltip } from "@material-ui/core";
+import { DataGrid } from '@material-ui/data-grid';
+import { dataGridLocaleText } from "../Constants";
 import { agregarGrupoUnidades, eliminarGrupoUnidades, modificarGrupoUnidades, obtenerGrupoUnidades, obtenerGrupoUnidadesId } from "../Util/Contexts/GrupoUnidadesContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 
@@ -162,25 +164,54 @@ function GrupoUnidades() {
         });
     }
 
-    const columns2 = React.useMemo(() => [
+    const columns = React.useMemo(() => [
         {
-            Name: "Código",
-            accessor: "m_nCodigo",
+            headerName: "Acciones",
+            sortable: false, filterable: false,
+            field: "",
+            renderCell: (row) => {
+                return (
+                    <div>
+                        <Tooltip title="Modificar">
+                            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdGrupoCliente))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+
+                        </Tooltip>
+                        <Tooltip title="Consultar">
+                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdGrupoCliente))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+
+                        </Tooltip>
+                        <Tooltip title="Eliminar">
+                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdGrupoCliente))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+
+                        </Tooltip>
+                    </div>
+                )
+            }
+        },
+        {
+            headerName: "Código",
+            field: "m_nCodigo",
+            width: 100,
         }, {
-            Name: "Grupo de unidades",
-            accessor: "m_sGrupoUnidad",
+            headerName: "Grupo de Unidades",
+            field: "m_sGrupoUnidad",
+            width: 200,
         }, {
-            Name: "Creado El",
-            accessor: "m_dtCreadoEl",
+            headerName: "Creado El",
+            field: "m_sCreadoEl",
+            width: 200,
         }, {
-            Name: "Creado Por",
-            accessor: "m_nCreadoPor",
+            headerName: "Creado Por",
+            field: "m_sCreadoPor",
+            width: 150,
         }, {
-            Name: "Modificado El",
-            accessor: "m_dtModificadoEl",
+            headerName: "Modificado El",
+            field: "m_sModificadoEl",
+            width: 200,
         }, {
-            Name: "Modificado Por",
-            accessor: "m_nModificadoPor",
+            headerName: "Modificado Por",
+            field: "m_sModificadoPor",
+            width: 150,
         }
 
     ]);
@@ -399,8 +430,25 @@ function GrupoUnidades() {
                         <div className="widget-wrap" id="Listado" className="tab-pane fade in active">
                             <div className="widget-wrap">
                                 <div className="widget-content">
-                                    <div className="row">
-                                        <Table columns={columns2} data={data} />
+                                <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                                        {data.length != 0 ? (
+                                            <DataGrid
+                                                localeText={dataGridLocaleText}
+                                                rows={data}
+                                                columns={columns}
+                                                density="compact"
+                                                pageSize={Math.floor((state.height - 310) / 30)}
+                                                getRowId={(row) => row.m_nIdGrupoUnidad}
+                                                onRowSelected={(row) => {
+                                                    setState({
+                                                        ...state,
+                                                        IdGrupoUnidad: row.data.m_nIdGrupoUnidad
+                                                    })
+                                                }}
+                                            />
+                                        ) : (
+                                            <div>No se encontró ningún registro</div>
+                                        )}
                                     </div>
                                 </div>
                             </div>

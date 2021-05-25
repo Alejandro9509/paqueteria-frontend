@@ -229,11 +229,11 @@ function Sucursal() {
             width: 400
         }, {
             headerName: "Ubicación",
-            field: "m_dtCreadoEl",
+            field: "m_sCreadoEl",
             width: 400
         }, {
             headerName: "Activo",
-            field: "m_nCreadoPor",
+            field: "m_sCreadoPor",
             width: 100
         }
 

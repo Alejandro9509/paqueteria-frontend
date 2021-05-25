@@ -34,7 +34,7 @@ function eliminarDepartamentos(id){
 }
 
 function obtenerDepartamentos(){
-    const url = `${process.env.REACT_APP_API_URL}/Departamentos/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL}/Departamento/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

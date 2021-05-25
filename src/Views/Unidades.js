@@ -110,7 +110,7 @@ function Unidades(props) {
         },
         {
             headerName: "Vencimiento",
-            field: "m_dtPlacasVencimiento",
+            field: "m_sPlacasVencimiento",
             width: 200
         },
     ]);

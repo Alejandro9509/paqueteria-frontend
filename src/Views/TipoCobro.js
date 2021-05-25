@@ -153,19 +153,19 @@ function TipoCobro() {
             width: 300
         }, {
             headerName: "Creado El",
-            field: "m_dtCreadoEl",
+            field: "m_sCreadoEl",
             width: 200
         }, {
             headerName: "Creado Por",
-            field: "m_nCreadoPor",
+            field: "m_sCreadoPor",
             width: 100
         }, {
             headerName: "Modificado El",
-            field: "m_dtModificadoEl",
+            field: "m_sModificadoEl",
             width: 200
         }, {
             headerName: "Modificado Por",
-            field: "m_nModificadoPor",
+            field: "m_sModificadoPor",
             width: 100
         }
 

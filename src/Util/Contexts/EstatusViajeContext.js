@@ -7,7 +7,7 @@ const headers = {
 }
 
 function modificarEstatusViaje(id, params){
-    const url = `${process.env.REACT_APP_API_URL}/Estatusviajes/Modificar/` + id;
+    const url = `${process.env.REACT_APP_API_URL}/EstatusViajes/Modificar/` + id;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -16,7 +16,7 @@ function modificarEstatusViaje(id, params){
 }
 
 function agregarEstatusViaje( params){
-    const url = `${process.env.REACT_APP_API_URL}/Estatusviajes/Agregar`;
+    const url = `${process.env.REACT_APP_API_URL}/EstatusViajes/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -25,7 +25,7 @@ function agregarEstatusViaje( params){
 }
 
 function eliminarEstatusViaje(id){
-    const url = `${process.env.REACT_APP_API_URL}/Estatusviajes/Eliminar/` + id;
+    const url = `${process.env.REACT_APP_API_URL}/EstatusViajes/Eliminar/` + id;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })
@@ -34,7 +34,7 @@ function eliminarEstatusViaje(id){
 }
 
 function obtenerEstatusViaje(){
-    const url = `${process.env.REACT_APP_API_URL}/Estatusviajes/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL}/EstatusViajes/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -43,7 +43,7 @@ function obtenerEstatusViaje(){
 }
 
 function obtenerEstatusViajeId(id){
-    const url = `${process.env.REACT_APP_API_URL}/Estatusviajes/GetById/${id}`;
+    const url = `${process.env.REACT_APP_API_URL}/EstatusViajes/GetById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

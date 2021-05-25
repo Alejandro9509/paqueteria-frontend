@@ -163,7 +163,7 @@ function TipoCambio() {
         },
         {
             headerName: "Fecha",
-            field: "m_dtFecha",
+            field: "m_sFecha",
             width: 300
         }, {
             headerName: "Tipo de Cambio",

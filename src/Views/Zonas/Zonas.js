@@ -76,7 +76,7 @@ class Zonas extends Component {
         },
         {
           headerName: "Creado Por",
-          field: "m_nCreadoPor",
+          field: "m_sCreadoPor",
           width: 125,
         },
         {
@@ -86,7 +86,7 @@ class Zonas extends Component {
         },
         {
           headerName: "Modificado Por",
-          field: "m_nModificadoPor",
+          field: "m_sModificadoPor",
           width: 150,
         }
 
