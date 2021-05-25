@@ -68,12 +68,15 @@ function EstatusViaje() {
             "ColorLetra": state.colorViaje.slice(-6),
             "Abreviacion": state.abreviacionViaje,
             "TipoEstatus": state.tipoEstatusViaje,
+            "noSeguimiento": state.noSeguimiento,
+            "archivo": state.archivo,
+            "carga": state.carga,
             "CreadoPor": state.CreadoPor,
             "ModificadoPor": state.ModificadoPor
         }
         console.log(params)
         if (state.idEstatusViaje != 0) {
-            const url = `${process.env.REACT_APP_API_URL}/Estatusviajes/Modificar/` + state.idEstatusViaje;
+            const url = `${process.env.REACT_APP_API_URL}/EstatusViajes/Modificar/` + state.idEstatusViaje;
             axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData();
@@ -82,7 +85,7 @@ function EstatusViaje() {
                 showSuccess("err")
             });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/Estatusviajes/Agregar`;
+            const url = `${process.env.REACT_APP_API_URL}/EstatusViajes/Agregar`;
             axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
@@ -106,9 +109,9 @@ function EstatusViaje() {
                 return;
             }
 
-            const url = `${process.env.REACT_APP_API_URL}/Estatusviajes/Eliminar/` + id;
+            const url = `${process.env.REACT_APP_API_URL}/EstatusViajes/Eliminar/` + id;
             axios.delete(url, { headers }).then(respuesta => {
-                showSuccess(respuesta)
+                showSuccess(respuesta.data)
                 getAllData()
             }).catch(err => {
                 showSuccess(err)
@@ -119,9 +122,8 @@ function EstatusViaje() {
     }
 
     function handleShowModificar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Estatusviajes/GetById/${id}`;
+        const url = `${process.env.REACT_APP_API_URL}/EstatusViajes/GetById/${id}`;
         axios.get(url, { headers }).then(respuesta => {
-            console.log(respuesta.data)
             setState({
                 ...state,
                 agregar: "Modificar",
@@ -131,12 +133,15 @@ function EstatusViaje() {
                 abreviacionViaje: respuesta.data.m_sAbreviacion,
                 tipoEstatusViaje: respuesta.data.m_nTipoEstatus,
                 colorViaje: "#" + respuesta.data.m_sColor,
+                noSeguimiento: respuesta.data.m_bNoEnviarCorreo,
+                archivo: respuesta.data.m_bArchivoEDI,
+                carga: respuesta.data.m_bCarga,
             })
         });
     }
 
     function handleShowConsultar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Estatusviajes/GetById/${id}`;
+        const url = `${process.env.REACT_APP_API_URL}/EstatusViajes/GetById/${id}`;
         axios.get(url, { headers }).then(respuesta => {
             console.log(respuesta.data)
             setState({
@@ -148,6 +153,9 @@ function EstatusViaje() {
                 abreviacionViaje: respuesta.data.m_sAbreviacion,
                 tipoEstatusViaje: respuesta.data.m_nTipoEstatus,
                 colorViaje: "#" + respuesta.data.m_sColor,
+                noSeguimiento: respuesta.data.m_bNoEnviarCorreo,
+                archivo: respuesta.data.m_bArchivoEDI,
+                carga: respuesta.data.m_bCarga,
             })
         });
     }
@@ -161,6 +169,9 @@ function EstatusViaje() {
             abreviacionViaje: "",
             tipoEstatusViaje: 1,
             colorViaje: "#000000",
+            noSeguimiento: false,
+            archivo: false,
+            carga: false,
         })
     }
 
@@ -191,7 +202,7 @@ function EstatusViaje() {
 
                         </Tooltip>
                         <Tooltip title="Consultar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdEstatusViaje))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdEstatusViaje))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
@@ -207,7 +218,6 @@ function EstatusViaje() {
             field: "m_sAbreviacion",
             width: 125,
             renderCell: (row) => {
-                console.log(row.row.m_sColor)
                 return (
                     <div style={{ backgroundColor: "#" + row.row.m_sColor, width: "100%", textAlign: "center" }}>
                         {row.row.m_sAbreviacion}
@@ -248,7 +258,7 @@ function EstatusViaje() {
     }, []);
 
     function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/Estatusviajes/GetListado`;
+        const url = `${process.env.REACT_APP_API_URL}/EstatusViajes/GetListado`;
         axios.get(url, { headers }).then(respuesta => {
             setData(respuesta.data)
         });
@@ -393,6 +403,11 @@ function EstatusViaje() {
                                 <i className="fa fa-list" /> Listado
             </a>
                         </li>
+                        <li>
+                            <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
+                                <i className="fa fa-plus-circle" /> {state.agregar}
+                            </a>
+                        </li>
                     </ul>
 
                     <div className="row" className="tab-content">
@@ -441,7 +456,9 @@ function EstatusViaje() {
                                                                 maxLength="30"
                                                                 required={true}
                                                                 value={state.estatusViaje}
-                                                                readOnly={state.agregar == "Consultar"}
+                                                                InputProps={{
+                                                                    readOnly: state.agregar == "Consultar"
+                                                                }}
                                                                 id="estatusViaje"
                                                             />
                                                         </div>
@@ -457,24 +474,26 @@ function EstatusViaje() {
                                                                 maxLength="5"
                                                                 required={true}
                                                                 value={state.abreviacionViaje}
-                                                                readOnly={state.agregar == "Consultar"}
+                                                                InputProps={{
+                                                                    readOnly: state.agregar == "Consultar"
+                                                                }}
                                                                 id="abreviacionViaje"
                                                             />
                                                         </div>
                                                     </div>
 
                                                     <div className="col-xs-6 col-sm-6 col-md-4 col-lg-4 unit">
-                                                        <label className="label">
-                                                            Color
-                            </label>
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label=""
+                                                            <TextField variant="outlined" margin="dense" label="Color"
                                                                 onChange={handleChange}
                                                                 className="form-control"
                                                                 required={true}
                                                                 type="color"
                                                                 value={state.colorViaje}
-                                                                readOnly={state.agregar == "Consultar"}
+                                                                InputProps={{
+                                                                    readOnly: state.agregar == "Consultar"
+                                                                }}
+                                                                disabled = {state.agregar == "Consultar"}
                                                                 id="colorViaje"
                                                             />
                                                         </div>
@@ -488,6 +507,7 @@ function EstatusViaje() {
                                                                 checked={state.noSeguimiento}
                                                                 name="noSeguimiento"
                                                                 onChange={(e) => setState({ ...state, noSeguimiento: e.target.checked })}
+                                                                disabled = {state.agregar == "Consultar"}
                                                                 type="checkbox"
                                                             />
                                                             <i />
@@ -503,6 +523,7 @@ function EstatusViaje() {
                                                                 checked={state.archivo}
                                                                 name="archivo"
                                                                 onChange={(e) => setState({ ...state, archivo: e.target.checked })}
+                                                                disabled = {state.agregar == "Consultar"}
                                                                 type="checkbox"
                                                             />
                                                             <i />
@@ -518,6 +539,7 @@ function EstatusViaje() {
                                                                 checked={state.carga}
                                                                 name="carga"
                                                                 onChange={(e) => setState({ ...state, carga: e.target.checked })}
+                                                                disabled = {state.agregar == "Consultar"}
                                                                 type="checkbox"
                                                             />
                                                             <i />
@@ -538,25 +560,6 @@ function EstatusViaje() {
                                 </div>
                             </div>
                         </div>
-
-                        <div className="widget-wrap" id="Importar" className="tab-pane fade">
-                            <div className="widget-wrap">
-                                <div className="widget-content">
-                                    <div className="row">
-                                        <div className="col-md-12">
-                                            <div className="form-footer" className="col-md-12">
-                                                <button className="btn btn-default btn-block ex-noty" data-layout="topCenter" data-type="information">Notificación</button>
-                                                <button href="#Listado" role="tab" data-toggle="tab" data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
-                                                >
-                                                    Cancelar</button>
-                                                <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
 
