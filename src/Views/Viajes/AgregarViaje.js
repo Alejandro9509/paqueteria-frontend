@@ -1025,6 +1025,7 @@ class AgregarViaje extends Component {
                                 ) : (
                                     <div>No se encontró ningún registro</div>
                                 )}
+                                {/**Para mostrar el boton nomas cuando haya registros*/}
                                 {this.state.dataInformes.length != 0 ? (
                                     <button
                                         type="submit"
