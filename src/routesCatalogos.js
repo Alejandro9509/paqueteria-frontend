@@ -56,6 +56,7 @@ import {ReactComponent as TCobreIcon} from './iconos/Catalogos/Icono Tipos de Co
 import {ReactComponent as TViajeIcon} from './iconos/Catalogos/Icono Tipos Viaje/icono_tipo_viaje.svg';
 import {ReactComponent as UnidadesIcon} from './iconos/Catalogos/Icono Unidades/icono_unidades.svg';
 import {ReactComponent as ViajesIcon} from './iconos/Catalogos/Icono Viajes/icono_viajes.svg';
+import {ReactComponent as TarifasIcon} from './iconos/Catalogos/Icono Tarifas/icono_tarifas.svg';
 import {ReactComponent as AddendasIcon} from './iconos/Catalogos/Icono Addendas/icono_addendas.svg';
 import EstatusGuia from './Views/EstatusGuia';
 import TipoUnidad from "./Views/TipoUnidad/TipoUnidad";
@@ -212,7 +213,7 @@ const catalogRoutes = [
   {
     path: "/Tarifas",
     name: "Tarifas",
-    icon: <GClienteIcon/>,
+    icon: <TarifasIcon/>,
     component: TarifasPage,
   },
   {

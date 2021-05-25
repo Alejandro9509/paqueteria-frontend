@@ -22,7 +22,7 @@ import { useHistory } from "react-router";
 import { Button } from "bootstrap";
 import { dataGridLocaleText } from "../Constants";
 import { obtenerClasificacionViaje } from "../Util/Contexts/ClasificacionViajeContext";
-import { agregarRutas, eliminarRutas, modificarRutas, obtenerRutas, obtenerRutasId, obtenerRutasOrigenes } from "../Util/Contexts/RutasContext";
+import { agregarRutas, eliminarRutas, modificarRutas, obtenerRutas, obtenerRutasId, obtenerRutasOrigenes, calcularCosto } from "../Util/Contexts/RutasContext";
 import { obtenerTipoUnidades } from "../Util/Contexts/TipoUnidadContext";
 import { obtenerTipoViaje } from "../Util/Contexts/TipoViajeContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
@@ -122,8 +122,8 @@ function Rutas(props) {
 
     function routed(route, exc) {
 
-
         var polygon = []
+        calcularCosto(state.points).then(data => console.log(data))
         if (route) {
             console.log(route)
             route.polyline.plain.polyline.map(c => {
@@ -407,10 +407,10 @@ function Rutas(props) {
         if (state.originLocation != null && state.destinyLocation != null) {
             calculateRoute()
         }
+        
     }, [state.originLocation, state.destinyLocation])
 
     function calculateRoute() {
-
         xroute.calculateRoute({
             "waypoints": state.points.map(p => apiPoint(p.location[1], p.location[0])),
             "resultFields": {
