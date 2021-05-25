@@ -31,6 +31,7 @@ class CodigoPostal extends Component {
   }
 
   componentDidUpdate(prevProps){
+    console.log(this.props.codigoPostalesSeleccionado)
     if(this.props.idCiudadSeleccionado != prevProps.idCiudadSeleccionado) // Check if it's a new user, you can also use some unique property, like the ID  (this.props.user.id !== prevProps.user.id)
   {
     this.getAllCodigoPostales();

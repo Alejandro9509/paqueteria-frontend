@@ -31,6 +31,8 @@ import {
 import $ from "jquery";
 import { remove_array_element } from "../Util/Util";
 import { useHistory, Redirect } from 'react-router-dom';
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
 import Noty from 'noty';
 import {
@@ -1030,7 +1032,19 @@ function Recoleccion() {
                         </Tooltip>
                         <Tooltip title="Eliminar">
                             <a href="#" className="btn btn-default btn-xs"
-                                onClick={() => (handleEliminar(row.row.m_nIdRecoleccion))}><i className="zmdi zmdi-delete"
+                                onClick={() => confirmAlert({
+                                    title: 'Confirmar Eliminar',
+                                    message: 'Está seguro de eliminar Embarque?',
+                                    buttons: [
+                                      {
+                                        label: 'Si',
+                                        onClick: () => handleEliminar(row.row.m_nIdRecoleccion)
+                                      },
+                                      {
+                                        label: 'No',
+                                      }
+                                    ]
+                                  })}><i className="zmdi zmdi-delete"
                                     style={{ color: "#F30B0B" }} /></a>
                         </Tooltip>
 

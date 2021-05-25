@@ -38,6 +38,8 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import { dataGridLocaleText } from "../Constants";
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
 function showSuccess(mensaje) {
     new Noty({
@@ -47,6 +49,30 @@ function showSuccess(mensaje) {
         timeout: "3000",
     }).show();
 }
+
+const options = {
+    title: 'Title',
+    message: 'Message',
+    buttons: [
+        {
+            label: 'Yes',
+            onClick: () => alert('Click Yes')
+        },
+        {
+            label: 'No',
+            onClick: () => alert('Click No')
+        }
+    ],
+    childrenElement: () => <div />,
+    customUI: ({ onClose }) => <div>Custom UI</div>,
+    closeOnEscape: true,
+    closeOnClickOutside: true,
+    willUnmount: () => { },
+    afterClose: () => { },
+    onClickOutside: () => { },
+    onKeypressEscape: () => { },
+    overlayClassName: "overlay-custom-class-name"
+};
 
 window.jQuery = window.$ = $;
 
@@ -115,11 +141,12 @@ function Embarque(props) {
         idEmbarque: 0,
         fechaInicial: "0",
         fechaFinal:
-            today.getDate() +
+            today.getFullYear()
+            +
             "-" +
             (today.getMonth() + 1) +
             "-" +
-            today.getFullYear(),
+            today.getDate(),
         sucursalListado: 0,
         estatusListado: 0,
         idSucursalAgregar: localStorage.getItem("Sucursal"),
@@ -469,15 +496,17 @@ function Embarque(props) {
 
     const handleCancelar = (e) => {
         e.preventDefault();
+
         var params = {
             motivoCancelacion: state.motivoCancelacion,
             usuarioCancelacion: localStorage.getItem("UsuarioId"),
             fechaCancelacion: state.fechaCancelacion,
         };
         const url = `${process.env.REACT_APP_API_URL}/Embarques/Cancelar/${state.idEmbarque}`;
-        axios.put(url, Object.assign({}, params), { headers }).then((respuesta) => {
-            console.log(respuesta.data);
-        });
+        console.log(url)
+        //axios.put(url, Object.assign({}, params), { headers }).then((respuesta) => {
+        //    console.log(respuesta.data);
+        //});
     };
 
     function handleShowCancelar() {
@@ -516,6 +545,22 @@ function Embarque(props) {
             if (respuesta.data.m_nSePuedeCancelar === 0)
                 showSuccess("Embarque no se puede cancelar");
         });
+    }
+
+    function handleShowCancelarConfirmacion() {
+        confirmAlert({
+            title: 'Confirmar Eliminar',
+            message: 'Está seguro de cancelar Embarque?',
+            buttons: [
+                {
+                    label: 'Si',
+                    onClick: () => handleCancelar
+                },
+                {
+                    label: 'No',
+                }
+            ]
+        })
     }
 
     function handleShowModificar(id) {
@@ -602,11 +647,11 @@ function Embarque(props) {
                 idOperador: dataOperador.find(
                     (o) => o.m_nIdOperador === respuesta.data.m_nIdOperador
                 ),
-                idTipoUnidad:  dataTipoUnidad.find(
+                idTipoUnidad: dataTipoUnidad.find(
                     (o) =>
                         o.m_nIdTipoUnidad ==
-                        dataUnidad.find((o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad) ?
-                        dataUnidad.find((o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad).m_nIdTipoUnidad : 0
+                            dataUnidad.find((o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad) ?
+                            dataUnidad.find((o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad).m_nIdTipoUnidad : 0
                 ),
                 idUnidad: dataUnidad.find(
                     (o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad
@@ -815,12 +860,12 @@ function Embarque(props) {
     };
 
     const handleSelectCiudadChange = (event) => {
-      console.log("diferenteEntrega : " + state.diferenteEntrega);
-      setState({
-          ...state,
-          ciudadRemitente: event.target.value,
-      });
-  };
+        console.log("diferenteEntrega : " + state.diferenteEntrega);
+        setState({
+            ...state,
+            ciudadRemitente: event.target.value,
+        });
+    };
 
     const handleFechaInicialFiltro = async (event) => {
         setState({
@@ -959,7 +1004,19 @@ function Embarque(props) {
                             <a
                                 href="#"
                                 className="btn btn-default btn-xs"
-                                onClick={() => handleEliminar(row.row.m_nIdEmbarque)}
+                                onClick={() => confirmAlert({
+                                    title: 'Confirmar Eliminar',
+                                    message: 'Está seguro de eliminar Embarque?',
+                                    buttons: [
+                                        {
+                                            label: 'Si',
+                                            onClick: () => handleEliminar(row.row.m_nIdEmbarque)
+                                        },
+                                        {
+                                            label: 'No',
+                                        }
+                                    ]
+                                })}
                             >
                                 <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
                             </a>
@@ -1021,11 +1078,11 @@ function Embarque(props) {
                         style={{
                             width: "100%",
                             textAlign: "center",
-                            color: (row.row.m_bEsRecolecta = 0 ? "green" : "red"),
+                            color: (row.row.m_bEsRecolecta != 0 ? "green" : "red"),
                         }}
                     >
                         {
-                            (row.row.m_bEsRecolecta = 0 ? (
+                            (row.row.m_bEsRecolecta != 0 ? (
                                 <SvgIcon component={Activo} />
                             ) : (
                                 <SvgIcon component={NoActivo} />
@@ -1042,13 +1099,18 @@ function Embarque(props) {
         },
         {
             headerName: "Cancelado",
-            field: "m_dtFechaCancelado",
+            field: "m_dtFechaCancelacion",
             width: 150,
         },
         {
             headerName: "Usuario que Cancela",
-            field: "m_sUsuarioqueCancela",
+            field: "m_sUsuarioCancelacion",
             width: 200,
+            renderCell: (row) => {
+                <div>
+                    {row.row.m_sUsuarioCancelacion == "0" ? "N/A" : row.row.m_sUsuarioCancelacion}
+                </div>
+            }
         },
     ]);
 
@@ -1396,7 +1458,7 @@ function Embarque(props) {
 
     async function getAllCodigosPostales() {
         const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
-        await axios.get(url, {headers}).then((respuesta) => {
+        await axios.get(url, { headers }).then((respuesta) => {
             setDataCodigoPostal(respuesta.data);
         });
     }
@@ -2659,7 +2721,7 @@ function Embarque(props) {
                                                                 id="idSucursalAgregar"
                                                                 label="Sucursal"
                                                                 InputProps={{
-                                                                    name:"Sucursal"
+                                                                    name: "Sucursal"
                                                                 }}
                                                             >
                                                                 <option value="0">Todas</option>
@@ -2692,7 +2754,7 @@ function Embarque(props) {
                                                                 id="estatusListado"
                                                                 label="Estatus"
                                                                 InputProps={{
-                                                                    id:"estatusListado"
+                                                                    id: "estatusListado"
                                                                 }}
                                                             >
                                                                 <option value="0">Todos</option>
@@ -2799,7 +2861,7 @@ function Embarque(props) {
                                                                         label="Sucursal"
                                                                         readOnly
                                                                         inputProps={{
-                                                                            id:"idSucursalAgregar"
+                                                                            id: "idSucursalAgregar"
                                                                         }}
                                                                     >
                                                                         <option value="0">Todas</option>
@@ -2914,7 +2976,7 @@ function Embarque(props) {
                                                                         disabled={state.agregar === "Consultar"}
                                                                         id="estatusEmbarque"
                                                                         inputProps={{
-                                                                            name:"estatusEmbarque"
+                                                                            name: "estatusEmbarque"
                                                                         }}
                                                                     >
                                                                         {dataEstatusEmbarque.map((estatus) => (
@@ -2945,7 +3007,7 @@ function Embarque(props) {
                                                                         onChange={handleChange}
                                                                         id="moneda"
                                                                         InputProps={{
-                                                                            name:"moneda"
+                                                                            name: "moneda"
                                                                         }}
                                                                     >
                                                                         {dataTipoMoneda.map((moneda) => (
@@ -2994,7 +3056,7 @@ function Embarque(props) {
                                                                         onChange={handleChange}
                                                                         id="tipoCobro"
                                                                         InputProps={{
-                                                                            name:"tipoCobro"
+                                                                            name: "tipoCobro"
                                                                         }}
                                                                     >
                                                                         {dataTipoCobro.map((tipoCobro) => (
@@ -3154,7 +3216,7 @@ function Embarque(props) {
                                                                                 disableClearable
                                                                                 disabled={state.agregar === "Consultar"}
                                                                                 forcePopupIcon={false}
-                                                                                options={dataCodigoPostal.filter( cp => cp.m_nIdCiudad == state.ciudadRemitente)}
+                                                                                options={dataCodigoPostal.filter(cp => cp.m_nIdCiudad == state.ciudadRemitente)}
                                                                                 getOptionLabel={(option) =>
                                                                                     option.m_sCP
                                                                                 }
@@ -3572,7 +3634,7 @@ function Embarque(props) {
                                                                             id="codigoPostalDestinatario"
                                                                             disableClearable
                                                                             disabled={state.agregar === "Consultar"}
-                                                                            options={dataCodigoPostal.filter( cp => cp.m_nIdCiudad == state.ciudadDestinatario)}
+                                                                            options={dataCodigoPostal.filter(cp => cp.m_nIdCiudad == state.ciudadDestinatario)}
                                                                             getOptionLabel={(option) => option.m_sCP}
                                                                             variant="outlined"
                                                                             style={{
@@ -3976,7 +4038,7 @@ function Embarque(props) {
                                                         <div className="widget-content">
                                                             <div className="row">
                                                                 <div className="col-md-12">
-                                                                <div className="col-sm-6 col-md-4  unit">
+                                                                    <div className="col-sm-6 col-md-4  unit">
                                                                         <div className="input">
                                                                             <Autocomplete
                                                                                 freeSolo
@@ -4012,7 +4074,7 @@ function Embarque(props) {
                                                                                             {...params}
                                                                                             InputProps={{
                                                                                                 ...params.InputProps,
-                                                                                                style: {height: 24},
+                                                                                                style: { height: 24 },
                                                                                                 type: "search",
                                                                                                 disabled:
                                                                                                     state.agregar ===
@@ -4080,7 +4142,7 @@ function Embarque(props) {
                                                                                 id="codigoPostalEntrega"
                                                                                 disableClearable
                                                                                 forcePopupIcon={false}
-                                                                                options={dataCodigoPostal.filter( cp => cp.m_nIdCiudad == state.ciudadEntrega.m_nIdCiudad)}
+                                                                                options={dataCodigoPostal.filter(cp => cp.m_nIdCiudad == state.ciudadEntrega.m_nIdCiudad)}
                                                                                 getOptionLabel={(option) =>
                                                                                     option.m_sCP
                                                                                 }
@@ -4246,7 +4308,7 @@ function Embarque(props) {
                                 <div className="widget-container">
                                     <div className="widget-content">
                                         <div className="row">
-                                            <form className="j-forms" onSubmit={handleCancelar}>
+                                            <form className="j-forms" onSubmit={handleShowCancelarConfirmacion}>
                                                 <div className="form-content">
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
