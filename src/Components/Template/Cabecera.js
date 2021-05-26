@@ -1,4 +1,4 @@
-import { Hidden } from "@material-ui/core";
+import {Hidden, Link} from "@material-ui/core";
 import React from "react";
 import iconoAyuda from '../../iconos/Cabecera/icono_ayuda.svg';
 import iconoShortcuts from '../../iconos/Cabecera/icono_shortcuts.svg';
@@ -44,10 +44,12 @@ function Cabecera({ titulo, children }) {
         },
         {
             id: '1',
+            path: "https://gmnoticiasblog.wordpress.com/author/gmnoticiasblog/",
             name: 'GM Noticias',
         },
         {
             id: '2',
+            path: "/Tutoriales",
             name: 'Tutoriales',
         },
         {
@@ -57,6 +59,7 @@ function Cabecera({ titulo, children }) {
         {
             id: '4',
             name: 'Actualizaciónes',
+            path: "/Actualizacion",
         },
         {
             id: '5',
@@ -222,9 +225,13 @@ function Cabecera({ titulo, children }) {
                             },
                         }}>
                         {menu_items.map((option) => (
-                            <MenuItem key={option.id} value={option.id} onClick={handleMenuItemClick}>
-                                {option.name}
-                            </MenuItem>
+                                <Link href={option.path}>
+                                    <MenuItem key={option.id} value={option.id}>
+                                        {option.name}
+                                    </MenuItem>
+                                </Link>
+
+
                         ))}
                     </Menu>
                 </div>
