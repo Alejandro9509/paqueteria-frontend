@@ -225,13 +225,11 @@ function Cabecera({ titulo, children }) {
                             },
                         }}>
                         {menu_items.map((option) => (
-                                <Link href={option.path}>
-                                    <MenuItem key={option.id} value={option.id}>
-                                        {option.name}
-                                    </MenuItem>
-                                </Link>
-
-
+                            <Link href={option.path}>
+                                <MenuItem key={option.id} value={option.id} onClick={handleMenuClose}>
+                                    {option.name}
+                                </MenuItem>
+                            </Link>
                         ))}
                     </Menu>
                 </div>
