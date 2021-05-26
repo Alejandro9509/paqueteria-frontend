@@ -14,6 +14,7 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
+import { agregarCuentasCorreo, modificarCuentasCorreo, obtenerCuentasCorreoUsuarioId } from '../../Util/Contexts/CuentasCorreoContext';
 window.jQuery = window.$ = $;
 
 const headers = {
@@ -69,13 +70,8 @@ class CuentasCorreo extends Component {
             ModificadoEl: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
             ModificadoPor: localStorage.getItem("UsuarioId")
         }
-
-        console.log(JSON.stringify(params));
-        debugger;
-
         if (this.state.edit) {
-            const url = `${process.env.REACT_APP_API_URL}/CuentasCorreo/Modificar/` + this.state.idCuenta;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+            modificarCuentasCorreo(this.state.idCuenta, params).then(respuesta => {
                 console.log(respuesta)
                 this.props.closeDialog()
             }).catch(err => {
@@ -83,9 +79,7 @@ class CuentasCorreo extends Component {
                 showSuccess(err)
             });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/CuentasCorreo/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
-                console.log(respuesta)
+            agregarCuentasCorreo(params).then(respuesta => {
                 this.props.closeDialog()
             }).catch(err => {
                 console.log(err)
@@ -104,7 +98,6 @@ class CuentasCorreo extends Component {
 
     handleChangeTipoCuenta = (event) => {
         event.preventDefault();
-        console.log("Tipo cuenta")
         let value = event.target.value;
         this.setState({
             [event.target.name]: value,
@@ -144,8 +137,7 @@ class CuentasCorreo extends Component {
     }
 
     consultarPorUsuario () {
-        const url = `${process.env.REACT_APP_API_URL}/CuentasCorreo/GetByIdUsuario/` + this.state.idUsuario;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerCuentasCorreoUsuarioId(this.state.idUsuario).then(respuesta => {
             console.log(respuesta.data)
             let info = respuesta.data
             let cuentaEnviarViajes = info && info.length > 0 ? info.filter(cuenta => cuenta.m_nTipoCuenta === 1) : []
@@ -277,7 +269,7 @@ class CuentasCorreo extends Component {
                 </div>
 
                 <div className={"row"}>
-                    <button className="btn btn-secondary secondary-btn" onClick={this.props.closeDialog}>Cancelar</button>
+                    <button type="button" className="btn btn-secondary secondary-btn" onClick={this.props.closeDialog}>Cancelar</button>
 
                     <button className="btn btn-primary primary-btn" type={"submit"} >Aceptar</button>
                 </div>

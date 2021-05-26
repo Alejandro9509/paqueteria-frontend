@@ -12,6 +12,8 @@ import { DataGrid } from '@material-ui/data-grid';
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import { TextField, Tooltip } from "@material-ui/core";
+import { agregarTipoViaje, eliminarTipoViaje, modificarTipoViaje, obtenerTipoViaje, obtenerTipoViajeId } from "../Util/Contexts/TipoViajeContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -39,7 +41,7 @@ function TipoViaje() {
 
     const [state, setState] = React.useState({
         idTipoViaje: 0,
-        DerechoBorrar: 81,
+        DerechoBorrar: 90,
         agregar: "Agregar",
         Codigo: "",
         TipoViaje: "",
@@ -59,10 +61,8 @@ function TipoViaje() {
             "CreadoPor": state.CreadoPor,
             "ModificadoPor": state.ModificadoPor
         }
-        console.log(params)
         if (state.idTipoViaje != 0) {
-            const url = `${process.env.REACT_APP_API_URL}/TipoViaje/Modificar/` + state.idTipoViaje;
-            axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+            modificarTipoViaje(state.idTipoViaje, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData();
             }).catch(err => {
@@ -70,8 +70,7 @@ function TipoViaje() {
                 showSuccess("err")
             });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/TipoViaje/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+            agregarTipoViaje(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
             }).catch(err => {
@@ -84,8 +83,7 @@ function TipoViaje() {
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        axios.get(urlDelete, { headers }).then(respuesta => {
+        validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
 
             derecho = respuesta.data;
@@ -94,8 +92,7 @@ function TipoViaje() {
                 return;
             }
 
-            const url = `${process.env.REACT_APP_API_URL}/TipoViaje/Eliminar/` + id;
-            axios.delete(url, { headers }).then(respuesta => {
+            eliminarTipoViaje(id).then(respuesta => {
                 alert(respuesta)
                 getAllData()
             }).catch(err => {
@@ -107,8 +104,7 @@ function TipoViaje() {
     }
 
     function handleShowModificar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/TipoViaje/GetById/${id}`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerTipoViajeId(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -121,8 +117,7 @@ function TipoViaje() {
     }
 
     function handleShowConsultar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/TipoViaje/GetById/${id}`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerTipoViajeId(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -193,19 +188,19 @@ function TipoViaje() {
             width: 250
         }, {
             headerName: "Creado El",
-            field: "m_dtCreadoEl",
+            field: "m_sCreadoEl",
             width: 200
         }, {
             headerName: "Creado Por",
-            field: "m_nCreadoPor",
+            field: "m_sCreadoPor",
             width: 150
         }, {
             headerName: "Modificado El",
-            field: "m_dtModificadoEl",
+            field: "m_sModificadoEl",
             width: 200
         }, {
             headerName: "Modificado Por",
-            field: "m_nModificadoPor",
+            field: "m_sModificadoPor",
             width: 150
         }
 
@@ -221,8 +216,7 @@ function TipoViaje() {
     }, []);
 
     function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/TipoViaje/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerTipoViaje().then(respuesta => {
             setData(respuesta.data)
         });
     };
@@ -230,105 +224,6 @@ function TipoViaje() {
     const headers = {
         'Content-Type': 'application/json',
         //    'access-control-allow-origin': '*'
-    }
-
-    function DefaultColumnFilter({
-        column: { filterValue, preFilteredRows, setFilter },
-    }) {
-        const count = preFilteredRows.length
-
-        return (
-            <input
-                className="form-control"
-                value={filterValue || ''}
-                onChange={e => {
-                    setFilter(e.target.value || undefined)
-                }}
-                placeholder={`Buscar ${count} registros...`}
-            />
-        )
-    }
-
-    function Table({ columns, data }) {
-
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        )
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn
-            },
-            useFilters,
-            useSortBy
-        )
-
-        return (
-            <div className="col-md-12">
-                <table className="table" {...getTableProps()}>
-                    <thead>
-                        {headerGroups.map(headerGroup => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                <th>Acciones</th>
-                                {headerGroup.headers.map(column => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render('Name')}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
-                                            {column.isSorted
-                                                ? column.isSortedDesc
-                                                    ? <i className="fa fa-caret-up" />
-                                                    : <i className="fa fa-caret-down" />
-                                                : ''}
-                                        </span>
-                                        <div>{column.canFilter ? column.render('Filter') : null}</div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                        {rows.map(
-                            (row, i) => {
-                                prepareRow(row);
-                                return (
-                                    <tr {...row.getRowProps()}
-                                        onClick={handleSelectRow.bind(this, row.original.m_nIdTipoViaje)}
-                                        className={state.idTipoViaje === row.original.m_nIdTipoViaje ? classes.seleccionado : classes.noSeleccionado}>
-                                        <td>
-                                            <div>
-                                                <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowModificar(row.original.m_nIdTipoViaje))} ><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                                                <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdTipoViaje))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                                                <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdTipoViaje))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
-                                            </div>
-                                        </td>
-                                        {row.cells.map(cell => {
-                                            return (
-                                                <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                                            )
-                                        })}
-                                    </tr>
-                                )
-                            }
-                        )}
-                    </tbody>
-                </table>
-            </div>
-        )
     }
 
     return (

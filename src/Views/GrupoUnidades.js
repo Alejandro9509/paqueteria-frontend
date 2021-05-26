@@ -8,7 +8,11 @@ import { useTable, useFilters, useAsyncDebounce, useSortBy } from 'react-table'
 import { makeStyles } from "@material-ui/core/styles";
 
 import Noty from 'noty';
-import { TextField } from "@material-ui/core";
+import { TextField, Tooltip } from "@material-ui/core";
+import { DataGrid } from '@material-ui/data-grid';
+import { dataGridLocaleText } from "../Constants";
+import { agregarGrupoUnidades, eliminarGrupoUnidades, modificarGrupoUnidades, obtenerGrupoUnidades, obtenerGrupoUnidadesId } from "../Util/Contexts/GrupoUnidadesContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -62,8 +66,7 @@ function GrupoUnidades() {
         }
         console.log(params)
         if (state.IdGrupoUnidad != 0) {
-            const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/Modificar/` + state.IdGrupoUnidad;
-            axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+            modificarGrupoUnidades(state.IdGrupoUnidad, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData();
             }).catch(err => {
@@ -71,8 +74,7 @@ function GrupoUnidades() {
                 showSuccess("err")
             });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+            agregarGrupoUnidades(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData();
             }).catch(err => {
@@ -85,8 +87,7 @@ function GrupoUnidades() {
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        axios.get(urlDelete, { headers }).then(respuesta => {
+        validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
 
             derecho = respuesta.data;
@@ -95,8 +96,7 @@ function GrupoUnidades() {
                 return;
             }
 
-            const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/Eliminar/` + id;
-            axios.delete(url, { headers }).then(respuesta => {
+            eliminarGrupoUnidades(id).then(respuesta => {
                 console.log(respuesta);
                 getAllData();
             }).catch(err => {
@@ -108,9 +108,7 @@ function GrupoUnidades() {
     }
 
     function handleShowModificar(id) {
-        console.log(id)
-        const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/GetById/` + id;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerGrupoUnidadesId(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -125,9 +123,7 @@ function GrupoUnidades() {
     }
 
     function handleShowConsultar(id) {
-        console.log(id)
-        const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/GetById/` + id;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerGrupoUnidadesId(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -168,25 +164,54 @@ function GrupoUnidades() {
         });
     }
 
-    const columns2 = React.useMemo(() => [
+    const columns = React.useMemo(() => [
         {
-            Name: "Código",
-            accessor: "m_nCodigo",
+            headerName: "Acciones",
+            sortable: false, filterable: false,
+            field: "",
+            renderCell: (row) => {
+                return (
+                    <div>
+                        <Tooltip title="Modificar">
+                            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdGrupoCliente))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+
+                        </Tooltip>
+                        <Tooltip title="Consultar">
+                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdGrupoCliente))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+
+                        </Tooltip>
+                        <Tooltip title="Eliminar">
+                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdGrupoCliente))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+
+                        </Tooltip>
+                    </div>
+                )
+            }
+        },
+        {
+            headerName: "Código",
+            field: "m_nCodigo",
+            width: 100,
         }, {
-            Name: "Grupo de unidades",
-            accessor: "m_sGrupoUnidad",
+            headerName: "Grupo de Unidades",
+            field: "m_sGrupoUnidad",
+            width: 200,
         }, {
-            Name: "Creado El",
-            accessor: "m_dtCreadoEl",
+            headerName: "Creado El",
+            field: "m_sCreadoEl",
+            width: 200,
         }, {
-            Name: "Creado Por",
-            accessor: "m_nCreadoPor",
+            headerName: "Creado Por",
+            field: "m_sCreadoPor",
+            width: 150,
         }, {
-            Name: "Modificado El",
-            accessor: "m_dtModificadoEl",
+            headerName: "Modificado El",
+            field: "m_sModificadoEl",
+            width: 200,
         }, {
-            Name: "Modificado Por",
-            accessor: "m_nModificadoPor",
+            headerName: "Modificado Por",
+            field: "m_sModificadoPor",
+            width: 150,
         }
 
     ]);
@@ -201,8 +226,7 @@ function GrupoUnidades() {
     }, []);
 
     function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerGrupoUnidades().then(respuesta => {
             setData(respuesta.data)
         });
     };
@@ -242,9 +266,7 @@ function GrupoUnidades() {
         </>
     );
 
-    const getSubHeaderComponent = () => {
 
-    };
 
     const headers = {
         'Content-Type': 'application/json',
@@ -408,8 +430,25 @@ function GrupoUnidades() {
                         <div className="widget-wrap" id="Listado" className="tab-pane fade in active">
                             <div className="widget-wrap">
                                 <div className="widget-content">
-                                    <div className="row">
-                                        <Table columns={columns2} data={data} />
+                                <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                                        {data.length != 0 ? (
+                                            <DataGrid
+                                                localeText={dataGridLocaleText}
+                                                rows={data}
+                                                columns={columns}
+                                                density="compact"
+                                                pageSize={Math.floor((state.height - 310) / 30)}
+                                                getRowId={(row) => row.m_nIdGrupoUnidad}
+                                                onRowSelected={(row) => {
+                                                    setState({
+                                                        ...state,
+                                                        IdGrupoUnidad: row.data.m_nIdGrupoUnidad
+                                                    })
+                                                }}
+                                            />
+                                        ) : (
+                                            <div>No se encontró ningún registro</div>
+                                        )}
                                     </div>
                                 </div>
                             </div>

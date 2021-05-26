@@ -6,6 +6,7 @@ import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import { DataGrid } from '@material-ui/data-grid';
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
+import { obtenerEstatusGuia } from "../Util/Contexts/EstatusContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -61,8 +62,7 @@ function EstatusGuia() {
     }, []);
 
     function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/EstatusGuia/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerEstatusGuia().then(respuesta => {
             setData(respuesta.data)
         });
     };

@@ -13,6 +13,8 @@ import { Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/
 import AgregarFolio from "./AgregarTipoUnidad";
 import CrearTarifa from "../Tarifas/CrearTarifa";
 import AgregarTipoUnidad from "./AgregarTipoUnidad";
+import { agregarTipoUnidades, eliminarTipoUnidades, obtenerTipoUnidades, modificarTipoUnidades } from '../../Util/Contexts/TipoUnidadContext';
+import { validarPermisos } from '../../Util/Contexts/UsuarioContext';
 window.jQuery = window.$ = $;
 const headers = {
     'Content-Type': 'application/json',
@@ -32,7 +34,7 @@ class TipoUnidad extends Component {
         super(props);
         this.state = {
             data: [],
-            DerechoBorrar:139,
+            DerechoBorrar:67,
             idTipoUnidad: null,
             agregar: "Agregar",
             openDialog: false,
@@ -69,19 +71,19 @@ class TipoUnidad extends Component {
                     width: 200,
                 }, {
                     headerName: "Creado El",
-                    field: "m_dtCreadoEl",
+                    field: "m_sCreadoEl",
                     width: 200,
                 }, {
                     headerName: "Creado Por",
-                    field: "m_nCreadoPor",
+                    field: "m_sCreadoPor",
                     width: 150,
                 }, {
                     headerName: "Modificado El",
-                    field: "m_dtModificadoEl",
+                    field: "m_sModificadoEl",
                     width: 200,
                 }, {
                     headerName: "Modificado Por",
-                    field: "m_nModificadoPor",
+                    field: "m_sModificadoPor",
                     width: 150,
                 }
 
@@ -102,16 +104,13 @@ class TipoUnidad extends Component {
 
     handleEliminar(id) {
          var derecho;
-         const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${this.state.CreadoPor}/${this.state.DerechoBorrar}/3`;
-         axios.get(urlDelete, { headers }).then(respuesta => {
+         validarPermisos(this.state).then(respuesta => {
              derecho = respuesta.data;
             if (derecho === false) {
                  showSuccess("El usuario no tiene derechos para realizar el proceso");
                  return;
         }
-            const url = `${process.env.REACT_APP_API_URL}/TipoUnidad/Eliminar/` + id;
-            axios.delete(url, { headers }).then(respuesta => {
-                console.log(respuesta);
+            eliminarTipoUnidades(id).then(respuesta => {
                 this.getAllData();
             }).catch(err => {
                 showSuccess(err)
@@ -136,8 +135,7 @@ class TipoUnidad extends Component {
         }
         console.log(JSON.stringify(params));
         debugger;
-            const url = `${process.env.REACT_APP_API_URL}/TipoUnidad/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+            agregarTipoUnidades(params).then(respuesta => {
                 console.log(respuesta)
                 showSuccess(respuesta.data)
 
@@ -155,7 +153,6 @@ class TipoUnidad extends Component {
     }
 
     handleAceptarModificar(data) {
-        console.log(data)
         const today = new Date();
 
         var params = {
@@ -169,8 +166,7 @@ class TipoUnidad extends Component {
 
         console.log(params)
 
-        const url = `${process.env.REACT_APP_API_URL}/TipoUnidad/Modificar`;
-        axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+        modificarTipoUnidades(data.idTipoUnidad, params).then(respuesta => {
             console.log(respuesta)
             showSuccess(respuesta.data)
             this.getAllData()
@@ -203,8 +199,7 @@ class TipoUnidad extends Component {
     }
 
     getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/TiposUnidades/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerTipoUnidades().then(respuesta => {
             this.setState({ data: respuesta.data })
         });
     }

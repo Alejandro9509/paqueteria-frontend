@@ -8,6 +8,9 @@ import { DataGrid } from '@material-ui/data-grid';
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import { Tooltip } from "@material-ui/core";
+import { obtenerCiudades } from "../Util/Contexts/CiudadesContext";
+import { obtenerCodigoPostal } from "../Util/Contexts/CodigoPostalContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -32,7 +35,7 @@ function Zonas() {
     idMunicipioSeleccionado: 0,
     idCiudadSeleccionado: 0,
     idCodigoPostalSeleccionado: 0,
-    DerechoBorrar: 58,
+    DerechoBorrar: 21,
     CreadoPor: localStorage.getItem("UsuarioId"),
     ModificadoPor: localStorage.getItem("UsuarioId"),
     height: window.innerHeight
@@ -73,8 +76,7 @@ function Zonas() {
 
     function handleEliminar(id) {
         var derecho;
-        const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        axios.get(urlDelete, { headers }).then(respuesta => {
+        validarPermisos(state).then(respuesta => {
             derecho = respuesta.data;
             if (derecho == false) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
@@ -190,22 +192,22 @@ function Zonas() {
         },
         {
             headerName: "Creado El",
-            field: "m_dtCreadoEl",
+            field: "m_sCreadoEl",
             width: 200,
         },
         {
             headerName: "Creado Por",
-            field: "m_nCreadoPor",
+            field: "m_sCreadoPor",
             width: 125,
         },
         {
             headerName: "Modificado El",
-            field: "m_dtModificadoEl",
+            field: "m_sModificadoEl",
             width: 200,
         },
         {
             headerName: "Modificado Por",
-            field: "m_nModificadoPor",
+            field: "m_sModificadoPor",
             width: 150,
         }
 
@@ -278,15 +280,13 @@ function Zonas() {
   }
 
   async function getAllCiudades() {
-    const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
-    await axios.get(url, { headers }).then((respuesta) => {
+    obtenerCiudades().then((respuesta) => {
       setDataCiudad(respuesta.data);
     });
   }
 
   async function getAllCodigoPostal() {
-    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
-    await axios.get(url, { headers }).then((respuesta) => {
+    obtenerCodigoPostal().then((respuesta) => {
       console.log(respuesta.data)
       setDataCodigoPostal(respuesta.data);
       getAllLocalidades(respuesta.data[0].m_nIdCP)

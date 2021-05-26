@@ -7,6 +7,7 @@ import { DataGrid } from '@material-ui/data-grid';
 
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
+import { obtenerEstatusRecoleccion } from "../Util/Contexts/EstatusContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -63,8 +64,7 @@ function EstatusRecoleccion() {
     }, []);
 
     function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoRecoleccion`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerEstatusRecoleccion().then(respuesta => {
             setData(respuesta.data)
         });
     };

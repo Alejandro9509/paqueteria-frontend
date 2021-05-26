@@ -1,29 +1,28 @@
 import logo from "../logo.svg";
 import "../App.css";
 
-import React, { useEffect, useState, setData, useMemo, Component } from "react";
+import React, { useEffect } from "react";
 
 import axios from "axios";
-import { FormControl, Input, InputLabel, Select, Step, StepLabel, Stepper, TextField, Tooltip } from "@material-ui/core";
+import { FormControl, InputLabel, Select, Step, StepLabel, Stepper, TextField, Tooltip } from "@material-ui/core";
 
-import DataTable from "react-data-table-component";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import { useTable, useFilters, useSortBy } from "react-table";
-import ExportCSV from "../Components/Template/Export";
-import ExportPDF from "../Components/Template/ExportPDF";
 import { DataGrid } from '@material-ui/data-grid';
 
 import $ from "jquery";
 import { remove_array_element } from "../Util/Util";
 
-import { SettingsEthernet } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 
 
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
+import { obtenerGrupoUnidades } from "../Util/Contexts/GrupoUnidadesContext";
+import { obtenerOperadores } from "../Util/Contexts/OperadoresContext";
+import { obtenerUnidades, obtenerUnidadesId, eliminarUnidades, validaCodigoUnidad, modificarUnidades, agregarUnidades } from "../Util/Contexts/UnidadesContext";
+import { obtenerTipoUnidades } from "../Util/Contexts/TipoUnidadContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -111,141 +110,11 @@ function Unidades(props) {
         },
         {
             headerName: "Vencimiento",
-            field: "m_dtPlacasVencimiento",
+            field: "m_sPlacasVencimiento",
             width: 200
         },
     ]);
-
-    function DefaultColumnFilter({
-        column: { filterValue, preFilteredRows, setFilter },
-    }) {
-        const count = preFilteredRows.length;
-
-        return (
-            <input
-                className="form-control"
-                value={filterValue || ""}
-                onChange={(e) => {
-                    setFilter(e.target.value || undefined);
-                }}
-                placeholder={`Buscar ${count} registros...`}
-            />
-        );
-    }
-
-    function Table({ columns, data }) {
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        );
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn,
-            },
-            useFilters,
-            useSortBy
-        );
-
-        return (
-            <div className="col-md-12">
-                <table className="table" {...getTableProps()}>
-                    <thead>
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                <th>Acciones</th>
-                                {headerGroup.headers.map((column) => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render("Name")}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
-                                            {column.isSorted ? (
-                                                column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up" />
-                                                ) : (
-                                                    <i className="fa fa-caret-down" />
-                                                )
-                                            ) : (
-                                                ""
-                                            )}
-                                        </span>
-                                        <div>
-                                            {column.canFilter ? column.render("Filter") : null}
-                                        </div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                        {rows.map((row, i) => {
-                            prepareRow(row);
-                            return (
-                                <tr {...row.getRowProps()}
-                                    onClick={handleSelectRow.bind(this, row.original.m_nIdUnidad)}
-                                    className={state.idUnidad === row.original.m_nIdUnidad ? classes.seleccionado : classes.noSeleccionado}>
-
-                                    <td>
-                                        <div>
-                                            <a
-                                                href="#Agregar"
-                                                role="tab"
-                                                data-toggle="tab"
-                                                onClick={() =>
-                                                    handleShowModificar(row.original.m_nIdUnidad)
-                                                }
-                                                className="btn btn-default btn-sm"
-                                            >
-                                                <i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} />
-                                            </a>
-                                            <a
-                                                href="#Agregar"
-                                                role="tab"
-                                                data-toggle="tab"
-                                                onClick={() =>
-                                                    handleShowModificar(row.original.m_nIdUnidad)
-                                                }
-                                                className="btn btn-default btn-sm"
-                                            >
-                                                <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                                            </a>
-                                            <a
-                                                href="#"
-                                                className="btn btn-default btn-sm"
-                                                onClick={() => handleEliminar(row.original.m_nIdUnidad)}
-                                            >
-                                                <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
-                                            </a>
-                                        </div>
-                                    </td>
-                                    {row.cells.map((cell) => {
-                                        return (
-                                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                        );
-                                    })}
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
-            </div>
-        );
-    }
-
-    const classes = useStyles();
+    
     const [dataOperador, setDataOperador] = React.useState([]);
 
   const [dataTiposUnidad, setDataTiposUnidad] = React.useState([]);
@@ -457,9 +326,7 @@ function Unidades(props) {
   }
 
     function handleShowModificar(id) {
-        console.log(id);
-        const url = `${process.env.REACT_APP_API_URL}/Unidad/GetById/` + id;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerUnidadesId(id).then((respuesta) => {
             console.log(respuesta.data);
             setState({
                 ...state,
@@ -562,8 +429,7 @@ function Unidades(props) {
     }, []);
 
     function getAllUnidades() {
-        const url = `${process.env.REACT_APP_API_URL}/Unidades/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerUnidades().then((respuesta) => {
             console.log(respuesta);
 
             setDataListadoUnidades(respuesta.data);
@@ -571,15 +437,13 @@ function Unidades(props) {
     }
 
     function getAllOperadores() {
-        const url = `${process.env.REACT_APP_API_URL}/Operadores/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerOperadores().then((respuesta) => {
             setDataOperador(respuesta.data);
         });
     }
 
     function getAllTipoUnidades() {
-        const url = `${process.env.REACT_APP_API_URL}/TiposUnidades/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerTipoUnidades().then((respuesta) => {
             setDataTiposUnidad(respuesta.data);
         });
     }
@@ -591,8 +455,7 @@ function Unidades(props) {
         });
     }
     function getAllGruposUnidades() {
-        const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerGrupoUnidades().then((respuesta) => {
             setDataGruposUnidades(respuesta.data);
         });
     }
@@ -633,9 +496,7 @@ function Unidades(props) {
 
     function handleEliminar(id) {
         //no esta el derecho de borrar en el listado original
-        const url = `${process.env.REACT_APP_API_URL}/Unidad/Eliminar/` + id;
-        axios
-            .get(url, { headers })
+        eliminarUnidades(id)
             .then((respuesta) => {
                 console.log(respuesta);
                 getAllUnidades();
@@ -661,9 +522,7 @@ function Unidades(props) {
     }
 
     const handleChangeCodigo = (event) => {
-        const url =
-            `${process.env.REACT_APP_API_URL}/Unidades/ValidaCodigoUnidad/` + state.codigo
-        axios.get(url, { headers }).then((respuesta) => {
+        validaCodigoUnidad(state.codigo).then((respuesta) => {
 
             if (respuesta.data != "") {
 
@@ -795,10 +654,7 @@ function Unidades(props) {
 
         console.log(params);
         if (state.idUnidad != 0) {
-            const url =
-                `${process.env.REACT_APP_API_URL}/Unidad/Modificar/` + state.idUnidad;
-            axios
-                .put(url, Object.assign({}, params), { headers })
+            modificarUnidades(state.idUnidad, params)
 
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -809,9 +665,7 @@ function Unidades(props) {
                     showSuccess("err");
                 });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/Unidad/Agregar`;
-            axios
-                .post(url, Object.assign({}, params), { headers })
+            agregarUnidades(params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     getAllUnidades();
@@ -1005,29 +859,6 @@ function Unidades(props) {
             </div>
         );
     });
-
-    function value(event) {
-        console.log(event.target.value);
-    }
-
-    function closeSeccions() {
-        //Cerrar todas las seciones
-        var $section = $(".widget-toggle");
-        $section.each(function () {
-            var $welem = $(this)
-                .parentsUntil(".widget-action-bar")
-                .parentsUntil(".w-action")
-                .parents(".widget-header")
-                .next(".widget-container");
-            $welem.slideUp();
-            $(this).children("a").children("i").removeClass("zmdi-chevron-down");
-            $(this).children("a").children("i").addClass("zmdi-chevron-up");
-        });
-    }
-
-    useEffect((value) => {
-        //closeSeccions();
-    }, []);
 
     return (
         <div >

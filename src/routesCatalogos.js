@@ -22,9 +22,13 @@ import EstatusInformePage from './Views/EstatusInforme';
 import EstatusDocumentoPage from './Views/EstatusDocumento';
 import ConceptosFacturacionPage from './Views/ConceptosFacturacion/ConceptosFacturacion';
 import TarifasPage from './Views/Tarifas/Tarifas';
+import ParametrosConfiguracionPage from './Views/ParametrosConfiguracion/ParametrosConfiguracion';
 import ClasificacionViajePage from './Views/ClasificacionViajes/ClasificacionViaje';
 import PlantillaCorreo from './Views/PlantillaCorreo';
 
+import {ReactComponent as TServicioIcon} from './iconos/Catalogos/Icono Tipos Servicio/icono_tipo_servicio.svg';
+
+import {ReactComponent as EDocumentosIcon} from './iconos/Catalogos/Icono Estatus Documento/icono_estatus_documento.svg';
 import {ReactComponent as GClienteIcon} from './iconos/Catalogos/Icono Grupo Clientes/icono_grupo_cliente.svg';
 import {ReactComponent as BancoIcon} from './iconos/Catalogos/Icono Banco/icono_banco.svg';
 import {ReactComponent as CasetaIcon} from './iconos/Catalogos/Icono Caseta/icono_caseta.svg';
@@ -136,7 +140,7 @@ const catalogRoutes = [
   {
     path: "/TiposServicio",
     name: "Tipos de Servicio",
-    icon: <PConfiguracionIcon/>,
+    icon: <TServicioIcon/>,
     component: TipoServicioPage,
   },
   {
@@ -172,7 +176,7 @@ const catalogRoutes = [
   {
     path: "/EstatusDocumento",
     name: "Estatus Documentos",
-    icon: <GClienteIcon/>,
+    icon: <EDocumentosIcon/>,
     component: EstatusDocumentoPage,
   },
 
@@ -219,10 +223,10 @@ const catalogRoutes = [
     component: TipoCobroPage,
   },
   {
-    path: "/Embalajes",
+    path: "/ParametrosConfiguracion",
     name: "Parámetros Configuración",
     icon: <PConfiguracionIcon/>,
-    component: EmbalajesPage,
+    component: ParametrosConfiguracionPage,
   },
   {
     path: "/PlantillaCorreo",

@@ -14,6 +14,7 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
+import { obtenerSucursales } from '../../Util/Contexts/SucursalContext';
 
 window.jQuery = window.$ = $;
 const headers = {
@@ -62,8 +63,7 @@ class AgregarFolio extends Component {
     }
 
     getAllSucursales() {
-        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-        axios.get(url, {headers}).then((respuesta) => {
+        obtenerSucursales().then((respuesta) => {
             this.setState({dataSucursal: respuesta.data})
         });
     }

@@ -1,0 +1,54 @@
+import axios from "axios";
+import { trackPromise } from "react-promise-tracker";
+
+const headers = {
+    'Content-Type': 'application/json',
+    //    'access-control-allow-origin': '*'
+}
+
+function modificarTipoServicio(id, params) {
+    const url = `${process.env.REACT_APP_API_URL}/TipoServicio/Modificar/` + id;
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, params), { headers })
+        );
+    return result
+}
+
+function agregarTipoServicio(params) {
+    const url = `${process.env.REACT_APP_API_URL}/TipoServicio/Agregar`;
+    let result;
+    trackPromise(
+        result =  axios.post(url, Object.assign({}, params), { headers })
+        );
+    return result
+}
+
+function eliminarTipoServicio(id) {
+    const url = `${process.env.REACT_APP_API_URL}/TipoServicio/Eliminar/` + id;
+    let result;
+    trackPromise(
+        result =  axios.delete(url, { headers })
+        );
+    return result
+}
+
+function obtenerTipoServicio() {
+    const url = `${process.env.REACT_APP_API_URL}/TipoServicio/GetListado`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
+}
+
+function obtenerTipoServicioId(id) {
+    const url = `${process.env.REACT_APP_API_URL}/TipoServicio/GetById/` + id;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
+}
+
+export { modificarTipoServicio, agregarTipoServicio, eliminarTipoServicio, obtenerTipoServicioId, obtenerTipoServicio }

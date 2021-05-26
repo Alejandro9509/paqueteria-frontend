@@ -14,6 +14,7 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
+import { obtenerClasificacionViajeId } from '../../Util/Contexts/ClasificacionViajeContext';
 window.jQuery = window.$ = $;
 const headers = {
     'Content-Type': 'application/json',
@@ -69,8 +70,7 @@ class AgregarClasificacionViaje extends Component {
     // };
 
     handleShowConsultar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/ClasificacionViajes/GetById/` + id;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerClasificacionViajeId(id).then(respuesta => {
             console.log(respuesta.data)
             this.setState({
                 codigo: respuesta.data.Codigo,

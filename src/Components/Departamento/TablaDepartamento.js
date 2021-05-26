@@ -1,6 +1,7 @@
 import React, {useEffect} from "react";
 import DataTable from 'react-data-table-component';
 import axios from "axios";
+import { obtenerDepartamentos } from "../../Util/Contexts/DepartamentoContext";
 
 function TablaDepartamento() {
   const headers = {
@@ -65,8 +66,7 @@ function TablaDepartamento() {
   }, []);
 
   async function getAllData() {
-    const url = `${process.env.REACT_APP_API_URL}/Departamento/GetListado`;
-    await axios.get(url, {headers}).then(respuesta => {
+    obtenerDepartamentos().then(respuesta => {
       setData(respuesta.data)
     });
   };
