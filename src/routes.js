@@ -18,6 +18,7 @@ import {ReactComponent as RecolecionIcon} from './iconos/Menu/IconoRecoleccion/i
 import {ReactComponent as EmbarqueIcon} from './iconos/Menu/IconoEmbarque/iconoEmbarque.svg';
 import {ReactComponent as GuiasIcon} from './iconos/Menu/IconoGuias/iconoGuia.svg';
 import {ReactComponent as viajeIcon} from './iconos/Menu/IconoViajes/iconoViajes.svg';
+import Tutoriales from "./Views/Tutoriales/Tutoriales";
 
 
 const dashboardRoutes = [
@@ -85,14 +86,14 @@ const dashboardRoutes = [
     single: true,
     child:[]
   },
-  /*{
-    path: "/Historial",
-    name: "Historial",
+  {
+    path: "/Tutoriales",
+    name: "Tutoriales",
     icon: viajeIcon,
-    component: Historial,
+    component: Tutoriales,
     single: true,
     child:[]
-  }*/
+  }
 ];
 
 export default dashboardRoutes;
