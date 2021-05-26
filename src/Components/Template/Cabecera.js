@@ -9,12 +9,33 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Tooltip from '@material-ui/core/Tooltip';
+import {ReactComponent as GClienteIcon} from "../../iconos/Catalogos/Icono Grupo Clientes/icono_grupo_cliente.svg";
+import GrupoClientePage from "../../Views/GrupoCliente";
 
 function Cabecera({ titulo, children }) {
 
     const shortcuts =[
-        'Item 1',
-        'Item 2',
+        {
+            path: "/GrupoCliente",
+            name: "Grupo Clientes",
+            icon:  <GClienteIcon style={{width:30, height:30}}/>,
+            component: GrupoClientePage,
+        },{
+            path: "/GrupoCliente",
+            name: "Grupo Clientes",
+            icon:  <GClienteIcon style={{width:30, height:30}}/>,
+            component: GrupoClientePage,
+        },{
+            path: "/GrupoCliente",
+            name: "Grupo Clientes",
+            icon:  <GClienteIcon style={{width:30, height:30}}/>,
+            component: GrupoClientePage,
+        },{
+            path: "/GrupoCliente",
+            name: "Grupo Clientes",
+            icon:  <GClienteIcon style={{width:30, height:30}}/>,
+            component: GrupoClientePage,
+        },
     ];
     const menu_items = [
         {
@@ -100,7 +121,15 @@ function Cabecera({ titulo, children }) {
                 </div>
             </Hidden>
 
-            <div className="topbar-right pull-right iconic-aside-container" style={{display:'flex', flexDirection:'row', alignItems: 'center', height: 60}}>
+            <div className="topbar-right pull-right iconic-aside-container"
+                 style={
+                     {
+                         display:'flex',
+                         flexDirection:'row',
+                         alignItems: 'center',
+                         height: 60
+                     }
+                 }>
                 <div>
                     <Tooltip title={"Ayuda en línea"}>
                         <a href={pdfAyuda} target={"_blank"}>
@@ -160,11 +189,11 @@ function Cabecera({ titulo, children }) {
                             },
                         }}>
                         {shortcuts.map((option) => (
-                            <MenuItem key={option} onClick={handleShortcutsClose}>
+                            <MenuItem key={option.name} onClick={handleShortcutsClose}>
                                 <ListItemIcon>
-                                    <img src={iconoShortcuts} style={{height:15, width:15}}/>
+                                    {option.icon}
                                 </ListItemIcon>
-                                {option}
+                                {option.name}
                             </MenuItem>
                         ))}
                     </Menu>
