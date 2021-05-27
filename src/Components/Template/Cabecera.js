@@ -40,7 +40,8 @@ function Cabecera({ titulo, children }) {
     const menu_items = [
         {
             id: '0',
-            name: 'Accesos director',
+            name: 'Accesos directos',
+            path: '/AccesosDirectos'
         },
         {
             id: '1',
