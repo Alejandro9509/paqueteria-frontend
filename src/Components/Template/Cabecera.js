@@ -64,6 +64,7 @@ function Cabecera({ titulo, children }) {
         {
             id: '5',
             name: 'Quejas y sugerencias',
+            path: "/QuejasSugerencias",
         },
     ];
 

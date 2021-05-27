@@ -1,5 +1,6 @@
 import Tutoriales from "./Views/Tutoriales/Tutoriales";
 import Actualizacion from "./Views/Actualizacion/Actualizacion";
+import QuejasSugerencias from "./Views/QuejasSugerencias/QuejasSugerencias";
 
 
 const cabeceraRoutes = [
@@ -12,6 +13,11 @@ const cabeceraRoutes = [
         path: "/Actualizacion",
         name: "Actualización",
         component: Actualizacion
+    },
+    {
+        path: "/QuejasSugerencias",
+        name: "Quejas y Sugerencias",
+        component: QuejasSugerencias,
     }
 ];
 
