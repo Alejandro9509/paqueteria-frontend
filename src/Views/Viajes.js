@@ -19,8 +19,9 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 import { dataGridLocaleText } from "../Constants";
-import { Tooltip } from "@material-ui/core";
+import {Button, Dialog, DialogActions, DialogContent, Tooltip} from "@material-ui/core";
 import { obtenerEstatusDocumentos } from "../Util/Contexts/EstatusContext";
+import {confirmAlert} from "react-confirm-alert";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -48,7 +49,6 @@ function Viajes() {
     const [dataSucursal, setDataSucursal] = React.useState([]);
     const [dataEstatusViaje, setEstatusViaje] = React.useState([]);
     const [dataEstatusDocumento, setEstatusDocumento] = React.useState([]);
-
     const [state, setState] = React.useState({
         showPopUp: false,
         idViaje: 0,
@@ -64,7 +64,8 @@ function Viajes() {
         fechaFinal: "",
         sucursalListado: 0,
         estatusListado: 0,
-        estatusDocumentoListado: 0
+        estatusDocumentoListado: 0,
+        idEquipo: 0,
 
 
 
@@ -75,12 +76,14 @@ function Viajes() {
          const url = `${process.env.REACT_APP_API_URL_LOCAL}/SisEstatus/getListadoViajes`;
         axios.get(url, { headers }).then((respuesta) => {
              setEstatusViaje(respuesta.data);
+             console.log(respuesta.data);
          });
     }
 
     function getAllEstatusDocumento() {
         obtenerEstatusDocumentos().then((respuesta) => {
             setEstatusDocumento(respuesta.data);
+            console.log(respuesta.data);
         });
     }
 
@@ -90,6 +93,7 @@ function Viajes() {
             setDataSucursal(respuesta.data);
         });
     }
+
     const handleAceptar = (e) => {
         e.preventDefault()
         // var params = {
@@ -329,12 +333,16 @@ function Viajes() {
         getAllSucursales();
         getAllEstatusViaje();
         getAllEstatusDocumento();
+
+        getEstatusEquipoListado();
+        getDispEquipoListado();
     }, []);
 
     function getAllData() {
         const url = `${process.env.REACT_APP_API_URL}/Viajes/GetListado`;
         axios.get(url, { headers }).then(respuesta => {
             setData(respuesta.data)
+            console.log(respuesta.data);
         });
     };
 
@@ -456,9 +464,188 @@ function Viajes() {
         )
     }
 
+    const columnsEquipo = [
+        {
+            headerName: "Acciones",
+            sortable: false, filterable: false,
+            field: "",
+            renderCell: (row) => {
+                return (
+                    <div>
+                        <Tooltip title="Modificar">
+                            <a
+                                onClick={() => showActualizarDispEquipo(row.row.m_nIdEquipo)}
+                                className="btn btn-default btn-xs">
+                                <i className="fa fa-pencil-square-o"
+                                    style={{ color: "#F9A03E" }}/>
+                            </a>
+                        </Tooltip>
+                    </div>
+                );
+            },
+            width: 100,
+        },
+        {
+            headerName: "Unidad",
+            field: "unidad",
+            width: 100,
+        }, {
+            headerName: "Tipo unidad",
+            field: "tipoUnidad",
+            width: 150,
+        }, {
+            headerName: "Estado",
+            field: "estado",
+            width: 150,
+        }, {
+            headerName: "Días",
+            field: "dias",
+            width: 100,
+        }, {
+            headerName: "Ubicación",
+            field: "ubicacion",
+            width: 200,
+        }, {
+            headerName: "Desde",
+            field: "desde",
+            width: 150,
+        },
+    ]
+    const [equipo, setEquipo] = React.useState([]);
+    const [estatusEquipo, setEstatusEquipo] = React.useState(0);
+    const [estatusEquipoListado, setEstatusEquipoListado] = React.useState([]);
+    const [eventOptions, setEventOptions] = React.useState({
+        showDispEquipoDialog : false,
+    });
+
+    function getEstatusEquipoListado(){
+        setEstatusEquipoListado([
+            {
+                id: 0,
+                name: "Disponible",
+            },
+            {
+                id: 1,
+                name: "Mantenimiento",
+            },
+            {
+                id: 2,
+                name: "En Patio",
+            },
+            {
+                id: 3,
+                name: "En Reparación",
+            }
+        ]);
+    }
+    function getDispEquipoListado(){
+        setEquipo([
+            {
+                id: 0,
+                unidad: "JT-5545",
+                tipoUnidadId: 0,
+                tipoUnidad: "Contenedor",
+                estadoId: 0,
+                estado: "Documentado",
+                dias: "944.0",
+                ubicacion: "Mexicali, Baja California",
+                desde: "12/12/2020",
+            },
+            {
+                id: 1,
+                unidad: "JT-5545",
+                tipoUnidadId: 0,
+                tipoUnidad: "Contenedor",
+                estadoId: 0,
+                estado: "Documentado",
+                dias: "944.0",
+                ubicacion: "Mexicali, Baja California",
+                desde: "12/12/2020",
+            },
+            {
+                id: 2,
+                unidad: "JT-5545",
+                tipoUnidadId: 0,
+                tipoUnidad: "Contenedor",
+                estadoId: 0,
+                estado: "Documentado",
+                dias: "944.0",
+                ubicacion: "Mexicali, Baja California",
+                desde: "12/12/2020",
+            }
+        ]);
+    }
+
+    const handleEstatus = (event) => {
+        setEstatusEquipo(event.target.value);
+    }
+    const showActualizarDispEquipo = () => {
+        setEventOptions({...eventOptions, showDispEquipoDialog: true});
+    }
+    const closeActualizarDispEquipo = () =>{
+        setEventOptions({...eventOptions, showDispEquipoDialog: false});
+    }
+
     return (
         <div >
-
+            <Dialog open={eventOptions.showDispEquipoDialog}
+                    onClose={closeActualizarDispEquipo}
+                    fullWidth={true}
+                    maxWidth={'sm'}>
+                <DialogContent>
+                    <div style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: 'space-between',
+                        alignItems: 'center'}}>
+                        <div>
+                            <span>Actualizar Estatus de Unidad</span>
+                        </div>
+                        <div>
+                            <span>Unidad:</span>
+                            <span style={{margin: 10}}>{equipo.unidad}</span>
+                        </div>
+                        <div style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: 'center'}}>
+                            <span style={{marginRight: 10}}>Estatus: </span>
+                            <label className="input select">
+                                <FormControl fullWidth variant="outlined" margin="dense">
+                                    <Select
+                                        labelId="idEstatusLabel"
+                                        className="form-control"
+                                        required
+                                        value={equipo.estatus}
+                                        onChange={handleEstatus}
+                                        id="estatusListado">
+                                        {estatusEquipoListado.map((estatus) => (
+                                            <option
+                                                key={estatus.id}
+                                                value={equipo.esta}>
+                                                {estatus.name}
+                                            </option>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </label>
+                        </div>
+                    </div>
+                    <div style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        margin: 10}}>
+                        <span style={{marginRight: 10}}>Origen: </span>
+                        <TextField id="outlined-basic" variant="outlined" />
+                    </div>
+                    <DialogActions>
+                        <Button variant={'contained'} color={'primary'} onClick={closeActualizarDispEquipo}>Aceptar</Button>
+                        <Button variant={'outlined'} color={'primary'} onClick={closeActualizarDispEquipo}>Cancelar</Button>
+                    </DialogActions>
+                </DialogContent>
+            </Dialog>
             <header className="topbar clearfix">
                 <Cabecera titulo="Viajes" >
                     <div className="page-header">
@@ -489,7 +676,7 @@ function Viajes() {
                         <li className="active">
                             <a data-toggle="tab" href="#Listado">
                                 <i className="fa fa-list" /> Listado
-            </a>
+                            </a>
                         </li>
                         <li>
                             <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
@@ -507,7 +694,7 @@ function Viajes() {
                                 });
                             }}>
                                 <i className="fa fa-print" /> Imprimir
-              </a>
+                            </a>
                         </li>
 
                     </ul>
@@ -644,7 +831,7 @@ function Viajes() {
                                         </form>
                                     </div>
 
-                                    <div className="row" style={{ height: state.height - 650, width: '100%' }}>
+                                    <div className="row" style={{ height: state.height - 250, width: '100%' }}>
                                         {data.length != 0 ? (
                                             <DataGrid
                                                 localeText={dataGridLocaleText}
@@ -671,24 +858,24 @@ function Viajes() {
                                     <label className="label" style={{ color: '#717171' }}>Disponibilidad del Equipo</label>
                                     <div className="widget-wrap">
                                         <div className="widget-content">
-                                            <div className="row" style={{ height: state.height - 1000, width: '100%' }}>
-                                                {/*{data.length != 0 ? (*/}
-                                                {/*  <DataGrid*/}
-                                                {/*    rows={data}*/}
-                                                {/*    columns={columns}*/}
-                                                {/*    density="compact"*/}
-                                                {/*    pageSize={ Math.floor((state.height - 310)/30)}*/}
-                                                {/*    getRowId={(row) => row.m_nIdDepartamento}*/}
-                                                {/*    onRowSelected={(row) => {*/}
-                                                {/*      setState({*/}
-                                                {/*        ...state,*/}
-                                                {/*        idViaje: row.data.m_nIdDepartamento*/}
-                                                {/*      })*/}
-                                                {/*    }}*/}
-                                                {/*  />*/}
-                                                {/*) : (*/}
-                                                {/*  <div>No se encontró ningún registro</div>*/}
-                                                {/*)}*/}
+                                            <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                                                {equipo.length !== 0 ? (
+                                                  <DataGrid
+                                                    rows={equipo}
+                                                    columns={columnsEquipo}
+                                                    density="compact"
+                                                    pageSize={ Math.floor((state.height - 310)/30)}
+                                                    getRowId={(row) => row.m_nIdEquipo}
+                                                    onRowSelected={(row) => {
+                                                      setState({
+                                                        ...state,
+                                                        idEquipo: row.data.m_nIdEquipo
+                                                      })
+                                                    }}
+                                                  />
+                                                ) : (
+                                                  <div>No se encontró ningún registro</div>
+                                                )}
                                             </div>
                                         </div>
                                     </div>
@@ -699,23 +886,23 @@ function Viajes() {
                                     <div className="widget-wrap">
                                         <div className="widget-content">
                                             <div className="row" style={{ height: state.height - 1000, width: '100%' }}>
-                                                {/*{data.length != 0 ? (*/}
-                                                {/*  <DataGrid*/}
-                                                {/*    rows={data}*/}
-                                                {/*    columns={columns}*/}
-                                                {/*    density="compact"*/}
-                                                {/*    pageSize={ Math.floor((state.height - 310)/30)}*/}
-                                                {/*    getRowId={(row) => row.m_nIdDepartamento}*/}
-                                                {/*    onRowSelected={(row) => {*/}
-                                                {/*      setState({*/}
-                                                {/*        ...state,*/}
-                                                {/*          idViaje: row.data.m_nIdDepartamento*/}
-                                                {/*      })*/}
-                                                {/*    }}*/}
-                                                {/*  />*/}
-                                                {/*) : (*/}
-                                                {/*  <div>No se encontró ningún registro</div>*/}
-                                                {/*)}*/}
+                                                {/*{data.length != 0 ? (
+                                                  <DataGrid
+                                                    rows={data}
+                                                    columns={columns}
+                                                    density="compact"
+                                                    pageSize={ Math.floor((state.height - 310)/30)}
+                                                    getRowId={(row) => row.m_nIdDepartamento}
+                                                    onRowSelected={(row) => {
+                                                      setState({
+                                                        ...state,
+                                                          idViaje: row.data.m_nIdDepartamento
+                                                      })
+                                                    }}
+                                                  />
+                                                ) : (
+                                                  <div>No se encontró ningún registro</div>
+                                                )}*/}
                                             </div>
                                         </div>
                                     </div>
