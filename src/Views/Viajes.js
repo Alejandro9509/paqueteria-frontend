@@ -266,10 +266,11 @@ function Viajes() {
             sortable: false, filterable: false,
             field: "",
             renderCell: (row) => {
+                console.log(row);
                 return (
                     <div>
                         <Tooltip title="Modificar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdViaje))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                            <a role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdViaje))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
 
                         </Tooltip>
                         <Tooltip title="Consultar">
@@ -336,6 +337,8 @@ function Viajes() {
 
         getEstatusEquipoListado();
         getDispEquipoListado();
+
+        getParadasListado();
     }, []);
 
     function getAllData() {
@@ -516,6 +519,7 @@ function Viajes() {
     const [estatusEquipoListado, setEstatusEquipoListado] = React.useState([]);
     const [eventOptions, setEventOptions] = React.useState({
         showDispEquipoDialog : false,
+        showParadasDialog: false,
     });
 
     function getEstatusEquipoListado(){
@@ -584,6 +588,112 @@ function Viajes() {
     }
     const closeActualizarDispEquipo = () =>{
         setEventOptions({...eventOptions, showDispEquipoDialog: false});
+    }
+
+    /**DETALLE DE PARADAS*/
+
+    const columnsParadas = [
+        {
+            headerName: "Camión",
+            field: "camion",
+            renderCell: (row) => {
+                console.log(row);
+                return (
+                    <a onClick={() => showCamionDialog()}>{row.row.camion}</a>
+                );
+            },
+            width: 100,
+        },
+        {
+            headerName: "Operador",
+            field: "operador",
+            width: 150,
+            renderCell: (row) => {
+              return (
+                  <a onClick={() => showOperadorDialog()}>{row.row.operador}</a>
+              )
+            },
+        },
+        {
+            headerName: "Salida",
+            field: "nameSalida",
+            width: 100,
+            renderCell: (row) => {
+                return(
+                    <a onClick={() => showSalidaDialog()}>{row.row.nameSalida}</a>
+                )
+            }
+        },
+        {
+            headerName: "Fecha",
+            field: "fecha_salida",
+            width: 150,
+        },
+        {
+            headerName: "Origen",
+            field: "origen",
+            width: 200,
+        },
+        {
+            headerName: "Llegada",
+            field: "nameLlegada",
+            width: 100,
+            renderCell: (row) => {
+                return(
+                    <a onClick={() => showLlegadaDialog()}>{row.row.nameLlegada}</a>
+                    )
+            }
+        },
+        {
+            headerName: "Fecha",
+            field: "fecha_llegada",
+            width: 150,
+        },
+        {
+            headerName: "Destino",
+            field: "destino",
+            width: 200,
+        },
+        {
+            headerName: "Liq",
+            field: "liq",
+            width: 80,
+        },
+    ]
+    const [paradasListado, setParadasListado] = React.useState([]);
+
+    function getParadasListado(){
+        setParadasListado([
+            {
+                id: 0,
+                camion: "JT-55455",
+                operador: "Gonzalez Claudio",
+                idSalida: 0,
+                nameSalida: "Asignar",
+                fecha_salida: "12/12/2020",
+                origen: "Mexicali,Baja California",
+                idLlegada: "0",
+                nameLlegada: "Asignar",
+                fecha_llegada: "12/12/2021",
+                destino: "Tijuana. Baja California",
+                liq: "",
+            }
+        ]);
+    }
+    const showCamionDialog = () =>{
+        console.log("Espero se haya abierto el dialogo al clickear camion");
+    }
+
+    const showOperadorDialog = () => {
+        console.log("Espero que se haya abierto el dialogo al clickear operador");
+    }
+
+    const showSalidaDialog = () => {
+        console.log("Espero que se haya abierto el dialogo al clickear salida");
+    }
+
+    const showLlegadaDialog = () => {
+        console.log("Espero que se haya abierto el dialogo al clickear llegada");
     }
 
     return (
@@ -885,24 +995,24 @@ function Viajes() {
                                     <label className="label" style={{ color: '#717171' }} >Detalle de Paradas</label>
                                     <div className="widget-wrap">
                                         <div className="widget-content">
-                                            <div className="row" style={{ height: state.height - 1000, width: '100%' }}>
-                                                {/*{data.length != 0 ? (
+                                            <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                                                {paradasListado.length !== 0 ? (
                                                   <DataGrid
-                                                    rows={data}
-                                                    columns={columns}
+                                                    rows={paradasListado}
+                                                    columns={columnsParadas}
                                                     density="compact"
                                                     pageSize={ Math.floor((state.height - 310)/30)}
-                                                    getRowId={(row) => row.m_nIdDepartamento}
-                                                    onRowSelected={(row) => {
-                                                      setState({
-                                                        ...state,
-                                                          idViaje: row.data.m_nIdDepartamento
-                                                      })
-                                                    }}
+                                                    // getRowId={(row) => row.m_nIdDepartamento}
+                                                    // onRowSelected={(row) => {
+                                                    //   setState({
+                                                    //     ...state,
+                                                    //       idViaje: row.data.m_nIdDepartamento
+                                                    //   })
+                                                    // }}
                                                   />
                                                 ) : (
                                                   <div>No se encontró ningún registro</div>
-                                                )}*/}
+                                                )}
                                             </div>
                                         </div>
                                     </div>
