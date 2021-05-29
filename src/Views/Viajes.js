@@ -22,6 +22,7 @@ import { dataGridLocaleText } from "../Constants";
 import {Button, Dialog, DialogActions, DialogContent, Tooltip} from "@material-ui/core";
 import { obtenerEstatusDocumentos } from "../Util/Contexts/EstatusContext";
 import {confirmAlert} from "react-confirm-alert";
+import ActualizarDiponibilidadEquipo from "./Viajes/ActualizarDiponibilidadEquipo";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -83,7 +84,6 @@ function Viajes() {
     function getAllEstatusDocumento() {
         obtenerEstatusDocumentos().then((respuesta) => {
             setEstatusDocumento(respuesta.data);
-            console.log(respuesta.data);
         });
     }
 
@@ -266,7 +266,6 @@ function Viajes() {
             sortable: false, filterable: false,
             field: "",
             renderCell: (row) => {
-                console.log(row);
                 return (
                     <div>
                         <Tooltip title="Modificar">
@@ -335,7 +334,7 @@ function Viajes() {
         getAllEstatusViaje();
         getAllEstatusDocumento();
 
-        getEstatusEquipoListado();
+        // getEstatusEquipoListado();
         getDispEquipoListado();
 
         getParadasListado();
@@ -345,7 +344,6 @@ function Viajes() {
         const url = `${process.env.REACT_APP_API_URL}/Viajes/GetListado`;
         axios.get(url, { headers }).then(respuesta => {
             setData(respuesta.data)
-            console.log(respuesta.data);
         });
     };
 
@@ -467,6 +465,8 @@ function Viajes() {
         )
     }
 
+    /**DISPONIBILIDAD DE EQUIPO*/
+
     const columnsEquipo = [
         {
             headerName: "Acciones",
@@ -477,7 +477,7 @@ function Viajes() {
                     <div>
                         <Tooltip title="Modificar">
                             <a
-                                onClick={() => showActualizarDispEquipo(row.row.m_nIdEquipo)}
+                                onClick={() => showActualizarDispEquipo(row.row)}
                                 className="btn btn-default btn-xs">
                                 <i className="fa fa-pencil-square-o"
                                     style={{ color: "#F9A03E" }}/>
@@ -492,13 +492,14 @@ function Viajes() {
             headerName: "Unidad",
             field: "unidad",
             width: 100,
-        }, {
+        },
+        {
             headerName: "Tipo unidad",
-            field: "tipoUnidad",
+            field: "nameTipoUnidad",
             width: 150,
         }, {
             headerName: "Estado",
-            field: "estado",
+            field: "nameEstatus",
             width: 150,
         }, {
             headerName: "Días",
@@ -514,78 +515,64 @@ function Viajes() {
             width: 150,
         },
     ]
-    const [equipo, setEquipo] = React.useState([]);
-    const [estatusEquipo, setEstatusEquipo] = React.useState(0);
-    const [estatusEquipoListado, setEstatusEquipoListado] = React.useState([]);
+    const [equipoListado, setEquipoListado] = React.useState([]);
+    const [equipoSelected, setEquipoSelected] = React.useState();
     const [eventOptions, setEventOptions] = React.useState({
         showDispEquipoDialog : false,
         showParadasDialog: false,
     });
 
-    function getEstatusEquipoListado(){
-        setEstatusEquipoListado([
-            {
-                id: 0,
-                name: "Disponible",
-            },
-            {
-                id: 1,
-                name: "Mantenimiento",
-            },
-            {
-                id: 2,
-                name: "En Patio",
-            },
-            {
-                id: 3,
-                name: "En Reparación",
-            }
-        ]);
-    }
     function getDispEquipoListado(){
-        setEquipo([
+        setEquipoListado([
             {
                 id: 0,
                 unidad: "JT-5545",
-                tipoUnidadId: 0,
-                tipoUnidad: "Contenedor",
-                estadoId: 0,
-                estado: "Documentado",
+                idIipoUnidad: 0,
+                nameTipoUnidad: "Contenedor",
+                idEstatus: 1,
+                nameEstatus: "Documentado",
                 dias: "944.0",
                 ubicacion: "Mexicali, Baja California",
                 desde: "12/12/2020",
+                origen: "origen 1",
             },
             {
                 id: 1,
                 unidad: "JT-5545",
-                tipoUnidadId: 0,
-                tipoUnidad: "Contenedor",
-                estadoId: 0,
-                estado: "Documentado",
+                idIipoUnidad: 0,
+                nameTipoUnidad: "Contenedor",
+                idEstatus: 0,
+                nameEstatus: "Documentado",
                 dias: "944.0",
                 ubicacion: "Mexicali, Baja California",
                 desde: "12/12/2020",
+                origen: "origen 2",
             },
             {
                 id: 2,
                 unidad: "JT-5545",
-                tipoUnidadId: 0,
-                tipoUnidad: "Contenedor",
-                estadoId: 0,
-                estado: "Documentado",
+                idIipoUnidad: 0,
+                nameTipoUnidad: "Contenedor",
+                idEstatus: 0,
+                nameEstatus: "Documentado",
                 dias: "944.0",
                 ubicacion: "Mexicali, Baja California",
                 desde: "12/12/2020",
+                origen: "origen 3"
             }
         ]);
     }
 
-    const handleEstatus = (event) => {
-        setEstatusEquipo(event.target.value);
+    function updateEquipoData(equipo){
+        console.log("Actualizar:");
+        console.log(equipo);
     }
-    const showActualizarDispEquipo = () => {
+
+    const showActualizarDispEquipo = (equipo) => {
+        setEquipoSelected(equipo)
         setEventOptions({...eventOptions, showDispEquipoDialog: true});
     }
+
     const closeActualizarDispEquipo = () =>{
         setEventOptions({...eventOptions, showDispEquipoDialog: false});
     }
@@ -597,7 +584,6 @@ function Viajes() {
             headerName: "Camión",
             field: "camion",
             renderCell: (row) => {
-                console.log(row);
                 return (
                     <a onClick={() => showCamionDialog()}>{row.row.camion}</a>
                 );
@@ -703,57 +689,16 @@ function Viajes() {
                     fullWidth={true}
                     maxWidth={'sm'}>
                 <DialogContent>
-                    <div style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: 'space-between',
-                        alignItems: 'center'}}>
-                        <div>
-                            <span>Actualizar Estatus de Unidad</span>
-                        </div>
-                        <div>
-                            <span>Unidad:</span>
-                            <span style={{margin: 10}}>{equipo.unidad}</span>
-                        </div>
-                        <div style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: 'center'}}>
-                            <span style={{marginRight: 10}}>Estatus: </span>
-                            <label className="input select">
-                                <FormControl fullWidth variant="outlined" margin="dense">
-                                    <Select
-                                        labelId="idEstatusLabel"
-                                        className="form-control"
-                                        required
-                                        value={equipo.estatus}
-                                        onChange={handleEstatus}
-                                        id="estatusListado">
-                                        {estatusEquipoListado.map((estatus) => (
-                                            <option
-                                                key={estatus.id}
-                                                value={equipo.esta}>
-                                                {estatus.name}
-                                            </option>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                            </label>
-                        </div>
-                    </div>
-                    <div style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        margin: 10}}>
-                        <span style={{marginRight: 10}}>Origen: </span>
-                        <TextField id="outlined-basic" variant="outlined" />
-                    </div>
-                    <DialogActions>
-                        <Button variant={'contained'} color={'primary'} onClick={closeActualizarDispEquipo}>Aceptar</Button>
-                        <Button variant={'outlined'} color={'primary'} onClick={closeActualizarDispEquipo}>Cancelar</Button>
-                    </DialogActions>
+                    <ActualizarDiponibilidadEquipo onSubmit={updateEquipoData} equipo={equipoSelected}>
+                        <DialogActions>
+                            <Button
+                                variant={'contained'} color={'primary'}
+                                type="submit"
+                                onClick={closeActualizarDispEquipo}>Aceptar</Button>
+                            <Button variant={'outlined'} color={'primary'} onClick={closeActualizarDispEquipo}>Cancelar</Button>
+                        </DialogActions>
+                    </ActualizarDiponibilidadEquipo>
+
                 </DialogContent>
             </Dialog>
             <header className="topbar clearfix">
@@ -969,9 +914,9 @@ function Viajes() {
                                     <div className="widget-wrap">
                                         <div className="widget-content">
                                             <div className="row" style={{ height: state.height - 250, width: '100%' }}>
-                                                {equipo.length !== 0 ? (
+                                                {equipoListado.length !== 0 ? (
                                                   <DataGrid
-                                                    rows={equipo}
+                                                    rows={equipoListado}
                                                     columns={columnsEquipo}
                                                     density="compact"
                                                     pageSize={ Math.floor((state.height - 310)/30)}
