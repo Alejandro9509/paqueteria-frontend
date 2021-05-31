@@ -1,10 +1,104 @@
-import { Hidden } from "@material-ui/core";
+import {Hidden, Link} from "@material-ui/core";
 import React from "react";
+import iconoAyuda from '../../iconos/Cabecera/icono_ayuda.svg';
+import iconoShortcuts from '../../iconos/Cabecera/icono_shortcuts.svg';
+import iconoMenu from '../../iconos/Cabecera/icono_menu.svg';
+import pdfAyuda from '../../Files/AYUDA_EN_LINEA.pdf';
+import IconButton from '@material-ui/core/IconButton';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import Tooltip from '@material-ui/core/Tooltip';
+import {ReactComponent as GClienteIcon} from "../../iconos/Catalogos/Icono Grupo Clientes/icono_grupo_cliente.svg";
+import GrupoClientePage from "../../Views/GrupoCliente";
 
 function Cabecera({ titulo, children }) {
 
+    const shortcuts =[
+        {
+            path: "/GrupoCliente",
+            name: "Grupo Clientes",
+            icon:  <GClienteIcon style={{width:30, height:30}}/>,
+            component: GrupoClientePage,
+        },{
+            path: "/GrupoCliente",
+            name: "Grupo Clientes",
+            icon:  <GClienteIcon style={{width:30, height:30}}/>,
+            component: GrupoClientePage,
+        },{
+            path: "/GrupoCliente",
+            name: "Grupo Clientes",
+            icon:  <GClienteIcon style={{width:30, height:30}}/>,
+            component: GrupoClientePage,
+        },{
+            path: "/GrupoCliente",
+            name: "Grupo Clientes",
+            icon:  <GClienteIcon style={{width:30, height:30}}/>,
+            component: GrupoClientePage,
+        },
+    ];
+    const menu_items = [
+        {
+            id: '0',
+            name: 'Accesos directos',
+            path: '/AccesosDirectos'
+        },
+        {
+            id: '1',
+            path: "https://gmnoticiasblog.wordpress.com/author/gmnoticiasblog/",
+            name: 'GM Noticias',
+        },
+        {
+            id: '2',
+            path: "/Tutoriales",
+            name: 'Tutoriales',
+        },
+        {
+            id: '3',
+            name: 'Ayuda en línea',
+        },
+        {
+            id: '4',
+            name: 'Actualizaciónes',
+            path: "/Actualizacion",
+        },
+        {
+            id: '5',
+            name: 'Quejas y sugerencias',
+            path: "/QuejasSugerencias",
+        },
+    ];
+
+    const ITEM_HEIGHT = 48;
+
     function logout() {
         localStorage.removeItem("accessToken");
+    }
+    const [shortcutsVisible, setShortcutsVisible] = React.useState(null);
+    const [menuVisible, setMenuVisible] = React.useState(null);
+    const menuOpen = Boolean(menuVisible);
+    const shortcutsOpen = Boolean(shortcutsVisible);
+
+    const handleShortcutsClick = (event) => {
+        setShortcutsVisible(event.currentTarget);
+    };
+    const handleShortcutsClose = () => {
+        setShortcutsVisible(null);
+    };
+    const handleMenuClick = (event) => {
+        setMenuVisible(event.currentTarget);
+        console.log(event.currentTarget);
+    };
+    const handleMenuClose = ()=> {
+        setMenuVisible(null);
+    };
+    const handleMenuItemClick = (event) => {
+        console.log(event.target.value);
+        switch (event.target.value) {
+            case 1:
+                window.open("https://gmnoticiasblog.wordpress.com/author/gmnoticiasblog/");
+                break;
+        }
     }
 
     return (
@@ -32,11 +126,26 @@ function Cabecera({ titulo, children }) {
                 </div>
             </Hidden>
 
-            <div className="topbar-right pull-right iconic-aside-container">
-                <div className="clearfix">
-                    <div className="user-profile-container">
+            <div className="topbar-right pull-right iconic-aside-container"
+                 style={
+                     {
+                         display:'flex',
+                         flexDirection:'row',
+                         alignItems: 'center',
+                         height: 60
+                     }
+                 }>
+                <div>
+                    <Tooltip title={"Ayuda en línea"}>
+                        <a href={pdfAyuda} target={"_blank"}>
+                            <img src={iconoAyuda} style={{height: 40, width:40, margin: 10}}/>
+                        </a>
+                    </Tooltip>
+                </div>
+                <div className="clearfix" style={{display:'block'}}>
+                    <div className="user-profile-container" style={{height: 40}}>
                         <div className="user-profile clearfix">
-                            <div className="admin-user-thumb">
+                            <div className="admin-user-thumb" style={{padding: '0px 0px 0px 0px'}}>
                                 <img src="images/avatar/jaman_01.jpg" alt="admin" />
                             </div>
                             <div className="admin-user-info">
@@ -61,14 +170,80 @@ function Cabecera({ titulo, children }) {
                         </div>
                     </div>
                 </div>
+                <div style={{position: "relative"}}>
+                    <Tooltip title={"Shortcuts"}>
+                        <IconButton
+                            style={{height:60, width:60}}
+                            aria-label="shortcuts"
+                            aria-controls="shortcuts-menu"
+                            aria-haspopup="true"
+                            onClick={handleShortcutsClick}>
+                            <img src={iconoShortcuts} style={{height:30, width:30, margin: 10}}/>
+                        </IconButton>
+                    </Tooltip>
+                    <Menu
+                        id="shortcuts-menu"
+                        anchorEl={shortcutsVisible}
+                        keepMounted
+                        open={shortcutsOpen}
+                        onClose={handleShortcutsClose}
+                        PaperProps={{
+                            style:{
+                                maxHeight: ITEM_HEIGHT * 4.5,
+                                width: '20ch',
+                            },
+                        }}>
+                        {shortcuts.map((option) => (
+                            <MenuItem key={option.name} onClick={handleShortcutsClose}>
+                                <ListItemIcon>
+                                    {option.icon}
+                                </ListItemIcon>
+                                {option.name}
+                            </MenuItem>
+                        ))}
+                    </Menu>
+                </div>
+                <div>
+                    <Tooltip title={"Menú"}>
+                        <IconButton
+                            style={{height:60, width:60}}
+                            aria-label="more"
+                            aria-controls="menu"
+                            aria-haspopup="true"
+                            onClick={handleMenuClick}>
+                            <img src={iconoMenu} style={{height:30, width:30, margin: 10}}/>
+                        </IconButton>
+                    </Tooltip>
+                    <Menu
+                        id="menu"
+                        anchorEl={menuVisible}
+                        keepMounted
+                        open={menuOpen}
+                        onClose={handleMenuClose}
+                        PaperProps={{
+                            style:{
+                                maxHeight: ITEM_HEIGHT * 4.5,
+                                width: '20ch',
+                            },
+                        }}>
+                        {menu_items.map((option) => (
+                            <Link href={option.path}>
+                                <MenuItem key={option.id} value={option.id} onClick={handleMenuClose}>
+                                    {option.name}
+                                </MenuItem>
+                            </Link>
+                        ))}
+                    </Menu>
+                </div>
             </div>
-            <Hidden smDown implementation="css">
+            {/**Se comentó ruta de navegación. No se borra porque chance y se usa despues.*/}
+            {/*<Hidden smDown implementation="css">
                 <div className="topbar-right pull-right iconic-aside-container" style={{ height: "60px", display: "inline-flex", width: "350px" }}>
                     <div style={{ display: "inline-block", verticalAlign: "middle", margin: "auto", marginRight: "0px", marginBottom: "0px", width: "100%" }}>
                         {children}
                     </div>
                 </div>
-            </Hidden>
+            </Hidden>*/}
             {/*Topbar Left Branding With Logo End*/}
         </div>
 

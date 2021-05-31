@@ -22,8 +22,9 @@ import EstatusInformePage from './Views/EstatusInforme';
 import EstatusDocumentoPage from './Views/EstatusDocumento';
 import ConceptosFacturacionPage from './Views/ConceptosFacturacion/ConceptosFacturacion';
 import TarifasPage from './Views/Tarifas/Tarifas';
-import ClasificacionViajePage from './Views/ClasificacionViajes/ClasificacionViaje'
 import ParametrosConfiguracionPage from './Views/ParametrosConfiguracion/ParametrosConfiguracion';
+import ClasificacionViajePage from './Views/ClasificacionViajes/ClasificacionViaje';
+import PlantillaCorreo from './Views/PlantillaCorreo';
 
 import {ReactComponent as TServicioIcon} from './iconos/Catalogos/Icono Tipos Servicio/icono_tipo_servicio.svg';
 
@@ -56,6 +57,7 @@ import {ReactComponent as TCobreIcon} from './iconos/Catalogos/Icono Tipos de Co
 import {ReactComponent as TViajeIcon} from './iconos/Catalogos/Icono Tipos Viaje/icono_tipo_viaje.svg';
 import {ReactComponent as UnidadesIcon} from './iconos/Catalogos/Icono Unidades/icono_unidades.svg';
 import {ReactComponent as ViajesIcon} from './iconos/Catalogos/Icono Viajes/icono_viajes.svg';
+import {ReactComponent as TarifasIcon} from './iconos/Catalogos/Icono Tarifas/icono_tarifas.svg';
 import {ReactComponent as AddendasIcon} from './iconos/Catalogos/Icono Addendas/icono_addendas.svg';
 import EstatusGuia from './Views/EstatusGuia';
 import TipoUnidad from "./Views/TipoUnidad/TipoUnidad";
@@ -212,7 +214,7 @@ const catalogRoutes = [
   {
     path: "/Tarifas",
     name: "Tarifas",
-    icon: <GClienteIcon/>,
+    icon: <TarifasIcon/>,
     component: TarifasPage,
   },
   {
@@ -226,6 +228,12 @@ const catalogRoutes = [
     name: "Parámetros Configuración",
     icon: <PConfiguracionIcon/>,
     component: ParametrosConfiguracionPage,
+  },
+  {
+    path: "/PlantillaCorreo",
+    name: "Plantilla de Correo",
+    icon: <PConfiguracionIcon/>,
+    component: PlantillaCorreo,
   },
 ];
 

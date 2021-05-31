@@ -6,6 +6,7 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
+    DialogTitle,
     FormControl,
     Grid,
     IconButton,
@@ -56,6 +57,7 @@ import { obtenerRutas } from "../Util/Contexts/RutasContext";
 import { agregarInformes, cancelarInformes, eliminarInformes, modificarInformes, obtenerInformes, obtenerInformesId } from "../Util/Contexts/InformesContext";
 import { obtenerSucursales } from "../Util/Contexts/SucursalContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
+import { imprimirFormatosId, obtenerFormatosImpresion } from "../Util/Contexts/FormatosImpresionContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -66,37 +68,6 @@ function showSuccess(mensaje) {
     }).show();
 }
 
-const stylesInformes = {
-    InformeCarrusel: {
-        height: "900px !important",
-    },
-    sobreCarrusel: {
-        height: "150px !important",
-    },
-    seleccionado: {
-        backgroundColor: "#FCC88F",
-    },
-    noSeleccionado: {
-        backgroundColor: "#FFFFFF",
-    },
-    disabled: {
-        pointerEvents: "none",
-        cursor: "default",
-    },
-    root: {
-        "& .super-app-theme--cell": {
-            backgroundColor: "rgba(224, 183, 60, 0.55)",
-            color: "#1a3e72",
-            fontWeight: "600",
-        },
-        "& .super-app.esRecolecta": {
-            backgroundColor: "green",
-        },
-        "& .super-app.noRecolecta": {
-            backgroundColor: "red",
-        },
-    },
-};
 
 const styles = {
     seleccionado: {
@@ -111,7 +82,6 @@ const styles = {
     },
 };
 const useStyles = makeStyles(styles);
-const useInformeStyles = makeStyles(stylesInformes);
 
 window.jQuery = window.$ = $;
 const headers = {
@@ -121,7 +91,6 @@ let timer;
 
 function Informes({ history }) {
     const classes = useStyles();
-    const classesInforme = useInformeStyles();
     const [stepActive, setStepActive] = React.useState(1);
     const [data, setData] = React.useState([]);
     const [dataRutas, setDataRutas] = React.useState([]);
@@ -134,7 +103,7 @@ function Informes({ history }) {
     const [dataOrigenes, setDataOrigenes] = React.useState([]);
     const [dataUnidadesRem, setDataUnidadesRem] = React.useState([]);
     const [dataUnidadesDol, setDataUnidadesDol] = React.useState([]);
-
+    const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [dataGuias, setDataGuias] = React.useState([]);
     const [dataViajes, setDataViajes] = React.useState([]);
     const [dataGuiasCubicar, setDataGuiasCubicar] = React.useState([]);
@@ -290,51 +259,7 @@ function Informes({ history }) {
         console.log(state.identificadorModal);
     }
 
-    const columns2 = React.useMemo(() => [
-        {
-            Name: "Folio/Serie",
-            accessor: "m_nFolioInforme",
-        },
-        {
-            Name: "Fecha/Hora Elaboración",
-            accessor: "m_dFecha",
-        },
-        {
-            Name: "Viaje",
-            accessor: "m_nIdViaje",
-        },
-        {
-            Name: "Oficina Emisora",
-            accessor: "m_sSucursalEmisora",
-        },
-        {
-            Name: "Oficina Receptora",
-            accessor: "m_sSucursalReceptora",
-        },
-        {
-            Name: "Operador",
-            accessor: "m_sNombreCompleto",
-        },
-        {
-            Name: "Unidad",
-            accessor: "m_sCodigoUnidad",
-        },
-    ]);
 
-    const columnsCP = React.useMemo(() => [
-        {
-            Name: "Codigo",
-            accessor: "m_sCP",
-        },
-        {
-            Name: "Estado",
-            accessor: "m_sEstado",
-        },
-        {
-            Name: "Ciudad",
-            accessor: "m_sCiudad",
-        },
-    ]);
 
     const columnsCiudades = React.useMemo(() => [
         {
@@ -555,11 +480,7 @@ function Informes({ history }) {
         );
     }
 
-    const headers2 = {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-    };
+    
 
     const [state, setState] = React.useState({
         showPopUp: false,
@@ -677,6 +598,12 @@ function Informes({ history }) {
                     showSuccess(err);
                 });
         }
+    };
+
+    function getFormatosImpresion() {
+        obtenerFormatosImpresion().then(respuesta => {
+            setFormatosImpresion(respuesta.data)
+        });
     };
 
     function TableCiudades({ columns, data, select }) {
@@ -1173,20 +1100,7 @@ function Informes({ history }) {
         setState({ ...state, Informes: Informes });
     }
 
-    function removeInformeGuia(index) {
-        var { Informes } = state;
-        Informes = remove_array_element(Informes, index);
-        setState({ ...state, Informes: Informes });
-    }
-
-    const handleChangeInformeGuia = (event, index) => {
-        var { Informes } = state;
-        Informes[index][event.target.name] = event.target.value;
-        setState({
-            ...state,
-            Informes: Informes,
-        });
-    };
+    
 
     const selectGuia = (index) => {
         const newGuia = [...dataGuias];
@@ -1195,12 +1109,7 @@ function Informes({ history }) {
         setDataGuias(newGuia);
     };
 
-    function handleSelectRow(id, event) {
-        setState({
-            ...state,
-            IdInforme: id,
-        });
-    }
+    
 
     function handleShowCancelar(event) {
         event.stopPropagation()
@@ -1272,6 +1181,14 @@ function Informes({ history }) {
             })
         }
 
+
+    }
+
+
+    const handleImprimir = () => {
+        imprimirFormatosId(state.formatoSeleccionado).then((response) => {
+            window.open(new Blob([response.data]));
+        })
 
     }
 
@@ -1387,6 +1304,7 @@ function Informes({ history }) {
         getAllEstatusInformes();
         getAllSucursales();
         getAllOperadores();
+        getFormatosImpresion();
         getAllCiudades();
         getAllUnidadesTipo(8);
         getAllUnidadesTipo(9);
@@ -1436,6 +1354,7 @@ function Informes({ history }) {
             <Dialog
                 open={state.openDialog}
                 onClose={() => setState({ ...state, openDialog: false })}
+                fullWidth maxWidth="md"
             >
                 <DialogContent>
                     {state.tipoModal == 1 && (
@@ -1605,6 +1524,48 @@ function Informes({ history }) {
                             </DialogActions>
                         </div>
                     )}
+                    {state.tipoModal === 6 &&
+                        <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+                            <DialogTitle style={{padding:"0px"}}><h4>Selecciona el Formato</h4></DialogTitle>
+                            <div>
+                                <label className="input select" style={{ width: "100%" }}>
+                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                        <InputLabel id="sucursalListadoLabel">Formato</InputLabel>
+                                        <Select
+                                            labelId="sucursalListadoLabel"
+                                            label="Formato"
+                                            className="form-control"
+                                            required
+                                            value={state.formatoSeleccionado}
+                                            onChange={(event) => setState({ ...state, formatoSeleccionado: event.target.value })}
+                                            id="formatoSeleccionado"
+                                            name="formatoSeleccionado"
+                                        >
+                                            {dataFormatos.map((formato) => (
+                                                <option
+                                                    key={formato.m_nIdFormato}
+                                                    value={formato.m_nIdFormato}
+                                                >
+                                                    {formato.m_sFormato}
+                                                </option>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                    <i></i>
+                                </label>
+                            </div>
+
+                            <DialogActions style={{ justifyContent: "left" }}>
+
+                                <button onClick={() => handleImprimir()} className="btn btn-primary primary-btn">Aceptar
+                            </button>
+                                <button onClick={() => setState({ ...state, openDialog: false })}
+                                    className="btn btn-secondary secondary-btn">Cerrar
+                            </button>
+
+                            </DialogActions>
+                        </div>
+                    }
                 </DialogContent>
             </Dialog>
 
@@ -1640,9 +1601,18 @@ function Informes({ history }) {
                         </li>
 
                         <li>
-                            <a data-toggle="tab" href="#Imprimir">
+                            <a onClick={(event) => {
+                                event.stopPropagation();
+                                setState({
+                                    ...state,
+                                    identificadorModal:
+                                        "imprimir",
+                                    tipoModal: 6,
+                                    openDialog: true
+                                });
+                            }}>
                                 <i className="fa fa-print" /> Imprimir
-              </a>
+                            </a>
                         </li>
 
                         <li>
@@ -1697,9 +1667,6 @@ function Informes({ history }) {
                                 </div>
                             </div>
                         </div>
-                        <div id="Imprimir" className="tab-pane fade ">
-                            Imprimir
-            </div>
                         <div id="Importar" className="tab-pane fade ">
                             Importar
             </div>

@@ -14,6 +14,8 @@ import configuracionRoutes from './routesConfiguraciones'
 import "../node_modules/noty/lib/noty.css";  
 import "../node_modules/noty/lib/themes/mint.css"; 
 import Indicadores from './Views/Indicadores';
+import Tracking from './Views/Seguimiento/Tracking';
+import cabeceraRoutes from "./routesCabecera";
 
 
 class App extends Component {
@@ -31,16 +33,19 @@ render(){
           <Switch>
             <Route path="/Indicadores" component={Indicadores} />
             <Route path="/Configuracion" component={Configuracion} />
-            
+            <Route exact path="/app/applications/:id/tracking" component={Tracking} />
             {dashboardRoutes.map((r, key) => {
                   return (<Route exact key={key} path={r.path} component={r.component} />)
               })}
-              {catalogdRoutes.map((r, key) => {
-                  return (<Route exact key={key} path={r.path} component={r.component} />)
-              })}
-              {configuracionRoutes.map((r, key) => {
-                  return (<Route exact key={key} path={r.path} component={r.component} />)
-              })}
+            {catalogdRoutes.map((r, key) => {
+                return (<Route exact key={key} path={r.path} component={r.component} />)
+            })}
+            {configuracionRoutes.map((r, key) => {
+                return (<Route exact key={key} path={r.path} component={r.component} />)
+            })}
+            {cabeceraRoutes.map((r, key) => {
+              return (<Route exact key={key} path={r.path} component={r.component} />)
+            })}
             <Redirect from="/" to="/Indicadores"/>
           </Switch>
         ) : (
