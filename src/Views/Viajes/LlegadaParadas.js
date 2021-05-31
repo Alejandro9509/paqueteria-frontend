@@ -210,7 +210,7 @@ export default function LlegadaParadas(props){
     return(
         <form onSubmit={onSubmit}  className={classes.root}>
             {/*<div className={classes.root}></div>*/}
-            <Grid container spacing={1}>
+            <Grid container spacing={2}>
                 <Grid item xs={2}>
                     <TextField
                         id={"sucursal"}
