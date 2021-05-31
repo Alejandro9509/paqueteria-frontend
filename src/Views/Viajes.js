@@ -19,10 +19,11 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 import { dataGridLocaleText } from "../Constants";
-import {Button, Dialog, DialogActions, DialogContent, Tooltip} from "@material-ui/core";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip} from "@material-ui/core";
 import { obtenerEstatusDocumentos } from "../Util/Contexts/EstatusContext";
 import {confirmAlert} from "react-confirm-alert";
 import ActualizarDiponibilidadEquipo from "./Viajes/ActualizarDiponibilidadEquipo";
+import SalidaParadas from "./Viajes/SalidaParadas";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -269,7 +270,7 @@ function Viajes() {
                 return (
                     <div>
                         <Tooltip title="Modificar">
-                            <a role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdViaje))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdViaje))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
 
                         </Tooltip>
                         <Tooltip title="Consultar">
@@ -519,7 +520,8 @@ function Viajes() {
     const [equipoSelected, setEquipoSelected] = React.useState();
     const [eventOptions, setEventOptions] = React.useState({
         showDispEquipoDialog : false,
-        showParadasDialog: false,
+        showSalidaParadasDialog: false,
+        showLlegadaParadasDialog: false
     });
 
     function getDispEquipoListado(){
@@ -666,6 +668,7 @@ function Viajes() {
             }
         ]);
     }
+
     const showCamionDialog = () =>{
         console.log("Espero se haya abierto el dialogo al clickear camion");
     }
@@ -675,11 +678,20 @@ function Viajes() {
     }
 
     const showSalidaDialog = () => {
-        console.log("Espero que se haya abierto el dialogo al clickear salida");
+        setEventOptions({...eventOptions, showSalidaParadasDialog: true});
+    }
+
+    const closeSalidaDialog = () =>{
+        setEventOptions({...eventOptions, showSalidaParadasDialog: false});
     }
 
     const showLlegadaDialog = () => {
         console.log("Espero que se haya abierto el dialogo al clickear llegada");
+    }
+
+    function updateSalida(data) {
+        console.log("Actualizar datos da salida");
+        console.log(data);
     }
 
     return (
@@ -698,7 +710,23 @@ function Viajes() {
                             <Button variant={'outlined'} color={'primary'} onClick={closeActualizarDispEquipo}>Cancelar</Button>
                         </DialogActions>
                     </ActualizarDiponibilidadEquipo>
-
+                </DialogContent>
+            </Dialog>
+            <Dialog open={eventOptions.showSalidaParadasDialog}
+                    onClose={closeSalidaDialog}
+                    fullWidth={true}
+                    maxWidth={'xl'}>
+                <DialogTitle>Salida de Paradas</DialogTitle>
+                <DialogContent>
+                    <SalidaParadas onSubmit={updateSalida}>
+                        <DialogActions>
+                            <Button
+                                variant={'contained'} color={'primary'}
+                                type="submit"
+                                onClick={closeSalidaDialog}>Aceptar</Button>
+                            <Button variant={'outlined'} color={'primary'} onClick={closeSalidaDialog}>Cancelar</Button>
+                        </DialogActions>
+                    </SalidaParadas>
                 </DialogContent>
             </Dialog>
             <header className="topbar clearfix">
