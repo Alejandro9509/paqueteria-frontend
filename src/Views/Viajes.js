@@ -26,6 +26,7 @@ import {confirmAlert} from "react-confirm-alert";
 import ActualizarDiponibilidadEquipo from "./Viajes/ActualizarDiponibilidadEquipo";
 import SalidaParadas from "./Viajes/SalidaParadas";
 import LlegadaParadas from "./Viajes/LlegadaParadas";
+import AsignarOperador from "./Viajes/AsignarOperador";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -522,7 +523,8 @@ function Viajes() {
     const [eventOptions, setEventOptions] = React.useState({
         showDispEquipoDialog : false,
         showSalidaParadasDialog: false,
-        showLlegadaParadasDialog: false
+        showLlegadaParadasDialog: false,
+        showAsignarOperadorDialog: false,
     });
 
     function getDispEquipoListado(){
@@ -599,7 +601,7 @@ function Viajes() {
             width: 150,
             renderCell: (row) => {
               return (
-                  <a onClick={() => showOperadorDialog()}>{row.row.operador}</a>
+                  <a onClick={() => showAsignarOperadorDialog()}>{row.row.operador}</a>
               )
             },
         },
@@ -674,10 +676,6 @@ function Viajes() {
         console.log("Espero se haya abierto el dialogo al clickear camion");
     }
 
-    const showOperadorDialog = () => {
-        console.log("Espero que se haya abierto el dialogo al clickear operador");
-    }
-
     const showSalidaDialog = () => {
         setEventOptions({...eventOptions, showSalidaParadasDialog: true});
     }
@@ -704,6 +702,20 @@ function Viajes() {
         console.log(data);
     }
 
+    const showAsignarOperadorDialog = () => {
+        setEventOptions({
+            ...eventOptions,
+            showAsignarOperadorDialog: true
+        });
+    }
+
+    const closeAsignarOperadorDialog = () => {
+        setEventOptions({
+            ...eventOptions,
+            showAsignarOperadorDialog: false
+        })
+    }
+
     return (
         <div >
             <Dialog open={eventOptions.showDispEquipoDialog}
@@ -726,7 +738,7 @@ function Viajes() {
                     onClose={closeSalidaDialog}
                     fullWidth={true}
                     maxWidth={'xl'}>
-                <DialogTitle>Salida de Paradas</DialogTitle>
+                <DialogTitle><h2>Salida de Paradas</h2></DialogTitle>
                 <DialogContent>
                     <SalidaParadas onSubmit={updateSalida}>
                         <DialogActions>
@@ -743,7 +755,7 @@ function Viajes() {
                     onClose={closeLlegadaDialog}
                     fullWidth={true}
                     maxWidth={'xl'}>
-                <DialogTitle>Llegada de Paradas</DialogTitle>
+                <DialogTitle><h2>Llegada de Paradas</h2></DialogTitle>
                 <DialogContent>
                     <LlegadaParadas onSubmit={updateLlegada}>
                         <DialogActions>
@@ -756,6 +768,24 @@ function Viajes() {
                     </LlegadaParadas>
                 </DialogContent>
             </Dialog>
+            <Dialog open={eventOptions.showAsignarOperadorDialog}
+                    onClose={closeAsignarOperadorDialog}
+                    fullWidth={true}
+                    maxWidth={'xl'}>
+                <DialogTitle><h3>Ruta</h3></DialogTitle>
+                <DialogContent>
+                    <AsignarOperador>
+                        <DialogActions>
+                            <Button
+                                variant={'contained'} color={'primary'}
+                                onClick={closeAsignarOperadorDialog}>Aceptar</Button>
+                            <Button variant={'outlined'} color={'primary'} onClick={closeAsignarOperadorDialog}>Cancelar</Button>
+                        </DialogActions>
+                    </AsignarOperador>
+
+                </DialogContent>
+            </Dialog>
+
             <header className="topbar clearfix">
                 <Cabecera titulo="Viajes" >
                     <div className="page-header">
