@@ -42,47 +42,47 @@ function Indicadores(props) {
             <aside className="iconic-leftbar">
                 <BarraLateralIzquierda />
             </aside>
-            <section className="main-container">
-                <div className="container-fluid">
+           <section className="main-container">
+               <div className="container-fluid">
 
 
-                    <div className="widget-wrap">
-                        <div className="widget-container">
-                            <div className="widget-content">
-                                <div className="row">
-                                    {
-                                        state.indicadores.map((i, index) => (
-                                            <div className="col-sm-6 col-md-4 col-lg-4 unit" style={{ padding: "10px", height: "400px" }}>
-                                                <ButtonBase style={{ height: "100%", width: "100%" }} onClick={(e) => { e.stopPropagation(); setState({ ...state, openDialog: true }) }}>
-                                                    <Paper style={{ height: "100%", width: "100%" }} elevation={3}>
-                                                        <div className="light" style={{ padding: "10px" }}>
-                                                            <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                                                <h4>
-                                                                    <strong > Agregar un Indicador</strong>
-                                                                </h4>
-                                                                <IconButton style={{ float: "right" }} onClick={(e) => { e.stopPropagation(); }}>
-                                                                    <CancelIcon />
-                                                                </IconButton>
-                                                            </div>
+                   <div className="widget-wrap">
+                       <div className="widget-container">
+                           <div className="widget-content">
+                               <div className="row">
+                                   {
+                                       state.indicadores.map((i, index) => (
+                                           <div className="col-sm-6 col-md-4 col-lg-4 unit" style={{ padding: "10px", height: "400px" }}>
+                                               <ButtonBase style={{ height: "100%", width: "100%" }} onClick={(e) => { e.stopPropagation(); setState({ ...state, openDialog: true }) }}>
+                                                   <Paper style={{ height: "100%", width: "100%" }} elevation={3}>
+                                                       <div className="light" style={{ padding: "10px" }}>
+                                                           <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                                               <h4>
+                                                                   <strong > Agregar un Indicador</strong>
+                                                               </h4>
+                                                               <IconButton style={{ float: "right" }} onClick={(e) => { e.stopPropagation(); }}>
+                                                                   <CancelIcon />
+                                                               </IconButton>
+                                                           </div>
 
-                                                            <div style={{ alignItems: "center", display: "flex", height: "300px" }}>
-                                                                <img src={addIcon} alt="add" style={{ margin: "auto", display: "block", width: "100px", verticalAlign: "middle" }} />
+                                                           <div style={{ alignItems: "center", display: "flex", height: "300px" }}>
+                                                               <img src={addIcon} alt="add" style={{ margin: "auto", display: "block", width: "100px", verticalAlign: "middle" }} />
 
-                                                            </div>
-                                                        </div>
+                                                           </div>
+                                                       </div>
 
-                                                    </Paper>
-                                                </ButtonBase>
-                                            </div>
+                                                   </Paper>
+                                               </ButtonBase>
+                                           </div>
 
-                                        ))
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+                                       ))
+                                   }
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </section>
         </div>
     );
 }

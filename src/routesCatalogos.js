@@ -22,8 +22,9 @@ import EstatusInformePage from './Views/EstatusInforme';
 import EstatusDocumentoPage from './Views/EstatusDocumento';
 import ConceptosFacturacionPage from './Views/ConceptosFacturacion/ConceptosFacturacion';
 import TarifasPage from './Views/Tarifas/Tarifas';
-import ClasificacionViajePage from './Views/ClasificacionViajes/ClasificacionViaje'
 import ParametrosConfiguracionPage from './Views/ParametrosConfiguracion/ParametrosConfiguracion';
+import ClasificacionViajePage from './Views/ClasificacionViajes/ClasificacionViaje';
+import PlantillaCorreo from './Views/PlantillaCorreo';
 
 import {ReactComponent as TServicioIcon} from './iconos/Catalogos/Icono Tipos Servicio/icono_tipo_servicio.svg';
 
@@ -227,6 +228,12 @@ const catalogRoutes = [
     name: "Parámetros Configuración",
     icon: <PConfiguracionIcon/>,
     component: ParametrosConfiguracionPage,
+  },
+  {
+    path: "/PlantillaCorreo",
+    name: "Plantilla de Correo",
+    icon: <PConfiguracionIcon/>,
+    component: PlantillaCorreo,
   },
 ];
 
