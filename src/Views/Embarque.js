@@ -32,7 +32,7 @@ import SvgIcon from "@material-ui/core/SvgIcon";
 import { ReactComponent as Activo } from "../iconos/Menu/palomita.svg";
 import { ReactComponent as NoActivo } from "../iconos/Menu/cruz.svg";
 import Noty from "noty";
-import { Dialog, DialogActions, DialogContent, Step, StepLabel, Stepper, Tooltip } from "@material-ui/core";
+import { Dialog, DialogActions, DialogContent, DialogTitle, Step, StepLabel, Stepper, Tooltip } from "@material-ui/core";
 import { ToggleButtonGroup } from "@material-ui/lab";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -53,6 +53,7 @@ import { obtenerSucursales } from "../Util/Contexts/SucursalContext";
 import { obtenerEstatusEmbarque } from "../Util/Contexts/EstatusContext";
 import { obtenerTipoCobro } from "../Util/Contexts/TipoCobroContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
+import { imprimirFormatosId, obtenerFormatosImpresion } from "../Util/Contexts/FormatosImpresionContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -115,6 +116,7 @@ function Embarque(props) {
     const [dataUnidad, setDataUnidad] = React.useState([]);
     const [dataEmbalaje, setDataEmbalaje] = React.useState([]);
     const [dataFolioEmbarque, SetDataFolioEmbarque] = React.useState([]);
+    const [dataFormatos, setFormatosImpresion] = React.useState([]);
 
     const [
         dataRemitenteDestinatario,
@@ -1314,6 +1316,7 @@ function Embarque(props) {
         getAllEmbalajes();
         getUltimoFolioEmbarque();
         getTipoCambio()
+        getFormatosImpresion()
     }
 
     async function getAllEmbarque() {
@@ -1321,6 +1324,12 @@ function Embarque(props) {
             setData(respuesta.data);
         });
     }
+
+    function getFormatosImpresion() {
+        obtenerFormatosImpresion().then(respuesta => {
+            setFormatosImpresion(respuesta.data)
+        });
+    };
 
     async function getAllRemitentesDestinatarios() {
         obtenerRemitentesDestinatarios().then((respuesta) => {
@@ -1948,6 +1957,13 @@ function Embarque(props) {
         );
     }
 
+    const handleImprimir = () => {
+        imprimirFormatosId(state.formatoSeleccionado).then((response) => {
+            window.open(new Blob([response.data]));
+        })
+
+    }
+
     function openSection(index) {
         // closeSeccions()
         var $section;
@@ -2463,6 +2479,48 @@ function Embarque(props) {
                             </DialogActions>
                         </div>
                     )}
+                    {state.tipoModal === 6 &&
+                        <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+                            <DialogTitle style={{padding:"0px"}}><h4>Selecciona el Formato</h4></DialogTitle>
+                            <div>
+                                <label className="input select" style={{ width: "100%" }}>
+                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                        <InputLabel id="sucursalListadoLabel">Formato</InputLabel>
+                                        <Select
+                                            labelId="sucursalListadoLabel"
+                                            label="Formato"
+                                            className="form-control"
+                                            required
+                                            value={state.formatoSeleccionado}
+                                            onChange={(event) => setState({ ...state, formatoSeleccionado: event.target.value })}
+                                            id="formatoSeleccionado"
+                                            name="formatoSeleccionado"
+                                        >
+                                            {dataFormatos.map((formato) => (
+                                                <option
+                                                    key={formato.m_nIdFormato}
+                                                    value={formato.m_nIdFormato}
+                                                >
+                                                    {formato.m_sFormato}
+                                                </option>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                    <i></i>
+                                </label>
+                            </div>
+
+                            <DialogActions style={{ justifyContent: "left" }}>
+
+                                <button onClick={() => handleImprimir()} className="btn btn-primary primary-btn">Aceptar
+                            </button>
+                                <button onClick={() => setState({ ...state, openDialog: false })}
+                                    className="btn btn-secondary secondary-btn">Cerrar
+                            </button>
+
+                            </DialogActions>
+                        </div>
+                    }
                 </DialogContent>
             </Dialog>
 

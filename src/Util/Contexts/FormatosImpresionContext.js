@@ -50,5 +50,13 @@ function obtenerFormatosImpresionId(id){
         );
     return result
 }
+function imprimirFormatosId(id){
+    const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
+}
 
-export {modificarFormatosImpresion, agregarFormatosImpresion, eliminarFormatosImpresion, obtenerFormatosImpresionId, obtenerFormatosImpresion}
+export {modificarFormatosImpresion, agregarFormatosImpresion, eliminarFormatosImpresion, obtenerFormatosImpresionId, obtenerFormatosImpresion, imprimirFormatosId}
