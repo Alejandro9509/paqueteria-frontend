@@ -175,17 +175,18 @@ class ConceptosFacturacion extends Component {
         var params = {
             m_sConcepto: data.concepto,
             m_sCodigo: data.codigo,
-            m_sUnidadMedida: data.unidadMedia,
+            m_sUnidadMedida: data.unidadMedida,
             m_bActivo: data.activo ? 1 : 0,
             m_bCalculoFlete: data.incluirLiquidacionFlete ? 1 : 0,
             m_bCalculoIngreso: data.incluirIngresosLiquidacion ? 1 : 0,
             m_nIdConceptosFacturacion: 1,
             m_nIdUnidadMedidaSAT: 1,
-            m_nIdProdServSAT: 1,
+            m_nIdProdServSAT: data.claseSeleccionado.m_nClaveClase,
             m_nCreadoPOr: localStorage.getItem("UsuarioId"),
             m_nModificadoPor: localStorage.getItem("UsuarioId"),
             arClsDetalle: arrayImpuestos
         }
+        console.log(JSON.stringify(params))
         if (this.state.edit) {
             modificarConceptosFacturacion(this.state.selected.idConceptosFacturacion, params).then(respuesta => {
                 showSuccess(respuesta.data)
@@ -218,6 +219,7 @@ class ConceptosFacturacion extends Component {
             }
 
         eliminarConceptosFacturacion(id).then(respuesta => {
+            showSuccess(respuesta.data)
                 console.log(respuesta);
                 this.getAllData();
             }).catch(err => {

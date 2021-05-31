@@ -51,4 +51,13 @@ function obtenerConceptosFacturacionId(id){
     return result
 }
 
-export {modificarConceptosFacturacion, agregarConceptosFacturacion, eliminarConceptosFacturacion, obtenerConceptosFacturacion, obtenerConceptosFacturacionId}
+function obtenerSAT(){
+    const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/GetListadoSAT`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
+}
+
+export {modificarConceptosFacturacion, agregarConceptosFacturacion, eliminarConceptosFacturacion, obtenerConceptosFacturacion, obtenerConceptosFacturacionId, obtenerSAT}

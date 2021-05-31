@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from "axios";
 import { Checkbox, FormControlLabel, List, ListItem, TextField } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } from '@material-ui/core';
+import ClavesCFDI from './ClavesCFDI';
 import { obtenerImpuestos } from '../../Util/Contexts/ImpuestosContext';
+import { obtenerSAT } from '../../Util/Contexts/ConceptosFacturacionContext';
 
 const headers = {
     'Content-Type': 'application/json',
@@ -15,11 +18,15 @@ class CrearConcepto extends Component {
         this.state = {
             codigo: props.edit ? props.select.m_sCodigo : "",
             concepto: props.edit ? props.select.m_sConcepto : "",
+            unidadMedida: props.edit ? props.select.m_sUnidadMedida : "",
+            openDialog: false,
+            claseSeleccionado: {},
+            dataSAT: [],
             impuestos: [],
             impuestosRetencion: [],
-            impuestosSeleccionadosTraslado: [],
+            impuestosSeleccionadosTraslado: props.edit ? props.select.arClsDetalle : [],
             predeterminadoSeleccionadosTraslado: {},
-            impuestosSeleccionadosRetencion: [],
+            impuestosSeleccionadosRetencion: props.edit ? props.select.arClsDetalle : [],
             predeterminadoSeleccionadosRetencion: {},
             activo: props.edit ? props.select.m_bActivo : false,
             incluirIngresosLiquidacion: props.edit ? props.select.m_bCalculoIngreso : false,
@@ -29,22 +36,31 @@ class CrearConcepto extends Component {
 
         this.handleChange = this.handleChange.bind(this)
         this.getAllImpuestos = this.getAllImpuestos.bind(this)
+        this.getAllSAT = this.getAllSAT.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
         this.handleChangeChecboxTraslado = this.handleChangeChecboxTraslado.bind(this)
         this.handleChangeChecboxTrasladoPredeterminado = this.handleChangeChecboxTrasladoPredeterminado.bind(this)
         this.handleChangeChecboxRetencion = this.handleChangeChecboxRetencion.bind(this)
         this.handleChangeChecboxRetencionPredeterminado = this.handleChangeChecboxRetencionPredeterminado.bind(this)
-
+        this.selectClase = this.selectClase.bind(this)
+        this.closeDialog = this.closeDialog.bind(this)
     }
 
     componentDidMount() {
         this.getAllImpuestos()
+        this.getAllSAT()
     }
 
     getAllImpuestos() {
         obtenerImpuestos().then(respuesta => {
             this.setState({ impuestos: respuesta.data.filter(i => i.m_nTIpoCalculo === 0), impuestosRetencion: respuesta.data.filter(i => i.m_nTIpoCalculo === 1) })
         });
+    };
+
+    getAllSAT() {
+        obtenerSAT().then(respuesta => {
+            this.setState({ dataSAT: respuesta.data })
+        })
     };
 
     handleChange(event) {
@@ -95,18 +111,35 @@ class CrearConcepto extends Component {
 
     }
 
-
     onSubmit(event) {
         event.preventDefault()
         console.log("hola")
         this.props.onSubmit(this.state)
     }
 
+    selectClase(row) {
+        console.log(row)
+        this.setState({
+            claseSeleccionado: row.data
+        })
+    }
+
+    closeDialog() {
+        this.setState({ openDialog: false })
+    }
 
     render() {
-        const { impuestos, impuestosRetencion } = this.state
+        const { impuestos, impuestosRetencion, openDialog } = this.state
         return (
             <form className="j-forms" onSubmit={this.onSubmit}>
+                <Dialog open={openDialog} fullWidth maxWidth="lg" onClose={() => this.setState({ openDialog: false })}>
+                    <DialogTitle>Claves Productos y Servicios</DialogTitle>
+                    <DialogContent>
+                        <ClavesCFDI selectClase={this.selectClase} closeDialog={this.closeDialog} dataSAT={this.state.dataSAT}>
+                        </ClavesCFDI>
+                    </DialogContent>
+                </Dialog>
+
                 <div className="form-content">
                     <div className="main-container" style={{ margin: "0px", padding: "0px" }}>
                         <div className="row" style={{ margin: "0px" }}>
@@ -280,7 +313,7 @@ class CrearConcepto extends Component {
                             <div className="col-sm-12 col-md-4 col-lg-4 unit" style={{ padding: "2px" }}>
                                 <label className="checkbox">
                                     <input
-                                        
+
                                         disabled={this.props.consult}
                                         native="true"
                                         name="activo"
@@ -297,7 +330,7 @@ class CrearConcepto extends Component {
                             <div className="col-sm-12 col-md-8 col-lg-8 unit" style={{ padding: "2px" }}>
                                 <label className="checkbox">
                                     <input
-                                        
+
                                         native="true"
                                         disabled={this.props.consult}
                                         checked={this.state.incluirIngresosLiquidacion}
@@ -315,7 +348,7 @@ class CrearConcepto extends Component {
                             <div className="col-sm-12 col-md-12 col-lg-12 unit" style={{ padding: "2px" }}>
                                 <label className="checkbox">
                                     <input
-                                        
+
                                         native="true"
                                         disabled={this.props.consult}
                                         name="incluirLiquidacionFlete"
@@ -340,20 +373,67 @@ class CrearConcepto extends Component {
                         </div>
                         <div className="row" style={{ margin: "0px" }}>
 
-                            <div className="col-sm-12 col-md-12 col-lg-12 unit" style={{ padding: "2px" }}>
+                            <div className="col-sm-3 col-md-3 col-lg-3 unit" style={{ padding: "2px" }}>
                                 <div className="input">
                                     <TextField variant="outlined" margin="dense"
                                         type="text"
-                                        disabled={this.props.consult}
                                         className="form-control"
-                                        label="Unidad Medida"
-                                        value={this.state.unidadMedia}
+                                        label="Clave SAT"
+                                        disabled={this.props.consult}
+                                        value={this.props.edit ? this.props.select.m_nIdProdServSAT : this.state.claseSeleccionado.m_nClaveClase}
                                         onChange={this.handleChange}
                                         name="unidadMedia"
+                                        InputProps={{
+                                            readOnly: true,
+                                        }}
                                     />
                                 </div>
                             </div>
+
+                            <div className="col-sm-8 col-md-8 col-lg-8 unit" style={{ padding: "2px" }}>
+                                <div className="input">
+                                    <TextField variant="outlined" margin="dense"
+                                        type="text"
+                                        className="form-control"
+                                        label="Producto o Servicio"
+                                        disabled={this.props.consult}
+                                        value={this.props.edit ? this.props.select.m_nIdProdServSAT : this.state.claseSeleccionado.m_sClase}
+                                        onChange={this.handleChange}
+                                        name="unidadMedia"
+                                        InputProps={{
+                                            readOnly: true,
+                                        }}
+                                    />
+                                </div>
+                            </div>
+
+                            <button
+                                type="button"
+                                className="btn btn-primary primary-btn"
+                                style={{ margin: "0px" }}
+                                onClick={() => this.setState({ openDialog: true })}
+                            >
+                                Seleccionar
+                            </button>
                         </div>
+                        <div className="row" style={{ margin: "0px" }}>
+                            <div className="col-sm-12 col-md-12 col-lg-12 unit" style={{ padding: "2px" }}>
+                                <div className="input">
+                                    <TextField variant="outlined" margin="dense"
+                                        onChange={this.handleChange}
+                                        className="form-control"
+                                        type="text"
+                                        label="Unidad Medida"
+                                        disabled={this.props.consult}
+                                        required
+                                        value={this.state.unidadMedida}
+                                        name="unidadMedida"
+                                    />
+                                </div>
+                            </div>
+
+                        </div>
+
                     </div>
 
                 </div>
