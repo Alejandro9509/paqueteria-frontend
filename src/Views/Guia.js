@@ -510,6 +510,7 @@ function Guia(props) {
     function handleShowConsultar(id) {
         obtenerGuiaId(id).then(respuesta => {
             // debugger;
+            console.log(respuesta)
             cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)
             handleEmbarqueModificar(respuesta)
             //valor2=respuesta.data.m_nIdEmbarque;

@@ -8,7 +8,7 @@ import ViajesPage from './Views/Viajes'
 import CatalogosPage from './Views/Catalogos';
 import ConfiguracionPage from './Views/Configuracion';
 import InicadoresPage from './Views/Indicadores';
-
+import Historial from './Views/Viajes/Historial';
 
 import {ReactComponent as ConfiguracionIcon} from './iconos/Menu/IconoConfiguraciones/iconoConfiguraciones.svg';
 import {ReactComponent as IndicadoresIcon} from './iconos/Menu/IconoIndicadores/iconoIndicadores.svg';
@@ -18,6 +18,7 @@ import {ReactComponent as RecolecionIcon} from './iconos/Menu/IconoRecoleccion/i
 import {ReactComponent as EmbarqueIcon} from './iconos/Menu/IconoEmbarque/iconoEmbarque.svg';
 import {ReactComponent as GuiasIcon} from './iconos/Menu/IconoGuias/iconoGuia.svg';
 import {ReactComponent as viajeIcon} from './iconos/Menu/IconoViajes/iconoViajes.svg';
+
 
 const dashboardRoutes = [
   {
@@ -83,7 +84,15 @@ const dashboardRoutes = [
     component: ViajesPage,
     single: true,
     child:[]
-  }
+  },
+  /*{
+    path: "/Tutoriales",
+    name: "Tutoriales",
+    icon: viajeIcon,
+    component: Tutoriales,
+    single: true,
+    child:[]
+  }*/
 ];
 
 export default dashboardRoutes;

@@ -21,6 +21,7 @@ import TextField from "@material-ui/core/TextField";
 import { dataGridLocaleText } from "../Constants";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip} from "@material-ui/core";
 import { obtenerEstatusDocumentos } from "../Util/Contexts/EstatusContext";
+import Historial from "./Viajes/Historial";
 import {confirmAlert} from "react-confirm-alert";
 import ActualizarDiponibilidadEquipo from "./Viajes/ActualizarDiponibilidadEquipo";
 import SalidaParadas from "./Viajes/SalidaParadas";
@@ -79,7 +80,6 @@ function Viajes() {
          const url = `${process.env.REACT_APP_API_URL_LOCAL}/SisEstatus/getListadoViajes`;
         axios.get(url, { headers }).then((respuesta) => {
              setEstatusViaje(respuesta.data);
-             console.log(respuesta.data);
          });
     }
 
