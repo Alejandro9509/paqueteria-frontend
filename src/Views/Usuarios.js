@@ -18,6 +18,7 @@ import { dataGridLocaleText } from "../Constants";
 import { FormControl, InputLabel, Select, TextField, Tooltip } from "@material-ui/core";
 import { eliminarUsuarios, modificarUsuarios, obtenerUsuarios, obtenerUsuariosId, validarPermisos } from "../Util/Contexts/UsuarioContext";
 import { agregarUnidades } from "../Util/Contexts/UnidadesContext";
+import Derechos from "./Usuarios/Derechos";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -567,6 +568,11 @@ function Usuarios() {
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>
+                        <li>
+                            <a data-toggle="tab" href="#Derechos" className={state.idUsuario == 0 ? classes.disabled : ""}>
+                                <i className="fa fa-plus-circle" /> Derechos
+                            </a>
+                        </li>
                         {/*<li>*/}
                         {/*  <a data-toggle="tab" href="#Importar">*/}
                         {/*    <i className="fa fa-upload" /> Importar*/}
@@ -580,7 +586,11 @@ function Usuarios() {
                         {/*</li>*/}
                     </ul>
 
+
                     <div className="tab-content">
+                        <div id="Derechos" className="tab-pane fade">
+                            <Derechos />
+                        </div>
                         <div id="Listado" className="tab-pane fade in active">
                             <div className="widget-wrap">
                                 <div className="row" style={{ height: state.height - 250, width: '100%' }}>

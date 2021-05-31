@@ -43,7 +43,7 @@ function eliminarRecoleccion(id) {
 }
 
 function obtenerRecoleccion() {
-    const url = `${process.env.REACT_APP_API_URL}/Puesto/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
