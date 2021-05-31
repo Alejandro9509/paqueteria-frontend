@@ -24,6 +24,7 @@ import { obtenerEstatusDocumentos } from "../Util/Contexts/EstatusContext";
 import {confirmAlert} from "react-confirm-alert";
 import ActualizarDiponibilidadEquipo from "./Viajes/ActualizarDiponibilidadEquipo";
 import SalidaParadas from "./Viajes/SalidaParadas";
+import LlegadaParadas from "./Viajes/LlegadaParadas";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -686,11 +687,20 @@ function Viajes() {
     }
 
     const showLlegadaDialog = () => {
-        console.log("Espero que se haya abierto el dialogo al clickear llegada");
+        setEventOptions({...eventOptions, showLlegadaParadasDialog: true});
+    }
+
+    const closeLlegadaDialog = () =>{
+        setEventOptions({...eventOptions, showLlegadaParadasDialog: false});
     }
 
     function updateSalida(data) {
         console.log("Actualizar datos da salida");
+        console.log(data);
+    }
+
+    function updateLlegada(data) {
+        console.log("Actualizar datos da llegada");
         console.log(data);
     }
 
@@ -727,6 +737,23 @@ function Viajes() {
                             <Button variant={'outlined'} color={'primary'} onClick={closeSalidaDialog}>Cancelar</Button>
                         </DialogActions>
                     </SalidaParadas>
+                </DialogContent>
+            </Dialog>
+            <Dialog open={eventOptions.showLlegadaParadasDialog}
+                    onClose={closeLlegadaDialog}
+                    fullWidth={true}
+                    maxWidth={'xl'}>
+                <DialogTitle>Llegada de Paradas</DialogTitle>
+                <DialogContent>
+                    <LlegadaParadas onSubmit={updateLlegada}>
+                        <DialogActions>
+                            <Button
+                                variant={'contained'} color={'primary'}
+                                type="submit"
+                                onClick={closeLlegadaDialog}>Aceptar</Button>
+                            <Button variant={'outlined'} color={'primary'} onClick={closeLlegadaDialog}>Cancelar</Button>
+                        </DialogActions>
+                    </LlegadaParadas>
                 </DialogContent>
             </Dialog>
             <header className="topbar clearfix">

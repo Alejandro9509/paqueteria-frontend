@@ -1,6 +1,7 @@
 import React from 'react';
 import {MenuItem, TextField} from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
+import InputAdornment from "@material-ui/core/InputAdornment";
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -262,6 +263,9 @@ export default function SalidaParadas(props){
                     margin={"dense"}
                     label={"Odómetro Kms"}
                     variant={"outlined"}
+                    InputProps={{
+                        endAdornment: <InputAdornment position="end">kms</InputAdornment>,
+                    }}
                     value={data.kmsRemolqueUno}
                     onChange={handleChangeKmsRemolqueUno}
                 />
@@ -269,6 +273,9 @@ export default function SalidaParadas(props){
                     id={"millasRemolqueUno"}
                     margin={"dense"}
                     label={"Odómetro Mi"}
+                    InputProps={{
+                        endAdornment: <InputAdornment position="end">mi</InputAdornment>,
+                    }}
                     variant={"outlined"}
                     value={data.millasRemolqueUno}
                     onChange={handleChangeMillasRemolqueUno}
@@ -301,6 +308,9 @@ export default function SalidaParadas(props){
                     margin={"dense"}
                     label={"Odómetro Kms"}
                     variant={"outlined"}
+                    InputProps={{
+                        endAdornment: <InputAdornment position="end">kms</InputAdornment>,
+                    }}
                     value={data.kmsRemolqueDos}
                     onChange={handleChangeKmsRemolqueDos}
                 />
@@ -309,6 +319,9 @@ export default function SalidaParadas(props){
                     margin={"dense"}
                     label={"Odómetro Mi"}
                     variant={"outlined"}
+                    InputProps={{
+                        endAdornment: <InputAdornment position="end">mi</InputAdornment>,
+                    }}
                     value={data.millasRemolqueDos}
                     onChange={handleChangeMillasRemolqueDos}
                 />
@@ -431,6 +444,9 @@ export default function SalidaParadas(props){
                     margin={"dense"}
                     label={"Odómetro Kms"}
                     variant={"outlined"}
+                    InputProps={{
+                        endAdornment: <InputAdornment position="end">kms</InputAdornment>,
+                    }}
                     value={data.kms}
                     onChange={handleChangeKms}
                 />
@@ -439,6 +455,9 @@ export default function SalidaParadas(props){
                     margin={"dense"}
                     label={"Odómetro Mi"}
                     variant={"outlined"}
+                    InputProps={{
+                        endAdornment: <InputAdornment position="end">mi</InputAdornment>,
+                    }}
                     value={data.millas}
                     onChange={handleChangeMillas}
                 />
