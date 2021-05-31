@@ -190,7 +190,7 @@ class ClavesCFDI extends Component {
 
                                 </FormControl>
 
-                                <FormControl className="col-sm-12 col-md-4 col-lg-4 unit" style={{ padding: "2px" }}>
+                                <FormControl variant="standard" className="col-sm-12 col-md-4 col-lg-4 unit" style={{ padding: "2px" }}>
 
                                     <InputLabel id="claveGrupoLabel">Grupo</InputLabel>
                                     <Select

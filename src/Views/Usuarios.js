@@ -19,6 +19,7 @@ import { FormControl, InputLabel, Select, TextField, Tooltip } from "@material-u
 import { eliminarUsuarios, modificarUsuarios, obtenerUsuarios, obtenerUsuariosId, validarPermisos } from "../Util/Contexts/UsuarioContext";
 import { agregarUnidades } from "../Util/Contexts/UnidadesContext";
 import Derechos from "./Usuarios/Derechos";
+import CopiarDerechos from "./Usuarios/CopiarDerechos";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -573,6 +574,11 @@ function Usuarios() {
                                 <i className="fa fa-plus-circle" /> Derechos
                             </a>
                         </li>
+                        <li>
+                            <a data-toggle="tab" href="#CopiarDerechos" >
+                                <i className="fa fa-plus-circle" /> Copiar Derechos
+                            </a>
+                        </li>
                         {/*<li>*/}
                         {/*  <a data-toggle="tab" href="#Importar">*/}
                         {/*    <i className="fa fa-upload" /> Importar*/}
@@ -589,7 +595,18 @@ function Usuarios() {
 
                     <div className="tab-content">
                         <div id="Derechos" className="tab-pane fade">
-                            <Derechos />
+                            <div className="widget-wrap j-forms">
+                                <div className="row">
+                                    <Derechos />
+                                </div>
+                            </div>
+                        </div>
+                        <div id="CopiarDerechos" className="tab-pane fade">
+                            <div className="widget-wrap j-forms">
+                                <div className="row">
+                                    <CopiarDerechos />
+                                </div>
+                            </div>
                         </div>
                         <div id="Listado" className="tab-pane fade in active">
                             <div className="widget-wrap">
