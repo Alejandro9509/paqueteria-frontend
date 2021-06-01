@@ -716,6 +716,11 @@ function Viajes() {
         })
     }
 
+    function submitOperadorUnidad(data){
+        console.log("Llamar servicio operador unidad");
+        console.log(data);
+    }
+
     return (
         <div >
             <Dialog open={eventOptions.showDispEquipoDialog}
@@ -774,7 +779,7 @@ function Viajes() {
                     maxWidth={'xl'}>
                 <DialogTitle><h3>Ruta</h3></DialogTitle>
                 <DialogContent>
-                    <AsignarOperador>
+                    <AsignarOperador onSubmit={submitOperadorUnidad}>
                         <DialogActions>
                             <Button
                                 variant={'contained'} color={'primary'}
