@@ -11,7 +11,7 @@ import ZonasPage from './Views/Zonas/Zonas';
 
 import {ReactComponent as GParametroIcon} from './iconos/Configuracion/Icono Parametros/icono_parametro.svg';
 import {ReactComponent as GUsuarioIcon} from './iconos/Configuracion/Icono Usuarios/icono_usuarios.svg';
-//import {ReactComponent as GPaisIcon} from './iconos/Configuracion/Icono Paises/icono_paises.svg';
+import {ReactComponent as GPaisIcon} from './iconos/Configuracion/Icono Paises/icono_pais.svg';
 import {ReactComponent as GCiudadIcon} from './iconos/Configuracion/Icono Ciudades/icono_ciudades.svg';
 import {ReactComponent as GSucursalIcon} from './iconos/Configuracion/Icono Sucursales/icono_sucursal.svg';
 import {ReactComponent as GZonasIcon} from './iconos/Configuracion/Icono Zonas/icono_zonas_color.svg';
@@ -43,7 +43,7 @@ const configurationRoutes = [
   {
     path: "/Paises",
     name: "Países",
-    icon: <GUsuarioIcon/>,
+    icon: <GPaisIcon/>,
     component: PaisesPage,
     isDialog: false
   },

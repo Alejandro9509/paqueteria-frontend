@@ -20,7 +20,7 @@ import { DataGrid } from '@material-ui/data-grid';
 import Noty from 'noty';
 import { SignalCellularNoSimOutlined } from "@material-ui/icons";
 import ConceptosAdicionales from "./Tarifas/ConceptosAdicionales";
-import { FormControl, InputLabel, Select, Step, StepLabel, Stepper, TextField, Tooltip } from "@material-ui/core";
+import { Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, Select, Step, StepLabel, Stepper, TextField, Tooltip } from "@material-ui/core";
 import { dataGridLocaleText } from "../Constants";
 import { obtenerCiudades } from "../Util/Contexts/CiudadesContext";
 import { obtenerEstatusGuia } from "../Util/Contexts/EstatusContext";
@@ -34,6 +34,7 @@ import { obtenerConceptosFacturacion } from "../Util/Contexts/ConceptosFacturaci
 import { obtenerTipoCobro } from "../Util/Contexts/TipoCobroContext";
 import { obtenerTipoServicio } from "../Util/Contexts/TipoServiciosContext";
 import { obtenerImpuestosTipo } from "../Util/Contexts/ImpuestosContext";
+import { imprimirFormatosId, obtenerFormatosImpresion } from "../Util/Contexts/FormatosImpresionContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -78,7 +79,7 @@ function Guia(props) {
 
     const [data, setData] = React.useState([])
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
-    const [conceptos, setConceptos] = React.useState([]);
+    const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [state, setState] = React.useState({
         showPopUp: false,
         idGuia: 0,
@@ -226,61 +227,18 @@ function Guia(props) {
     const [fileUploaded, setFileUploaded] = React.useState([])
     const [stepActive, setStepActive] = React.useState(1);
     const [dataSucursal, setDataSucursal] = React.useState([])
-    const [stateSucursal, setStateSucursal] = React.useState({
-        idSucursal: 0,
-        Sucursal: ""
-    })
 
     const [dataMoneda, setDataMoneda] = React.useState([])
-    const [stateMoneda, setStateMoneda] = React.useState({
-        idMoneda: 0,
-        Moneda: ""
-    })
     const [dataTipoCobro, setDataTipoCobro] = React.useState([])
-    const [stateTipoCobro, setStateTipoCobro] = React.useState({
-        idTipoCobro: 0,
-        Descripcion: ""
-    })
     const [dataEstatusGuia, setDataEstatusGuia] = React.useState([])
-    const [stateEstatusGuia, setStateEstatusGuia] = React.useState({
-        idEstatusGuia: 0,
-        Estatus: "",
-        Color: ""
-    })
     const [dataEmbarque, setDataEmbarque] = React.useState([])
-    const [stateEmbarque, setStateEmbarque] = React.useState({
-        FolioEmbarque: "",
-        idEmbarque: 0
-    })
     const [dataConcepto, setDataConcepto] = React.useState([])
-    const [stateConcepto, setStateConcepto] = React.useState({
-        IdConceptoFacturacion: 0,
-        Concepto: "",
-    })
     const [dataImpuestoTraslado, setDataImpuestoTraslado] = React.useState([])
-    const [stateImpuestoTraslado, setStateImpuestoTraslado] = React.useState({
-        IdImpuesto: 0,
-        Impuesto: "",
-        Porcentaje: 0
-    })
     const [dataImpuestoRetiene, setDataImpuestoRetiene] = React.useState([])
-    const [stateImpuestoRetiene, setStateImpuestoRetiene] = React.useState({
-        IdImpuesto: 0,
-        Impuesto: "",
-        Porcentaje: 0
-    })
 
     const [dataCiudad, setDataCiudad] = React.useState([])
-    const [stateCiudad, setStateCiudad] = React.useState({
-        IdCiudad: 0,
-        Ciudad: ""
-    })
 
     const [dataTipoServicio, setDataTipoServicio] = React.useState([])
-    const [stateTipoServicio, setStateTipoServicio] = React.useState({
-        idTipoServicio: 0,
-        Descripcion: ""
-    })
 
     const handleAceptar = (e) => {
         e.preventDefault()
@@ -430,6 +388,12 @@ function Guia(props) {
                 // muestraPaquetes:true
             });
             $("#Imprimir").click();
+        });
+    };
+
+    function getFormatosImpresion() {
+        obtenerFormatosImpresion().then(respuesta => {
+            setFormatosImpresion(respuesta.data)
         });
     };
 
@@ -712,9 +676,9 @@ function Guia(props) {
             fechaInicial: event.target.value,
         })
         obtenerGuiasFiltro(
-            event.target.value,state.fechaFinal ,state.sucursalListado , state.estatusListado).then(respuesta => {
-            setData(respuesta.data)
-        })
+            event.target.value, state.fechaFinal, state.sucursalListado, state.estatusListado).then(respuesta => {
+                setData(respuesta.data)
+            })
     }
 
     const handleFechaFinalFiltro = async (event) => {
@@ -723,7 +687,7 @@ function Guia(props) {
             fechaFinal: event.target.value,
         })
 
-        obtenerGuiasFiltro(state.fechaInicial , event.target.value , state.sucursalListado , state.estatusListado).then(respuesta => {
+        obtenerGuiasFiltro(state.fechaInicial, event.target.value, state.sucursalListado, state.estatusListado).then(respuesta => {
             setData(respuesta.data)
         })
     }
@@ -733,7 +697,7 @@ function Guia(props) {
             ...state,
             sucursalListado: event.target.value,
         })
-        obtenerGuiasFiltro(state.fechaInicial , state.fechaFinal , event.target.value, state.estatusListado).then(respuesta => {
+        obtenerGuiasFiltro(state.fechaInicial, state.fechaFinal, event.target.value, state.estatusListado).then(respuesta => {
             setData(respuesta.data)
         })
     }
@@ -743,7 +707,7 @@ function Guia(props) {
             ...state,
             estatusListado: event.target.value,
         })
-        obtenerGuiasFiltro(state.fechaInicial , state.fechaFinal , state.sucursalListado , event.target.value).then(respuesta => {
+        obtenerGuiasFiltro(state.fechaInicial, state.fechaFinal, state.sucursalListado, event.target.value).then(respuesta => {
             setData(respuesta.data)
         })
     }
@@ -917,7 +881,7 @@ function Guia(props) {
                     paquetes: paquetesTemp,
                     sobres: sobresTemp
                 })
-                obtenerEmbarqueMoneda( respuesta.data.IdSucursal , respuesta.data.m_nIdMoneda , state.idGuia).then(respuesta => {
+                obtenerEmbarqueMoneda(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, state.idGuia).then(respuesta => {
                     setDataEmbarque(respuesta.data)
                 })
             });
@@ -939,6 +903,7 @@ function Guia(props) {
         getAllImpuestosRetiene();
         getUltimoFolioGuia()
         getTipoCambio()
+        getFormatosImpresion()
     }, []);
 
     async function getAllData() {
@@ -1057,7 +1022,7 @@ function Guia(props) {
 
     function cargaEmbarqueModificar(valorSucursal, valorMoneda, valorGuia) {
         //showSuccess(valorSucursal + "-" + valorMoneda)
-        obtenerEmbarqueMoneda( valorSucursal , valorMoneda , valorGuia).then(respuesta => {
+        obtenerEmbarqueMoneda(valorSucursal, valorMoneda, valorGuia).then(respuesta => {
             //console.log(respuesta);
             setDataEmbarque(respuesta.data)
         });
@@ -1074,7 +1039,7 @@ function Guia(props) {
         if (state.idSucursal === "" || state.idSucursal === "0") return;
         if (valor === "" || valor === "0") return;
 
-        obtenerEmbarqueMoneda( state.idSucursal , valor, state.idGuia).then(respuesta => {
+        obtenerEmbarqueMoneda(state.idSucursal, valor, state.idGuia).then(respuesta => {
             setDataEmbarque(respuesta.data)
         });
     };
@@ -1162,7 +1127,7 @@ function Guia(props) {
                     conceptosAdicionales: conceptosTemp, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada
                 })
             })
-            
+
 
         });
     };
@@ -1276,108 +1241,11 @@ function Guia(props) {
         'Content-Type': 'application/json'
     }
 
-    function DefaultColumnFilter({
-        column: { filterValue, preFilteredRows, setFilter },
-    }) {
-        const count = preFilteredRows.length
+    const handleImprimir = () => {
+        imprimirFormatosId(state.formatoSeleccionado).then((response) => {
+            window.open(new Blob([response.data]));
+        })
 
-        return (
-            <TextField variant="outlined" margin="dense"
-                className="form-control"
-                value={filterValue || ''}
-                onChange={e => {
-                    setFilter(e.target.value || undefined)
-                }}
-                placeholder={`Buscar ${count} registros...`}
-            />
-        )
-    }
-
-    function Table({ columns, data }) {
-
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter
-            }),
-            []
-        )
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn
-            },
-            useFilters,
-            useSortBy,
-        )
-
-        return (
-            <div className="wrapper-tabla" style={{ height: state.height - 270 }}>
-                <div className="wrapper-tabla-2" >
-                    <table className="table tabla-listado" {...getTableProps()}>
-                        <thead>
-
-                            {headerGroups.map(headerGroup => (
-                                <tr {...headerGroup.getHeaderGroupProps()}>
-                                    <th>Acciones</th>
-                                    {headerGroup.headers.map(column => (
-
-                                        // Add the sorting props to control sorting. For this example
-                                        // we can add them into the header props
-                                        <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                            {column.render('Name')}
-                                            {/* Add a sort direction indicator */}
-                                            <span>
-                                                {column.isSorted
-                                                    ? column.isSortedDesc
-                                                        ? <i className="fa fa-caret-up" />
-                                                        : <i className="fa fa-caret-down" />
-                                                    : ''}
-                                            </span>
-                                            <div>{column.canFilter ? column.render('Filter') : null}</div>
-                                        </th>
-                                    ))}
-                                </tr>
-                            ))}
-                        </thead>
-                        <tbody {...getTableBodyProps()}>
-                            {rows.map(
-                                (row, i) => {
-                                    prepareRow(row);
-                                    return (
-                                        <tr {...row.getRowProps()}
-                                            onClick={handleSelectRow.bind(this, row.original.m_nIdGuia)}
-                                            className={state.idGuia === row.original.m_nIdGuia ? classes.seleccionado : classes.noSeleccionado}>
-
-                                            <td>
-                                                <div>
-                                                    <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdGuia))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                                                    <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdGuia))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                                                    <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdGuia))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
-                                                </div>
-                                            </td>
-                                            {row.cells.map(cell => {
-                                                return (
-                                                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                                                )
-                                            })}
-                                        </tr>
-                                    )
-                                }
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        )
     }
 
     function openSection(index) {
@@ -1894,6 +1762,56 @@ function Guia(props) {
 
     return (
         <div >
+            <Dialog
+                open={state.openDialog}
+                onClose={() => setState({ ...state, openDialog: false })}
+                fullWidth maxWidth="md"
+            >
+                <DialogContent>
+                    {state.tipoModal === 6 &&
+                        <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+                            <DialogTitle style={{ padding: "0px" }}><h4>Selecciona el Formato</h4></DialogTitle>
+                            <div>
+                                <label className="input select" style={{ width: "100%" }}>
+                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                        <InputLabel id="sucursalListadoLabel">Formato</InputLabel>
+                                        <Select
+                                            labelId="sucursalListadoLabel"
+                                            label="Formato"
+                                            className="form-control"
+                                            required
+                                            value={state.formatoSeleccionado}
+                                            onChange={(event) => setState({ ...state, formatoSeleccionado: event.target.value })}
+                                            id="formatoSeleccionado"
+                                            name="formatoSeleccionado"
+                                        >
+                                            {dataFormatos.map((formato) => (
+                                                <option
+                                                    key={formato.m_nIdFormato}
+                                                    value={formato.m_nIdFormato}
+                                                >
+                                                    {formato.m_sFormato}
+                                                </option>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                    <i></i>
+                                </label>
+                            </div>
+
+                            <DialogActions style={{ justifyContent: "left" }}>
+
+                                <button onClick={() => handleImprimir()} className="btn btn-primary primary-btn">Aceptar
+                            </button>
+                                <button onClick={() => setState({ ...state, openDialog: false })}
+                                    className="btn btn-secondary secondary-btn">Cerrar
+                            </button>
+
+                            </DialogActions>
+                        </div>
+                    }
+                </DialogContent>
+            </Dialog>
 
             <header className="topbar clearfix">
                 <Cabecera titulo="Guías">
@@ -1931,10 +1849,20 @@ function Guia(props) {
                             </a>
                         </li>
                         <li>
-                            <a data-toggle="tab" href="#Imprimir" onClick={handleShowImprimir}>
+                            <a onClick={(event) => {
+                                event.stopPropagation();
+                                setState({
+                                    ...state,
+                                    identificadorModal:
+                                        "imprimir",
+                                    tipoModal: 6,
+                                    openDialog: true
+                                });
+                            }}>
                                 <i className="fa fa-print" /> Imprimir
-              </a>
+                            </a>
                         </li>
+
                         <li className="hide">
                             <a data-toggle="tab" href="#Importar">
                                 <i className="fa fa-upload" /> Importar

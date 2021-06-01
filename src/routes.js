@@ -46,7 +46,7 @@ const dashboardRoutes = [
     child:  [] 
     },
   {
-    path: "/Recolección",
+    path: "/Recoleccion",
     name: "Recolección",
     icon: RecolecionIcon,
     component: RecoleccionPage,
