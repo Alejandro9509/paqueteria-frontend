@@ -523,6 +523,10 @@ function Clientes(props) {
         getAllTipoMoneda();
     }, []);
 
+    function handleShowImprimir(){
+        $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(2).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Imprimir').addClass('in show');
+    }
+
     function getAllGrupoClientes() {
         obtenerGrupoClientes().then((respuesta) => {
             console.log(respuesta);
@@ -841,6 +845,11 @@ function Clientes(props) {
                         <li>
                             <a  onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
+                            </a>
+                        </li>
+                        <li>
+                            <a  onClick={handleShowImprimir}>
+                                <i className="fa fa-print" /> Imprimir
                             </a>
                         </li>
                     </ul>
