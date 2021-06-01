@@ -898,9 +898,6 @@ function Clientes(props) {
                                                 checkboxSelection={true}
                                                 pageSize={Math.floor((state.height - 310) / 30)}
                                                 getRowId={(row) => row.m_nIdCliente}
-                                                onSelectionModelChange={(newSelection) => {
-                                                    setSelectedRows(newSelection.rows);
-                                                }}
                                             />
                                         ) : (
                                             <div>No se encontró ningún registro</div>
