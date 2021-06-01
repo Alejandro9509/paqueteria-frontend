@@ -849,7 +849,7 @@ function Clientes(props) {
                         </li>
                         <li>
                             <a  onClick={handleShowImprimir}>
-                                <i className="fa fa-plus-circle" /> Imprimir
+                                <i className="fa fa-print" /> Imprimir
                             </a>
                         </li>
                     </ul>
