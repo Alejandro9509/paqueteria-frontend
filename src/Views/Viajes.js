@@ -338,9 +338,9 @@ function Viajes() {
         getAllEstatusDocumento();
 
         // getEstatusEquipoListado();
-        getDispEquipoListado();
+        // getDispEquipoListado();
 
-        getParadasListado();
+        // getParadasListado();
     }, []);
 
     function getAllData() {
@@ -587,7 +587,7 @@ function Viajes() {
     const columnsParadas = [
         {
             headerName: "Camión",
-            field: "camion",
+            field: "m_sNumeroNombreOperador",
             renderCell: (row) => {
                 return (
                     <a onClick={() => showCamionDialog()}>{row.row.camion}</a>
@@ -597,7 +597,7 @@ function Viajes() {
         },
         {
             headerName: "Operador",
-            field: "operador",
+            field: "m_sNumeroNombreOperador",
             width: 150,
             renderCell: (row) => {
               return (
@@ -607,7 +607,7 @@ function Viajes() {
         },
         {
             headerName: "Salida",
-            field: "nameSalida",
+            field: "m_sNumeroNombreOperador",
             width: 100,
             renderCell: (row) => {
                 return(
@@ -617,17 +617,17 @@ function Viajes() {
         },
         {
             headerName: "Fecha",
-            field: "fecha_salida",
+            field: "m_dFechaSalida",
             width: 150,
         },
         {
             headerName: "Origen",
-            field: "origen",
+            field: "m_sCiudadOrigen",
             width: 200,
         },
         {
             headerName: "Llegada",
-            field: "nameLlegada",
+            field: "m_sNumeroNombreOperador",
             width: 100,
             renderCell: (row) => {
                 return(
@@ -637,24 +637,24 @@ function Viajes() {
         },
         {
             headerName: "Fecha",
-            field: "fecha_llegada",
+            field: "m_dFechaLlegada",
             width: 150,
         },
         {
             headerName: "Destino",
-            field: "destino",
+            field: "m_sCiudadDestino",
             width: 200,
         },
         {
             headerName: "Liq",
-            field: "liq",
+            field: "m_sNumeroNombreOperador",
             width: 80,
         },
     ]
     const [paradasListado, setParadasListado] = React.useState([]);
 
     function getParadasListado(){
-        setParadasListado([
+        /*setParadasListado([
             {
                 id: 0,
                 camion: "JT-55455",
@@ -669,7 +669,12 @@ function Viajes() {
                 destino: "Tijuana. Baja California",
                 liq: "",
             }
-        ]);
+        ]);*/
+        const url = `${process.env.REACT_APP_API_URL}/Informes/GetByIdViaje/${state.idViaje}`;
+        axios.get(url, { headers }).then(respuesta => {
+            console.log(respuesta.data);
+            setParadasListado(respuesta.data);
+        });
     }
 
     const showCamionDialog = () =>{
@@ -989,7 +994,8 @@ function Viajes() {
                                                     setState({
                                                         ...state,
                                                         idViaje: row.data.m_nIdViaje
-                                                    })
+                                                    });
+                                                    getParadasListado();
                                                 }}
                                             />
                                         ) : (
@@ -1031,23 +1037,20 @@ function Viajes() {
                                     <div className="widget-wrap">
                                         <div className="widget-content">
                                             <div className="row" style={{ height: state.height - 250, width: '100%' }}>
-                                                {paradasListado.length !== 0 ? (
-                                                  <DataGrid
+                                                <DataGrid
                                                     rows={paradasListado}
                                                     columns={columnsParadas}
                                                     density="compact"
                                                     pageSize={ Math.floor((state.height - 310)/30)}
-                                                    // getRowId={(row) => row.m_nIdDepartamento}
+                                                    getRowId={(row) => row.m_nIdInforme}
                                                     // onRowSelected={(row) => {
                                                     //   setState({
                                                     //     ...state,
                                                     //       idViaje: row.data.m_nIdDepartamento
                                                     //   })
                                                     // }}
-                                                  />
-                                                ) : (
-                                                  <div>No se encontró ningún registro</div>
-                                                )}
+                                                />
+
                                             </div>
                                         </div>
                                     </div>

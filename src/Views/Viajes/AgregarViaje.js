@@ -332,7 +332,7 @@ class AgregarViaje extends Component {
                 <Dialog open={this.state.showAsignarOperadorDialog}
                         fullWidth={true}
                         maxWidth={"md"}
-                        onChange={() => this.setState({showAsignarOperadorDialog: false})} >
+                        onClose={() => this.setState({showAsignarOperadorDialog: false})} >
                     <DialogContent>
                         <AsignarOperadorUnidad>
                             <DialogActions>
