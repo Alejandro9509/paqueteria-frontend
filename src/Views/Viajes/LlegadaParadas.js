@@ -1,4 +1,3 @@
-
 import React from 'react';
 import {FormControl, MenuItem, OutlinedInput, TextField} from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
@@ -33,37 +32,37 @@ export default function LlegadaParadas(props){
     const classes = useStyles();
 
     const [data, setData] = React.useState({
-        sucursal: "",
-        viaje: "",
+        sucursal: props.data.m_sSucursalEmisora,
+        viaje: props.data.m_sFolioViaje,
         documento: "",
         numViajeCliente: "",
-        fecha: "",
-        hora: "",
+        fecha: props.data.m_dFecha,
+        hora: props.data.m_tHora,
         cliente: "",
-        ruta: "",
-        origen: "",
+        ruta: props.data.m_sRuta,
+        origen: props.data.m_sCiudadOrigen,
         tipoDeCambioOrigen: "",
-        destino: "",
+        destino: props.data.m_sCiudadDestino,
         kms: "",
         millas: "",
-        operador: "",
+        operador: props.data.m_sNombreCompleto,
         liquidacion: "",
-        unidad: "",
+        unidad: props.data.m_sUnidad,
         idEstatusUnidad: 0,
-        remolqueUno: "",
+        remolqueUno: props.data.m_sRemolque1,
         kmsRemolqueUno: "",
         millasRemolqueUno: "",
-        placasRemolqueUno: "",
+        placasRemolqueUno: props.data.m_sPlacasRemolque1,
         idEstatusRemolqueUno: 0,
         nameEstatusRemolqueUno: "",
-        remolqueDos: "",
+        remolqueDos: props.data.m_sRemolque2,
         kmsRemolqueDos: "",
         millasRemolqueDos: "",
-        placasremolqueDos: "",
-        dolly: "",
-        fechaSalida: "",
+        placasremolqueDos: props.data.m_sPlacasRemolque2,
+        dolly: props.data.m_sDolly,
+        fechaSalida: props.data.m_dFechaSalida,
         horaSalida: "",
-        fechaLlegada: "",
+        fechaLlegada: props.data.m_dFechaLlegada,
         horaLlegada: "",
         idEstatus: 0,
         motivoRetraso: "",
@@ -208,7 +207,7 @@ export default function LlegadaParadas(props){
     }
 
     return(
-        <form onSubmit={onSubmit}  className={classes.root}>
+        <form onSubmit={onSubmit}>
             {/*<div className={classes.root}></div>*/}
             <Grid container spacing={2}>
                 <Grid item xs={2}>
@@ -389,13 +388,13 @@ export default function LlegadaParadas(props){
 
                 <Grid item xs={5}>
                     <TextField
-                        id={"operador"}
+                        id={"unidad"}
                         margin={"dense"}
-                        label={"Operador"}
+                        label={"Unidad"}
                         InputProps={{readOnly: true}}
                         disabled
                         variant={"outlined"}
-                        value={data.operador}/>
+                        value={data.unidad}/>
                 </Grid>
                 <Grid item xs={2}>
                     <TextField
