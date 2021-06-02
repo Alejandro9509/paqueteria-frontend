@@ -611,7 +611,7 @@ function Viajes() {
             width: 100,
             renderCell: (row) => {
                 return(
-                    <a onClick={() => showSalidaDialog()}>{row.row.m_nIdCiudadOrigen === 0 ? "Asignar" : "Quitar"}</a>
+                    <a onClick={() => showSalidaDialog(row.row)}>{row.row.m_nIdCiudadOrigen === 0 ? "Asignar" : "Quitar"}</a>
                 )
             }
         },
@@ -652,6 +652,7 @@ function Viajes() {
         },
     ]
     const [paradasListado, setParadasListado] = React.useState([]);
+    const [paradaData, setParadaData] = React.useState();
 
     function getParadasListado(){
         /*setParadasListado([
@@ -686,8 +687,11 @@ function Viajes() {
         console.log("Espero se haya abierto el dialogo al clickear camion");
     }
 
-    const showSalidaDialog = () => {
+    const showSalidaDialog = (data) => {
+        console.log(data);
+        setParadaData(data);
         setEventOptions({...eventOptions, showSalidaParadasDialog: true});
+
     }
 
     const closeSalidaDialog = () =>{
@@ -755,7 +759,7 @@ function Viajes() {
                     maxWidth={'xl'}>
                 <DialogTitle><h2>Salida de Paradas</h2></DialogTitle>
                 <DialogContent>
-                    <SalidaParadas onSubmit={updateSalida}>
+                    <SalidaParadas onSubmit={updateSalida} data={paradaData}>
                         <DialogActions>
                             <Button
                                 variant={'contained'} color={'primary'}
