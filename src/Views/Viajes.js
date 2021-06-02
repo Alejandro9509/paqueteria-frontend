@@ -631,7 +631,7 @@ function Viajes() {
             width: 100,
             renderCell: (row) => {
                 return(
-                    <a onClick={() => showLlegadaDialog()}>{row.row.m_nIdCiudadDestino === 0 ? "Asignar" : "Quitar"}</a>
+                    <a onClick={() => showLlegadaDialog(row.row)}>{row.row.m_nIdCiudadDestino === 0 ? "Asignar" : "Quitar"}</a>
                     )
             }
         },
@@ -698,7 +698,8 @@ function Viajes() {
         setEventOptions({...eventOptions, showSalidaParadasDialog: false});
     }
 
-    const showLlegadaDialog = () => {
+    const showLlegadaDialog = (data) => {
+        setParadaData(data);
         setEventOptions({...eventOptions, showLlegadaParadasDialog: true});
     }
 
@@ -776,7 +777,7 @@ function Viajes() {
                     maxWidth={'xl'}>
                 <DialogTitle><h2>Llegada de Paradas</h2></DialogTitle>
                 <DialogContent>
-                    <LlegadaParadas onSubmit={updateLlegada}>
+                    <LlegadaParadas onSubmit={updateLlegada} data={paradaData}>
                         <DialogActions>
                             <Button
                                 variant={'contained'} color={'primary'}

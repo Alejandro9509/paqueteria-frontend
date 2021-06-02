@@ -21,7 +21,7 @@ export default function SalidaParadas(props){
         sucursal: props.data.m_sSucursalEmisora,
         recorrido: "",
         fecha: props.data.m_dFecha,
-        hora: "",
+        hora: props.data.m_tHora,
         cliente: "",
         ruta: props.data.m_sRuta,
         fechaEntrega: "",
