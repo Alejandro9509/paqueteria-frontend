@@ -340,7 +340,7 @@ function Viajes() {
         // getEstatusEquipoListado();
         // getDispEquipoListado();
 
-        // getParadasListado();
+        // getInventarioUnidades();
     }, []);
 
     function getAllData() {
@@ -587,31 +587,31 @@ function Viajes() {
     const columnsParadas = [
         {
             headerName: "Camión",
-            field: "m_sNumeroNombreOperador",
+            field: "m_sUnidadIdentificador",
             renderCell: (row) => {
                 return (
-                    <a onClick={() => showCamionDialog()}>{row.row.camion}</a>
+                    <a onClick={() => showCamionDialog()}>{row.row.m_sUnidadIdentificador}</a>
                 );
             },
             width: 100,
         },
         {
             headerName: "Operador",
-            field: "m_sNumeroNombreOperador",
+            field: "m_sNombreCompleto",
             width: 150,
             renderCell: (row) => {
               return (
-                  <a onClick={() => showAsignarOperadorDialog()}>{row.row.operador}</a>
+                  <a onClick={() => showAsignarOperadorDialog()}>{row.row.m_sNombreCompleto}</a>
               )
             },
         },
         {
             headerName: "Salida",
-            field: "m_sNumeroNombreOperador",
+            field: "m_nIdCiudadOrigen",
             width: 100,
             renderCell: (row) => {
                 return(
-                    <a onClick={() => showSalidaDialog()}>{row.row.nameSalida}</a>
+                    <a onClick={() => showSalidaDialog()}>{row.row.m_nIdCiudadOrigen === 0 ? "Asignar" : "Quitar"}</a>
                 )
             }
         },
@@ -627,11 +627,11 @@ function Viajes() {
         },
         {
             headerName: "Llegada",
-            field: "m_sNumeroNombreOperador",
+            field: "m_nIdCiudadDestino",
             width: 100,
             renderCell: (row) => {
                 return(
-                    <a onClick={() => showLlegadaDialog()}>{row.row.nameLlegada}</a>
+                    <a onClick={() => showLlegadaDialog()}>{row.row.m_nIdCiudadDestino === 0 ? "Asignar" : "Quitar"}</a>
                     )
             }
         },
@@ -656,24 +656,29 @@ function Viajes() {
     function getParadasListado(){
         /*setParadasListado([
             {
-                id: 0,
-                camion: "JT-55455",
-                operador: "Gonzalez Claudio",
-                idSalida: 0,
-                nameSalida: "Asignar",
-                fecha_salida: "12/12/2020",
-                origen: "Mexicali,Baja California",
-                idLlegada: "0",
-                nameLlegada: "Asignar",
-                fecha_llegada: "12/12/2021",
-                destino: "Tijuana. Baja California",
-                liq: "",
+                m_nIdInforme: 0,
+                m_sUnidadIdentificador: "JT-55455",
+                m_sNombreCompleto: "Gonzalez Claudio",
+                m_nIdCiudadOrigen: "Asignar",
+                m_dFechaSalida: "12/12/2020",
+                m_sCiudadOrigen: "Mexicali,Baja California",
+                m_nIdCiudadDestino: "Asignar",
+                m_dFechaLlegada: "12/12/2021",
+                m_sCiudadDestino: "Tijuana. Baja California",
+                m_sNumeroNombreOperador: "",
             }
         ]);*/
         const url = `${process.env.REACT_APP_API_URL}/Informes/GetByIdViaje/${state.idViaje}`;
         axios.get(url, { headers }).then(respuesta => {
             console.log(respuesta.data);
             setParadasListado(respuesta.data);
+        });
+    }
+
+    function getInventarioUnidades(){
+        const url = `${process.env.REACT_APP_API_URL}/InventarioUnidades/GetListado`;
+        axios.get(url, { headers }).then(respuesta => {
+            console.log(respuesta.data);
         });
     }
 
