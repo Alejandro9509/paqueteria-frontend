@@ -107,14 +107,14 @@ function Departamento() {
                 return;
             }
 
-            eliminarDepartamentos(id).then(respuesta => {
-                console.log(respuesta);
+            eliminarDepartamentos(id, state.ModificadoPor).then(respuesta => {
+                console.log(respuesta.data);
                 getAllData();
             }).catch(err => {
-                showSuccess(err)
+                showSuccess(err.data)
             });
         }).catch(err => {
-            showSuccess(err)
+            showSuccess(err.data)
         });
     }
 

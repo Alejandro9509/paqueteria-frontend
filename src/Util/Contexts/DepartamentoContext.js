@@ -24,8 +24,8 @@ function agregarDepartamentos( params){
     return result
 }
 
-function eliminarDepartamentos(id){
-    const url = `${process.env.REACT_APP_API_URL}/Departamento/Eliminar/` + id;
+function eliminarDepartamentos(id, eliminadoPor){
+    const url = `${process.env.REACT_APP_API_URL}/Departamento/Eliminar/` + id + '/' + eliminadoPor;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })
