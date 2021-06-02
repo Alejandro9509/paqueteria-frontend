@@ -1,22 +1,42 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Grid from '@material-ui/core/Grid';
 import {DataGrid} from "@material-ui/data-grid";
-import { makeStyles } from '@material-ui/core/styles';
-const useStyles = makeStyles(() => ({
-
-}));
+import axios from "axios";
 
 
 export default function AsignarOperador(props){
+
+    const headers = {
+        'Content-Type': 'application/json',
+        //    'access-control-allow-origin': '*'
+    }
+    const [unidadesListado, setUnidadesListado] = React.useState([]);
+
+    function getUnidadesListado(){
+        /*setUnidadesListado([
+            {
+                id: 0,
+                tipoUnidad: "bonita"
+            }
+        ]);*/
+        const url = `${process.env.REACT_APP_API_URL}/InventarioUnidades/GetListado`;
+        axios.get(url, { headers }).then(respuesta => {
+            setUnidadesListado(respuesta.data);
+        });
+    }
+
+    useEffect( value => {
+        getUnidadesListado();
+    }, []);
     const columnUnidades = [
         {
             headerName: "Tipo Unidad",
-            field: "tipoUnidad",
+            field: "m_sTipoUnidad",
             width: 150,
         },
         {
             headerName: "Código",
-            field: "codigo",
+            field: "m_sCodigoUnidad",
             width: 100,
         },
         {
@@ -26,7 +46,7 @@ export default function AsignarOperador(props){
         },
         {
             headerName: "Estatus",
-            field: "nameEstatus",
+            field: "m_sEstatus",
             width: 200,
         },
         {
@@ -41,7 +61,7 @@ export default function AsignarOperador(props){
         },
         {
             headerName: "Ubicación",
-            field: "ubicación",
+            field: "m_sUbicacion",
             width: 300,
         },
         {
@@ -71,7 +91,7 @@ export default function AsignarOperador(props){
         },
         {
             headerName: "Activa",
-            field: "placas",
+            field: "activa",
             width: 100,
 
         },
@@ -87,12 +107,6 @@ export default function AsignarOperador(props){
             field: "nombre",
             width: 200,
         },
-    ]
-    const unidadesListado = [
-        {
-            id: 0,
-            tipoUnidad: "bonita"
-        }
     ]
     const operadoresListado = [
         {
@@ -123,6 +137,7 @@ export default function AsignarOperador(props){
                             rows={unidadesListado}
                             density={"compact"}
                             hideFooter={true}
+                            getRowId={(row) => row.m_nIdUnidad}
                         />
                     </div>
 

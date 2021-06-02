@@ -19,7 +19,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 import { dataGridLocaleText } from "../Constants";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip} from "@material-ui/core";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip, ButtonBase} from "@material-ui/core";
 import { obtenerEstatusDocumentos } from "../Util/Contexts/EstatusContext";
 import Historial from "./Viajes/Historial";
 import {confirmAlert} from "react-confirm-alert";
@@ -787,14 +787,17 @@ function Viajes() {
                     onClose={closeAsignarOperadorDialog}
                     fullWidth={true}
                     maxWidth={'xl'}>
-                <DialogTitle><h3>Ruta</h3></DialogTitle>
+                <DialogTitle style={{display:"flex", flexDirection: "row", justifyContent:"space-between"}}>
+                    <h3>Ruta</h3>
+
+                </DialogTitle>
                 <DialogContent>
-                    <AsignarOperador onSubmit={submitOperadorUnidad}>
+                    <AsignarOperador>
                         <DialogActions>
                             <Button
-                                variant={'contained'} color={'primary'}
-                                onClick={closeAsignarOperadorDialog}>Aceptar</Button>
-                            <Button variant={'outlined'} color={'primary'} onClick={closeAsignarOperadorDialog}>Cancelar</Button>
+                                variant={'contained'}
+                                color={'primary'}
+                                onClick={closeAsignarOperadorDialog}>Cerrar</Button>
                         </DialogActions>
                     </AsignarOperador>
 
