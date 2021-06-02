@@ -17,6 +17,7 @@ import { dataGridLocaleText } from "../../Constants";
 import Historial from "./Historial";
 import { obtenerCiudades } from "../../Util/Contexts/CiudadesContext";
 import { obtenerCodigoPostal } from "../../Util/Contexts/CodigoPostalContext";
+import AsignarOperadorUnidad from "./AsignarOperadorUnidad";
 
 const headers = {
     'Content-Type': 'application/json',
@@ -57,7 +58,8 @@ class AgregarViaje extends Component {
             placasDolly: "",
             placasRemolque1: "",
             placasRemolque2: "",
-            height: window.innerHeight
+            height: window.innerHeight,
+            showAsignarOperadorDialog: false,
         }
 
         this.getAllCiudades = this.getAllCiudades.bind(this);
@@ -326,6 +328,26 @@ class AgregarViaje extends Component {
                     open={this.state.openHistoryDialog}
                     onClose={() => this.setState({openHistoryDialog: false })}>
                     <Historial/>
+                </Dialog>
+                <Dialog open={this.state.showAsignarOperadorDialog}
+                        fullWidth={true}
+                        maxWidth={"md"}
+                        onClose={() => this.setState({showAsignarOperadorDialog: false})} >
+                    <DialogContent>
+                        <AsignarOperadorUnidad>
+                            <DialogActions>
+                                <Button
+                                    variant={"contained"}
+                                    color={"primary"}
+                                    type={"submit"}
+                                    onClick={() => this.setState({showAsignarOperadorDialog: false})}>Aceptar</Button>
+                                <Button
+                                    variant={"outlined"}
+                                    color={"primary"}
+                                    onClick={() => this.setState({showAsignarOperadorDialog: false})}>Cancelar</Button>
+                            </DialogActions>
+                        </AsignarOperadorUnidad>
+                    </DialogContent>
                 </Dialog>
                 <div className="widget-wrap">
                     <div className="widget-content">
@@ -1032,6 +1054,11 @@ class AgregarViaje extends Component {
                                         onClick={() => this.setState({openHistoryDialog: true })}>Historial</button>
                                 ): (<div/>)}
                             </div>
+
+                            <Button
+                                variant={"contained"}
+                                color={"primary"}
+                                onClick={() => this.setState({showAsignarOperadorDialog: true})}>Asignar operador unidad</Button>
                         </div>
                     </div>
                 </div>
