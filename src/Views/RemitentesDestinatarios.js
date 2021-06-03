@@ -680,6 +680,14 @@ function RemitenteDestinatario(props) {
         });
     }
 
+    function CustomToolbar() {
+        return (
+            <GridToolbarContainer>
+                <GridToolbarExport />
+            </GridToolbarContainer>
+        );
+    }
+
     return (
         <div>
             <Modal style={{ height: "400px" }}>
@@ -743,6 +751,11 @@ function RemitenteDestinatario(props) {
                             <i className="fa fa-plus-circle" /> {state.agregar}
                         </a>
                     </li>
+                    <li>
+                        <a data-toggle="tab" href="#Imprimir" onClick={(event) => { event.stopPropagation(); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(2).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Imprimir').addClass('in show'); }}>
+                            <i className="fa fa-print" /> Imprimir
+                        </a>
+                    </li>
                     {/*<li>*/}
                     {/*  <ExportCSV*/}
                     {/*    csvData={data}*/}
@@ -784,8 +797,33 @@ function RemitenteDestinatario(props) {
                         </div>
                     </div>
                     <div id="Imprimir" className="tab-pane fade ">
-                        Imprimir
-          </div>
+                            <div className="widget-wrap">
+                                <div className="widget-content">
+                                    <div
+                                        className="row"
+                                        style={{ height: state.height - 250, width: "100%" }}
+                                    >
+                                        {data.length != 0 ? (
+                                            <DataGrid
+                                                components={{
+                                                    Toolbar: CustomToolbar,
+                                                }}
+                                                localeText={dataGridLocaleText}
+                                                rows={data}
+                                                columns={columns}
+                                                density="compact"
+                                                checkboxSelection={true}
+                                                pageSize={Math.floor((state.height - 310) / 30)}
+                                                getRowId={(row) => row.m_nIdCliente}
+                                            />
+                                        ) : (
+                                            <div>No se encontró ningún registro</div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
 
                     <div id="Agregar" className="tab-pane fade ">
                         <form className="j-forms" onSubmit={handleAceptar}>

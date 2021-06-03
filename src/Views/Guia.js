@@ -298,7 +298,7 @@ function Guia(props) {
             "EntregarEn": state.entregarEn,
             "DatosAdicionalesis": state.datosAdicionalesis,
             "Tracking": state.tracking,
-            "arClsGuiaConceptos": state.conceptosAdicionales.map(c => ({ m_nIdConceptoFacturacion: c.concepto.m_nIdConceptoFacturacion, m_cImporte: c.importe, m_nIdImpuestoTraslada: c.traslada, m_nIdImpuestoRetiene: c.retiene, m_cImporteRetiene: c.importeRet, m_cImporteIva: c.importeIva })),
+            "arClsGuiaConceptos": state.conceptosAdicionales.map(c => ({ m_nIdConceptosFacturacion: c.concepto.m_nIdConceptosFacturacion, m_cImporte: c.importe, m_nIdImpuestoTraslada: c.traslada, m_nIdImpuestoRetiene: c.retiene, m_cImporteRetiene: c.importeRet, m_cImporteIva: c.importeIva })),
             "CreadoPor": state.creadoPor,
             "ModificadoPor": state.modificadoPor,
             "CreadoEl": state.creadoEl,
@@ -309,6 +309,9 @@ function Guia(props) {
 
 
         }
+        console.log(JSON.stringify(params));
+
+        debugger;
         if (state.idGuia != 0) {
             modificarGuia(state.idGuia, params).then(respuesta => {
                 showSuccess(respuesta.data)
@@ -1045,8 +1048,9 @@ function Guia(props) {
     };
 
     function handleEmbarque(embarque) {
+        
         obtenerEmbarquesId(embarque).then(respuesta => {
-
+console.log(embarque);
             const paquetesTemp = [];
             const sobresTemp = [];
             //console.log(paquetesTemp);
@@ -1091,7 +1095,7 @@ function Guia(props) {
 
                 if (tarifa.data.length !== 0) {
                     tarifa.data[0].m_arrArConceptos.forEach(element => {
-                        conceptosTemp.push({ concepto: dataConcepto.find(c => c.m_nIdConceptosFacturacion === element.m_nIdConceptoFacturacion), importe: element.m_cImporte, traslada: element.m_nIdImpuestoTraslada, importeIVA: element.m_cImporteIva, retiene: element.m_nIdImpuestoRetiene, importeRet: element.m_cImporteRetiene })
+                        conceptosTemp.push({ concepto: dataConcepto.find(c => c.m_nIdConceptosFacturacion === element.m_nIdConceptosFacturacion), importe: element.m_cImporte, traslada: element.m_nIdImpuestoTraslada, importeIVA: element.m_cImporteIva, retiene: element.m_nIdImpuestoRetiene, importeRet: element.m_cImporteRetiene })
 
                     })
                     ivaTraslada = getUniqueListBy(conceptosTemp, "traslada").map(i => i.traslada);
@@ -1177,7 +1181,7 @@ function Guia(props) {
                     continue;
 
                 conceptosTemp.push({
-                    IdConceptoFacturacion: embarque.data.m_arClsGuiaConceptos[i].m_nIdConceptoFacturacion,
+                    IdConceptoFacturacion: embarque.data.m_arClsGuiaConceptos[i].m_nIdConceptosFacturacion,
                     Importe: embarque.data.m_arClsGuiaConceptos[i].m_cImporte,
                     IdImpuestoTraslada: embarque.data.m_arClsGuiaConceptos[i].m_nIdImpuestoTraslada,
                     ImporteIva: embarque.data.m_arClsGuiaConceptos[i].m_cImporteIva,
@@ -2782,6 +2786,7 @@ function Guia(props) {
                                                                                         disabled={state.agregar == "Consultar"}
                                                                                         id="idTipoServicio"
                                                                                         read="true"
+                                                                                        value={state.idTipoServicio}
                                                                                     >
                                                                                         {dataTipoServicio.map(
                                                                                             (tipoServicio) => (

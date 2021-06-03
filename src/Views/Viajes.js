@@ -19,13 +19,14 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 import { dataGridLocaleText } from "../Constants";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip} from "@material-ui/core";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip, ButtonBase} from "@material-ui/core";
 import { obtenerEstatusDocumentos } from "../Util/Contexts/EstatusContext";
 import Historial from "./Viajes/Historial";
 import {confirmAlert} from "react-confirm-alert";
 import ActualizarDiponibilidadEquipo from "./Viajes/ActualizarDiponibilidadEquipo";
 import SalidaParadas from "./Viajes/SalidaParadas";
 import LlegadaParadas from "./Viajes/LlegadaParadas";
+import AsignarOperador from "./Viajes/AsignarOperador";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -337,9 +338,9 @@ function Viajes() {
         getAllEstatusDocumento();
 
         // getEstatusEquipoListado();
-        getDispEquipoListado();
+        // getDispEquipoListado();
 
-        getParadasListado();
+        // getInventarioUnidades();
     }, []);
 
     function getAllData() {
@@ -522,7 +523,8 @@ function Viajes() {
     const [eventOptions, setEventOptions] = React.useState({
         showDispEquipoDialog : false,
         showSalidaParadasDialog: false,
-        showLlegadaParadasDialog: false
+        showLlegadaParadasDialog: false,
+        showAsignarOperadorDialog: false,
     });
 
     function getDispEquipoListado(){
@@ -585,108 +587,119 @@ function Viajes() {
     const columnsParadas = [
         {
             headerName: "Camión",
-            field: "camion",
+            field: "m_sUnidadIdentificador",
             renderCell: (row) => {
                 return (
-                    <a onClick={() => showCamionDialog()}>{row.row.camion}</a>
+                    <a onClick={() => showCamionDialog()}>{row.row.m_sUnidadIdentificador}</a>
                 );
             },
             width: 100,
         },
         {
             headerName: "Operador",
-            field: "operador",
+            field: "m_sNombreCompleto",
             width: 150,
             renderCell: (row) => {
               return (
-                  <a onClick={() => showOperadorDialog()}>{row.row.operador}</a>
+                  <a onClick={() => showAsignarOperadorDialog()}>{row.row.m_sNombreCompleto}</a>
               )
             },
         },
         {
             headerName: "Salida",
-            field: "nameSalida",
+            field: "m_nIdCiudadOrigen",
             width: 100,
             renderCell: (row) => {
                 return(
-                    <a onClick={() => showSalidaDialog()}>{row.row.nameSalida}</a>
+                    <a onClick={() => showSalidaDialog(row.row)}>{row.row.m_nIdCiudadOrigen === 0 ? "Asignar" : "Quitar"}</a>
                 )
             }
         },
         {
             headerName: "Fecha",
-            field: "fecha_salida",
+            field: "m_dFechaSalida",
             width: 150,
         },
         {
             headerName: "Origen",
-            field: "origen",
+            field: "m_sCiudadOrigen",
             width: 200,
         },
         {
             headerName: "Llegada",
-            field: "nameLlegada",
+            field: "m_nIdCiudadDestino",
             width: 100,
             renderCell: (row) => {
                 return(
-                    <a onClick={() => showLlegadaDialog()}>{row.row.nameLlegada}</a>
+                    <a onClick={() => showLlegadaDialog(row.row)}>{row.row.m_nIdCiudadDestino === 0 ? "Asignar" : "Quitar"}</a>
                     )
             }
         },
         {
             headerName: "Fecha",
-            field: "fecha_llegada",
+            field: "m_dFechaLlegada",
             width: 150,
         },
         {
             headerName: "Destino",
-            field: "destino",
+            field: "m_sCiudadDestino",
             width: 200,
         },
         {
             headerName: "Liq",
-            field: "liq",
+            field: "m_sNumeroNombreOperador",
             width: 80,
         },
     ]
     const [paradasListado, setParadasListado] = React.useState([]);
+    const [paradaData, setParadaData] = React.useState();
 
     function getParadasListado(){
-        setParadasListado([
+        /*setParadasListado([
             {
-                id: 0,
-                camion: "JT-55455",
-                operador: "Gonzalez Claudio",
-                idSalida: 0,
-                nameSalida: "Asignar",
-                fecha_salida: "12/12/2020",
-                origen: "Mexicali,Baja California",
-                idLlegada: "0",
-                nameLlegada: "Asignar",
-                fecha_llegada: "12/12/2021",
-                destino: "Tijuana. Baja California",
-                liq: "",
+                m_nIdInforme: 0,
+                m_sUnidadIdentificador: "JT-55455",
+                m_sNombreCompleto: "Gonzalez Claudio",
+                m_nIdCiudadOrigen: "Asignar",
+                m_dFechaSalida: "12/12/2020",
+                m_sCiudadOrigen: "Mexicali,Baja California",
+                m_nIdCiudadDestino: "Asignar",
+                m_dFechaLlegada: "12/12/2021",
+                m_sCiudadDestino: "Tijuana. Baja California",
+                m_sNumeroNombreOperador: "",
             }
-        ]);
+        ]);*/
+        const url = `${process.env.REACT_APP_API_URL}/Informes/GetByIdViaje/${state.idViaje}`;
+        axios.get(url, { headers }).then(respuesta => {
+            console.log(respuesta.data);
+            setParadasListado(respuesta.data);
+        });
+    }
+
+    function getInventarioUnidades(){
+        const url = `${process.env.REACT_APP_API_URL}/InventarioUnidades/GetListado`;
+        axios.get(url, { headers }).then(respuesta => {
+            console.log(respuesta.data);
+        });
     }
 
     const showCamionDialog = () =>{
         console.log("Espero se haya abierto el dialogo al clickear camion");
     }
 
-    const showOperadorDialog = () => {
-        console.log("Espero que se haya abierto el dialogo al clickear operador");
-    }
-
-    const showSalidaDialog = () => {
+    const showSalidaDialog = (data) => {
+        console.log(data);
+        setParadaData(data);
         setEventOptions({...eventOptions, showSalidaParadasDialog: true});
+
     }
 
     const closeSalidaDialog = () =>{
         setEventOptions({...eventOptions, showSalidaParadasDialog: false});
     }
 
-    const showLlegadaDialog = () => {
+    const showLlegadaDialog = (data) => {
+        setParadaData(data);
         setEventOptions({...eventOptions, showLlegadaParadasDialog: true});
     }
 
@@ -701,6 +714,25 @@ function Viajes() {
 
     function updateLlegada(data) {
         console.log("Actualizar datos da llegada");
+        console.log(data);
+    }
+
+    const showAsignarOperadorDialog = () => {
+        setEventOptions({
+            ...eventOptions,
+            showAsignarOperadorDialog: true
+        });
+    }
+
+    const closeAsignarOperadorDialog = () => {
+        setEventOptions({
+            ...eventOptions,
+            showAsignarOperadorDialog: false
+        })
+    }
+
+    function submitOperadorUnidad(data){
+        console.log("Llamar servicio operador unidad");
         console.log(data);
     }
 
@@ -726,9 +758,9 @@ function Viajes() {
                     onClose={closeSalidaDialog}
                     fullWidth={true}
                     maxWidth={'xl'}>
-                <DialogTitle>Salida de Paradas</DialogTitle>
+                <DialogTitle><h2>Salida de Paradas</h2></DialogTitle>
                 <DialogContent>
-                    <SalidaParadas onSubmit={updateSalida}>
+                    <SalidaParadas onSubmit={updateSalida} data={paradaData}>
                         <DialogActions>
                             <Button
                                 variant={'contained'} color={'primary'}
@@ -743,9 +775,9 @@ function Viajes() {
                     onClose={closeLlegadaDialog}
                     fullWidth={true}
                     maxWidth={'xl'}>
-                <DialogTitle>Llegada de Paradas</DialogTitle>
+                <DialogTitle><h2>Llegada de Paradas</h2></DialogTitle>
                 <DialogContent>
-                    <LlegadaParadas onSubmit={updateLlegada}>
+                    <LlegadaParadas onSubmit={updateLlegada} data={paradaData}>
                         <DialogActions>
                             <Button
                                 variant={'contained'} color={'primary'}
@@ -756,6 +788,27 @@ function Viajes() {
                     </LlegadaParadas>
                 </DialogContent>
             </Dialog>
+            <Dialog open={eventOptions.showAsignarOperadorDialog}
+                    onClose={closeAsignarOperadorDialog}
+                    fullWidth={true}
+                    maxWidth={'xl'}>
+                <DialogTitle style={{display:"flex", flexDirection: "row", justifyContent:"space-between"}}>
+                    <h3>Ruta</h3>
+
+                </DialogTitle>
+                <DialogContent>
+                    <AsignarOperador>
+                        <DialogActions>
+                            <Button
+                                variant={'contained'}
+                                color={'primary'}
+                                onClick={closeAsignarOperadorDialog}>Cerrar</Button>
+                        </DialogActions>
+                    </AsignarOperador>
+
+                </DialogContent>
+            </Dialog>
+
             <header className="topbar clearfix">
                 <Cabecera titulo="Viajes" >
                     <div className="page-header">
@@ -954,7 +1007,8 @@ function Viajes() {
                                                     setState({
                                                         ...state,
                                                         idViaje: row.data.m_nIdViaje
-                                                    })
+                                                    });
+                                                    getParadasListado();
                                                 }}
                                             />
                                         ) : (
@@ -996,23 +1050,20 @@ function Viajes() {
                                     <div className="widget-wrap">
                                         <div className="widget-content">
                                             <div className="row" style={{ height: state.height - 250, width: '100%' }}>
-                                                {paradasListado.length !== 0 ? (
-                                                  <DataGrid
+                                                <DataGrid
                                                     rows={paradasListado}
                                                     columns={columnsParadas}
                                                     density="compact"
                                                     pageSize={ Math.floor((state.height - 310)/30)}
-                                                    // getRowId={(row) => row.m_nIdDepartamento}
+                                                    getRowId={(row) => row.m_nIdInforme}
                                                     // onRowSelected={(row) => {
                                                     //   setState({
                                                     //     ...state,
                                                     //       idViaje: row.data.m_nIdDepartamento
                                                     //   })
                                                     // }}
-                                                  />
-                                                ) : (
-                                                  <div>No se encontró ningún registro</div>
-                                                )}
+                                                />
+
                                             </div>
                                         </div>
                                     </div>

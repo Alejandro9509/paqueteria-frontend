@@ -523,6 +523,10 @@ function Clientes(props) {
         getAllTipoMoneda();
     }, []);
 
+    function handleShowImprimir(){
+        $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(2).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Imprimir').addClass('in show');
+    }
+
     function getAllGrupoClientes() {
         obtenerGrupoClientes().then((respuesta) => {
             console.log(respuesta);
@@ -843,6 +847,11 @@ function Clientes(props) {
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>
+                        <li>
+                            <a  onClick={handleShowImprimir}>
+                                <i className="fa fa-print" /> Imprimir
+                            </a>
+                        </li>
                     </ul>
 
                     <div className="tab-content">
@@ -889,9 +898,6 @@ function Clientes(props) {
                                                 checkboxSelection={true}
                                                 pageSize={Math.floor((state.height - 310) / 30)}
                                                 getRowId={(row) => row.m_nIdCliente}
-                                                onSelectionModelChange={(newSelection) => {
-                                                    setSelectedRows(newSelection.rows);
-                                                }}
                                             />
                                         ) : (
                                             <div>No se encontró ningún registro</div>
