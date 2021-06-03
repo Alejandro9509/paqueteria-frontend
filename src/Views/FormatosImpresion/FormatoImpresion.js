@@ -128,7 +128,11 @@ class FormatoImpresion extends Component {
 
     async handleAceptar(data) {
         let file = await toBase64(data.file[0])
-        let image = await toBase64(data.image[0])
+        var image = null
+        if (data.image.length != 0) {
+            image = await toBase64(data.image[0])
+        }
+        
         var params = {
             m_sFormato: data.formato,
             m_nTipoProceso: data.idTipoProcesoAgregar,

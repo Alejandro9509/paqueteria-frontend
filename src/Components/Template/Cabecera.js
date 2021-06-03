@@ -118,7 +118,7 @@ function Cabecera({ titulo, children }) {
                 </div>
             </div>
             <Hidden xsDown implementation="css">
-                <div className="topbar-left pull-left iconic-aside-container" style={{ backgroundColor: "white", height: "60px", width:"300px" }}>
+                <div className="topbar-left pull-left iconic-aside-container" style={{ backgroundColor: "white", height: "60px" }}>
                     <div style={{ display: "inline-block", verticalAlign: "middle", margin: "auto", marginLeft: "0px" }}>
                         <h2 style={{ position: "absolute" }}>{titulo}</h2>
                     </div>

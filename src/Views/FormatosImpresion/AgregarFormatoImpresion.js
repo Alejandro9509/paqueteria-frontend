@@ -186,7 +186,6 @@ class AgregarFormatoImpresion extends Component {
                                                    className="form-control"
                                                    type="text"
                                                    disabled={true}
-                                                   required
                                                    label="Archivo Imagen"
                                                    value={this.state.image.length !== 0 ? this.state.image[0].name : ""}
                                                    name={"nombreImagen"}

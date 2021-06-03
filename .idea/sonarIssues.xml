@@ -3,6 +3,11 @@
   <component name="issues">
     <option name="index">
       <map>
+        <entry key="/Dummy.txt">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Views/Clientes.js">
           <value>
             <set />
@@ -79,6 +84,51 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Views/Zonas.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/app-navigation.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/app-routes.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/assets/constants/index.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/context/IndicatorContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/context/ProgramContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/pages/indicators/admin-indicator.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/pages/indicators/admin-recomentadions.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/pages/report-indicators/recomendation-evidence.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/pages/report-indicators/report_recomendations.js">
           <value>
             <set />
           </value>

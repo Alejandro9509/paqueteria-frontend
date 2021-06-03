@@ -54,7 +54,7 @@ function imprimirFormatosId(id){
     const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
     let result;
     trackPromise(
-        result =  axios.get(url, { headers })
+        result =  axios.get(url, { headers, responseType:"arraybuffer" })
         );
     return result
 }

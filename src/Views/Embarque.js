@@ -2020,7 +2020,10 @@ function Embarque(props) {
 
     const handleImprimir = () => {
         imprimirFormatosId(state.formatoSeleccionado).then((response) => {
-            window.open(new Blob([response.data]));
+            var file = new Blob([response.data], {type: 'application/pdf'})
+            var fileURL = URL.createObjectURL(file)
+            console.log(fileURL)
+            window.open(fileURL);
         })
 
     }
@@ -2280,6 +2283,7 @@ function Embarque(props) {
             <Dialog
                 open={state.openDialog}
                 onClose={() => setState({ ...state, openDialog: false })}
+                fullWidth maxWidth="md"
             >
                 <DialogContent>
                     {state.tipoModal === 0 && (
@@ -2618,6 +2622,20 @@ function Embarque(props) {
                         >
                             <a onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
+                            </a>
+                        </li>
+                        <li>
+                            <a onClick={(event) => {
+                                event.stopPropagation();
+                                setState({
+                                    ...state,
+                                    identificadorModal:
+                                        "imprimir",
+                                    tipoModal: 6,
+                                    openDialog: true
+                                });
+                            }}>
+                                <i className="fa fa-print" /> Imprimir
                             </a>
                         </li>
                         <li>
