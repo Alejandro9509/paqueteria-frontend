@@ -263,15 +263,13 @@ export default function AsignarOperadorUnidad(props){
     };
     return (
         <div>
-            <AppBar position="static">
-                <Tabs
-                    value={tabActive}
-                    onChange={handleChangeTab}
-                    aria-label="simple tabs example">
-                    <Tab label="Item One" {...a11yProps(0)} />
-                    <Tab label="Item Two" {...a11yProps(1)} />
-                </Tabs>
-            </AppBar>
+            <Tabs
+                value={tabActive}
+                onChange={handleChangeTab}
+                aria-label="simple tabs example">
+                <Tab label="General" {...a11yProps(0)} />
+                <Tab label="Informes" {...a11yProps(1)} />
+            </Tabs>
             <form onSubmit={submit}>
                 <TabPanel value={tabActive} index={0}>
                     <Grid container spacing={2}>
