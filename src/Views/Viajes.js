@@ -601,7 +601,7 @@ function Viajes() {
             width: 150,
             renderCell: (row) => {
               return (
-                  <a onClick={() => showAsignarOperadorDialog()}>{row.row.m_sNombreCompleto}</a>
+                  <a onClick={() => showAsignarOperadorDialog(row.row)}>{row.row.m_sNombreCompleto}</a>
               )
             },
         },
@@ -717,7 +717,8 @@ function Viajes() {
         console.log(data);
     }
 
-    const showAsignarOperadorDialog = () => {
+    const showAsignarOperadorDialog = (data) => {
+        setParadaData(data);
         setEventOptions({
             ...eventOptions,
             showAsignarOperadorDialog: true
@@ -793,7 +794,8 @@ function Viajes() {
                     fullWidth={true}
                     maxWidth={'xl'}>
                 <DialogTitle style={{display:"flex", flexDirection: "row", justifyContent:"space-between"}}>
-                    <h3>Ruta</h3>
+                    {/*<h3>Origen: {paradaData.m_sCiudadOrigen} Destino: {paradaData.m_sCiudadDestino}</h3>*/}
+                    <h3>Origen:  Destino: </h3>
 
                 </DialogTitle>
                 <DialogContent>

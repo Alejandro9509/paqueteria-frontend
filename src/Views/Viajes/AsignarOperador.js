@@ -48,6 +48,12 @@ export default function AsignarOperador(props){
             headerName: "Estatus",
             field: "m_sEstatus",
             width: 200,
+            renderCell: (row) => {
+                let color = "#" + row.row.m_sColor;
+                return (
+                    <div style={{color: {color}}}>{row.row.m_sEstatus}</div>
+                )
+            }
         },
         {
             headerName: "Distancia Kms",
@@ -129,7 +135,7 @@ export default function AsignarOperador(props){
     return(
         <div>
             <Grid container spacing={1}>
-                <Grid item xs={7} >
+                <Grid item xs={8} >
                     <div style={{height: 400}}>
                         <h3>Disponibilidad de unidades</h3>
                         <DataGrid
@@ -142,7 +148,7 @@ export default function AsignarOperador(props){
                     </div>
 
                 </Grid>
-                <Grid item xs={5}>
+                <Grid item xs={4}>
                     <div style={{height: 400}}>
                         <h3>Operadores</h3>
                         <DataGrid
