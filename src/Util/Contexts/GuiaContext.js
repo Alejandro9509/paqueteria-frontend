@@ -24,8 +24,8 @@ function agregarGuia(params) {
     return result
 }
 
-function eliminarGuia(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Guia/Eliminar/` + id;
+function eliminarGuia(id, idEliminadoPor) {
+    const url = `${process.env.REACT_APP_API_URL}/Guia/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })

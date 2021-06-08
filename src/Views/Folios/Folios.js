@@ -36,10 +36,12 @@ class Folios extends Component {
             agregar: "Agregar",
             openDialog: false,
             height: window.innerHeight,
+            CreadoPor: localStorage.getItem("UsuarioId"),
+            ModificadoPor: localStorage.getItem("UsuarioId"),
             pantalla: 1,
             selected: {},
             dataSucursal: [],
-            DerechoBorrar:  1,//TODO: Definir id 
+            DerechoBorrar: 1,//TODO: Definir id 
             columns: [
                 {
                     headerName: "Acciones",
@@ -52,11 +54,11 @@ class Folios extends Component {
                         )
                     }
                 },
-                 {
-                   headerName: "Folio",
-                   field: "m_sFolio",
+                {
+                    headerName: "Folio",
+                    field: "m_sFolio",
                     width: 300,
-                 },
+                },
                 {
                     headerName: "Serie",
                     field: "m_sSerie",
@@ -70,11 +72,11 @@ class Folios extends Component {
                     field: "m_sSucursal",
                     width: 125,
                 },
-                 {
+                {
                     headerName: "Estatus",
-                     field: "m_nIdEstatus",
+                    field: "m_nIdEstatus",
                     valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
-                   width: 125,
+                    width: 125,
                 },
 
             ]
@@ -91,24 +93,24 @@ class Folios extends Component {
     }
 
     handleEliminar(id) {
-         var derecho;
-         validarPermisos(this.state).then(respuesta => {
-             derecho = respuesta.data;
-             if (derecho === false) {
-                 showSuccess("El usuario no tiene derechos para realizar el proceso");
-                 return;
-             }
+        var derecho;
+        validarPermisos(this.state).then(respuesta => {
+            derecho = respuesta.data;
+            if (derecho === false) {
+                showSuccess("El usuario no tiene derechos para realizar el proceso");
+                return;
+            }
 
-        eliminarFolios(id).then(respuesta => {
-            console.log(respuesta);
-            showSuccess(respuesta.data)
-            this.getAllData();
+            eliminarFolios(id, this.state.ModificadoPor).then(respuesta => {
+                console.log(respuesta);
+                showSuccess(respuesta.data)
+                this.getAllData();
+            }).catch(err => {
+                showSuccess(err)
+            });
         }).catch(err => {
             showSuccess(err)
         });
-         }).catch(err => {
-             showSuccess(err)
-         });
     }
 
     handleAceptar(data) {
@@ -123,11 +125,11 @@ class Folios extends Component {
             m_nFolioFinal: parseInt(data.folioFinal),
             m_dtCreadoEl: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
             m_nCreadoPor: localStorage.getItem("UsuarioId"),
-            m_nIdEstatus:1
+            m_nIdEstatus: 1
         }
         console.log(JSON.stringify(params));
         debugger;
-           agregarFolios(params).then(respuesta => {
+        agregarFolios(params).then(respuesta => {
 
             showSuccess(respuesta.data)
             $('.nav-tabs li ').removeClass('active');

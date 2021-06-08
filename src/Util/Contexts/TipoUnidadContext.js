@@ -24,8 +24,8 @@ function agregarTipoUnidades( params){
     return result
 }
 
-function eliminarTipoUnidades(id){
-    const url = `${process.env.REACT_APP_API_URL}/TipoUnidad/Eliminar/` + id;
+function eliminarTipoUnidades(id, idEliminadoPor){
+    const url = `${process.env.REACT_APP_API_URL}/TipoUnidad/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })

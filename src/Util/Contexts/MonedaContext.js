@@ -24,8 +24,8 @@ function agregarMonedas( params){
     return result
 }
 
-function eliminarMonedas(id){
-    const url = `${process.env.REACT_APP_API_URL}/Moneda/Eliminar/` + id;
+function eliminarMonedas(id, idEliminadoPor){
+    const url = `${process.env.REACT_APP_API_URL}/Moneda/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })

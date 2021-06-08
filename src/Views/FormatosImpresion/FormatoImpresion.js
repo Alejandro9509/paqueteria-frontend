@@ -113,7 +113,7 @@ class FormatoImpresion extends Component {
         //         return;
         //     }
 
-        const url = `${process.env.REACT_APP_API_URL}/Folios/Eliminar/` + id;
+        const url = `${process.env.REACT_APP_API_URL}/Folios/Eliminar/` + id + `/${this.state.ModificadoPor}`;
         axios.delete(url, { headers }).then(respuesta => {
             console.log(respuesta);
             showSuccess(respuesta.data)
@@ -132,7 +132,7 @@ class FormatoImpresion extends Component {
         if (data.image.length != 0) {
             image = await toBase64(data.image[0])
         }
-        
+
         var params = {
             m_sFormato: data.formato,
             m_nTipoProceso: data.idTipoProcesoAgregar,
@@ -169,7 +169,7 @@ class FormatoImpresion extends Component {
         obtenerFormatosImpresion().then(respuesta => {
             this.setState({ data: respuesta.data, agregar: "Agregar" })
         });
-    } 
+    }
 
     handleClose() {
         this.setState({ openDialog: false })

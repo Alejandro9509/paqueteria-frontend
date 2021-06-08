@@ -24,8 +24,8 @@ function agregarClasificacionViaje( params){
     return result
 }
 
-function eliminarClasificacionViaje(id){
-    const url = `${process.env.REACT_APP_API_URL}/ClasificacionViajes/Eliminar/` + id;
+function eliminarClasificacionViaje(id, idEliminadoPor){
+    const url = `${process.env.REACT_APP_API_URL}/ClasificacionViajes/Eliminar/` + id +`/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })

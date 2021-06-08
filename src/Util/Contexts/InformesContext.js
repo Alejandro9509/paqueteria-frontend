@@ -33,8 +33,8 @@ function agregarInformes( params){
     return result
 }
 
-function eliminarInformes(id){
-    const url = `${process.env.REACT_APP_API_URL}/Unidadd/Eliminar/` + id; //TODO: Cambiar a servicio de eliminar informe
+function eliminarInformes(id, idEliminadoPor){
+    const url = `${process.env.REACT_APP_API_URL}/Unidadd/Eliminar/` + id + `/${idEliminadoPor}`; //TODO: Cambiar a servicio de eliminar informe
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })

@@ -97,7 +97,7 @@ function GrupoCliente() {
                 return;
             }
 
-            eliminarGrupoClientes(id).then(respuesta => {
+            eliminarGrupoClientes(id, state.CreadoPor).then(respuesta => {
                 console.log(respuesta);
                 getAllData();
             }).catch(err => {

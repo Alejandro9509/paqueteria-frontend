@@ -27,8 +27,8 @@ function agregarUnidades(params) {
     return result
 }
 
-function eliminarUnidades(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Unidad/Eliminar/` + id;
+function eliminarUnidades(id, idEliminadoPor) {
+    const url = `${process.env.REACT_APP_API_URL}/Unidad/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios

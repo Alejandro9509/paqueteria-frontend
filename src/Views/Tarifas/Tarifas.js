@@ -35,6 +35,8 @@ class Tarifas extends Component {
             data: [],
             agregar: "Agregar",
             height: window.innerHeight,
+            CreadoPor: localStorage.getItem("UsuarioId"),
+            ModificadoPor: localStorage.getItem("UsuarioId"),
             pantalla: 1,
             selected: {},
             DerechoBorrar: 1, //TODO: Definir id
@@ -182,7 +184,7 @@ class Tarifas extends Component {
                 return;
             }
 
-            const url = `${process.env.REACT_APP_API_URL}/Tarifas/Eliminar/` + id;
+            const url = `${process.env.REACT_APP_API_URL}/Tarifas/Eliminar/` + id + `/${this.state.ModificadoPor}`;
             axios.delete(url, { headers }).then(respuesta => {
                 console.log(respuesta);
                 this.getAllData();
@@ -284,12 +286,12 @@ class Tarifas extends Component {
 
                         <ul className="nav navStatica nav-tabs">
                             <li className="active">
-                                <a  onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
+                                <a onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
                                     <i className="fa fa-list" /> Listado
               </a>
                             </li>
                             <li >
-                                <a  onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 2, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show'); }}>
+                                <a onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 2, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show'); }}>
                                     <i className="fa fa-plus-circle" /> {this.state.agregar}
                                 </a>
                             </li>

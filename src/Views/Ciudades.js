@@ -130,7 +130,7 @@ function CiudadesCodigoPostal() {
     }
 
     function handleEliminarCiudad(id) {
-        eliminarCiudad(id).then(respuesta => {
+        eliminarCiudad(id, state.CreadoPor).then(respuesta => {
             showSuccess(respuesta.data)
             getAllData();
         }).catch(err => {

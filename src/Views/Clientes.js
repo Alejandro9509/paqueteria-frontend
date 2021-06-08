@@ -613,7 +613,7 @@ function Clientes(props) {
                     return;
                 }
 
-                eliminarCliente(id)
+                eliminarCliente(id, state.CreadoPor)
                     .then((respuesta) => {
                         showSuccess(respuesta.data);
                         getAllClientes();

@@ -103,7 +103,7 @@ function Embalaje() {
                 return;
             }
 
-            eliminarEmbalajes(id).then(respuesta => {
+            eliminarEmbalajes(id, state.CreadoPor).then(respuesta => {
                 console.log(respuesta)
                 getAllData()
             }).catch(err => {

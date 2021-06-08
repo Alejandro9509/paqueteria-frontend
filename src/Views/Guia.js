@@ -417,7 +417,7 @@ function Guia(props) {
                 return;
             }
 
-            eliminarGuia(id).then(respuesta => {
+            eliminarGuia(id, state.modificadoPor).then(respuesta => {
                 showSuccess(respuesta.data)
                 //console.log(respuesta)
                 if (respuesta.data.indexOf("fracaso:") <= 0)

@@ -24,8 +24,8 @@ function agregarGrupoUnidades( params){
     return result
 }
 
-function eliminarGrupoUnidades(id){
-    const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/Eliminar/` + id;
+function eliminarGrupoUnidades(id, idEliminadoPor){
+    const url = `${process.env.REACT_APP_API_URL}/GrupoUnidad/Eliminar/` + id + `${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })

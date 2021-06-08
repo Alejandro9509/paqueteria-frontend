@@ -1277,7 +1277,7 @@ function Informes({ history }) {
                     return;
                 }
 
-                eliminarInformes(id)
+                eliminarInformes(id, state.CreadoPor)
                     .then((respuesta) => {
                         console.log(respuesta);
                     })

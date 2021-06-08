@@ -84,7 +84,7 @@ function Impuestos() {
                 return;
             }
 
-            eliminarImpuestos(id).then(respuesta => {
+            eliminarImpuestos(id, state.CreadoPor).then(respuesta => {
                 console.log(respuesta);
                 getAllData();
             }).catch(err => {

@@ -25,8 +25,8 @@ function agregarRutas(params) {
     return result
 }
 
-function eliminarRutas(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Rutas/Eliminar/` + id;
+function eliminarRutas(id, idEliminadoPor) {
+    const url = `${process.env.REACT_APP_API_URL}/Rutas/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result = axios.delete(url, { headers })

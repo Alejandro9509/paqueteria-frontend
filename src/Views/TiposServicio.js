@@ -96,7 +96,7 @@ function TiposServicio() {
                 return;
             }
 
-            eliminarTipoServicio(id).then(respuesta => {
+            eliminarTipoServicio(id, state.ModificadoPor).then(respuesta => {
                 console.log(respuesta)
                 getAllData();
             }).catch(err => {

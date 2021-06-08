@@ -24,8 +24,8 @@ function agregarTipoViaje(params) {
     return result
 }
 
-function eliminarTipoViaje(id) {
-    const url = `${process.env.REACT_APP_API_URL}/TipoViaje/Eliminar/` + id;
+function eliminarTipoViaje(id, idEliminadoPor) {
+    const url = `${process.env.REACT_APP_API_URL}/TipoViaje/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })

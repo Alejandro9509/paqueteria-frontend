@@ -556,7 +556,7 @@ function Recoleccion() {
                     return;
                 }
 
-                eliminarRecoleccion(id)
+                eliminarRecoleccion(id, state.CreadoPor)
                     .then((respuesta) => {
                         showSuccess(respuesta.data);
                         getAllData();

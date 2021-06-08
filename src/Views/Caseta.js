@@ -101,7 +101,7 @@ function Caseta() {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-           eliminarCaseta(id).then(respuesta => {
+           eliminarCaseta(id, state.CreadoPor).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
             }).catch(err => {

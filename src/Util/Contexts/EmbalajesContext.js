@@ -24,8 +24,8 @@ function agregarEmbalajes( params){
     return result
 }
 
-function eliminarEmbalajes(id){
-    const url = `${process.env.REACT_APP_API_URL}/Embalaje/Eliminar/` + id;
+function eliminarEmbalajes(id, idEliminadoPor){
+    const url = `${process.env.REACT_APP_API_URL}/Embalaje/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })

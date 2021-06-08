@@ -544,7 +544,7 @@ function Operadores(props) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-            eliminarOperadores(id)
+            eliminarOperadores(id, state.CreadoPor)
                 .then((respuesta) => {
                     console.log(respuesta);
                     getAllOperadores();

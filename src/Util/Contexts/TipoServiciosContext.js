@@ -24,8 +24,8 @@ function agregarTipoServicio(params) {
     return result
 }
 
-function eliminarTipoServicio(id) {
-    const url = `${process.env.REACT_APP_API_URL}/TipoServicio/Eliminar/` + id;
+function eliminarTipoServicio(id, idEliminadoPor) {
+    const url = `${process.env.REACT_APP_API_URL}/TipoServicio/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })

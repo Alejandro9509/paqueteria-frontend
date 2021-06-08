@@ -24,8 +24,8 @@ function agregarCaseta( params){
     return result
 }
 
-function eliminarCaseta(id){
-    const url = `${process.env.REACT_APP_API_URL}/Casetas/Eliminar/` + id;
+function eliminarCaseta(id, idEliminadoPor){
+    const url = `${process.env.REACT_APP_API_URL}/Casetas/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
     result =  axios.delete(url, { headers })

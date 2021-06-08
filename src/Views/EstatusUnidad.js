@@ -104,7 +104,7 @@ function EstatusUnidad() {
                 return;
             }
 
-            eliminarEstatusUnidades(id).then(respuesta => {
+            eliminarEstatusUnidades(id, state.CreadoPor).then(respuesta => {
                 showSuccess(respuesta)
                 getAllData()
             }).catch(err => {

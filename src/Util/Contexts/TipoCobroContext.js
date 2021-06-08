@@ -24,8 +24,8 @@ function agregarTipoCobro(params) {
     return result
 }
 
-function eliminarTipoCobro(id) {
-    const url = `${process.env.REACT_APP_API_URL}/TipoCobro/Eliminar/` + id;
+function eliminarTipoCobro(id, idEliminadoPor) {
+    const url = `${process.env.REACT_APP_API_URL}/TipoCobro/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })

@@ -218,7 +218,7 @@ class ConceptosFacturacion extends Component {
                 return;
             }
 
-        eliminarConceptosFacturacion(id).then(respuesta => {
+        eliminarConceptosFacturacion(id, this.state.CreadoPor).then(respuesta => {
             showSuccess(respuesta.data)
                 console.log(respuesta);
                 this.getAllData();

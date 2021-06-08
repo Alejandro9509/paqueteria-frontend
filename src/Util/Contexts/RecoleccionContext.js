@@ -33,8 +33,8 @@ function cancelarRecoleccion(id, params) {
     return result
 }
 
-function eliminarRecoleccion(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Eliminar/` + id;
+function eliminarRecoleccion(id, idEliminadoPor) {
+    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })

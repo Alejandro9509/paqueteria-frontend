@@ -92,7 +92,7 @@ function TipoViaje() {
                 return;
             }
 
-            eliminarTipoViaje(id).then(respuesta => {
+            eliminarTipoViaje(id, state.ModificadoPor).then(respuesta => {
                 alert(respuesta)
                 getAllData()
             }).catch(err => {

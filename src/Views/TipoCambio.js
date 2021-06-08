@@ -43,6 +43,8 @@ function TipoCambio() {
         tipoCambio: "",
         DerechoBorrar: 29,
         agregar: "Agregar",
+        CreadoPor: localStorage.getItem("UsuarioId"),
+        ModificadoPor: localStorage.getItem("UsuarioId"),
         height: window.innerHeight
     })
 
@@ -87,7 +89,7 @@ function TipoCambio() {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-            eliminarTipoCambio(id).then(respuesta => {
+            eliminarTipoCambio(id, state.ModificadoPor).then(respuesta => {
                 showSuccess(respuesta)
                 getAllData();
             }).catch(err => {

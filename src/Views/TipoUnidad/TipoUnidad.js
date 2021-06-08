@@ -34,9 +34,11 @@ class TipoUnidad extends Component {
         super(props);
         this.state = {
             data: [],
-            DerechoBorrar:67,
+            DerechoBorrar: 67,
             idTipoUnidad: null,
             agregar: "Agregar",
+            CreadoPor: localStorage.getItem("UsuarioId"),
+            ModificadoPor: localStorage.getItem("UsuarioId"),
             openDialog: false,
             height: window.innerHeight,
             pantalla: 1,
@@ -103,21 +105,21 @@ class TipoUnidad extends Component {
     }
 
     handleEliminar(id) {
-         var derecho;
-         validarPermisos(this.state).then(respuesta => {
-             derecho = respuesta.data;
+        var derecho;
+        validarPermisos(this.state).then(respuesta => {
+            derecho = respuesta.data;
             if (derecho === false) {
-                 showSuccess("El usuario no tiene derechos para realizar el proceso");
-                 return;
-        }
-            eliminarTipoUnidades(id).then(respuesta => {
+                showSuccess("El usuario no tiene derechos para realizar el proceso");
+                return;
+            }
+            eliminarTipoUnidades(id, this.state.ModificadoPor).then(respuesta => {
                 this.getAllData();
             }).catch(err => {
                 showSuccess(err)
             });
-         }).catch(err => {
-             showSuccess(err)
-         });
+        }).catch(err => {
+            showSuccess(err)
+        });
     }
 
     handleAceptarAgregar(data) {
@@ -135,9 +137,9 @@ class TipoUnidad extends Component {
         }
         console.log(JSON.stringify(params));
         debugger;
-            agregarTipoUnidades(params).then(respuesta => {
-                console.log(respuesta)
-                showSuccess(respuesta.data)
+        agregarTipoUnidades(params).then(respuesta => {
+            console.log(respuesta)
+            showSuccess(respuesta.data)
 
             $('.nav-tabs li ').removeClass('active');
             $('.nav-tabs li').eq(0).addClass('active');

@@ -24,8 +24,8 @@ function agregarPaises(params) {
     return result
 }
 
-function eliminarPaises(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Pais/Eliminar/` + id;
+function eliminarPaises(id, idEliminadoPor) {
+    const url = `${process.env.REACT_APP_API_URL}/Pais/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })

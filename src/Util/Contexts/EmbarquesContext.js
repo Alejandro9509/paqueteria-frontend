@@ -24,8 +24,8 @@ function agregarEmbarques( params){
     return result
 }
 
-function eliminarEmbarques(id){
-    const url = `${process.env.REACT_APP_API_URL}/Embarques/Eliminar/` + id;
+function eliminarEmbarques(id, idEliminadoPor){
+    const url = `${process.env.REACT_APP_API_URL}/Embarques/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })

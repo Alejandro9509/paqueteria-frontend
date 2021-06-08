@@ -98,7 +98,7 @@ function EstatusViaje() {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-            eliminarEstatusViaje(id).then(respuesta => {
+            eliminarEstatusViaje(id, state.CreadoPor).then(respuesta => {
                 showSuccess(respuesta)
                 getAllData()
             }).catch(err => {

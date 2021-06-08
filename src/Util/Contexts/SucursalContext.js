@@ -24,8 +24,8 @@ function agregarSucursales(params) {
     return result
 }
 
-function eliminarSucursales(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Sucursales/Eliminar/` + id;
+function eliminarSucursales(id, idEliminadoPor) {
+    const url = `${process.env.REACT_APP_API_URL}/Sucursales/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })

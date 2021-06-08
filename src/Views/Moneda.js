@@ -94,7 +94,7 @@ function Moneda() {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-            eliminarMonedas(id).then(respuesta => {
+            eliminarMonedas(id, state.CreadoPor).then(respuesta => {
                 showSuccess(respuesta)
                 window.location.reload();
             }).catch(err => {

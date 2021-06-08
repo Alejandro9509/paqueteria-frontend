@@ -496,7 +496,7 @@ function Unidades(props) {
 
     function handleEliminar(id) {
         //no esta el derecho de borrar en el listado original
-        eliminarUnidades(id)
+        eliminarUnidades(id, state.modificadoPor)
             .then((respuesta) => {
                 console.log(respuesta);
                 getAllUnidades();

@@ -68,8 +68,8 @@ function obtenerEstatusUnidadesId(id){
     return result
 }
 
-function eliminarEstatusUnidades(id){
-    const url = `${process.env.REACT_APP_API_URL}/EstatusUnidades/Eliminar/` + id;
+function eliminarEstatusUnidades(id, idEliminadoPor){
+    const url = `${process.env.REACT_APP_API_URL}/EstatusUnidades/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })

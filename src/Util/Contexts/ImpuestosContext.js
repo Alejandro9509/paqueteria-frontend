@@ -24,8 +24,8 @@ function agregarImpuestos( params){
     return result
 }
 
-function eliminarImpuestos(id){
-    const url = `${process.env.REACT_APP_API_URL}/Impuestos/Eliminar/` + id;
+function eliminarImpuestos(id, idEliminadoPor){
+    const url = `${process.env.REACT_APP_API_URL}/Impuestos/Eliminar/` + id +`/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })

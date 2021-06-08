@@ -112,7 +112,7 @@ function Sucursal() {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-            eliminarSucursales(id).then(respuesta => {
+            eliminarSucursales(id, state.ModificadoPor).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData();
             }).catch(err => {

@@ -96,7 +96,7 @@ function GrupoUnidades() {
                 return;
             }
 
-            eliminarGrupoUnidades(id).then(respuesta => {
+            eliminarGrupoUnidades(id, state.CreadoPor).then(respuesta => {
                 console.log(respuesta);
                 getAllData();
             }).catch(err => {

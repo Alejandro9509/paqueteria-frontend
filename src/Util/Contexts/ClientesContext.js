@@ -24,8 +24,8 @@ function agregarCliente( params){
     return result
 }
 
-function eliminarCliente(id){
-    const url = `${process.env.REACT_APP_API_URL}/Clientes/Eliminar/` + id;
+function eliminarCliente(id, idEliminadoPor){
+    const url = `${process.env.REACT_APP_API_URL}/Clientes/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })

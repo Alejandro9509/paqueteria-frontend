@@ -24,8 +24,8 @@ function agregarCiudad( params){
     return result
 }
 
-function eliminarCiudad(id){
-    const url = `${process.env.REACT_APP_API_URL}/Ciudades/Eliminar/` + id;
+function eliminarCiudad(id, idEliminadoPor){
+    const url = `${process.env.REACT_APP_API_URL}/Ciudades/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })

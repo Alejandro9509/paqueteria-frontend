@@ -175,7 +175,7 @@ function Rutas(props) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-            eliminarRutas(id).then(respuesta => {
+            eliminarRutas(id, state.CreadoPor).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
             }).catch(err => {

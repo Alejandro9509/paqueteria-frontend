@@ -83,7 +83,7 @@ function Zonas() {
                 return;
             }
 
-            const url = `${process.env.REACT_APP_API_URL}/Departamento/Eliminar/` + id;
+            const url = `${process.env.REACT_APP_API_URL}/Zonas/Eliminar/` + id +`${state.CreadoPor}`;
             axios.delete(url, { headers }).then(respuesta => {
                 console.log(respuesta);
                 getAllData();

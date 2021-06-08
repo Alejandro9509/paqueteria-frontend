@@ -24,8 +24,8 @@ function agregarEstatusViaje( params){
     return result
 }
 
-function eliminarEstatusViaje(id){
-    const url = `${process.env.REACT_APP_API_URL}/EstatusViajes/Eliminar/` + id;
+function eliminarEstatusViaje(id, idEliminadoPor){
+    const url = `${process.env.REACT_APP_API_URL}/EstatusViajes/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })

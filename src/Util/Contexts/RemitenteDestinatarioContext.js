@@ -24,8 +24,8 @@ function agregarRemitentesDestinatarios( params){
     return result
 }
 
-function eliminarRemitentesDestinatarios(id){
-    const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/Eliminar/` + id;
+function eliminarRemitentesDestinatarios(id, idEliminadoPor){
+    const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })

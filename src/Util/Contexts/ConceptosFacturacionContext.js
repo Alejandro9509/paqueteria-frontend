@@ -24,8 +24,8 @@ function agregarConceptosFacturacion( params){
     return result
 }
 
-function eliminarConceptosFacturacion(id){
-    const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/Eliminar/` + id;
+function eliminarConceptosFacturacion(id, idEliminadoPor){
+    const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })

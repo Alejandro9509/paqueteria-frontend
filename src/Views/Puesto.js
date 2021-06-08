@@ -80,7 +80,7 @@ function Puesto() {
                 return;
             }
 
-            eliminarPuestos(id).then(respuesta => {
+            eliminarPuestos(id, state.CreadoPor).then(respuesta => {
                 console.log(respuesta)
                 getAllData();
             }).catch(err => {

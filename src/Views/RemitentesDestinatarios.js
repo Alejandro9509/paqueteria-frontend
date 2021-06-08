@@ -266,7 +266,7 @@ function RemitenteDestinatario(props) {
                 return;
             }
 
-            eliminarRemitentesDestinatarios(id)
+            eliminarRemitentesDestinatarios(id, state.modificadoPor)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     getAllDataRemDes();

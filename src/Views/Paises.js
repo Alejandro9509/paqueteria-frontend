@@ -127,7 +127,7 @@ function PaisesEstado() {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-            eliminarPaises(id).then(respuesta => {
+            eliminarPaises(id, state.CreadoPor).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData();
             }).catch(err => {

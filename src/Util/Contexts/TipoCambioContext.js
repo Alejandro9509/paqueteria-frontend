@@ -24,8 +24,8 @@ function agregarTipoCambio(params) {
     return result
 }
 
-function eliminarTipoCambio(id) {
-    const url = `${process.env.REACT_APP_API_URL}/TipoCambio/Eliminar/` + id;
+function eliminarTipoCambio(id, idEliminadoPor) {
+    const url = `${process.env.REACT_APP_API_URL}/TipoCambio/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })

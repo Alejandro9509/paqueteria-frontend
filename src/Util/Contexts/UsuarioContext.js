@@ -24,8 +24,8 @@ function agregarUsuarios( params){
     return result
 }
 
-function eliminarUsuarios(id){
-    const url = `${process.env.REACT_APP_API_URL}/Usuarios/Eliminar/` + id;
+function eliminarUsuarios(id, idEliminadoPor){
+    const url = `${process.env.REACT_APP_API_URL}/Usuarios/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })

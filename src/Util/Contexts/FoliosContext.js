@@ -16,8 +16,8 @@ function agregarFolios( params){
     return result
 }
 
-function eliminarFolios(id){
-    const url = `${process.env.REACT_APP_API_URL}/Folios/Eliminar/` + id;
+function eliminarFolios(id, idEliminadoPor){
+    const url = `${process.env.REACT_APP_API_URL}/Folios/Eliminar/` + id + `${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })

@@ -24,8 +24,8 @@ function agregarGrupoClientes( params){
     return result
 }
 
-function eliminarGrupoClientes(id){
-    const url = `${process.env.REACT_APP_API_URL}/GruposClientes/Eliminar/` + id;
+function eliminarGrupoClientes(id, idEliminadoPor){
+    const url = `${process.env.REACT_APP_API_URL}/GruposClientes/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })

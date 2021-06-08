@@ -28,8 +28,8 @@ function agregarOperadores(params) {
     return result
 }
 
-function eliminarOperadores(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Operador/Eliminar/` + id;
+function eliminarOperadores(id, idEliminadoPor) {
+    const url = `${process.env.REACT_APP_API_URL}/Operador/Eliminar/` + id +`/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

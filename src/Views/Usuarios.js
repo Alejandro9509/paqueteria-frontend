@@ -192,7 +192,7 @@ function Usuarios() {
                 return;
             }
 
-            eliminarUsuarios(id).then(respuesta => {
+            eliminarUsuarios(id, state.ModificadoPor).then(respuesta => {
                 console.log(respuesta);
                 getAllData();
             }).catch(err => {

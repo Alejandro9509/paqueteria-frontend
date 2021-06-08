@@ -36,6 +36,8 @@ class ClasificacionViaje extends Component {
             data: [],
             idClasificacionViaje: null,
             agregar: "Agregar",
+            CreadoPor: localStorage.getItem("UsuarioId"),
+            ModificadoPor: localStorage.getItem("UsuarioId"),
             openDialog: false,
             height: window.innerHeight,
             pantalla: 1,
@@ -130,7 +132,7 @@ class ClasificacionViaje extends Component {
                  showSuccess("El usuario no tiene derechos para realizar el proceso");
                  return;
              }
-        eliminarClasificacionViaje(id).then(respuesta => {
+        eliminarClasificacionViaje(id, this.state.ModificadoPor).then(respuesta => {
             console.log(respuesta);
             this.getAllData();
         }).catch(err => {

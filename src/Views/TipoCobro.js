@@ -75,7 +75,7 @@ function TipoCobro() {
                 return;
             }
 
-            eliminarTipoCobro(id).then(respuesta => {
+            eliminarTipoCobro(id, state.ModificadoPor).then(respuesta => {
                 showSuccess(respuesta)
                 getAllData();
             }).catch(err => {

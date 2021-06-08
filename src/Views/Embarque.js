@@ -505,7 +505,7 @@ function Embarque(props) {
                     return;
                 }
 
-                eliminarEmbarques(id)
+                eliminarEmbarques(id, state.CreadoPor)
                     .then((respuesta) => {
                         showSuccess(respuesta.data);
                         getAllEmbarque();
