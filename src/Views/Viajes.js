@@ -78,7 +78,7 @@ function Viajes() {
     const [fileUploaded, setFileUploaded] = React.useState([])
 
     function getAllEstatusViaje() {
-         const url = `${process.env.REACT_APP_API_URL_LOCAL}/SisEstatus/getListadoViajes`;
+         const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoViajes`;
         axios.get(url, { headers }).then((respuesta) => {
              setEstatusViaje(respuesta.data);
          });
@@ -235,6 +235,8 @@ function Viajes() {
     }
 
     const handleEstatusFiltro = async (event) => {
+        event.preventDefault()
+        console.log(event.target.value)
         setState({
             ...state,
             estatusListado: event.target.value,
@@ -956,7 +958,7 @@ function Viajes() {
                                                                         key={estatus.m_nIdEstatusViaje}
                                                                         value={estatus.m_nIdEstatusViaje}
                                                                     >
-                                                                        {estatus.m_sDescripcion}
+                                                                        {estatus.m_sEstatus}
                                                                     </option>
                                                                 ))}
                                                             </Select>
