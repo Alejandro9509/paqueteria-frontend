@@ -294,3 +294,10 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 .MuiDataGrid-root .MuiDataGrid-colCellMoving {
   background-color: white !important;
 }
+.MuiTooltip-popper {
+  pointer-events: auto !important;
+}
+.MuiTooltip-tooltip {
+  max-width: max-content !important;
+  color: black !important;
+}

@@ -9,7 +9,7 @@ import CatalogosPage from './Views/Catalogos';
 import ConfiguracionPage from './Views/Configuracion';
 import InicadoresPage from './Views/Indicadores';
 import Historial from './Views/Viajes/Historial';
-import UltimaMillaPage from './Views/UltimaMilla';
+import UltimaMillaPage from './Views/UltimaMilla/UltimaMilla';
 
 
 import {ReactComponent as ConfiguracionIcon} from './iconos/Menu/IconoConfiguraciones/iconoConfiguraciones.svg';
@@ -80,6 +80,15 @@ const dashboardRoutes = [
     child:[]
   },
   {
+    path: "/UltimaMilla",
+    name: "Última Milla",
+    icon: viajeIcon,
+    component: UltimaMillaPage,
+    single: true,
+    newWindow: true,
+    child:[]
+  },
+  {
     path: "/Viajes",
     name: "Viajes",
     icon: viajeIcon,
@@ -95,14 +104,7 @@ const dashboardRoutes = [
     single: true,
     child:[]
   }*/
-  {
-    path: "/UltimaMilla",
-    name: "Última Milla",
-    icon: viajeIcon,
-    component: UltimaMillaPage,
-    single: true,
-    child:[]
-  }
+
 ];
 
 export default dashboardRoutes;

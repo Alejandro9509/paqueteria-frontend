@@ -19,7 +19,8 @@ function BarraLateralDerecha() {
     <div className="iconic-aside-container">
       <ul className="list-accordion">
         {dashboardRoutes.map((r, index) => {
-          return r.single ? (
+          return !r.newWindow ? (
+
             <li  className="boton-de-menu">
               <Link component="a" to={r.path}>
                 <i>
@@ -37,31 +38,22 @@ function BarraLateralDerecha() {
               </Link>
             </li>
           ) : (
-            <li>
-              <a href="#">
-                <i>
-                  <SvgIcon
-                    component={r.icon}
-                    style={{
-                      height: "100%",
-                      textAlign: "center",
-                      width: "70%",
-                    }}
-                    viewBox="0 0 40 40"
-                  />
-                </i>
-                <span className="list-label">{r.name}</span>
-              </a>
-              <ul>
-                {r.child.map((c) => (
-                  <li key={c.name}>
-                    <Link component="a" to={c.path}>
-                      {c.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </li>
+              <li  className="boton-de-menu">
+                  <Link component="a" target={"_blank"} to={r.path}>
+                      <i>
+                          <SvgIcon
+                              component={r.icon}
+                              style={{
+                                  height: "100%",
+                                  textAlign: "center",
+                                  width: "70%",
+                              }}
+                              viewBox="0 0 40 40"
+                          />
+                      </i>
+                      <span className="list-label">{r.name}</span>
+                  </Link>
+              </li>
           )
         })}
       </ul>

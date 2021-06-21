@@ -8,6 +8,51 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/package-lock.json">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/package.json">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/public/css/project-style.css">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/public/index.html">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Components/Map/SwipeableBottomSheet.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Components/Map/index.css">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Components/Template/BarraLateralIzquierda.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/UltimaMillaContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/ZonasContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Views/Clientes.js">
           <value>
             <set />
@@ -68,7 +113,57 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Views/Tarifas/Tarifas.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Views/TipoUnidad/TipoUnidad.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/UltimaMilla.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/Cronograma.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/FiltersMap.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/PaquetesList.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/SucursalesList.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/UltimaMilla.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/UnidadesList.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/ZonasList.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/index.css">
           <value>
             <set />
           </value>
@@ -84,6 +179,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Views/Zonas.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/routes.js">
           <value>
             <set />
           </value>
@@ -123,12 +223,112 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/pages/report-indicators/comment.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/pages/report-indicators/recomendation-evidence.js">
           <value>
             <set />
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/pages/report-indicators/report_recomendations.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/pages/review-indicator/review-indicator.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/Cetys/sw-cetys-cercana-web/package.json">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/Cetys/sw-cetys-cercana-web/src/app/App.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/Cetys/sw-cetys-cercana-web/src/app/routes.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/Cetys/sw-cetys-cercana-web/src/app/views/LandingPage/Sections/WorkSection.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/Cetys/sw-cetys-cercana-web/src/app/views/frequentAnswers/frequentAnswers.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/Cetys/sw-cetys-cercana-web/src/app/views/reports/EvaluationReport.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/Cetys/sw-cetys-cercana-web/src/app/views/ticket/CreateTicket.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/Cetys/sw-cetys-cercana-web/src/app/views/ticket/QualifyTicket.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/Cetys/sw-cetys-cercana-web/src/app/views/ticket/ResolvedTicket.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/Cetys/sw-cetys-cercana-web/src/app/views/ticket/Ticket.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/Cetys/sw-cetys-cercana-web/src/app/views/ticket/TicketDetail.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/Cetys/sw-cetys-cercana-web/src/app/views/user/admins/admins.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/Cetys/sw-cetys-cercana-web/src/app/views/user/profile/Profile.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/Cetys/sw-cetys-cercana-web/src/assets/constants/index.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/Cetys/sw-cetys-cercana-web/src/components/Header/Header.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/Cetys/sw-cetys-cercana-web/src/components/Header/HeaderLinks.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/Cetys/sw-cetys-cercana-web/src/components/MessageList/index.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/Cetys/sw-cetys-cercana-web/src/util/Contexts/TicketContext.js">
           <value>
             <set />
           </value>

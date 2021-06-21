@@ -91,62 +91,9 @@ export default function UltimaMilla(props) {
     useEffect(value => {
         calculatTour()
         getAllUnidades()
-        calculatHere()
     }, [])
 
-    function calculatHere() {
-        axios.post("https://tourplanning.hereapi.com/v2/problems", {
-            "plan": {
-                "jobs": 
-                    arrayPonts.map((p, index) => (
-                        {
-                            "id": "myJob"+index,
-                            "places": {
-                              "deliveries": [
-                                {
-                                  "location": { "lat": p[1], "lng": p[0] },
-                                  "duration": 120,
-                                  "demand": [1]
-                                }
-                              ]
-                            }
-                          }
-                    ))
-            },
-            "fleet": {
-                "types": [
-                    {
-                        "id": "myVehicle",
-                        "profile": "normal_car",
-                        "costs": {
-                            "distance": 0.0002,
-                            "time": 0.005,
-                            "fixed": 22
-                        },
-                        "shifts": [{
-                            "start": {
-                                "time": "2020-07-04T09:00:00Z",
-                                "location": { "lat": 32.635112006525993, "lng": -115.440285695247098 }
-                            },
-                            "end": {
-                                "time": "2020-07-04T18:00:00Z",
-                                "location": { "lat": 32.635112006525993, "lng": -115.440285695247098 }
-                            }
-                        }],
-                        "capacity": [10000],
-                        "amount": 1
-                    }
-                ],
-                "profiles": [{
-                    "name": "normal_car",
-                    "type": "car",
-                    "departureTime": "2020-07-04T09:15:00Z"
-                }]
-            }
-        }, { headers: { "Content-Type": "application/json", "Authorization": "Bearer eyJhbGciOiJSUzUxMiIsImN0eSI6IkpXVCIsImlzcyI6IkhFUkUiLCJhaWQiOiJyaHNhM24xVkNmTEF4QVFBTXJ1ciIsImlhdCI6MTYxNzMxNjEwNCwiZXhwIjoxNjE3NDAyNTA0LCJraWQiOiJqMSJ9.ZXlKaGJHY2lPaUprYVhJaUxDSmxibU1pT2lKQk1qVTJRMEpETFVoVE5URXlJbjAuLmlNRnNvWjRfVUZZSnFoSWdGV1NSQWcuX2wwQ1ItWUo5N2laRlJKTG41aUFpd0dFUHh5REozNGVhanJaQlp6MkQzS3prZWltZkdJYTJiUWtnT3hmQXQyS3NUOW4xdE1vSG00WS1pWTRwYnpnMElWcDhfRjJPWUFBc1lmeVdOWUJLMXRBWmxCMG9NVl9ORFN6aElEZEhVSkswR01KZmdsdGpRZEllclV1RWNYNUJnLmluV3F3RjhuRjNfWFpMS1NUdkJqd01oMTV6ZVBERFprOVlyd0ZKSFdraUE.Rlz-KBPP4g1oQfGYDYjZgis4aTbppzhbU1pqoLDE-2khH10u45dt6ibCpfjl1_Pr9c3fRquGeeWXVD3WrpCg0RCBiA3aCJpamXUXoW6nze29jpfQSba70Yq16nT4GJxWs2VrS0brBF4geJwHk9LQLcn2QhZD6o1HI8dGGKomO2Fewy4v653be2geX0SxRHSuhRParCS8ZaVk7HYwC7hjUWjfmfkJcewKjBscU64bY4Y8ydH0t3KeI8st8wDAiVQUJ78YEtYY8vSAFdQ8W3jSO3Pwfurpfh-eajsB4YOGbh9RZSgMpojlnufeAoO2tNpvqK6O5XAAni9VQeh5zK7EIw" } }).then(result => {
-            console.log(result)
-        })
-    }
+
 
     function calculatTour() {
         xtour.planTours({
