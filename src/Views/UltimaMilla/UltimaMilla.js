@@ -9,6 +9,8 @@ import FaceIcon from "@material-ui/icons/Face";
 import Tooltip from "@material-ui/core/Tooltip";
 import FiltersMap from "./FiltersMap";
 import Cronograma from "./Cronograma";
+import {obtenerRutas, obtenerGuiasUbicacion} from "../../Util/Contexts/UltimaMillaContext";
+import Tour from "./Tour";
 
 class UltimaMilla extends Component {
     constructor(props) {
@@ -17,8 +19,14 @@ class UltimaMilla extends Component {
             map: null,
             height: window.innerHeight,
             openCronograma: false,
-            data: {}
+            data: {},
+            tour: null,
+            lat: 32.6464858,
+            lng: -115.4552451
         }
+        this.generarRuta = this.generarRuta.bind(this)
+        this.getLocation = this.getLocation.bind(this)
+        this.showPosition = this.showPosition.bind(this)
     }
 
     componentWillMount() {
@@ -33,10 +41,28 @@ class UltimaMilla extends Component {
 
     }
 
-
-    generarRuta(data){
-
+    getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(this.showPosition);
+        }
     }
+
+    showPosition(position) {
+        this.setState({lat: position.coords.latitude, lng: position.coords.longitude})
+    }
+
+
+    async generarRuta(data) {
+        var guias = await obtenerGuiasUbicacion(data.paquetesSeleccionadas)
+        var unidades =  data.unidadesSeleccionadas
+        obtenerRutas(data.unidadesSeleccionadas, guias, data).then((results) => {
+            if (results.vehicleIdsNotPlanned.length > 0) {
+                unidades = unidades.filter(u => results.vehicleIdsNotPlanned.find(t => t === ("vehicle" + u.m_nIdUnidad)) === undefined)
+            }
+            this.setState({tour: {tour: results,  paquetes: guias, unidades: unidades}, openCronograma: true, })
+        })
+    }
+
     render() {
         return (
             <div>
@@ -45,26 +71,30 @@ class UltimaMilla extends Component {
                     </Cabecera>
                 </header>
 
-
-                {/*Page Container Start Here*/}
                 <section>
                     <div className="widget-content">
                         <div className="row" style={{height: window.innerHeight, width: '100%'}}>
-                            <MapContainer style={{width: "100%", height: "100%", zIndex: 1}}
-                                          center={[32.62781, -115.44632]} zoom={15} scrollWheelZoom={false}
+                            <MapContainer style={{width: "100%", height:  "100%", zIndex: 1}}
+                                          center={[this.state.lat, this.state.lng]} zoom={15} scrollWheelZoom={false}
                                           whenCreated={(map) => this.setState({map: map})}>
 
                                 <TileLayer style={{width: "100%", height: "100%"}}
                                            url="https://xserver2-america-test.cloud.ptvgroup.com/services/rest/XMap/tile/{z}/{x}/{y}?userLanguage=es&amp;xtok={token}"
                                            token="51FA3E8E-8BF3-49EF-AB82-59D807A0645C"
                                 />
-                                <FiltersMap/>
+                                <FiltersMap generarRuta={this.generarRuta}/>
+                                {
+                                    this.state.tour && this.state.tour.tours.map(t =>
+                                        <Tour tour={t} />
+                                    )
+
+                                }
 
 
-                                    {
-                                        this.state.openCronograma &&
-                                        <Cronograma data={this.state.data} />
-                                    }
+                                {
+                                    this.state.tour && this.state.openCronograma &&
+                                    <Cronograma tour={this.state.tour} />
+                                }
 
 
                             </MapContainer>
@@ -83,7 +113,6 @@ class UltimaMilla extends Component {
 UltimaMilla.propTypes = {};
 
 export default UltimaMilla;
-
 
 
 function TripPoint(props) {

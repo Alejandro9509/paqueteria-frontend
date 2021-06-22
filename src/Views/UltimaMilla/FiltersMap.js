@@ -26,6 +26,7 @@ import UnidadesList from "./UnidadesList";
 import PaquetesList from "./PaquetesList";
 import {obtenerGuia} from "../../Util/Contexts/GuiaContext";
 import ZonasList from "./ZonasList";
+import Configuracion from "./Configuracion";
 
 moment.locale('es-mx', localization);
 const useStyles = theme => ({
@@ -86,7 +87,9 @@ class FiltersMap extends Component {
             fecha: new Date(),
             unidadesSeleccionadas: [],
             paquetesSeleccionadas: [],
-            sucursalSeleccionadas: []
+            sucursalSeleccionadas: [],
+            start: "2021-06-20T08:00:00+01:00",
+            finish: "2021-06-20T17:00:00+01:00"
 
         }
 
@@ -158,6 +161,8 @@ class FiltersMap extends Component {
     selectPaquetes(array) {
         this.setState({paquetesSeleccionadas: array})
     }
+
+
 
 
     render() {
@@ -315,7 +320,7 @@ class FiltersMap extends Component {
                                 </UnidadesList>
                             }>
                             <Chip
-                                label={`Unidades (${this.state.paquetesSeleccionadas.length})`}
+                                label={`Unidades (${this.state.unidadesSeleccionadas.length})`}
                                 style={{
                                     backgroundColor: "white",
                                     margin: "1px",
@@ -341,9 +346,7 @@ class FiltersMap extends Component {
                             disableHoverListener
                             disableTouchListener
                             title={
-                                <div>
-                                    Hola
-                                </div>
+                                <Configuracion></Configuracion>
                             }>
                             <Chip
                                 label="Configuración"
@@ -370,7 +373,7 @@ class FiltersMap extends Component {
                                 margin: "1px",
                                 boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                             }}
-                            onClick={() => console.log("hola")}
+                            onClick={() => this.props.generarRuta(this.state)}
                         />
                         <IconButton style={{
                             backgroundColor: "white",

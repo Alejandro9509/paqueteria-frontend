@@ -2,18 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="94d8e9cf-07c8-4a10-b81b-63018b1e29c3" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Util/Contexts/UltimaMillaContext.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Util/Contexts/ZonasContext.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/Cronograma.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/FiltersMap.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/PaquetesList.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/UltimaMilla.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/UnidadesList.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/ZonasList.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/Configuracion.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/Tour.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/iconos/Menu/IconoUltimaMilla/IconoUltimaMilla.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/sonarIssues.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarIssues.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/css/project-style.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/project-style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/iconos/Catalogos/Icono Addendas/Rectángulo 2300.svg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/public/iconos/Catalogos/Icono Caseta/Sustracción 128.zip" beforeDir="false" />
@@ -35,9 +28,14 @@
       <change beforePath="$PROJECT_DIR$/public/iconos/Configuracion/Icono Folios/Sustracción 107.zip" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/public/iconos/Menu/Icono Recoleccion/Sustracción 98 (1).zip" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/public/iconos/Menu/Icono Recoleccion/Sustracción 98.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/Template/BarraLateralIzquierda.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Template/BarraLateralIzquierda.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Util/Contexts/UltimaMillaContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/UltimaMillaContext.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Util/Data.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Data.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/Cronograma.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/Cronograma.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/FiltersMap.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/FiltersMap.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/PaquetesList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/PaquetesList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/UltimaMilla.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/UltimaMilla.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/UnidadesList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/UnidadesList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/ZonasList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/ZonasList.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/iconos/Catalogos/Icono Addendas/Rectángulo 2300.svg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/iconos/Catalogos/Icono Caseta/Sustracción 128.zip" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/iconos/Catalogos/Icono Conceptos Factura/Exclusión 7.zip" beforeDir="false" />
@@ -58,6 +56,7 @@
       <change beforePath="$PROJECT_DIR$/src/iconos/Configuracion/Icono Folios/Sustracción 107.zip" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/iconos/Menu/IconoRecoleccion/Sustracción 98 (1).zip" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/iconos/Menu/IconoRecoleccion/Sustracción 98.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/iconos/Menu/palomita.svg" beforeDir="false" afterPath="$PROJECT_DIR$/src/iconos/Menu/palomita.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -100,6 +99,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/iconos/Menu/IconoUltimaMilla" />
       <recent name="$PROJECT_DIR$/src/Components/Map" />
     </key>
   </component>
@@ -200,6 +200,10 @@
       </map>
     </option>
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Vista de ultima milla" />
+    <option name="LAST_COMMIT_MESSAGE" value="Vista de ultima milla" />
+  </component>
   <component name="WindowStateProjectService">
     <state x="2184" y="-158" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1623343338242">
       <screen x="1440" y="-540" width="2560" height="1440" />
@@ -209,30 +213,31 @@
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
     <state x="2280" y="-236" key="CommitChangelistDialog2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1622499544130" />
-    <state x="2150" y="-151" width="1152" height="720" key="DiffContextDialog" timestamp="1623259007611">
-      <screen x="1440" y="-540" width="2560" height="1440" />
+    <state x="2150" y="-151" width="1152" height="720" key="DiffContextDialog" timestamp="1624288154736">
+      <screen x="1440" y="-515" width="2560" height="1415" />
     </state>
     <state x="2150" y="-151" width="1152" height="720" key="DiffContextDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1623259007611" />
-    <state width="1419" height="174" key="GridCell.Tab.0.bottom" timestamp="1624061126545">
+    <state x="2150" y="-151" width="1152" height="720" key="DiffContextDialog/50.25.1390.875/1440.-515.2560.1415@1440.-515.2560.1415" timestamp="1624288154736" />
+    <state width="1419" height="174" key="GridCell.Tab.0.bottom" timestamp="1624286443605">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="2539" height="319" key="GridCell.Tab.0.bottom/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1623892098717" />
-    <state width="1419" height="174" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1624061126545" />
-    <state width="1419" height="174" key="GridCell.Tab.0.center" timestamp="1624061126544">
+    <state width="1419" height="174" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1624286443605" />
+    <state width="1419" height="174" key="GridCell.Tab.0.center" timestamp="1624286443602">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="2539" height="319" key="GridCell.Tab.0.center/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1623892098715" />
-    <state width="1419" height="174" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1624061126544" />
-    <state width="1419" height="174" key="GridCell.Tab.0.left" timestamp="1624061126544">
+    <state width="1419" height="174" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1624286443602" />
+    <state width="1419" height="174" key="GridCell.Tab.0.left" timestamp="1624286443601">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="2539" height="319" key="GridCell.Tab.0.left/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1623892098713" />
-    <state width="1419" height="174" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1624061126544" />
-    <state width="1419" height="174" key="GridCell.Tab.0.right" timestamp="1624061126545">
+    <state width="1419" height="174" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1624286443601" />
+    <state width="1419" height="174" key="GridCell.Tab.0.right" timestamp="1624286443603">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="2539" height="319" key="GridCell.Tab.0.right/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1623892098716" />
-    <state width="1419" height="174" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1624061126545" />
+    <state width="1419" height="174" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1624286443603" />
     <state width="2539" height="519" key="GridCell.Tab.1.bottom" timestamp="1623980783897">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
@@ -309,10 +314,10 @@
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
     <state x="2525" y="104" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1622499355475" />
-    <state x="2400" y="-63" width="667" height="486" key="find.popup" timestamp="1623893761841">
+    <state x="2400" y="-63" width="667" height="486" key="find.popup" timestamp="1624389990748">
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
-    <state x="2400" y="-63" width="667" height="486" key="find.popup/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1623893761841" />
+    <state x="2400" y="-63" width="667" height="486" key="find.popup/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1624389990748" />
     <state x="2367" y="-25" key="git4idea.merge.GitPullDialog" timestamp="1622499857276">
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>

@@ -53,6 +53,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Data.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Views/Clientes.js">
           <value>
             <set />
@@ -128,6 +133,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/Configuracion.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/Cronograma.js">
           <value>
             <set />
@@ -144,6 +154,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/SucursalesList.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/Tour.js">
           <value>
             <set />
           </value>
@@ -179,6 +194,16 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Views/Zonas.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/iconos/Menu/IconoUltimaMilla/IconoUltimaMilla.svg">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/iconos/Menu/palomita.svg">
           <value>
             <set />
           </value>

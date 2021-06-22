@@ -99,7 +99,7 @@ class PaquetesList extends Component {
         this.props.selectPaquetes([])
     };
     handleClick(event, row) {
-        const selectedIndex = this.props.paquetesSeleccionadas.indexOf(u => u.m_nIdGuia === row.m_nIdGuia);
+        const selectedIndex = this.props.paquetesSeleccionadas.map(u => u.m_nIdGuia).indexOf(row.m_nIdGuia);
         let newSelected = [];
 
         if (selectedIndex === -1) {

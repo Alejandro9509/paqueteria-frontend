@@ -98,7 +98,7 @@ class UnidadesList extends Component {
         this.props.selectUnidades([])
     };
     handleClick(event, row) {
-        const selectedIndex = this.props.unidadesSeleccionadas.indexOf(u => u.m_nIdUnidad === row.m_nIdUnidad);
+        const selectedIndex = this.props.unidadesSeleccionadas.map(u => u.m_nIdUnidad).indexOf(row.m_nIdUnidad);
         console.log(selectedIndex)
         let newSelected = [];
 

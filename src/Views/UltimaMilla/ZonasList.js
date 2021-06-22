@@ -138,8 +138,7 @@ class ZonasList extends Component {
         this.props.selectZona([])
     };
     handleClick(event, row) {
-        const selectedIndex = this.props.zonasSeleccionadas.indexOf(u => u.m_nIdZona === row.m_nIdZona);
-        console.log(selectedIndex)
+        const selectedIndex = this.props.zonasSeleccionadas.map(u => u.m_nIdZona).indexOf(row.m_nIdZona);
         let newSelected = [];
 
         if (selectedIndex === -1) {
