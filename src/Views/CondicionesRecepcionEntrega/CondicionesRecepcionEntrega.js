@@ -24,9 +24,22 @@ function CondicionesRecepcionEntrega(){
         agregar: "Agregar",
         height: window.innerHeight,
         descripcion: "",
-        active: 0,
+        activo: 0,
     })
-    const [data, setData] = React.useState([])
+    const [data, setData] = React.useState([
+        {
+            id: 0,
+            descripcion: "Descripcion uno",
+            activo: 1,
+            activonName: "Sí"
+        },
+        {
+            id: 1,
+            descripcion: "Descripcion dos",
+            activo: 0,
+            activonName: "No"
+        }
+    ])
     const columns = React.useMemo(() => [
         {
             headerName: "Acciones",
@@ -39,9 +52,9 @@ function CondicionesRecepcionEntrega(){
                             <a href={"#Agregar"}
                                role={"tab"}
                                data-toggle={"tab"}
-                               onClick={() => (handleShowModificar(row.row.id))}
+                               onClick={() => (handleShowModificar(row.row))}
                                className={"btn btn-default btn-xs"}>
-                                <i className={"fa fa-pencial-square-o"}
+                                <i className={"fa fa-pencil-square-o"}
                                    style={{ color: "#F9A03E" }}/>
                             </a>
                         </Tooltip>
@@ -50,7 +63,7 @@ function CondicionesRecepcionEntrega(){
                                role={"tab"}
                                data-toggle={"tab"}
                                className={"btn btn-default btn-xs"}
-                               onClick={() => (handleShowModificar(row.row.id))}>
+                               onClick={() => (handleShowModificar(row.row))}>
                                 <i className={"fa fa-eye"} style={{ color: "#F9A03E" }} />
                             </a>
                         </Tooltip>
@@ -63,7 +76,7 @@ function CondicionesRecepcionEntrega(){
                                 buttons: [
                                     {
                                         label: 'Si',
-                                        onClick: () => handleEliminar(row.row.id)
+                                        onClick: () => handleEliminar(row.row)
                                     },
                                     {
                                         label: 'No',
@@ -84,13 +97,13 @@ function CondicionesRecepcionEntrega(){
         },
         {
             headerName: "Decripción",
-            field: "desctipcion",
+            field: "descripcion",
             width: 400,
         },
         {
             headerName: "Activo",
-            field: "activo",
-            width: 100,
+            field: "activonName",
+            width: 200,
         }
     ]);
 
@@ -101,12 +114,17 @@ function CondicionesRecepcionEntrega(){
         })
     }
 
-    function handleShowModificar(id){
-        console.log(id)
+    function handleShowModificar(row){
+        console.log(row.id)
+        setState({
+            ...state,
+            descripcion: row.descripcion,
+            activo: row.activo
+        })
     }
 
-    function handleEliminar(id){
-        console.log(id)
+    function handleEliminar(row){
+        console.log(row)
     }
 
     const handleChange = (event) =>{
@@ -120,7 +138,7 @@ function CondicionesRecepcionEntrega(){
     const handleChangeActive = (event) =>{
         setState({
             ...state,
-            active: event.target.value
+            activo: event.target.value
         });
     };
     return(
@@ -193,6 +211,7 @@ function CondicionesRecepcionEntrega(){
                                                                            type="text"
                                                                            maxLength="50"
                                                                            required
+                                                                           value={state.descripcion}
                                                                            placeholder={state.descripcion}
                                                                            id="descripcion"
                                                                            maxLength="50"/>
@@ -207,7 +226,7 @@ function CondicionesRecepcionEntrega(){
                                                                         labelId="idActivo"
                                                                         onChange={handleChangeActive}
                                                                         className="form-control"
-                                                                        value={state.active}
+                                                                        value={state.activo}
                                                                         required
                                                                         name="idActivo"
                                                                         id="idActivo">
