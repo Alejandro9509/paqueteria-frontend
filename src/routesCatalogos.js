@@ -26,6 +26,7 @@ import ParametrosConfiguracionPage from './Views/ParametrosConfiguracion/Paramet
 import ClasificacionViajePage from './Views/ClasificacionViajes/ClasificacionViaje';
 import PlantillaCorreo from './Views/PlantillaCorreo';
 import CondicionesRecepcionEntrega from './Views/CondicionesRecepcionEntrega/CondicionesRecepcionEntrega';
+import Productos from "./Views/Productos/Productos";
 
 import {ReactComponent as TServicioIcon} from './iconos/Catalogos/Icono Tipos Servicio/icono_tipo_servicio.svg';
 
@@ -241,6 +242,12 @@ const catalogRoutes = [
     name: "Condiciones de recepcion y entrega",
     icon: <PConfiguracionIcon/>,
     component: CondicionesRecepcionEntrega,
+  },
+  {
+    path: "/Productos",
+    name: "Productos",
+    icon: <PConfiguracionIcon/>,
+    component: Productos,
   },
 ];
 
