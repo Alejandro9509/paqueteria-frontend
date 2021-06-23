@@ -858,6 +858,7 @@ function RemitenteDestinatario(props) {
                                                                                 id="numero"
                                                                                 maxlength="4"
                                                                                 required
+                                                                                
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -872,7 +873,7 @@ function RemitenteDestinatario(props) {
                                                                                 title="Favor de introducir un RFC válido."
                                                                                 value={state.rfc}
                                                                                 id="rfc"
-                                                                                required
+                                                                                
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -1054,7 +1055,7 @@ function RemitenteDestinatario(props) {
                                                                         <div className="input">
                                                                             <Autocomplete
                                                                                 onSelect={handleSelectCodigoPostal()}
-
+                                                                                            required
                                                                                 value={state.codigoPostal}
                                                                                 freeSolo
                                                                                 onChange={(event, newValue) =>
@@ -1136,6 +1137,7 @@ function RemitenteDestinatario(props) {
                                                                                 id="text"
                                                                                 value={state.municipio}
                                                                                 id="municipio"
+                                                                                required
                                                                             />
                                                                         </div>{" "}
                                                                     </div>
@@ -1172,6 +1174,7 @@ function RemitenteDestinatario(props) {
                                                                                 type="text"
                                                                                 value={state.calle}
                                                                                 id="calle"
+                                                                                required
                                                                             />
                                                                         </div>
                                                                     </div>

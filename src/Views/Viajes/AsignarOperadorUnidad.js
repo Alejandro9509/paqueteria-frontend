@@ -15,6 +15,8 @@ import {Checkbox, FormControlLabel, Grid, TextField} from "@material-ui/core";
 import { obtenerDetalleParadasIdInformes } from "../../Util/Contexts/DetalleParadasContext";
 import { obtenerCiudades } from "../../Util/Contexts/CiudadesContext";
 import { obtenerOperadores } from "../../Util/Contexts/OperadoresContext";
+import { obtenerUnidades } from "../../Util/Contexts/UnidadesContext";
+
 //import { data } from '@here/maps-api-for-javascript';
 
 
@@ -85,8 +87,7 @@ export default function AsignarOperadorUnidad(props){
         operador: {},
         cargadoVacioRemolqueUno: false,
         cargadoVacioRemolqueDos: false,
-        operador: "",
-        unidad: "",
+        unidad: {},
         placaIntUnidad: "",
         estatusUnidad: "",
         referencia: "",
@@ -108,7 +109,9 @@ export default function AsignarOperadorUnidad(props){
         entregado: false,
         estatusInforme: "",
         dataCiudad: [],
-        dataOperador: []
+        dataOperador: [],
+        dataUnidad: []
+
     });
     /*const [informeData, setInformeData] = React.useState({
         fechaInforme: "",
@@ -123,8 +126,10 @@ export default function AsignarOperadorUnidad(props){
     });*/
     useEffect((value) => {
         handleshowDetalleParadas(props.idInforme)
+        getAllUnidades()
         getAllCiudades()
         getAllOperadores()
+        
     }, []);
   
 
@@ -143,6 +148,7 @@ export default function AsignarOperadorUnidad(props){
    function getAllCiudades() {
         obtenerCiudades().then((respuesta) => {
             setData({...data,dataCiudad: respuesta.data})
+            console.log(data.dataCiudad)
        /*  const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
         axios.get(url, { headers }).then((respuesta) => {
             this.setState({ dataCiudad: respuesta.data }) */
@@ -150,13 +156,24 @@ export default function AsignarOperadorUnidad(props){
     }
     function getAllOperadores() {
         obtenerOperadores().then((respuesta) => {
+            console.log(respuesta.data)
             setData({...data,dataOperador: respuesta.data})
+            // console.log(data.dataOperador)
        /*  const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
         axios.get(url, { headers }).then((respuesta) => {
             this.setState({ dataCiudad: respuesta.data }) */
         });
     }
-
+    function getAllUnidades() {
+        obtenerUnidades().then((respuesta) => {
+            console.log(respuesta.data)
+            setData({...data,dataUnidad: respuesta.data})
+            // console.log(data.dataOperador)
+       /*  const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
+        axios.get(url, { headers }).then((respuesta) => {
+            this.setState({ dataCiudad: respuesta.data }) */
+        });
+    }
     
     
     const handleFechaInforme = (e) => {
@@ -506,7 +523,7 @@ export default function AsignarOperadorUnidad(props){
                                                 forcePopupIcon={false}
                                                 options={data.dataOperador}
                                                 getOptionLabel={(option) =>
-                                                    option.m_sNombre
+                                                    option.m_sNombreCompleto
                                                 }
                                                 style={{
                                                     transform: "translate(14px, 10px) scale(1) !important"
@@ -523,6 +540,68 @@ export default function AsignarOperadorUnidad(props){
                                                                 style: { height: "33px", fontSize: "14px" },
                                                                 type: "search",
                                                                 value: data.operador,
+                                                                //disabled: state.agregar == "Consultar",
+                                                                disableUnderline: true,
+                                                                endAdornment: (
+                                                                    <InputAdornment position="end">
+                                                                        <IconButton
+                                                                            padding="0px"
+                                                                            style={{
+                                                                                paddingRight: "0px",
+                                                                            }}
+                                                                            //disabled={state.agregar == "Consultar"}
+                                                                        >
+                                                                            <PageviewIcon
+                                                                                style={{
+                                                                                    color: "#F9A03E",
+                                                                                    fontSize: 32,
+                                                                                    paddingInlineEnd: 0,
+                                                                                    paddingRight: 0,
+                                                                                    paddingBlockEnd: 0,
+                                                                                    paddingLeft: 0,
+                                                                                    paddingBlock: 0,
+                                                                                }}
+                                                                            />
+                                                                        </IconButton>
+                                                                    </InputAdornment>
+                                                                ),
+                                                            }}
+                                                        />
+                                                    </div>
+                                                )}
+                                            />
+                        </Grid>
+                        <Grid item xs={6}/>
+
+                        <Grid item xs={6}>
+                        <Autocomplete
+                                                freeSolo
+                                                onChange={handleUnidad}
+
+                                                value={data.unidad}
+                                                //disabled={state.agregar == "Consultar"}
+                                                id="unidad"
+                                                disableClearable
+                                                forcePopupIcon={false}
+                                                options={data.dataUnidad}
+                                                getOptionLabel={(option) =>
+                                                    option.m_sDescripcion
+                                                }
+                                                style={{
+                                                    transform: "translate(14px, 10px) scale(1) !important"
+                                                }}
+                                                renderInput={(params) => (
+                                                    <div>
+                                                        <TextField
+                                                            label="Unidad"
+                                                            margin="dense"
+                                                            variant="outlined"
+                                                            {...params}
+                                                            InputProps={{
+                                                                ...params.InputProps,
+                                                                style: { height: "33px", fontSize: "14px" },
+                                                                type: "search",
+                                                                value: data.unidad,
                                                                 //disabled: state.agregar == "Consultar",
                                                                 disableUnderline: true,
                                                                 endAdornment: (
@@ -562,17 +641,6 @@ export default function AsignarOperadorUnidad(props){
                                                     </div>
                                                 )}
                                             />
-                        </Grid>
-                        <Grid item xs={6}/>
-
-                        <Grid item xs={6}>
-                            <TextField
-                                margin={"dense"}
-                                variant={"outlined"}
-                                label={"Unidad"}
-                                required
-                                onChange={handleUnidad}
-                                value={data.unidad}/>
                         </Grid>
                         <Grid item xs={2}>
                             <TextField
