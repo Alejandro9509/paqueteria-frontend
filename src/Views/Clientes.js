@@ -959,7 +959,7 @@ function Clientes(props) {
                                                                         value={state.numeroCliente}
                                                                         id="numeroCliente"
                                                                         name="numeroCliente"
-                                                                        required
+                                                                        
                                                                     />
                                                                 </div>
                                                             </div>
@@ -1004,7 +1004,7 @@ function Clientes(props) {
                                                                         value={state.nombreCorto}
                                                                         id="nombreCorto"
                                                                         name="nombreCorto"
-                                                                        required
+                                                                        
                                                                         native
                                                                     />
                                                                 </div>
@@ -1242,7 +1242,7 @@ function Clientes(props) {
                                                                                 native
                                                                                 className="form-control"
                                                                                 name="metodoPago"
-                                                                                required
+                                                                                
                                                                             >
                                                                                 <option value="1">
                                                                                     Transferencia Eléctronica
@@ -1259,7 +1259,7 @@ function Clientes(props) {
                                                                         <TextField variant="outlined" margin="dense"
                                                                             onChange={handleChange}
                                                                             className="form-control"
-                                                                            required
+                                                                            
                                                                             label="Días de Crédito"
                                                                             type="number"
                                                                             value={state.diasCredito}
@@ -1542,6 +1542,7 @@ function Clientes(props) {
                                                                                                         value={state.codigoPostal}
                                                                                                         id="codigoPostal"
                                                                                                         name="codigoPostal"
+                                                                                                        required
                                                                                                     />
                                                                                                 </div>
                                                                                             </div>
@@ -1558,6 +1559,7 @@ function Clientes(props) {
                                                                                                             value={state.municipio}
                                                                                                             id="municipio"
                                                                                                             name="municipio"
+                                                                                                            required
                                                                                                         />
                                                                                                     </div>
                                                                                                 </div>
@@ -1602,6 +1604,7 @@ function Clientes(props) {
                                                                                                         value={state.calle}
                                                                                                         id="calle"
                                                                                                         name="calle"
+                                                                                                        required
                                                                                                     />
                                                                                                 </div>
                                                                                             </div>
@@ -1850,7 +1853,7 @@ function Clientes(props) {
                                                                                                         label="Uso de CFDI"
                                                                                                         onChange={handleChange}
                                                                                                         className="form-control"
-                                                                                                        required
+                                                                                                        
                                                                                                         native
                                                                                                         name="idUSOCFDI"
                                                                                                         value={state.idUSOCFDI}
@@ -2077,7 +2080,7 @@ function Clientes(props) {
                                                                             value={state.contactoTelefono}
                                                                             name="contactoTelefono"
                                                                             className="form-control"
-                                                                            required
+                                                                            
                                                                             type="text"
                                                                             placeholder=""
                                                                             id="contactoTelefono"

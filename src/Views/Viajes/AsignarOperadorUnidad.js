@@ -1,12 +1,24 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import Autocomplete from "@material-ui/lab/Autocomplete";
+//import TextField from "@material-ui/core/TextField";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import IconButton from "@material-ui/core/IconButton";
+import PageviewIcon from "@material-ui/icons/Pageview";
+//import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import {Checkbox, FormControlLabel, Grid, TextField} from "@material-ui/core";
+import { obtenerDetalleParadasIdInformes } from "../../Util/Contexts/DetalleParadasContext";
+import { obtenerCiudades } from "../../Util/Contexts/CiudadesContext";
+import { obtenerOperadores } from "../../Util/Contexts/OperadoresContext";
+import { obtenerUnidades } from "../../Util/Contexts/UnidadesContext";
+
+//import { data } from '@here/maps-api-for-javascript';
+
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -42,6 +54,14 @@ function a11yProps(index) {
 
 
 export default function AsignarOperadorUnidad(props){
+ 
+    
+    
+ 
+
+
+
+
     const [tabActive, setTabActive] = React.useState(0);
     /*const [generalData, setGeneralData] = React.useState({
         origen: "",
@@ -62,12 +82,12 @@ export default function AsignarOperadorUnidad(props){
         horasEnRuta: "",
     });*/
     const [data, setData] = React.useState({
-        origen: "",
-        destino: "",
+        origen: {},
+        destino: {},
+        operador: {},
         cargadoVacioRemolqueUno: false,
         cargadoVacioRemolqueDos: false,
-        operador: "",
-        unidad: "",
+        unidad: {},
         placaIntUnidad: "",
         estatusUnidad: "",
         referencia: "",
@@ -88,6 +108,10 @@ export default function AsignarOperadorUnidad(props){
         horaEntregaInforme: "",
         entregado: false,
         estatusInforme: "",
+        dataCiudad: [],
+        dataOperador: [],
+        dataUnidad: []
+
     });
     /*const [informeData, setInformeData] = React.useState({
         fechaInforme: "",
@@ -100,8 +124,60 @@ export default function AsignarOperadorUnidad(props){
         entregado: false,
         estatus: "",
     });*/
+    useEffect((value) => {
+        handleshowDetalleParadas(props.idInforme)
+        getAllUnidades()
+        getAllCiudades()
+        getAllOperadores()
+        
+    }, []);
+  
 
+    function handleshowDetalleParadas(id) {
+
+        obtenerDetalleParadasIdInformes(id).then((respuesta) => {
+            console.log(respuesta.data);
+            //alert(respuesta.data);
+            setData({
+                ...data,
+                kms:respuesta.data[0].m_nCVR1
+            });
+            });
+    }
+
+   function getAllCiudades() {
+        obtenerCiudades().then((respuesta) => {
+            setData({...data,dataCiudad: respuesta.data})
+            console.log(data.dataCiudad)
+       /*  const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
+        axios.get(url, { headers }).then((respuesta) => {
+            this.setState({ dataCiudad: respuesta.data }) */
+        });
+    }
+    function getAllOperadores() {
+        obtenerOperadores().then((respuesta) => {
+            console.log(respuesta.data)
+            setData({...data,dataOperador: respuesta.data})
+            // console.log(data.dataOperador)
+       /*  const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
+        axios.get(url, { headers }).then((respuesta) => {
+            this.setState({ dataCiudad: respuesta.data }) */
+        });
+    }
+    function getAllUnidades() {
+        obtenerUnidades().then((respuesta) => {
+            console.log(respuesta.data)
+            setData({...data,dataUnidad: respuesta.data})
+            // console.log(data.dataOperador)
+       /*  const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
+        axios.get(url, { headers }).then((respuesta) => {
+            this.setState({ dataCiudad: respuesta.data }) */
+        });
+    }
+    
+    
     const handleFechaInforme = (e) => {
+        console.log(props)
         setData({
             ...data,
             fechaInforme: e.target.value
@@ -274,22 +350,141 @@ export default function AsignarOperadorUnidad(props){
                 <TabPanel value={tabActive} index={0}>
                     <Grid container spacing={2}>
                         <Grid item xs={6}>
-                            <TextField
-                                margin={"dense"}
-                                variant={"outlined"}
-                                label={"Origen"}
-                                required
-                                onChange={handleOrigen}
-                                value={data.origen}/>
+                        <Autocomplete
+                                                freeSolo
+                                                onChange={handleOrigen}
+                                                value={data.origen}
+                                                //disabled={state.agregar == "Consultar"}
+                                                id="origen"
+                                                disableClearable
+                                                forcePopupIcon={false}
+                                                options={data.dataCiudad}
+                                                getOptionLabel={(option) =>
+                                                    option.m_sCiudad
+                                                }
+                                                style={{
+                                                    transform: "translate(14px, 10px) scale(1) !important"
+                                                }}
+                                                renderInput={(params) => (
+                                                    <div>
+                                                        <TextField
+                                                            label="Origen"
+                                                            margin="dense"
+                                                            variant="outlined"
+                                                            {...params}
+                                                            InputProps={{
+                                                                ...params.InputProps,
+                                                                style: { height: "33px", fontSize: "14px" },
+                                                                type: "search",
+                                                                value: data.origen,
+                                                                //disabled: state.agregar == "Consultar",
+                                                                disableUnderline: true,
+                                                                endAdornment: (
+                                                                    <InputAdornment position="end">
+                                                                        <IconButton
+                                                                            padding="0px"
+                                                                            style={{
+                                                                                paddingRight: "0px",
+                                                                            }}
+                                                                            //disabled={state.agregar == "Consultar"}
+                                                                            onClick={() => {
+                                                                                setData({
+                                                                                    ...data,
+                                                                                    identificadorModal:
+                                                                                        "origen",
+                                                                                    tipoModal: 1,
+                                                                                    openDialog: true
+                                                                                })
+                                                                            }}
+                                                                        >
+                                                                            <PageviewIcon
+                                                                                style={{
+                                                                                    color: "#F9A03E",
+                                                                                    fontSize: 32,
+                                                                                    paddingInlineEnd: 0,
+                                                                                    paddingRight: 0,
+                                                                                    paddingBlockEnd: 0,
+                                                                                    paddingLeft: 0,
+                                                                                    paddingBlock: 0,
+                                                                                }}
+                                                                            />
+                                                                        </IconButton>
+                                                                    </InputAdornment>
+                                                                ),
+                                                            }}
+                                                        />
+                                                    </div>
+                                                )}
+                                            />
                         </Grid>
                         <Grid item xs={6}>
-                            <TextField
-                                margin={"dense"}
-                                variant={"outlined"}
-                                label={"Destino"}
-                                required
-                                onChange={handleDestino}
-                                value={data.destino}/>
+                        <Autocomplete
+                                                freeSolo
+                                                onChange={handleDestino}
+
+                                                value={data.destino}
+                                                //disabled={state.agregar == "Consultar"}
+                                                id="destino"
+                                                disableClearable
+                                                forcePopupIcon={false}
+                                                options={data.dataCiudad}
+                                                getOptionLabel={(option) =>
+                                                    option.m_sCiudad
+                                                }
+                                                style={{
+                                                    transform: "translate(14px, 10px) scale(1) !important"
+                                                }}
+                                                renderInput={(params) => (
+                                                    <div>
+                                                        <TextField
+                                                            label="Destino"
+                                                            margin="dense"
+                                                            variant="outlined"
+                                                            {...params}
+                                                            InputProps={{
+                                                                ...params.InputProps,
+                                                                style: { height: "33px", fontSize: "14px" },
+                                                                type: "search",
+                                                                value: data.destino,
+                                                                //disabled: state.agregar == "Consultar",
+                                                                disableUnderline: true,
+                                                                endAdornment: (
+                                                                    <InputAdornment position="end">
+                                                                        <IconButton
+                                                                            padding="0px"
+                                                                            style={{
+                                                                                paddingRight: "0px",
+                                                                            }}
+                                                                            //disabled={state.agregar == "Consultar"}
+                                                                            onClick={() => {
+                                                                               setData({
+                                                                                   ...data,
+                                                                                    identificadorModal:
+                                                                                        "destino",
+                                                                                    tipoModal: 1,
+                                                                                    openDialog: true
+                                                                                })
+                                                                            }}
+                                                                        >
+                                                                            <PageviewIcon
+                                                                                style={{
+                                                                                    color: "#F9A03E",
+                                                                                    fontSize: 32,
+                                                                                    paddingInlineEnd: 0,
+                                                                                    paddingRight: 0,
+                                                                                    paddingBlockEnd: 0,
+                                                                                    paddingLeft: 0,
+                                                                                    paddingBlock: 0,
+                                                                                }}
+                                                                            />
+                                                                        </IconButton>
+                                                                    </InputAdornment>
+                                                                ),
+                                                            }}
+                                                        />
+                                                    </div>
+                                                )}
+                                            />
                         </Grid>
 
                         <Grid item xs={3}>
@@ -317,24 +512,135 @@ export default function AsignarOperadorUnidad(props){
                         <Grid item xs={6}/>
 
                         <Grid item xs={6}>
-                            <TextField
-                                margin={"dense"}
-                                variant={"outlined"}
-                                label={"Operador"}
-                                required
-                                onChange={handleOperador}
-                                value={data.operador}/>
+                        <Autocomplete
+                                                freeSolo
+                                                onChange={handleOperador}
+
+                                                value={data.operador}
+                                                //disabled={state.agregar == "Consultar"}
+                                                id="operador"
+                                                disableClearable
+                                                forcePopupIcon={false}
+                                                options={data.dataOperador}
+                                                getOptionLabel={(option) =>
+                                                    option.m_sNombreCompleto
+                                                }
+                                                style={{
+                                                    transform: "translate(14px, 10px) scale(1) !important"
+                                                }}
+                                                renderInput={(params) => (
+                                                    <div>
+                                                        <TextField
+                                                            label="Operador"
+                                                            margin="dense"
+                                                            variant="outlined"
+                                                            {...params}
+                                                            InputProps={{
+                                                                ...params.InputProps,
+                                                                style: { height: "33px", fontSize: "14px" },
+                                                                type: "search",
+                                                                value: data.operador,
+                                                                //disabled: state.agregar == "Consultar",
+                                                                disableUnderline: true,
+                                                                endAdornment: (
+                                                                    <InputAdornment position="end">
+                                                                        <IconButton
+                                                                            padding="0px"
+                                                                            style={{
+                                                                                paddingRight: "0px",
+                                                                            }}
+                                                                            //disabled={state.agregar == "Consultar"}
+                                                                        >
+                                                                            <PageviewIcon
+                                                                                style={{
+                                                                                    color: "#F9A03E",
+                                                                                    fontSize: 32,
+                                                                                    paddingInlineEnd: 0,
+                                                                                    paddingRight: 0,
+                                                                                    paddingBlockEnd: 0,
+                                                                                    paddingLeft: 0,
+                                                                                    paddingBlock: 0,
+                                                                                }}
+                                                                            />
+                                                                        </IconButton>
+                                                                    </InputAdornment>
+                                                                ),
+                                                            }}
+                                                        />
+                                                    </div>
+                                                )}
+                                            />
                         </Grid>
                         <Grid item xs={6}/>
 
                         <Grid item xs={6}>
-                            <TextField
-                                margin={"dense"}
-                                variant={"outlined"}
-                                label={"Unidad"}
-                                required
-                                onChange={handleUnidad}
-                                value={data.unidad}/>
+                        <Autocomplete
+                                                freeSolo
+                                                onChange={handleUnidad}
+
+                                                value={data.unidad}
+                                                //disabled={state.agregar == "Consultar"}
+                                                id="unidad"
+                                                disableClearable
+                                                forcePopupIcon={false}
+                                                options={data.dataUnidad}
+                                                getOptionLabel={(option) =>
+                                                    option.m_sDescripcion
+                                                }
+                                                style={{
+                                                    transform: "translate(14px, 10px) scale(1) !important"
+                                                }}
+                                                renderInput={(params) => (
+                                                    <div>
+                                                        <TextField
+                                                            label="Unidad"
+                                                            margin="dense"
+                                                            variant="outlined"
+                                                            {...params}
+                                                            InputProps={{
+                                                                ...params.InputProps,
+                                                                style: { height: "33px", fontSize: "14px" },
+                                                                type: "search",
+                                                                value: data.unidad,
+                                                                //disabled: state.agregar == "Consultar",
+                                                                disableUnderline: true,
+                                                                endAdornment: (
+                                                                    <InputAdornment position="end">
+                                                                        <IconButton
+                                                                            padding="0px"
+                                                                            style={{
+                                                                                paddingRight: "0px",
+                                                                            }}
+                                                                            //disabled={state.agregar == "Consultar"}
+                                                                            onClick={() => {
+                                                                               setData({
+                                                                                   ...data,
+                                                                                    identificadorModal:
+                                                                                        "destino",
+                                                                                    tipoModal: 1,
+                                                                                    openDialog: true
+                                                                                })
+                                                                            }}
+                                                                        >
+                                                                            <PageviewIcon
+                                                                                style={{
+                                                                                    color: "#F9A03E",
+                                                                                    fontSize: 32,
+                                                                                    paddingInlineEnd: 0,
+                                                                                    paddingRight: 0,
+                                                                                    paddingBlockEnd: 0,
+                                                                                    paddingLeft: 0,
+                                                                                    paddingBlock: 0,
+                                                                                }}
+                                                                            />
+                                                                        </IconButton>
+                                                                    </InputAdornment>
+                                                                ),
+                                                            }}
+                                                        />
+                                                    </div>
+                                                )}
+                                            />
                         </Grid>
                         <Grid item xs={2}>
                             <TextField
@@ -554,3 +860,5 @@ export default function AsignarOperadorUnidad(props){
         </div>
     );
 }
+
+
