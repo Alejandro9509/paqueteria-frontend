@@ -62,7 +62,6 @@ function MapEvents(props) {
             }
         },
     })
-    return ("")
 }
 
 export function LocationMarker(props) {

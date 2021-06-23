@@ -73,6 +73,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Views/DisplayMapClass.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Views/Embarque.js">
           <value>
             <set />
@@ -153,6 +158,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/Rutas.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/SucursalesList.js">
           <value>
             <set />
@@ -194,6 +204,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Views/Zonas.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/iconos/Catalogos/Icono Grupo Clientes/icono_grupo_cliente.svg">
           <value>
             <set />
           </value>
