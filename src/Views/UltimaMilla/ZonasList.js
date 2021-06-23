@@ -1,0 +1,238 @@
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import {
+    TableBody,
+    Table,
+    TableContainer,
+    Paper,
+    TableHead,
+    TableCell,
+    TableRow,
+    Checkbox,
+    withStyles,
+    TableSortLabel, InputBase
+} from "@material-ui/core";
+import {fade} from "@material-ui/core/styles";
+import {obtenerZonasSucursal} from "../../Util/Contexts/ZonasContext";
+import SearchIcon from "@material-ui/icons/Search";
+
+const useStyles = theme => ({
+    visuallyHidden: {
+        border: 0,
+        clip: 'rect(0 0 0 0)',
+        height: 1,
+        margin: -1,
+        overflow: 'hidden',
+        padding: 0,
+        position: 'absolute',
+        top: 20,
+        width: 1,
+    },
+    search: {
+        position: 'relative',
+        borderRadius: theme.shape.borderRadius,
+        backgroundColor: fade(theme.palette.common.white, 0.15),
+        '&:hover': {
+            backgroundColor: fade(theme.palette.common.white, 0.25),
+        },
+        marginLeft: 0,
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+            marginLeft: theme.spacing(1),
+            width: 'auto',
+        },
+    },
+    searchIcon: {
+        padding: theme.spacing(0, 2),
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    inputRoot: {
+        color: 'inherit',
+    },
+    inputInput: {
+        padding: theme.spacing(1, 1, 1, 0),
+        // vertical padding + font size from searchIcon
+        paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+        transition: theme.transitions.create('width'),
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+            width: '12ch',
+            '&:focus': {
+                width: '20ch',
+            },
+        },
+    },
+});
+
+class ZonasList extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            zonas: [],
+            order: "asc",
+            orderBy: "m_sDescripcion",
+        }
+        this.getAllzonas = this.getAllzonas.bind(this)
+        this.handleRequestSort = this.handleRequestSort.bind(this)
+        this.handleSelectAllClickevent = this.handleSelectAllClickevent.bind(this)
+    }
+
+    componentDidMount() {
+        this.getAllzonas()
+    }
+
+    getAllzonas() {
+        obtenerZonasSucursal(this.props.sucursalSeleccionada).then(({data}) => {
+            this.setState({zonas: data})
+        })
+    }
+
+    descendingComparator(a, b, orderBy) {
+        if (b[orderBy] < a[orderBy]) {
+            return -1;
+        }
+        if (b[orderBy] > a[orderBy]) {
+            return 1;
+        }
+        return 0;
+    }
+
+    getComparator(order, orderBy) {
+        return order === 'desc'
+            ? (a, b) => this.descendingComparator(a, b, orderBy)
+            : (a, b) => -this.descendingComparator(a, b, orderBy);
+    }
+
+    stableSort(array, comparator) {
+        const stabilizedThis = array.map((el, index) => [el, index]);
+        stabilizedThis.sort((a, b) => {
+            const order = comparator(a[0], b[0]);
+            if (order !== 0) return order;
+            return a[1] - b[1];
+        });
+        return stabilizedThis.map((el) => el[0]);
+    }
+
+    handleRequestSort(event, property) {
+        const isAsc = this.state.orderBy === property && this.state.order === 'asc';
+        this.setState({
+            order: isAsc ? 'desc' : 'asc', orderBy: property
+        })
+    };
+
+    createSortHandler(property, event){
+        this.handleRequestSort(event, property);
+    };
+
+    handleSelectAllClickevent(event) {
+        if (event.target.checked) {
+            const newSelecteds = this.state.zonas;
+            this.props.selectZona(newSelecteds)
+            return;
+        }
+        this.props.selectZona([])
+    };
+    handleClick(event, row) {
+        const selectedIndex = this.props.zonasSeleccionadas.map(u => u.m_nIdZona).indexOf(row.m_nIdZona);
+        let newSelected = [];
+
+        if (selectedIndex === -1) {
+            newSelected = newSelected.concat(this.props.zonasSeleccionadas, row);
+        } else if (selectedIndex === 0) {
+            newSelected = newSelected.concat(this.props.zonasSeleccionadas.slice(1));
+        } else if (selectedIndex === this.props.zonasSeleccionadas.length - 1) {
+            newSelected = newSelected.concat(this.props.zonasSeleccionadas.slice(0, -1));
+        } else if (selectedIndex > 0) {
+            newSelected = newSelected.concat(
+                this.props.zonasSeleccionadas.slice(0, selectedIndex),
+                this.props.zonasSeleccionadas.slice(selectedIndex + 1),
+            );
+        }
+        this.props.selectZona(newSelected)
+    };
+
+    render() {
+        const {classes} = this.props;
+        const isSelected = (row) => this.props.zonasSeleccionadas.find(u => u.m_nIdZona === row) != null;
+
+
+        return (
+            <TableContainer>
+                <div className={classes.search}>
+                    <div className={classes.searchIcon}>
+                        <SearchIcon/>
+                    </div>
+                    <InputBase
+                        placeholder="Buscar"
+                        classes={{
+                            root: classes.inputRoot,
+                            input: classes.inputInput,
+                        }}
+                        inputProps={{'aria-label': 'search'}}
+                    />
+                </div>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell padding="checkbox">
+                                <Checkbox
+                                    indeterminate={this.props.zonasSeleccionadas.length > 0 && this.props.zonasSeleccionadas.length < this.state.zonas.length}
+                                    checked={this.state.zonas.length > 0 && this.props.zonasSeleccionadas.length === this.state.zonas.length}
+                                    onChange={this.handleSelectAllClickevent}
+                                    inputProps={{'aria-label': 'select all desserts'}}
+                                />
+                            </TableCell>
+                            <TableCell
+                                sortDirection={this.state.orderBy === "m_sDescripcion" ? this.state.order : false}
+                                align="left">
+                                <TableSortLabel
+                                    active={this.state.orderBy === "m_sDescripcion"}
+                                    direction={this.state.orderBy === "m_sDescripcion" ? this.state.order : 'asc'}
+                                    onClick={(event) => this.createSortHandler("m_sDescripcion", event)}
+                                >
+                                    Todas
+                                    {this.state.orderBy === "m_sDescripcion" ? (
+                                        <span className={classes.visuallyHidden}>
+                                            {this.state.order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                                        </span>
+                                    ) : null}
+                                </TableSortLabel>
+
+                            </TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {
+                            this.stableSort(this.state.zonas, this.getComparator(this.state.order, this.state.orderBy)).map((u, index) => {
+                                const isItemSelected = isSelected(u.m_nIdZona);
+                                console.log(isItemSelected)
+                                const labelId = `enhanced-table-checkbox-${index}`;
+                                return (
+                                    <TableRow>
+                                        <TableCell padding="checkbox">
+                                            <Checkbox
+                                                onClick={(event) => this.handleClick(event, u)}
+                                                checked={isItemSelected}
+                                                inputProps={{'aria-labelledby': labelId}}
+                                            />
+                                        </TableCell>
+                                        <TableCell align="left">{u.m_sDescripcion}</TableCell>
+                                    </TableRow>
+                                )
+                            })
+                        }
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        );
+    }
+}
+
+ZonasList.propTypes = {};
+
+export default withStyles(useStyles)(ZonasList);

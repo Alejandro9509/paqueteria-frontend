@@ -9,7 +9,7 @@ import CatalogosPage from './Views/Catalogos';
 import ConfiguracionPage from './Views/Configuracion';
 import InicadoresPage from './Views/Indicadores';
 import Historial from './Views/Viajes/Historial';
-import UltimaMillaPage from './Views/UltimaMilla';
+import UltimaMillaPage from './Views/UltimaMilla/UltimaMilla';
 
 
 import {ReactComponent as ConfiguracionIcon} from './iconos/Menu/IconoConfiguraciones/iconoConfiguraciones.svg';
@@ -19,6 +19,8 @@ import {ReactComponent as InformeIcon} from './iconos/Menu/IconoInforme/iconoInf
 import {ReactComponent as RecolecionIcon} from './iconos/Menu/IconoRecoleccion/iconoRecoleccion.svg';
 import {ReactComponent as EmbarqueIcon} from './iconos/Menu/IconoEmbarque/iconoEmbarque.svg';
 import {ReactComponent as GuiasIcon} from './iconos/Menu/IconoGuias/iconoGuia.svg';
+import {ReactComponent as UltimaMillaIcono} from './iconos/Menu/IconoUltimaMilla/IconoUltimaMilla.svg';
+
 import {ReactComponent as viajeIcon} from './iconos/Menu/IconoViajes/iconoViajes.svg';
 
 
@@ -80,6 +82,15 @@ const dashboardRoutes = [
     child:[]
   },
   {
+    path: "/UltimaMilla",
+    name: "Última Milla",
+    icon: UltimaMillaIcono,
+    component: UltimaMillaPage,
+    single: true,
+    newWindow: true,
+    child:[]
+  },
+  {
     path: "/Viajes",
     name: "Viajes",
     icon: viajeIcon,
@@ -95,14 +106,7 @@ const dashboardRoutes = [
     single: true,
     child:[]
   }*/
-  {
-    path: "/UltimaMilla",
-    name: "Última Milla",
-    icon: viajeIcon,
-    component: UltimaMillaPage,
-    single: true,
-    child:[]
-  }
+
 ];
 
 export default dashboardRoutes;

@@ -290,7 +290,35 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 
 .MuiStepper-root {
   overflow-x: auto;
+  padding: 0px !important;
 }
 .MuiDataGrid-root .MuiDataGrid-colCellMoving {
   background-color: white !important;
+}
+.MuiTooltip-popper {
+  pointer-events: auto !important;
+}
+.MuiTooltip-tooltip {
+  max-width: max-content !important;
+  color: black !important;
+}
+.MuiTableCell-root{
+  font-size: var(--font-size) !important
+}
+
+.leaflet-marker-icon {
+  margin-left:-10px !important;
+  margin-top:-10px !important;
+}
+
+.ReactSwipeableBottomSheet--closed {
+  border-radius: 20px !important;
+  background-color: transparent !important;
+}
+.ReactSwipeableBottomSheet--open {
+  border-radius: 20px !important;
+  background-color: transparent !important;
+}
+.react-swipeable-view-container {
+  box-shadow: none !important;
 }
