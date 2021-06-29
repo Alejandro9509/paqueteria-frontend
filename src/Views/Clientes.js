@@ -25,7 +25,8 @@ import {
 } from "@material-ui/data-grid";
 import { dataGridLocaleText } from "../Constants/index";
 import Noty from "noty";
-import { InputLabel, Select, FormControl, Tooltip, Stepper, Step, StepLabel } from "@material-ui/core";
+import {InputLabel, Select, FormControl, Tooltip, Stepper, Step, StepLabel} from "@material-ui/core";
+import Grid from '@material-ui/core/Grid'
 import { agregarCliente, eliminarCliente, modificarCliente, obtenerCliente, obtenerClienteId, validarNumeroCliente } from "../Util/Contexts/ClientesContext";
 import { obtenerGrupoClientes } from "../Util/Contexts/GrupoClientesContext";
 import { obtenerMonedas } from "../Util/Contexts/MonedaContext";
@@ -35,6 +36,9 @@ import { obtenerImpuestos } from "../Util/Contexts/ImpuestosContext";
 import { obtenerSucursales } from "../Util/Contexts/SucursalContext";
 import { obtenerEstadosPais } from "../Util/Contexts/EstadosContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
+import NavTabs from "./Clientes/NavTabs";
+import BlockHeaderH3 from "./Clientes/BlockHeaderH3";
+import SectionHeaderH4 from "./Clientes/SectionHeaderH4";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -49,6 +53,17 @@ window.jQuery = window.$ = $;
 const headers = {
     "Content-Type": "application/json",
 };
+
+const styles = {
+    stepper: {
+        position: "sticky",
+        top: "60px",
+        padding: "15px",
+        backgroundColor: "white",
+        zIndex: 100,
+        marginBottom: "10px",
+    },
+}
 
 function Clientes(props) {
     const headers = {
@@ -154,11 +169,13 @@ function Clientes(props) {
     const columns2 = React.useMemo(() => [
         {
             Name: "Formato",
-            accessor: "m_sFormato",
+            field: "m_sFormato",
+            width : 200,
         },
         {
             Name: "Tipo proceso",
-            accessor: "m_nTipoProceso",
+            field: "m_nTipoProceso",
+            width : 200,
         },
     ]);
 
@@ -599,8 +616,6 @@ function Clientes(props) {
         console.log(event.target.name + " " + state.activo);
     };
 
-
-
     function handleEliminar(id) {
         var derecho;
         validarPermisos(state)
@@ -758,7 +773,6 @@ function Clientes(props) {
         }
     };
 
-
     const [stepActive, setStepActive] = React.useState(1);
 
     function openSection(index) {
@@ -835,12 +849,11 @@ function Clientes(props) {
             <section className="main-container">
                 <div className="container-fluid">
 
-
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
                             <a onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
                                 <i className="fa fa-list" /> Listado
-              </a>
+                            </a>
                         </li>
                         <li>
                             <a  onClick={handleShowAgregar}>
@@ -860,8 +873,7 @@ function Clientes(props) {
                                 <div className="widget-content">
                                     <div
                                         className="row"
-                                        style={{ height: state.height - 250, width: "100%" }}
-                                    >
+                                        style={{ height: state.height - 250, width: "100%" }}>
                                         {dataListadoClientes.length != 0 ? (
                                             <DataGrid
                                                 localeText={dataGridLocaleText}
@@ -912,17 +924,8 @@ function Clientes(props) {
                                 {/*Inicio de ejemplo*/}
                                 <div className="form-content">
                                     {/* start steps */}
-                                    <div
-                                        className="wizard-breadcrumb number-style"
-                                        style={{
-                                            position: "sticky",
-                                            top: "60px",
-                                            padding: "5px",
-                                            backgroundColor: "white",
-                                            zIndex: 100,
-                                            marginBottom: "10px",
-                                        }}
-                                    >
+                                    <div className="widget-wrap"
+                                        style={styles.stepper}>
                                         <div className="row">
                                             <Stepper activeStep={stepActive - 1}>
                                                 {
@@ -939,9 +942,8 @@ function Clientes(props) {
                                     {/* end steps */}
 
                                     <div className="widget-wrap" id="infogral">
-                                        <div className="widget-header block-header margin-bottom-0 clearfix">
-                                            <h3>Información General</h3>
-                                        </div>
+
+                                        <BlockHeaderH3>{'Información General'}</BlockHeaderH3>
                                         <div className="widget-container">
                                             <div className="widget-content">
                                                 <div className="row">
@@ -1216,18 +1218,253 @@ function Clientes(props) {
                                     {/*Fin de ejemplo*/}
 
                                     <div className="widget-wrap" id="caracteristicas">
-                                        <div className="widget-header block-header margin-bottom-0 clearfix">
-                                            <h3>Información Monetaria</h3>
-                                        </div>
+                                        {/*<BlockHeaderH3>{'Métodos de Pago y Crédito'}</BlockHeaderH3>*/}
                                         <div className="widget-container">
                                             <div className="widget-content">
                                                 <div className="row">
-                                                    <div className="col-sm-12 col-md-8">
-                                                        <div className="w-section-header ">
-                                                            <h4>Métodos de Pago y Crédito</h4>
-                                                        </div>
+
+                                                    <Grid container spacing={3}>
+                                                        <Grid item xs={8}>
+                                                            <BlockHeaderH3>{'Métodos de Pago y Crédito'}</BlockHeaderH3>
+                                                            <div className="form-content">
+                                                                {/* start text password */}
+                                                                <div className="row">
+                                                                    <div className="col-sm-6 col-md-4 unit">
+                                                                        <label className="input select">
+                                                                            <FormControl fullWidth variant="outlined" margin="dense">
+                                                                                <InputLabel id="metodoPagoLabel">Forma de pago</InputLabel>
+                                                                                <Select
+                                                                                    labelId="metodoPagoLabel"
+                                                                                    onChange={handleChange}
+                                                                                    value={state.metodoPago}
+                                                                                    id="metodoPago"
+                                                                                    label="Forma de pago"
+                                                                                    native
+                                                                                    className="form-control"
+                                                                                    name="metodoPago"
+
+                                                                                >
+                                                                                    <option value="1">
+                                                                                        Transferencia Eléctronica
+                                                                                    </option>
+                                                                                    <option value="2">Efectivo</option>
+                                                                                </Select>
+                                                                            </FormControl>
+                                                                            <i></i>
+                                                                        </label>
+                                                                    </div>
+                                                                    <div className="col-sm-6 col-md-4 unit">
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+
+                                                                                       label="Días de Crédito"
+                                                                                       type="number"
+                                                                                       value={state.diasCredito}
+                                                                                       id="diasCredito"
+                                                                                       name="diasCredito"
+                                                                                       native
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="row">
+                                                                    <SectionHeaderH4>{'Pesos'}</SectionHeaderH4>
+                                                                    <div className="col-sm-4  col-md-4 unit">
+
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       label="Límite Crédito"
+                                                                                       type="number"
+                                                                                       value={state.credito}
+                                                                                       id="credito"
+                                                                                       name="credito"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-sm-4  col-md-4 unit">
+
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="number"
+                                                                                       label="Saldo facturado por cobrar"
+                                                                                       value={state.saldoCredito}
+                                                                                       id="saldoCredito"
+                                                                                       name="saldoCredito"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-sm-4  col-md-4 unit">
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="number"
+                                                                                       label="Viajes pendientes por facturar"
+                                                                                       value={state.pendFacturar}
+                                                                                       id="pendFacturar"
+                                                                                       name="pendFacturar"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="row">
+                                                                    <SectionHeaderH4>{'Dólares'}</SectionHeaderH4>
+                                                                    <div className="col-sm-4  col-md-4 unit">
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="number"
+                                                                                       label="Límite Crédito"
+                                                                                       value={state.creditoDlls}
+                                                                                       id="creditoDlls"
+                                                                                       name="creditoDlls"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-sm-4  col-md-4 unit">
+
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="number"
+                                                                                       label="Saldo facturado por cobrar"
+                                                                                       value={state.saldoCreditoDLLS}
+                                                                                       id="saldoCreditoDLLS"
+                                                                                       name="saldoCreditoDLLS"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-sm-4  col-md-4 unit">
+
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="number"
+                                                                                       label="Viajes pendientes por facturar"
+                                                                                       value={state.pendFacturarDLLS}
+                                                                                       id="pendFacturarDLLS"
+                                                                                       name="pendFacturarDLLS"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </Grid>
+
+                                                        <Grid item xs={4}>
+                                                            <Grid container
+                                                                  direction={'column'}
+                                                                  alignItems={"stretch"}
+                                                                  spacing={2}>
+                                                                <Grid item xs={12}>
+                                                                    <BlockHeaderH3>{'Información Adicional del Pago'}</BlockHeaderH3>
+                                                                </Grid>
+                                                                <Grid item xs={12}>
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   label="Banco Ordenante"
+                                                                                   value={state.bancoOrdenante}
+                                                                                   id="bancoOrdenante"
+                                                                                   name="bancoOrdenante"/>
+                                                                    </div>
+                                                                </Grid>
+                                                                <Grid item xs={12}>
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   label="RFC"
+                                                                                   value={state.rfcBancoOrdenante}
+                                                                                   pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
+                                                                                   title="Favor de introducir un RFC válido."
+                                                                                   id="rfcBancoOrdenante"
+                                                                                   name="rfcBancoOrdenante"/>
+                                                                    </div>
+                                                                </Grid>
+                                                                <Grid item xs={12}>
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   label="Núm. Cuenta"
+                                                                                   value={state.cuentaBancoOrdenante}
+                                                                                   id="cuentaBancoOrdenante"
+                                                                                   name="cuentaBancoOrdenante"/>
+                                                                    </div>
+                                                                </Grid>
+                                                            </Grid>
+                                                            {/*<div className="form-content" style={{ paddingLeft: "10px" }}>
+                                                                 start text password
+                                                                <div className="row">
+                                                                    <div className="col-xs-6 col-ms-6 col-md-10 unit">
+
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       label="Banco Ordenante"
+                                                                                       value={state.bancoOrdenante}
+                                                                                       id="bancoOrdenante"
+                                                                                       name="bancoOrdenante"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="row">
+                                                                    <div className="col-xs-6 col-ms-6 col-md-10 unit">
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       label="RFC"
+                                                                                       value={state.rfcBancoOrdenante}
+                                                                                       pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
+                                                                                       title="Favor de introducir un RFC válido."
+                                                                                       id="rfcBancoOrdenante"
+                                                                                       name="rfcBancoOrdenante"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="row">
+                                                                    <div className="col-xs-6 col-ms-6 col-md-10 unit">
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       label="Núm. Cuenta"
+                                                                                       value={state.cuentaBancoOrdenante}
+                                                                                       id="cuentaBancoOrdenante"
+                                                                                       name="cuentaBancoOrdenante"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>*/}
+                                                        </Grid>
+                                                    </Grid>
+                                                    {/*<div className="col-sm-12 col-md-8">
                                                         <div className="form-content">
-                                                            {/* start text password */}
+                                                             start text password
                                                             <div className="row">
                                                                 <div className="col-sm-6 col-md-4 unit">
                                                                     <label className="input select">
@@ -1254,7 +1491,6 @@ function Clientes(props) {
                                                                     </label>
                                                                 </div>
                                                                 <div className="col-sm-6 col-md-4 unit">
-
                                                                     <div className="input">
                                                                         <TextField variant="outlined" margin="dense"
                                                                             onChange={handleChange}
@@ -1272,9 +1508,7 @@ function Clientes(props) {
                                                             </div>
 
                                                             <div className="row">
-                                                                <div className="w-section-header">
-                                                                    <h3>Pesos</h3>
-                                                                </div>
+                                                                <SectionHeaderH4>{'Pesos'}</SectionHeaderH4>
                                                                 <div className="col-sm-4  col-md-4 unit">
 
                                                                     <div className="input">
@@ -1318,9 +1552,7 @@ function Clientes(props) {
                                                                 </div>
                                                             </div>
                                                             <div className="row">
-                                                                <div className="w-section-header">
-                                                                    <h5>Dólares</h5>
-                                                                </div>
+                                                                <SectionHeaderH4>{'Dólares'}</SectionHeaderH4>
                                                                 <div className="col-sm-4  col-md-4 unit">
                                                                     <div className="input">
                                                                         <TextField variant="outlined" margin="dense"
@@ -1364,14 +1596,12 @@ function Clientes(props) {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div>*/}
 
-                                                    <div className="col-sm-12 col-md-3 bordesizquierdo">
-                                                        <div className="w-section-header" style={{ paddingLeft: "10px" }}>
-                                                            <h4>Información Adicional del Pago</h4>
-                                                        </div>
+                                                    {/*<div className="col-sm-12 col-md-3 bordesizquierdo">
+                                                        <SectionHeaderH4>{'Información Adicional del Pago'}</SectionHeaderH4>
                                                         <div className="form-content" style={{ paddingLeft: "10px" }}>
-                                                            {/* start text password */}
+                                                             start text password
                                                             <div className="row">
                                                                 <div className="col-xs-6 col-ms-6 col-md-10 unit">
 
@@ -1422,7 +1652,7 @@ function Clientes(props) {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div>*/}
                                                 </div>
                                             </div>
                                         </div>
@@ -1430,46 +1660,23 @@ function Clientes(props) {
                                     {/*Fin de ejemplo*/}
 
                                     <div className="widget-wrap" id="detalles">
-                                        <div className="widget-header block-header margin-bottom-0 clearfix">
-                                            <h3>Datos generales</h3>
-                                        </div>
+                                        {/*<div className="widget-header block-header margin-bottom-0 clearfix">
+                                            <h3>General</h3>
+                                        </div>*/}
+                                        <BlockHeaderH3>{'General'}</BlockHeaderH3>
                                         <div className="widget-container">
                                             <div className="widget-content">
                                                 <div className="row">
                                                     <div className="col-md-12">
-                                                        <ul className="nav nav-tabs">
-                                                            <li className="active">
-                                                                <a data-toggle="tab" href="#Domicilio">
-                                                                    Domicilio
-                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a data-toggle="tab" href="#Formatos">
-                                                                    Formatos
-                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a data-toggle="tab" href="#Especiales">
-                                                                    Procesos Especiales
-                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a data-toggle="tab" href="#Adicional">
-                                                                    Inf. Adicional
-                                </a>
-                                                            </li>
-                                                        </ul>
-
+                                                        <NavTabs/>
                                                         <div className="form-content">
                                                             {/* start text password */}
                                                             <div className="widget-wrap">
                                                                 <div className="widget-container margin-top-0">
                                                                     <div className="widget-content">
                                                                         <div className="tab-content">
-                                                                            <div
-                                                                                id="Domicilio"
-                                                                                className="tab-pane fade in active"
-                                                                            >
+                                                                            <div id="Domicilio"
+                                                                                className="tab-pane fade in active">
                                                                                 <div className="row">
                                                                                     <div className="col-md-12 unit">
                                                                                         <div className="row">
@@ -1659,7 +1866,6 @@ function Clientes(props) {
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
-
                                                                                         <div className="row">
                                                                                             <div className="col-sm-6  col-md-2-5 unit">
                                                                                                 <div className="input">
@@ -1714,16 +1920,23 @@ function Clientes(props) {
                                                                             </div>
                                                                             <div
                                                                                 id="Formatos"
-                                                                                className="tab-pane fade"
-                                                                            >
-                                                                                <div className="widget-wrap">
-                                                                                    <div className="widget-content">
-                                                                                        <div className="row">
-                                                                                            <TableFormatos
+                                                                                className="tab-pane fade">
+                                                                                <div className="row">
+                                                                                    {/*<TableFormatos
                                                                                                 columns={columns2}
                                                                                                 data={dataFormatos}
-                                                                                            />
-                                                                                        </div>
+                                                                                            />*/}
+                                                                                    <div>
+                                                                                        <DataGrid
+                                                                                            rows={dataFormatos}
+                                                                                            localeText={dataGridLocaleText}
+                                                                                            columns={columns2}
+                                                                                            density="compact"
+                                                                                            pageSize={5}
+                                                                                            getRowId={(row) => row.m_nIdFormato}
+                                                                                            checkboxSelection
+                                                                                            disableSelectionOnClick
+                                                                                        autoHeight={true}/>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
