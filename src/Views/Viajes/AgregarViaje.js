@@ -116,7 +116,7 @@ class AgregarViaje extends Component {
     }
 
     getAllSucursales() {
-        const url = `${process.env.REACT_APP_API_URL_LOCAL}/Sucursales/GetListado`;
+        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
         axios.get(url, { headers }).then((respuesta) => {
             this.setState({ dataSucursal: respuesta.data })
         });
@@ -125,14 +125,14 @@ class AgregarViaje extends Component {
     getAllCiudades() {
         obtenerCiudades().then((respuesta) => {
             this.setState({dataCiudad: respuesta.data})
-       /*  const url = `${process.env.REACT_APP_API_URL_LOCAL}/Ciudades/GetListado`;
+       /*  const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
         axios.get(url, { headers }).then((respuesta) => {
             this.setState({ dataCiudad: respuesta.data }) */
         });
     }
 
     getAllRutas() {
-        const url = `${process.env.REACT_APP_API_URL_LOCAL}/Rutas/GetListado`;
+        const url = `${process.env.REACT_APP_API_URL}/Rutas/GetListado`;
         axios.get(url, { headers }).then((respuesta) => {
             this.setState({ dataRuta: respuesta.data })
         });
@@ -141,28 +141,28 @@ class AgregarViaje extends Component {
     getAllCodigosPostales() {
         obtenerCodigoPostal().then((respuesta) => {
             this.setState({dataCodigoPostal: respuesta.data})
-      /*   const url = `${process.env.REACT_APP_API_URL_LOCAL}/CodigoPostal/GetListado`;
+      /*   const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
         axios.get(url, { headers }).then((respuesta) => {
             this.setState({ dataCodigoPostal: respuesta.data }) */
         });
     }
 
     getAllEstatusViaje() {
-        const url = `${process.env.REACT_APP_API_URL_LOCAL}/SisEstatus/getListadoViajes`;
+        const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoViajes`;
         axios.get(url, { headers }).then((respuesta) => {
             this.setState({ dataEstatusViaje: respuesta.data })
         });
     }
 
     getAllUnidades() {
-        const url = `${process.env.REACT_APP_API_URL_LOCAL}/Unidades/GetListado`;
+        const url = `${process.env.REACT_APP_API_URL}/Unidades/GetListado`;
         axios.get(url, { headers }).then((respuesta) => {
             this.setState({ dataUnidades: respuesta.data })
         });
     }
 
     getInformesByFiltro(nIdRuta, nIdCiudadOrigen, nIdCiudadDestino, nIdRemolque1, nIdRemolque2, nIdDolly) {
-        const url = `${process.env.REACT_APP_API_URL_LOCAL}/Informes/GetByFiltro` + "/" + nIdRuta + "/" +
+        const url = `${process.env.REACT_APP_API_URL}/Informes/GetByFiltro` + "/" + nIdRuta + "/" +
             nIdCiudadOrigen + "/" + nIdCiudadDestino + "/" + nIdRemolque1 + "/" + nIdRemolque2 + "/" + nIdDolly;
         console.log(url)
 
@@ -1107,6 +1107,40 @@ class AgregarViaje extends Component {
                                 ) : (
                                     <div>No se encontró ningún registro</div>
                                 )}
+                               
+                            </div>
+
+                          
+                        </div>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-12">
+                        <div className="widget-wrap">
+                            <div className="widget-header">
+                                <h2 color={'#717171'} >Detalle de paradas</h2>
+                            </div>
+
+                            <div className="row" style={{ height: this.state.height - 450, width: '100%' }}>
+                                {this.state.dataInformes.length != 0 ? (
+                                    <DataGrid
+                                        localeText={dataGridLocaleText}
+                                        rows={this.state.dataInformes}
+                                        columns={columns}
+                                        density="compact"
+                                        pageSize={Math.floor((this.state.height - 310) / 30)}
+                                        getRowId={(row) => row.m_nIdInforme}
+                                        onRowSelected={(row) => {
+                                            this.setState({
+                                                idInforme: row.data.m_nIdInforme
+                                               
+                                            })
+                                            
+                                        }}
+                                    />
+                                ) : (
+                                    <div>No se encontró ningún registro</div>
+                                )}
                                 {/**Para mostrar el boton nomas cuando haya registros*/}
                                 {this.state.dataInformes.length != 0 ? (
                                       <Button
@@ -1129,6 +1163,7 @@ class AgregarViaje extends Component {
                         </div>
                     </div>
                 </div>
+
 
 {/* 
                 <div className="row">

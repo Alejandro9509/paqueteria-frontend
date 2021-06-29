@@ -254,11 +254,11 @@ function Recoleccion() {
             domicilioRemitente: newValue.m_sDomicilio,
 
             codigoPostalRemitente: dataCodigoPostal.find(
-                (o) => o.m_nIdCP == parseInt(newValue.m_sCodigoPostal)
+                (o) => o.m_nIdCP == parseInt(newValue.m_nIdCP)
             ),
 
             ciudadRemitente: dataCodigoPostal.find(
-                (o) => o.m_nIdCP == newValue.m_sCodigoPostal
+                (o) => o.m_nIdCP == newValue.m_nIdCP
             ).m_nIdCiudad,
 
             correoRemitente: newValue.m_sCorreoElectronico,
@@ -296,11 +296,11 @@ function Recoleccion() {
             domicilioDestinatario: newValue.m_sDomicilio,
 
             codigoPostalDestinatario: dataCodigoPostal.find(
-                (o) => o.m_nIdCP == newValue.m_sCodigoPostal
+                (o) => o.m_nIdCP == newValue.m_nIdCP
             ),
 
             ciudadDestinatario: dataCodigoPostal.find(
-                (o) => o.m_nIdCP == newValue.m_sCodigoPostal
+                (o) => o.m_nIdCP == newValue.m_nIdCP
             ).m_nIdCiudad,
 
             correoDestinatario: newValue.m_sCorreoElectronico,
@@ -2096,6 +2096,7 @@ function Recoleccion() {
                                 onChange={(event) => handleChangePaquete(event, index)}
                                 id="m_nIdTipoEmbalaje"
                                 name="m_nIdTipoEmbalaje"
+                                required
                             >
                                 {dataEmbalaje.map((embalaje) => (
                                     <option key={embalaje.m_nIdEmbalaje} value={embalaje.m_nIdEmbalaje}>

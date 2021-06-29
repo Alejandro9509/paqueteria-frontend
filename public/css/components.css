@@ -1888,7 +1888,7 @@ a.waves-effect .waves-ripple {
 /* Content
 =============================== */
 .j-forms .form-content {
-  padding: 0px;
+  padding: 15px;
 }
 .j-forms .form-content:after {
   clear: both;

@@ -106,7 +106,7 @@ function RemitenteDestinatario(props) {
             municipio: "",
             idPais: 0,
             idEstado: 21,
-            codigoPostal: 0,
+            idCodigoPostal: {},
             creadoPor: state.creadoPor,
             creadoEl: "",
             modificadoPor: state.modificadoPor,
@@ -136,7 +136,7 @@ function RemitenteDestinatario(props) {
             rfc: newValue.m_sRFC,
             nombre: newValue.m_sNombreCorto,
             idPais: newValue.m_nIdPais,
-            codigoPostal: newValue.m_sCodigoPostal,
+            idCodigoPostal: newValue.m_sCodigoPostal,
             idEstado: newValue.m_nIdEstado,
             municipio: newValue.m_sMunicipio,
             localidad: newValue.m_sLocalidad,
@@ -213,7 +213,7 @@ function RemitenteDestinatario(props) {
             IdEstado: state.idEstado,
             CreadoPor: state.creadoPor,
             CreadoEl: state.creadoEl,
-
+            IdCP: state.idCodigoPostal.m_nIdCP,
             ModificadoPor: state.modificadoPor,
             ModificadoEl: state.modificadoEl,
             Contacto: state.contacto,
@@ -222,6 +222,7 @@ function RemitenteDestinatario(props) {
             agregar: "Agregar",
             importar: "",
         };
+        console.log(JSON.stringify(params))
         if (state.idRemitenteDestinatario != 0) {
             modificarRemitentesDestinatarios(state.idRemitenteDestinatario, params)
                 .then((respuesta) => {
@@ -301,7 +302,9 @@ function RemitenteDestinatario(props) {
                 municipio: respuesta.data.m_sMunicipio,
                 idPais: respuesta.data.m_nIdPais,
                 idEstado: respuesta.data.m_nIdEstado,
-                codigoPostal: respuesta.data.m_sCodigoPostal,
+                idCodigoPostal: dataCodigoPostal.find(
+                    (o) => o.m_nIdCP == respuesta.data.m_nIdCP
+                ),
                 creadoPor: respuesta.data.m_nCreadoPor,
                 creadoEl: respuesta.data.m_dtCreadoEl,
                 modificadoPor: respuesta.data.m_nModificadoPor,
@@ -858,6 +861,7 @@ function RemitenteDestinatario(props) {
                                                                                 id="numero"
                                                                                 maxlength="4"
                                                                                 required
+                                                                                
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -872,7 +876,7 @@ function RemitenteDestinatario(props) {
                                                                                 title="Favor de introducir un RFC válido."
                                                                                 value={state.rfc}
                                                                                 id="rfc"
-                                                                                required
+                                                                                
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -1054,16 +1058,16 @@ function RemitenteDestinatario(props) {
                                                                         <div className="input">
                                                                             <Autocomplete
                                                                                 onSelect={handleSelectCodigoPostal()}
-
-                                                                                value={state.codigoPostal}
+                                                                                            required
+                                                                                value={state.idCodigoPostal}
                                                                                 freeSolo
                                                                                 onChange={(event, newValue) =>
                                                                                     setState({
                                                                                         ...state,
-                                                                                        codigoPostal: newValue,
+                                                                                        idCodigoPostal: newValue,
                                                                                     })
                                                                                 }
-                                                                                id="codigoPostal"
+                                                                                id="idCodigoPostal"
                                                                                 disableClearable
                                                                                 forcePopupIcon={false}
                                                                                 options={dataCodigoPostal}
@@ -1136,6 +1140,7 @@ function RemitenteDestinatario(props) {
                                                                                 id="text"
                                                                                 value={state.municipio}
                                                                                 id="municipio"
+                                                                                required
                                                                             />
                                                                         </div>{" "}
                                                                     </div>
@@ -1172,6 +1177,7 @@ function RemitenteDestinatario(props) {
                                                                                 type="text"
                                                                                 value={state.calle}
                                                                                 id="calle"
+                                                                                required
                                                                             />
                                                                         </div>
                                                                     </div>

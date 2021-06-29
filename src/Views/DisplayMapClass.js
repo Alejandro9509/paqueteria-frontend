@@ -62,10 +62,9 @@ function MapEvents(props) {
             }
         },
     })
-    return ("")
 }
 
-function LocationMarker(props) {
+export function LocationMarker(props) {
     const markerRef = useRef(null)
 
     const eventHandlers = useMemo(
