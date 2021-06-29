@@ -37,6 +37,8 @@ import {
     Checkbox
 } from "@material-ui/core";
 import Grid from '@material-ui/core/Grid'
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import { agregarCliente, eliminarCliente, modificarCliente, obtenerCliente, obtenerClienteId, validarNumeroCliente } from "../Util/Contexts/ClientesContext";
 import { obtenerGrupoClientes } from "../Util/Contexts/GrupoClientesContext";
 import { obtenerMonedas } from "../Util/Contexts/MonedaContext";
@@ -365,6 +367,7 @@ function Clientes(props) {
         excluirNodo: 0,
 
         idUSOCFDI: "",
+        numResgistoIdentidadFiscal: "",
         agruparCantidadPorConcepto: "",
         ajustarImporte2Dec: "",
 
@@ -468,7 +471,7 @@ function Clientes(props) {
 
     function handleShowModificar(id) {
         obtenerClienteId(id).then((respuesta) => {
-
+            console.log(respuesta)
             setState({
                 ...state,
                 //idCliente: id,
@@ -2005,7 +2008,10 @@ function Clientes(props) {
                                                                                                         name="envioAutomaticoSeguimiento"
                                                                                                         color="primary"
                                                                                                         value={state.envioAutomaticoSeguimiento}
-                                                                                                        id="envioAutomaticoSeguimiento"/>
+                                                                                                        id="envioAutomaticoSeguimiento"
+                                                                                                        icon={<CheckBoxOutlineBlankIcon fontSize="large" />}
+                                                                                                        checkedIcon={<CheckBoxIcon fontSize="large" />}
+                                                                                                    />
                                                                                                 }
                                                                                                 label="Envio Automático de Seguimiento de Viajes"/>
                                                                                         </Grid>
@@ -2021,7 +2027,10 @@ function Clientes(props) {
                                                                                                         name="excluirNodo"
                                                                                                         color="primary"
                                                                                                         value={state.excluirNodo}
-                                                                                                        id="excluirNodo"/>
+                                                                                                        id="excluirNodo"
+                                                                                                        icon={<CheckBoxOutlineBlankIcon fontSize="large" />}
+                                                                                                        checkedIcon={<CheckBoxIcon fontSize="large" />}
+                                                                                                    />
                                                                                                 }
                                                                                                 label="Excluir Nodo Condiciones de Pago en el XML"/>
                                                                                         </Grid>
@@ -2121,10 +2130,111 @@ function Clientes(props) {
 
                                                                             <div
                                                                                 id="Adicional"
-                                                                                className="tab-pane fade "
-                                                                            >
+                                                                                className="tab-pane fade ">
                                                                                 <div className="row">
-                                                                                    <div className="col-md-12 unit">
+                                                                                    <Grid container spacing={3}>
+                                                                                        <Grid item xs={3}>
+                                                                                            <FormControl fullWidth variant="outlined" margin="dense">
+                                                                                                <InputLabel id="idUSOCFDILabel">Uso de CFDI</InputLabel>
+                                                                                                <Select
+                                                                                                    labelId="idUSOCFDILabel"
+                                                                                                    label="Uso de CFDI"
+                                                                                                    onChange={handleChange}
+                                                                                                    className="form-control"
+
+                                                                                                    native
+                                                                                                    name="idUSOCFDI"
+                                                                                                    value={state.idUSOCFDI}
+                                                                                                    id="idUSOCFDI"
+                                                                                                >
+                                                                                                    <option value="1">
+                                                                                                        1. Adqusicion de mercancias
+                                                                                                    </option>
+                                                                                                    <option value="2">
+                                                                                                        2. Devoluciones, descuentos
+                                                                                                        o bonificaciones{" "}
+                                                                                                    </option>
+                                                                                                    <option value="3">
+                                                                                                        3. Gastos en general{" "}
+                                                                                                    </option>
+                                                                                                    <option value="4">
+                                                                                                        4. Construcciones{" "}
+                                                                                                    </option>
+                                                                                                    <option value="5">
+                                                                                                        5. Mobiliario y equipo{" "}
+                                                                                                    </option>
+                                                                                                </Select>
+                                                                                            </FormControl>
+                                                                                        </Grid>
+                                                                                        <Grid item xs={3}>
+                                                                                            <TextField
+                                                                                                variant="outlined" margin="dense"
+                                                                                                onChange={handleChange}
+                                                                                                className="form-control"
+                                                                                                type="text"
+                                                                                                fullWidth
+                                                                                                label="Núm. Registro de Identidad Fiscal"
+                                                                                                value={state.numResgistoIdentidadFiscal}
+                                                                                                id="numResgistoIdentidadFiscal"
+                                                                                                name="numResgistoIdentidadFiscal"/>
+                                                                                        </Grid>
+                                                                                        <Grid item xs={6}></Grid>
+                                                                                    </Grid>
+                                                                                    <FormControlLabel
+                                                                                        control={
+                                                                                            <Checkbox
+                                                                                                checked={state.agruparCantidadPorConcepto}
+                                                                                                onChange={(e) => setState({
+                                                                                                    ...state,
+                                                                                                    agruparCantidadPorConcepto: e.target.checked,
+                                                                                                })}
+                                                                                                name="agruparCantidadPorConcepto"
+                                                                                                color="primary"
+                                                                                                size={'medium'}
+                                                                                                value={state.agruparCantidadPorConcepto}
+                                                                                                id="agruparCantidadPorConcepto"
+                                                                                                icon={<CheckBoxOutlineBlankIcon fontSize="large" />}
+                                                                                                checkedIcon={<CheckBoxIcon fontSize="large" />}
+                                                                                            />
+                                                                                        }
+                                                                                        label="Permitir agrupar la cantidad de conceptos al facturar"/>
+                                                                                    <FormControlLabel
+                                                                                        control={
+                                                                                            <Checkbox
+                                                                                                checked={state.ajustarImporte2Dec}
+                                                                                                onChange={(e) => setState({
+                                                                                                    ...state,
+                                                                                                    ajustarImporte2Dec: e.target.checked,
+                                                                                                })}
+                                                                                                name="ajustarImporte2Dec"
+                                                                                                color="primary"
+                                                                                                size={'medium'}
+                                                                                                value={state.ajustarImporte2Dec}
+                                                                                                id="ajustarImporte2Dec"
+                                                                                                icon={<CheckBoxOutlineBlankIcon fontSize="large" />}
+                                                                                                checkedIcon={<CheckBoxIcon fontSize="large" />}
+                                                                                            />
+                                                                                        }
+                                                                                        label="Ajusta a 2 Decimales los importes de los conceptos en Facturacion por viaje"/>
+                                                                                    <FormControlLabel
+                                                                                        control={
+                                                                                            <Checkbox
+                                                                                                checked={state.aplicarDetalleConceptoCadaViajeXML}
+                                                                                                onChange={(e) => setState({
+                                                                                                    ...state,
+                                                                                                    aplicarDetalleConceptoCadaViajeXML: e.target.checked,
+                                                                                                })}
+                                                                                                name="aplicarDetalleConceptoCadaViajeXML"
+                                                                                                color="primary"
+                                                                                                size={'medium'}
+                                                                                                value={state.aplicarDetalleConceptoCadaViajeXML}
+                                                                                                id="aplicarDetalleConceptoCadaViajeXML"
+                                                                                                icon={<CheckBoxOutlineBlankIcon fontSize="large" />}
+                                                                                                checkedIcon={<CheckBoxIcon fontSize="large" />}
+                                                                                            />
+                                                                                        }
+                                                                                        label="Aplicar en el XML de la factura, el Detalle por Concepto de Cada Viaje/CartaPorte"/>
+                                                                                   {/* <div className="col-md-12 unit">
                                                                                         <div className="unit ">
                                                                                             <label className="input select">
                                                                                                 <FormControl fullWidth variant="outlined" margin="dense">
@@ -2169,27 +2279,20 @@ function Clientes(props) {
                                                                                                 <label className="checkbox">
                                                                                                     <input
                                                                                                         checked={state.agruparCantidadPorConcepto}
-                                                                                                        onChange={(e) =>
-                                                                                                            setState({
+                                                                                                        onChange={(e) => setState({
                                                                                                                 ...state,
                                                                                                                 agruparCantidadPorConcepto: e.target.checked,
-                                                                                                            })
-                                                                                                        }
+                                                                                                            })}
                                                                                                         native
                                                                                                         name="agruparCantidadPorConcepto"
                                                                                                         type="checkbox"
-                                                                                                        value={
-                                                                                                            state.agruparCantidadPorConcepto
-                                                                                                        }
+                                                                                                        value={state.agruparCantidadPorConcepto}
                                                                                                         id="agruparCantidadPorConcepto"
                                                                                                     />
-                                                                                                    <i />
-                                                  Permitir agrupar la cantidad
-                                                  de conceptos al facturar
-                                                </label>
+                                                                                                    <i />Permitir agrupar la cantidad de conceptos al facturar
+                                                                                                </label>
                                                                                             </div>
                                                                                         </div>
-
                                                                                         <div className="unit">
                                                                                             <div className="inline-group">
                                                                                                 <label className="label">
@@ -2198,25 +2301,18 @@ function Clientes(props) {
                                                                                                 <label className="checkbox">
                                                                                                     <input
                                                                                                         checked={state.ajustarImporte2Dec}
-                                                                                                        onChange={(e) =>
-                                                                                                            setState({
+                                                                                                        onChange={(e) => setState({
                                                                                                                 ...state,
                                                                                                                 ajustarImporte2Dec: e.target.checked,
-                                                                                                            })
-                                                                                                        }
+                                                                                                            })}
                                                                                                         native
                                                                                                         name="ajustarImporte2Dec"
                                                                                                         type="checkbox"
-                                                                                                        value={
-                                                                                                            state.ajustarImporte2Dec
-                                                                                                        }
+                                                                                                        value={state.ajustarImporte2Dec}
                                                                                                         id="ajustarImporte2Dec"
                                                                                                     />
-                                                                                                    <i />
-                                                  Ajusta a 2 Decimales los
-                                                  importes de los conceptos en
-                                                  Facturacion por viaje
-                                                </label>
+                                                                                                    <i />Ajusta a 2 Decimales los importes de los conceptos en Facturacion por viaje
+                                                                                                </label>
                                                                                             </div>
                                                                                         </div>
 
@@ -2228,29 +2324,21 @@ function Clientes(props) {
                                                                                                 <label className="checkbox">
                                                                                                     <input
                                                                                                         checked={state.aplicarDetalleConceptoCadaViajeXML}
-                                                                                                        onChange={(e) =>
-                                                                                                            setState({
+                                                                                                        onChange={(e) => setState({
                                                                                                                 ...state,
                                                                                                                 aplicarDetalleConceptoCadaViajeXML: e.target.checked,
-                                                                                                            })
-                                                                                                        }
+                                                                                                            })}
                                                                                                         native
                                                                                                         name="aplicarDetalleConceptoCadaViajeXML"
                                                                                                         type="checkbox"
-                                                                                                        value={
-                                                                                                            state.aplicarDetalleConceptoCadaViajeXML
-                                                                                                        }
+                                                                                                        value={state.aplicarDetalleConceptoCadaViajeXML}
                                                                                                         id="aplicarDetalleConceptoCadaViajeXML"
                                                                                                     />
-                                                                                                    <i />
-                                                  Aplicar en el XML de la
-                                                  factura, el Detalle por
-                                                  Concepto de Cada
-                                                  Viaje/CartaPorte
-                                                </label>
+                                                                                                    <i />Aplicar en el XML de la factura, el Detalle por Concepto de Cada Viaje/CartaPorte
+                                                                                                </label>
                                                                                             </div>
                                                                                         </div>
-                                                                                    </div>
+                                                                                    </div>*/}
                                                                                 </div>
                                                                             </div>
                                                                         </div>
