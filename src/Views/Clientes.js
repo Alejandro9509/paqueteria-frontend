@@ -25,7 +25,17 @@ import {
 } from "@material-ui/data-grid";
 import { dataGridLocaleText } from "../Constants/index";
 import Noty from "noty";
-import {InputLabel, Select, FormControl, Tooltip, Stepper, Step, StepLabel} from "@material-ui/core";
+import {
+    InputLabel,
+    Select,
+    FormControl,
+    Tooltip,
+    Stepper,
+    Step,
+    StepLabel,
+    FormControlLabel,
+    Checkbox
+} from "@material-ui/core";
 import Grid from '@material-ui/core/Grid'
 import { agregarCliente, eliminarCliente, modificarCliente, obtenerCliente, obtenerClienteId, validarNumeroCliente } from "../Util/Contexts/ClientesContext";
 import { obtenerGrupoClientes } from "../Util/Contexts/GrupoClientesContext";
@@ -168,12 +178,12 @@ function Clientes(props) {
 
     const columns2 = React.useMemo(() => [
         {
-            Name: "Formato",
+            headerName: "Formato",
             field: "m_sFormato",
             width : 200,
         },
         {
-            Name: "Tipo proceso",
+            headerName: "Tipo proceso",
             field: "m_nTipoProceso",
             width : 200,
         },
@@ -851,7 +861,14 @@ function Clientes(props) {
 
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
-                            <a onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
+                            <a onClick={(event) => {
+                                event.stopPropagation();
+                                setState({...state, agregar: "Agregar"});
+                                $('.nav-tabs li ').removeClass('active');
+                                $('.nav-tabs li').eq(0).addClass('active');
+                                $('.tab-content div ').removeClass('in show');
+                                $('#Listado').addClass('in show');
+                            }}>
                                 <i className="fa fa-list" /> Listado
                             </a>
                         </li>
@@ -1668,6 +1685,7 @@ function Clientes(props) {
                                             <div className="widget-content">
                                                 <div className="row">
                                                     <div className="col-md-12">
+                                                        {/*Este componente son las tabs*/}
                                                         <NavTabs/>
                                                         <div className="form-content">
                                                             {/* start text password */}
@@ -1942,16 +1960,80 @@ function Clientes(props) {
                                                                             </div>
                                                                             <div
                                                                                 id="Especiales"
-                                                                                className="tab-pane fade "
-                                                                            >
+                                                                                className="tab-pane fade ">
                                                                                 <div className="row">
-                                                                                    <div className="col-md-12 unit">
+                                                                                    <SectionHeaderH4>{'Envío de Estados de Cuentas'}</SectionHeaderH4>
+                                                                                    <Grid container spacing={3}>
+                                                                                        <Grid item xs={3}>
+                                                                                            <TextField
+                                                                                                variant="outlined" margin="dense"
+                                                                                                onChange={handleChange}
+                                                                                                className="form-control"
+                                                                                                type="text"
+                                                                                                fullWidth
+                                                                                                label="Frecuencia de Envio (Días)"
+                                                                                                value={state.frecuenciaEnvioDias}
+                                                                                                id="frecuenciaEnvioDias"
+                                                                                                name="frecuenciaEnvioDias"/>
+                                                                                        </Grid>
+                                                                                        <Grid item xs={9}></Grid>
+                                                                                        <Grid item xs={3}>
+                                                                                            <TextField
+                                                                                                variant="outlined" margin="dense"
+                                                                                                onChange={handleChange}
+                                                                                                className="form-control"
+                                                                                                type="datetime-local"
+                                                                                                InputLabelProps={{
+                                                                                                           shrink: true,
+                                                                                                       }}
+                                                                                                fullWidth
+                                                                                                label="Enviar a partir de"
+                                                                                                value={state.enviarApartir}
+                                                                                                id="enviarApartir"
+                                                                                                name="enviarApartir"/>
+                                                                                        </Grid>
+                                                                                        <Grid item xs={9}></Grid>
+                                                                                        <Grid item xs={12}>
+                                                                                            <FormControlLabel
+                                                                                                control={
+                                                                                                    <Checkbox
+                                                                                                        checked={state.envioAutomaticoSeguimiento}
+                                                                                                        onChange={(e) => setState({
+                                                                                                            ...state,
+                                                                                                            envioAutomaticoSeguimiento: e.target.checked,
+                                                                                                        })}
+                                                                                                        name="envioAutomaticoSeguimiento"
+                                                                                                        color="primary"
+                                                                                                        value={state.envioAutomaticoSeguimiento}
+                                                                                                        id="envioAutomaticoSeguimiento"/>
+                                                                                                }
+                                                                                                label="Envio Automático de Seguimiento de Viajes"/>
+                                                                                        </Grid>
+                                                                                        <Grid item xs={12}>
+                                                                                            <FormControlLabel
+                                                                                                control={
+                                                                                                    <Checkbox
+                                                                                                        checked={state.excluirNodo}
+                                                                                                        onChange={(e) => setState({
+                                                                                                            ...state,
+                                                                                                            excluirNodo: e.target.checked,
+                                                                                                        })}
+                                                                                                        name="excluirNodo"
+                                                                                                        color="primary"
+                                                                                                        value={state.excluirNodo}
+                                                                                                        id="excluirNodo"/>
+                                                                                                }
+                                                                                                label="Excluir Nodo Condiciones de Pago en el XML"/>
+                                                                                        </Grid>
+                                                                                    </Grid>
+                                                                                    {/*Antiguos inputs*/}
+                                                                                    {/*<div className="col-md-12 unit">
                                                                                         <div className="w-section-header">
-                                                                                            <h3>
-                                                                                                Envío de Estados de Cuentas
-                                              </h3>
+                                                                                            <h3>Envío de Estados de Cuentas</h3>
                                                                                         </div>
+
                                                                                         <div className="row">
+
                                                                                             <div className="col-md-2-5 col-sm-2-5 col-lg-2-5">
 
                                                                                                 <div className="input" style={{ padding: "10px" }}>
@@ -1966,8 +2048,7 @@ function Clientes(props) {
                                                                                                                 state.frecuenciaEnvioDias
                                                                                                             }
                                                                                                             id="frecuenciaEnvioDias"
-                                                                                                            name="frecuenciaEnvioDias"
-                                                                                                        />
+                                                                                                            name="frecuenciaEnvioDias"/>
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
@@ -1990,14 +2071,13 @@ function Clientes(props) {
                                                                                                                 state.enviarApartir
                                                                                                             }
                                                                                                             id="enviarApartir"
-                                                                                                            name="enviarApartir"
-                                                                                                        />
+                                                                                                            name="enviarApartir"/>
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
-                                                                                    </div>
-                                                                                    <div className="unit">
+                                                                                    </div>*/}
+                                                                                    {/*<div className="unit">
                                                                                         <div className="inline-group">
                                                                                             <label className="label">
                                                                                                 &nbsp;{" "}
@@ -2005,49 +2085,37 @@ function Clientes(props) {
                                                                                             <label className="checkbox">
                                                                                                 <input
                                                                                                     checked={state.envioAutomaticoSeguimiento}
-                                                                                                    onChange={(e) =>
-                                                                                                        setState({
+                                                                                                    onChange={(e) => setState({
                                                                                                             ...state,
                                                                                                             envioAutomaticoSeguimiento: e.target.checked,
-                                                                                                        })
-                                                                                                    }
+                                                                                                        })}
                                                                                                     native
                                                                                                     name="envioAutomaticoSeguimiento"
                                                                                                     type="checkbox"
-                                                                                                    value={
-                                                                                                        state.envioAutomaticoSeguimiento
-                                                                                                    }
-                                                                                                    id="envioAutomaticoSeguimiento"
-                                                                                                />
-                                                                                                <i />
-                                                Envio Automático de Seguimiento
-                                                de Viajes
-                                              </label>
+                                                                                                    value={state.envioAutomaticoSeguimiento}
+                                                                                                    id="envioAutomaticoSeguimiento"/>
+                                                                                                <i />Envio Automático de Seguimiento de Viajes
+                                                                                            </label>
                                                                                         </div>
-                                                                                    </div>
-                                                                                    <div className="unit">
+                                                                                    </div>*/}
+                                                                                    {/*<div className="unit">
                                                                                         <div className="inline-group">
                                                                                             <label className="checkbox">
                                                                                                 <input variant="outlined" margin="dense"
                                                                                                     checked={state.excluirNodo}
-                                                                                                    onChange={(e) =>
-                                                                                                        setState({
+                                                                                                    onChange={(e) => setState({
                                                                                                             ...state,
                                                                                                             excluirNodo: e.target.checked,
-                                                                                                        })
-                                                                                                    }
+                                                                                                        })}
                                                                                                     native
                                                                                                     name="excluirNodo"
                                                                                                     type="checkbox"
                                                                                                     id="excluirNodo"
-                                                                                                    value={state.excluirNodo}
-                                                                                                />
-                                                                                                <i />
-                                                Excluir Nodo Condiciones de Pago
-                                                en el XML
-                                              </label>
+                                                                                                    value={state.excluirNodo}/>
+                                                                                                <i/>Excluir Nodo Condiciones de Pago en el XML
+                                                                                            </label>
                                                                                         </div>
-                                                                                    </div>
+                                                                                    </div>*/}
                                                                                 </div>
                                                                             </div>
 
