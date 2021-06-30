@@ -34,7 +34,7 @@ import {
     Step,
     StepLabel,
     FormControlLabel,
-    Checkbox
+    Checkbox, Button
 } from "@material-ui/core";
 import Grid from '@material-ui/core/Grid'
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
@@ -51,6 +51,7 @@ import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import NavTabs from "./Clientes/NavTabs";
 import BlockHeaderH3 from "./Clientes/BlockHeaderH3";
 import SectionHeaderH4 from "./Clientes/SectionHeaderH4";
+import FormularioContacto from "./Clientes/FormularioContacto";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -81,7 +82,6 @@ function Clientes(props) {
     const headers = {
         "Content-Type": "application/json",
     };
-
     const columns = React.useMemo(() => [
         {
             headerName: "Acciones",
@@ -177,7 +177,6 @@ function Clientes(props) {
             },
         },
     ]);
-
     const columns2 = React.useMemo(() => [
         {
             headerName: "Formato",
@@ -2355,17 +2354,200 @@ function Clientes(props) {
                                     {/*Fin de ejemplo*/}
 
                                     <div className="widget-wrap" id="otros">
-                                        <div className="widget-header block-header margin-bottom-0 clearfix">
+                                        {/*<div className="widget-header block-header margin-bottom-0 clearfix">
                                             <div className="pull-left">
                                                 <h3> Contacto</h3>
                                             </div>
-                                        </div>
+                                        </div>*/}
+                                        {/*<Grid container spacing={1}>
+                                            <Grid item xs={6}>
+                                                <BlockHeaderH3>{"Contacto"}</BlockHeaderH3>
+                                                <Grid container spacing={2} alignItems="center">
+                                                    <Grid item xs={6} >
+                                                        <Grid container spacing={2}>
+                                                            <Grid item xs={12}>
+                                                            <TextField
+                                                                variant="outlined" margin="dense" label="Contacto"
+                                                                onChange={handleChange}
+                                                                value={state.contactoNombre}
+                                                                name="contactoNombre"
+                                                                className="form-control"
+                                                                type="text"
+                                                                placeholder=""
+                                                                id="contactoNombre"
+                                                            />
+                                                            </Grid>
+                                                            <Grid item xs={12}>
+                                                                <TextField
+                                                                    variant="outlined" margin="dense"
+                                                                    label="Correo"
+                                                                    onChange={handleChange}
+                                                                    value={state.contactoCorreo}
+                                                                    name="contactoCorreo"
+                                                                    className="form-control"
+                                                                    type="email"
+                                                                    placeholder=""
+                                                                    id="contactoCorreo"
+                                                                />
+                                                            </Grid>
+                                                            <Grid item xs={12}>
+                                                            <TextField
+                                                                variant="outlined" margin="dense" label="Teléfono"
+                                                                onChange={handleChange}
+                                                                value={state.contactoTelefono}
+                                                                name="contactoTelefono"
+                                                                className="form-control"
+                                                                type="text"
+                                                                placeholder=""
+                                                                id="contactoTelefono"
+                                                            />
+                                                        </Grid>
+                                                            <Grid item xs={12}>
+                                                                <Button variant="contained" color="primary">
+                                                                    Agregar contacto
+                                                                </Button>
+                                                                <button
+                                                                    className="btn btn-primary primary-btn">Agregar contacto
+                                                                </button>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Grid>
+                                                    <Grid item xs={6}>
+                                                        <div className="inline-group">
+                                                            <label className="label">&nbsp; </label>
+                                                            <label className="checkbox">
+                                                                <input
+                                                                    checked={state.RecibirFactura}
+                                                                    onChange={(e) =>
+                                                                        setState({
+                                                                            ...state,
+                                                                            RecibirFactura: e.target.checked,
+                                                                        })
+                                                                    } native
+                                                                    name="RecibirFactura"
+                                                                    type="checkbox"
+                                                                    value={state.RecibirFactura}
+                                                                    id="RecibirFactura"
+                                                                />
+                                                                <i />Recibir factura
+                                                            </label>
+                                                        </div>
+                                                        <div className="inline-group">
+                                                            <label className="checkbox">
+                                                                <input variant="outlined" margin="dense"
+                                                                       checked={state.RecibirEstadoCuenta}
+                                                                       onChange={(e) =>
+                                                                           setState({
+                                                                               ...state,
+                                                                               RecibirEstadoCuenta: e.target.checked,
+                                                                           })
+                                                                       }
+                                                                       native
+                                                                       name="RecibirEstadoCuenta"
+                                                                       type="checkbox"
+                                                                       id="RecibirEstadoCuenta"
+                                                                       value={state.RecibirEstadoCuenta}
+                                                                />
+                                                                <i />
+                                                                Recibir Edo de cuenta
+                                                            </label>
+                                                        </div>
+                                                        <div className="inline-group">
+                                                            <label className="checkbox">
+                                                                <input
+                                                                    checked={state.PermitirSeguimiento}
+                                                                    onChange={(e) =>
+                                                                        setState({
+                                                                            ...state,
+                                                                            PermitirSeguimiento: e.target.checked,
+                                                                        })
+                                                                    }
+                                                                    native
+                                                                    name="PermitirSeguimiento"
+                                                                    type="checkbox"
+                                                                    id="PermitirSeguimiento"
+                                                                    value={state.PermitirSeguimiento}
+                                                                />
+                                                                <i />
+                                                                Permitir Seguimiento de Viajes/Unidades
+                                                            </label>
+                                                        </div>
+                                                        <div className="inline-group">
+                                                            <label className="checkbox">
+                                                                <input
+                                                                    checked={state.UsoServicioWeb}
+                                                                    onChange={(e) =>
+                                                                        setState({
+                                                                            ...state,
+                                                                            UsoServicioWeb: e.target.checked,
+                                                                        })
+                                                                    }
+                                                                    native
+                                                                    name="UsoServicioWeb"
+                                                                    type="checkbox"
+                                                                    id="UsoServicioWeb"
+                                                                    value={state.UsoServicioWeb}
+                                                                />
+                                                                <i />
+                                                                Uso de un servicio web
+                                                            </label>
+                                                        </div>
+                                                        <div className="inline-group">
+                                                            <label className="checkbox">
+                                                                <input
+                                                                    checked={state.PermitirVerPortal}
+                                                                    onChange={(e) =>
+                                                                        setState({
+                                                                            ...state,
+                                                                            PermitirVerPortal: e.target.checked,
+                                                                        })
+                                                                    }
+                                                                    native
+                                                                    name="PermitirVerPortal"
+                                                                    type="checkbox"
+                                                                    id="PermitirVerPortal"
+                                                                    value={state.PermitirVerPortal}
+                                                                />
+                                                                <i />
+                                                                Permitir ver Portal de Clientes
+                                                            </label>
+                                                        </div>
+                                                        <div className="inline-group">
+                                                            <label className="checkbox">
+                                                                <input
+                                                                    checked={state.RecibirCartaPorte}
+                                                                    onChange={(e) =>
+                                                                        setState({
+                                                                            ...state,
+                                                                            RecibirCartaPorte: e.target.checked,
+                                                                        })
+                                                                    }
+                                                                    native
+                                                                    name="RecibirCartaPorte"
+                                                                    type="checkbox"
+                                                                    id="RecibirCartaPorte"
+                                                                    value={state.RecibirCartaPorte}
+                                                                />
+                                                                <i />
+                                                                Recibir carta porte
+                                                            </label>
+                                                        </div>
+                                                    </Grid>
+                                                </Grid>
+                                            </Grid>
+                                            <Grid item xs={6}>
+
+                                            </Grid>
+                                        </Grid>*/}
+                                        <FormularioContacto data={state} onChange={handleChange}/>
+
                                         <div className="widget-container">
                                             <div className="widget-content">
                                                 <div className="row">
-                                                    <div className="col-md-12">
+                                                    {/*<div className="col-md-12">
                                                         <div className="form-content">
-                                                            {/* start text password */}
+                                                             start text password
+
                                                             <div className="row">
                                                                 <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                                     <div className="input">
@@ -2397,9 +2579,8 @@ function Clientes(props) {
                                                                                 value={state.RecibirFactura}
                                                                                 id="RecibirFactura"
                                                                             />
-                                                                            <i />
-                                      Recibir factura
-                                    </label>
+                                                                            <i />Recibir factura
+                                                                        </label>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -2556,20 +2737,24 @@ function Clientes(props) {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div>*/}
                                                     <div className="form-footer" className="col-md-12">
                                                         <button
-                                                            type="button" onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}
-                                                            className="btn btn-secondary secondary-btn"
-                                                        >
-                                                            Cancelar
-                            </button>
+                                                            type="button"
+                                                            onClick={(event) => {
+                                                                event.stopPropagation();
+                                                                setState({...state, agregar: "Agregar"});
+                                                                $('.nav-tabs li ').removeClass('active');
+                                                                $('.nav-tabs li').eq(0).addClass('active');
+                                                                $('.tab-content div ').removeClass('in show');
+                                                                $('#Listado').addClass('in show');
+                                                            }}
+                                                            className="btn btn-secondary secondary-btn">Cancelar
+                                                        </button>
                                                         <button
                                                             type="submit"
-                                                            className="btn btn-primary primary-btn"
-                                                        >
-                                                            Aceptar
-                            </button>
+                                                            className="btn btn-primary primary-btn">Aceptar
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
