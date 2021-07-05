@@ -1,88 +1,75 @@
 import React, {Component} from 'react'
 import Cabecera from "../../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
-import {DataGrid} from "@material-ui/data-grid";
+import {DataGrid, GridToolbar } from "@material-ui/data-grid";
 import {dataGridLocaleText} from "../../Constants";
-import {TextField, Tooltip} from "@material-ui/core";
-import {confirmAlert} from "react-confirm-alert";
-import EscribirConvenio from "./EscribirConvenio";
+import SvgIcon from "@material-ui/core/SvgIcon";
+import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
+import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
 
 export default class Convenios extends Component {
     state = {
         columns: [
-            {
-                headerName: "Acciones",
-                soportable: false, filterable: false,
-                field: "",
-                renderCell: (row) => {
-                    return(
-                        <div>
-                            <Tooltip title={"Agregar"}>
-                                <a href={"#Agregar"}
-                                   role={"tab"}
-                                   data-toggle={"tab"}
-                                   onClick={() => (this.handleShowModificar(row.row))}
-                                   className={"btn btn-default btn-xs"}>
-                                    <i className={"fa fa-pencil-square-o"}
-                                       style={{ color: "#F9A03E" }}/>
-                                </a>
-                            </Tooltip>
-                            <Tooltip title={"Consultar"}>
-                                <a href={"#Agregar"}
-                                   role={"tab"}
-                                   data-toggle={"tab"}
-                                   className={"btn btn-default btn-xs"}
-                                   onClick={() => (this.handleShowModificar(row.row))}>
-                                    <i className={"fa fa-eye"} style={{ color: "#F9A03E" }} />
-                                </a>
-                            </Tooltip>
-                            <Tooltip title={"Eliminar"}>
-                                <a href="#"
-                                   className="btn btn-default btn-xs"
-                                   onClick={() => confirmAlert({
-                                       title: 'Confirmar Eliminar',
-                                       message: 'Está seguro de eliminar Condición?',
-                                       buttons: [
-                                           {
-                                               label: 'Si',
-                                               onClick: () => this.handleEliminar(row.row)
-                                           },
-                                           {
-                                               label: 'No',
-                                           }
-                                       ]
-                                   })}>
-                                    <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
-                                </a>
-                            </Tooltip>
-                        </div>
-                    )
-                }
-            },
             {
                 headerName: "ID",
                 field: 'id',
                 width: 100,
             },
             {
-                headerName: "Nombre",
-                field: 'nombre',
-                width: 100,
-            },
-            {
-                headerName: "vigencia",
-                field: 'vigencia',
-                width: 100,
-            },
-            {
                 headerName: "RFC",
                 field: 'rfc',
+                width: 200,
+            },
+            {
+                headerName: "Nombre",
+                field: 'nombre',
+                width: 300,
+            },
+            {
+                headerName: "Vigencia",
+                field: 'vigencia',
+                width: 200,
+            },
+            {
+                headerName: "Vigente",
+                field: 'vigente',
                 width: 100,
-            }
+                renderCell: (row) => {
+                    return (
+                        <div
+                            style={{
+                                width: "100%",
+                                textAlign: "center",
+                                color: row.row.vigente ? "green" : "red",
+                            }}>
+                            {row.row.vigente ? (
+                                <SvgIcon component={Activo} />
+                            ) : (
+                                <SvgIcon component={NoActivo} />
+                            )}
+                        </div>
+                    );
+                },
+            },
 
         ],
         height: window. innerHeight,
-        conveniosList: [],
+        listaConvenios: [
+            {
+                id: '001',
+                rfc: "RFC12345",
+                nombre: "Alberto Obregón",
+                vigencia: "12/10/2021",
+                vigente: true,
+            },
+            {
+                id: '002',
+                rfc: "RFC67890",
+                nombre: "Alberto Obregón",
+                vigencia: "12/01/2021",
+                vigente: false,
+            },
+        ],
 
     }
 
@@ -90,7 +77,7 @@ export default class Convenios extends Component {
     handleEliminar = () => {}
 
     render() {
-        const {columns, conveniosList, height} = this.state
+        const {columns, listaConvenios, height} = this.state
         return(
             <div>
                 <header className="topbar clearfix">
@@ -120,11 +107,11 @@ export default class Convenios extends Component {
                                     <i className={"fa fa-list"}/> Listado
                                 </a>
                             </li>
-                            <li>
-                                <a data-toggle={"tab"} href={"#Agregar"}>
-                                    <i className={"fa fa-plus-circle"}/> Agregar
+                            {/*<li>
+                                <a  onClick={handleShowImprimir}>
+                                    <i className="fa fa-print" /> Imprimir
                                 </a>
-                            </li>
+                            </li>*/}
                         </ul>
 
                         <div className={"row"} className={"tab-content"}>
@@ -132,57 +119,26 @@ export default class Convenios extends Component {
                                 <div className="widget-wrap">
                                     <div className="widget-content">
                                         <div className={"row"} style={{height: height -250, width: '100%'}}>
-                                            <DataGrid columns={columns} rows={conveniosList}
+                                            <DataGrid columns={columns} rows={listaConvenios}
                                                       locateText={dataGridLocaleText}
                                                       density={"compact"}
-                                                      pageSize={Math.floor((height - 310) / 30)}/>
+                                                      pageSize={Math.floor((height - 310) / 30)}
+                                                      components={{
+                                                          Toolbar: GridToolbar,
+                                                      }}
+                                                      disableColumnSelector
+                                                      disableDensitySelector
+                                                      filterModel={{
+                                                          items: [
+                                                              { columnField: '', operatorValue: '', value: '' },
+                                                          ],
+                                                      }}
+                                            />
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div className="widget-wrap" id="Agregar" className="tab-pane fade">
-                                <div className="widget-wrap">
-                                    <div className="widget-content">
-                                        <div className="row">
-                                            {/*<div className="col-md-12">
-                                                <form className="j-forms" onSubmit={handleAceptar}>
-                                                    <div className="form-content">
-                                                        <div className="row">
-                                                            <div className="col-xs-6 col-sm-3 col-md-2-5 col-lg-2-5 unit">
-                                                                <div className="input">
-                                                                    <TextField variant="outlined" margin="dense" label="Descripción"
-                                                                               onChange={handleChange}
-                                                                               className="form-control"
-                                                                               type="text"
-                                                                               maxLength="50"
-                                                                               required
-                                                                               value={state.descripcion}
-                                                                               placeholder={state.descripcion}
-                                                                               id="descripcion"
-                                                                               maxLength="50"/>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="row">
-                                                            <div className="form-footer" className="col-sm-6 col-md-5 unit">
-                                                                <button href="#Listado"
-                                                                        role="tab"
-                                                                        data-toggle="tab"
-                                                                        data-layout="topCenter"
-                                                                        data-type="information"
-                                                                        className="btn btn-secondary secondary-btn"> Cancelar</button>
-                                                                <button type="submit"
-                                                                        className="btn btn-primary primary-btn">Aceptar</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>*/}
-                                            <EscribirConvenio/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                 </section>
