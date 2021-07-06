@@ -7,7 +7,7 @@ const headers = {
 }
 
 function obtenerTodosAtajos(){
-    const url = `${process.env.REACT_APP_API_URL}/Atajos/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL}/Procesos/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

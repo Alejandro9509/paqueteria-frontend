@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="94d8e9cf-07c8-4a10-b81b-63018b1e29c3" name="Default Changelist" comment="*Se agregó modulo de convenios">
-      <change afterPath="$PROJECT_DIR$/src/Views/Convenios/Convenios.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Views/Convenios/EscribirConvenio.js" afterDir="false" />
+    <list default="true" id="94d8e9cf-07c8-4a10-b81b-63018b1e29c3" name="Default Changelist" comment="*Se integró listado de atajos en toolbar">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/routesCatalogos.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routesCatalogos.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Util/Contexts/AccesosDirectosContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/AccesosDirectosContext.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/AccesosDirectos/AccesosDirectos.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/AccesosDirectos/AccesosDirectos.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -146,7 +145,14 @@
       <option name="project" value="LOCAL" />
       <updated>1625005785111</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="*Se integró listado de atajos en toolbar">
+      <created>1625608170315</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1625608170315</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -207,6 +213,23 @@
     <MESSAGE value="*Headers de tabla en pestaña formatos se ven correctamente.&#10;*Pestaña inputs de Procecsos especiales fueron reemplazados con componentes." />
     <MESSAGE value="*Se agregó campo numRegistroIdentidadFiscal en seccion General, pestaña Inf. Adicional.&#10;*Se reemplazaron inputs por componentes." />
     <MESSAGE value="*Se agregó modulo de convenios" />
-    <option name="LAST_COMMIT_MESSAGE" value="*Se agregó modulo de convenios" />
+    <MESSAGE value="*Se integró listado de atajos en toolbar" />
+    <option name="LAST_COMMIT_MESSAGE" value="*Se integró listado de atajos en toolbar" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/Views/Recoleccion.js</url>
+          <line>2617</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/Views/Recoleccion.js</url>
+          <line>988</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
