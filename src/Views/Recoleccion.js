@@ -829,7 +829,7 @@ function Recoleccion() {
             estatusRecoleccion: dataEstatusRecoleccion.length !== 0 ? dataEstatusRecoleccion[0].m_nIdEstatusRecoleccion : 2,
             moneda: 1,
             tipoCambio: dataTipoCambio.length !== 0 ? dataTipoCambio[0].m_nIdTipoCambio : 2,
-            tipoCobro: 0,
+            tipoCobro: dataTipoCobro ? dataTipoCobro.length > 0 ? dataTipoCobro[0].m_nIdTipoCobro : 0 : 0,
             RFCRemitente: "",
             domicilioRemitente: "",
             codigoPostalRemitente: dataCodigoPostal.find(cp => cp.m_nIdCiudad == dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1),
@@ -4245,7 +4245,7 @@ function Recoleccion() {
                                                                             </div>
 
                                                                             <div
-                                                                                className="col-sm-6 col-md-6 col-lg-6 unit">
+                                                                                className="col-sm-4 col-md-4 col-lg-4 unit">
 
                                                                                 <div className="input">
                                                                                     <TextField variant="outlined"
@@ -4262,7 +4262,7 @@ function Recoleccion() {
                                                                             </div>
 
                                                                             <div
-                                                                                className="col-sm-12 col-md-6 col-lg-6 unit">
+                                                                                className="col-sm-4 col-md-4 col-lg-4 unit">
 
                                                                                 <div className="input">
                                                                                     <TextField variant="outlined"
@@ -4279,7 +4279,7 @@ function Recoleccion() {
                                                                             </div>
 
                                                                             <div
-                                                                                className="col-sm-12 col-md-12 col-lg-12 unit">
+                                                                                className="col-sm-4 col-md-4 col-lg-4 unit">
 
                                                                                 <div className="input">
                                                                                     <TextField variant="outlined"
