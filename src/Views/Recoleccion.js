@@ -254,11 +254,11 @@ function Recoleccion() {
             domicilioRemitente: newValue.m_sDomicilio,
 
             codigoPostalRemitente: dataCodigoPostal.find(
-                (o) => o.m_nIdCP == parseInt(newValue.m_sCodigoPostal)
+                (o) => o.m_nIdCP == parseInt(newValue.m_nIdCP)
             ),
 
             ciudadRemitente: dataCodigoPostal.find(
-                (o) => o.m_nIdCP == newValue.m_sCodigoPostal
+                (o) => o.m_nIdCP == newValue.m_nIdCP
             ).m_nIdCiudad,
 
             correoRemitente: newValue.m_sCorreoElectronico,
@@ -296,11 +296,11 @@ function Recoleccion() {
             domicilioDestinatario: newValue.m_sDomicilio,
 
             codigoPostalDestinatario: dataCodigoPostal.find(
-                (o) => o.m_nIdCP == newValue.m_sCodigoPostal
+                (o) => o.m_nIdCP == newValue.m_nIdCP
             ),
 
             ciudadDestinatario: dataCodigoPostal.find(
-                (o) => o.m_nIdCP == newValue.m_sCodigoPostal
+                (o) => o.m_nIdCP == newValue.m_nIdCP
             ).m_nIdCiudad,
 
             correoDestinatario: newValue.m_sCorreoElectronico,
@@ -829,7 +829,7 @@ function Recoleccion() {
             estatusRecoleccion: dataEstatusRecoleccion.length !== 0 ? dataEstatusRecoleccion[0].m_nIdEstatusRecoleccion : 2,
             moneda: 1,
             tipoCambio: dataTipoCambio.length !== 0 ? dataTipoCambio[0].m_nIdTipoCambio : 2,
-            tipoCobro: 0,
+            tipoCobro: dataTipoCobro ? dataTipoCobro.length > 0 ? dataTipoCobro[0].m_nIdTipoCobro : 0 : 0,
             RFCRemitente: "",
             domicilioRemitente: "",
             codigoPostalRemitente: dataCodigoPostal.find(cp => cp.m_nIdCiudad == dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1),
@@ -2096,6 +2096,7 @@ function Recoleccion() {
                                 onChange={(event) => handleChangePaquete(event, index)}
                                 id="m_nIdTipoEmbalaje"
                                 name="m_nIdTipoEmbalaje"
+                                required
                             >
                                 {dataEmbalaje.map((embalaje) => (
                                     <option key={embalaje.m_nIdEmbalaje} value={embalaje.m_nIdEmbalaje}>
@@ -4244,7 +4245,7 @@ function Recoleccion() {
                                                                             </div>
 
                                                                             <div
-                                                                                className="col-sm-6 col-md-6 col-lg-6 unit">
+                                                                                className="col-sm-4 col-md-4 col-lg-4 unit">
 
                                                                                 <div className="input">
                                                                                     <TextField variant="outlined"
@@ -4261,7 +4262,7 @@ function Recoleccion() {
                                                                             </div>
 
                                                                             <div
-                                                                                className="col-sm-12 col-md-6 col-lg-6 unit">
+                                                                                className="col-sm-4 col-md-4 col-lg-4 unit">
 
                                                                                 <div className="input">
                                                                                     <TextField variant="outlined"
@@ -4278,7 +4279,7 @@ function Recoleccion() {
                                                                             </div>
 
                                                                             <div
-                                                                                className="col-sm-12 col-md-12 col-lg-12 unit">
+                                                                                className="col-sm-4 col-md-4 col-lg-4 unit">
 
                                                                                 <div className="input">
                                                                                     <TextField variant="outlined"

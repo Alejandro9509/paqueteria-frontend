@@ -25,7 +25,20 @@ import {
 } from "@material-ui/data-grid";
 import { dataGridLocaleText } from "../Constants/index";
 import Noty from "noty";
-import { InputLabel, Select, FormControl, Tooltip, Stepper, Step, StepLabel } from "@material-ui/core";
+import {
+    InputLabel,
+    Select,
+    FormControl,
+    Tooltip,
+    Stepper,
+    Step,
+    StepLabel,
+    FormControlLabel,
+    Checkbox, Button
+} from "@material-ui/core";
+import Grid from '@material-ui/core/Grid'
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import { agregarCliente, eliminarCliente, modificarCliente, obtenerCliente, obtenerClienteId, validarNumeroCliente } from "../Util/Contexts/ClientesContext";
 import { obtenerGrupoClientes } from "../Util/Contexts/GrupoClientesContext";
 import { obtenerMonedas } from "../Util/Contexts/MonedaContext";
@@ -35,6 +48,10 @@ import { obtenerImpuestos } from "../Util/Contexts/ImpuestosContext";
 import { obtenerSucursales } from "../Util/Contexts/SucursalContext";
 import { obtenerEstadosPais } from "../Util/Contexts/EstadosContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
+import NavTabs from "./Clientes/NavTabs";
+import BlockHeaderH3 from "./Clientes/BlockHeaderH3";
+import SectionHeaderH4 from "./Clientes/SectionHeaderH4";
+import FormularioContacto from "./Clientes/FormularioContacto";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -50,11 +67,21 @@ const headers = {
     "Content-Type": "application/json",
 };
 
+const styles = {
+    stepper: {
+        position: "sticky",
+        top: "60px",
+        padding: "15px",
+        backgroundColor: "white",
+        zIndex: 100,
+        marginBottom: "10px",
+    },
+}
+
 function Clientes(props) {
     const headers = {
         "Content-Type": "application/json",
     };
-
     const columns = React.useMemo(() => [
         {
             headerName: "Acciones",
@@ -150,15 +177,16 @@ function Clientes(props) {
             },
         },
     ]);
-
     const columns2 = React.useMemo(() => [
         {
-            Name: "Formato",
-            accessor: "m_sFormato",
+            headerName: "Formato",
+            field: "m_sFormato",
+            width : 200,
         },
         {
-            Name: "Tipo proceso",
-            accessor: "m_nTipoProceso",
+            headerName: "Tipo proceso",
+            field: "m_nTipoProceso",
+            width : 200,
         },
     ]);
 
@@ -338,6 +366,7 @@ function Clientes(props) {
         excluirNodo: 0,
 
         idUSOCFDI: "",
+        numResgistoIdentidadFiscal: "",
         agruparCantidadPorConcepto: "",
         ajustarImporte2Dec: "",
 
@@ -441,7 +470,7 @@ function Clientes(props) {
 
     function handleShowModificar(id) {
         obtenerClienteId(id).then((respuesta) => {
-
+            console.log(respuesta)
             setState({
                 ...state,
                 //idCliente: id,
@@ -598,8 +627,6 @@ function Clientes(props) {
         });
         console.log(event.target.name + " " + state.activo);
     };
-
-
 
     function handleEliminar(id) {
         var derecho;
@@ -758,7 +785,6 @@ function Clientes(props) {
         }
     };
 
-
     const [stepActive, setStepActive] = React.useState(1);
 
     function openSection(index) {
@@ -835,12 +861,18 @@ function Clientes(props) {
             <section className="main-container">
                 <div className="container-fluid">
 
-
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
-                            <a onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
+                            <a onClick={(event) => {
+                                event.stopPropagation();
+                                setState({...state, agregar: "Agregar"});
+                                $('.nav-tabs li ').removeClass('active');
+                                $('.nav-tabs li').eq(0).addClass('active');
+                                $('.tab-content div ').removeClass('in show');
+                                $('#Listado').addClass('in show');
+                            }}>
                                 <i className="fa fa-list" /> Listado
-              </a>
+                            </a>
                         </li>
                         <li>
                             <a  onClick={handleShowAgregar}>
@@ -860,8 +892,7 @@ function Clientes(props) {
                                 <div className="widget-content">
                                     <div
                                         className="row"
-                                        style={{ height: state.height - 250, width: "100%" }}
-                                    >
+                                        style={{ height: state.height - 250, width: "100%" }}>
                                         {dataListadoClientes.length != 0 ? (
                                             <DataGrid
                                                 localeText={dataGridLocaleText}
@@ -912,17 +943,8 @@ function Clientes(props) {
                                 {/*Inicio de ejemplo*/}
                                 <div className="form-content">
                                     {/* start steps */}
-                                    <div
-                                        className="wizard-breadcrumb number-style"
-                                        style={{
-                                            position: "sticky",
-                                            top: "60px",
-                                            padding: "5px",
-                                            backgroundColor: "white",
-                                            zIndex: 100,
-                                            marginBottom: "10px",
-                                        }}
-                                    >
+                                    <div className="widget-wrap"
+                                        style={styles.stepper}>
                                         <div className="row">
                                             <Stepper activeStep={stepActive - 1}>
                                                 {
@@ -939,9 +961,8 @@ function Clientes(props) {
                                     {/* end steps */}
 
                                     <div className="widget-wrap" id="infogral">
-                                        <div className="widget-header block-header margin-bottom-0 clearfix">
-                                            <h3>Información General</h3>
-                                        </div>
+
+                                        <BlockHeaderH3>{'Información General'}</BlockHeaderH3>
                                         <div className="widget-container">
                                             <div className="widget-content">
                                                 <div className="row">
@@ -1216,18 +1237,253 @@ function Clientes(props) {
                                     {/*Fin de ejemplo*/}
 
                                     <div className="widget-wrap" id="caracteristicas">
-                                        <div className="widget-header block-header margin-bottom-0 clearfix">
-                                            <h3>Información Monetaria</h3>
-                                        </div>
+                                        {/*<BlockHeaderH3>{'Métodos de Pago y Crédito'}</BlockHeaderH3>*/}
                                         <div className="widget-container">
                                             <div className="widget-content">
                                                 <div className="row">
-                                                    <div className="col-sm-12 col-md-8">
-                                                        <div className="w-section-header ">
-                                                            <h4>Métodos de Pago y Crédito</h4>
-                                                        </div>
+
+                                                    <Grid container spacing={3}>
+                                                        <Grid item xs={8}>
+                                                            <BlockHeaderH3>{'Métodos de Pago y Crédito'}</BlockHeaderH3>
+                                                            <div className="form-content">
+                                                                {/* start text password */}
+                                                                <div className="row">
+                                                                    <div className="col-sm-6 col-md-4 unit">
+                                                                        <label className="input select">
+                                                                            <FormControl fullWidth variant="outlined" margin="dense">
+                                                                                <InputLabel id="metodoPagoLabel">Forma de pago</InputLabel>
+                                                                                <Select
+                                                                                    labelId="metodoPagoLabel"
+                                                                                    onChange={handleChange}
+                                                                                    value={state.metodoPago}
+                                                                                    id="metodoPago"
+                                                                                    label="Forma de pago"
+                                                                                    native
+                                                                                    className="form-control"
+                                                                                    name="metodoPago"
+
+                                                                                >
+                                                                                    <option value="1">
+                                                                                        Transferencia Eléctronica
+                                                                                    </option>
+                                                                                    <option value="2">Efectivo</option>
+                                                                                </Select>
+                                                                            </FormControl>
+                                                                            <i></i>
+                                                                        </label>
+                                                                    </div>
+                                                                    <div className="col-sm-6 col-md-4 unit">
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+
+                                                                                       label="Días de Crédito"
+                                                                                       type="number"
+                                                                                       value={state.diasCredito}
+                                                                                       id="diasCredito"
+                                                                                       name="diasCredito"
+                                                                                       native
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="row">
+                                                                    <SectionHeaderH4>{'Pesos'}</SectionHeaderH4>
+                                                                    <div className="col-sm-4  col-md-4 unit">
+
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       label="Límite Crédito"
+                                                                                       type="number"
+                                                                                       value={state.credito}
+                                                                                       id="credito"
+                                                                                       name="credito"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-sm-4  col-md-4 unit">
+
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="number"
+                                                                                       label="Saldo facturado por cobrar"
+                                                                                       value={state.saldoCredito}
+                                                                                       id="saldoCredito"
+                                                                                       name="saldoCredito"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-sm-4  col-md-4 unit">
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="number"
+                                                                                       label="Viajes pendientes por facturar"
+                                                                                       value={state.pendFacturar}
+                                                                                       id="pendFacturar"
+                                                                                       name="pendFacturar"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="row">
+                                                                    <SectionHeaderH4>{'Dólares'}</SectionHeaderH4>
+                                                                    <div className="col-sm-4  col-md-4 unit">
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="number"
+                                                                                       label="Límite Crédito"
+                                                                                       value={state.creditoDlls}
+                                                                                       id="creditoDlls"
+                                                                                       name="creditoDlls"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-sm-4  col-md-4 unit">
+
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="number"
+                                                                                       label="Saldo facturado por cobrar"
+                                                                                       value={state.saldoCreditoDLLS}
+                                                                                       id="saldoCreditoDLLS"
+                                                                                       name="saldoCreditoDLLS"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-sm-4  col-md-4 unit">
+
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="number"
+                                                                                       label="Viajes pendientes por facturar"
+                                                                                       value={state.pendFacturarDLLS}
+                                                                                       id="pendFacturarDLLS"
+                                                                                       name="pendFacturarDLLS"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </Grid>
+
+                                                        <Grid item xs={4}>
+                                                            <Grid container
+                                                                  direction={'column'}
+                                                                  alignItems={"stretch"}
+                                                                  spacing={2}>
+                                                                <Grid item xs={12}>
+                                                                    <BlockHeaderH3>{'Información Adicional del Pago'}</BlockHeaderH3>
+                                                                </Grid>
+                                                                <Grid item xs={12}>
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   label="Banco Ordenante"
+                                                                                   value={state.bancoOrdenante}
+                                                                                   id="bancoOrdenante"
+                                                                                   name="bancoOrdenante"/>
+                                                                    </div>
+                                                                </Grid>
+                                                                <Grid item xs={12}>
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   label="RFC"
+                                                                                   value={state.rfcBancoOrdenante}
+                                                                                   pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
+                                                                                   title="Favor de introducir un RFC válido."
+                                                                                   id="rfcBancoOrdenante"
+                                                                                   name="rfcBancoOrdenante"/>
+                                                                    </div>
+                                                                </Grid>
+                                                                <Grid item xs={12}>
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   label="Núm. Cuenta"
+                                                                                   value={state.cuentaBancoOrdenante}
+                                                                                   id="cuentaBancoOrdenante"
+                                                                                   name="cuentaBancoOrdenante"/>
+                                                                    </div>
+                                                                </Grid>
+                                                            </Grid>
+                                                            {/*<div className="form-content" style={{ paddingLeft: "10px" }}>
+                                                                 start text password
+                                                                <div className="row">
+                                                                    <div className="col-xs-6 col-ms-6 col-md-10 unit">
+
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       label="Banco Ordenante"
+                                                                                       value={state.bancoOrdenante}
+                                                                                       id="bancoOrdenante"
+                                                                                       name="bancoOrdenante"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="row">
+                                                                    <div className="col-xs-6 col-ms-6 col-md-10 unit">
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       label="RFC"
+                                                                                       value={state.rfcBancoOrdenante}
+                                                                                       pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
+                                                                                       title="Favor de introducir un RFC válido."
+                                                                                       id="rfcBancoOrdenante"
+                                                                                       name="rfcBancoOrdenante"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="row">
+                                                                    <div className="col-xs-6 col-ms-6 col-md-10 unit">
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       label="Núm. Cuenta"
+                                                                                       value={state.cuentaBancoOrdenante}
+                                                                                       id="cuentaBancoOrdenante"
+                                                                                       name="cuentaBancoOrdenante"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>*/}
+                                                        </Grid>
+                                                    </Grid>
+                                                    {/*<div className="col-sm-12 col-md-8">
                                                         <div className="form-content">
-                                                            {/* start text password */}
+                                                             start text password
                                                             <div className="row">
                                                                 <div className="col-sm-6 col-md-4 unit">
                                                                     <label className="input select">
@@ -1254,7 +1510,6 @@ function Clientes(props) {
                                                                     </label>
                                                                 </div>
                                                                 <div className="col-sm-6 col-md-4 unit">
-
                                                                     <div className="input">
                                                                         <TextField variant="outlined" margin="dense"
                                                                             onChange={handleChange}
@@ -1272,9 +1527,7 @@ function Clientes(props) {
                                                             </div>
 
                                                             <div className="row">
-                                                                <div className="w-section-header">
-                                                                    <h3>Pesos</h3>
-                                                                </div>
+                                                                <SectionHeaderH4>{'Pesos'}</SectionHeaderH4>
                                                                 <div className="col-sm-4  col-md-4 unit">
 
                                                                     <div className="input">
@@ -1318,9 +1571,7 @@ function Clientes(props) {
                                                                 </div>
                                                             </div>
                                                             <div className="row">
-                                                                <div className="w-section-header">
-                                                                    <h5>Dólares</h5>
-                                                                </div>
+                                                                <SectionHeaderH4>{'Dólares'}</SectionHeaderH4>
                                                                 <div className="col-sm-4  col-md-4 unit">
                                                                     <div className="input">
                                                                         <TextField variant="outlined" margin="dense"
@@ -1364,14 +1615,12 @@ function Clientes(props) {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div>*/}
 
-                                                    <div className="col-sm-12 col-md-3 bordesizquierdo">
-                                                        <div className="w-section-header" style={{ paddingLeft: "10px" }}>
-                                                            <h4>Información Adicional del Pago</h4>
-                                                        </div>
+                                                    {/*<div className="col-sm-12 col-md-3 bordesizquierdo">
+                                                        <SectionHeaderH4>{'Información Adicional del Pago'}</SectionHeaderH4>
                                                         <div className="form-content" style={{ paddingLeft: "10px" }}>
-                                                            {/* start text password */}
+                                                             start text password
                                                             <div className="row">
                                                                 <div className="col-xs-6 col-ms-6 col-md-10 unit">
 
@@ -1422,7 +1671,7 @@ function Clientes(props) {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div>*/}
                                                 </div>
                                             </div>
                                         </div>
@@ -1430,46 +1679,24 @@ function Clientes(props) {
                                     {/*Fin de ejemplo*/}
 
                                     <div className="widget-wrap" id="detalles">
-                                        <div className="widget-header block-header margin-bottom-0 clearfix">
-                                            <h3>Datos generales</h3>
-                                        </div>
+                                        {/*<div className="widget-header block-header margin-bottom-0 clearfix">
+                                            <h3>General</h3>
+                                        </div>*/}
+                                        <BlockHeaderH3>{'General'}</BlockHeaderH3>
                                         <div className="widget-container">
                                             <div className="widget-content">
                                                 <div className="row">
                                                     <div className="col-md-12">
-                                                        <ul className="nav nav-tabs">
-                                                            <li className="active">
-                                                                <a data-toggle="tab" href="#Domicilio">
-                                                                    Domicilio
-                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a data-toggle="tab" href="#Formatos">
-                                                                    Formatos
-                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a data-toggle="tab" href="#Especiales">
-                                                                    Procesos Especiales
-                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a data-toggle="tab" href="#Adicional">
-                                                                    Inf. Adicional
-                                </a>
-                                                            </li>
-                                                        </ul>
-
+                                                        {/*Este componente son las tabs*/}
+                                                        <NavTabs/>
                                                         <div className="form-content">
                                                             {/* start text password */}
                                                             <div className="widget-wrap">
                                                                 <div className="widget-container margin-top-0">
                                                                     <div className="widget-content">
                                                                         <div className="tab-content">
-                                                                            <div
-                                                                                id="Domicilio"
-                                                                                className="tab-pane fade in active"
-                                                                            >
+                                                                            <div id="Domicilio"
+                                                                                className="tab-pane fade in active">
                                                                                 <div className="row">
                                                                                     <div className="col-md-12 unit">
                                                                                         <div className="row">
@@ -1659,7 +1886,6 @@ function Clientes(props) {
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
-
                                                                                         <div className="row">
                                                                                             <div className="col-sm-6  col-md-2-5 unit">
                                                                                                 <div className="input">
@@ -1714,31 +1940,108 @@ function Clientes(props) {
                                                                             </div>
                                                                             <div
                                                                                 id="Formatos"
-                                                                                className="tab-pane fade"
-                                                                            >
-                                                                                <div className="widget-wrap">
-                                                                                    <div className="widget-content">
-                                                                                        <div className="row">
-                                                                                            <TableFormatos
+                                                                                className="tab-pane fade">
+                                                                                <div className="row">
+                                                                                    {/*<TableFormatos
                                                                                                 columns={columns2}
                                                                                                 data={dataFormatos}
-                                                                                            />
-                                                                                        </div>
+                                                                                            />*/}
+                                                                                    <div>
+                                                                                        <DataGrid
+                                                                                            rows={dataFormatos}
+                                                                                            localeText={dataGridLocaleText}
+                                                                                            columns={columns2}
+                                                                                            density="compact"
+                                                                                            pageSize={5}
+                                                                                            getRowId={(row) => row.m_nIdFormato}
+                                                                                            checkboxSelection
+                                                                                            disableSelectionOnClick
+                                                                                        autoHeight={true}/>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
                                                                             <div
                                                                                 id="Especiales"
-                                                                                className="tab-pane fade "
-                                                                            >
+                                                                                className="tab-pane fade ">
                                                                                 <div className="row">
-                                                                                    <div className="col-md-12 unit">
+                                                                                    <SectionHeaderH4>{'Envío de Estados de Cuentas'}</SectionHeaderH4>
+                                                                                    <Grid container spacing={3}>
+                                                                                        <Grid item xs={3}>
+                                                                                            <TextField
+                                                                                                variant="outlined" margin="dense"
+                                                                                                onChange={handleChange}
+                                                                                                className="form-control"
+                                                                                                type="text"
+                                                                                                fullWidth
+                                                                                                label="Frecuencia de Envio (Días)"
+                                                                                                value={state.frecuenciaEnvioDias}
+                                                                                                id="frecuenciaEnvioDias"
+                                                                                                name="frecuenciaEnvioDias"/>
+                                                                                        </Grid>
+                                                                                        <Grid item xs={9}></Grid>
+                                                                                        <Grid item xs={3}>
+                                                                                            <TextField
+                                                                                                variant="outlined" margin="dense"
+                                                                                                onChange={handleChange}
+                                                                                                className="form-control"
+                                                                                                type="datetime-local"
+                                                                                                InputLabelProps={{
+                                                                                                           shrink: true,
+                                                                                                       }}
+                                                                                                fullWidth
+                                                                                                label="Enviar a partir de"
+                                                                                                value={state.enviarApartir}
+                                                                                                id="enviarApartir"
+                                                                                                name="enviarApartir"/>
+                                                                                        </Grid>
+                                                                                        <Grid item xs={9}></Grid>
+                                                                                        <Grid item xs={12}>
+                                                                                            <FormControlLabel
+                                                                                                control={
+                                                                                                    <Checkbox
+                                                                                                        checked={state.envioAutomaticoSeguimiento}
+                                                                                                        onChange={(e) => setState({
+                                                                                                            ...state,
+                                                                                                            envioAutomaticoSeguimiento: e.target.checked,
+                                                                                                        })}
+                                                                                                        name="envioAutomaticoSeguimiento"
+                                                                                                        color="primary"
+                                                                                                        value={state.envioAutomaticoSeguimiento}
+                                                                                                        id="envioAutomaticoSeguimiento"
+                                                                                                        icon={<CheckBoxOutlineBlankIcon fontSize="large" />}
+                                                                                                        checkedIcon={<CheckBoxIcon fontSize="large" />}
+                                                                                                    />
+                                                                                                }
+                                                                                                label="Envio Automático de Seguimiento de Viajes"/>
+                                                                                        </Grid>
+                                                                                        <Grid item xs={12}>
+                                                                                            <FormControlLabel
+                                                                                                control={
+                                                                                                    <Checkbox
+                                                                                                        checked={state.excluirNodo}
+                                                                                                        onChange={(e) => setState({
+                                                                                                            ...state,
+                                                                                                            excluirNodo: e.target.checked,
+                                                                                                        })}
+                                                                                                        name="excluirNodo"
+                                                                                                        color="primary"
+                                                                                                        value={state.excluirNodo}
+                                                                                                        id="excluirNodo"
+                                                                                                        icon={<CheckBoxOutlineBlankIcon fontSize="large" />}
+                                                                                                        checkedIcon={<CheckBoxIcon fontSize="large" />}
+                                                                                                    />
+                                                                                                }
+                                                                                                label="Excluir Nodo Condiciones de Pago en el XML"/>
+                                                                                        </Grid>
+                                                                                    </Grid>
+                                                                                    {/*Antiguos inputs*/}
+                                                                                    {/*<div className="col-md-12 unit">
                                                                                         <div className="w-section-header">
-                                                                                            <h3>
-                                                                                                Envío de Estados de Cuentas
-                                              </h3>
+                                                                                            <h3>Envío de Estados de Cuentas</h3>
                                                                                         </div>
+
                                                                                         <div className="row">
+
                                                                                             <div className="col-md-2-5 col-sm-2-5 col-lg-2-5">
 
                                                                                                 <div className="input" style={{ padding: "10px" }}>
@@ -1753,8 +2056,7 @@ function Clientes(props) {
                                                                                                                 state.frecuenciaEnvioDias
                                                                                                             }
                                                                                                             id="frecuenciaEnvioDias"
-                                                                                                            name="frecuenciaEnvioDias"
-                                                                                                        />
+                                                                                                            name="frecuenciaEnvioDias"/>
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
@@ -1777,14 +2079,13 @@ function Clientes(props) {
                                                                                                                 state.enviarApartir
                                                                                                             }
                                                                                                             id="enviarApartir"
-                                                                                                            name="enviarApartir"
-                                                                                                        />
+                                                                                                            name="enviarApartir"/>
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
-                                                                                    </div>
-                                                                                    <div className="unit">
+                                                                                    </div>*/}
+                                                                                    {/*<div className="unit">
                                                                                         <div className="inline-group">
                                                                                             <label className="label">
                                                                                                 &nbsp;{" "}
@@ -1792,58 +2093,147 @@ function Clientes(props) {
                                                                                             <label className="checkbox">
                                                                                                 <input
                                                                                                     checked={state.envioAutomaticoSeguimiento}
-                                                                                                    onChange={(e) =>
-                                                                                                        setState({
+                                                                                                    onChange={(e) => setState({
                                                                                                             ...state,
                                                                                                             envioAutomaticoSeguimiento: e.target.checked,
-                                                                                                        })
-                                                                                                    }
+                                                                                                        })}
                                                                                                     native
                                                                                                     name="envioAutomaticoSeguimiento"
                                                                                                     type="checkbox"
-                                                                                                    value={
-                                                                                                        state.envioAutomaticoSeguimiento
-                                                                                                    }
-                                                                                                    id="envioAutomaticoSeguimiento"
-                                                                                                />
-                                                                                                <i />
-                                                Envio Automático de Seguimiento
-                                                de Viajes
-                                              </label>
+                                                                                                    value={state.envioAutomaticoSeguimiento}
+                                                                                                    id="envioAutomaticoSeguimiento"/>
+                                                                                                <i />Envio Automático de Seguimiento de Viajes
+                                                                                            </label>
                                                                                         </div>
-                                                                                    </div>
-                                                                                    <div className="unit">
+                                                                                    </div>*/}
+                                                                                    {/*<div className="unit">
                                                                                         <div className="inline-group">
                                                                                             <label className="checkbox">
                                                                                                 <input variant="outlined" margin="dense"
                                                                                                     checked={state.excluirNodo}
-                                                                                                    onChange={(e) =>
-                                                                                                        setState({
+                                                                                                    onChange={(e) => setState({
                                                                                                             ...state,
                                                                                                             excluirNodo: e.target.checked,
-                                                                                                        })
-                                                                                                    }
+                                                                                                        })}
                                                                                                     native
                                                                                                     name="excluirNodo"
                                                                                                     type="checkbox"
                                                                                                     id="excluirNodo"
-                                                                                                    value={state.excluirNodo}
-                                                                                                />
-                                                                                                <i />
-                                                Excluir Nodo Condiciones de Pago
-                                                en el XML
-                                              </label>
+                                                                                                    value={state.excluirNodo}/>
+                                                                                                <i/>Excluir Nodo Condiciones de Pago en el XML
+                                                                                            </label>
                                                                                         </div>
-                                                                                    </div>
+                                                                                    </div>*/}
                                                                                 </div>
                                                                             </div>
 
                                                                             <div
                                                                                 id="Adicional"
-                                                                                className="tab-pane fade "
-                                                                            >
+                                                                                className="tab-pane fade ">
                                                                                 <div className="row">
-                                                                                    <div className="col-md-12 unit">
+                                                                                    <Grid container spacing={3}>
+                                                                                        <Grid item xs={3}>
+                                                                                            <FormControl fullWidth variant="outlined" margin="dense">
+                                                                                                <InputLabel id="idUSOCFDILabel">Uso de CFDI</InputLabel>
+                                                                                                <Select
+                                                                                                    labelId="idUSOCFDILabel"
+                                                                                                    label="Uso de CFDI"
+                                                                                                    onChange={handleChange}
+                                                                                                    className="form-control"
+
+                                                                                                    native
+                                                                                                    name="idUSOCFDI"
+                                                                                                    value={state.idUSOCFDI}
+                                                                                                    id="idUSOCFDI"
+                                                                                                >
+                                                                                                    <option value="1">
+                                                                                                        1. Adqusicion de mercancias
+                                                                                                    </option>
+                                                                                                    <option value="2">
+                                                                                                        2. Devoluciones, descuentos
+                                                                                                        o bonificaciones{" "}
+                                                                                                    </option>
+                                                                                                    <option value="3">
+                                                                                                        3. Gastos en general{" "}
+                                                                                                    </option>
+                                                                                                    <option value="4">
+                                                                                                        4. Construcciones{" "}
+                                                                                                    </option>
+                                                                                                    <option value="5">
+                                                                                                        5. Mobiliario y equipo{" "}
+                                                                                                    </option>
+                                                                                                </Select>
+                                                                                            </FormControl>
+                                                                                        </Grid>
+                                                                                        <Grid item xs={3}>
+                                                                                            <TextField
+                                                                                                variant="outlined" margin="dense"
+                                                                                                onChange={handleChange}
+                                                                                                className="form-control"
+                                                                                                type="text"
+                                                                                                fullWidth
+                                                                                                label="Núm. Registro de Identidad Fiscal"
+                                                                                                value={state.numResgistoIdentidadFiscal}
+                                                                                                id="numResgistoIdentidadFiscal"
+                                                                                                name="numResgistoIdentidadFiscal"/>
+                                                                                        </Grid>
+                                                                                        <Grid item xs={6}></Grid>
+                                                                                    </Grid>
+                                                                                    <FormControlLabel
+                                                                                        control={
+                                                                                            <Checkbox
+                                                                                                checked={state.agruparCantidadPorConcepto}
+                                                                                                onChange={(e) => setState({
+                                                                                                    ...state,
+                                                                                                    agruparCantidadPorConcepto: e.target.checked,
+                                                                                                })}
+                                                                                                name="agruparCantidadPorConcepto"
+                                                                                                color="primary"
+                                                                                                size={'medium'}
+                                                                                                value={state.agruparCantidadPorConcepto}
+                                                                                                id="agruparCantidadPorConcepto"
+                                                                                                icon={<CheckBoxOutlineBlankIcon fontSize="large" />}
+                                                                                                checkedIcon={<CheckBoxIcon fontSize="large" />}
+                                                                                            />
+                                                                                        }
+                                                                                        label="Permitir agrupar la cantidad de conceptos al facturar"/>
+                                                                                    <FormControlLabel
+                                                                                        control={
+                                                                                            <Checkbox
+                                                                                                checked={state.ajustarImporte2Dec}
+                                                                                                onChange={(e) => setState({
+                                                                                                    ...state,
+                                                                                                    ajustarImporte2Dec: e.target.checked,
+                                                                                                })}
+                                                                                                name="ajustarImporte2Dec"
+                                                                                                color="primary"
+                                                                                                size={'medium'}
+                                                                                                value={state.ajustarImporte2Dec}
+                                                                                                id="ajustarImporte2Dec"
+                                                                                                icon={<CheckBoxOutlineBlankIcon fontSize="large" />}
+                                                                                                checkedIcon={<CheckBoxIcon fontSize="large" />}
+                                                                                            />
+                                                                                        }
+                                                                                        label="Ajusta a 2 Decimales los importes de los conceptos en Facturacion por viaje"/>
+                                                                                    <FormControlLabel
+                                                                                        control={
+                                                                                            <Checkbox
+                                                                                                checked={state.aplicarDetalleConceptoCadaViajeXML}
+                                                                                                onChange={(e) => setState({
+                                                                                                    ...state,
+                                                                                                    aplicarDetalleConceptoCadaViajeXML: e.target.checked,
+                                                                                                })}
+                                                                                                name="aplicarDetalleConceptoCadaViajeXML"
+                                                                                                color="primary"
+                                                                                                size={'medium'}
+                                                                                                value={state.aplicarDetalleConceptoCadaViajeXML}
+                                                                                                id="aplicarDetalleConceptoCadaViajeXML"
+                                                                                                icon={<CheckBoxOutlineBlankIcon fontSize="large" />}
+                                                                                                checkedIcon={<CheckBoxIcon fontSize="large" />}
+                                                                                            />
+                                                                                        }
+                                                                                        label="Aplicar en el XML de la factura, el Detalle por Concepto de Cada Viaje/CartaPorte"/>
+                                                                                   {/* <div className="col-md-12 unit">
                                                                                         <div className="unit ">
                                                                                             <label className="input select">
                                                                                                 <FormControl fullWidth variant="outlined" margin="dense">
@@ -1888,27 +2278,20 @@ function Clientes(props) {
                                                                                                 <label className="checkbox">
                                                                                                     <input
                                                                                                         checked={state.agruparCantidadPorConcepto}
-                                                                                                        onChange={(e) =>
-                                                                                                            setState({
+                                                                                                        onChange={(e) => setState({
                                                                                                                 ...state,
                                                                                                                 agruparCantidadPorConcepto: e.target.checked,
-                                                                                                            })
-                                                                                                        }
+                                                                                                            })}
                                                                                                         native
                                                                                                         name="agruparCantidadPorConcepto"
                                                                                                         type="checkbox"
-                                                                                                        value={
-                                                                                                            state.agruparCantidadPorConcepto
-                                                                                                        }
+                                                                                                        value={state.agruparCantidadPorConcepto}
                                                                                                         id="agruparCantidadPorConcepto"
                                                                                                     />
-                                                                                                    <i />
-                                                  Permitir agrupar la cantidad
-                                                  de conceptos al facturar
-                                                </label>
+                                                                                                    <i />Permitir agrupar la cantidad de conceptos al facturar
+                                                                                                </label>
                                                                                             </div>
                                                                                         </div>
-
                                                                                         <div className="unit">
                                                                                             <div className="inline-group">
                                                                                                 <label className="label">
@@ -1917,25 +2300,18 @@ function Clientes(props) {
                                                                                                 <label className="checkbox">
                                                                                                     <input
                                                                                                         checked={state.ajustarImporte2Dec}
-                                                                                                        onChange={(e) =>
-                                                                                                            setState({
+                                                                                                        onChange={(e) => setState({
                                                                                                                 ...state,
                                                                                                                 ajustarImporte2Dec: e.target.checked,
-                                                                                                            })
-                                                                                                        }
+                                                                                                            })}
                                                                                                         native
                                                                                                         name="ajustarImporte2Dec"
                                                                                                         type="checkbox"
-                                                                                                        value={
-                                                                                                            state.ajustarImporte2Dec
-                                                                                                        }
+                                                                                                        value={state.ajustarImporte2Dec}
                                                                                                         id="ajustarImporte2Dec"
                                                                                                     />
-                                                                                                    <i />
-                                                  Ajusta a 2 Decimales los
-                                                  importes de los conceptos en
-                                                  Facturacion por viaje
-                                                </label>
+                                                                                                    <i />Ajusta a 2 Decimales los importes de los conceptos en Facturacion por viaje
+                                                                                                </label>
                                                                                             </div>
                                                                                         </div>
 
@@ -1947,29 +2323,21 @@ function Clientes(props) {
                                                                                                 <label className="checkbox">
                                                                                                     <input
                                                                                                         checked={state.aplicarDetalleConceptoCadaViajeXML}
-                                                                                                        onChange={(e) =>
-                                                                                                            setState({
+                                                                                                        onChange={(e) => setState({
                                                                                                                 ...state,
                                                                                                                 aplicarDetalleConceptoCadaViajeXML: e.target.checked,
-                                                                                                            })
-                                                                                                        }
+                                                                                                            })}
                                                                                                         native
                                                                                                         name="aplicarDetalleConceptoCadaViajeXML"
                                                                                                         type="checkbox"
-                                                                                                        value={
-                                                                                                            state.aplicarDetalleConceptoCadaViajeXML
-                                                                                                        }
+                                                                                                        value={state.aplicarDetalleConceptoCadaViajeXML}
                                                                                                         id="aplicarDetalleConceptoCadaViajeXML"
                                                                                                     />
-                                                                                                    <i />
-                                                  Aplicar en el XML de la
-                                                  factura, el Detalle por
-                                                  Concepto de Cada
-                                                  Viaje/CartaPorte
-                                                </label>
+                                                                                                    <i />Aplicar en el XML de la factura, el Detalle por Concepto de Cada Viaje/CartaPorte
+                                                                                                </label>
                                                                                             </div>
                                                                                         </div>
-                                                                                    </div>
+                                                                                    </div>*/}
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1986,17 +2354,200 @@ function Clientes(props) {
                                     {/*Fin de ejemplo*/}
 
                                     <div className="widget-wrap" id="otros">
-                                        <div className="widget-header block-header margin-bottom-0 clearfix">
+                                        {/*<div className="widget-header block-header margin-bottom-0 clearfix">
                                             <div className="pull-left">
                                                 <h3> Contacto</h3>
                                             </div>
-                                        </div>
+                                        </div>*/}
+                                        {/*<Grid container spacing={1}>
+                                            <Grid item xs={6}>
+                                                <BlockHeaderH3>{"Contacto"}</BlockHeaderH3>
+                                                <Grid container spacing={2} alignItems="center">
+                                                    <Grid item xs={6} >
+                                                        <Grid container spacing={2}>
+                                                            <Grid item xs={12}>
+                                                            <TextField
+                                                                variant="outlined" margin="dense" label="Contacto"
+                                                                onChange={handleChange}
+                                                                value={state.contactoNombre}
+                                                                name="contactoNombre"
+                                                                className="form-control"
+                                                                type="text"
+                                                                placeholder=""
+                                                                id="contactoNombre"
+                                                            />
+                                                            </Grid>
+                                                            <Grid item xs={12}>
+                                                                <TextField
+                                                                    variant="outlined" margin="dense"
+                                                                    label="Correo"
+                                                                    onChange={handleChange}
+                                                                    value={state.contactoCorreo}
+                                                                    name="contactoCorreo"
+                                                                    className="form-control"
+                                                                    type="email"
+                                                                    placeholder=""
+                                                                    id="contactoCorreo"
+                                                                />
+                                                            </Grid>
+                                                            <Grid item xs={12}>
+                                                            <TextField
+                                                                variant="outlined" margin="dense" label="Teléfono"
+                                                                onChange={handleChange}
+                                                                value={state.contactoTelefono}
+                                                                name="contactoTelefono"
+                                                                className="form-control"
+                                                                type="text"
+                                                                placeholder=""
+                                                                id="contactoTelefono"
+                                                            />
+                                                        </Grid>
+                                                            <Grid item xs={12}>
+                                                                <Button variant="contained" color="primary">
+                                                                    Agregar contacto
+                                                                </Button>
+                                                                <button
+                                                                    className="btn btn-primary primary-btn">Agregar contacto
+                                                                </button>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Grid>
+                                                    <Grid item xs={6}>
+                                                        <div className="inline-group">
+                                                            <label className="label">&nbsp; </label>
+                                                            <label className="checkbox">
+                                                                <input
+                                                                    checked={state.RecibirFactura}
+                                                                    onChange={(e) =>
+                                                                        setState({
+                                                                            ...state,
+                                                                            RecibirFactura: e.target.checked,
+                                                                        })
+                                                                    } native
+                                                                    name="RecibirFactura"
+                                                                    type="checkbox"
+                                                                    value={state.RecibirFactura}
+                                                                    id="RecibirFactura"
+                                                                />
+                                                                <i />Recibir factura
+                                                            </label>
+                                                        </div>
+                                                        <div className="inline-group">
+                                                            <label className="checkbox">
+                                                                <input variant="outlined" margin="dense"
+                                                                       checked={state.RecibirEstadoCuenta}
+                                                                       onChange={(e) =>
+                                                                           setState({
+                                                                               ...state,
+                                                                               RecibirEstadoCuenta: e.target.checked,
+                                                                           })
+                                                                       }
+                                                                       native
+                                                                       name="RecibirEstadoCuenta"
+                                                                       type="checkbox"
+                                                                       id="RecibirEstadoCuenta"
+                                                                       value={state.RecibirEstadoCuenta}
+                                                                />
+                                                                <i />
+                                                                Recibir Edo de cuenta
+                                                            </label>
+                                                        </div>
+                                                        <div className="inline-group">
+                                                            <label className="checkbox">
+                                                                <input
+                                                                    checked={state.PermitirSeguimiento}
+                                                                    onChange={(e) =>
+                                                                        setState({
+                                                                            ...state,
+                                                                            PermitirSeguimiento: e.target.checked,
+                                                                        })
+                                                                    }
+                                                                    native
+                                                                    name="PermitirSeguimiento"
+                                                                    type="checkbox"
+                                                                    id="PermitirSeguimiento"
+                                                                    value={state.PermitirSeguimiento}
+                                                                />
+                                                                <i />
+                                                                Permitir Seguimiento de Viajes/Unidades
+                                                            </label>
+                                                        </div>
+                                                        <div className="inline-group">
+                                                            <label className="checkbox">
+                                                                <input
+                                                                    checked={state.UsoServicioWeb}
+                                                                    onChange={(e) =>
+                                                                        setState({
+                                                                            ...state,
+                                                                            UsoServicioWeb: e.target.checked,
+                                                                        })
+                                                                    }
+                                                                    native
+                                                                    name="UsoServicioWeb"
+                                                                    type="checkbox"
+                                                                    id="UsoServicioWeb"
+                                                                    value={state.UsoServicioWeb}
+                                                                />
+                                                                <i />
+                                                                Uso de un servicio web
+                                                            </label>
+                                                        </div>
+                                                        <div className="inline-group">
+                                                            <label className="checkbox">
+                                                                <input
+                                                                    checked={state.PermitirVerPortal}
+                                                                    onChange={(e) =>
+                                                                        setState({
+                                                                            ...state,
+                                                                            PermitirVerPortal: e.target.checked,
+                                                                        })
+                                                                    }
+                                                                    native
+                                                                    name="PermitirVerPortal"
+                                                                    type="checkbox"
+                                                                    id="PermitirVerPortal"
+                                                                    value={state.PermitirVerPortal}
+                                                                />
+                                                                <i />
+                                                                Permitir ver Portal de Clientes
+                                                            </label>
+                                                        </div>
+                                                        <div className="inline-group">
+                                                            <label className="checkbox">
+                                                                <input
+                                                                    checked={state.RecibirCartaPorte}
+                                                                    onChange={(e) =>
+                                                                        setState({
+                                                                            ...state,
+                                                                            RecibirCartaPorte: e.target.checked,
+                                                                        })
+                                                                    }
+                                                                    native
+                                                                    name="RecibirCartaPorte"
+                                                                    type="checkbox"
+                                                                    id="RecibirCartaPorte"
+                                                                    value={state.RecibirCartaPorte}
+                                                                />
+                                                                <i />
+                                                                Recibir carta porte
+                                                            </label>
+                                                        </div>
+                                                    </Grid>
+                                                </Grid>
+                                            </Grid>
+                                            <Grid item xs={6}>
+
+                                            </Grid>
+                                        </Grid>*/}
+                                        <FormularioContacto data={state} onChange={handleChange}/>
+
                                         <div className="widget-container">
                                             <div className="widget-content">
                                                 <div className="row">
-                                                    <div className="col-md-12">
+                                                    {/*<div className="col-md-12">
                                                         <div className="form-content">
-                                                            {/* start text password */}
+                                                             start text password
+
                                                             <div className="row">
                                                                 <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                                     <div className="input">
@@ -2028,9 +2579,8 @@ function Clientes(props) {
                                                                                 value={state.RecibirFactura}
                                                                                 id="RecibirFactura"
                                                                             />
-                                                                            <i />
-                                      Recibir factura
-                                    </label>
+                                                                            <i />Recibir factura
+                                                                        </label>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -2187,20 +2737,24 @@ function Clientes(props) {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div>*/}
                                                     <div className="form-footer" className="col-md-12">
                                                         <button
-                                                            type="button" onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}
-                                                            className="btn btn-secondary secondary-btn"
-                                                        >
-                                                            Cancelar
-                            </button>
+                                                            type="button"
+                                                            onClick={(event) => {
+                                                                event.stopPropagation();
+                                                                setState({...state, agregar: "Agregar"});
+                                                                $('.nav-tabs li ').removeClass('active');
+                                                                $('.nav-tabs li').eq(0).addClass('active');
+                                                                $('.tab-content div ').removeClass('in show');
+                                                                $('#Listado').addClass('in show');
+                                                            }}
+                                                            className="btn btn-secondary secondary-btn">Cancelar
+                                                        </button>
                                                         <button
                                                             type="submit"
-                                                            className="btn btn-primary primary-btn"
-                                                        >
-                                                            Aceptar
-                            </button>
+                                                            className="btn btn-primary primary-btn">Aceptar
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>

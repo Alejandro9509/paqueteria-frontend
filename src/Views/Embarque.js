@@ -312,6 +312,8 @@ function Embarque(props) {
     const handleAceptar = (e) => {
         e.preventDefault();
 
+
+if(state.m_nIdCiudadDetalleEntrega=undefined){
         var params = {
             m_nIdEmbarque: state.idEmbarque,
             m_nIdRecoleccion: props.location.idRecoleccion,
@@ -356,6 +358,7 @@ function Embarque(props) {
             FechaLlegada: state.fechaHoraLlegada.split("T")[0],
             HoraLlegada: state.fechaHoraLlegada.split("T")[1],
             CodigoPostalEntrega: state.codigoPostalEntrega.m_nIdCP,
+           
             IdCiudadEntrega: state.ciudadEntrega.m_nIdCiudad,
             IdZonaEntrega: state.zonaEntrega,
             DomicilioEntrega: state.domicilioEntrega,
@@ -367,7 +370,72 @@ function Embarque(props) {
             ModificadoPor: state.ModificadoPor,
             m_tFechaDetalleEntrega: state.fechaEntrega.split("T")[0],
             m_tHoraDetalleEntrega: state.fechaEntrega.split("T")[1],
-        };
+        }
+        
+    }else{
+        var params = {
+            m_nIdEmbarque: state.idEmbarque,
+            m_nIdRecoleccion: props.location.idRecoleccion,
+            m_nFolioEmbarque: state.folioEmbarque,
+            m_nFolioGuia: state.folioGuía,
+            m_nFolioInforme: state.folioInforme,
+            m_dFecha: state.fechaHoraCreacion.split("T")[0],
+            m_tHora: state.fechaHoraCreacion.split("T")[1],
+
+            m_dFechaRegistro: state.fechaHoraRegistro.split("T")[0],
+            m_tHoraRegistro: state.fechaHoraRegistro.split("T")[1],
+            m_nIdEstatusEmbarque: state.estatusEmbarque,
+            m_nIdMoneda: state.moneda,
+            m_cTIpoCambio: state.tipoCambio,
+            m_nIdTIpoCobro: state.tipoCobro,
+            m_sNOmbreRemitente: state.nombreRemitente.m_sNombreFiscal,
+            m_sRFCRemitente: state.RFCRemitente,
+            m_sDomicilioRemitente: state.domicilioRemitente,
+            m_nIdCodigoPostalRemitente: state.codigoPostalRemitente.m_nIdCP,
+            m_nCiudadRemitente: state.ciudadRemitente.m_nIdCiudad,
+            m_sCorreoRemitente: state.correoRemitente,
+            m_sTelefonoRemitente: state.telefonoRemitente,
+            m_sContactoRemitente: state.contactoRemitente,
+            m_nIdCiudadOrigen: state.ciudadOrigen.m_nIdCiudad,
+            m_sNombreDestinatario: state.nombreDestinatario.m_sNombreFiscal,
+            m_sRFCDestinatario: state.RFCDestinatario,
+            m_sDomicilioDestinatario: state.domicilioDestinatario,
+            m_nIdCodigoPostalDestinatario: state.codigoPostalDestinatario.m_nIdCP,
+            m_nIdCIudadDestinatario: state.ciudadDestinatario.m_nIdCiudad,
+            m_sCorreoDestinatario: state.correoDestinatario,
+            m_sTelefonoDestinatario: state.telefonoDestinatario,
+            m_sContactoDestinatario: state.contactoDestinatario,
+            m_nIdCiudadDestino: state.ciudadDestino.m_nIdCiudad,
+            m_dFechaEntrega: "",
+            m_tHoraEntrega: "",
+            m_nNoPaquetes: state.paquetes.length,
+            m_nNoSobres: state.sobres.length,
+            //m_nIdOperador: state.idOperador.m_nIdOperador,
+            // m_nIdUnidad: state.idUnidad.m_nIdUnidad,
+            m_dFechaSalida: state.fechaHoraSalida.split("T")[0],
+            m_tHoraSalida: state.fechaHoraSalida.split("T")[1],
+            FechaLlegada: state.fechaHoraLlegada.split("T")[0],
+            HoraLlegada: state.fechaHoraLlegada.split("T")[1],
+            CodigoPostalEntrega: state.codigoPostalEntrega.m_nIdCP,
+           
+          //  IdCiudadEntrega: state.ciudadEntrega.m_nIdCiudad,
+            IdZonaEntrega: state.zonaEntrega,
+            DomicilioEntrega: state.domicilioEntrega,
+            EntregarEn: state.entregaEn,
+            DatosAdicionales: state.datosAdicionalesEntrega,
+            IdSucursal: state.idSucursalAgregar,
+            m_arrClsDetalle: state.paquetes,
+            CreadoPor: state.CreadoPor,
+            ModificadoPor: state.ModificadoPor,
+            m_tFechaDetalleEntrega: state.fechaEntrega.split("T")[0],
+            m_tHoraDetalleEntrega: state.fechaEntrega.split("T")[1],
+    }
+
+    }
+
+
+        //console.log(JSON.stringify(params))
+
         if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
@@ -812,7 +880,7 @@ function Embarque(props) {
                 ":" +
                 today.getMinutes(),
             moneda: dataTipoMoneda ? dataTipoMoneda.length > 0 ? dataTipoMoneda[0].m_nIdMoneda : 0 : 0,
-            tipoCambio: "",
+            tipoCambio: dataTipoCambio.length !== 0 ? dataTipoCambio[0].m_nIdTipoCambio : 2,
             tipoCobro: dataTipoCobro ? dataTipoCobro.length > 0 ? dataTipoCobro[0].m_nIdTipoCobro : 0 : 0,
             estatusEmbarque: dataEstatusEmbarque ? dataEstatusEmbarque.length > 0 ? dataEstatusEmbarque[0].m_nIdEstatusEmbarque : 0 : 0,
             nombreRemitente: {},
@@ -2611,19 +2679,23 @@ function Embarque(props) {
 
 
                     <ul className="nav navStatica nav-tabs">
-                        <li
-                            className="active"
-                        >
+                    <li className={props.location.idRecoleccion != undefined ? "" : "active"}>
+
                             <a onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
                                 <i className="fa fa-list" /> Listado
                             </a>
                         </li>
-                        <li
-                        >
-                            <a onClick={handleShowAgregar}>
+                       
+
+                        <li className={props.location.idRecoleccion != undefined ? "active" : ""}>
+                            <a data-toggle="tab" href="#Agregar" onClick={() => handleShowAgregar()}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>
+
+
+
+
                         <li>
                             <a onClick={(event) => {
                                 event.stopPropagation();
@@ -2662,10 +2734,8 @@ function Embarque(props) {
                     </ul>
 
                     <div className="row tab-content">
-                        <div
-                            id="Listado"
-                            className="tab-pane fade in show"
-                        >
+                    <div id="Listado" className={props.location.idRecoleccion != undefined ? "tab-pane fade" : "tab-pane fade in active"}>
+
                             <div className="widget-wrap">
                                 <div className="widget-content">
                                     <div className="row" style={{ paddingLeft: "8px" }}>
@@ -2813,10 +2883,8 @@ function Embarque(props) {
                             </div>
                         </div>
 
-                        <div
-                            id="Agregar"
-                            className="tab-pane fade"
-                        >
+                        <div id="Agregar" className={props.location.idRecoleccion != undefined ? "tab-pane fade in active" : "tab-pane fade"}>
+
                             <form className="j-forms row" onSubmit={handleAceptar}>
                                 <div className="form-content">
                                     <div
@@ -4176,7 +4244,7 @@ function Embarque(props) {
                                                                                 id="codigoPostalEntrega"
                                                                                 disableClearable
                                                                                 forcePopupIcon={false}
-                                                                                options={dataCodigoPostal.filter(cp => cp.m_nIdCiudad == state.ciudadEntrega.m_nIdCiudad)}
+                                                                                options={dataCodigoPostal.filter(cp => cp.m_nIdCiudad == state.ciudadEntrega)}
                                                                                 getOptionLabel={(option) =>
                                                                                     option.m_sCP
                                                                                 }
@@ -4256,7 +4324,7 @@ function Embarque(props) {
                                                                         </div>
                                                                     </div>
 
-                                                                    <div className="col-sm-4 col-md-12 unit">
+                                                                    <div className="col-sm-4 col-md-4 unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
                                                                                 label="Domicilio"
@@ -4273,7 +4341,7 @@ function Embarque(props) {
                                                                         </div>
                                                                     </div>
 
-                                                                    <div className="col-sm-12 col-md-6  unit">
+                                                                    <div className="col-sm-4 col-md-4  unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
                                                                                 label="Entrega En"
@@ -4290,7 +4358,7 @@ function Embarque(props) {
                                                                         </div>
                                                                     </div>
 
-                                                                    <div className="col-sm-4 col-md-6 unit">
+                                                                    <div className="col-sm-4 col-md-4 unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
                                                                                 label="Datos Adicionales para la Entrega"
