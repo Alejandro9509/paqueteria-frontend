@@ -1,20 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="94d8e9cf-07c8-4a10-b81b-63018b1e29c3" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/Rutas.js" afterDir="false" />
+    <list default="true" id="94d8e9cf-07c8-4a10-b81b-63018b1e29c3" name="Default Changelist" comment="Vista de ultima milla">
+      <change afterPath="$PROJECT_DIR$/src/Util/Contexts/MensajesConetext.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/Mensajes.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/iconos/Mapa/fullscreen-exit.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/iconos/Mapa/fullscreen.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/iconos/Mapa/iconoCalendario.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/sonarIssues.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarIssues.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/css/project-style.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/project-style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Util/Contexts/GuiaContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/GuiaContext.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Util/Contexts/UltimaMillaContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/UltimaMillaContext.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Util/Data.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Data.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/ConceptosFacturacion/CrearConcepto.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/ConceptosFacturacion/CrearConcepto.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/DisplayMapClass.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/DisplayMapClass.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Rutas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Rutas.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/Configuracion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/Configuracion.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/Cronograma.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/Cronograma.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/FiltersMap.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/FiltersMap.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/PaquetesList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/PaquetesList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/Rutas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/Rutas.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/Tour.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/Tour.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/UltimaMilla.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/UltimaMilla.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/iconos/Catalogos/Icono Grupo Clientes/icono_grupo_cliente.svg" beforeDir="false" afterPath="$PROJECT_DIR$/src/iconos/Catalogos/Icono Grupo Clientes/icono_grupo_cliente.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/UnidadesList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/UnidadesList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/ZonasList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/ZonasList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Usuarios/Derechos.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Usuarios/Derechos.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/iconos/Menu/IconoUltimaMilla/IconoUltimaMilla.svg" beforeDir="false" afterPath="$PROJECT_DIR$/src/iconos/Menu/IconoUltimaMilla/IconoUltimaMilla.svg" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,6 +68,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/iconos/Mapa" />
       <recent name="$PROJECT_DIR$/src/iconos/Menu/IconoUltimaMilla" />
       <recent name="$PROJECT_DIR$/src/Components/Map" />
     </key>
@@ -102,6 +115,17 @@
       <workItem from="1623776437152" duration="15215000" />
       <workItem from="1624033298108" duration="263000" />
       <workItem from="1624285744095" duration="478000" />
+      <workItem from="1624550800416" duration="203000" />
+      <workItem from="1624640802553" duration="10027000" />
+      <workItem from="1624899936558" duration="8725000" />
+      <workItem from="1624983934460" duration="3132000" />
+      <workItem from="1625016087734" duration="411000" />
+      <workItem from="1625068862286" duration="166000" />
+      <workItem from="1625073283046" duration="2971000" />
+      <workItem from="1625090729039" duration="965000" />
+      <workItem from="1625177259911" duration="677000" />
+      <workItem from="1625251528954" duration="502000" />
+      <workItem from="1625674325132" duration="14515000" />
     </task>
     <servers />
   </component>
@@ -166,35 +190,44 @@
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
     <state x="2184" y="-158" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1623343338242" />
-    <state x="2280" y="-236" key="CommitChangelistDialog2" timestamp="1622499544130">
+    <state x="2280" y="-236" key="CommitChangelistDialog2" timestamp="1625844661571">
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
     <state x="2280" y="-236" key="CommitChangelistDialog2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1622499544130" />
+    <state x="2280" y="-236" key="CommitChangelistDialog2/0.25.1440.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1625844661571" />
     <state x="2150" y="-151" width="1152" height="720" key="DiffContextDialog" timestamp="1624288154736">
       <screen x="1440" y="-515" width="2560" height="1415" />
     </state>
     <state x="2150" y="-151" width="1152" height="720" key="DiffContextDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1623259007611" />
     <state x="2150" y="-151" width="1152" height="720" key="DiffContextDialog/50.25.1390.875/1440.-515.2560.1415@1440.-515.2560.1415" timestamp="1624288154736" />
-    <state width="2539" height="305" key="GridCell.Tab.0.bottom" timestamp="1624408880161">
-      <screen x="1440" y="-540" width="2560" height="1440" />
+    <state width="1419" height="70" key="GridCell.Tab.0.bottom" timestamp="1625252442178">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="2539" height="305" key="GridCell.Tab.0.bottom/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1624408880161" />
+    <state width="1419" height="70" key="GridCell.Tab.0.bottom/0.0.1440.900/1440.-515.2560.1415@0.0.1440.900" timestamp="1625252442178" />
+    <state width="2539" height="135" key="GridCell.Tab.0.bottom/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1624925766060" />
     <state width="1419" height="174" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1624286443605" />
-    <state width="2539" height="305" key="GridCell.Tab.0.center" timestamp="1624408880158">
-      <screen x="1440" y="-540" width="2560" height="1440" />
+    <state width="2539" height="135" key="GridCell.Tab.0.bottom/0.25.1440.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1625005047899" />
+    <state width="1419" height="70" key="GridCell.Tab.0.center" timestamp="1625252442175">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="2539" height="305" key="GridCell.Tab.0.center/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1624408880158" />
+    <state width="1419" height="70" key="GridCell.Tab.0.center/0.0.1440.900/1440.-515.2560.1415@0.0.1440.900" timestamp="1625252442175" />
+    <state width="2539" height="135" key="GridCell.Tab.0.center/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1624925766059" />
     <state width="1419" height="174" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1624286443602" />
-    <state width="2539" height="305" key="GridCell.Tab.0.left" timestamp="1624408880157">
-      <screen x="1440" y="-540" width="2560" height="1440" />
+    <state width="2539" height="135" key="GridCell.Tab.0.center/0.25.1440.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1625005047897" />
+    <state width="1419" height="70" key="GridCell.Tab.0.left" timestamp="1625252442173">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="2539" height="305" key="GridCell.Tab.0.left/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1624408880157" />
+    <state width="1419" height="70" key="GridCell.Tab.0.left/0.0.1440.900/1440.-515.2560.1415@0.0.1440.900" timestamp="1625252442173" />
+    <state width="2539" height="135" key="GridCell.Tab.0.left/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1624925766058" />
     <state width="1419" height="174" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1624286443601" />
-    <state width="2539" height="305" key="GridCell.Tab.0.right" timestamp="1624408880159">
-      <screen x="1440" y="-540" width="2560" height="1440" />
+    <state width="2539" height="135" key="GridCell.Tab.0.left/0.25.1440.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1625005047896" />
+    <state width="1419" height="70" key="GridCell.Tab.0.right" timestamp="1625252442177">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="2539" height="305" key="GridCell.Tab.0.right/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1624408880159" />
+    <state width="1419" height="70" key="GridCell.Tab.0.right/0.0.1440.900/1440.-515.2560.1415@0.0.1440.900" timestamp="1625252442177" />
+    <state width="2539" height="135" key="GridCell.Tab.0.right/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1624925766060" />
     <state width="1419" height="174" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1624286443603" />
+    <state width="2539" height="135" key="GridCell.Tab.0.right/0.25.1440.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1625005047898" />
     <state width="2539" height="519" key="GridCell.Tab.1.bottom" timestamp="1623980783897">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
@@ -255,6 +288,14 @@
     </state>
     <state width="2539" height="519" key="GridCell.Tab.3.right/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1623776449834" />
     <state width="2539" height="519" key="GridCell.Tab.3.right/0.0.1440.900@0.0.1440.900" timestamp="1623980783901" />
+    <state x="2144" y="-194" key="MergeDialog" timestamp="1624484874738">
+      <screen x="1440" y="-540" width="2560" height="1440" />
+    </state>
+    <state x="2144" y="-194" key="MergeDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1624484874738" />
+    <state x="2433" y="-100" key="MultipleFileMergeDialog" timestamp="1624484876787">
+      <screen x="1440" y="-540" width="2560" height="1440" />
+    </state>
+    <state x="2433" y="-100" key="MultipleFileMergeDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1624484876787" />
     <state x="2601" y="-91" key="RollbackChangesDialog" timestamp="1622499511060">
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
@@ -263,18 +304,19 @@
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
     <state x="2573" y="103" key="VCS.ChangelistChooser/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1622499125895" />
-    <state x="2320" y="-69" key="Vcs.Push.Dialog.v2" timestamp="1622498460612">
-      <screen x="1440" y="-517" width="2560" height="1417" />
+    <state x="2320" y="-85" key="Vcs.Push.Dialog.v2" timestamp="1624484894108">
+      <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
+    <state x="2320" y="-85" key="Vcs.Push.Dialog.v2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1624484894108" />
     <state x="2320" y="-69" key="Vcs.Push.Dialog.v2/44.23.1396.877/1440.-517.2560.1417@1440.-517.2560.1417" timestamp="1622498460612" />
     <state x="2525" y="104" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1622499355475">
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
     <state x="2525" y="104" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1622499355475" />
-    <state x="540" y="298" width="674" height="486" key="find.popup" timestamp="1624410163913">
-      <screen x="0" y="0" width="1440" height="900" />
+    <state x="2400" y="-63" width="667" height="486" key="find.popup" timestamp="1625850664817">
+      <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
-    <state x="2400" y="-63" width="667" height="486" key="find.popup/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1624409503622" />
+    <state x="2400" y="-63" width="667" height="486" key="find.popup/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1625850664817" />
     <state x="540" y="298" width="674" height="486" key="find.popup/0.0.1440.900@0.0.1440.900" timestamp="1624410163913" />
     <state x="2367" y="-25" key="git4idea.merge.GitPullDialog" timestamp="1622499857276">
       <screen x="1440" y="-540" width="2560" height="1440" />
@@ -285,5 +327,9 @@
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
     <state x="2430" y="81" key="git4idea.ui.GitResetDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1622498770254" />
+    <state x="2385" y="-209" width="670" height="676" key="search.everywhere.popup" timestamp="1624908669053">
+      <screen x="1440" y="-540" width="2560" height="1440" />
+    </state>
+    <state x="2385" y="-209" width="670" height="676" key="search.everywhere.popup/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1624908669053" />
   </component>
 </project>

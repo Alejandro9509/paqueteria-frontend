@@ -322,3 +322,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 .react-swipeable-view-container {
   box-shadow: none !important;
 }
+
+.MuiOutlinedInput-adornedEnd{
+  padding-right: 0px !important;
+}

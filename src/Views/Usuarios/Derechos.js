@@ -225,6 +225,7 @@ class Derechos extends Component {
                                     <tr key={i.m_nIdAccion}>
                                         <td style={{ width: "50px" }}>
                                             <label className="checkbox">
+
                                                 <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.handleChangeChecboxAcciones(event, index, false)} checked={this.state.accionesSeleccionados.find(t => t.m_nIdAccion === i.m_nIdAccion) != null} />
                                                 <i />
                                             </label>

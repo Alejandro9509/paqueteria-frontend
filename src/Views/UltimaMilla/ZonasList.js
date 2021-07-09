@@ -10,7 +10,7 @@ import {
     TableRow,
     Checkbox,
     withStyles,
-    TableSortLabel, InputBase
+    TableSortLabel, InputBase, InputAdornment, TextField
 } from "@material-ui/core";
 import {fade} from "@material-ui/core/styles";
 import {obtenerZonasSucursal} from "../../Util/Contexts/ZonasContext";
@@ -74,12 +74,15 @@ class ZonasList extends Component {
         super(props);
         this.state = {
             zonas: [],
+            zonasFiltradas: [],
             order: "asc",
             orderBy: "m_sDescripcion",
+            searchText: ""
         }
         this.getAllzonas = this.getAllzonas.bind(this)
         this.handleRequestSort = this.handleRequestSort.bind(this)
         this.handleSelectAllClickevent = this.handleSelectAllClickevent.bind(this)
+        this.searchZona = this.searchZona.bind(this)
     }
 
     componentDidMount() {
@@ -88,7 +91,7 @@ class ZonasList extends Component {
 
     getAllzonas() {
         obtenerZonasSucursal(this.props.sucursalSeleccionada).then(({data}) => {
-            this.setState({zonas: data})
+            this.setState({zonas: data, zonasFiltradas: data})
         })
     }
 
@@ -156,6 +159,16 @@ class ZonasList extends Component {
         this.props.selectZona(newSelected)
     };
 
+    searchZona(event){
+        event.preventDefault()
+        if (this.state.searchText  === "") {
+            this.setState({zonasFiltradas: this.state.zonas})
+        }else {
+            this.setState({zonasFiltradas: this.state.zonas.filter( u => u.m_sDescripcion.toLowerCase().includes(this.state.searchText.toLowerCase()))})
+        }
+
+    }
+
     render() {
         const {classes} = this.props;
         const isSelected = (row) => this.props.zonasSeleccionadas.find(u => u.m_nIdZona === row) != null;
@@ -163,19 +176,17 @@ class ZonasList extends Component {
 
         return (
             <TableContainer>
-                <div className={classes.search}>
-                    <div className={classes.searchIcon}>
-                        <SearchIcon/>
-                    </div>
-                    <InputBase
-                        placeholder="Buscar"
-                        classes={{
-                            root: classes.inputRoot,
-                            input: classes.inputInput,
-                        }}
-                        inputProps={{'aria-label': 'search'}}
-                    />
-                </div>
+                <TextField variant="outlined" size={"small"} placeholder={"Buscar"} style={{padding: "0px"}}
+                           value={this.state.searchText}
+                           onChange={(e) => this.setState({searchText: e.target.value})}
+                           InputProps={{
+                               endAdornment: (
+                                   <InputAdornment position="end">
+                                       <SearchIcon fontSize={"large"} style={{fill:"#868686", cursor: "pointer"}} onClick={this.searchZona}/>
+                                   </InputAdornment>
+                               ),
+                           }}
+                />
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -208,9 +219,8 @@ class ZonasList extends Component {
                     </TableHead>
                     <TableBody>
                         {
-                            this.stableSort(this.state.zonas, this.getComparator(this.state.order, this.state.orderBy)).map((u, index) => {
+                            this.stableSort(this.state.zonasFiltradas, this.getComparator(this.state.order, this.state.orderBy)).map((u, index) => {
                                 const isItemSelected = isSelected(u.m_nIdZona);
-                                console.log(isItemSelected)
                                 const labelId = `enhanced-table-checkbox-${index}`;
                                 return (
                                     <TableRow>
