@@ -35,9 +35,9 @@ export function DisplayMapClass(props) {
                 url="https://xserver2-america-test.cloud.ptvgroup.com/services/rest/XMap/tile/{z}/{x}/{y}?userLanguage=es&amp;xtok={token}"
                 token="51FA3E8E-8BF3-49EF-AB82-59D807A0645C"
             />
-            {props.markers.map(value => {
+            {props.markers.map((value, index) => {
                 return (
-                    <LocationMarker markerId={value.key} position={value.location} label={value.label} />
+                    <LocationMarker markerId={index} position={value.location} label={value.label} />
                 )
             })}
             <MapEvents isManual={props.isManual} setNewPoint={props.setNewPoint}/>
@@ -62,6 +62,7 @@ function MapEvents(props) {
             }
         },
     })
+    return (<div></div>)
 }
 
 export function LocationMarker(props) {

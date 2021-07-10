@@ -10,11 +10,12 @@ import {
     TableRow,
     Checkbox,
     withStyles,
-    TableSortLabel, Typography, Grid
+    TableSortLabel, Typography, Grid, TextField
 } from "@material-ui/core";
 import {obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
 import {fade} from "@material-ui/core/styles";
-import {obtenerGuia} from "../../Util/Contexts/GuiaContext";
+import {obtenerGuia, obtenerGuiasFiltro} from "../../Util/Contexts/GuiaContext";
+import {arrayGuias} from "../../Util/Data";
 
 const useStyles = theme => ({
     visuallyHidden: {
@@ -48,8 +49,8 @@ class PaquetesList extends Component {
     }
 
     getAllPaquetes() {
-        obtenerGuia().then(({data}) => {
-            this.setState({paquetes: data})
+        obtenerGuiasFiltro(this.props.data.startDate, this.props.data.finishDate, this.props.data.sucursalSeleccionada.m_nIdSucursal, 4).then(({data}) => {
+            this.setState({paquetes: arrayGuias})
         })
     }
 
@@ -86,7 +87,7 @@ class PaquetesList extends Component {
         })
     };
 
-    createSortHandler(property, event){
+    createSortHandler(property, event) {
         this.handleRequestSort(event, property);
     };
 
@@ -98,6 +99,7 @@ class PaquetesList extends Component {
         }
         this.props.selectPaquetes([])
     };
+
     handleClick(event, row) {
         const selectedIndex = this.props.paquetesSeleccionadas.map(u => u.m_nIdGuia).indexOf(row.m_nIdGuia);
         let newSelected = [];
@@ -124,20 +126,64 @@ class PaquetesList extends Component {
 
 
         return (
-            <TableContainer>
+            <TableContainer className={"j-forms"}>
                 <Typography variant={"h4"}>Seleccionar Paquetes </Typography>
-                <Grid container>
-                    <Grid item md={4}>
-
+                <Grid container spacing={2} style={{padding:"10px"}}>
+                    <Grid item >
+                        <div className="input">
+                            <TextField variant="outlined" margin="dense" label="Fecha inicial"
+                                       value={this.props.data.startDate}
+                                       InputLabelProps={{
+                                           shrink: true,
+                                       }}
+                                       onChange={event => {this.props.changeDate(event.target.name, event.target.value); this.getAllPaquetes()}}
+                                       name="startDate"
+                                       class="form-control"
+                                       type="date"
+                            />
+                        </div>
                     </Grid>
-                    <Grid item md={4}>
-
+                    <Grid item>
+                        <div className="input">
+                            <TextField variant="outlined" margin="dense" label="Fecha final"
+                                       InputLabelProps={{
+                                           shrink: true,
+                                       }}
+                                       value={this.props.data.finishDate}
+                                       onChange={event => {this.props.changeDate(event.target.name, event.target.value); this.getAllPaquetes()}}
+                                       name="finishDate"
+                                       class="form-control"
+                                       type="date"
+                            />
+                        </div>
                     </Grid>
-                    <Grid item md={4}>
-
+                    <Grid item>
+                        <div className="input">
+                            <TextField variant="outlined" margin="dense" label="Hora inicial"
+                                       InputLabelProps={{
+                                           shrink: true,
+                                       }}
+                                       value={this.props.data.startTime}
+                                       name="startTime"
+                                       onChange={event => {this.props.changeDate(event.target.name, event.target.value); this.getAllPaquetes()}}
+                                       class="form-control"
+                                       type="time"
+                            />
+                        </div>
                     </Grid>
-                    <Grid item md={4}>
-
+                    <Grid item >
+                        <div className="input">
+                            <TextField variant="outlined" margin="dense" label="Hora final"
+                                       InputLabelProps={{
+                                           shrink: true,
+                                       }}
+                                       value={this.props.data.finishTime}
+                                       name="finishTime"
+                                       onChange={event => {this.props.changeDate(event.target.name, event.target.value); this.getAllPaquetes()}}
+                                       class="form-control"
+                                       type="time"
+                            />
+                        </div>
                     </Grid>
                 </Grid>
                 <Table>
@@ -172,8 +218,12 @@ class PaquetesList extends Component {
                             <TableCell
                                 sortDirection={this.state.orderBy === "m_sDomicilioDestinatario" ? this.state.order : false}
                                 align="left">Volumen</TableCell>
-                            <TableCell sortDirection={this.state.orderBy === "m_sDomicilioDestinatario" ? this.state.order : false}
-                                       align="left">Destino</TableCell>
+                            <TableCell
+                                sortDirection={this.state.orderBy === "m_sNombreDestinatario" ? this.state.order : false}
+                                align="left">Destinatario</TableCell>
+                            <TableCell
+                                sortDirection={this.state.orderBy === "m_sDomicilioDestinatario" ? this.state.order : false}
+                                align="left">Destino</TableCell>
                             <TableCell
                                 sortDirection={this.state.orderBy === "m_sNombreOperador" ? this.state.order : false}
                                 align="left">Ventana de entrega</TableCell>
@@ -181,8 +231,9 @@ class PaquetesList extends Component {
                                        align="left">Fecha</TableCell>
                             <TableCell sortDirection={this.state.orderBy === "m_sFechaHora" ? this.state.order : false}
                                        align="left">Prioridad</TableCell>
-                            <TableCell sortDirection={this.state.orderBy === "m_sEstatusGuia" ? this.state.order : false}
-                                       align="left">Estatus</TableCell>
+                            <TableCell
+                                sortDirection={this.state.orderBy === "m_sEstatusGuia" ? this.state.order : false}
+                                align="left">Estatus</TableCell>
                             <TableCell align="left"></TableCell>
                         </TableRow>
                     </TableHead>
@@ -203,6 +254,7 @@ class PaquetesList extends Component {
                                         </TableCell>
                                         <TableCell align="left">{u.m_nFolioGuia}</TableCell>
                                         <TableCell align="left">Capacidad</TableCell>
+                                        <TableCell align="left">{u.m_sNombreDestinatario}</TableCell>
                                         <TableCell align="left">{u.m_sDomicilioDestinatario}</TableCell>
                                         <TableCell align="left">Sin definir</TableCell>
                                         <TableCell align="left">{u.m_sFechaHora}</TableCell>

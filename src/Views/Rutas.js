@@ -436,7 +436,6 @@ function Rutas(props) {
 
     function handleShowConsultar(id) {
         obtenerRutasId(id).then(respuesta => {
-            console.log(respuesta.data)
             setState({
                 ...state,
                 agregar: "Modificar",

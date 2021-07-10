@@ -1,5 +1,11 @@
 import {arrayPonts} from "../Data";
 import {trackPromise} from "react-promise-tracker";
+import axios from "axios";
+
+const headers = {
+    'Content-Type': 'application/json',
+    //    'access-control-allow-origin': '*'
+}
 
 const XTourClient = window.XTourClient;
 const XLocateClient = window.XLocateClient;
@@ -30,12 +36,12 @@ const Depot = (id, x, y, startDate, finishDate) => ({
 
 async function convertData(trucks, guias, dateFilter) {
     var array = []
-    var location = await searchLocation(dateFilter.sucursalSeleccionada.m_sMunicipio)
-    array = array.concat((trucks.map(t => Depot(t.m_nIdUnidad, location.x, location.y, dateFilter.start, dateFilter.finish))));
+    var location = await searchLocation(dateFilter.sucursalSeleccionada.m_sMunicipio, dateFilter.sucursalSeleccionada.m_sCalle)
+    array = array.concat((trucks.map(t => Depot(t.m_nIdUnidad, location.x, location.y, dateFilter.startDate + "T" + dateFilter.startTime +":00+00:00", dateFilter.finishDate + "T" + dateFilter.finishTime+":00+00:00"))));
     array = array.concat((guias.map((p, index) => (
         {
             "$type": "CustomerSite",
-            "id": "Customer" + index,
+            "id": "Customer" + p.idGuia,
             "routeLocation": {
                 "$type": "OffRoadRouteLocation",
                 "offRoadCoordinate": {
@@ -44,22 +50,25 @@ async function convertData(trucks, guias, dateFilter) {
                 }
             },
             "openingIntervals": [{
-                "$type": "StartDurationInterval",
-                "start": "2021-06-20T18:00:00+01:00",
-                "duration": "7200.0"
+                "$type": "StartEndInterval",
+                "start":  dateFilter.startDate + "T" + dateFilter.startTime+":00+00:00",
+                "end": dateFilter.finishDate + "T" + dateFilter.finishTime+":00+00:00"
             }
-            ]
+            ],
+            "serviceTimePerStop": "300.0"
         }
     ))))
     return array
 }
-function randomColor(brightness){
-    function randomChannel(brightness){
-        var r = 255-brightness;
-        var n = 0|((Math.random() * r) + brightness);
+
+function randomColor(brightness) {
+    function randomChannel(brightness) {
+        var r = 255 - brightness;
+        var n = 0 | ((Math.random() * r) + brightness);
         var s = n.toString(16);
-        return (s.length==1) ? '0'+s : s;
+        return (s.length == 1) ? '0' + s : s;
     }
+
     return '#' + randomChannel(brightness) + randomChannel(brightness) + randomChannel(brightness);
 }
 
@@ -67,11 +76,14 @@ async function obtenerGuiasUbicacion(paquetes) {
     var guias = []
     for (var i = 0; i < paquetes.length; i++) {
         var g = paquetes[i]
-        var location = await searchLocationAddress( g.m_sDomicilioRemitente, g.m_sCiudadDestino)
+        var location = await searchLocationAddress(g.m_sDomicilioDestinatario)
         guias.push({
             idGuia: g.m_nIdGuia,
             index: i,
             folio: g.m_nFolioGuia,
+            IdSucursal: g.IdSucursal,
+            m_nIdCiudadDestino: g.m_nIdCiudadDestino,
+            m_nCiudadRemitente: g.m_nCiudadRemitente,
             paquetes: g.m_nNoPaquetes,
             lat: location.y,
             lng: location.x,
@@ -91,8 +103,8 @@ async function obtenerRutas(truck, guias, data) {
             guias.map((p, index) => (
                 {
                     "$type": "VisitOrder",
-                    "id": index,
-                    "locationId": "Customer" + index,
+                    "id": p.idGuia,
+                    "locationId": "Customer" + p.idGuia,
                 }
             )),
         "fleet": {
@@ -101,7 +113,7 @@ async function obtenerRutas(truck, guias, data) {
                     {
                         "ids": ["vehicle" + t.m_nIdUnidad],
                         "maximumQuantityScenarios": [{
-                            "quantities": [10000.0]
+                            "quantities": [100.0]
                         }],
                         "startLocationId": "Depo" + t.m_nIdUnidad,
                         "endLocationId": "Depo" + t.m_nIdUnidad
@@ -123,24 +135,22 @@ function apiPoint(x, y) {
                 "x": x,
                 "y": y
             },
-            "considerAlternativeNearByRoads": true
+            "considerAlternativeNearByRoads": false
         }
     })
 };
 
 function calcularRuta(points) {
     return new Promise((resolve, reject) => {
-        console.log('Initial');
         xroute.calculateRoute({
             "waypoints": points.map(p => apiPoint(p.lng, p.lat)),
             "resultFields": {
                 "polyline": true,
                 "eventTypes": [
-                    "MANEUVER_EVENT",
-                    "TOLL_EVENT"
+                    "MANEUVER_EVENT"
                 ],
                 "encodedPath": true,
-                "guidedNavigationRoute": true
+                "guidedNavigationRoute": false
             },
             "routeOptions": {
                 "polylineOptions": {
@@ -151,18 +161,15 @@ function calcularRuta(points) {
                 "userLanguage": "es"
             }
 
-        }, (r,e) => resolve(r))
+        }, (r, e) => resolve(r))
     })
 
 }
 
-async function searchLocationAddress(addess, city) {
+async function searchLocationAddress(address) {
     var location = await xlocate.searchLocations({
-        "$type": "SearchByAddressRequest",
-        "address": {
-            "street": addess,
-            "city": city
-        }
+        "$type": "SearchByTextRequest",
+        "text": address
     })
     if (location.results) {
         if (location.results.length !== 0) {
@@ -176,11 +183,34 @@ async function searchLocationAddress(addess, city) {
 
 }
 
-async function searchLocation(city) {
+function searchLocationWeb(city, address) {
+    return new Promise((resolve, reject) => {
+        xlocate.searchLocations({
+            "$type": "SearchByAddressRequest",
+            "address": {
+                "city": city,
+                "street": address,
+            }
+        }, (location) => {
+            if (location.results) {
+                if (location.results.length !== 0) {
+                    resolve(location.results[0].location.referenceCoordinate)
+                } else {
+                    resolve({x: 0.0, y: 0.0})
+                }
+            } else {
+                resolve({x: 0.0, y: 0.0})
+            }
+        });
+    })
+}
+
+async function searchLocation(city, address) {
     var location = await xlocate.searchLocations({
         "$type": "SearchByAddressRequest",
         "address": {
             "city": city,
+            "street": address,
         }
     });
     if (location.results) {
@@ -192,9 +222,17 @@ async function searchLocation(city) {
     } else {
         return {x: 0.0, y: 0.0}
     }
-
 }
 
-export {obtenerRutas, obtenerGuiasUbicacion, calcularRuta, randomColor}
+function agregarRuta(guias, unidad){
+    const url = `${process.env.REACT_APP_API_URL}/GenerarRuta`;
+    let result;
+    trackPromise(
+        result = axios.put(url, Object.assign({}, {m_arrClsProGuia: guias.map(g => ({m_nIdGuia: g.idGuia, m_sLatitud: g.lat, m_sLongitud: g.lng, IdSucursal: g.IdSucursal, m_nCiudadRemitente: g.m_nCiudadRemitente, m_nIdCiudadDestino: g.m_nIdCiudadDestino})), m_nIdUnidad: unidad.m_nIdUnidad, m_nIdOperador: unidad.m_nIdOperador, m_nCreadoPor: localStorage.getItem("UsuarioId")}), { headers })
+    );
+    return result
+}
+
+export {obtenerRutas, obtenerGuiasUbicacion, calcularRuta, randomColor, searchLocationWeb, agregarRuta, searchLocationAddress}
 
 

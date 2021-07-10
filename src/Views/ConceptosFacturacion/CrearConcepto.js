@@ -113,7 +113,6 @@ class CrearConcepto extends Component {
 
     onSubmit(event) {
         event.preventDefault()
-        console.log("hola")
         this.props.onSubmit(this.state)
     }
 

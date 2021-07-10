@@ -92,7 +92,7 @@ function imprimirGuia(id) {
 
 function obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado) {
     const url =
-        `${process.env.REACT_APP_API_URL}/Guias/GetByFiltro/` +
+        `${process.env.REACT_APP_API_URL}/Guia/GetByFiltro/` +
         fechaInicial +
         "/" +
         fechaFinal +

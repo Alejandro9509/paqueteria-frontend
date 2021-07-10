@@ -17,6 +17,7 @@ import {
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import moment from "moment";
+import {ReactComponent as CalendarioIcono} from "../../iconos/Mapa/iconoCalendario.svg";
 
 class Cronograma extends Component {
     constructor(props) {
@@ -45,8 +46,9 @@ class Cronograma extends Component {
                 {
                     !this.state.openDetail &&
                     <Chip
-                        icon={<DateRangeIcon/>}
+                        icon={<CalendarioIcono style={{fill: "white", paddingTop:"5px", paddingBottom:"5px"}}/>}
                         style={{
+                            color:"white",
                             backgroundColor: "#F9A03E",
                             bottom: "10px",
                             left: "10px",
@@ -136,15 +138,17 @@ class Cronograma extends Component {
                                                 <TableBody>
                                                     {
                                                         this.props.tour.unidades.map(u => {
-                                                            var ms = this.props.tour.tour.tourReports.find(t => t.vehicleId === ("vehicle" + u.m_nIdUnidad)).costReport.drivingTime,
-                                                                min = Math.floor((ms / 60 / 60) << 0),
-                                                                sec = Math.floor((ms / 60) % 60);
+                                                            var tour = this.props.tour.tour.tours.find( t => t.vehicleId === ("vehicle" + u.m_nIdUnidad))
+                                                            var color = tour.color
+                                                            var ms = this.props.tour.tour.tourReports.find(t => t.vehicleId === ("vehicle" + u.m_nIdUnidad)).costReport.travelTime,
+                                                                min = Math.floor((ms/ 60) << 0),
+                                                                sec = Math.floor((ms) % 60);
                                                             return (
                                                                 <TableRow>
                                                                     <TableCell style={{borderBottom: "none"}}
                                                                                align="left">
                                                                         <div style={{
-                                                                            backgroundColor: this.props.tour.tour.tours[0].color,
+                                                                            backgroundColor: color,
                                                                             width: "20px",
                                                                             height: "20px",
                                                                             borderRadius: "5px"
@@ -178,7 +182,7 @@ class Cronograma extends Component {
                                                                                width={"50%"}>
                                                                         <Stepper>
                                                                             {
-                                                                                this.props.tour.tour.tours[0].trips[0].stops.map((s, index) => (
+                                                                                tour.trips[0].stops.map((s, index) => (
                                                                                     <Step key={index}
                                                                                           color={this.props.tour.tour.tours[0].color}>
                                                                                         <StepLabel> </StepLabel>
