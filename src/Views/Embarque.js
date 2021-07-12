@@ -741,15 +741,15 @@ if(state.m_nIdCiudadDetalleEntrega=undefined){
                 idOperador: dataOperador.find(
                     (o) => o.m_nIdOperador === respuesta.data.m_nIdOperador
                 ),
-                idTipoUnidad: dataTipoUnidad.find(
-                    (o) =>
-                        o.m_nIdTipoUnidad ==
-                            dataUnidad.find((o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad) ?
-                            dataUnidad.find((o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad).m_nIdTipoUnidad : 0
-                ),
-                idUnidad: dataUnidad.find(
-                    (o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad
-                ),
+                // idTipoUnidad: dataTipoUnidad.find(
+                //     (o) =>
+                //         o.m_nIdTipoUnidad ==
+                //             dataUnidad.find((o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad) ?
+                //             dataUnidad.find((o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad).m_nIdTipoUnidad : 0
+                // ),
+                // idUnidad: dataUnidad.find(
+                //     (o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad
+                // ),
                 paquetes: respuesta.data.m_arrPaquetes,
             });
             $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
@@ -827,7 +827,7 @@ if(state.m_nIdCiudadDetalleEntrega=undefined){
                 idOperador: dataOperador.find(
                     (o) => o.m_nIdOperador === respuesta.data.m_nIdOperador
                 ),
-                idTipoUnidad: dataTipoUnidad.find(
+              /*   idTipoUnidad: dataTipoUnidad.find(
                     (o) =>
                         o.m_sTipoUnidad ==
                         dataUnidad.find((o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad)
@@ -835,7 +835,7 @@ if(state.m_nIdCiudadDetalleEntrega=undefined){
                 ),
                 idUnidad: dataUnidad.find(
                     (o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad
-                ),
+                ), */
                 zonaEntrega: respuesta.data.IdZonaEntrega,
                 domicilioEntrega: respuesta.data.DomicilioEntrega,
                 entregaEn: respuesta.data.EntregarEn,
