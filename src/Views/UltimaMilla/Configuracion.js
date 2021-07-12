@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Grid, Typography, RadioGroup, FormControlLabel, Radio} from "@material-ui/core"
+
 class Configuracion extends Component {
     constructor(props) {
         super(props);
@@ -21,31 +22,94 @@ class Configuracion extends Component {
 
     render() {
         return (
-            <Grid container>
-                <Grid md={6}>
+            <Grid container className={"j-form"}>
+                <Grid item md={6}>
                     <Typography variant={"h4"}>Sistema Unidad</Typography>
-                    <RadioGroup aria-label="unidad" name="gender1" >
-                        <FormControlLabel value="1" control={<Radio />} label="Kilómetros" />
-                        <FormControlLabel value="2" control={<Radio />} label="Millas" />
+                    <RadioGroup aria-label="unidad" name="gender1">
+                        <Grid container>
+                            <Grid item>
+                                <FormControlLabel value="1" control={<Radio/>} label="Kilómetros"/>
+                            </Grid>
+                            <Grid item>
+                                <FormControlLabel value="2" control={<Radio/>} label="Millas"/>
+                            </Grid>
+                        </Grid>
                     </RadioGroup>
                 </Grid>
-                <Grid md={6}>
+                <Grid item md={6}>
                     <Typography variant={"h4"}>Optimizar</Typography>
-                    <RadioGroup aria-label="unidad" name="gender1" >
-                        <FormControlLabel value="1" control={<Radio />} label="Distancia" />
-                        <FormControlLabel value="2" control={<Radio />} label="Tiempo" />
+                    <RadioGroup aria-label="unidad" name="gender1">
+                        <Grid container>
+                            <Grid item>
+                                <FormControlLabel value="1" control={<Radio/>} label="Distancia"/>
+                            </Grid>
+                            <Grid item>
+                                <FormControlLabel value="2" control={<Radio/>} label="Tiempo"/>
+                            </Grid>
+                        </Grid>
                     </RadioGroup>
                 </Grid>
-                <Grid md={12}>
+                <Grid item md={12}>
                     <Typography variant={"h4"}>Creación de rutas</Typography>
-                    <RadioGroup aria-label="unidad" name="gender1" >
-                        <FormControlLabel value="1" control={<Radio />} label="Solo entregas" />
-                        <FormControlLabel value="2" control={<Radio />} label="Solo recolecciones" />
-                        <FormControlLabel value="3" control={<Radio />} label="Ambos" />
+
+                    <RadioGroup aria-label="unidad" name="gender1">
+                        <Grid container>
+                            <Grid item>
+                                <FormControlLabel value="1" control={<Radio/>} label="Solo entregas"/>
+                            </Grid>
+                            <Grid item>
+                                <FormControlLabel value="2" control={<Radio/>} label="Solo recolecciones"/>
+                            </Grid>
+                            <Grid item>
+                                <FormControlLabel value="3" control={<Radio/>} label="Ambos"/>
+                            </Grid>
+                        </Grid>
                     </RadioGroup>
                 </Grid>
-                <Grid md={12}>
+                <Grid item md={12}>
                     <Typography variant={"h4"}>Pantalla completa</Typography>
+                    <Grid container spacing={2}>
+                        <Grid item>
+                            <label className="checkbox">
+
+                                <input
+                                    checked={this.props.fullScreenData.chatFullscreen}
+                                    style={{marginRight: "5px", marginLeft: "0px", position: "relative"}}
+                                    type="checkbox"
+                                    name={"chatFullscreen"}
+                                    onClick={(event) => this.props.changeConfigurationFullScreen(event.target.name, event.target.checked)}/>
+                                <i/>
+                                Chat Repartidores
+                            </label>
+                        </Grid>
+                        <Grid item>
+                            <label className="checkbox">
+                                <input
+                                    checked={this.props.fullScreenData.cronogramaFullscreen}
+                                    style={{marginRight: "5px", marginLeft: "0px", position: "relative"}}
+                                    type="checkbox"
+                                    name={"cronogramaFullscreen"}
+                                    onClick={(event) => this.props.changeConfigurationFullScreen(event.target.name, event.target.checked)}/>
+                                <i/>
+                                Cronograma
+                            </label>
+                        </Grid>
+                        <Grid item>
+                            <label className="checkbox">
+                                <input
+                                    checked={this.props.fullScreenData.resumenFullscreen}
+                                    style={{marginRight: "5px", marginLeft: "0px", position: "relative"}}
+                                    type="checkbox"
+                                    name={"resumenFullscreen"}
+                                    onClick={(event) => this.props.changeConfigurationFullScreen(event.target.name, event.target.checked)}
+                                />
+                                <i/>
+                                Resumen Paradas
+                            </label>
+                        </Grid>
+                    </Grid>
+
+
                 </Grid>
             </Grid>
         );

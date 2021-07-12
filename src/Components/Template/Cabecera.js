@@ -1,5 +1,5 @@
 import {Hidden, Link} from "@material-ui/core";
-import React from "react";
+import React, {useEffect} from "react";
 import iconoAyuda from '../../iconos/Cabecera/icono_ayuda.svg';
 import iconoShortcuts from '../../iconos/Cabecera/icono_shortcuts.svg';
 import iconoMenu from '../../iconos/Cabecera/icono_menu.svg';
@@ -11,32 +11,10 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Tooltip from '@material-ui/core/Tooltip';
 import {ReactComponent as GClienteIcon} from "../../iconos/Catalogos/Icono Grupo Clientes/icono_grupo_cliente.svg";
 import GrupoClientePage from "../../Views/GrupoCliente";
+import {obtenerAtajosUsuario} from "../../Util/Contexts/AccesosDirectosContext";
 
 function Cabecera({ titulo, children }) {
 
-    const shortcuts =[
-        {
-            path: "/GrupoCliente",
-            name: "Grupo Clientes",
-            icon:  <GClienteIcon style={{width:30, height:30}}/>,
-            component: GrupoClientePage,
-        },{
-            path: "/GrupoCliente",
-            name: "Grupo Clientes",
-            icon:  <GClienteIcon style={{width:30, height:30}}/>,
-            component: GrupoClientePage,
-        },{
-            path: "/GrupoCliente",
-            name: "Grupo Clientes",
-            icon:  <GClienteIcon style={{width:30, height:30}}/>,
-            component: GrupoClientePage,
-        },{
-            path: "/GrupoCliente",
-            name: "Grupo Clientes",
-            icon:  <GClienteIcon style={{width:30, height:30}}/>,
-            component: GrupoClientePage,
-        },
-    ];
     const menu_items = [
         {
             id: '0',
@@ -74,20 +52,25 @@ function Cabecera({ titulo, children }) {
     function logout() {
         localStorage.removeItem("accessToken");
     }
-    const [shortcutsVisible, setShortcutsVisible] = React.useState(null);
+    const [atajos, setAtajos] = React.useState([])
+    const [shortcutsVisible, setShortcutsVisible] = React.useState(false);
     const [menuVisible, setMenuVisible] = React.useState(null);
     const menuOpen = Boolean(menuVisible);
     const shortcutsOpen = Boolean(shortcutsVisible);
 
     const handleShortcutsClick = (event) => {
         setShortcutsVisible(event.currentTarget);
+        obtenerAtajosUsuario(localStorage.getItem("UsuarioId")).then((respuesta) => {
+            setAtajos(respuesta.data)
+            // console.log(respuesta.data)
+        })
     };
     const handleShortcutsClose = () => {
         setShortcutsVisible(null);
     };
     const handleMenuClick = (event) => {
         setMenuVisible(event.currentTarget);
-        console.log(event.currentTarget);
+        // console.log(event.currentTarget);
     };
     const handleMenuClose = ()=> {
         setMenuVisible(null);
@@ -193,13 +176,15 @@ function Cabecera({ titulo, children }) {
                                 width: '20ch',
                             },
                         }}>
-                        {shortcuts.map((option) => (
-                            <MenuItem key={option.name} onClick={handleShortcutsClose}>
-                                <ListItemIcon>
+                        {atajos.map((option) => (
+                            <Link href={option.m_sURLAtajo}>
+                            <MenuItem key={option.m_nIdProceso} onClick={handleShortcutsClose}>
+                                {/*<ListItemIcon>
                                     {option.icon}
-                                </ListItemIcon>
-                                {option.name}
+                                </ListItemIcon>*/}
+                                {option.m_sNombreAtajo}
                             </MenuItem>
+                            </Link>
                         ))}
                     </Menu>
                 </div>

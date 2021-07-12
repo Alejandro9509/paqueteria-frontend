@@ -35,32 +35,56 @@ class Tour extends Component {
 
     }
 
-    getRoute(){
+    getRoute() {
+
         var polygon = []
-        calcularRuta(this.props.paquetes.filter((p, index) =>  this.props.tour.trips[0].stops.map((s,i) =>   parseInt(s.tasks[0].orderId) === index) != null )).then((result) => {
-            result.polyline.plain.polyline.map(c => {
-                polygon.push([c.y, c.x])
+        var guias = this.props.paquetes.filter((p, index) => this.props.tour.trips[0].stops.find((s, i) => parseInt(s.tasks[0].orderId) === p.idGuia) != null)
+
+        var result = []
+        this.props.tour.trips[0].stops.forEach((item, index) => {
+            var found = false;
+            guias = guias.filter(function (guia) {
+                if (!found && guia.idGuia == parseInt(item.tasks[0].orderId)) {
+                    result.push(guia);
+                    found = true;
+                    return false;
+                } else
+                    return true;
             })
-            this.setState({ polygon: polygon})
         })
+        if (result.length !== 1) {
+            calcularRuta(result).then((result) => {
+                result.polyline.plain.polyline.map(c => {
+                    polygon.push([c.y, c.x])
+                })
+                this.setState({polygon: polygon})
+            })
+        }
 
     }
 
     render() {
-        const blackOptions = { color: this.props.tour.color }
+        const blackOptions = {color: this.props.tour.color}
         return (
             <div style={{backgroundColor: "transparent"}}>
                 {
-                    this.props.tour.trips[0].stops.map((s,index) =>
-                        <Marker key={index + 1}  icon={<MarkerComponent color={this.props.tour.color} index={index + 1}/>} position={[this.props.paquetes[parseInt(s.tasks[0].orderId)].lat, this.props.paquetes[parseInt(s.tasks[0].orderId)].lng]}>
+                    this.props.tour.trips[0].stops.map((s, index) => {
+                            const paquete = this.props.paquetes.find(p => parseInt(s.tasks[0].orderId) === p.idGuia)
+                            console.log(paquete)
+                            return (
+                                <Marker key={index}
+                                        icon={<MarkerComponent color={this.props.tour.color} index={index + 1}/>}
+                                        position={[paquete.lat, paquete.lng]}>
 
-                        </Marker>
+                                </Marker>
+                            )
+                        }
                     )
                 }
 
                 {
                     this.state.polygon.length !== 0 &&
-                    <Polyline pathOptions={blackOptions} positions={this.state.polygon} />
+                    <Polyline pathOptions={blackOptions} positions={this.state.polygon}/>
 
                 }
             </div>
@@ -76,6 +100,7 @@ class MarkerComponent extends Component {
     constructor(props) {
         super(props);
     }
+
     render() {
         const markerStyle = {
             backgroundColor: this.props.color,
