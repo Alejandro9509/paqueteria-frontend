@@ -42,6 +42,33 @@ function obtenerConceptosFacturacion(){
     return result
 }
 
+function obtenerConceptosFacturacionManiobra(){
+    const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/GetListado/Maniobra`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
+}
+
+function obtenerConceptosFacturacionEntrega(){
+    const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/GetListado/Entrega`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
+}
+
+function obtenerConceptosFacturacionRecoleccion(){
+    const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/GetListado/Recoleccion`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
+}
+
 function obtenerConceptosFacturacionId(id){
     const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/GetById/` + id;
     let result;
@@ -60,4 +87,4 @@ function obtenerSAT(){
     return result
 }
 
-export {modificarConceptosFacturacion, agregarConceptosFacturacion, eliminarConceptosFacturacion, obtenerConceptosFacturacion, obtenerConceptosFacturacionId, obtenerSAT}
+export {modificarConceptosFacturacion, agregarConceptosFacturacion, eliminarConceptosFacturacion, obtenerConceptosFacturacion, obtenerConceptosFacturacionId, obtenerSAT, obtenerConceptosFacturacionManiobra, obtenerConceptosFacturacionEntrega, obtenerConceptosFacturacionRecoleccion}
