@@ -188,7 +188,7 @@ class ConceptosFacturacion extends Component {
         }
         console.log(JSON.stringify(params))
         if (this.state.edit) {
-            modificarConceptosFacturacion(this.state.selected.idConceptosFacturacion, params).then(respuesta => {
+            modificarConceptosFacturacion(this.state.selected.m_nIdConceptosFacturacion, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 this.getAllData()
                 this.setState({ openDialog: false })
@@ -299,13 +299,6 @@ class ConceptosFacturacion extends Component {
                             onClick={() => this.setState({ openDialog: true, edit: false, consult: false })}
                         >
                             Agregar
-                    </button>
-                        <button
-                            className="btn btn-primary primary-btn"
-                            style={{ margin: "5px" }}
-                            onClick={() => console.log("")}
-                        >
-                            Modificar
                     </button>
                         <button
                             className="btn btn-primary primary-btn"

@@ -205,12 +205,16 @@ class Tarifas extends Component {
             m_cMontoMinimo: data.precioMinimo,
             m_cPrecioKilo: data.precioKilo,
             m_cPrecioM3: data.precioM3,
+            m_bPorPesoVolumen: data.porPesoOVolumen,
+            m_bPorRango: data.porRangos,
+            m_nFactorConversion: data.factorConversion,
             m_arrArCobros: data.tiposCobroSeleccionado.map(c => ({ m_nIdTipoCobro: c.m_nIdTipoCobro })),
             m_arrArServicios: data.tiposServicioSeleccionado.map(s => ({ m_nIdTipoServicio: s.m_nIdTipoServicio })),
-            m_arrArConceptos: data.conceptosAdicionales.map(c => ({ m_nIdConceptoFacturacion: c.concepto.m_nIdConceptoFacturacion, m_cImporte: c.importe, m_nIdImpuestoTraslada: c.traslada, m_nIdImpuestoRetiene: c.retiene, m_cImporteRetiene: c.importeRet, m_cImporteIva: c.importeIva })),
+            m_arrArConceptos: data.conceptosAdicionales.map(c => ({ m_nIdConceptosFacturacion: c.concepto.m_nIdConceptosFacturacion, m_cImporte: c.importe, m_nIdImpuestoTraslada: c.traslada, m_nIdImpuestoRetiene: c.retiene, m_cImporteRetiene: c.importeRet, m_cImporteIva: c.importeIVA, m_nIdTipoCalculo: c.tipoCalculo })),
             m_nCreadoPOr: localStorage.getItem("UsuarioId"),
             m_nModificadoPor: localStorage.getItem("UsuarioId")
         }
+        console.log(JSON.stringify(params))
         if (this.state.edit) {
             const url = `${process.env.REACT_APP_API_URL}/Tarifas/Modificar/` + this.state.selected.m_nIdTarifa;
             axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
@@ -317,7 +321,6 @@ class Tarifas extends Component {
                                 <div className="widget-wrap">
                                     <div className="widget-content">
                                         <div className="row" style={{ height: this.state.height - 250, width: '100%' }}>
-                                            {data.length != 0 ? (
                                                 <DataGrid
                                                     localeText={dataGridLocaleText}
                                                     rows={data}
@@ -331,9 +334,6 @@ class Tarifas extends Component {
                                                         })
                                                     }}
                                                 />
-                                            ) : (
-                                                <div>No se encontró ningún registro</div>
-                                            )}
                                         </div>
                                     </div>
                                 </div>

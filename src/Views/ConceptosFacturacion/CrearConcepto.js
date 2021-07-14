@@ -21,9 +21,13 @@ class CrearConcepto extends Component {
             unidadMedida: props.edit ? props.select.m_sUnidadMedida : "",
             openDialog: false,
             claseSeleccionado: {},
+            claveSAT: this.props.edit ? this.props.select.m_nIdProdServSAT : 0,
+            productoOServicio: this.props.edit ? this.props.select.m_sClase : "",
             dataSAT: [],
             impuestos: [],
             impuestosRetencion: [],
+            rangoMinimo: props.edit ? props.select.m_nRangoMinimo : 0,
+            rangoMaximo: props.edit ? props.select.m_nRangoMaximo : 0,
             impuestosSeleccionadosTraslado: props.edit ? props.select.arClsDetalle : [],
             predeterminadoSeleccionadosTraslado: {},
             impuestosSeleccionadosRetencion: props.edit ? props.select.arClsDetalle : [],
@@ -44,6 +48,7 @@ class CrearConcepto extends Component {
         this.handleChangeChecboxRetencionPredeterminado = this.handleChangeChecboxRetencionPredeterminado.bind(this)
         this.selectClase = this.selectClase.bind(this)
         this.closeDialog = this.closeDialog.bind(this)
+        this.getClase = this.getClase.bind(this)
     }
 
     componentDidMount() {
@@ -119,12 +124,20 @@ class CrearConcepto extends Component {
     selectClase(row) {
         console.log(row)
         this.setState({
-            claseSeleccionado: row.data
+            claseSeleccionado: row.data,
+            claveSAT: row.data.m_nClaveClase,
+            productoOServicio: row.data.m_sClase
         })
     }
 
     closeDialog() {
         this.setState({ openDialog: false })
+    }
+
+    getClase(){
+        if(this.state.dataSAT.find(producto => producto.m_nClaveClase == this.props.select.m_nIdProdServSAT) != undefined){
+            return this.state.dataSAT.find(producto => producto.m_nClaveClase == this.props.select.m_nIdProdServSAT).m_sClase
+        } 
     }
 
     render() {
@@ -379,7 +392,7 @@ class CrearConcepto extends Component {
                                         className="form-control"
                                         label="Clave SAT"
                                         disabled={this.props.consult}
-                                        value={this.props.edit ? this.props.select.m_nIdProdServSAT : this.state.claseSeleccionado.m_nClaveClase}
+                                        value={this.state.claveSAT}
                                         onChange={this.handleChange}
                                         name="unidadMedia"
                                         InputProps={{
@@ -396,7 +409,7 @@ class CrearConcepto extends Component {
                                         className="form-control"
                                         label="Producto o Servicio"
                                         disabled={this.props.consult}
-                                        value={this.props.edit ? this.props.select.m_nIdProdServSAT : this.state.claseSeleccionado.m_sClase}
+                                        value={this.state.productoOServicio}
                                         onChange={this.handleChange}
                                         name="unidadMedia"
                                         InputProps={{
@@ -427,6 +440,32 @@ class CrearConcepto extends Component {
                                         required
                                         value={this.state.unidadMedida}
                                         name="unidadMedida"
+                                    />
+                                </div>
+                            </div>
+                            <div className="col-sm-12 col-md-6 col-lg-6 unit" style={{ padding: "2px" }}>
+                                <div className="input">
+                                    <TextField variant="outlined" margin="dense"
+                                        onChange={this.handleChange}
+                                        className="form-control"
+                                        type="number"
+                                        label="Unidad Medida"
+                                        disabled={this.props.consult}
+                                        value={this.state.rangoMinimo}
+                                        name="rangoMinimo"
+                                    />
+                                </div>
+                            </div>
+                            <div className="col-sm-12 col-md-6 col-lg-6 unit" style={{ padding: "2px" }}>
+                                <div className="input">
+                                    <TextField variant="outlined" margin="dense"
+                                        onChange={this.handleChange}
+                                        className="form-control"
+                                        type="number"
+                                        label="Rango Máximo"
+                                        disabled={this.props.consult}
+                                        value={this.state.rangoMaximo}
+                                        name="rangoMaximo"
                                     />
                                 </div>
                             </div>
