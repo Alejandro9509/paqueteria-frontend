@@ -27,6 +27,7 @@ import ClasificacionViajePage from './Views/ClasificacionViajes/ClasificacionVia
 import PlantillaCorreo from './Views/PlantillaCorreo';
 import CondicionesRecepcionEntrega from './Views/CondicionesRecepcionEntrega/CondicionesRecepcionEntrega';
 import Productos from "./Views/Productos/Productos";
+import Convenios from "./Views/Convenios/Convenios";
 
 import {ReactComponent as TServicioIcon} from './iconos/Catalogos/Icono Tipos Servicio/icono_tipo_servicio.svg';
 
@@ -249,6 +250,12 @@ const catalogRoutes = [
     icon: <PConfiguracionIcon/>,
     component: Productos,
   },
+  {
+    path: "/Convenios",
+    name: "Convenios",
+    icon: <PConfiguracionIcon/>,
+    component: Convenios
+  }
 ];
 
 export default catalogRoutes;

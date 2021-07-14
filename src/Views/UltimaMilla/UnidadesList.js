@@ -10,7 +10,8 @@ import {
     TableRow,
     Checkbox,
     withStyles,
-    TableSortLabel
+    TableSortLabel,
+    Link
 } from "@material-ui/core";
 import {obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
 import {fade} from "@material-ui/core/styles";
@@ -85,7 +86,7 @@ class UnidadesList extends Component {
         })
     };
 
-    createSortHandler(property, event){
+    createSortHandler(property, event) {
         this.handleRequestSort(event, property);
     };
 
@@ -97,6 +98,7 @@ class UnidadesList extends Component {
         }
         this.props.selectUnidades([])
     };
+
     handleClick(event, row) {
         const selectedIndex = this.props.unidadesSeleccionadas.map(u => u.m_nIdUnidad).indexOf(row.m_nIdUnidad);
         console.log(selectedIndex)
@@ -182,7 +184,8 @@ class UnidadesList extends Component {
                                         <TableCell align="left">{u.m_sDescripcion}</TableCell>
                                         <TableCell align="left">Capacidad</TableCell>
                                         <TableCell align="left">{u.m_sTipoUnidad}</TableCell>
-                                        <TableCell align="left">{u.m_sNombreOperador}</TableCell>
+                                        <TableCell align="left">{u.m_nIdOperador === 0 ? (
+                                            <Link>Asignar</Link>) : u.m_sNombreOperador}</TableCell>
                                         <TableCell align="left">{u.m_sPlacas}</TableCell>
                                     </TableRow>
                                 )

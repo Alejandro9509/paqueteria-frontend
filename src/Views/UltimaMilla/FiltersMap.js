@@ -7,7 +7,7 @@ import {
     IconButton,
     withStyles,
     InputBase,
-    ListItemText
+    ListItemText, InputAdornment, TextField
 } from "@material-ui/core";
 import {fade, makeStyles} from '@material-ui/core/styles';
 
@@ -24,9 +24,14 @@ import moment from "moment";
 import {obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
 import UnidadesList from "./UnidadesList";
 import PaquetesList from "./PaquetesList";
-import {obtenerGuia} from "../../Util/Contexts/GuiaContext";
+import {obtenerGuia, obtenerGuiasFiltro} from "../../Util/Contexts/GuiaContext";
 import ZonasList from "./ZonasList";
 import Configuracion from "./Configuracion";
+import {arrayGuias} from "../../Util/Data";
+import {ReactComponent as EmbarqueIcon} from "../../iconos/Menu/IconoEmbarque/iconoEmbarque.svg";
+import {ReactComponent as UnidadesIcon} from "../../iconos/Catalogos/Icono Unidades/icono_unidades.svg";
+import {ReactComponent as UltimaMillaIcono} from "../../iconos/Menu/IconoUltimaMilla/IconoUltimaMilla.svg";
+import {ReactComponent as CalendarioIcono} from "../../iconos/Mapa/iconoCalendario.svg";
 
 moment.locale('es-mx', localization);
 const useStyles = theme => ({
@@ -81,6 +86,7 @@ class FiltersMap extends Component {
             openPaquetes: false,
             openConfiguration: false,
             sucursales: [],
+            sucursalesFiltradas: [],
             zonas: [],
             sucursalSeleccionada: null,
             zonasSeleccionada: [],
@@ -88,11 +94,14 @@ class FiltersMap extends Component {
             unidadesSeleccionadas: [],
             paquetesSeleccionadas: [],
             sucursalSeleccionadas: [],
-            start: "2021-06-20T08:00:00+01:00",
-            finish: "2021-06-20T17:00:00+01:00"
+            startDate: moment(new Date()).format('yyyy-MM-DD'),
+            finishDate: moment(new Date()).format('yyyy-MM-DD'),
+            startTime: "00:00",
+            finishTime:  moment(new Date()).format('hh:mm'),
+            searchText:"",
+            locationSearch: ""
 
         }
-
         this.getAllSucursales = this.getAllSucursales.bind(this)
         this.getAllUnidades = this.getAllUnidades.bind(this)
         this.getAllGuias = this.getAllGuias.bind(this)
@@ -101,7 +110,8 @@ class FiltersMap extends Component {
         this.selectZona = this.selectZona.bind(this)
         this.selectUnidades = this.selectUnidades.bind(this)
         this.selectPaquetes = this.selectPaquetes.bind(this)
-        this.selectSucursal = this.selectSucursal.bind(this)
+        this.searchSucursal = this.searchSucursal.bind(this)
+        this.changeDate = this.changeDate.bind(this)
     }
 
     componentDidMount() {
@@ -111,6 +121,13 @@ class FiltersMap extends Component {
 
     }
 
+    changeDate(name, value){
+        this.setState({
+            [name] : value
+        })
+        this.getAllGuias()
+    }
+
     getAllUnidades() {
         obtenerUnidades().then(({data}) => {
             this.setState({unidadesSeleccionadas: data})
@@ -118,8 +135,9 @@ class FiltersMap extends Component {
     }
 
     getAllGuias() {
-        obtenerGuia().then(({data}) => {
-            this.setState({paquetesSeleccionadas: data})
+
+        obtenerGuiasFiltro(this.state.startDate , this.state.finishDate, this.state.sucursalSeleccionada.m_nIdSucursal, 4).then(({data}) => {
+            this.setState({paquetesSeleccionadas: arrayGuias})
         })
     }
 
@@ -131,12 +149,13 @@ class FiltersMap extends Component {
 
     getAllSucursales() {
         obtenerSucursales().then(({data}) => {
-            this.setState({sucursales: data})
+            this.setState({sucursales: data, sucursalesFiltradas: data})
         })
     }
 
     selectCiudad(sucursal) {
         this.setState({sucursalSeleccionada: sucursal, openSucursales: false})
+        this.props.changeMapLocation(sucursal)
     }
 
 
@@ -146,12 +165,9 @@ class FiltersMap extends Component {
             this.getAllUnidades()
             this.getAllGuias()
         }
-        //this.getAllZonas(zona.m_nIdZona)
     }
 
-    selectSucursal(array) {
-        this.setState({sucursalSeleccionadas: array})
-    }
+
 
 
     selectUnidades(array) {
@@ -164,6 +180,15 @@ class FiltersMap extends Component {
 
 
 
+    searchSucursal(event){
+        event.preventDefault()
+        if (this.state.searchText  === "") {
+            this.setState({sucursalesFiltradas: this.state.sucursales})
+        }else {
+            this.setState({sucursalesFiltradas: this.state.sucursales.filter( u => u.m_sSucursal.toLowerCase().includes(this.state.searchText.toLowerCase()))})
+        }
+
+    }
 
     render() {
         const {classes} = this.props;
@@ -187,25 +212,23 @@ class FiltersMap extends Component {
                                     subheader={
                                         <ListSubheader component="div" style={{position: "inherit"}}
                                                        id="nested-list-subheader">
-                                            <div className={classes.search}>
-                                                <div className={classes.searchIcon}>
-                                                    <SearchIcon/>
-                                                </div>
-                                                <InputBase
-                                                    placeholder="Buscar"
-                                                    classes={{
-                                                        root: classes.inputRoot,
-                                                        input: classes.inputInput,
-                                                    }}
-                                                    inputProps={{'aria-label': 'search'}}
-                                                />
-                                            </div>
+                                            <TextField variant="outlined" size={"small"} placeholder={"Buscar"} style={{padding: "0px"}}
+                                                       value={this.state.searchText}
+                                                       onChange={(e) => this.setState({searchText: e.target.value})}
+                                                       InputProps={{
+                                                           endAdornment: (
+                                                               <InputAdornment position="end">
+                                                                   <SearchIcon fontSize={"large"} style={{fill:"#868686", cursor: "pointer"}} onClick={this.searchSucursal}/>
+                                                               </InputAdornment>
+                                                           ),
+                                                       }}
+                                            />
                                         </ListSubheader>
                                     }
                                     style={{width: '100%', maxHeight: "300px", overflow: "auto"}}
                                 >
                                     {
-                                        this.state.sucursales.map((c, index) =>
+                                        this.state.sucursalesFiltradas.map((c, index) =>
                                             <ListItem button onClick={() => this.selectCiudad(c)} key={c.m_nIdSucursal}>
                                                 <ListItemText id={c.m_nIdSucursal} primary={c.m_sSucursal}/>
                                             </ListItem>)
@@ -261,12 +284,13 @@ class FiltersMap extends Component {
                             />
                         </BootstrapTooltip>
                         <Chip
-                            icon={<DateRangeIcon/>}
+                            icon={<CalendarioIcono style={{fill: "#F9A03E", paddingTop:"5px", paddingBottom:"5px"}}/>}
                             style={{
                                 backgroundColor: "white",
                                 margin: "1px",
                                 boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                             }}
+                            disabled={this.state.sucursalSeleccionada == null}
                             label={moment(this.state.fecha).format('MMMM DD')}
 
                             onClick={() => console.log("Press")}
@@ -283,7 +307,7 @@ class FiltersMap extends Component {
                             disableHoverListener
                             disableTouchListener
                             title={
-                                <PaquetesList paquetesSeleccionadas={this.state.paquetesSeleccionadas}
+                                <PaquetesList changeDate={this.changeDate} data={this.state} paquetesSeleccionadas={this.state.paquetesSeleccionadas}
                                               selectPaquetes={this.selectPaquetes}>
 
                                 </PaquetesList>
@@ -294,6 +318,8 @@ class FiltersMap extends Component {
                                     margin: "1px",
                                     boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                                 }}
+                                disabled={this.state.sucursalSeleccionada == null}
+                                icon={<EmbarqueIcon style={{fill: "#F9A03E", paddingTop:"5px", paddingBottom:"5px"}}/>}
                                 label={`Paquetes (${this.state.paquetesSeleccionadas.length})`}
                                 onClick={() => this.setState({
                                     openPaquetes: !this.state.openPaquetes, openSucursales: false,
@@ -326,6 +352,8 @@ class FiltersMap extends Component {
                                     margin: "1px",
                                     boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                                 }}
+                                disabled={this.state.sucursalSeleccionada == null}
+                                icon={<UnidadesIcon style={{fill: "#F9A03E", paddingTop:"10px", paddingBottom:"10px"}}/>}
                                 onClick={() => this.setState({
                                     openUnidades: !this.state.openUnidades, openSucursales: false,
                                     openZona: false,
@@ -346,7 +374,7 @@ class FiltersMap extends Component {
                             disableHoverListener
                             disableTouchListener
                             title={
-                                <Configuracion></Configuracion>
+                                <Configuracion changeConfigurationFullScreen={this.props.changeConfiguration} fullScreenData={this.props.data}/>
                             }>
                             <Chip
                                 label="Configuración"
@@ -367,15 +395,21 @@ class FiltersMap extends Component {
                         </BootstrapTooltip>
 
                         <Chip
+                            icon={<UltimaMillaIcono style={{fill: "white", paddingTop:"10px", paddingBottom:"10px"}}/>}
                             label="Generar Rutas"
                             style={{
+                                color:"white",
                                 backgroundColor: "#F9A03E",
                                 margin: "1px",
                                 boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                             }}
+                            disabled={this.state.sucursalSeleccionada == null}
                             onClick={() => this.props.generarRuta(this.state)}
                         />
-                        <IconButton style={{
+                        <IconButton
+                            onClick={() => this.props.guardarRuta()}
+                            disabled={this.state.sucursalSeleccionada == null}
+                            style={{
                             backgroundColor: "white",
                             margin: "1px",
                             width: "70px",
@@ -385,6 +419,18 @@ class FiltersMap extends Component {
                         }} aria-label="send">
                             <SendIcon color={"primary"} fontSize="large"/>
                         </IconButton>
+                        <TextField variant="standard" size={"small"} placeholder={"Buscar"}
+                                   style={{width:"300px", paddingLeft:"10px", backgroundColor:"white", borderRadius:"20px"}}
+                                   value={this.state.locationSearch}
+                                   onChange={(e) => this.setState({locationSearch: e.target.value})}
+                                   InputProps={{
+                                       endAdornment: (
+                                           <InputAdornment position="end">
+                                               <SearchIcon fontSize={"large"} style={{fill:"#868686", cursor: "pointer"}} onClick={ () => this.props.searchLocation(this.state.locationSearch)}/>
+                                           </InputAdornment>
+                                       ),
+                                   }}
+                        />
                     </div>
 
                 </div>

@@ -434,7 +434,7 @@ if(state.m_nIdCiudadDetalleEntrega=undefined){
     }
 
 
-        console.log(JSON.stringify(params))
+        //console.log(JSON.stringify(params))
 
         if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
@@ -880,7 +880,7 @@ if(state.m_nIdCiudadDetalleEntrega=undefined){
                 ":" +
                 today.getMinutes(),
             moneda: dataTipoMoneda ? dataTipoMoneda.length > 0 ? dataTipoMoneda[0].m_nIdMoneda : 0 : 0,
-            tipoCambio: "",
+            tipoCambio: dataTipoCambio.length !== 0 ? dataTipoCambio[0].m_nIdTipoCambio : 2,
             tipoCobro: dataTipoCobro ? dataTipoCobro.length > 0 ? dataTipoCobro[0].m_nIdTipoCobro : 0 : 0,
             estatusEmbarque: dataEstatusEmbarque ? dataEstatusEmbarque.length > 0 ? dataEstatusEmbarque[0].m_nIdEstatusEmbarque : 0 : 0,
             nombreRemitente: {},
@@ -4324,7 +4324,7 @@ if(state.m_nIdCiudadDetalleEntrega=undefined){
                                                                         </div>
                                                                     </div>
 
-                                                                    <div className="col-sm-4 col-md-12 unit">
+                                                                    <div className="col-sm-4 col-md-4 unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
                                                                                 label="Domicilio"
@@ -4341,7 +4341,7 @@ if(state.m_nIdCiudadDetalleEntrega=undefined){
                                                                         </div>
                                                                     </div>
 
-                                                                    <div className="col-sm-12 col-md-6  unit">
+                                                                    <div className="col-sm-4 col-md-4  unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
                                                                                 label="Entrega En"
@@ -4358,7 +4358,7 @@ if(state.m_nIdCiudadDetalleEntrega=undefined){
                                                                         </div>
                                                                     </div>
 
-                                                                    <div className="col-sm-4 col-md-6 unit">
+                                                                    <div className="col-sm-4 col-md-4 unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
                                                                                 label="Datos Adicionales para la Entrega"
