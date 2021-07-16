@@ -18,6 +18,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/public/css/bootstrap-extend.css">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/public/css/project-style.css">
           <value>
             <set />
@@ -168,6 +173,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/DetalleParadas.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/FiltersMap.js">
           <value>
             <set />
@@ -179,6 +189,16 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/PaquetesList.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/Paradas.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/ParadasStyle.css">
           <value>
             <set />
           </value>
@@ -243,6 +263,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/iconos/Mapa/flagIcon.svg">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/iconos/Mapa/fullscreen-exit.svg">
           <value>
             <set />
@@ -254,6 +279,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/iconos/Mapa/iconoCalendario.svg">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/iconos/Mapa/paradas.svg">
           <value>
             <set />
           </value>

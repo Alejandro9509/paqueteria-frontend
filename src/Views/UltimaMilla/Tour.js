@@ -110,7 +110,10 @@ class MarkerComponent extends Component {
             width: "20px",
             height: "20px",
             borderRadius: "20px",
-            alignItems: "center"
+            alignItems: "center",
+            borderStyle: "solid",
+            borderColor: "white",
+            boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
         };
         return <div align={"center"} style={markerStyle}>{this.props.index}</div>;
     }

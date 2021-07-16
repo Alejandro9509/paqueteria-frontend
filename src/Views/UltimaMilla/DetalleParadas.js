@@ -1,60 +1,46 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {
-    IconButton,
+    Button,
+    Collapse,
+    Divider,
     Grid,
+    IconButton,
+    InputAdornment,
     List,
     ListItem,
-    ListItemIcon,
     ListItemText,
-    Collapse,
-    Typography,
-    Divider,
-    TextField, InputAdornment, Button
+    TextField,
+    Typography
 } from "@material-ui/core";
-import MessageIcon from '@material-ui/icons/Message';
-import CloseIcon from '@material-ui/icons/Close';
-import EmailIcon from '@material-ui/icons/Email';
+import {ReactComponent as ParadasIcono} from "../../iconos/Mapa/paradas.svg";
+import {ReactComponent as CalendarioIcono} from "../../iconos/Mapa/iconoCalendario.svg";
+import MessageIcon from "@material-ui/icons/Message";
+import CloseIcon from "@material-ui/icons/Close";
+import SearchIcon from "@material-ui/icons/Search";
 import {ReactComponent as UnidadesIcon} from "../../iconos/Catalogos/Icono Unidades/icono_unidades.svg";
-import SearchIcon from '@material-ui/icons/Search';
-import {agregarMensajes, obtenerMensajes} from "../../Util/Contexts/MensajesConetext";
-import Buttons from "../../Util/CarruselButtons";
+import EmailIcon from "@material-ui/icons/Email";
+import {obtenerMensajes} from "../../Util/Contexts/MensajesConetext";
+import { PieChart } from 'react-minimal-pie-chart';
 
-class Mensajes extends Component {
+
+
+class DetalleParadas extends Component {
     constructor(props) {
         super(props);
         this.state = {
             openDetail: false,
             repartidoresFiltrados: this.props.tour.unidades,
-            indexOpen: -1,
-            searchText: "",
-            mensajes: [],
-            newMessageText: ""
+            newMessageText: "",
+            paradas:[]
         }
         this.searchRepartidor = this.searchRepartidor.bind(this)
-        this.openChat = this.openChat.bind(this)
-        this.enviarMensaje = this.enviarMensaje.bind(this)
-    }
-
-    componentWillMount() {
-
+        this.openDetail = this.openDetail.bind(this)
     }
 
     componentDidMount() {
 
     }
-
-    componentWillUnmount() {
-
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        console.log(document.getElementById("listMessage"))
-        if(document.getElementById("listMessage")){
-            document.getElementById("listMessage").scrollTo(0,document.getElementById("listMessage").scrollHeight)
-        }
-    }
-
     searchRepartidor(event) {
         event.preventDefault()
         if (this.state.searchText === "") {
@@ -64,29 +50,16 @@ class Mensajes extends Component {
         }
 
     }
-
-    openChat(index) {
+    openDetail(index) {
         obtenerMensajes(this.state.repartidoresFiltrados[index].m_nIdOperador).then(({data}) => {
             this.setState({indexOpen: index === this.state.indexOpen ? -1 : index, mensajes: data, newMessageText: ""})
         })
 
     }
 
-    enviarMensaje() {
-        if (this.state.newMessageText !== "") {
-            agregarMensajes(this.state.newMessageText, this.state.repartidoresFiltrados[this.state.indexOpen].m_nIdOperador).then(({data}) => {
-                obtenerMensajes(this.state.repartidoresFiltrados[this.state.indexOpen].m_nIdOperador).then(({data}) => {
-                    this.setState({mensajes: data, newMessageText: ""})
-                })
-            })
-        }
-    }
-
-
     render() {
-
         return (
-            <div className={"j-form"}>
+            <div>
                 {
                     !this.state.openDetail &&
                     <IconButton
@@ -96,16 +69,18 @@ class Mensajes extends Component {
                             borderRadius: "10px",
                             width: "30px",
                             height: "30px",
-                            backgroundColor: "#4F6AF3",
-                            top: "150px",
+                            backgroundColor: "#29B08A",
+                            top: "190px",
                             right: "10px",
+                            padding: "4px",
                             position: "fixed",
                             zIndex: 3000,
                             boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                         }}>
-                        <MessageIcon/>
+                        <ParadasIcono  style={{fill: "white"}}/>
                     </IconButton>
                 }
+
                 {
                     this.state.openDetail &&
                     <div
@@ -123,19 +98,21 @@ class Mensajes extends Component {
                             boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                         }}>
                         <div style={{
-                            backgroundColor: "#4F6AF3",
+                            backgroundColor: "#29B08A",
                             width: "100%",
                             height: "30px",
                             color: "white",
                             display: "inline-block"
                         }}>
-                            <MessageIcon style={{
+                            <ParadasIcono style={{
                                 verticalAlign: "middle",
                                 marginLeft: "5px",
                                 marginRight: "5px",
-                                height: "30px"
+                                padding:"5px",
+                                height: "30px",
+                                fill: "white"
                             }}/>
-                            Repartidores
+                            Resumen de Paradas
                             <div style={{float: "right"}}>
                                 <IconButton
                                     style={{height: "30px"}}
@@ -145,7 +122,26 @@ class Mensajes extends Component {
                                 </IconButton>
                             </div>
                         </div>
-                        <TextField variant="outlined" size={"small"} placeholder={"Buscar repartidor"}
+                        <Grid container spacing={1}>
+                            <Grid item md={6} sm={12}>
+                                <div style={{height:"100px", padding:"10px 0 10px 0"}}>
+                                    <PieChart
+                                        lineWidth={15}
+                                        paddingAngle={5}
+                                        data={[
+                                            { title: 'One', value: 10, color: '#E38627' },
+                                            { title: 'Two', value: 15, color: '#C13C37' },
+                                            { title: 'Three', value: 20, color: '#6A2135' },
+                                        ]}
+                                    />
+                                </div>
+
+                            </Grid>
+                            <Grid item md={6} sm={12}>
+
+                            </Grid>
+                        </Grid>
+                        <TextField variant="outlined" size={"small"} placeholder={"Buscar repartidor, unidad"}
                                    style={{padding: "10px"}}
                                    value={this.state.searchText}
                                    onChange={(e) => this.setState({searchText: e.target.value})}
@@ -159,18 +155,18 @@ class Mensajes extends Component {
                                        ),
                                    }}
                         />
-                        <Divider/>
                         <div style={{width: "100%", height: "30px", color: "black"}}>
                             <List style={{overflow: "auto"}}>
                                 {
                                     this.state.repartidoresFiltrados.map((r, index) => {
-                                        var color = this.props.tour.tour.tours.find(t => t.vehicleId === ("vehicle" + r.m_nIdUnidad)).color
+                                        var tour = this.props.tour.tour.tours.find(t => t.vehicleId === ("vehicle" + r.m_nIdUnidad))
+                                        var color = tour.color
                                         return (
                                             <div>
                                                 <ListItem button
-                                                          onClick={() => this.openChat(index)}>
+                                                          onClick={() => this.openDetail(index)}>
                                                     <ListItemText primary={
-                                                        <Grid container spacing={2} alignItems={"baseline"}>
+                                                        <Grid container spacing={1} alignItems={"baseline"} justify={"space-between"}>
                                                             <Grid item>
                                                                 <Typography>{r.m_sNombreOperador}</Typography>
                                                             </Grid>
@@ -178,19 +174,23 @@ class Mensajes extends Component {
                                                                 <UnidadesIcon
                                                                     style={{
                                                                         fill: color,
-                                                                        paddingTop: "5px",
-                                                                        paddingBottom: "5px",
+                                                                        paddingTop: "2px",
+                                                                        paddingRight:"4px",
+                                                                        paddingBottom: "2px",
                                                                         width: "20px",
                                                                         verticalAlign: "middle"
                                                                     }}/>
+                                                                JT-5214
+
                                                             </Grid>
-                                                            <Grid item>
-                                                                {r.m_sPlacas}
+                                                            <Grid item sm={6}>
+                                                                {tour.trips[0].stops.length} Paradas
+                                                            </Grid>
+                                                            <Grid item sm={6}>
+
                                                             </Grid>
                                                         </Grid>
                                                     }/>
-                                                    <EmailIcon color={"primary"} fontSize={"large"}
-                                                               style={{verticalAlign: "middle"}}/>
                                                 </ListItem>
                                                 <Collapse in={this.state.indexOpen === index} timeout="auto"
                                                           unmountOnExit>
@@ -200,18 +200,17 @@ class Mensajes extends Component {
                                                         margin: "5px",
                                                         border: "2px solid #868686"
                                                     }}>
-
-                                                        <List id="listMessage"  component="div" disablePadding style={{
+                                                        <List component="div" disablePadding style={{
                                                             padding: "10px",
                                                             height: "200px",
                                                             overflow: "auto"
                                                         }}>
                                                             {
-                                                                this.state.mensajes.map((m,index) => {
+                                                                this.state.paradas.map(m => {
                                                                     return (
-                                                                        <ListItem id={`item${index}`} autoFocus={true} style={{
+                                                                        <ListItem style={{
                                                                             borderRadius: "5px",
-                                                                            marginBottom:"5px",
+                                                                            padding:"10px",
                                                                             backgroundColor: m.m_nIdEnviadoPor === parseInt(localStorage.getItem("UsuarioId")) ? "#C6CDF3" : "#E6E6E6"
                                                                         }}>
                                                                             <ListItemText primary={m.m_sMensaje}/>
@@ -220,34 +219,6 @@ class Mensajes extends Component {
                                                                 })
                                                             }
                                                         </List>
-
-                                                        <TextField
-                                                            variant={"outlined"}
-                                                            style={{padding: "10px"}}
-                                                            value={this.state.newMessageText}
-                                                            onChange={(event) => this.setState({newMessageText: event.target.value})}
-                                                            multiline
-                                                            InputProps={{
-                                                                endAdornment: (
-                                                                    <InputAdornment position="end" style={{
-                                                                        marginRight: "0px",
-                                                                        paddingRight: "0px",
-                                                                        marginBottom: "0px"
-                                                                    }}>
-                                                                        <Button
-                                                                            variant={"contained"}
-                                                                            color={"primary"}
-                                                                            size={"small"}
-                                                                            onClick={() => this.enviarMensaje()}
-                                                                        >
-                                                                            Enviar
-                                                                        </Button>
-
-
-                                                                    </InputAdornment>
-                                                                ),
-                                                            }}
-                                                        />
                                                     </div>
 
                                                 </Collapse>
@@ -266,6 +237,6 @@ class Mensajes extends Component {
     }
 }
 
-Mensajes.propTypes = {};
+DetalleParadas.propTypes = {};
 
-export default Mensajes;
+export default DetalleParadas;

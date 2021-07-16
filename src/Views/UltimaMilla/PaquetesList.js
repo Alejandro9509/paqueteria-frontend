@@ -49,7 +49,7 @@ class PaquetesList extends Component {
     }
 
     getAllPaquetes() {
-        obtenerGuiasFiltro(this.props.data.startDate, this.props.data.finishDate, this.props.data.sucursalSeleccionada.m_nIdSucursal, 4).then(({data}) => {
+        obtenerGuiasFiltro("0", "0", this.props.data.sucursalSeleccionada.m_nIdSucursal, 4).then(({data}) => {
             this.setState({paquetes: arrayGuias})
         })
     }
@@ -219,6 +219,9 @@ class PaquetesList extends Component {
                                 sortDirection={this.state.orderBy === "m_sDomicilioDestinatario" ? this.state.order : false}
                                 align="left">Volumen</TableCell>
                             <TableCell
+                                sortDirection={this.state.orderBy === "m_nIdTIpoCobro" ? this.state.order : false}
+                                align="left">Estatus pago</TableCell>
+                            <TableCell
                                 sortDirection={this.state.orderBy === "m_sNombreDestinatario" ? this.state.order : false}
                                 align="left">Destinatario</TableCell>
                             <TableCell
@@ -229,8 +232,7 @@ class PaquetesList extends Component {
                                 align="left">Ventana de entrega</TableCell>
                             <TableCell sortDirection={this.state.orderBy === "m_sFechaHora" ? this.state.order : false}
                                        align="left">Fecha</TableCell>
-                            <TableCell sortDirection={this.state.orderBy === "m_sFechaHora" ? this.state.order : false}
-                                       align="left">Prioridad</TableCell>
+
                             <TableCell
                                 sortDirection={this.state.orderBy === "m_sEstatusGuia" ? this.state.order : false}
                                 align="left">Estatus</TableCell>
@@ -254,11 +256,11 @@ class PaquetesList extends Component {
                                         </TableCell>
                                         <TableCell align="left">{u.m_nFolioGuia}</TableCell>
                                         <TableCell align="left">Capacidad</TableCell>
+                                        <TableCell align="left">{u.m_nIdTIpoCobro === 3  ?  "Por cobrar destinatario" : u.m_nIdTIpoCobro === 5 ? "Por cobrar remitente" : "Pendiente de pago"}</TableCell>
                                         <TableCell align="left">{u.m_sNombreDestinatario}</TableCell>
                                         <TableCell align="left">{u.m_sDomicilioDestinatario}</TableCell>
                                         <TableCell align="left">Sin definir</TableCell>
                                         <TableCell align="left">{u.m_sFechaHora}</TableCell>
-                                        <TableCell align="left">Sin definir</TableCell>
                                         <TableCell align="left">{u.m_sEstatusGuia}</TableCell>
                                         <TableCell align="left"></TableCell>
                                     </TableRow>

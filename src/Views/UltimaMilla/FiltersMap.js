@@ -136,7 +136,7 @@ class FiltersMap extends Component {
 
     getAllGuias() {
 
-        obtenerGuiasFiltro(this.state.startDate , this.state.finishDate, this.state.sucursalSeleccionada.m_nIdSucursal, 4).then(({data}) => {
+        obtenerGuiasFiltro("0" , "0", this.state.sucursalSeleccionada.m_nIdSucursal, 4).then(({data}) => {
             this.setState({paquetesSeleccionadas: arrayGuias})
         })
     }
@@ -408,7 +408,6 @@ class FiltersMap extends Component {
                         />
                         <IconButton
                             onClick={() => this.props.guardarRuta()}
-                            disabled={this.state.sucursalSeleccionada == null}
                             style={{
                             backgroundColor: "white",
                             margin: "1px",

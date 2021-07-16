@@ -21,6 +21,7 @@ import Mensajes from "./Mensajes";
 import MessageIcon from "@material-ui/icons/Message";
 import {ReactComponent as FullscreenIcono} from "../../iconos/Mapa/fullscreen.svg";
 import {ReactComponent as FullscreenExitIcono} from "../../iconos/Mapa/fullscreen-exit.svg";
+import DetalleParadas from "./DetalleParadas";
 
 
 class UltimaMilla extends Component {
@@ -85,8 +86,8 @@ class UltimaMilla extends Component {
 
     guardarRuta() {
         this.state.tour.unidades.forEach((u) => {
-            var tour = this.props.tour.tour.tours.find( t => t.vehicleId === ("vehicle" + u.m_nIdUnidad))
-            var guias = this.props.paquetes.filter((p, index) => tour.trips[0].stops.find((s, i) => parseInt(s.tasks[0].orderId) === p.idGuia) != null)
+            var tour = this.state.tour.tour.tours.find( t => t.vehicleId === ("vehicle" + u.m_nIdUnidad))
+            var guias = this.state.tour.paquetes.filter((p, index) => tour.trips[0].stops.find((s, i) => parseInt(s.tasks[0].orderId) === p.idGuia) != null)
             agregarRuta(guias, u).then((data) => {
 
             })
@@ -170,18 +171,22 @@ class UltimaMilla extends Component {
                                 }
 
                                 {
-                                    this.state.tour && !this.state.fullScreen && this.state.tour.tour.tours.map(t =>
+                                    this.state.tour && this.state.tour.tour.tours.map(t =>
                                         <Tour tour={t} paquetes={this.state.tour.paquetes}/>
                                     )
                                 }
 
                                 {
-                                    this.state.tour && this.state.openCronograma &&
+                                    this.state.tour && this.state.openCronograma && (this.state.fullScreen === false || this.state.cronogramaFullscreen ) &&
                                     <Cronograma tour={this.state.tour}/>
                                 }
                                 {
-                                    this.state.tour &&
+                                    this.state.tour && (this.state.fullScreen === false || this.state.chatFullscreen ) &&
                                     <Mensajes tour={this.state.tour}/>
+                                }
+                                {
+                                    this.state.tour && (this.state.fullScreen === false || this.state.resumenFullscreen ) &&
+                                    <DetalleParadas tour={this.state.tour}/>
                                 }
                                 <IconButton
                                     onClick={() => this.state.fullScreen ? this.closeFullscreen() : this.openFullscreen()}
@@ -191,11 +196,11 @@ class UltimaMilla extends Component {
                                         width: "30px",
                                         height: "30px",
                                         backgroundColor: "white",
-                                        top: "70px",
+                                        top: "110px",
                                         right: "10px",
                                         position: "fixed",
                                         zIndex: 3000,
-                                        padding: "4px",
+                                        padding: "5px",
                                         boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                                     }}>
                                     { this.state.fullScreen ? <FullscreenExitIcono style={{fill: "#F9A03E"}}/> : <FullscreenIcono style={{fill: "#F9A03E"}}/> }
