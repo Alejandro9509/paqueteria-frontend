@@ -1094,8 +1094,7 @@ function Guia(props) {
             var ivaTraslada = []
             var ivaRetiene = []
             //var flete = dataConcepto.find(c => c.m_nIdConceptosFacturacion === 22)
-            console.log(`${process.env.REACT_APP_API_URL}/Tarifas/GetBySucursalDestino/${state.idSucursal}/${respuesta.data.m_nIdCiudadDestino}`)
-            axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetBySucursalDestino/${state.idSucursal}/${respuesta.data.m_nIdCiudadDestino}`, { headers }).then(tarifa => {
+            axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${embarque}`, { headers }).then(tarifa => {
 
                 if (tarifa.data.length !== 0) {
                     //setDataConcepto(tarifa.m_arrArConceptos)
@@ -2865,31 +2864,8 @@ function Guia(props) {
                                                                 <div>
                                                                     <Tabs value={state.tab} onChange={handleTabChange} aria-label="simple tabs example" variant="scrollable" scrollButtons="auto">
                                                                         <Tab label="Concetos Adicionales por Destino" {...a11yProps(0)} className={{ backgroundColor: "white !important" }} />
-                                                                        <Tab label="Maniobras" {...a11yProps(1)}  />
-                                                                        <Tab label="Entrega" {...a11yProps(2)} />
-                                                                        <Tab label="Recolección" {...a11yProps(3)} />
                                                                     </Tabs>
-                                                                    {/* <TabPanel value={state.tab} index={0}>
-                                                                        <ConceptosAdicionales consult={true} edit={false} conceptosAdicionales={state.conceptosAdicionales} addConcepto={addConcepto} removeConcepto={removeConcepto} ivaRetiene={state.ivaRetiene} ivaTraslada={state.ivaTraslada}>
-
-                                                                        </ConceptosAdicionales>
-                                                                    </TabPanel>
-                                                                    <TabPanel value={state.tab} index={1}>
-                                                                        <ConceptosAdicionalesManiobra consult={true} edit={false} conceptosAdicionales={state.conceptosAdicionales} addConcepto={addConcepto} removeConcepto={removeConcepto} ivaRetiene={state.ivaRetiene} ivaTraslada={state.ivaTraslada}>
-
-                                                                        </ConceptosAdicionalesManiobra>
-                                                                    </TabPanel>
-                                                                    <TabPanel value={state.tab} index={2}>
-                                                                        <ConceptosAdicionalesEntrega consult={true} edit={false} conceptosAdicionales={state.conceptosAdicionales} addConcepto={addConcepto} removeConcepto={removeConcepto} ivaRetiene={state.ivaRetiene} ivaTraslada={state.ivaTraslada}>
-
-                                                                        </ConceptosAdicionalesEntrega>
-                                                                    </TabPanel>
-                                                                    <TabPanel value={state.tab} index={3}>
-                                                                        <ConceptosAdicionalesRecoleccion consult={true} edit={false} conceptosAdicionales={state.conceptosAdicionales} addConcepto={addConcepto} removeConcepto={removeConcepto} ivaRetiene={state.ivaRetiene} ivaTraslada={state.ivaTraslada}>
-
-                                                                        </ConceptosAdicionalesRecoleccion>
-                                                                    </TabPanel> */}
-                                                                    <ConceptosAdicionales guias={true} conceptosAdicionales={state.conceptosAdicionales} addConcepto={addConcepto} removeConcepto={removeConcepto} ivaRetiene={state.ivaRetiene} ivaTraslada={state.ivaTraslada}>
+                                                                    <ConceptosAdicionales guias={true} conceptosAdicionales={state.conceptosAdicionales} addConcepto={addConcepto} removeConcepto={removeConcepto} ivaRetiene={state.ivaRetiene} ivaTraslada={state.ivaTraslada} noMostrarRangos={false}>
 
                                                                     </ConceptosAdicionales>
                                                                 </div>
