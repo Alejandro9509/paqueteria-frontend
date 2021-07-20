@@ -49,7 +49,8 @@ class PaquetesList extends Component {
     }
 
     getAllPaquetes() {
-        obtenerGuiasFiltro("0", "0", this.props.data.sucursalSeleccionada.m_nIdSucursal, 4).then(({data}) => {
+        //"0", "0", this.props.data.sucursalSeleccionada.m_nIdSucursal, 4
+        obtenerGuia().then(({data}) => {
             this.setState({paquetes: arrayGuias})
         })
     }
@@ -126,7 +127,7 @@ class PaquetesList extends Component {
 
 
         return (
-            <TableContainer className={"j-forms"}>
+            <TableContainer className={"j-forms"} style={{height:"300px"}}>
                 <Typography variant={"h4"}>Seleccionar Paquetes </Typography>
                 <Grid container spacing={2} style={{padding:"10px"}}>
                     <Grid item >

@@ -136,8 +136,12 @@ class FiltersMap extends Component {
 
     getAllGuias() {
 
-        obtenerGuiasFiltro("0" , "0", this.state.sucursalSeleccionada.m_nIdSucursal, 4).then(({data}) => {
-            this.setState({paquetesSeleccionadas: arrayGuias})
+        // obtenerGuiasFiltro("0" , "0", this.state.sucursalSeleccionada.m_nIdSucursal, 4).then(({data}) => {
+        //     this.setState({paquetesSeleccionadas: arrayGuias})
+        // })
+        //"0", "0", this.props.data.sucursalSeleccionada.m_nIdSucursal, 4
+        obtenerGuia().then(({data}) => {
+            this.setState({paquetes: arrayGuias})
         })
     }
 

@@ -20,7 +20,7 @@ class Paradas extends Component {
                         return (
                             <div className="pointBarPass"
                                  style={{
-                                     left: `${(index+1) * 10}%`,
+                                     left: `${((index+1) / this.props.tour.trips[0].stops.length) * 90}%`,
                                      color: this.props.color
                                  }}>
                                 {index+1}

@@ -75,6 +75,7 @@ class UltimaMilla extends Component {
 
     async changeMapLocation(location) {
         searchLocationWeb(location.m_sMunicipio, location.m_sCalle).then((data) => {
+            this.setState({lat: data.y, lng: data.x})
             this.state.map.setView([data.y, data.x], 15)
         })
 
@@ -113,7 +114,7 @@ class UltimaMilla extends Component {
                     }
                 }
                 results.tours.map(t => t.color = randomColor(10))
-                this.setState({tour: {tour: results, paquetes: guias, unidades: unidades}, openCronograma: true,})
+                this.setState({tour: {tour: results, paquetes: guias, unidades: unidades}, openCronograma: true})
             })
         }
     }
@@ -155,7 +156,7 @@ class UltimaMilla extends Component {
 
                 <section>
                     <div className="widget-content" id={"mapFullScreen"} >
-                        <div className="row" style={{height:  this.state.fullScreen ? "100%" : window.innerHeight, width: '100%'}}>
+                        <div className="row" style={{height:  this.state.fullScreen ? "100%" : window.innerHeight - 50, width: '100%'}}>
                             <MapContainer style={{width: "100%", height: "100%", zIndex: 1}}
                                           center={[this.state.lat, this.state.lng]} zoom={15} scrollWheelZoom={false}
                                           whenCreated={(map) => this.setState({map: map})}>
@@ -172,7 +173,7 @@ class UltimaMilla extends Component {
 
                                 {
                                     this.state.tour && this.state.tour.tour.tours.map(t =>
-                                        <Tour tour={t} paquetes={this.state.tour.paquetes}/>
+                                        <Tour tour={t} data={this.state} paquetes={this.state.tour.paquetes}/>
                                     )
                                 }
 

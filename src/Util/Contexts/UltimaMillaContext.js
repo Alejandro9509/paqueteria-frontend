@@ -140,10 +140,14 @@ function apiPoint(x, y) {
     })
 };
 
-function calcularRuta(points) {
+function calcularRuta(points, sucursal) {
+    var array = []
+    array.push(apiPoint(sucursal.lng, sucursal.lat))
+    array = array.concat(points.map(p => apiPoint(p.lng, p.lat)))
+    array.push(apiPoint(sucursal.lng, sucursal.lat))
     return new Promise((resolve, reject) => {
         xroute.calculateRoute({
-            "waypoints": points.map(p => apiPoint(p.lng, p.lat)),
+            "waypoints": array,
             "resultFields": {
                 "polyline": true,
                 "eventTypes": [

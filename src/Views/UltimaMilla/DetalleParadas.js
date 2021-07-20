@@ -129,16 +129,32 @@ class DetalleParadas extends Component {
                                         lineWidth={15}
                                         paddingAngle={5}
                                         data={[
-                                            { title: 'One', value: 10, color: '#E38627' },
-                                            { title: 'Two', value: 15, color: '#C13C37' },
-                                            { title: 'Three', value: 20, color: '#6A2135' },
+                                            { title: '', value: 0, color: '#F51533' },
+                                            { title: '', value: 0, color: '#06B100' },
+                                            { title: '', value: this.props.tour.paquetes.length, color: '#F5E23E' },
                                         ]}
                                     />
                                 </div>
 
                             </Grid>
                             <Grid item md={6} sm={12}>
-
+                                <Grid container spacing={1} style={{paddingTop: "10px", paddingRight:"10px"}}>
+                                    <Grid item sm={12}>
+                                        <div style={{backgroundColor:"#F5E23E", display:"inline-block", width:"100%", textAlign:"center"}}>
+                                            <strong>Pendientes </strong> {this.props.tour.paquetes.length} de {this.props.tour.paquetes.length} <strong>100%</strong>
+                                        </div>
+                                    </Grid>
+                                    <Grid item sm={12}>
+                                        <div style={{backgroundColor:"#06B100", display:"inline-block", width:"100%", textAlign:"center"}}>
+                                            <strong>Pendientes </strong> {0} de {0} <strong>0%</strong>
+                                        </div>
+                                    </Grid>
+                                    <Grid item sm={12}>
+                                        <div style={{backgroundColor:"#F51533", display:"inline-block", width:"100%", textAlign:"center"}}>
+                                            <strong>Pendientes </strong> {0} de {0} <strong>0%</strong>
+                                        </div>
+                                    </Grid>
+                                </Grid>
                             </Grid>
                         </Grid>
                         <TextField variant="outlined" size={"small"} placeholder={"Buscar repartidor, unidad"}
@@ -192,7 +208,7 @@ class DetalleParadas extends Component {
                                                         </Grid>
                                                     }/>
                                                 </ListItem>
-                                                <Collapse in={this.state.indexOpen === index} timeout="auto"
+                                               {/* <Collapse in={this.state.indexOpen === index} timeout="auto"
                                                           unmountOnExit>
                                                     <div style={{
                                                         borderRadius: "5px",
@@ -221,7 +237,7 @@ class DetalleParadas extends Component {
                                                         </List>
                                                     </div>
 
-                                                </Collapse>
+                                                </Collapse>*/}
                                             </div>
                                         )
                                     })
