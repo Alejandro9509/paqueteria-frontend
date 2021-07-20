@@ -15,7 +15,7 @@ import { DataGrid } from '@material-ui/data-grid';
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import { FormControl, InputLabel, Select, Tooltip } from "@material-ui/core";
-import { obtenerCodigoPostal } from "../Util/Contexts/CodigoPostalContext";
+import { obtenerCodigoPostal,obtenerPaisEstadoByCP } from "../Util/Contexts/CodigoPostalContext";
 import { obtenerPaises } from "../Util/Contexts/PaisesContext";
 import { obtenerEstadosPais } from "../Util/Contexts/EstadosContext";
 import { agregarSucursales, eliminarSucursales, modificarSucursales, obtenerSucursales, obtenerSucursalesId } from "../Util/Contexts/SucursalContext";
@@ -29,7 +29,7 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
-function Sucursal() {
+function Sucursal(props) {
 
     const [data, setData] = React.useState([])
     const [dataPais, setDataPais] = React.useState([])
@@ -493,30 +493,100 @@ function Sucursal() {
                                                         </div>
 
                                                         <div className="col-sm-12 col-md-2-5 unit">
-                                                            <label className="input select">
-                                                                <FormControl fullWidth variant="outlined" margin="dense">
-                                                                    <InputLabel id="codigoPostalLabel">Código Postal</InputLabel>
-                                                                    <Select
-                                                                        labelId="codigoPostalLabel"
-                                                                        label="Código Postal"
-                                                                        className="form-control"
-                                                                        required
-                                                                        value={state.codigoPostal}
-                                                                        onChange={handleChange}
-                                                                        id="codigoPostal"
-                                                                    >
-                                                                        {dataCodigoPostal.filter(cp => cp.m_nIdEstado == state.idEstado.m_nIdEstado).map(
-                                                                            (codigoPostal) => (
-                                                                                <option key={codigoPostal.m_nIdCP} value={codigoPostal.m_nIdCP}>
-                                                                                    {
-                                                                                        codigoPostal.m_sCP
-                                                                                    }
-                                                                                </option>
-                                                                            )
-                                                                        )}
-                                                                    </Select>
-                                                                </FormControl>
-                                                            </label>
+                                                        <div className="input">
+                                                                            <Autocomplete
+                                                                                value={state.codigoPostalRemitente}
+                                                                                freeSolo
+                                                                                onSelect={(event, newValue) => {
+                                                                                    console.log(state.ciudadRemitente)
+                                                                                    console.log(
+                                                                                        dataCodigoPostal.filter(cp => cp.m_nIdCiudad == state.ciudadRemitente))
+                                                                                    setState({
+                                                                                        ...state,
+                                                                                        codigoPostal: newValue,
+                                                                                      
+                                                                                    })
+                                                                                    obtenerPaisEstadoByCP(state.codigoPostal).then(respuesta => {
+                                                                                    
+                                                                                        setState({
+                                                                                            ...state,
+                                                                                            idPais: respuesta.data[0].m_nIdPais
+                                                                                        })
+                                                                                    });
+                                                                                }
+                                                                               
+                                                                            }
+                                                                          
+                                                                            
+                                                                                id="codigoPostal"
+                                                                                disableClearable
+                                                                                forcePopupIcon={false}
+                                                                                options={dataCodigoPostal //.filter((cp) => cp.m_nIdCiudad == state.ciudadRemitente)//
+                                                                                }
+                                                                                disabled={state.agregar === "Consultar"}
+                                                                                getOptionLabel={(option) =>
+                                                                                    option.m_sCP
+                                                                                }
+                                                                                variant="outlined"
+                                                                                style={{
+                                                                                    transform: "translate(14px, 10px) scale(1) !important"
+                                                                                }}
+                                                                                renderInput={(params) => (
+                                                                                    <div>
+                                                                                        <TextField
+                                                                                            variant="outlined"
+                                                                                            label="Código Postal"
+                                                                                            margin="dense"
+                                                                                            required
+                                                                                            {...params}
+                                                                                            InputProps={{
+                                                                                                ...params.InputProps,
+                                                                                                style: {
+                                                                                                    height: "33px",
+                                                                                                    fontSize: "14px"
+                                                                                                },
+                                                                                                type: "search",
+                                                                                                disableUnderline: true,
+                                                                                                disabled: state.agregar === "Consultar",
+                                                                                                endAdornment: (
+                                                                                                    <InputAdornment
+                                                                                                        position="end">
+                                                                                                        <IconButton
+                                                                                                            padding="0px"
+                                                                                                            style={{
+                                                                                                                paddingRight: "0px",
+                                                                                                            }}
+                                                                                                            disabled={state.agregar === "Consultar"}
+                                                                                                            onClick={() => {
+                                                                                                                setState({
+                                                                                                                    ...state,
+                                                                                                                    identificadorModal:
+                                                                                                                        "codigoPostalRemitente",
+                                                                                                                    tipoModal: 0,
+                                                                                                                    openDialog: true
+                                                                                                                });
+                                                                                                            }}
+                                                                                                        >
+                                                                                                            <PageviewIcon
+                                                                                                                style={{
+                                                                                                                    color: "#F9A03E",
+                                                                                                                    fontSize: 32,
+                                                                                                                    paddingInlineEnd: 0,
+                                                                                                                    paddingRight: 0,
+                                                                                                                    paddingBlockEnd: 0,
+                                                                                                                    paddingLeft: 0,
+                                                                                                                    paddingBlock: 0,
+                                                                                                                }}
+                                                                                                            />
+                                                                                                        </IconButton>
+                                                                                                    </InputAdornment>
+                                                                                                ),
+                                                                                            }}
+                                                                                        />
+                                                                                    </div>
+                                                                                )}
+                                                                            />
+                                                                        </div>
                                                         </div>
 
                                                         <div className="col-sm-12 col-md-2-5 unit">
