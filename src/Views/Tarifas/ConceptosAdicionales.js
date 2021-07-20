@@ -388,8 +388,8 @@ class ConceptosAdicionales extends Component {
                             <table style={{ width: "100%" }}>
                                 <tr>
                                     <th style={{ textAlign: "left" }}> Concepto</th>
-                                    <th style={{ textAlign: "left" }}> Min</th>
-                                    <th style={{ textAlign: "left" }}> Max</th>
+                                    {this.props.mostrarRangos ? <th style={{ textAlign: "left" }}> Min</th> : <th></th>}
+                                    {this.props.mostrarRangos ? <th style={{ textAlign: "left" }}> Max</th> : <th></th>}
                                     <th style={{ textAlign: "left" }}> Importe</th>
                                     <th style={{ textAlign: "left" }}> Traslada</th>
                                     <th style={{ textAlign: "left" }}> Importe IVA</th>
@@ -400,8 +400,8 @@ class ConceptosAdicionales extends Component {
                                     this.props.conceptosAdicionales.map((c, index) => (
                                         <tr>
                                             <td style={{ textAlign: "left" }}>{c.nombreConcepto}</td>
-                                            <td style={{ textAlign: "left" }}>{c.rangoMinimo} Kg</td>
-                                            <td style={{ textAlign: "left" }}>{c.rangoMaximo} Kg</td>
+                                            {this.props.mostrarRangos ? <td style={{ textAlign: "left" }}>{c.rangoMinimo} Kg</td> : <td></td>}
+                                            {this.props.mostrarRangos ? <td style={{ textAlign: "left" }}>{c.rangoMaximo} Kg</td> : <td></td>}
                                             <td style={{ textAlign: "left" }}>${parseFloat(c.importe).toFixed(2)}</td>
                                             <td style={{ textAlign: "left" }}>{this.state.impuestos.length !== 0 && (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.traslada)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.traslada)).m_sImpuesto : "No Aplica")}</td>
                                             <td style={{ textAlign: "left" }}>${parseFloat(c.importeIVA).toFixed(2)}</td>
