@@ -15,7 +15,7 @@ import { DataGrid } from '@material-ui/data-grid';
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import { FormControl, InputLabel, Select, Tooltip } from "@material-ui/core";
-import { obtenerCodigoPostal,obtenerPaisEstadoByCP } from "../Util/Contexts/CodigoPostalContext";
+import { obtenerCodigoPostal } from "../Util/Contexts/CodigoPostalContext";
 import { obtenerPaises } from "../Util/Contexts/PaisesContext";
 import { obtenerEstadosPais } from "../Util/Contexts/EstadosContext";
 import { agregarSucursales, eliminarSucursales, modificarSucursales, obtenerSucursales, obtenerSucursalesId } from "../Util/Contexts/SucursalContext";
@@ -51,12 +51,14 @@ function Sucursal(props) {
         numInterior: 0,
         numExterior: 0,
         iva: "18",
-        zonaHoraria: "08:00|America/Tijuana",
+        zonaHoraria: "",
         activo: false,
         height: window.innerHeight,
         CreadoPor: localStorage.getItem("UsuarioId"),
         ModificadoPor: localStorage.getItem("UsuarioId")
     })
+
+
 
 
     const handleAceptar = (e) => {
@@ -102,6 +104,22 @@ function Sucursal(props) {
 
     }
 
+    function obtenerPaisEstadoByCP(id){
+        if (id !=undefined) {
+        const url = `${process.env.REACT_APP_API_URL_LOCAL}/Utilerias/BusquedaPaisEstadoByCP/` + id;
+        axios.get(url, { headers }).then((respuesta) => {
+            setState
+            ({
+                ...state,
+                idPais: respuesta.data[0].m_nIdPais ,   
+         
+            idEstado: dataEstado.find(
+                (o) => o.m_nIdEstado === respuesta.data[0].m_nIdEstado
+            ),   })
+        });
+    }
+    }
+
     function handleEliminar(id) {
         var derecho;
         validarPermisos(state).then(respuesta => {
@@ -133,7 +151,7 @@ function Sucursal(props) {
                 idSucursal: respuesta.data.m_nIdSucursal,
                 sucursal: respuesta.data.m_sSucursal,
                 abreviacion: respuesta.data.m_sAbreviacion,
-                idPais: 0,
+                idPais:  respuesta.data.m_nIdPais,
                 idEstado: respuesta.data.m_nIdEstado,
                 codigoPostal: 0,
                 municipio: respuesta.data.m_sMunicipio,
@@ -143,7 +161,7 @@ function Sucursal(props) {
                 numInterior: respuesta.data.m_sNoInterior,
                 numExterior: respuesta.data.m_sNoExterior,
                 iva: respuesta.data.m_sIdImpuestoTraslado,
-                zonaHoraria: respuesta.data.m_xZonaHoraria,
+                zonaHoraria: respuesta.data.m_sDescripcionZonaHoraria,
                 activo: respuesta.data.m_bActiva
             })
         });
@@ -165,7 +183,7 @@ function Sucursal(props) {
             numInterior: 0,
             numExterior: 0,
             iva: "18",
-            zonaHoraria: "08:00|America/Tijuana",
+            zonaHoraria: "",
             activo: false
         })
     }
@@ -185,6 +203,19 @@ function Sucursal(props) {
             idPais: event.target.value
         });
         getAllEstado(event.target.value)
+    }
+    const handleSelectIva = event => {
+        setState({
+            ...state,
+            iva: event.target.value
+        });
+    }
+
+    const handleSelectZonaHoraria= event => {
+        setState({
+            ...state,
+            zonaHoraria: event.target.value
+        });
     }
 
     function handleChangeBoolean() {
@@ -497,22 +528,15 @@ function Sucursal(props) {
                                                                             <Autocomplete
                                                                                 value={state.codigoPostalRemitente}
                                                                                 freeSolo
-                                                                                onSelect={(event, newValue) => {
-                                                                                    console.log(state.ciudadRemitente)
-                                                                                    console.log(
-                                                                                        dataCodigoPostal.filter(cp => cp.m_nIdCiudad == state.ciudadRemitente))
+                                                                                onChange={(event, newValue) =>
                                                                                     setState({
                                                                                         ...state,
                                                                                         codigoPostal: newValue,
-                                                                                      
                                                                                     })
-                                                                                    obtenerPaisEstadoByCP(state.codigoPostal).then(respuesta => {
-                                                                                    
-                                                                                        setState({
-                                                                                            ...state,
-                                                                                            idPais: respuesta.data[0].m_nIdPais
-                                                                                        })
-                                                                                    });
+                                                                                }
+                                                                                onSelect={() => {
+                                                                                 console.log(state.codigoPostal)
+                                                                                    obtenerPaisEstadoByCP(state.codigoPostal.m_nIdCP)
                                                                                 }
                                                                                
                                                                             }
@@ -690,7 +714,7 @@ function Sucursal(props) {
                                                                         className="form-control"
                                                                         required
                                                                         value={state.iva}
-                                                                        onChange={handleChange}
+                                                                        onChange={handleSelectIva}
                                                                         id="iva"
                                                                     >
                                                                         <option value="18">
@@ -704,7 +728,7 @@ function Sucursal(props) {
                                                             </label>
                                                         </div>
 
-                                                        <div className="col-sm-12 col-md-2-5  unit">
+                                                        <div className="col-sm-12 col-md-4  unit">
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined" margin="dense">
                                                                     <InputLabel id="zonaHorariaLabel">Zona Horaria</InputLabel>
@@ -714,15 +738,36 @@ function Sucursal(props) {
                                                                         className="form-control"
                                                                         required
                                                                         value={state.zonaHoraria}
-                                                                        onChange={handleChange}
+                                                                        onChange={handleSelectZonaHoraria}
                                                                         id="zonaHoraria"
                                                                     >
-                                                                        <option value="08:00|America/Tijuana">
+                                                                        <option value="-06:00|America/México, Gudalajara, Monterrey">
+                                                                        America/México, Gudalajara, Monterrey
+                                                                        </option>
+
+                                                                        <option value="-06:00|America/Piedras Negras Reynosa">
+                                                                        America/Piedras Negras Reynosa
+                                                                        </option>
+
+                                                                        <option value="-07:00|America/Sonora">
+                                                                        America/Sonora
+                                                                        </option>
+                                                                        <option value="-07:00|America/Chihuahua, La paz, Mazatlán">
+                                                                        America/Chihuahua, La paz, Mazatlán
+                                                                        </option>
+
+                                                                        <option value="-08:00|America/Baja California">
+                                                                        America/Baja California
+                                                                        </option>
+
+                                                                        <option value="-07:00|America/Chihuahua">
+                                                                        America/Cancun
+                                                                        </option>
+
+                                                                        <option value="-08:00|America/Tijuana">
                                                                             America/Tijuana
-                              </option>
-                                                                        <option value="06:00|America/Mexico_City">
-                                                                            America/Mexico_City
-                              </option>
+                                                                        </option>
+                                                                       
                                                                     </Select>
                                                                 </FormControl>
                                                             </label>

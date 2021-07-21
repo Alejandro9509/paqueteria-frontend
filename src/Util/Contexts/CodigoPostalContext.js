@@ -42,14 +42,7 @@ function obtenerCodigoPostalCiudad(id){
     return result
 }
 
-function obtenerPaisEstadoByCP(id){
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/Utilerias/BusquedaPaisEstadoByCP/` + id;
-    let result;
-    trackPromise(
-        result =  axios.get(url, { headers })
-        );
-    return result
-}
+
 
 function obtenerCodigoPostal(){
     const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado` ;
@@ -77,4 +70,4 @@ function obtenerCodigoPostalId(id){
     return result
 }
 
-export {modificarCodigoPostal, agregarCodigoPostal, eliminarCodigoPostal, obtenerCodigoPostalId, obtenerCodigoPostalCiudad, obtenerCodigoPostal, obtenerCodigoPostalEstado,obtenerPaisEstadoByCP}
+export {modificarCodigoPostal, agregarCodigoPostal, eliminarCodigoPostal, obtenerCodigoPostalId, obtenerCodigoPostalCiudad, obtenerCodigoPostal, obtenerCodigoPostalEstado}
