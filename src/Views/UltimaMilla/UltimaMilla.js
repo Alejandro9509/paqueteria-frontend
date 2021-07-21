@@ -39,6 +39,7 @@ class UltimaMilla extends Component {
             chatFullscreen: true,
             cronogramaFullscreen: true,
             resumenFullscreen: true,
+            filtros: {}
         }
         this.generarRuta = this.generarRuta.bind(this)
         this.getLocation = this.getLocation.bind(this)
@@ -86,14 +87,9 @@ class UltimaMilla extends Component {
     }
 
     guardarRuta() {
-        this.state.tour.unidades.forEach((u) => {
-            var tour = this.state.tour.tour.tours.find( t => t.vehicleId === ("vehicle" + u.m_nIdUnidad))
-            var guias = this.state.tour.paquetes.filter((p, index) => tour.trips[0].stops.find((s, i) => parseInt(s.tasks[0].orderId) === p.idGuia) != null)
-            agregarRuta(guias, u).then((data) => {
-
-            })
+        agregarRuta(this.state.tour, this.state.filtros).then((data) => {
+            
         })
-
     }
 
     async searchLocation(address) {
@@ -114,7 +110,7 @@ class UltimaMilla extends Component {
                     }
                 }
                 results.tours.map(t => t.color = randomColor(10))
-                this.setState({tour: {tour: results, paquetes: guias, unidades: unidades}, openCronograma: true})
+                this.setState({tour: {tour: results, paquetes: guias, unidades: unidades}, openCronograma: true, filtros: data})
             })
         }
     }

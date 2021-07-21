@@ -228,11 +228,22 @@ async function searchLocation(city, address) {
     }
 }
 
-function agregarRuta(guias, unidad){
-    const url = `${process.env.REACT_APP_API_URL}/GenerarRuta`;
+function agregarRuta(tour, data){
+    const url = `${process.env.REACT_APP_API_URL}/GuardarUltimaMilla`;
     let result;
+    var ultimaMillaObject = {fecha: data.fecha.split("T")[0], m_nCreadoPor: localStorage.getItem("UsuarioId"), idSucursal: data.sucursalSeleccionada.m_nIdSucursal,zonas: [], rutas:[]}
+    console.log(tour)
+    tour.unidades.forEach((u) => {
+        var tempTour = tour.tour.tours.find( t => t.vehicleId === ("vehicle" + u.m_nIdUnidad))
+        var guias = tour.paquetes.filter((p, index) => tempTour.trips[0].stops.find((s, i) => parseInt(s.tasks[0].orderId) === p.idGuia) != null)
+        ultimaMillaObject.rutas.push({idOperador: u.m_nIdOperador, idUnidad: u.m_nIdUnidad, guias: guias})
+    })
+    data.zonasSeleccionada.forEach((z) => {
+        ultimaMillaObject.zonas.push({id: z.m_nIdZona})
+    })
+
     trackPromise(
-        result = axios.put(url, Object.assign({}, {m_arrClsProGuia: guias.map(g => ({m_nIdGuia: g.idGuia, m_sLatitud: g.lat, m_sLongitud: g.lng, IdSucursal: g.IdSucursal, m_nCiudadRemitente: g.m_nCiudadRemitente, m_nIdCiudadDestino: g.m_nIdCiudadDestino})), m_nIdUnidad: unidad.m_nIdUnidad, m_nIdOperador: unidad.m_nIdOperador, m_nCreadoPor: localStorage.getItem("UsuarioId")}), { headers })
+        result = axios.post(url, Object.assign({}, ultimaMillaObject), { headers })
     );
     return result
 }

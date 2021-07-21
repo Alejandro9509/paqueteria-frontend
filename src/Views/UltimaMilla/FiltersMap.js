@@ -93,7 +93,6 @@ class FiltersMap extends Component {
             fecha: new Date(),
             unidadesSeleccionadas: [],
             paquetesSeleccionadas: [],
-            sucursalSeleccionadas: [],
             startDate: moment(new Date()).format('yyyy-MM-DD'),
             finishDate: moment(new Date()).format('yyyy-MM-DD'),
             startTime: "00:00",
