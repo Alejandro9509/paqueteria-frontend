@@ -51,7 +51,7 @@ class PaquetesList extends Component {
     getAllPaquetes() {
         //"0", "0", this.props.data.sucursalSeleccionada.m_nIdSucursal, 4
         obtenerGuia().then(({data}) => {
-            this.setState({paquetes: arrayGuias})
+            this.setState({paquetes: data})
         })
     }
 

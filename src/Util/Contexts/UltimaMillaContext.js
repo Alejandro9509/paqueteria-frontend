@@ -231,7 +231,7 @@ async function searchLocation(city, address) {
 function agregarRuta(tour, data){
     const url = `${process.env.REACT_APP_API_URL}/GuardarUltimaMilla`;
     let result;
-    var ultimaMillaObject = {fecha: data.fecha.split("T")[0], m_nCreadoPor: localStorage.getItem("UsuarioId"), idSucursal: data.sucursalSeleccionada.m_nIdSucursal,zonas: [], rutas:[]}
+    var ultimaMillaObject = {fecha: data.fecha.split("T")[0].replace("-", ""), m_nCreadoPor: localStorage.getItem("UsuarioId"), idSucursal: data.sucursalSeleccionada.m_nIdSucursal,zonas: [], rutas:[]}
     console.log(tour)
     tour.unidades.forEach((u) => {
         var tempTour = tour.tour.tours.find( t => t.vehicleId === ("vehicle" + u.m_nIdUnidad))
