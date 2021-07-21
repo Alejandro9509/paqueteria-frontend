@@ -1,6 +1,7 @@
 import {arrayPonts} from "../Data";
 import {trackPromise} from "react-promise-tracker";
 import axios from "axios";
+import Tour from "../../Views/UltimaMilla/Tour";
 
 const headers = {
     'Content-Type': 'application/json',
@@ -236,7 +237,8 @@ function agregarRuta(tour, data){
     tour.unidades.forEach((u) => {
         var tempTour = tour.tour.tours.find( t => t.vehicleId === ("vehicle" + u.m_nIdUnidad))
         var guias = tour.paquetes.filter((p, index) => tempTour.trips[0].stops.find((s, i) => parseInt(s.tasks[0].orderId) === p.idGuia) != null)
-        ultimaMillaObject.rutas.push({idOperador: u.m_nIdOperador, idUnidad: u.m_nIdUnidad, guias: guias})
+        guias = ordenarGuiasPorRuta(tempTour, guias)
+        ultimaMillaObject.rutas.push({idOperador: u.m_nIdOperador, idUnidad: u.m_nIdUnidad, guias: guias.map(g => ({idGuia: g.idGuia, lat: g.lat, lng: g.lng, orden: g.orden}))})
     })
     data.zonasSeleccionada.forEach((z) => {
         ultimaMillaObject.zonas.push({id: z.m_nIdZona})
@@ -251,3 +253,19 @@ function agregarRuta(tour, data){
 export {obtenerRutas, obtenerGuiasUbicacion, calcularRuta, randomColor, searchLocationWeb, agregarRuta, searchLocationAddress}
 
 
+function ordenarGuiasPorRuta(tour, guias) {
+    var result = []
+        tour.trips[0].stops.forEach((item, index) => {
+            var found = false;
+            guias = guias.filter(function (guia) {
+                if (!found && guia.idGuia == parseInt(item.tasks[0].orderId)) {
+                    guia.orden = index + 1
+                    result.push(guia);
+                    found = true;
+                    return false;
+                } else
+                    return true;
+            })
+        })
+        return result
+}
