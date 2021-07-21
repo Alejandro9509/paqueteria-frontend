@@ -152,7 +152,9 @@ function Sucursal(props) {
                 sucursal: respuesta.data.m_sSucursal,
                 abreviacion: respuesta.data.m_sAbreviacion,
                 idPais:  respuesta.data.m_nIdPais,
-                idEstado: respuesta.data.m_nIdEstado,
+                idEstado: dataEstado.find(
+                    (o) => o.m_nIdEstado === respuesta.data.m_nIdEstado
+                ),                
                 codigoPostal: 0,
                 municipio: respuesta.data.m_sMunicipio,
                 localidad: respuesta.data.m_sLocalidad,
