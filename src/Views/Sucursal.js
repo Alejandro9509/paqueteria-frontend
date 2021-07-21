@@ -106,7 +106,7 @@ function Sucursal(props) {
 
     function obtenerPaisEstadoByCP(id){
         if (id !=undefined) {
-        const url = `${process.env.REACT_APP_API_URL_LOCAL}/Utilerias/BusquedaPaisEstadoByCP/` + id;
+        const url = `${process.env.REACT_APP_API_URL}/Utilerias/BusquedaPaisEstadoByCP/` + id;
         axios.get(url, { headers }).then((respuesta) => {
             setState
             ({
