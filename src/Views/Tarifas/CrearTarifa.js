@@ -38,8 +38,8 @@ class CrearTarifa extends Component {
             tiposCobroAll: false,
             tiposServicioAll: false,
             activo: true,
-            porPesoOVolumen: props.edit ? props.select.m_bPorPeso : false,
-            porRangos: props.edit ? props.select.m_nIdSucursal : false,
+            porPesoOVolumen: props.edit ? props.select.m_bPorPesoVolumen : true,
+            porRangos: props.edit ? props.select.m_bPorRango : false,
             unidadPeso: props.edit ? props.select.m_sUnidadPeso : "Kg",
             factorConversion: props.edit ? props.select.m_nFactorConversion : 1,
             ivaTraslada: [],
@@ -107,7 +107,7 @@ class CrearTarifa extends Component {
         const { conceptosAdicionales } = this.state
         var ivaTraslada = []
         var ivaRetiene = []
-        conceptosAdicionales.push({ concepto: data.concepto, importe: data.importe, retiene: data.retiene, traslada: data.traslada, importeRet: data.importeRet, importeIVA: data.importeIVA, rangoMinimo: data.rangoMinimo, rangoMaximo: data.rangoMaximo, nombreConcepto: data.nombreConcepto, tipoCalculo: data.tipoCalculo })
+        conceptosAdicionales.push({ concepto: data.concepto, importe: data.importe, retiene: data.retiene, traslada: data.traslada, importeRet: data.importeRet, importeIVA: data.importeIVA, rangoMinimo: data.rangoMinimo, rangoMaximo: data.rangoMaximo, nombreConcepto: data.nombreConcepto, tipoCalculo: data.tipoCalculo, rangoMinimo: data.rangoMinimo, rangoMaximo: data.rangoMaximo })
         ivaTraslada = getUniqueListBy(conceptosAdicionales, "traslada").map(i => i.traslada);
         ivaRetiene = getUniqueListBy(conceptosAdicionales, "retiene").map(i => i.retiene);
 
@@ -279,7 +279,7 @@ class CrearTarifa extends Component {
                                                 Peso o Volumen
                                                 <input type="checkbox"
                                                     checked={this.state.porPesoOVolumen}
-                                                    onChange={(e) => { this.setState({ porPesoOVolumen: !this.state.porPesoOVolumen, porRangos: false }) }}
+                                                    onChange={(e) => { this.setState({ porPesoOVolumen: !this.state.porPesoOVolumen, porRangos: !this.state.porRangos }) }}
                                                     name="porPesoOVolumen" />
                                                 <i />
                                             </label>
@@ -290,7 +290,7 @@ class CrearTarifa extends Component {
                                                 Rangos
                                                 <input type="checkbox"
                                                     checked={this.state.porRangos}
-                                                    onChange={(e) => { this.setState({ porRangos: !this.state.porRangos, porPesoOVolumen: false }) }}
+                                                    onChange={(e) => { this.setState({ porRangos: !this.state.porRangos, porPesoOVolumen: !this.state.porPesoOVolumen }) }}
                                                     name="porRangos" />
                                                 <i />
                                             </label>

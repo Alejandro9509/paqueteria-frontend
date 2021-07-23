@@ -195,8 +195,6 @@ class ConceptosAdicionales extends Component {
                                         this.setState({
                                             concepto: newValue,
                                             nombreConcepto: newValue.m_sConcepto,
-                                            rangoMinimo: newValue.m_nRangoMinimo,
-                                            rangoMaximo: newValue.m_nRangoMaximo,
                                             importeRet: "0",
                                             retiene: 0,
                                             traslada: 0,
@@ -277,7 +275,6 @@ class ConceptosAdicionales extends Component {
                                     type="number"
                                     label="Min"
                                     style={{ textAlign: "right" }}
-                                    disabled
                                     value={this.state.rangoMinimo}
                                     name="rangoMinimo"
                                 />
@@ -292,7 +289,6 @@ class ConceptosAdicionales extends Component {
                                     type="number"
                                     label="Max"
                                     style={{ textAlign: "right" }}
-                                    disabled
                                     value={this.state.rangoMaximo}
                                     name="rangoMaximo"
                                 />

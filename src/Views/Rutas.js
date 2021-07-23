@@ -93,6 +93,7 @@ function Rutas(props) {
         isTour: false,
         showDialog: false,
         identificadorModal: "",
+        clasificacion: 0,
         tipoModal: 0,
         tipoUnidad: null,
         tipoViaje: null,
@@ -275,7 +276,6 @@ function Rutas(props) {
             "m_sDescripcion": state.description,
             "m_nIdTipoViaje": state.tipoViaje,
             "m_nIdClasificacionViaje": state.clasificacion,
-            //"m_nIdClasificacionViaje": 1,
             "m_nIdTipoUnidad": state.tipoUnidad,
             "m_bTipoTrayecto": state.trayecto === "PERMANENTE" ? 1 : 0,
             "m_rHoras": state.horas,
@@ -293,6 +293,7 @@ function Rutas(props) {
             "m_arrClsTrazoLibre": state.points,
 
         }
+        console.log(JSON.stringify(params))
         if (state.idRuta != 0) {
             modificarRutas(state.idRuta, params)
                 .then((respuesta) => {
@@ -319,7 +320,7 @@ function Rutas(props) {
                     $('#Listado').addClass('in show');
                 })
                 .catch((err) => {
-                    console.log(err);
+                    console.log(JSON.stringify(err));
                     showSuccess(err);
                 });
         }
@@ -838,6 +839,7 @@ function Rutas(props) {
                                                                                     type="text"
                                                                                     pattern="[0-9]*"
                                                                                     required
+                                                                                    type="number"
                                                                                     className="form-control"
                                                                                     name="folio"
                                                                                     value={state.folio}

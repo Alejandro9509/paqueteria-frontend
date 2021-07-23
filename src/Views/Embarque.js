@@ -373,6 +373,8 @@ function Embarque(props) {
                 ModificadoPor: state.ModificadoPor,
                 m_tFechaDetalleEntrega: state.fechaEntrega.split("T")[0],
                 m_tHoraDetalleEntrega: state.fechaEntrega.split("T")[1],
+                m_bEntregaEnSucursal: state.entregaEnSucursal,
+                m_nIdSucursalEntrega: state.idSucursalEntrega
             }
 
         } else {
