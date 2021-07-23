@@ -42,6 +42,8 @@ function obtenerCodigoPostalCiudad(id){
     return result
 }
 
+
+
 function obtenerCodigoPostal(){
     const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado` ;
     let result;
