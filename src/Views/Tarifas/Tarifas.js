@@ -217,7 +217,8 @@ class Tarifas extends Component {
                 m_nIdImpuestoRetiene: c.retiene,
                 m_cImporteRetiene: c.importeRet,
                 m_cImporteIva: c.importeIVA,
-                m_nIdTipoCalculo: c.tipoCalculo
+                m_nIdTipoCalculo: c.tipoCalculo,
+                m_nIdAgregadoDesde: c.agregadoDesde
             })),
             m_nCreadoPOr: localStorage.getItem("UsuarioId"),
             m_nModificadoPor: localStorage.getItem("UsuarioId")
