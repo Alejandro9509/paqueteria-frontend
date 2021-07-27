@@ -287,7 +287,6 @@ class ConceptosAdicionales extends Component {
                                     type="number"
                                     label="Min"
                                     style={{ textAlign: "right" }}
-                                    disabled
                                     value={this.state.rangoMinimo}
                                     name="rangoMinimo"
                                 />
@@ -302,7 +301,6 @@ class ConceptosAdicionales extends Component {
                                            type="number"
                                            label="Max"
                                            style={{textAlign: "right"}}
-                                           disabled
                                            value={this.state.rangoMaximo}
                                            name="rangoMaximo"
                                 />
