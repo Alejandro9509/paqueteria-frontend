@@ -30,7 +30,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="develop" />
+        <entry key="$PROJECT_DIR$" value="support/tarifas" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -159,7 +159,21 @@
       <option name="project" value="LOCAL" />
       <updated>1625612097430</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Se agregaron filtros para conceptos de tarifas">
+      <created>1627348022490</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1627348022490</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Se agregaron los filtros necesarios">
+      <created>1627356533411</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1627356533411</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -170,19 +184,7 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="FILTERS">
-                <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="origin/develop" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-            </State>
+            <State />
           </value>
         </entry>
       </map>
@@ -222,7 +224,9 @@
     <MESSAGE value="*Se agregó modulo de convenios" />
     <MESSAGE value="*Se integró listado de atajos en toolbar" />
     <MESSAGE value="* Se traen los accesos directos de los servicios" />
-    <option name="LAST_COMMIT_MESSAGE" value="* Se traen los accesos directos de los servicios" />
+    <MESSAGE value="Se agregaron filtros para conceptos de tarifas" />
+    <MESSAGE value="Se agregaron los filtros necesarios" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se agregaron los filtros necesarios" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

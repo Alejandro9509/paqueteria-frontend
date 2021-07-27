@@ -46,7 +46,8 @@ class ConceptosAdicionales extends Component {
                     Name: "Concepto",
                     accessor: "m_sConcepto",
                 }
-            ]
+            ],
+            agregadoDesde: 2
 
         }
         this.getAllConceptos = this.getAllConceptos.bind(this)
@@ -80,7 +81,18 @@ class ConceptosAdicionales extends Component {
                     this.props.removeConcepto(element)
                 })
                 this.props.select.m_arrArConceptos.forEach(element => {
-                    this.props.addConcepto({ concepto: respuesta.data.find(c => c.m_nIdConceptosFacturacion === element.m_nIdConceptosFacturacion), importe: element.m_cImporte, traslada: element.m_nIdImpuestoTraslada, importeIVA: element.m_cImporteIva, retiene: element.m_nIdImpuestoRetiene, importeRet: element.m_cImporteRetiene, nombreConcepto: element.m_sConcepto, rangoMinimo: element.m_xnRangoMinimo, rangoMaximo: element.m_xnRangoMaximo })
+                    this.props.addConcepto({
+                        concepto: respuesta.data.find(c => c.m_nIdConceptosFacturacion === element.m_nIdConceptosFacturacion),
+                        importe: element.m_cImporte,
+                        traslada: element.m_nIdImpuestoTraslada,
+                        importeIVA: element.m_cImporteIva,
+                        retiene: element.m_nIdImpuestoRetiene,
+                        importeRet: element.m_cImporteRetiene,
+                        nombreConcepto: element.m_sConcepto,
+                        rangoMinimo: element.m_xnRangoMinimo,
+                        rangoMaximo: element.m_xnRangoMaximo,
+                        agregadoDesde: element.m_nIdAgregadoDesde
+                    })
                 })
             }
             this.setState({ conceptos: respuesta.data })
@@ -275,6 +287,7 @@ class ConceptosAdicionales extends Component {
                                     type="number"
                                     label="Min"
                                     style={{ textAlign: "right" }}
+                                    disabled
                                     value={this.state.rangoMinimo}
                                     name="rangoMinimo"
                                 />
@@ -284,13 +297,14 @@ class ConceptosAdicionales extends Component {
 
                             <div className="input">
                                 <TextField variant="outlined" margin="dense"
-                                    onChange={this.handleChange}
-                                    className="form-control"
-                                    type="number"
-                                    label="Max"
-                                    style={{ textAlign: "right" }}
-                                    value={this.state.rangoMaximo}
-                                    name="rangoMaximo"
+                                           onChange={this.handleChange}
+                                           className="form-control"
+                                           type="number"
+                                           label="Max"
+                                           style={{textAlign: "right"}}
+                                           disabled
+                                           value={this.state.rangoMaximo}
+                                           name="rangoMaximo"
                                 />
                             </div>
                         </div>
