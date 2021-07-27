@@ -124,8 +124,6 @@ class CrearTarifa extends Component {
             rangoMaximo: data.rangoMaximo,
             nombreConcepto: data.nombreConcepto,
             tipoCalculo: data.tipoCalculo,
-            rangoMinimo: data.rangoMinimo,
-            rangoMaximo: data.rangoMaximo,
             agregadoDesde: data.agregadoDesde
         })
         ivaTraslada = getUniqueListBy(conceptosAdicionales, "traslada").map(i => i.traslada);
