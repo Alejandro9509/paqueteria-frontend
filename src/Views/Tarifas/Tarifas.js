@@ -199,7 +199,7 @@ class Tarifas extends Component {
     handleAceptar(data) {
         var params = {
             m_nIdSucursal: data.sucursal,
-            m_sDestino: data.destino,
+            m_nIdDestino: data.destino,
             m_cFleteMinimo: data.precioFlete,
             m_bActivo: data.activo ? 1 : 0,
             m_cMontoMinimo: data.precioMinimo,

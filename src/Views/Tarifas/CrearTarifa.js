@@ -45,7 +45,7 @@ class CrearTarifa extends Component {
             ivaTraslada: [],
             ivaRetiene: [],
             sucursal: props.edit ? props.select.m_nIdSucursal : "0",
-            destino: props.edit ? props.select.m_sDestino : "0",
+            destino: props.edit ? props.select.m_nIdDestino : "0",
             precioFlete: props.edit ? props.select.m_cFleteMinimo : "",
             precioMinimo: props.edit ? props.select.m_cMontoMinimo : "",
             precioKilo: props.edit ? props.select.m_cPrecioKilo : "",
@@ -83,7 +83,6 @@ class CrearTarifa extends Component {
     getAllImpuestos() {
         const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetListado`;
         axios.get(url, { headers }).then(respuesta => {
-            console.log(respuesta.data)
             this.setState({ impuestos: respuesta.data })
         });
     };
@@ -299,7 +298,7 @@ class CrearTarifa extends Component {
                                                         {this.state.ciudades.map((ciudad) => (
                                                             <option
                                                                 key={ciudad.m_nIdCiudad}
-                                                                value={ciudad.m_sCiudad}
+                                                                value={ciudad.m_nIdCiudad}
                                                             >
                                                                 {ciudad.m_sCiudad}
                                                             </option>
