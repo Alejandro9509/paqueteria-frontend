@@ -1,10 +1,12 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Cabecera from "../../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
 import {ReactComponent as GClienteIcon} from "../../iconos/Catalogos/Icono Grupo Clientes/icono_grupo_cliente.svg";
 import GrupoClientePage from "../GrupoCliente";
 import {makeStyles} from "@material-ui/core/styles";
 import {Button, ButtonBase, List, ListItem, ListItemIcon, ListItemText} from "@material-ui/core";
+import {obtenerAtajosUsuario, obtenerTodosAtajos} from "../../Util/Contexts/AccesosDirectosContext";
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -70,8 +72,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AccesosDirectos(){
     const classes = useStyles();
-    const [allShortcuts, setAllShortcuts] = React.useState([
-        {
+    const [allAtajos, setAllAtajos] = React.useState([
+        /*{
             id: 0,
             path: "/GrupoCliente",
             name: "Grupo Clientes1",
@@ -95,42 +97,25 @@ export default function AccesosDirectos(){
             name: "Grupo Clientes4",
             icon:  <GClienteIcon style={{width:30, height:30}}/>,
             component: GrupoClientePage,
-        },
+        },*/
         ]);
-    const [userShortcuts, setUserShortcuts] = React.useState([
-        {
-            id: 4,
-            path: "/GrupoCliente",
-            name: "Grupo Clientes5",
-            icon:  <GClienteIcon style={{width:30, height:30}}/>,
-            component: GrupoClientePage,
-        },{
-            id: 5,
-            path: "/GrupoCliente",
-            name: "Grupo Clientes6",
-            icon:  <GClienteIcon style={{width:30, height:30}}/>,
-            component: GrupoClientePage,
-        },{
-            id: 6,
-            path: "/GrupoCliente",
-            name: "Grupo Clientes7",
-            icon:  <GClienteIcon style={{width:30, height:30}}/>,
-            component: GrupoClientePage,
-        },{
-            id: 7,
-            path: "/GrupoCliente",
-            name: "Grupo Clientes8",
-            icon:  <GClienteIcon style={{width:30, height:30}}/>,
-            component: GrupoClientePage,
-        },
-    ]);
+    const [userAtajos, setUserAtajos] = React.useState([]);
 
     const [disableButtons, setButtonsDisable] = React.useState(true);
     const [disableSaveButton, setSaveButtonDisable] = React.useState(false);
     const [selectedIndex, setSelectedIndex] = React.useState();
     const [selectedItem, setSelectedItem] = React.useState();
 
-    /**Elimina un elemento del array(espero)*/
+    useEffect(() => {
+        obtenerAtajosUsuario(localStorage.getItem("UsuarioId")).then((respuesta) => {
+            console.log(respuesta)
+            // setUserAtajos(respuesta.data)
+            // setAllAtajos(respuesta.data)
+        })
+
+    }, [])
+
+    /**Elimina un elemento del array*/
     function arrayRemove(arr, value) {
 
         return arr.filter(function(ele){
@@ -152,35 +137,35 @@ export default function AccesosDirectos(){
     }
 
     const handleAgregarClick = () =>{
-        if (userShortcuts.includes(selectedItem)){
+        if (userAtajos.includes(selectedItem)){
             return
         }
-        userShortcuts.push(selectedItem);
-        userShortcuts.sort(compare);
-        setUserShortcuts(userShortcuts);
-        setAllShortcuts(arrayRemove(allShortcuts, selectedItem).sort(compare));
-        console.log(userShortcuts);
+        userAtajos.push(selectedItem);
+        userAtajos.sort(compare);
+        setUserAtajos(userAtajos);
+        setAllAtajos(arrayRemove(allAtajos, selectedItem).sort(compare));
+        // console.log(userAtajos);
     }
     const handleRegresarClick = () =>{
-        if (allShortcuts.includes(selectedItem)){
+        if (allAtajos.includes(selectedItem)){
             return
         }
-        allShortcuts.push(selectedItem);
-        allShortcuts.sort(compare);
-        setAllShortcuts(allShortcuts);
-        setUserShortcuts(arrayRemove(userShortcuts, selectedItem).sort(compare));
-        console.log(allShortcuts);
+        allAtajos.push(selectedItem);
+        allAtajos.sort(compare);
+        setAllAtajos(allAtajos);
+        setUserAtajos(arrayRemove(userAtajos, selectedItem).sort(compare));
+        console.log(allAtajos);
     }
     const handleRegresarTodoClick = () => {
-        userShortcuts.map((item) => (
-            allShortcuts.push(item)
+        userAtajos.map((item) => (
+            allAtajos.push(item)
         ))
-        allShortcuts.sort(compare);
-        userShortcuts.length = 0;
-        setAllShortcuts(allShortcuts);
-        setUserShortcuts(userShortcuts);
-        console.log(allShortcuts);
-        console.log(userShortcuts);
+        allAtajos.sort(compare);
+        userAtajos.length = 0;
+        setAllAtajos(allAtajos);
+        setUserAtajos(userAtajos);
+        console.log(allAtajos);
+        console.log(userAtajos);
     }
     const handleListItemClick = (event, index, atajo) => {
         setSelectedIndex(index);
@@ -211,15 +196,16 @@ export default function AccesosDirectos(){
                             justifyContent: "center"
                         }}>
                             <List component="nav" aria-label="main mailbox folders" style={{width: '33%'}}>
-                                {allShortcuts.map((atajo) => (
+                                {allAtajos.map((atajo, index) => (
                                     <ListItem
+                                        key={atajo.m_nIdProceso}
                                         button
-                                        selected={selectedIndex === atajo.id}
-                                        onClick={(event) => handleListItemClick(event, atajo.id, atajo)}>
-                                        <ListItemIcon>
+                                        selected={selectedIndex === atajo.m_nIdProceso}
+                                        onClick={(event) => handleListItemClick(event, index, atajo)}>
+                                        {/*<ListItemIcon>
                                             {atajo.icon}
-                                        </ListItemIcon>
-                                        <ListItemText primary={atajo.name} />
+                                        </ListItemIcon>*/}
+                                        <ListItemText primary={atajo.m_sNombreAtajo} />
                                     </ListItem>
                                 ))}
                             </List>
@@ -249,15 +235,16 @@ export default function AccesosDirectos(){
                             </div>
 
                             <List component="nav" aria-label="main mailbox folders" style={{width: '33%'}}>
-                                {userShortcuts.map((atajo) => (
+                                {userAtajos.map((atajo, index) => (
                                     <ListItem
                                         button
-                                        selected={selectedIndex === atajo.id}
-                                        onClick={(event) => handleListItemClick(event, atajo.id, atajo)}>
-                                        <ListItemIcon>
+                                        key={atajo.m_nIdProceso}
+                                        selected={selectedIndex === atajo.m_nIdProceso}
+                                        onClick={(event) => handleListItemClick(event, index, atajo)}>
+                                        {/*<ListItemIcon>
                                             {atajo.icon}
-                                        </ListItemIcon>
-                                        <ListItemText primary={atajo.name} />
+                                        </ListItemIcon>*/}
+                                        <ListItemText primary={atajo.m_sNombreAtajo} />
                                     </ListItem>
                                 ))}
                             </List>

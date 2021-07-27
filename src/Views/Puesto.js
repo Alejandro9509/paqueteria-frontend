@@ -92,7 +92,6 @@ function Puesto() {
     }
 
     function handleShowModificar(id) {
-        console.log()
         obtenerPuestosId(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
@@ -118,8 +117,6 @@ function Puesto() {
     }
 
     const handleChange = event => {
-        console.log(event.target.id + " : " + event.target.value)
-        console.log(state.height)
         setState({
             ...state,
             [event.target.id]: event.target.value

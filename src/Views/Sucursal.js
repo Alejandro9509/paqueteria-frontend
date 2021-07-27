@@ -29,7 +29,7 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
-function Sucursal() {
+function Sucursal(props) {
 
     const [data, setData] = React.useState([])
     const [dataPais, setDataPais] = React.useState([])
@@ -51,12 +51,14 @@ function Sucursal() {
         numInterior: 0,
         numExterior: 0,
         iva: "18",
-        zonaHoraria: "08:00|America/Tijuana",
+        zonaHoraria: "",
         activo: false,
         height: window.innerHeight,
         CreadoPor: localStorage.getItem("UsuarioId"),
         ModificadoPor: localStorage.getItem("UsuarioId")
     })
+
+
 
 
     const handleAceptar = (e) => {
@@ -102,6 +104,22 @@ function Sucursal() {
 
     }
 
+    function obtenerPaisEstadoByCP(id){
+        if (id !=undefined) {
+        const url = `${process.env.REACT_APP_API_URL}/Utilerias/BusquedaPaisEstadoByCP/` + id;
+        axios.get(url, { headers }).then((respuesta) => {
+            setState
+            ({
+                ...state,
+                idPais: respuesta.data[0].m_nIdPais ,   
+         
+            idEstado: dataEstado.find(
+                (o) => o.m_nIdEstado === respuesta.data[0].m_nIdEstado
+            ),   })
+        });
+    }
+    }
+
     function handleEliminar(id) {
         var derecho;
         validarPermisos(state).then(respuesta => {
@@ -133,8 +151,10 @@ function Sucursal() {
                 idSucursal: respuesta.data.m_nIdSucursal,
                 sucursal: respuesta.data.m_sSucursal,
                 abreviacion: respuesta.data.m_sAbreviacion,
-                idPais: 0,
-                idEstado: respuesta.data.m_nIdEstado,
+                idPais:  respuesta.data.m_nIdPais,
+                idEstado: dataEstado.find(
+                    (o) => o.m_nIdEstado === respuesta.data.m_nIdEstado
+                ),                
                 codigoPostal: 0,
                 municipio: respuesta.data.m_sMunicipio,
                 localidad: respuesta.data.m_sLocalidad,
@@ -143,7 +163,7 @@ function Sucursal() {
                 numInterior: respuesta.data.m_sNoInterior,
                 numExterior: respuesta.data.m_sNoExterior,
                 iva: respuesta.data.m_sIdImpuestoTraslado,
-                zonaHoraria: respuesta.data.m_xZonaHoraria,
+                zonaHoraria: respuesta.data.m_sDescripcionZonaHoraria,
                 activo: respuesta.data.m_bActiva
             })
         });
@@ -165,7 +185,7 @@ function Sucursal() {
             numInterior: 0,
             numExterior: 0,
             iva: "18",
-            zonaHoraria: "08:00|America/Tijuana",
+            zonaHoraria: "",
             activo: false
         })
     }
@@ -185,6 +205,19 @@ function Sucursal() {
             idPais: event.target.value
         });
         getAllEstado(event.target.value)
+    }
+    const handleSelectIva = event => {
+        setState({
+            ...state,
+            iva: event.target.value
+        });
+    }
+
+    const handleSelectZonaHoraria= event => {
+        setState({
+            ...state,
+            zonaHoraria: event.target.value
+        });
     }
 
     function handleChangeBoolean() {
@@ -493,30 +526,93 @@ function Sucursal() {
                                                         </div>
 
                                                         <div className="col-sm-12 col-md-2-5 unit">
-                                                            <label className="input select">
-                                                                <FormControl fullWidth variant="outlined" margin="dense">
-                                                                    <InputLabel id="codigoPostalLabel">Código Postal</InputLabel>
-                                                                    <Select
-                                                                        labelId="codigoPostalLabel"
-                                                                        label="Código Postal"
-                                                                        className="form-control"
-                                                                        required
-                                                                        value={state.codigoPostal}
-                                                                        onChange={handleChange}
-                                                                        id="codigoPostal"
-                                                                    >
-                                                                        {dataCodigoPostal.filter(cp => cp.m_nIdEstado == state.idEstado.m_nIdEstado).map(
-                                                                            (codigoPostal) => (
-                                                                                <option key={codigoPostal.m_nIdCP} value={codigoPostal.m_nIdCP}>
-                                                                                    {
-                                                                                        codigoPostal.m_sCP
-                                                                                    }
-                                                                                </option>
-                                                                            )
-                                                                        )}
-                                                                    </Select>
-                                                                </FormControl>
-                                                            </label>
+                                                        <div className="input">
+                                                                            <Autocomplete
+                                                                                value={state.codigoPostalRemitente}
+                                                                                freeSolo
+                                                                                onChange={(event, newValue) =>
+                                                                                    setState({
+                                                                                        ...state,
+                                                                                        codigoPostal: newValue,
+                                                                                    })
+                                                                                }
+                                                                                onSelect={() => {
+                                                                                 console.log(state.codigoPostal)
+                                                                                    obtenerPaisEstadoByCP(state.codigoPostal.m_nIdCP)
+                                                                                }
+                                                                               
+                                                                            }
+                                                                          
+                                                                            
+                                                                                id="codigoPostal"
+                                                                                disableClearable
+                                                                                forcePopupIcon={false}
+                                                                                options={dataCodigoPostal //.filter((cp) => cp.m_nIdCiudad == state.ciudadRemitente)//
+                                                                                }
+                                                                                disabled={state.agregar === "Consultar"}
+                                                                                getOptionLabel={(option) =>
+                                                                                    option.m_sCP
+                                                                                }
+                                                                                variant="outlined"
+                                                                                style={{
+                                                                                    transform: "translate(14px, 10px) scale(1) !important"
+                                                                                }}
+                                                                                renderInput={(params) => (
+                                                                                    <div>
+                                                                                        <TextField
+                                                                                            variant="outlined"
+                                                                                            label="Código Postal"
+                                                                                            margin="dense"
+                                                                                            required
+                                                                                            {...params}
+                                                                                            InputProps={{
+                                                                                                ...params.InputProps,
+                                                                                                style: {
+                                                                                                    height: "33px",
+                                                                                                    fontSize: "14px"
+                                                                                                },
+                                                                                                type: "search",
+                                                                                                disableUnderline: true,
+                                                                                                disabled: state.agregar === "Consultar",
+                                                                                                endAdornment: (
+                                                                                                    <InputAdornment
+                                                                                                        position="end">
+                                                                                                        <IconButton
+                                                                                                            padding="0px"
+                                                                                                            style={{
+                                                                                                                paddingRight: "0px",
+                                                                                                            }}
+                                                                                                            disabled={state.agregar === "Consultar"}
+                                                                                                            onClick={() => {
+                                                                                                                setState({
+                                                                                                                    ...state,
+                                                                                                                    identificadorModal:
+                                                                                                                        "codigoPostalRemitente",
+                                                                                                                    tipoModal: 0,
+                                                                                                                    openDialog: true
+                                                                                                                });
+                                                                                                            }}
+                                                                                                        >
+                                                                                                            <PageviewIcon
+                                                                                                                style={{
+                                                                                                                    color: "#F9A03E",
+                                                                                                                    fontSize: 32,
+                                                                                                                    paddingInlineEnd: 0,
+                                                                                                                    paddingRight: 0,
+                                                                                                                    paddingBlockEnd: 0,
+                                                                                                                    paddingLeft: 0,
+                                                                                                                    paddingBlock: 0,
+                                                                                                                }}
+                                                                                                            />
+                                                                                                        </IconButton>
+                                                                                                    </InputAdornment>
+                                                                                                ),
+                                                                                            }}
+                                                                                        />
+                                                                                    </div>
+                                                                                )}
+                                                                            />
+                                                                        </div>
                                                         </div>
 
                                                         <div className="col-sm-12 col-md-2-5 unit">
@@ -620,7 +716,7 @@ function Sucursal() {
                                                                         className="form-control"
                                                                         required
                                                                         value={state.iva}
-                                                                        onChange={handleChange}
+                                                                        onChange={handleSelectIva}
                                                                         id="iva"
                                                                     >
                                                                         <option value="18">
@@ -634,7 +730,7 @@ function Sucursal() {
                                                             </label>
                                                         </div>
 
-                                                        <div className="col-sm-12 col-md-2-5  unit">
+                                                        <div className="col-sm-12 col-md-4  unit">
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined" margin="dense">
                                                                     <InputLabel id="zonaHorariaLabel">Zona Horaria</InputLabel>
@@ -644,15 +740,36 @@ function Sucursal() {
                                                                         className="form-control"
                                                                         required
                                                                         value={state.zonaHoraria}
-                                                                        onChange={handleChange}
+                                                                        onChange={handleSelectZonaHoraria}
                                                                         id="zonaHoraria"
                                                                     >
-                                                                        <option value="08:00|America/Tijuana">
+                                                                        <option value="-06:00|America/México, Gudalajara, Monterrey">
+                                                                        America/México, Gudalajara, Monterrey
+                                                                        </option>
+
+                                                                        <option value="-06:00|America/Piedras Negras Reynosa">
+                                                                        America/Piedras Negras Reynosa
+                                                                        </option>
+
+                                                                        <option value="-07:00|America/Sonora">
+                                                                        America/Sonora
+                                                                        </option>
+                                                                        <option value="-07:00|America/Chihuahua, La paz, Mazatlán">
+                                                                        America/Chihuahua, La paz, Mazatlán
+                                                                        </option>
+
+                                                                        <option value="-08:00|America/Baja California">
+                                                                        America/Baja California
+                                                                        </option>
+
+                                                                        <option value="-07:00|America/Chihuahua">
+                                                                        America/Cancun
+                                                                        </option>
+
+                                                                        <option value="-08:00|America/Tijuana">
                                                                             America/Tijuana
-                              </option>
-                                                                        <option value="06:00|America/Mexico_City">
-                                                                            America/Mexico_City
-                              </option>
+                                                                        </option>
+                                                                       
                                                                     </Select>
                                                                 </FormControl>
                                                             </label>

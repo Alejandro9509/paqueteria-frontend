@@ -4,8 +4,10 @@ import Cabecera from "../Components/Template/Cabecera";
 
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import ExportCSV from '../Components/Template/Export';
-import ExportPDF from "../Components/Template/ExportPDF";
+import { Tab, Tabs, Box } from '@material-ui/core';
+import ConceptosAdicionalesManiobra from './Tarifas/ConceptosAdicionalesManiobra';
+import ConceptosAdicionalesEntrega from './Tarifas/ConceptosAdicionalesEntrega';
+import ConceptosAdicionalesRecoleccion from './Tarifas/ConceptosAdicionalesRecoleccion';
 import Carousel, { propTypes } from "re-carousel";
 import IndicatorDots from "../Util/Dots";
 import Buttons from "../Util/CarruselButtons";
@@ -215,6 +217,7 @@ function Guia(props) {
                 IdGuiaConcepto: 0
             }
         ],
+        tab: 0,
         height: window.innerHeight
     })
 
@@ -919,7 +922,7 @@ function Guia(props) {
         const { conceptosAdicionales } = state
         var ivaTraslada = []
         var ivaRetiene = []
-        conceptosAdicionales.push({ concepto: data.concepto, importe: data.importe, retiene: data.retiene, traslada: data.traslada, importeRet: data.importeRet, importeIVA: data.importeIVA })
+        conceptosAdicionales.push({ concepto: data.concepto, importe: data.importe, retiene: data.retiene, traslada: data.traslada, importeRet: data.importeRet, importeIVA: data.importeIVA, rangoMinimo: data.rangoMinimo, rangoMaximo: data.rangoMaximo, nombreConcepto: data.nombreConcepto, tipoCalculo: data.tipoCalculo })
         ivaTraslada = getUniqueListBy(conceptosAdicionales, "traslada").map(i => i.traslada);
         ivaRetiene = getUniqueListBy(conceptosAdicionales, "retiene").map(i => i.retiene);
         setState({ ...state, conceptosAdicionales: conceptosAdicionales, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
@@ -1048,9 +1051,9 @@ function Guia(props) {
     };
 
     function handleEmbarque(embarque) {
-        
+
         obtenerEmbarquesId(embarque).then(respuesta => {
-console.log(embarque);
+            console.log(embarque);
             const paquetesTemp = [];
             const sobresTemp = [];
             //console.log(paquetesTemp);
@@ -1090,12 +1093,13 @@ console.log(embarque);
             var conceptosTemp = []
             var ivaTraslada = []
             var ivaRetiene = []
-            var flete = dataConcepto.find(c => c.m_nIdConceptosFacturacion === 22)
-            axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetBySucursalDestino/${state.idSucursal}/${respuesta.data.m_nIdCiudadDestino}`, { headers }).then(tarifa => {
+            //var flete = dataConcepto.find(c => c.m_nIdConceptosFacturacion === 22)
+            axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${embarque}`, { headers }).then(tarifa => {
 
                 if (tarifa.data.length !== 0) {
+                    //setDataConcepto(tarifa.m_arrArConceptos)
                     tarifa.data[0].m_arrArConceptos.forEach(element => {
-                        conceptosTemp.push({ concepto: dataConcepto.find(c => c.m_nIdConceptosFacturacion === element.m_nIdConceptosFacturacion), importe: element.m_cImporte, traslada: element.m_nIdImpuestoTraslada, importeIVA: element.m_cImporteIva, retiene: element.m_nIdImpuestoRetiene, importeRet: element.m_cImporteRetiene })
+                        conceptosTemp.push({ concepto: dataConcepto.find(c => c.m_nIdConceptosFacturacion === element.m_nIdConceptosFacturacion), importe: element.m_cImporte, retiene: element.m_nIdImpuestoRetiene, traslada: element.m_nIdImpuestoTraslada, importeRet: element.m_cImporteRetiene, importeIVA: element.m_cImporteIva, rangoMinimo: element.m_xnRangoMinimo, rangoMaximo: element.m_xnRangoMaximo, nombreConcepto: element.m_sConcepto, tipoCalculo: element.m_nIdTipoCalculo })
 
                     })
                     ivaTraslada = getUniqueListBy(conceptosTemp, "traslada").map(i => i.traslada);
@@ -1247,7 +1251,7 @@ console.log(embarque);
 
     const handleImprimir = () => {
         imprimirFormatosId(state.formatoSeleccionado).then((response) => {
-            var file = new Blob([response.data], {type: 'application/pdf'})
+            var file = new Blob([response.data], { type: 'application/pdf' })
             var fileURL = URL.createObjectURL(file)
             console.log(fileURL)
             window.open(fileURL);
@@ -1626,7 +1630,7 @@ console.log(embarque);
                                                 <div className="col-md-12 unit">
                                                     <label className="label">
                                                         Zona
-											</label>
+                                                    </label>
                                                     <div className="input">
                                                         <TextField variant="outlined" margin="dense"
                                                             className="form-control"
@@ -1767,6 +1771,17 @@ console.log(embarque);
         });
     }
 
+    function a11yProps(index) {
+        return {
+            id: `simple-tab-${index}`,
+            'aria-controls': `simple-tabpanel-${index}`,
+        };
+    }
+
+    function handleTabChange(event, newValue) {
+        setState({ ...state, tab: newValue });
+    }
+
     return (
         <div >
             <Dialog
@@ -1809,10 +1824,10 @@ console.log(embarque);
                             <DialogActions style={{ justifyContent: "left" }}>
 
                                 <button onClick={() => handleImprimir()} className="btn btn-primary primary-btn">Aceptar
-                            </button>
+                                </button>
                                 <button onClick={() => setState({ ...state, openDialog: false })}
                                     className="btn btn-secondary secondary-btn">Cerrar
-                            </button>
+                                </button>
 
                             </DialogActions>
                         </div>
@@ -1848,7 +1863,7 @@ console.log(embarque);
                         <li className={props.location.idEmbarque != undefined ? "" : "active"}>
                             <a data-toggle="tab" href="#Listado">
                                 <i className="fa fa-list" /> Listado
-            </a>
+                            </a>
                         </li>
                         <li className={props.location.idEmbarque != undefined ? "active" : ""}>
                             <a data-toggle="tab" href="#Agregar" onClick={() => handleShowAgregar()}>
@@ -1873,12 +1888,12 @@ console.log(embarque);
                         <li className="hide">
                             <a data-toggle="tab" href="#Importar">
                                 <i className="fa fa-upload" /> Importar
-            </a>
+                            </a>
                         </li>
                         <li>
                             <a data-toggle="tab" href="#Cancelar" onClick={handleShowCancelar} className={state.idGuia == 0 ? classes.disabled : ""}>
                                 <i className="fa fa-times-circle" /> Cancelar
-              </a>
+                            </a>
                         </li>
                         {/*<li>*/}
                         {/*    <ExportCSV csvData={data} fileName="Guia_Listado" />*/}
@@ -2231,7 +2246,7 @@ console.log(embarque);
                                                                     >
                                                                         <option value="0">
                                                                             Seleccionar
-                            </option>
+                                                                        </option>
                                                                         {dataMoneda.map(
                                                                             (moneda) => (
                                                                                 <option key={moneda.m_nIdMoneda} value={moneda.m_nIdMoneda}>
@@ -2846,9 +2861,15 @@ console.log(embarque);
                                                         <form className="j-forms">
                                                             {
                                                                 state.idEmbarque &&
-                                                                <ConceptosAdicionales guias={true} conceptosAdicionales={state.conceptosAdicionales} addConcepto={addConcepto} removeConcepto={removeConcepto} ivaRetiene={state.ivaRetiene} ivaTraslada={state.ivaTraslada}>
+                                                                <div>
+                                                                    <Tabs value={state.tab} onChange={handleTabChange} aria-label="simple tabs example" variant="scrollable" scrollButtons="auto">
+                                                                        <Tab label="Concetos Adicionales por Destino" {...a11yProps(0)} className={{ backgroundColor: "white !important" }} />
+                                                                    </Tabs>
+                                                                    <ConceptosAdicionales guias={true} conceptosAdicionales={state.conceptosAdicionales} addConcepto={addConcepto} removeConcepto={removeConcepto} ivaRetiene={state.ivaRetiene} ivaTraslada={state.ivaTraslada} noMostrarRangos={false}>
 
-                                                                </ConceptosAdicionales>
+                                                                    </ConceptosAdicionales>
+                                                                </div>
+
                                                             }
 
                                                         </form>
@@ -2863,10 +2884,10 @@ console.log(embarque);
                                                             className="btn btn-secondary secondary-btn"
                                                         >
                                                             Cancelar
-                            </button>
+                                                        </button>
                                                         <button type="submit" className="btn btn-primary primary-btn" disabled={state.agregar == "Consultar"}>
                                                             Aceptar
-                            </button>
+                                                        </button>
                                                     </div>
 
                                                 </div>
@@ -2892,7 +2913,7 @@ console.log(embarque);
                                                     <div className="col-sm-12 col-md-12 unit">
                                                         <label className="label">
                                                             Importar
-                          </label>
+                                                        </label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
                                                                 onChange={handleUpload}
@@ -3042,13 +3063,13 @@ console.log(embarque);
                                                             className="btn btn-secondary secondary-btn"
                                                         >
                                                             Cancelar
-                                </button>
+                                                        </button>
                                                         <button
                                                             type="submit"
                                                             className="btn btn-primary primary-btn"
                                                         >
                                                             Aceptar
-                                </button>
+                                                        </button>
                                                     </div>
 
                                                 </div>
@@ -3073,6 +3094,26 @@ console.log(embarque);
 
         </div>
 
+    );
+}
+
+function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+        >
+            {value === index && (
+                <Box p={1}>
+                    {children}
+                </Box>
+            )}
+        </div>
     );
 }
 
