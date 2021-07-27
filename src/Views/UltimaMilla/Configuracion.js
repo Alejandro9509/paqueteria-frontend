@@ -25,7 +25,7 @@ class Configuracion extends Component {
             <Grid container className={"j-form"}>
                 <Grid item md={6}>
                     <Typography variant={"h4"}>Sistema Unidad</Typography>
-                    <RadioGroup aria-label="unidad" name="gender1">
+                    <RadioGroup aria-label="sistemaUnidad" name="sistemaUnidad" value={this.props.values.sistemaUnidad}>
                         <Grid container>
                             <Grid item>
                                 <FormControlLabel value="1" control={<Radio/>} label="Kilómetros"/>
@@ -38,7 +38,7 @@ class Configuracion extends Component {
                 </Grid>
                 <Grid item md={6}>
                     <Typography variant={"h4"}>Optimizar</Typography>
-                    <RadioGroup aria-label="unidad" name="gender1">
+                    <RadioGroup aria-label="optimizar" name="optimizar" value={this.props.values.optimizar}>
                         <Grid container>
                             <Grid item>
                                 <FormControlLabel value="1" control={<Radio/>} label="Distancia"/>
@@ -52,7 +52,7 @@ class Configuracion extends Component {
                 <Grid item md={12}>
                     <Typography variant={"h4"}>Creación de rutas</Typography>
 
-                    <RadioGroup aria-label="unidad" name="gender1">
+                    <RadioGroup aria-label="tipoBusqueda" name="tipoBusqueda" value={this.props.values.tipoBusqueda}>
                         <Grid container>
                             <Grid item>
                                 <FormControlLabel value="1" control={<Radio/>} label="Solo entregas"/>

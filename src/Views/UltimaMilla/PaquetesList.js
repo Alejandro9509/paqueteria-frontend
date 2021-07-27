@@ -14,7 +14,7 @@ import {
 } from "@material-ui/core";
 import {obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
 import {fade} from "@material-ui/core/styles";
-import {obtenerGuia, obtenerGuiasFiltro} from "../../Util/Contexts/GuiaContext";
+import {obtenerGuia, obtenerGuiasFiltro, obtenerGuiaUltimaMilla} from "../../Util/Contexts/GuiaContext";
 import {arrayGuias} from "../../Util/Data";
 
 const useStyles = theme => ({
@@ -49,9 +49,11 @@ class PaquetesList extends Component {
     }
 
     getAllPaquetes() {
-        obtenerGuiasFiltro(this.props.data.startDate, this.props.data.finishDate, this.props.data.sucursalSeleccionada.m_nIdSucursal, 4).then(({data}) => {
+        //"0", "0", this.props.data.sucursalSeleccionada.m_nIdSucursal, 4
+        obtenerGuiaUltimaMilla(this.props.zonasIds,this.props.tipoServicio).then(({data}) => {
             this.setState({paquetes: arrayGuias})
         })
+        this.setState({paquetes: arrayGuias})
     }
 
     descendingComparator(a, b, orderBy) {
@@ -126,7 +128,7 @@ class PaquetesList extends Component {
 
 
         return (
-            <TableContainer className={"j-forms"}>
+            <TableContainer className={"j-forms"} style={{height:"300px"}}>
                 <Typography variant={"h4"}>Seleccionar Paquetes </Typography>
                 <Grid container spacing={2} style={{padding:"10px"}}>
                     <Grid item >
@@ -219,6 +221,9 @@ class PaquetesList extends Component {
                                 sortDirection={this.state.orderBy === "m_sDomicilioDestinatario" ? this.state.order : false}
                                 align="left">Volumen</TableCell>
                             <TableCell
+                                sortDirection={this.state.orderBy === "m_nIdTIpoCobro" ? this.state.order : false}
+                                align="left">Estatus pago</TableCell>
+                            <TableCell
                                 sortDirection={this.state.orderBy === "m_sNombreDestinatario" ? this.state.order : false}
                                 align="left">Destinatario</TableCell>
                             <TableCell
@@ -229,8 +234,7 @@ class PaquetesList extends Component {
                                 align="left">Ventana de entrega</TableCell>
                             <TableCell sortDirection={this.state.orderBy === "m_sFechaHora" ? this.state.order : false}
                                        align="left">Fecha</TableCell>
-                            <TableCell sortDirection={this.state.orderBy === "m_sFechaHora" ? this.state.order : false}
-                                       align="left">Prioridad</TableCell>
+
                             <TableCell
                                 sortDirection={this.state.orderBy === "m_sEstatusGuia" ? this.state.order : false}
                                 align="left">Estatus</TableCell>
@@ -254,11 +258,11 @@ class PaquetesList extends Component {
                                         </TableCell>
                                         <TableCell align="left">{u.m_nFolioGuia}</TableCell>
                                         <TableCell align="left">Capacidad</TableCell>
+                                        <TableCell align="left">{u.m_nIdTIpoCobro === 3  ?  "Por cobrar destinatario" : u.m_nIdTIpoCobro === 5 ? "Por cobrar remitente" : "Pendiente de pago"}</TableCell>
                                         <TableCell align="left">{u.m_sNombreDestinatario}</TableCell>
                                         <TableCell align="left">{u.m_sDomicilioDestinatario}</TableCell>
                                         <TableCell align="left">Sin definir</TableCell>
                                         <TableCell align="left">{u.m_sFechaHora}</TableCell>
-                                        <TableCell align="left">Sin definir</TableCell>
                                         <TableCell align="left">{u.m_sEstatusGuia}</TableCell>
                                         <TableCell align="left"></TableCell>
                                     </TableRow>
