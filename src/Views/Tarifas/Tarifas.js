@@ -210,7 +210,15 @@ class Tarifas extends Component {
             m_nFactorConversion: data.factorConversion,
             m_arrArCobros: data.tiposCobroSeleccionado.map(c => ({ m_nIdTipoCobro: c.m_nIdTipoCobro })),
             m_arrArServicios: data.tiposServicioSeleccionado.map(s => ({ m_nIdTipoServicio: s.m_nIdTipoServicio })),
-            m_arrArConceptos: data.conceptosAdicionales.map(c => ({ m_nIdConceptosFacturacion: c.concepto.m_nIdConceptosFacturacion, m_cImporte: c.importe, m_nIdImpuestoTraslada: c.traslada, m_nIdImpuestoRetiene: c.retiene, m_cImporteRetiene: c.importeRet, m_cImporteIva: c.importeIVA, m_nIdTipoCalculo: c.tipoCalculo })),
+            m_arrArConceptos: data.conceptosAdicionales.map(c => ({
+                m_nIdConceptosFacturacion: c.concepto.m_nIdConceptosFacturacion,
+                m_cImporte: c.importe,
+                m_nIdImpuestoTraslada: c.traslada,
+                m_nIdImpuestoRetiene: c.retiene,
+                m_cImporteRetiene: c.importeRet,
+                m_cImporteIva: c.importeIVA,
+                m_nIdTipoCalculo: c.tipoCalculo
+            })),
             m_nCreadoPOr: localStorage.getItem("UsuarioId"),
             m_nModificadoPor: localStorage.getItem("UsuarioId")
         }
