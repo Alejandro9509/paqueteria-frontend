@@ -373,6 +373,8 @@ function Embarque(props) {
                 ModificadoPor: state.ModificadoPor,
                 m_tFechaDetalleEntrega: state.fechaEntrega.split("T")[0],
                 m_tHoraDetalleEntrega: state.fechaEntrega.split("T")[1],
+                m_bEntregaEnSucursal: state.entregaEnSucursal,
+                m_nIdSucursalEntrega: state.idSucursalEntrega
             }
 
         } else {
@@ -441,36 +443,36 @@ function Embarque(props) {
 
         console.log(JSON.stringify(params))
 
-        // if (state.idEmbarque != 0) {
-        //     modificarEmbarques(state.idEmbarque, params)
-        //         .then((respuesta) => {
-        //             showSuccess(respuesta.data);
-        //             getAllEmbarque();
-        //             $('.nav-tabs li ').removeClass('active');
-        //             $('.nav-tabs li').eq(0).addClass('active');
-        //             $('.tab-content div ').removeClass('in show');
-        //             $('#Listado').addClass('in show');
-        //         })
-        //         .catch((err) => {
-        //             console.log(err);
-        //             showSuccess("El Usuario no tiene derecho para modificar");
-        //         });
-        // } else {
-        //     agregarEmbarques(params)
-        //         .then((respuesta) => {
-        //             showSuccess(respuesta.data);
-        //             console.log(respuesta.data);
-        //             getAllEmbarque();
-        //             $('.nav-tabs li ').removeClass('active');
-        //             $('.nav-tabs li').eq(0).addClass('active');
-        //             $('.tab-content div ').removeClass('in show');
-        //             $('#Listado').addClass('in show');
-        //         })
-        //         .catch((err) => {
-        //             console.log(err);
-        //             showSuccess(err);
-        //         });
-        // }
+        if (state.idEmbarque != 0) {
+            modificarEmbarques(state.idEmbarque, params)
+                .then((respuesta) => {
+                    showSuccess(respuesta.data);
+                    getAllEmbarque();
+                    $('.nav-tabs li ').removeClass('active');
+                    $('.nav-tabs li').eq(0).addClass('active');
+                    $('.tab-content div ').removeClass('in show');
+                    $('#Listado').addClass('in show');
+                })
+                .catch((err) => {
+                    console.log(err);
+                    showSuccess("El Usuario no tiene derecho para modificar");
+                });
+        } else {
+            agregarEmbarques(params)
+                .then((respuesta) => {
+                    showSuccess(respuesta.data);
+                    console.log(respuesta.data);
+                    getAllEmbarque();
+                    $('.nav-tabs li ').removeClass('active');
+                    $('.nav-tabs li').eq(0).addClass('active');
+                    $('.tab-content div ').removeClass('in show');
+                    $('#Listado').addClass('in show');
+                })
+                .catch((err) => {
+                    console.log(err);
+                    showSuccess(err);
+                });
+        }
     };
 
     function handleSelectCP(id, cp) {
@@ -746,15 +748,15 @@ function Embarque(props) {
                 idOperador: dataOperador.find(
                     (o) => o.m_nIdOperador === respuesta.data.m_nIdOperador
                 ),
-                idTipoUnidad: dataTipoUnidad.find(
-                    (o) =>
-                        o.m_nIdTipoUnidad ==
-                            dataUnidad.find((o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad) ?
-                            dataUnidad.find((o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad).m_nIdTipoUnidad : 0
-                ),
-                idUnidad: dataUnidad.find(
-                    (o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad
-                ),
+                // idTipoUnidad: dataTipoUnidad.find(
+                //     (o) =>
+                //         o.m_nIdTipoUnidad ==
+                //             dataUnidad.find((o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad) ?
+                //             dataUnidad.find((o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad).m_nIdTipoUnidad : 0
+                // ),
+                // idUnidad: dataUnidad.find(
+                //     (o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad
+                // ),
                 paquetes: respuesta.data.m_arrPaquetes,
             });
             $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
@@ -832,7 +834,7 @@ function Embarque(props) {
                 idOperador: dataOperador.find(
                     (o) => o.m_nIdOperador === respuesta.data.m_nIdOperador
                 ),
-                idTipoUnidad: dataTipoUnidad.find(
+              /*   idTipoUnidad: dataTipoUnidad.find(
                     (o) =>
                         o.m_sTipoUnidad ==
                         dataUnidad.find((o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad)
@@ -840,7 +842,7 @@ function Embarque(props) {
                 ),
                 idUnidad: dataUnidad.find(
                     (o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad
-                ),
+                ), */
                 zonaEntrega: respuesta.data.IdZonaEntrega,
                 domicilioEntrega: respuesta.data.DomicilioEntrega,
                 entregaEn: respuesta.data.EntregarEn,

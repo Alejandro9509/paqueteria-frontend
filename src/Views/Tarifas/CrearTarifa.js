@@ -38,8 +38,8 @@ class CrearTarifa extends Component {
             tiposCobroAll: false,
             tiposServicioAll: false,
             activo: true,
-            porPesoOVolumen: props.edit ? props.select.m_bPorPeso : false,
-            porRangos: props.edit ? props.select.m_nIdSucursal : false,
+            porPesoOVolumen: props.edit ? props.select.m_bPorPesoVolumen : true,
+            porRangos: props.edit ? props.select.m_bPorRango : false,
             unidadPeso: props.edit ? props.select.m_sUnidadPeso : "Kg",
             factorConversion: props.edit ? props.select.m_nFactorConversion : 1,
             ivaTraslada: [],
@@ -124,6 +124,8 @@ class CrearTarifa extends Component {
             rangoMaximo: data.rangoMaximo,
             nombreConcepto: data.nombreConcepto,
             tipoCalculo: data.tipoCalculo,
+            rangoMinimo: data.rangoMinimo,
+            rangoMaximo: data.rangoMaximo,
             agregadoDesde: data.agregadoDesde
         })
         ivaTraslada = getUniqueListBy(conceptosAdicionales, "traslada").map(i => i.traslada);
@@ -297,9 +299,9 @@ class CrearTarifa extends Component {
                                                 Peso o Volumen
                                                 <input type="checkbox"
                                                     checked={this.state.porPesoOVolumen}
-                                                    onChange={(e) => { this.setState({ porPesoOVolumen: !this.state.porPesoOVolumen, porRangos: false }) }}
+                                                    onChange={(e) => { this.setState({ porPesoOVolumen: !this.state.porPesoOVolumen, porRangos: !this.state.porRangos }) }}
                                                     name="porPesoOVolumen"
-                                                    disabled={this.state.disabled}/>
+                                                       disabled={this.state.disabled}/>
                                                 <i />
                                             </label>
                                         </div>
@@ -309,9 +311,9 @@ class CrearTarifa extends Component {
                                                 Rangos
                                                 <input type="checkbox"
                                                     checked={this.state.porRangos}
-                                                    onChange={(e) => { this.setState({ porRangos: !this.state.porRangos, porPesoOVolumen: false }) }}
+                                                    onChange={(e) => { this.setState({ porRangos: !this.state.porRangos, porPesoOVolumen: !this.state.porPesoOVolumen }) }}
                                                     name="porRangos"
-                                                    disabled={this.state.disabled}/>
+                                                       disabled={this.state.disabled}/>
                                                 <i />
                                             </label>
                                         </div>

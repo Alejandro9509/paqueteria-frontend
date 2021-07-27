@@ -1,17 +1,7 @@
-import React, {Component, useEffect} from 'react';
+import React, { Component, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import axios from "axios";
-import {
-    Dialog,
-    DialogActions,
-    DialogContent,
-    FormControl,
-    IconButton,
-    InputAdornment,
-    InputLabel,
-    Select,
-    TextField
-} from '@material-ui/core';
+import { Dialog, DialogActions, DialogContent, FormControl, IconButton, InputAdornment, InputLabel, Select, TextField } from '@material-ui/core';
 import PageviewIcon from "@material-ui/icons/Pageview";
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -22,7 +12,7 @@ import {
     useAsyncDebounce,
     useSortBy,
 } from "react-table";
-import {obtenerConceptosFacturacionEntrega} from '../../Util/Contexts/ConceptosFacturacionContext';
+import { obtenerConceptosFacturacionEntrega } from '../../Util/Contexts/ConceptosFacturacionContext';
 
 const headers = {
     'Content-Type': 'application/json',
@@ -92,7 +82,7 @@ class ConceptosAdicionales extends Component {
                 })
                 this.props.select.m_arrArConceptos.forEach(element => {
                     this.props.addConcepto({
-                        concepto: respuesta.data.find(c => c.m_nIdConceptosFacturacion === element.m_nIdConceptoFacturacion),
+                        concepto: respuesta.data.find(c => c.m_nIdConceptosFacturacion === element.m_nIdConceptosFacturacion),
                         importe: element.m_cImporte,
                         traslada: element.m_nIdImpuestoTraslada,
                         importeIVA: element.m_cImporteIva,
@@ -103,7 +93,6 @@ class ConceptosAdicionales extends Component {
                         rangoMaximo: element.m_xnRangoMaximo,
                         agregadoDesde: element.m_nIdAgregadoDesde
                     })
-
                 })
             }
             this.setState({ conceptos: respuesta.data })
@@ -154,21 +143,11 @@ class ConceptosAdicionales extends Component {
         this.setState({ retiene: retiene, importe: importe, traslada: traslada })
         if (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(traslada)) != null) {
             const impuesto = this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(traslada))
-            this.setState({
-                importeIVA: parseFloat((parseFloat(impuesto.m_nPorcentaje) / 100) * parseFloat(importe)).toFixed(2),
-                retiene: retiene,
-                importe: importe,
-                traslada: traslada
-            })
+            this.setState({ importeIVA: parseFloat((parseFloat(impuesto.m_nPorcentaje) / 100) * parseFloat(importe)).toFixed(2), retiene: retiene, importe: importe, traslada: traslada })
         }
         if (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(retiene)) != null) {
             const impuesto = this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(retiene))
-            this.setState({
-                importeRet: parseFloat((parseFloat(impuesto.m_nPorcentaje) / 100) * parseFloat(importe)).toFixed(2),
-                retiene: retiene,
-                importe: importe,
-                traslada: traslada
-            })
+            this.setState({ importeRet: parseFloat((parseFloat(impuesto.m_nPorcentaje) / 100) * parseFloat(importe)).toFixed(2), retiene: retiene, importe: importe, traslada: traslada })
         }
     }
 
@@ -184,43 +163,32 @@ class ConceptosAdicionales extends Component {
     }
 
 
+
     render() {
 
 
 
         return (
             <div>
-                <Dialog open={this.state.openDialog} onClose={() => this.setState({openDialog: false})}>
+                <Dialog open={this.state.openDialog} onClose={() => this.setState({ openDialog: false })}>
                     <DialogContent>
                         {this.state.tipoModal == 1 &&
-                        <div className="row" style={{backgroundColor: '#FFFFFF'}}>
-                            <div align="right">
-                                <button onClick={() => {
-                                    this.props.history.push("/Ciudades")
-                                }} className="btn btn-primary primary-btn">Agregar
-                                </button>
+                            <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+                                <div align="right">
+                                    <button onClick={() => { this.props.history.push("/Ciudades") }} className="btn btn-primary primary-btn">Agregar</button>
 
+                                </div>
+
+                                {this.state.conceptos.length != 0 ? <TableConceptos handleSelectCP={this.handleSelectCP} object={this.state} select={this.state[this.state.identificadorModal] && this.state[this.state.identificadorModal].m_nIdConceptosFacturacion} columns={this.state.columnsConceptos} data={this.state.conceptos} identificadorModal={this.state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
+
+
+                                <DialogActions style={{ justifyContent: "left" }}>
+
+                                    <button onClick={() => this.setState({ openDialog: false })} className="btn btn-primary primary-btn">Aceptar</button>
+                                    <button onClick={() => this.setState({ openDialog: false })} className="btn btn-secondary secondary-btn">Cerrar</button>
+
+                                </DialogActions>
                             </div>
-
-                            {this.state.conceptos.length != 0 ?
-                                <TableConceptos handleSelectCP={this.handleSelectCP} object={this.state}
-                                                select={this.state[this.state.identificadorModal] && this.state[this.state.identificadorModal].m_nIdConceptosFacturacion}
-                                                columns={this.state.columnsConceptos} data={this.state.conceptos}
-                                                identificadorModal={this.state.identificadorModal}/> :
-                                <div>No se encontró ningún registro</div>}
-
-
-                            <DialogActions style={{justifyContent: "left"}}>
-
-                                <button onClick={() => this.setState({openDialog: false})}
-                                        className="btn btn-primary primary-btn">Aceptar
-                                </button>
-                                <button onClick={() => this.setState({openDialog: false})}
-                                        className="btn btn-secondary secondary-btn">Cerrar
-                                </button>
-
-                            </DialogActions>
-                        </div>
                         }
                     </DialogContent>
 
@@ -228,7 +196,7 @@ class ConceptosAdicionales extends Component {
                 {
                     !this.props.consult &&
                     <div className="row">
-                        <div className="col-md-2 col-sm-6" style={{padding: "5px"}}>
+                        <div className="col-md-2 col-sm-6" style={{ padding: "5px" }}>
 
                             <div className="input">
                                 <Autocomplete
@@ -239,8 +207,6 @@ class ConceptosAdicionales extends Component {
                                         this.setState({
                                             concepto: newValue,
                                             nombreConcepto: newValue.m_sConcepto,
-                                            rangoMinimo: newValue.m_nRangoMinimo,
-                                            rangoMaximo: newValue.m_nRangoMaximo,
                                             importeRet: "0",
                                             retiene: 0,
                                             traslada: 0,
@@ -270,7 +236,7 @@ class ConceptosAdicionales extends Component {
                                                 margin="dense"
                                                 InputProps={{
                                                     ...params.InputProps,
-                                                    style: {height: "33px", fontSize: "14px"},
+                                                    style: { height: "33px", fontSize: "14px" },
                                                     type: "search",
                                                     disableUnderline: true,
                                                     endAdornment: (
@@ -312,22 +278,22 @@ class ConceptosAdicionales extends Component {
                             </div>
                         </div>
 
-                        <div className="col-md-1 col-sm-6" style={{padding: "5px"}}>
+                        <div className="col-md-1 col-sm-6" style={{ padding: "5px" }}>
 
                             <div className="input">
                                 <TextField variant="outlined" margin="dense"
-                                           onChange={this.handleChange}
-                                           className="form-control"
-                                           type="number"
-                                           label="Min"
-                                           style={{textAlign: "right"}}
-                                           disabled
-                                           value={this.state.rangoMinimo}
-                                           name="rangoMinimo"
+                                    onChange={this.handleChange}
+                                    className="form-control"
+                                    type="number"
+                                    label="Min"
+                                    style={{ textAlign: "right" }}
+                                    disabled
+                                    value={this.state.rangoMinimo}
+                                    name="rangoMinimo"
                                 />
                             </div>
                         </div>
-                        <div className="col-md-1 col-sm-6" style={{padding: "5px"}}>
+                        <div className="col-md-1 col-sm-6" style={{ padding: "5px" }}>
 
                             <div className="input">
                                 <TextField variant="outlined" margin="dense"
@@ -343,25 +309,25 @@ class ConceptosAdicionales extends Component {
                             </div>
                         </div>
 
-                        <div className="col-md-1 col-sm-6" style={{padding: "5px"}}>
+                        <div className="col-md-1 col-sm-6" style={{ padding: "5px" }}>
 
                             <div className="input">
                                 <TextField variant="outlined" margin="dense"
-                                           onChange={this.handleChange}
-                                           className="form-control"
-                                           type="number"
-                                           label="Importe"
-                                           style={{textAlign: "right"}}
-                                           step="1"
-                                           min="0"
-                                           value={this.state.importe}
-                                           name="importe"
+                                    onChange={this.handleChange}
+                                    className="form-control"
+                                    type="number"
+                                    label="Importe"
+                                    style={{ textAlign: "right" }}
+                                    step="1"
+                                    min="0"
+                                    value={this.state.importe}
+                                    name="importe"
                                 />
                             </div>
                         </div>
 
-                        <div className="col-md-1-5 col-sm-6" style={{padding: "5px"}}>
-                            <label className="input select" style={{width: "100%"}}>
+                        <div className="col-md-1-5 col-sm-6" style={{ padding: "5px" }}>
+                            <label className="input select" style={{ width: "100%" }}>
                                 <FormControl fullWidth variant="outlined" margin="dense">
                                     <InputLabel id="trasladaLabel">Traslada</InputLabel>
                                     <Select
@@ -379,37 +345,37 @@ class ConceptosAdicionales extends Component {
                                             Selecciona
                                         </option>
                                         {this.state.concepto &&
-                                        this.state.impuestos.filter(i => this.state.concepto.arClsDetalle.find(c => c.m_nIdImpuesto === i.m_nIdImpuesto && c.m_bTrasladado === true)).map((impuesto) => (
-                                            <option
-                                                key={impuesto.m_nIdImpuesto}
-                                                value={impuesto.m_nIdImpuesto}
-                                            >
-                                                {impuesto.m_sImpuesto}
-                                            </option>
-                                        ))}
+                                            this.state.impuestos.filter(i => this.state.concepto.arClsDetalle.find(c => c.m_nIdImpuesto === i.m_nIdImpuesto && c.m_bTrasladado === true)).map((impuesto) => (
+                                                <option
+                                                    key={impuesto.m_nIdImpuesto}
+                                                    value={impuesto.m_nIdImpuesto}
+                                                >
+                                                    {impuesto.m_sImpuesto}
+                                                </option>
+                                            ))}
                                     </Select>
                                 </FormControl>
                             </label>
                         </div>
-                        <div className="col-md-1 col-sm-6" style={{padding: "5px"}}>
+                        <div className="col-md-1 col-sm-6" style={{ padding: "5px" }}>
 
                             <div className="input">
                                 <TextField variant="outlined" margin="dense"
-                                           onChange={this.handleChange}
-                                           className="form-control"
-                                           type="number"
-                                           style={{textAlign: "right"}}
-                                           disabled
-                                           label="IVA"
-                                           step="1"
-                                           min="0"
-                                           value={this.state.importeIVA}
-                                           name="importeIVA"
+                                    onChange={this.handleChange}
+                                    className="form-control"
+                                    type="number"
+                                    style={{ textAlign: "right" }}
+                                    disabled
+                                    label="IVA"
+                                    step="1"
+                                    min="0"
+                                    value={this.state.importeIVA}
+                                    name="importeIVA"
                                 />
                             </div>
                         </div>
-                        <div className="col-md-1-5 col-sm-6" style={{padding: "5px"}}>
-                            <label className="input select" style={{width: "100%"}}>
+                        <div className="col-md-1-5 col-sm-6" style={{ padding: "5px" }}>
+                            <label className="input select" style={{ width: "100%" }}>
                                 <FormControl fullWidth variant="outlined" margin="dense">
                                     <InputLabel id="retieneLabel">Retiene</InputLabel>
                                     <Select
@@ -427,38 +393,38 @@ class ConceptosAdicionales extends Component {
                                             Selecciona
                                         </option>
                                         {this.state.concepto &&
-                                        this.state.impuestos.filter(i => this.state.concepto.arClsDetalle.find(c => c.m_nIdImpuesto === i.m_nIdImpuesto && c.m_bTrasladado === false)).map((impuesto) => (
-                                            <option
-                                                key={impuesto.m_nIdImpuesto}
-                                                value={impuesto.m_nIdImpuesto}
-                                            >
-                                                {impuesto.m_sImpuesto}
-                                            </option>
-                                        ))}
+                                            this.state.impuestos.filter(i => this.state.concepto.arClsDetalle.find(c => c.m_nIdImpuesto === i.m_nIdImpuesto && c.m_bTrasladado === false)).map((impuesto) => (
+                                                <option
+                                                    key={impuesto.m_nIdImpuesto}
+                                                    value={impuesto.m_nIdImpuesto}
+                                                >
+                                                    {impuesto.m_sImpuesto}
+                                                </option>
+                                            ))}
                                     </Select>
                                 </FormControl>
                             </label>
                         </div>
 
-                        <div className="col-md-1 col-sm-6" style={{padding: "5px"}}>
+                        <div className="col-md-1 col-sm-6" style={{ padding: "5px" }}>
 
                             <div className="input">
                                 <TextField variant="outlined" margin="dense"
-                                           onChange={this.handleChange}
-                                           className="form-control"
-                                           type="number"
-                                           style={{textAlign: "right"}}
-                                           disabled
-                                           label="Ret"
-                                           step="1"
-                                           min="0"
-                                           value={this.state.importeRet}
-                                           name="importeRet"
+                                    onChange={this.handleChange}
+                                    className="form-control"
+                                    type="number"
+                                    style={{ textAlign: "right" }}
+                                    disabled
+                                    label="Ret"
+                                    step="1"
+                                    min="0"
+                                    value={this.state.importeRet}
+                                    name="importeRet"
                                 />
                             </div>
                         </div>
-                        <div className="col-md-2 col-sm-6" style={{padding: "5px"}}>
-                            <label className="input select" style={{width: "100%"}}>
+                        <div className="col-md-2 col-sm-6" style={{ padding: "5px" }}>
+                            <label className="input select" style={{ width: "100%" }}>
                                 <FormControl fullWidth variant="outlined" margin="dense">
                                     <InputLabel id="tipoLabel">Tipo</InputLabel>
                                     <Select
@@ -492,45 +458,45 @@ class ConceptosAdicionales extends Component {
                             </label>
                         </div>
 
-                        <div className="col-md-12 col-sm-12" style={{padding: "0px", textAlign: "right"}}>
-                            <IconButton onClick={this.onSubmit} style={{padding: "0px"}}>
-                                <AddBoxIcon style={{fill: "green", fontSize: "xx-large"}}/>
+                        <div className="col-md-12 col-sm-12" style={{ padding: "0px", textAlign: "right" }}>
+                            <IconButton onClick={this.onSubmit} style={{ padding: "0px" }}>
+                                <AddBoxIcon style={{ fill: "green", fontSize: "xx-large" }} />
                             </IconButton>
                         </div>
                     </div>
                 }
 
                 <div className="row">
-                    <div className="col-md-12 col-sm-12" style={{padding: "5px"}}>
+                    <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
                         {
                             this.props.conceptosAdicionales.length !== 0 &&
                             <table style={{ width: "100%" }}>
                                 <tr>
-                                    <th style={{textAlign: "left"}}> Concepto</th>
-                                    <th style={{textAlign: "left"}}> Min</th>
-                                    <th style={{textAlign: "left"}}> Max</th>
-                                    <th style={{textAlign: "left"}}> Importe</th>
-                                    <th style={{textAlign: "left"}}> Traslada</th>
-                                    <th style={{textAlign: "left"}}> Importe IVA</th>
-                                    <th style={{textAlign: "left"}}> Retiene</th>
-                                    <th style={{textAlign: "left"}}> Importe Ret</th>
-                                    <th style={{textAlign: "left"}}> Tipo</th>
+                                    <th style={{ textAlign: "left" }}> Concepto</th>
+                                    <th style={{ textAlign: "left" }}> Min</th>
+                                    <th style={{ textAlign: "left" }}> Max</th>
+                                    <th style={{ textAlign: "left" }}> Importe</th>
+                                    <th style={{ textAlign: "left" }}> Traslada</th>
+                                    <th style={{ textAlign: "left" }}> Importe IVA</th>
+                                    <th style={{ textAlign: "left" }}> Retiene</th>
+                                    <th style={{ textAlign: "left" }}> Importe Ret</th>
+                                    <th style={{ textAlign: "left" }}> Tipo</th>
                                 </tr>
                                 {
                                     this.props.conceptosAdicionales.map((c, index) => (
                                         <tr>
-                                            <td style={{textAlign: "left"}}>{c.nombreConcepto}</td>
-                                            <td style={{textAlign: "left"}}>{c.rangoMinimo} kg</td>
-                                            <td style={{textAlign: "left"}}>{c.rangoMaximo} kg</td>
-                                            <td style={{textAlign: "left"}}>${parseFloat(c.importe).toFixed(2)}</td>
-                                            <td style={{textAlign: "left"}}>{this.state.impuestos.length !== 0 && (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.traslada)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.traslada)).m_sImpuesto : "No Aplica")}</td>
-                                            <td style={{textAlign: "left"}}>${parseFloat(c.importeIVA).toFixed(2)}</td>
-                                            <td style={{textAlign: "left"}}>{this.state.impuestos.length !== 0 && (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.retiene)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.retiene)).m_sImpuesto : "No Aplica")}</td>
-                                            <td style={{textAlign: "left"}}>${parseFloat(c.importeRet).toFixed(2)}</td>
-                                            <td style={{textAlign: "left"}}>{c.tipoCalculo == 1 ? "Fijo" : c.tipoCalculo == 2 ? "Factor" : ""}</td>
+                                            <td style={{ textAlign: "left" }}>{c.nombreConcepto}</td>
+                                            <td style={{ textAlign: "left" }}>{c.rangoMinimo} kg</td>
+                                            <td style={{ textAlign: "left" }}>{c.rangoMaximo} kg</td>
+                                            <td style={{ textAlign: "left" }}>${parseFloat(c.importe).toFixed(2)}</td>
+                                            <td style={{ textAlign: "left" }}>{this.state.impuestos.length !== 0 && (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.traslada)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.traslada)).m_sImpuesto : "No Aplica")}</td>
+                                            <td style={{ textAlign: "left" }}>${parseFloat(c.importeIVA).toFixed(2)}</td>
+                                            <td style={{ textAlign: "left" }}>{this.state.impuestos.length !== 0 && (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.retiene)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.retiene)).m_sImpuesto : "No Aplica")}</td>
+                                            <td style={{ textAlign: "left" }}>${parseFloat(c.importeRet).toFixed(2)}</td>
+                                            <td style={{ textAlign: "left" }}>{c.tipoCalculo == 1 ? "Fijo" : c.tipoCalculo == 2 ? "Factor" : ""}</td>
                                             <td>
                                                 <IconButton onClick={this.removeConcepto}>
-                                                    <CancelIcon style={{fill: "red", fontSize: "x-large"}}/>
+                                                    <CancelIcon style={{ fill: "red", fontSize: "x-large" }} />
                                                 </IconButton>
                                             </td>
                                         </tr>
@@ -540,57 +506,17 @@ class ConceptosAdicionales extends Component {
                         }
 
                     </div>
-                    <div className="col-md-12 col-sm-12"
-                         style={{padding: "5px", backgroundColor: "white", backgroundClip: "content-box"}}>
+                    <div className="col-md-12 col-sm-12" style={{ padding: "5px", backgroundColor: "white", backgroundClip: "content-box" }}>
 
-                        <div className="col-md-12 col-sm-12"
-                             style={{alignItems: "right", display: "inline-flex", justifyContent: "flex-end"}}>
-                            <div style={{margin: "5px", padding: "5px"}}>Subtotal</div>
-                            <div style={{
-                                margin: "4px",
-                                padding: "4px",
-                                marginRight: "15px",
-                                backgroundColor: "white",
-                                backgroundClip: "border-box",
-                                borderStyle: "solid",
-                                borderColor: "gray",
-                                minWidth: "230px",
-                                textAlign: "right"
-                            }}> ${parseFloat(this.props.conceptosAdicionales.reduce((total, arg) => total + parseFloat(arg.importe), 0)).toFixed(2)}</div>
+                        <div className="col-md-12 col-sm-12" style={{ alignItems: "right", display: "inline-flex", justifyContent: "flex-end" }}>
+                            <div style={{ margin: "5px", padding: "5px" }}>Subtotal</div> <div style={{ margin: "4px", padding: "4px", marginRight: "15px", backgroundColor: "white", backgroundClip: "border-box", borderStyle: "solid", borderColor: "gray", minWidth: "230px", textAlign: "right" }}> ${parseFloat(this.props.conceptosAdicionales.reduce((total, arg) => total + parseFloat(arg.importe), 0)).toFixed(2)}</div>
                         </div>
-                        <div className="col-md-12 col-sm-12"
-                             style={{alignItems: "right", display: "inline-flex", justifyContent: "flex-end"}}>
+                        <div className="col-md-12 col-sm-12" style={{ alignItems: "right", display: "inline-flex", justifyContent: "flex-end" }}>
 
-                            <div style={{
-                                margin: "4px",
-                                padding: "4px",
-                                marginRight: "15px",
-                                backgroundColor: "white",
-                                backgroundClip: "border-box",
-                                borderStyle: "solid",
-                                borderColor: "gray",
-                                minWidth: "230px",
-                                textAlign: "right"
-                            }}>  {this.props.ivaTraslada.map(t => (
-                                <div>{`${this.state.impuestos.length !== 0 ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : "" : ""} `} ${parseFloat(this.props.conceptosAdicionales.filter(c => c.traslada === t).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)).toFixed(2)}<br/>
-                                </div>))} {this.props.ivaRetiene.map(t => (
-                                <div>{`Retención ${this.state.impuestos.length !== 0 ? `${this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : ""}` : ""} `} ${parseFloat(this.props.conceptosAdicionales.filter(c => c.retiene === t).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}<br/>
-                                </div>))} </div>
+                            <div style={{ margin: "4px", padding: "4px", marginRight: "15px", backgroundColor: "white", backgroundClip: "border-box", borderStyle: "solid", borderColor: "gray", minWidth: "230px", textAlign: "right" }}>  {this.props.ivaTraslada.map(t => (<div>{`${this.state.impuestos.length !== 0 ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : "" : ""} `}  ${parseFloat(this.props.conceptosAdicionales.filter(c => c.traslada === t).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)).toFixed(2)}<br /></div>))} {this.props.ivaRetiene.map(t => (<div>{`Retención ${this.state.impuestos.length !== 0 ? `${this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : ""}` : ""} `}  ${parseFloat(this.props.conceptosAdicionales.filter(c => c.retiene === t).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}<br /></div>))} </div>
                         </div>
-                        <div className="col-md-12 col-sm-12"
-                             style={{alignItems: "right", display: "inline-flex", justifyContent: "flex-end"}}>
-                            <div style={{margin: "5px", padding: "5px"}}>Total</div>
-                            <div style={{
-                                margin: "4px",
-                                padding: "4px",
-                                marginRight: "15px",
-                                backgroundColor: "white",
-                                backgroundClip: "border-box",
-                                borderStyle: "solid",
-                                borderColor: "gray",
-                                minWidth: "230px",
-                                textAlign: "right"
-                            }}> ${parseFloat(this.props.conceptosAdicionales.reduce((total, arg) => total + parseFloat(arg.importe), 0) + this.props.conceptosAdicionales.filter(c => this.props.ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0) + this.props.conceptosAdicionales.filter(c => this.props.ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}</div>
+                        <div className="col-md-12 col-sm-12" style={{ alignItems: "right", display: "inline-flex", justifyContent: "flex-end" }}>
+                            <div style={{ margin: "5px", padding: "5px" }}>Total</div> <div style={{ margin: "4px", padding: "4px", marginRight: "15px", backgroundColor: "white", backgroundClip: "border-box", borderStyle: "solid", borderColor: "gray", minWidth: "230px", textAlign: "right" }}> ${parseFloat(this.props.conceptosAdicionales.reduce((total, arg) => total + parseFloat(arg.importe), 0) + this.props.conceptosAdicionales.filter(c => this.props.ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0) + this.props.conceptosAdicionales.filter(c => this.props.ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}</div>
                         </div>
                     </div>
                 </div>
@@ -607,20 +533,20 @@ ConceptosAdicionales.propTypes = {
 export default ConceptosAdicionales;
 
 function DefaultColumnFilter({
-                                 column: {filterValue, preFilteredRows, setFilter},
-                             }) {
+    column: { filterValue, preFilteredRows, setFilter },
+}) {
     const count = preFilteredRows.length;
     const [showResults, setShowResults] = React.useState(false)
     const onClick = () => setShowResults(!showResults)
     return (
-        <div style={{display: "flex"}}>
-            <span style={{display: "block", float: "right"}}>
+        <div style={{ display: "flex" }}>
+            <span style={{ display: "block", float: "right" }}>
                 <a onClick={onClick}>
-                    <i className="fa fa-search"/>
+                    <i className="fa fa-search" />
                 </a>
             </span>
             <br></br>
-            <span style={{display: "block"}}>
+            <span style={{ display: "block" }}>
                 <input
                     className="form-control"
                     type={showResults ? "" : "hidden"}
@@ -635,7 +561,7 @@ function DefaultColumnFilter({
     );
 }
 
-function TableConceptos({columns, data, select, handleSelectCP}) {
+function TableConceptos({ columns, data, select, handleSelectCP }) {
     const defaultColumn = React.useMemo(
         () => ({
             // Default Filter UI
@@ -664,54 +590,52 @@ function TableConceptos({columns, data, select, handleSelectCP}) {
     return (
         <div
             className="col-md-12"
-            style={{maxHeight: "300px", overflow: "auto"}}
+            style={{ maxHeight: "300px", overflow: "auto" }}
         >
             <table className="table" {...getTableProps()}>
                 <thead>
-                {headerGroups.map((headerGroup) => (
-                    <tr {...headerGroup.getHeaderGroupProps()}>
-                        {headerGroup.headers.map(column => (
-                            // Add the sorting props to control sorting. For this example
-                            // we can add them into the header props
-                            <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                {column.render("Name")}
-                                {/* Add a sort direction indicator */}
-                                <span>
+                    {headerGroups.map((headerGroup) => (
+                        <tr {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map(column => (
+                                // Add the sorting props to control sorting. For this example
+                                // we can add them into the header props
+                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                    {column.render("Name")}
+                                    {/* Add a sort direction indicator */}
+                                    <span>
                                         {column.isSorted ? (
                                             column.isSortedDesc ? (
-                                                <i className="fa fa-caret-up"/>
+                                                <i className="fa fa-caret-up" />
                                             ) : (
-                                                <i className="fa fa-caret-down"/>
+                                                <i className="fa fa-caret-down" />
                                             )
                                         ) : (
                                             ""
                                         )}
                                     </span>
-                                <div>
-                                    {column.canFilter ? column.render("Filter") : null}
-                                </div>
-                            </th>
-                        ))}
-                    </tr>
-                ))}
+                                    <div>
+                                        {column.canFilter ? column.render("Filter") : null}
+                                    </div>
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
                 </thead>
                 <tbody {...getTableBodyProps()}>
-                {rows.map(
-                    (row, i) => {
-                        prepareRow(row);
-                        return (
-                            <tr style={{backgroundColor: row.original.m_nIdConceptosFacturacion === select ? "orange" : "white"}} {...row.getRowProps()}
-                                onClick={(event) => handleSelectCP(row.original, false, event)}
-                                onDoubleClick={(event) => handleSelectCP(row.original, true, event)}>
-                                {row.cells.map(cell => {
-                                    return (
-                                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                                    )
-                                })}
-                            </tr>
-                        )
-                    }
-                )}
+                    {rows.map(
+                        (row, i) => {
+                            prepareRow(row);
+                            return (
+                                <tr style={{ backgroundColor: row.original.m_nIdConceptosFacturacion === select ? "orange" : "white" }} {...row.getRowProps()} onClick={(event) => handleSelectCP(row.original, false, event)} onDoubleClick={(event) => handleSelectCP(row.original, true, event)}>
+                                    {row.cells.map(cell => {
+                                        return (
+                                            <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                        )
+                                    })}
+                                </tr>
+                            )
+                        }
+                    )}
                 </tbody>
             </table>
         </div>

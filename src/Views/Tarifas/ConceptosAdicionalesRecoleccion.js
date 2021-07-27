@@ -82,7 +82,7 @@ class ConceptosAdicionales extends Component {
                 })
                 this.props.select.m_arrArConceptos.forEach(element => {
                     this.props.addConcepto({
-                        concepto: respuesta.data.find(c => c.m_nIdConceptosFacturacion === element.m_nIdConceptoFacturacion),
+                        concepto: respuesta.data.find(c => c.m_nIdConceptosFacturacion === element.m_nIdConceptosFacturacion),
                         importe: element.m_cImporte,
                         traslada: element.m_nIdImpuestoTraslada,
                         importeIVA: element.m_cImporteIva,
@@ -93,7 +93,6 @@ class ConceptosAdicionales extends Component {
                         rangoMaximo: element.m_xnRangoMaximo,
                         agregadoDesde: element.m_nIdAgregadoDesde
                     })
-
                 })
             }
             this.setState({ conceptos: respuesta.data })
@@ -208,8 +207,6 @@ class ConceptosAdicionales extends Component {
                                         this.setState({
                                             concepto: newValue,
                                             nombreConcepto: newValue.m_sConcepto,
-                                            rangoMinimo: newValue.m_nRangoMinimo,
-                                            rangoMaximo: newValue.m_nRangoMaximo,
                                             importeRet: "0",
                                             retiene: 0,
                                             traslada: 0,
@@ -290,7 +287,6 @@ class ConceptosAdicionales extends Component {
                                     type="number"
                                     label="Min"
                                     style={{ textAlign: "right" }}
-                                    disabled
                                     value={this.state.rangoMinimo}
                                     name="rangoMinimo"
                                 />
@@ -305,7 +301,6 @@ class ConceptosAdicionales extends Component {
                                     type="number"
                                     label="Max"
                                     style={{ textAlign: "right" }}
-                                    disabled
                                     value={this.state.rangoMaximo}
                                     name="rangoMaximo"
                                 />

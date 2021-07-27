@@ -218,6 +218,8 @@ class Tarifas extends Component {
                 m_cImporteRetiene: c.importeRet,
                 m_cImporteIva: c.importeIVA,
                 m_nIdTipoCalculo: c.tipoCalculo,
+                m_xnRangoMinimo: c.rangoMinimo,
+                m_xnRangoMaximo: c.rangoMaximo,
                 m_nIdAgregadoDesde: c.agregadoDesde
             })),
             m_nCreadoPOr: localStorage.getItem("UsuarioId"),
@@ -266,7 +268,6 @@ class Tarifas extends Component {
             this.setState({ data: respuesta.data, agregar: "Agregar" })
             console.log(respuesta.data)
         });
-
     }
 
 
