@@ -49,7 +49,8 @@ class CrearTarifa extends Component {
             precioFlete: props.edit ? props.select.m_cFleteMinimo : "",
             precioMinimo: props.edit ? props.select.m_cMontoMinimo : "",
             precioKilo: props.edit ? props.select.m_cPrecioKilo : "",
-            precioM3: props.edit ? props.select.m_cPrecioM3 : ""
+            precioM3: props.edit ? props.select.m_cPrecioM3 : "",
+            disabled: true
         }
         this.getAllSucursales = this.getAllSucursales.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -60,6 +61,10 @@ class CrearTarifa extends Component {
         this.handleChangeChecboxTiposCobro = this.handleChangeChecboxTiposCobro.bind(this)
         this.handleChangeChecboxTiposServicio = this.handleChangeChecboxTiposServicio.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
+    }
+
+    handleEnableComponents(disabled){
+        this.setState({disabled: disabled})
     }
 
     componentWillMount() {
@@ -97,7 +102,8 @@ class CrearTarifa extends Component {
     handleChange(event) {
         event.preventDefault()
         this.setState({
-            [event.target.name]: event.target.value
+            [event.target.name]: event.target.value,
+            disabled: !(this.state.sucursal === "0" || this.state.destino === "0")
         });
     }
 
@@ -292,7 +298,8 @@ class CrearTarifa extends Component {
                                                 <input type="checkbox"
                                                     checked={this.state.porPesoOVolumen}
                                                     onChange={(e) => { this.setState({ porPesoOVolumen: !this.state.porPesoOVolumen, porRangos: false }) }}
-                                                    name="porPesoOVolumen" />
+                                                    name="porPesoOVolumen"
+                                                    disabled={this.state.disabled}/>
                                                 <i />
                                             </label>
                                         </div>
@@ -303,7 +310,8 @@ class CrearTarifa extends Component {
                                                 <input type="checkbox"
                                                     checked={this.state.porRangos}
                                                     onChange={(e) => { this.setState({ porRangos: !this.state.porRangos, porPesoOVolumen: false }) }}
-                                                    name="porRangos" />
+                                                    name="porRangos"
+                                                    disabled={this.state.disabled}/>
                                                 <i />
                                             </label>
                                         </div>
@@ -537,7 +545,7 @@ class CrearTarifa extends Component {
                                             </Tabs>
 
                                             <TabPanel value={this.state.tab} index={0}>
-                                                <ConceptosAdicionales consult={this.props.consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={this.state.conceptosAdicionales.agregadoDesde === 0} addConcepto={this.addConcepto} removeConcepto={this.removeConcepto} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada} mostrarRangos={true}>
+                                                <ConceptosAdicionales consult={this.props.consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={this.state.conceptosAdicionales.filter(c => c.agregadoDesde === 0)} addConcepto={this.addConcepto} removeConcepto={this.removeConcepto} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada} mostrarRangos={true}>
 
                                                 </ConceptosAdicionales>
                                             </TabPanel>

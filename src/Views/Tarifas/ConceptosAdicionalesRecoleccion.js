@@ -77,8 +77,8 @@ class ConceptosAdicionales extends Component {
     getAllConceptos() {
         obtenerConceptosFacturacionRecoleccion().then(respuesta => {
             if (this.props.edit) {
-                this.props.select.m_arrArConceptos.forEach((element, i) => {
-                    this.props.removeConcepto(i)
+                this.props.select.m_arrArConceptos.forEach(element => {
+                    this.props.removeConcepto(element)
                 })
                 this.props.select.m_arrArConceptos.forEach(element => {
                     this.props.addConcepto({

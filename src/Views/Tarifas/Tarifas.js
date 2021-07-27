@@ -263,7 +263,9 @@ class Tarifas extends Component {
         const url = `${process.env.REACT_APP_API_URL}/Tarifas/GetListado`;
         axios.get(url, { headers }).then(respuesta => {
             this.setState({ data: respuesta.data, agregar: "Agregar" })
+            console.log(respuesta.data)
         });
+
     }
 
 
