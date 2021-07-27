@@ -14,7 +14,7 @@ import {
     obtenerGuiasUbicacion,
     randomColor,
     searchLocationWeb,
-    generarRuta, agregarRuta, searchLocationAddress
+    generarRuta, agregarRuta, searchLocationAddress, obtenerUltimaMillaFecha
 } from "../../Util/Contexts/UltimaMillaContext";
 import Tour from "./Tour";
 import Mensajes from "./Mensajes";
@@ -22,8 +22,20 @@ import MessageIcon from "@material-ui/icons/Message";
 import {ReactComponent as FullscreenIcono} from "../../iconos/Mapa/fullscreen.svg";
 import {ReactComponent as FullscreenExitIcono} from "../../iconos/Mapa/fullscreen-exit.svg";
 import DetalleParadas from "./DetalleParadas";
+import Noty from "noty";
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import TourUltimaMilla from "./TourUltimaMilla"; // Import css
 
 
+function showSuccess(mensaje) {
+    new Noty({
+        type: "information",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000"
+    }).show()
+}
+var actualizar = true
 class UltimaMilla extends Component {
     constructor(props) {
         super(props);
@@ -39,7 +51,9 @@ class UltimaMilla extends Component {
             chatFullscreen: true,
             cronogramaFullscreen: true,
             resumenFullscreen: true,
-            filtros: {}
+            filtros: {},
+            modoEdicion: true,
+            ultimaMilla: null
         }
         this.generarRuta = this.generarRuta.bind(this)
         this.getLocation = this.getLocation.bind(this)
@@ -50,24 +64,37 @@ class UltimaMilla extends Component {
         this.openFullscreen = this.openFullscreen.bind(this)
         this.closeFullscreen = this.closeFullscreen.bind(this)
         this.changeConfiguration = this.changeConfiguration.bind(this)
+        this.getFechaUltimaMilla = this.getFechaUltimaMilla.bind(this)
     }
 
-    componentWillMount() {
 
-    }
 
     componentDidMount() {
-
     }
-
     componentWillUnmount() {
-
+        clearInterval(this.interval);
     }
 
     getLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(this.showPosition);
         }
+    }
+
+    getFechaUltimaMilla(date, idSucursal, zonas) {
+
+        obtenerUltimaMillaFecha(date, idSucursal, zonas).then(({data}) => {
+            if (data.m_nIdUltimaMilla !== 0) {
+                if (actualizar) {
+                    this.interval = setInterval(() => this.getFechaUltimaMilla(), 1000);
+                }
+                data.m_arrClsParadaUltimaMilla.forEach(t => t.color = randomColor(10))
+                this.setState({modoEdicion: false, ultimaMilla: data})
+                actualizar = false
+            }else {
+                clearInterval(this.interval);
+            }
+        })
     }
 
     showPosition(position) {
@@ -88,7 +115,8 @@ class UltimaMilla extends Component {
 
     guardarRuta() {
         agregarRuta(this.state.tour, this.state.filtros).then((data) => {
-            
+            showSuccess("Se guardo la información con exito")
+            this.getFechaUltimaMilla(this.state.filtros.fecha, this.state.filtros.sucursalSeleccionada.m_nIdSucursal, this.state.filtros.zonasSeleccionada.map(z => z.m_nIdZona))
         })
     }
 
@@ -110,7 +138,8 @@ class UltimaMilla extends Component {
                     }
                 }
                 results.tours.map(t => t.color = randomColor(10))
-                this.setState({tour: {tour: results, paquetes: guias, unidades: unidades}, openCronograma: true, filtros: data})
+                this.setState({tour: {tour: results, paquetes: guias, unidades: unidades}, filtros: data})
+
             })
         }
     }
@@ -162,28 +191,33 @@ class UltimaMilla extends Component {
                                 />
                                 {
                                     !this.state.fullScreen &&
-                                    <FiltersMap changeConfiguration={this.changeConfiguration} searchLocation={this.searchLocation} generarRuta={this.generarRuta}
+                                    <FiltersMap  getFechaUltimaMilla={this.getFechaUltimaMilla} changeConfiguration={this.changeConfiguration} searchLocation={this.searchLocation} generarRuta={this.generarRuta}
                                                 guardarRuta={this.guardarRuta}
                                                 changeMapLocation={this.changeMapLocation} data={this.state}/>
                                 }
 
                                 {
-                                    this.state.tour && this.state.tour.tour.tours.map(t =>
-                                        <Tour tour={t} data={this.state} paquetes={this.state.tour.paquetes}/>
+                                    this.state.tour  && this.state.tour.tour.tours.map(t =>
+                                        <Tour tour={t}  data={this.state} paquetes={this.state.tour.paquetes}/>
+                                    )
+                                }
+                                {
+                                    this.state.ultimaMilla && this.state.ultimaMilla.m_arrClsParadaUltimaMilla.map(t =>
+                                        <TourUltimaMilla data={t} sucursal={this.state}/>
                                     )
                                 }
 
                                 {
-                                    this.state.tour && this.state.openCronograma && (this.state.fullScreen === false || this.state.cronogramaFullscreen ) &&
-                                    <Cronograma tour={this.state.tour}/>
+                                    !this.state.modoEdicion  && (this.state.fullScreen === false || this.state.cronogramaFullscreen ) &&
+                                    <Cronograma tour={this.state.ultimaMilla}/>
                                 }
                                 {
-                                    this.state.tour && (this.state.fullScreen === false || this.state.chatFullscreen ) &&
-                                    <Mensajes tour={this.state.tour}/>
+                                    !this.state.modoEdicion && (this.state.fullScreen === false || this.state.chatFullscreen ) &&
+                                    <Mensajes tour={this.state.ultimaMilla}/>
                                 }
                                 {
-                                    this.state.tour && (this.state.fullScreen === false || this.state.resumenFullscreen ) &&
-                                    <DetalleParadas tour={this.state.tour}/>
+                                    !this.state.modoEdicion && (this.state.fullScreen === false || this.state.resumenFullscreen ) &&
+                                    <DetalleParadas tour={this.state.ultimaMilla}/>
                                 }
                                 <IconButton
                                     onClick={() => this.state.fullScreen ? this.closeFullscreen() : this.openFullscreen()}

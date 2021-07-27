@@ -1,16 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="94d8e9cf-07c8-4a10-b81b-63018b1e29c3" name="Default Changelist" comment="">
+    <list default="true" id="94d8e9cf-07c8-4a10-b81b-63018b1e29c3" name="Default Changelist" comment="#GMPAQ2-139">
+      <change afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/TourUltimaMilla.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarIssues.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarIssues.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Util/Contexts/GuiaContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/GuiaContext.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Util/Contexts/UltimaMillaContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/UltimaMillaContext.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/Configuracion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/Configuracion.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/Cronograma.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/Cronograma.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/DetalleParadas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/DetalleParadas.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/FiltersMap.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/FiltersMap.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/Mensajes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/Mensajes.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/PaquetesList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/PaquetesList.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/Paradas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/Paradas.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/Tour.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/Tour.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/UltimaMilla.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/UltimaMilla.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -121,6 +131,10 @@
       <workItem from="1626110793257" duration="6223000" />
       <workItem from="1626220784599" duration="63000" />
       <workItem from="1626278858288" duration="13582000" />
+      <workItem from="1626800657221" duration="2919000" />
+      <workItem from="1626976797218" duration="488000" />
+      <workItem from="1626991445992" duration="2490000" />
+      <workItem from="1627321153908" duration="17983000" />
     </task>
     <task id="LOCAL-00001" summary="*Algunos pedazos de codigos se sustituyeron con componentes.&#10;*Listado de formatos se muestra correctamente&#10;*Mejor acomodo en pestaña domicilios">
       <created>1624952066000</created>
@@ -150,7 +164,14 @@
       <option name="project" value="LOCAL" />
       <updated>1626459787257</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="#GMPAQ2-139">
+      <created>1626806374206</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1626806374206</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -211,40 +232,42 @@
     <MESSAGE value="*Headers de tabla en pestaña formatos se ven correctamente.&#10;*Pestaña inputs de Procecsos especiales fueron reemplazados con componentes." />
     <MESSAGE value="*Se agregó campo numRegistroIdentidadFiscal en seccion General, pestaña Inf. Adicional.&#10;*Se reemplazaron inputs por componentes." />
     <MESSAGE value="#GMPAQ2-137&#10;#GMPAQ2-137&#10;#GMPAQ2-156" />
-    <option name="LAST_COMMIT_MESSAGE" value="#GMPAQ2-137&#10;#GMPAQ2-137&#10;#GMPAQ2-156" />
+    <MESSAGE value="#GMPAQ2-139" />
+    <option name="LAST_COMMIT_MESSAGE" value="#GMPAQ2-139" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="251" y="49" key="CommitChangelistDialog2" timestamp="1626459786741">
-      <screen x="0" y="0" width="1440" height="900" />
+    <state x="1886" y="-462" key="CommitChangelistDialog2" timestamp="1627405497323">
+      <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
+    <state x="1886" y="-462" key="CommitChangelistDialog2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1627405497323" />
     <state x="251" y="49" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1626459786741" />
-    <state width="1419" height="133" key="GridCell.Tab.0.bottom" timestamp="1626540795732">
+    <state width="2539" height="501" key="GridCell.Tab.0.bottom" timestamp="1627348818726">
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
-    <state width="1419" height="133" key="GridCell.Tab.0.bottom/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1626540795732" />
+    <state width="2539" height="501" key="GridCell.Tab.0.bottom/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1627348818726" />
     <state width="1419" height="133" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1626460439936" />
-    <state width="2539" height="133" key="GridCell.Tab.0.bottom/0.25.1440.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1625863520595" />
+    <state width="2539" height="237" key="GridCell.Tab.0.bottom/0.25.1440.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1626921221536" />
     <state width="2539" height="519" key="GridCell.Tab.0.bottom/50.25.1390.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1626110800937" />
-    <state width="1419" height="133" key="GridCell.Tab.0.center" timestamp="1626540795730">
+    <state width="2539" height="501" key="GridCell.Tab.0.center" timestamp="1627348818725">
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
-    <state width="1419" height="133" key="GridCell.Tab.0.center/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1626540795730" />
+    <state width="2539" height="501" key="GridCell.Tab.0.center/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1627348818725" />
     <state width="1419" height="133" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1626460439934" />
-    <state width="2539" height="133" key="GridCell.Tab.0.center/0.25.1440.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1625863520593" />
+    <state width="2539" height="237" key="GridCell.Tab.0.center/0.25.1440.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1626921221534" />
     <state width="2539" height="519" key="GridCell.Tab.0.center/50.25.1390.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1626110800934" />
-    <state width="1419" height="133" key="GridCell.Tab.0.left" timestamp="1626540795729">
+    <state width="2539" height="501" key="GridCell.Tab.0.left" timestamp="1627348818724">
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
-    <state width="1419" height="133" key="GridCell.Tab.0.left/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1626540795729" />
+    <state width="2539" height="501" key="GridCell.Tab.0.left/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1627348818724" />
     <state width="1419" height="133" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1626460439934" />
-    <state width="2539" height="133" key="GridCell.Tab.0.left/0.25.1440.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1625863520593" />
+    <state width="2539" height="237" key="GridCell.Tab.0.left/0.25.1440.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1626921221533" />
     <state width="2539" height="519" key="GridCell.Tab.0.left/50.25.1390.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1626110800885" />
-    <state width="1419" height="133" key="GridCell.Tab.0.right" timestamp="1626540795731">
+    <state width="2539" height="501" key="GridCell.Tab.0.right" timestamp="1627348818726">
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
-    <state width="1419" height="133" key="GridCell.Tab.0.right/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1626540795731" />
+    <state width="2539" height="501" key="GridCell.Tab.0.right/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1627348818726" />
     <state width="1419" height="133" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1626460439935" />
-    <state width="2539" height="133" key="GridCell.Tab.0.right/0.25.1440.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1625863520594" />
+    <state width="2539" height="237" key="GridCell.Tab.0.right/0.25.1440.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1626921221535" />
     <state width="2539" height="519" key="GridCell.Tab.0.right/50.25.1390.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1626110800936" />
     <state width="2539" height="279" key="GridCell.Tab.1.bottom" timestamp="1626220765387">
       <screen x="1440" y="-540" width="2560" height="1440" />
@@ -294,15 +317,27 @@
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
     <state width="2539" height="279" key="GridCell.Tab.3.right/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1626220765393" />
-    <state x="495" y="286" key="Vcs.Push.Dialog.v2" timestamp="1626459793846">
-      <screen x="0" y="0" width="1440" height="900" />
+    <state x="2047" y="-347" key="RollbackChangesDialog" timestamp="1626896501197">
+      <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
-    <state x="2320" y="-83" key="Vcs.Push.Dialog.v2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1625862807680" />
+    <state x="2047" y="-347" key="RollbackChangesDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1626896501197" />
+    <state x="2320" y="-83" key="Vcs.Push.Dialog.v2" timestamp="1626806381814">
+      <screen x="1440" y="-540" width="2560" height="1440" />
+    </state>
+    <state x="2320" y="-83" key="Vcs.Push.Dialog.v2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1626806381814" />
     <state x="495" y="286" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1626459793846" />
-    <state x="532" y="298" width="674" height="486" key="find.popup" timestamp="1626470501902">
-      <screen x="0" y="0" width="1440" height="900" />
+    <state x="2378" y="-201" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1627347119481">
+      <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
-    <state x="2386" y="-63" width="667" height="486" key="find.popup/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1626306850690" />
+    <state x="2378" y="-201" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1627347119481" />
+    <state x="2386" y="-63" width="667" height="486" key="find.popup" timestamp="1627348485613">
+      <screen x="1440" y="-540" width="2560" height="1440" />
+    </state>
+    <state x="2386" y="-63" width="667" height="486" key="find.popup/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1627348485613" />
     <state x="532" y="298" width="674" height="486" key="find.popup/0.0.1440.900@0.0.1440.900" timestamp="1626470501902" />
+    <state x="2368" y="-25" key="git4idea.merge.GitPullDialog" timestamp="1626902848470">
+      <screen x="1440" y="-540" width="2560" height="1440" />
+    </state>
+    <state x="2368" y="-25" key="git4idea.merge.GitPullDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1626902848470" />
   </component>
 </project>

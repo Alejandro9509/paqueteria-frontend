@@ -2,6 +2,7 @@ import {arrayPonts} from "../Data";
 import {trackPromise} from "react-promise-tracker";
 import axios from "axios";
 import Tour from "../../Views/UltimaMilla/Tour";
+import moment from "moment";
 
 const headers = {
     'Content-Type': 'application/json',
@@ -38,7 +39,7 @@ const Depot = (id, x, y, startDate, finishDate) => ({
 async function convertData(trucks, guias, dateFilter) {
     var array = []
     var location = await searchLocation(dateFilter.sucursalSeleccionada.m_sMunicipio, dateFilter.sucursalSeleccionada.m_sCalle)
-    array = array.concat((trucks.map(t => Depot(t.m_nIdUnidad, location.x, location.y, dateFilter.startDate + "T" + dateFilter.startTime +":00+00:00", dateFilter.finishDate + "T" + dateFilter.finishTime+":00+00:00"))));
+    array = array.concat((trucks.map(t => Depot(t.m_nIdUnidad, location.x, location.y, dateFilter.startDate + "T" + dateFilter.startTime + ":00+00:00", dateFilter.finishDate + "T" + dateFilter.finishTime + ":00+00:00"))));
     array = array.concat((guias.map((p, index) => (
         {
             "$type": "CustomerSite",
@@ -52,8 +53,8 @@ async function convertData(trucks, guias, dateFilter) {
             },
             "openingIntervals": [{
                 "$type": "StartEndInterval",
-                "start":  dateFilter.startDate + "T" + dateFilter.startTime+":00+00:00",
-                "end": dateFilter.finishDate + "T" + dateFilter.finishTime+":00+00:00"
+                "start": dateFilter.startDate + "T" + dateFilter.startTime + ":00+00:00",
+                "end": dateFilter.finishDate + "T" + dateFilter.finishTime + ":00+00:00"
             }
             ],
             "serviceTimePerStop": "300.0"
@@ -97,34 +98,41 @@ async function obtenerGuiasUbicacion(paquetes) {
 }
 
 async function obtenerRutas(truck, guias, data) {
-
-    return xtour.planTours({
-        "locations": await convertData(truck, guias, data),
-        "orders":
-            guias.map((p, index) => (
-                {
-                    "$type": "VisitOrder",
-                    "id": p.idGuia,
-                    "locationId": "Customer" + p.idGuia,
+    var converData = await convertData(truck, guias, data)
+    var result;
+    trackPromise(
+        result = new Promise((resolve, reject) => {
+            xtour.planTours({
+                "locations": converData,
+                "orders":
+                    guias.map((p, index) => (
+                        {
+                            "$type": "VisitOrder",
+                            "id": p.idGuia,
+                            "locationId": "Customer" + p.idGuia,
+                        }
+                    )),
+                "fleet": {
+                    "vehicles":
+                        truck.map(t => (
+                            {
+                                "ids": ["vehicle" + t.m_nIdUnidad],
+                                "maximumQuantityScenarios": [{
+                                    "quantities": [100.0]
+                                }],
+                                "startLocationId": "Depo" + t.m_nIdUnidad,
+                                "endLocationId": "Depo" + t.m_nIdUnidad
+                            }
+                        ))
+                },
+                "distanceMode": {
+                    "$type": "DirectDistance"
                 }
-            )),
-        "fleet": {
-            "vehicles":
-                truck.map(t => (
-                    {
-                        "ids": ["vehicle" + t.m_nIdUnidad],
-                        "maximumQuantityScenarios": [{
-                            "quantities": [100.0]
-                        }],
-                        "startLocationId": "Depo" + t.m_nIdUnidad,
-                        "endLocationId": "Depo" + t.m_nIdUnidad
-                    }
-                ))
-        },
-        "distanceMode": {
-            "$type": "DirectDistance"
-        }
-    })
+            }, (r, e) => resolve(r))
+        })
+    )
+    return result
+
 
 }
 
@@ -146,28 +154,32 @@ function calcularRuta(points, sucursal) {
     array.push(apiPoint(sucursal.lng, sucursal.lat))
     array = array.concat(points.map(p => apiPoint(p.lng, p.lat)))
     array.push(apiPoint(sucursal.lng, sucursal.lat))
-    return new Promise((resolve, reject) => {
-        xroute.calculateRoute({
-            "waypoints": array,
-            "resultFields": {
-                "polyline": true,
-                "eventTypes": [
-                    "MANEUVER_EVENT"
-                ],
-                "encodedPath": true,
-                "guidedNavigationRoute": false
-            },
-            "routeOptions": {
-                "polylineOptions": {
-                    "elevations": true
+    var result;
+    trackPromise(
+        result = new Promise((resolve, reject) => {
+            xroute.calculateRoute({
+                "waypoints": array,
+                "resultFields": {
+                    "polyline": true,
+                    "eventTypes": [
+                        "MANEUVER_EVENT"
+                    ],
+                    "encodedPath": true,
+                    "guidedNavigationRoute": false
+                },
+                "routeOptions": {
+                    "polylineOptions": {
+                        "elevations": true
+                    }
+                },
+                "requestProfile": {
+                    "userLanguage": "es"
                 }
-            },
-            "requestProfile": {
-                "userLanguage": "es"
-            }
 
-        }, (r, e) => resolve(r))
-    })
+            }, (r, e) => resolve(r))
+        })
+    )
+    return result
 
 }
 
@@ -187,6 +199,7 @@ async function searchLocationAddress(address) {
     }
 
 }
+
 
 function searchLocationWeb(city, address) {
     return new Promise((resolve, reject) => {
@@ -229,43 +242,70 @@ async function searchLocation(city, address) {
     }
 }
 
-function agregarRuta(tour, data){
+function agregarRuta(tour, data) {
     const url = `${process.env.REACT_APP_API_URL}/GuardarUltimaMilla`;
     let result;
-    var ultimaMillaObject = {fecha: data.fecha.split("T")[0].replace("-", ""), m_nCreadoPor: localStorage.getItem("UsuarioId"), idSucursal: data.sucursalSeleccionada.m_nIdSucursal,zonas: [], rutas:[]}
-    console.log(tour)
+    var ultimaMillaObject = {
+        fecha: moment(data.fecha).format("YYYYMMDD"),
+        m_nCreadoPor: localStorage.getItem("UsuarioId"),
+        idSucursal: data.sucursalSeleccionada.m_nIdSucursal,
+        zonas: [],
+        rutas: []
+    }
     tour.unidades.forEach((u) => {
-        var tempTour = tour.tour.tours.find( t => t.vehicleId === ("vehicle" + u.m_nIdUnidad))
+        var tempTour = tour.tour.tours.find(t => t.vehicleId === ("vehicle" + u.m_nIdUnidad))
         var guias = tour.paquetes.filter((p, index) => tempTour.trips[0].stops.find((s, i) => parseInt(s.tasks[0].orderId) === p.idGuia) != null)
         guias = ordenarGuiasPorRuta(tempTour, guias)
-        ultimaMillaObject.rutas.push({idOperador: u.m_nIdOperador, idUnidad: u.m_nIdUnidad, guias: guias.map(g => ({idGuia: g.idGuia, lat: g.lat, lng: g.lng, orden: g.orden}))})
+        ultimaMillaObject.rutas.push({
+            idOperador: u.m_nIdOperador,
+            idUnidad: u.m_nIdUnidad,
+            guias: guias.map(g => ({idGuia: g.idGuia, lat: g.lat, lng: g.lng, orden: g.orden}))
+        })
     })
     data.zonasSeleccionada.forEach((z) => {
         ultimaMillaObject.zonas.push({id: z.m_nIdZona})
     })
 
     trackPromise(
-        result = axios.post(url, Object.assign({}, ultimaMillaObject), { headers })
+        result = axios.post(url, Object.assign({}, ultimaMillaObject), {headers})
     );
     return result
 }
 
-export {obtenerRutas, obtenerGuiasUbicacion, calcularRuta, randomColor, searchLocationWeb, agregarRuta, searchLocationAddress}
+function obtenerUltimaMillaFecha(date, idSucursal, zonas) {
+    const url = `${process.env.REACT_APP_API_URL}/GetUltimaMillaFecha/` + moment(date).format("YYYYMMDD") + "/" + idSucursal;
+    let result;
+    trackPromise(
+        result = axios.post(url, Object.assign({}, {zonas: zonas.join(",")}), {headers})
+    );
+    return result
+}
+
+export {
+    obtenerRutas,
+    obtenerGuiasUbicacion,
+    calcularRuta,
+    randomColor,
+    searchLocationWeb,
+    agregarRuta,
+    searchLocationAddress,
+    obtenerUltimaMillaFecha
+}
 
 
 function ordenarGuiasPorRuta(tour, guias) {
     var result = []
-        tour.trips[0].stops.forEach((item, index) => {
-            var found = false;
-            guias = guias.filter(function (guia) {
-                if (!found && guia.idGuia == parseInt(item.tasks[0].orderId)) {
-                    guia.orden = index + 1
-                    result.push(guia);
-                    found = true;
-                    return false;
-                } else
-                    return true;
-            })
+    tour.trips[0].stops.forEach((item, index) => {
+        var found = false;
+        guias = guias.filter(function (guia) {
+            if (!found && guia.idGuia == parseInt(item.tasks[0].orderId)) {
+                guia.orden = index + 1
+                result.push(guia);
+                found = true;
+                return false;
+            } else
+                return true;
         })
-        return result
+    })
+    return result
 }

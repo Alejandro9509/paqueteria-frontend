@@ -138,12 +138,10 @@ class Cronograma extends Component {
                                                 </TableHead>
                                                 <TableBody>
                                                     {
-                                                        this.props.tour.unidades.map((u, index) => {
-                                                            var tour = this.props.tour.tour.tours.find(t => t.vehicleId === ("vehicle" + u.m_nIdUnidad))
+                                                        this.props.tour.m_arrClsParadaUltimaMilla.map((u, index) => {
+                                                            var tour = this.props.tour.m_arrClsParadaUltimaMilla.find(t => t.m_nIdUnidad ===  u.m_nIdUnidad)
                                                             var color = tour.color
-                                                            var ms = this.props.tour.tour.tourReports.find(t => t.vehicleId === ("vehicle" + u.m_nIdUnidad)).costReport.travelTime,
-                                                                min = Math.floor((ms / 60) << 0),
-                                                                sec = Math.floor((ms) % 60);
+                                                            var min = 20, sec = 10;
                                                             return (
                                                                 <TableRow key={index}>
                                                                     <TableCell style={{borderBottom: "none"}}
@@ -156,9 +154,9 @@ class Cronograma extends Component {
                                                                         }}></div>
                                                                     </TableCell>
                                                                     <TableCell style={{borderBottom: "none"}}
-                                                                               align="left">{u.m_sNombreOperador}</TableCell>
+                                                                               align="left">{u.m_snNombreOperador}</TableCell>
                                                                     <TableCell style={{borderBottom: "none"}}
-                                                                               align="left">{u.m_sPlacas}</TableCell>
+                                                                               align="left">{u.m_sPlacasUnidad}</TableCell>
                                                                     <TableCell style={{borderBottom: "none"}}
                                                                                align="left">Capacidad</TableCell>
                                                                     <TableCell style={{borderBottom: "none"}}
@@ -178,7 +176,7 @@ class Cronograma extends Component {
                                                                     <TableCell style={{borderBottom: "none"}}
                                                                                align="center">
                                                                         <Chip
-                                                                            label={this.props.tour.tour.tours[0].trips[0].stops.length}
+                                                                            label={u.m_arrClsProGuia.length}
                                                                             color={"default"}
                                                                             variant="default"
                                                                         />
@@ -188,7 +186,7 @@ class Cronograma extends Component {
                                                                     }}
                                                                                width={"50%"}>
                                                                         <div style={{position: "relative"}}>
-                                                                            <Paradas color={color} tour={tour}>
+                                                                            <Paradas color={color} tour={tour} ultimaMilla={true}>
 
 
                                                                             </Paradas>

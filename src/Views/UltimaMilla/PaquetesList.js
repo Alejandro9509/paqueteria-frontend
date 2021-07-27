@@ -14,7 +14,7 @@ import {
 } from "@material-ui/core";
 import {obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
 import {fade} from "@material-ui/core/styles";
-import {obtenerGuia, obtenerGuiasFiltro} from "../../Util/Contexts/GuiaContext";
+import {obtenerGuia, obtenerGuiasFiltro, obtenerGuiaUltimaMilla} from "../../Util/Contexts/GuiaContext";
 import {arrayGuias} from "../../Util/Data";
 
 const useStyles = theme => ({
@@ -50,9 +50,10 @@ class PaquetesList extends Component {
 
     getAllPaquetes() {
         //"0", "0", this.props.data.sucursalSeleccionada.m_nIdSucursal, 4
-        obtenerGuia().then(({data}) => {
-            this.setState({paquetes: data})
+        obtenerGuiaUltimaMilla(this.props.zonasIds,this.props.tipoServicio).then(({data}) => {
+            this.setState({paquetes: arrayGuias})
         })
+        this.setState({paquetes: arrayGuias})
     }
 
     descendingComparator(a, b, orderBy) {

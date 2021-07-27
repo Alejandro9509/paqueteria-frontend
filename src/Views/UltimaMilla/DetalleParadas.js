@@ -22,6 +22,7 @@ import {ReactComponent as UnidadesIcon} from "../../iconos/Catalogos/Icono Unida
 import EmailIcon from "@material-ui/icons/Email";
 import {obtenerMensajes} from "../../Util/Contexts/MensajesConetext";
 import { PieChart } from 'react-minimal-pie-chart';
+import {obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
 
 
 
@@ -30,34 +31,34 @@ class DetalleParadas extends Component {
         super(props);
         this.state = {
             openDetail: false,
-            repartidoresFiltrados: this.props.tour.unidades,
+            repartidoresFiltrados: this.props.tour.m_arrClsParadaUltimaMilla,
             newMessageText: "",
-            paradas:[]
+            paradas:[],
         }
         this.searchRepartidor = this.searchRepartidor.bind(this)
         this.openDetail = this.openDetail.bind(this)
     }
 
     componentDidMount() {
-
     }
     searchRepartidor(event) {
         event.preventDefault()
         if (this.state.searchText === "") {
-            this.setState({repartidoresFiltrados: this.props.tour.unidades})
+            this.setState({repartidoresFiltrados: this.props.tour.m_arrClsParadaUltimaMilla})
         } else {
-            this.setState({repartidoresFiltrados: this.props.tour.unidades.filter(u => u.m_sNombreOperador.toLowerCase().includes(this.state.searchText.toLowerCase()))})
+            this.setState({repartidoresFiltrados: this.props.tour.m_arrClsParadaUltimaMilla.filter(u => u.m_sNombreOperador.toLowerCase().includes(this.state.searchText.toLowerCase()))})
         }
 
     }
     openDetail(index) {
-        obtenerMensajes(this.state.repartidoresFiltrados[index].m_nIdOperador).then(({data}) => {
-            this.setState({indexOpen: index === this.state.indexOpen ? -1 : index, mensajes: data, newMessageText: ""})
-        })
+            this.setState({indexOpen: index === this.state.indexOpen ? -1 : index})
 
     }
 
     render() {
+
+        const totalPaquetes = this.props.tour.m_arrClsParadaUltimaMilla.map(a => a.m_arrClsProGuia.length).reduce((a,b)=> a + b)
+        const allGuias = [].concat(...this.props.tour.m_arrClsParadaUltimaMilla.map(a => a.m_arrClsProGuia))
         return (
             <div>
                 {
@@ -129,9 +130,9 @@ class DetalleParadas extends Component {
                                         lineWidth={15}
                                         paddingAngle={5}
                                         data={[
-                                            { title: '', value: 0, color: '#F51533' },
-                                            { title: '', value: 0, color: '#06B100' },
-                                            { title: '', value: this.props.tour.paquetes.length, color: '#F5E23E' },
+                                            { title: '', value: allGuias.filter(g => g.m_nIdEstatusGuia === 8 ).length, color: '#F51533' },
+                                            { title: '', value: allGuias.filter(g =>  g.m_nIdEstatusGuia === 7).length, color: '#06B100' },
+                                            { title: '', value: allGuias.filter(g => g.m_nIdEstatusGuia !== 8 && g.m_nIdEstatusGuia !== 7).length, color: '#F5E23E' },
                                         ]}
                                     />
                                 </div>
@@ -141,17 +142,17 @@ class DetalleParadas extends Component {
                                 <Grid container spacing={1} style={{paddingTop: "10px", paddingRight:"10px"}}>
                                     <Grid item sm={12}>
                                         <div style={{backgroundColor:"#F5E23E", display:"inline-block", width:"100%", textAlign:"center"}}>
-                                            <strong>Pendientes </strong> {this.props.tour.paquetes.length} de {this.props.tour.paquetes.length} <strong>100%</strong>
+                                            <strong>Pendientes </strong> {allGuias.filter(g => g.m_nIdEstatusGuia !== 8 && g.m_nIdEstatusGuia !== 7).length} de {totalPaquetes} <strong>{parseInt((allGuias.filter(g => g.m_nIdEstatusGuia !== 8 && g.m_nIdEstatusGuia !== 7).length / totalPaquetes) * 100)}%</strong>
                                         </div>
                                     </Grid>
                                     <Grid item sm={12}>
                                         <div style={{backgroundColor:"#06B100", display:"inline-block", width:"100%", textAlign:"center"}}>
-                                            <strong>Pendientes </strong> {0} de {0} <strong>0%</strong>
+                                            <strong>Exitosas </strong> {allGuias.filter(g => g.m_nIdEstatusGuia === 7).length} de {totalPaquetes} <strong> {parseInt((allGuias.filter(g => g.m_nIdEstatusGuia === 7).length/totalPaquetes) * 100)}%</strong>
                                         </div>
                                     </Grid>
                                     <Grid item sm={12}>
                                         <div style={{backgroundColor:"#F51533", display:"inline-block", width:"100%", textAlign:"center"}}>
-                                            <strong>Pendientes </strong> {0} de {0} <strong>0%</strong>
+                                            <strong>Fallidas </strong>  {allGuias.filter(g => g.m_nIdEstatusGuia === 8).length} de {totalPaquetes} <strong>{parseInt((allGuias.filter(g => g.m_nIdEstatusGuia === 8).length/totalPaquetes) * 100)}%</strong>
                                         </div>
                                     </Grid>
                                 </Grid>
@@ -175,16 +176,16 @@ class DetalleParadas extends Component {
                             <List style={{overflow: "auto"}}>
                                 {
                                     this.state.repartidoresFiltrados.map((r, index) => {
-                                        var tour = this.props.tour.tour.tours.find(t => t.vehicleId === ("vehicle" + r.m_nIdUnidad))
+                                        var tour = this.props.tour.m_arrClsParadaUltimaMilla.find(t => t.m_nIdUnidad ===  r.m_nIdUnidad)
                                         var color = tour.color
                                         return (
-                                            <div>
+                                            <div key={r.m_sNombreOperador}>
                                                 <ListItem button
                                                           onClick={() => this.openDetail(index)}>
                                                     <ListItemText primary={
                                                         <Grid container spacing={1} alignItems={"baseline"} justify={"space-between"}>
                                                             <Grid item>
-                                                                <Typography>{r.m_sNombreOperador}</Typography>
+                                                                <Typography>{r.m_snNombreOperador}</Typography>
                                                             </Grid>
                                                             <Grid item>
                                                                 <UnidadesIcon
@@ -196,11 +197,11 @@ class DetalleParadas extends Component {
                                                                         width: "20px",
                                                                         verticalAlign: "middle"
                                                                     }}/>
-                                                                JT-5214
+                                                                {r.m_sPlacasUnidad}
 
                                                             </Grid>
                                                             <Grid item sm={6}>
-                                                                {tour.trips[0].stops.length} Paradas
+                                                                {tour.m_arrClsProGuia.length} Paradas
                                                             </Grid>
                                                             <Grid item sm={6}>
 
@@ -208,7 +209,7 @@ class DetalleParadas extends Component {
                                                         </Grid>
                                                     }/>
                                                 </ListItem>
-                                               {/* <Collapse in={this.state.indexOpen === index} timeout="auto"
+                                                <Collapse in={this.state.indexOpen === index} timeout="auto"
                                                           unmountOnExit>
                                                     <div style={{
                                                         borderRadius: "5px",
@@ -222,14 +223,13 @@ class DetalleParadas extends Component {
                                                             overflow: "auto"
                                                         }}>
                                                             {
-                                                                this.state.paradas.map(m => {
+                                                                tour.m_arrClsProGuia.map(g => {
                                                                     return (
                                                                         <ListItem style={{
                                                                             borderRadius: "5px",
                                                                             padding:"10px",
-                                                                            backgroundColor: m.m_nIdEnviadoPor === parseInt(localStorage.getItem("UsuarioId")) ? "#C6CDF3" : "#E6E6E6"
                                                                         }}>
-                                                                            <ListItemText primary={m.m_sMensaje}/>
+                                                                            Hols
                                                                         </ListItem>
                                                                     )
                                                                 })
@@ -237,7 +237,7 @@ class DetalleParadas extends Component {
                                                         </List>
                                                     </div>
 
-                                                </Collapse>*/}
+                                                </Collapse>
                                             </div>
                                         )
                                     })

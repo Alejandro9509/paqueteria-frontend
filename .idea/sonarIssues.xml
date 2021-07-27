@@ -8,6 +8,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/.env">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/package-lock.json">
           <value>
             <set />
@@ -218,6 +223,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/TourUltimaMilla.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/UltimaMilla.js">
           <value>
             <set />
@@ -294,6 +304,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/iconos/Menu/palomita.svg">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/index.js">
           <value>
             <set />
           </value>
@@ -444,6 +459,36 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/../../Web/Cetys/sw-cetys-cercana-web/src/util/Contexts/TicketContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/sw-sierra-servicio-web/src/app/routes.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/sw-sierra-servicio-web/src/app/views/Dashboard/AnswerChart.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/sw-sierra-servicio-web/src/app/views/Dashboard/Dashboard.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/sw-sierra-servicio-web/src/app/views/category/categoryList.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/sw-sierra-servicio-web/src/app/views/ticket/TicketDetail.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/sw-sierra-servicio-web/src/assets/constants/index.js">
           <value>
             <set />
           </value>

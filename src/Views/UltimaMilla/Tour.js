@@ -31,9 +31,6 @@ class Tour extends Component {
 
     }
 
-    componentWillUnmount() {
-
-    }
 
     getRoute() {
 
