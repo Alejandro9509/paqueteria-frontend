@@ -269,23 +269,24 @@ function Embarque(props) {
 
     function handleSelectRemitente(newValue) {
         console.log(newValue)
+        let user = newValue
         setState({
             ...state,
-            nombreRemitente: newValue,
-            RFCRemitente: newValue.m_sRFC,
-            domicilioRemitente: newValue.m_sDomicilio,
+            nombreRemitente: user,
+            RFCRemitente: user.m_sRFC,
+            domicilioRemitente: user.m_sDomicilio,
 
             codigoPostalRemitente: dataCodigoPostal.find(
-                (o) => o.m_nIdCP == newValue.m_nIdCP
+                (o) => o.m_nIdCP == user.m_nIdCP
             ),
 
             ciudadRemitente: dataCiudad.find(
-                (o) => o.m_nIdCiudad == dataCodigoPostal.find((o) => o.m_nIdCP == newValue.m_nIdCP).m_nIdCiudad
+                (o) => o.m_nIdCiudad == dataCodigoPostal.find((o) => o.m_nIdCP == user.m_nIdCP).m_nIdCiudad
             ),
 
-            correoRemitente: newValue.m_sCorreoElectronico,
-            telefonoRemitente: newValue.m_sTelefono,
-            contactoRemitente: newValue.m_sContacto,
+            correoRemitente: user.m_sCorreoElectronico,
+            telefonoRemitente: user.m_sTelefono,
+            contactoRemitente: user.m_sContacto,
         });
 
     }
@@ -440,10 +441,10 @@ function Embarque(props) {
 
         }
 
-
+        console.log(params)
         console.log(JSON.stringify(params))
 
-        if (state.idEmbarque != 0) {
+        /*if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -472,14 +473,51 @@ function Embarque(props) {
                     console.log(err);
                     showSuccess(err);
                 });
-        }
+        }*/
     };
 
     function handleSelectCP(id, cp) {
-        setState({
-            ...state,
-            [state.identificadorModal]: id,
-        });
+        if (state.identificadorModal == "nombreRemitente"){
+            setState({
+                ...state,
+                [state.identificadorModal]: id,
+                RFCRemitente: id.m_sRFC,
+                domicilioRemitente: id.m_sDomicilio,
+
+                codigoPostalRemitente: dataCodigoPostal.find(
+                    (o) => o.m_nIdCP == id.m_nIdCP
+                ),
+
+                ciudadRemitente: dataCiudad.find(
+                    (o) => o.m_nIdCiudad == dataCodigoPostal.find((o) => o.m_nIdCP == id.m_nIdCP).m_nIdCiudad
+                ),
+
+                correoRemitente: id.m_sCorreoElectronico,
+                telefonoRemitente: id.m_sTelefono,
+                contactoRemitente: id.m_sContacto,
+            });
+        }else{
+            setState({
+                ...state,
+                [state.identificadorModal]: id,
+                RFCDestinatario: id.m_sRFC,
+                domicilioDestinatario: id.m_sDomicilio,
+
+                codigoPostalDestinatario: dataCodigoPostal.find(
+                    (o) => o.m_nIdCP == id.m_nIdCP
+                ),
+
+                ciudadDestinatario: dataCiudad.find(
+                    (o) => o.m_nIdCiudad ==
+                        dataCodigoPostal.find((o) => o.m_nIdCP == id.m_nIdCP).m_nIdCiudad
+                ),
+
+                correoDestinatario: id.m_sCorreoElectronico,
+                telefonoDestinatario: id.m_sTelefono,
+                contactoDestinatario: id.m_sContacto,
+            });
+        }
+
         console.log(id);
         console.log(state.identificadorModal);
     }
@@ -3688,6 +3726,7 @@ function Embarque(props) {
                                                                                                                 identificadorModal:
                                                                                                                     "nombreDestinatario",
                                                                                                                 tipoModal: 5,
+                                                                                                                openDialog: true,
                                                                                                             });
                                                                                                             open();
                                                                                                         }}
