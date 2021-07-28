@@ -147,7 +147,11 @@ async function calculateReachableLocations(routeEncode, guias) {
             }
         }
     );
-    return location.reachableLocations.map(r => r.inputLocationIndex);
+    if(location.reachableLocations) {
+        return location.reachableLocations.map(r => r.inputLocationIndex);
+    }else {
+        return []
+    }
 
 }
 

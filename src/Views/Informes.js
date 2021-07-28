@@ -535,6 +535,7 @@ function Informes({ history }) {
         sucursalCancelacion: {},
         sePuedeCancelar: false,
         Informes: [],
+        indexCubicar:0,
     });
 
     const handleAceptar = (e) => {
@@ -586,15 +587,19 @@ function Informes({ history }) {
             agregarInformes(params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
-                    console.log(respuesta.data);
-                    getAllData();
-                    $('.nav-tabs li ').removeClass('active');
-                    $('.nav-tabs li').eq(0).addClass('active');
-                    $('.tab-content div ').removeClass('in show');
-                    $('#Listado').addClass('in show');
+                    if(state.cuibicar && state.indexCubicar < informes.length) {
+                        showAgregarFromCubicar(state.indexCubicar++)
+                    }else {
+                        getAllData();
+                        $('.nav-tabs li ').removeClass('active');
+                        $('.nav-tabs li').eq(0).addClass('active');
+                        $('.tab-content div ').removeClass('in show');
+                        $('#Listado').addClass('in show');
+                        setState({...state, cubicar: false})
+                    }
+
                 })
                 .catch((err) => {
-                    console.log(err);
                     showSuccess(err);
                 });
         }
@@ -605,6 +610,17 @@ function Informes({ history }) {
             setFormatosImpresion(respuesta.data)
         });
     };
+
+    function showAgregarFromCubicar(index){
+        setState({
+            ...state,
+            index: index
+        })
+        var guiasArray = guias.filter(g => informes[index].map(i => i.idGuia).includes(g.m_nIdGuia))
+        guias.forEach(g => g.select = true)
+        setDataGuias(guiasArray)
+
+    }
 
     function TableCiudades({ columns, data, select }) {
         const defaultColumn = React.useMemo(
@@ -1177,6 +1193,7 @@ function Informes({ history }) {
                         state.IdRemolque2
                     );
                     setInformes(array);
+                    console.log(array)
                 }
             })
         }
@@ -3048,6 +3065,13 @@ function Informes({ history }) {
                                     >
                                         Aceptar
                   </button>
+                                    {
+                                        state.cubicar &&
+                                            <div>
+                                                {state.indexCubicar + 1} de {informes.length}
+                                            </div>
+                                    }
+
                                 </div>
                             </form>
                         </div>
@@ -3706,7 +3730,7 @@ function Informes({ history }) {
                                                 align="center"
                                             >
                                                 <button
-                                                    onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar", cubicar: true }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show'); }}
+                                                    onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar", cubicar: true }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');showAgregarFromCubicar(0); }}
                                                     className="btn btn-primary primary-btn"
                                                     style={{ margin: "10px" }}
                                                 >

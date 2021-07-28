@@ -142,6 +142,7 @@ class FiltersMap extends Component {
 
     changeDateConsult(value) {
         this.setState({fecha: value})
+
         this.props.getFechaUltimaMilla(value, this.state.sucursalSeleccionada.m_nIdSucursal, this.state.zonasSeleccionada.map(z => z.m_nIdZona))
     }
 
@@ -179,7 +180,7 @@ class FiltersMap extends Component {
         if (zona.length !== 0) {
             this.getAllUnidades()
             this.getAllGuias()
-            console.log(this.state.sucursalSeleccionada)
+            console.log(zona)
             this.props.getFechaUltimaMilla(this.state.fecha, this.state.sucursalSeleccionada.m_nIdSucursal, zona.map(z => z.m_nIdZona))
 
         }

@@ -51,9 +51,8 @@ class PaquetesList extends Component {
     getAllPaquetes() {
         //"0", "0", this.props.data.sucursalSeleccionada.m_nIdSucursal, 4
         obtenerGuiaUltimaMilla(this.props.zonasIds,this.props.tipoServicio).then(({data}) => {
-            this.setState({paquetes: arrayGuias})
+            this.setState({paquetes: data})
         })
-        this.setState({paquetes: arrayGuias})
     }
 
     descendingComparator(a, b, orderBy) {

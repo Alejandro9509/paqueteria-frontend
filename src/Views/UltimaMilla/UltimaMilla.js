@@ -82,17 +82,26 @@ class UltimaMilla extends Component {
     }
 
     getFechaUltimaMilla(date, idSucursal, zonas) {
-
+        clearInterval(this.interval);
         obtenerUltimaMillaFecha(date, idSucursal, zonas).then(({data}) => {
             if (data.m_nIdUltimaMilla !== 0) {
                 if (actualizar) {
-                    this.interval = setInterval(() => this.getFechaUltimaMilla(), 1000);
+                    this.interval = setInterval(() => this.getFechaUltimaMilla(date, idSucursal, zonas), 10000);
                 }
-                data.m_arrClsParadaUltimaMilla.forEach(t => t.color = randomColor(10))
+                if (!this.state.ultimaMilla) {
+                    data.m_arrClsParadaUltimaMilla.forEach(t => t.color = randomColor(10))
+                }else {
+                    if (data.m_nIdUltimaMilla === this.state.ultimaMilla.m_nIdUltimaMilla) {
+                        data.m_arrClsParadaUltimaMilla.forEach(t => t.color = this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(u => u.m_nIdParadaUltimaMilla === t.m_nIdParadaUltimaMilla).color)
+                    }else {
+                        data.m_arrClsParadaUltimaMilla.forEach(t => t.color = randomColor(10))
+                    }
+                }
+
                 this.setState({modoEdicion: false, ultimaMilla: data})
                 actualizar = false
             }else {
-                clearInterval(this.interval);
+                this.setState({modoEdicion: true, ultimaMilla: null})
             }
         })
     }

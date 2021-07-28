@@ -1151,20 +1151,12 @@ function Recoleccion() {
     const columnsTipoUnidades = React.useMemo(() => [
         {
             Name: "Tipo de unidad",
-            accessor: "m_nIdTipoUnidad",
+            accessor: "m_sTipoUnidad",
         },
         {
             Name: "Identificador",
-            accessor: "m_nIdentificador",
-        },
-        {
-            Name: "Nomenclatura",
-            accessor: "m_sNomenclaturaSCT",
-        },
-        {
-            Name: "Estatus",
-            accessor: "m_bActivo",
-        },
+            accessor: "m_nIdTipoUnidad",
+        }
     ]);
 
     const columnsUnidades = React.useMemo(() => [
@@ -2798,7 +2790,13 @@ function Recoleccion() {
                                                                         required
                                                                         label="Estatus de la Recolección"
                                                                         value={state.estatusRecoleccion}
-                                                                        onChange={handleChange}
+                                                                        onChange={(event) => {
+                                                                            event.preventDefault();
+                                                                            setState({
+                                                                                ...state,
+                                                                                estatusRecoleccion: event.target.value,
+                                                                            });
+                                                                        }}
                                                                         disabled={state.agregar === "Consultar"}
                                                                         id="estatusRecoleccion"
                                                                     >
@@ -2827,7 +2825,13 @@ function Recoleccion() {
                                                                         className="form-control"
                                                                         required
                                                                         value={state.moneda}
-                                                                        onChange={handleChange}
+                                                                        onChange={(event) => {
+                                                                            event.preventDefault();
+                                                                            setState({
+                                                                                ...state,
+                                                                                moneda: event.target.value,
+                                                                            });
+                                                                        }}
                                                                         disabled={state.agregar === "Consultar"}
                                                                         id="moneda"
                                                                     >

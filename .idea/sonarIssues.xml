@@ -78,6 +78,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Util.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Views/Clientes.js">
           <value>
             <set />
@@ -119,6 +124,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Views/GrupoCliente.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/Informes.js">
           <value>
             <set />
           </value>

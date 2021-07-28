@@ -273,6 +273,7 @@ function agregarRuta(tour, data) {
 }
 
 function obtenerUltimaMillaFecha(date, idSucursal, zonas) {
+    console.log(zonas)
     const url = `${process.env.REACT_APP_API_URL}/GetUltimaMillaFecha/` + moment(date).format("YYYYMMDD") + "/" + idSucursal;
     let result;
     trackPromise(
