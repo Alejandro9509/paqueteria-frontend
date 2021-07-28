@@ -55,7 +55,8 @@ function Sucursal(props) {
         activo: false,
         height: window.innerHeight,
         CreadoPor: localStorage.getItem("UsuarioId"),
-        ModificadoPor: localStorage.getItem("UsuarioId")
+        ModificadoPor: localStorage.getItem("UsuarioId"),
+        codigoPostalRemitente: ""
     })
 
 
@@ -144,6 +145,7 @@ function Sucursal(props) {
 
     function handleShowModificar(id) {
         obtenerSucursalesId(id).then(respuesta => {
+            let cpObject = dataCodigoPostal.find(c => c.m_nIdCP == respuesta.data.m_nIdCodigoPostal)
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -155,7 +157,8 @@ function Sucursal(props) {
                 idEstado: dataEstado.find(
                     (o) => o.m_nIdEstado === respuesta.data.m_nIdEstado
                 ),                
-                codigoPostal: 0,
+                codigoPostal: respuesta.data.m_nIdCodigoPostal,
+                codigoPostalRemitente: cpObject,
                 municipio: respuesta.data.m_sMunicipio,
                 localidad: respuesta.data.m_sLocalidad,
                 colonia: respuesta.data.m_sColonia,
