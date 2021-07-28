@@ -32,6 +32,7 @@ class ConceptosAdicionales extends Component {
             retiene: 0,
             traslada: 0,
             importeIVA: "0",
+            idConcepto: 0,
             concepto: null,
             rangoMinimo: 0,
             rangoMaximo: 0,
@@ -76,25 +77,28 @@ class ConceptosAdicionales extends Component {
 
     getAllConceptos() {
         obtenerConceptosFacturacionManiobra().then(respuesta => {
-            if (this.props.edit) {
-                this.props.select.m_arrArConceptos.forEach(element => {
-                    this.props.removeConcepto(element)
-                })
-                this.props.select.m_arrArConceptos.forEach(element => {
-                    this.props.addConcepto({
-                        concepto: respuesta.data.find(c => c.m_nIdConceptosFacturacion === element.m_nIdConceptosFacturacion),
-                        importe: element.m_cImporte,
-                        traslada: element.m_nIdImpuestoTraslada,
-                        importeIVA: element.m_cImporteIva,
-                        retiene: element.m_nIdImpuestoRetiene,
-                        importeRet: element.m_cImporteRetiene,
-                        nombreConcepto: element.m_sConcepto,
-                        rangoMinimo: element.m_xnRangoMinimo,
-                        rangoMaximo: element.m_xnRangoMaximo,
-                        agregadoDesde: element.m_nIdAgregadoDesde
+            /*if (this.props.conceptosAdicionales.length == 0){
+                if (this.props.edit) {
+                    this.props.select.m_arrArConceptos.forEach(element => {
+                        this.props.removeConcepto(element)
                     })
-                })
-            }
+                    this.props.select.m_arrArConceptos.forEach(element => {
+                        this.props.addConcepto({
+                            concepto: respuesta.data.find(c => c.m_nIdConceptosFacturacion === element.m_nIdConceptosFacturacion),
+                            importe: element.m_cImporte,
+                            traslada: element.m_nIdImpuestoTraslada,
+                            importeIVA: element.m_cImporteIva,
+                            retiene: element.m_nIdImpuestoRetiene,
+                            importeRet: element.m_cImporteRetiene,
+                            nombreConcepto: element.m_sConcepto,
+                            rangoMinimo: element.m_xnRangoMinimo,
+                            rangoMaximo: element.m_xnRangoMaximo,
+                            agregadoDesde: element.m_nIdAgregadoDesde
+                        })
+                    })
+                }
+            }*/
+
             this.setState({ conceptos: respuesta.data })
         });
     }
