@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="94d8e9cf-07c8-4a10-b81b-63018b1e29c3" name="Default Changelist" comment="Se habilitaron campos de minimo y maximo para pastaña de conceptos de entrega por rangos">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionales.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionales.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesEntrega.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesEntrega.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesManiobra.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesManiobra.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesRecoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesRecoleccion.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/CrearTarifa.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/CrearTarifa.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/Tarifas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/Tarifas.js" afterDir="false" />
-    </list>
+    <list default="true" id="94d8e9cf-07c8-4a10-b81b-63018b1e29c3" name="Default Changelist" comment="Se arregló problema de duplicidad de registros y la funcion modificar ya funciona" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -200,7 +192,14 @@
       <option name="project" value="LOCAL" />
       <updated>1627426088771</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Se arregló problema de duplicidad de registros y la funcion modificar ya funciona">
+      <created>1627444117527</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1627444117527</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -256,7 +255,8 @@
     <MESSAGE value="Se agregaron validacionees para obligar a seleccionar sucursal y destino antes de otros datos" />
     <MESSAGE value="Se hicieron ajustes para mandar el id de destino en lugar el nombre a los servicios" />
     <MESSAGE value="Se habilitaron campos de minimo y maximo para pastaña de conceptos de entrega por rangos" />
-    <option name="LAST_COMMIT_MESSAGE" value="Se habilitaron campos de minimo y maximo para pastaña de conceptos de entrega por rangos" />
+    <MESSAGE value="Se arregló problema de duplicidad de registros y la funcion modificar ya funciona" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se arregló problema de duplicidad de registros y la funcion modificar ya funciona" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
