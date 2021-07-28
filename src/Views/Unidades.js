@@ -2059,6 +2059,7 @@ function Unidades(props) {
                                                                                                         className="form-control"
                                                                                                         type="datetime-local"
                                                                                                         placeholder=""
+                                                                                                       required
                                                                                                         value={
                                                                                                             state.placasVencimiento
                                                                                                         }
