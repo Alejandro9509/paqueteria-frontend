@@ -18,6 +18,7 @@ import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import moment from "moment";
 import {ReactComponent as CalendarioIcono} from "../../iconos/Mapa/iconoCalendario.svg";
+import Paradas from "./Paradas";
 
 class Cronograma extends Component {
     constructor(props) {
@@ -46,9 +47,9 @@ class Cronograma extends Component {
                 {
                     !this.state.openDetail &&
                     <Chip
-                        icon={<CalendarioIcono style={{fill: "white", paddingTop:"5px", paddingBottom:"5px"}}/>}
+                        icon={<CalendarioIcono style={{fill: "white", paddingTop: "5px", paddingBottom: "5px"}}/>}
                         style={{
-                            color:"white",
+                            color: "white",
                             backgroundColor: "#F9A03E",
                             bottom: "10px",
                             left: "10px",
@@ -112,7 +113,7 @@ class Cronograma extends Component {
                                          }}>
                                     </div>
                                     <Grid item md={12}>
-                                        <TableContainer style={{height: "100%", padding: "10px"}}>
+                                        <TableContainer style={{height: "100%", padding: "10px", paddingRight:"30px"}}>
                                             <Table size="small">
                                                 <TableHead>
                                                     <TableRow>
@@ -137,14 +138,12 @@ class Cronograma extends Component {
                                                 </TableHead>
                                                 <TableBody>
                                                     {
-                                                        this.props.tour.unidades.map(u => {
-                                                            var tour = this.props.tour.tour.tours.find( t => t.vehicleId === ("vehicle" + u.m_nIdUnidad))
+                                                        this.props.tour.m_arrClsParadaUltimaMilla.map((u, index) => {
+                                                            var tour = this.props.tour.m_arrClsParadaUltimaMilla.find(t => t.m_nIdUnidad ===  u.m_nIdUnidad)
                                                             var color = tour.color
-                                                            var ms = this.props.tour.tour.tourReports.find(t => t.vehicleId === ("vehicle" + u.m_nIdUnidad)).costReport.travelTime,
-                                                                min = Math.floor((ms/ 60) << 0),
-                                                                sec = Math.floor((ms) % 60);
+                                                            var min = 20, sec = 10;
                                                             return (
-                                                                <TableRow>
+                                                                <TableRow key={index}>
                                                                     <TableCell style={{borderBottom: "none"}}
                                                                                align="left">
                                                                         <div style={{
@@ -155,9 +154,9 @@ class Cronograma extends Component {
                                                                         }}></div>
                                                                     </TableCell>
                                                                     <TableCell style={{borderBottom: "none"}}
-                                                                               align="left">{u.m_sNombreOperador}</TableCell>
+                                                                               align="left">{u.m_snNombreOperador}</TableCell>
                                                                     <TableCell style={{borderBottom: "none"}}
-                                                                               align="left">{u.m_sPlacas}</TableCell>
+                                                                               align="left">{u.m_sPlacasUnidad}</TableCell>
                                                                     <TableCell style={{borderBottom: "none"}}
                                                                                align="left">Capacidad</TableCell>
                                                                     <TableCell style={{borderBottom: "none"}}
@@ -168,28 +167,31 @@ class Cronograma extends Component {
                                                                     </TableCell>
                                                                     <TableCell style={{borderBottom: "none"}}
                                                                                align="center">
-                                                                        <div style={{backgroundColor:"#F9A03E", borderRadius:"10px"}}>En camino</div>
+                                                                        <div style={{
+                                                                            backgroundColor: "#F9A03E",
+                                                                            borderRadius: "10px"
+                                                                        }}>En camino
+                                                                        </div>
                                                                     </TableCell>
                                                                     <TableCell style={{borderBottom: "none"}}
                                                                                align="center">
                                                                         <Chip
-                                                                            label={this.props.tour.tour.tours[0].trips[0].stops.length}
+                                                                            label={u.m_arrClsProGuia.length}
                                                                             color={"default"}
                                                                             variant="default"
                                                                         />
                                                                     </TableCell>
-                                                                    <TableCell style={{borderBottom: "none"}}
+                                                                    <TableCell style={{
+                                                                        borderBottom: "none"
+                                                                    }}
                                                                                width={"50%"}>
-                                                                        <Stepper>
-                                                                            {
-                                                                                tour.trips[0].stops.map((s, index) => (
-                                                                                    <Step key={index}
-                                                                                          color={this.props.tour.tour.tours[0].color}>
-                                                                                        <StepLabel> </StepLabel>
-                                                                                    </Step>
-                                                                                ))
-                                                                            }
-                                                                        </Stepper>
+                                                                        <div style={{position: "relative"}}>
+                                                                            <Paradas selectGuiaReasignar={this.props.selectGuiaReasignar} color={color} tour={tour} ultimaMilla={true}>
+
+
+                                                                            </Paradas>
+                                                                        </div>
+
                                                                     </TableCell>
                                                                 </TableRow>
                                                             )

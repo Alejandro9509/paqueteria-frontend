@@ -25,7 +25,7 @@ class Mensajes extends Component {
         super(props);
         this.state = {
             openDetail: false,
-            repartidoresFiltrados: this.props.tour.unidades,
+            repartidoresFiltrados: this.props.tour.m_arrClsParadaUltimaMilla,
             indexOpen: -1,
             searchText: "",
             mensajes: [],
@@ -48,12 +48,19 @@ class Mensajes extends Component {
 
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        console.log(document.getElementById("listMessage"))
+        if(document.getElementById("listMessage")){
+            document.getElementById("listMessage").scrollTo(0,document.getElementById("listMessage").scrollHeight)
+        }
+    }
+
     searchRepartidor(event) {
         event.preventDefault()
         if (this.state.searchText === "") {
-            this.setState({repartidoresFiltrados: this.props.tour.unidades})
+            this.setState({repartidoresFiltrados: this.props.tour.m_arrClsParadaUltimaMilla})
         } else {
-            this.setState({repartidoresFiltrados: this.props.tour.unidades.filter(u => u.m_sNombreOperador.toLowerCase().includes(this.state.searchText.toLowerCase()))})
+            this.setState({repartidoresFiltrados: this.props.tour.m_arrClsParadaUltimaMilla.filter(u => u.m_sNombreOperador.toLowerCase().includes(this.state.searchText.toLowerCase()))})
         }
 
     }
@@ -68,13 +75,16 @@ class Mensajes extends Component {
     enviarMensaje() {
         if (this.state.newMessageText !== "") {
             agregarMensajes(this.state.newMessageText, this.state.repartidoresFiltrados[this.state.indexOpen].m_nIdOperador).then(({data}) => {
-               this.openChat(this.state.indexOpen)
+                obtenerMensajes(this.state.repartidoresFiltrados[this.state.indexOpen].m_nIdOperador).then(({data}) => {
+                    this.setState({mensajes: data, newMessageText: ""})
+                })
             })
         }
     }
 
 
     render() {
+
         return (
             <div className={"j-form"}>
                 {
@@ -87,7 +97,7 @@ class Mensajes extends Component {
                             width: "30px",
                             height: "30px",
                             backgroundColor: "#4F6AF3",
-                            top: "110px",
+                            top: "150px",
                             right: "10px",
                             position: "fixed",
                             zIndex: 3000,
@@ -154,7 +164,8 @@ class Mensajes extends Component {
                             <List style={{overflow: "auto"}}>
                                 {
                                     this.state.repartidoresFiltrados.map((r, index) => {
-                                        var color = this.props.tour.tour.tours.find(t => t.vehicleId === ("vehicle" + r.m_nIdUnidad)).color
+                                        var tour = this.props.tour.m_arrClsParadaUltimaMilla.find(t => t.m_nIdUnidad ===  r.m_nIdUnidad)
+                                        var color = tour.color
                                         return (
                                             <div>
                                                 <ListItem button
@@ -162,7 +173,7 @@ class Mensajes extends Component {
                                                     <ListItemText primary={
                                                         <Grid container spacing={2} alignItems={"baseline"}>
                                                             <Grid item>
-                                                                <Typography>{r.m_sNombreOperador}</Typography>
+                                                                <Typography>{r.m_snNombreOperador}</Typography>
                                                             </Grid>
                                                             <Grid item>
                                                                 <UnidadesIcon
@@ -175,7 +186,7 @@ class Mensajes extends Component {
                                                                     }}/>
                                                             </Grid>
                                                             <Grid item>
-                                                                {r.m_sPlacas}
+                                                                {r.m_sPlacasUnidad}
                                                             </Grid>
                                                         </Grid>
                                                     }/>
@@ -190,17 +201,19 @@ class Mensajes extends Component {
                                                         margin: "5px",
                                                         border: "2px solid #868686"
                                                     }}>
-                                                        <List component="div" disablePadding style={{
+
+                                                        <List id="listMessage"  component="div" disablePadding style={{
                                                             padding: "10px",
                                                             height: "200px",
                                                             overflow: "auto"
                                                         }}>
                                                             {
-                                                                this.state.mensajes.map(m => {
+                                                                this.state.mensajes.map((m,index) => {
                                                                     return (
-                                                                        <ListItem style={{
+                                                                        <ListItem id={`item${index}`} autoFocus={true} style={{
                                                                             borderRadius: "5px",
-                                                                            backgroundColor: "#E6E6E6"
+                                                                            marginBottom:"5px",
+                                                                            backgroundColor: m.m_nIdEnviadoPor === parseInt(localStorage.getItem("UsuarioId")) ? "#C6CDF3" : "#E6E6E6"
                                                                         }}>
                                                                             <ListItemText primary={m.m_sMensaje}/>
                                                                         </ListItem>
@@ -208,6 +221,7 @@ class Mensajes extends Component {
                                                                 })
                                                             }
                                                         </List>
+
                                                         <TextField
                                                             variant={"outlined"}
                                                             style={{padding: "10px"}}

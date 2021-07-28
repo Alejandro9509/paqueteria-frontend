@@ -1,0 +1,43 @@
+.pointBarPass {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position:absolute;
+    margin-top:-15px;
+    z-index:10000;
+    height:30px;
+    width:30px;
+    border-radius:15px;
+    background-color: white;
+    text-align: center;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.pointBarFlag {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    margin-top: -15px;
+    z-index: 10000;
+    height: 30px;
+    width: 25px;
+    text-align: center;
+}
+
+.pointBarActive {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position:absolute;
+    margin-top:-15px;
+    z-index:10000;
+    height:30px;
+    width:30px;
+    border-radius:15px;
+    border-style: solid;
+    border-color: white;
+    color: white;
+    text-align: center;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
