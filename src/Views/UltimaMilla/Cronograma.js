@@ -186,7 +186,7 @@ class Cronograma extends Component {
                                                                     }}
                                                                                width={"50%"}>
                                                                         <div style={{position: "relative"}}>
-                                                                            <Paradas color={color} tour={tour} ultimaMilla={true}>
+                                                                            <Paradas selectGuiaReasignar={this.props.selectGuiaReasignar} color={color} tour={tour} ultimaMilla={true}>
 
 
                                                                             </Paradas>

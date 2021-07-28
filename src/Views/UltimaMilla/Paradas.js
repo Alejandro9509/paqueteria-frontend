@@ -24,6 +24,7 @@ class Paradas extends Component {
                                 this.props.tour.m_arrClsProGuia.map((s, index) => {
                                     return (
                                         <div className="pointBarPass"
+                                             onClick={()=> this.props.selectGuiaReasignar(this.props.tour.m_nIdParadaUltimaMilla, s.m_nIdGuia)}
                                              style={{
                                                  left: `${((index+1) / this.props.tour.m_arrClsProGuia.length) * 90}%`,
                                                  color: this.props.color
