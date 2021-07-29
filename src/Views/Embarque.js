@@ -140,6 +140,8 @@ function Embarque(props) {
     const [dataOperador, setDataOperador] = React.useState([]);
     const [dataTipoUnidad, setDataTipoUnidad] = React.useState([]);
     const [dataUnidad, setDataUnidad] = React.useState([]);
+    const [dataZona, setDataZona] = React.useState([]);
+
     const [dataEmbalaje, setDataEmbalaje] = React.useState([]);
     const [dataFolioEmbarque, SetDataFolioEmbarque] = React.useState([]);
     const [dataFormatos, setFormatosImpresion] = React.useState([]);
@@ -208,7 +210,7 @@ function Embarque(props) {
         horaEntrega: "",
         codigoPostalEntrega: {},
         ciudadEntrega: {},
-        zonaEntrega: "",
+        zonaEntrega: 0,
         domicilioEntrega: "",
         entregaEn: "",
         countSobres: 1,
@@ -1070,7 +1072,7 @@ function Embarque(props) {
             idOperador: {},
             idTipoUnidad: {},
             idUnidad: {},
-            zonaEntrega: "",
+            zonaEntrega: 0,
             domicilioEntrega: "",
             entregaEn: "",
             datosAdicionalesEntrega: "",
@@ -1343,6 +1345,23 @@ function Embarque(props) {
             }
         },
     ]);
+
+    
+    function getAllZonas() {
+        const url = `${process.env.REACT_APP_API_URL}/Zonas/GetListado`;
+        axios.get(url, { headers }).then((respuesta) => {
+            setDataZona(respuesta.data);
+        });
+    }
+
+
+    const handleChangeZonaEntrega = (event) => {
+        event.preventDefault();
+        setState({
+            ...state,
+            zonaEntrega: event.target.value,
+        });
+    }
 
     const columnsRemitenteDestinatarios = React.useMemo(() => [
         {
@@ -1617,6 +1636,8 @@ function Embarque(props) {
 
     useEffect((value) => {
         getAllData();
+        getAllZonas();
+
     }, []);
 
     async function getAllData() {
@@ -4558,20 +4579,37 @@ function Embarque(props) {
                                                                 </div>
 
                                                                 <div className="col-sm-6 col-md-4 unit">
-                                                                    <div className="input">
-                                                                        <TextField variant="outlined" margin="dense"
-                                                                            label="Zona"
-                                                                            onChange={handleChange}
-                                                                            className="form-control"
-                                                                            type="text"
-                                                                            required
-                                                                            value={state.zonaEntrega}
-                                                                            disabled={
-                                                                                state.agregar == "Consultar"
-                                                                            }
-                                                                            name="zonaEntrega"
-                                                                        />
-                                                                    </div>
+                                                                <label className="input select">
+                                                                                    <FormControl fullWidth
+                                                                                        variant="outlined"
+                                                                                        margin="dense">
+                                                                                        <InputLabel
+                                                                                            id="zonaEntregaLabel">Zona</InputLabel>
+                                                                                        <Select
+                                                                                            labelId="zonaEntregaLabel"
+                                                                                            label="Zona"
+                                                                                            className="form-control"
+
+                                                                                            value={state.zonaEntrega}
+                                                                                            disabled={state.agregar === "Consultar"}
+                                                                                            onChange={handleChangeZonaEntrega}
+                                                                                            id="zonaEntrega"
+                                                                                        >
+                                                                                            <option value="">Selecciona
+                                                                                        </option>
+
+                                                                                            {dataZona.map((zona) => (
+                                                                                                <option
+                                                                                                    key={zona.m_nIdZona}
+                                                                                                    value={zona.m_nIdZona}
+                                                                                                >
+                                                                                                    {zona.m_sDescripcion}
+                                                                                                </option>
+                                                                                            ))}
+                                                                                        </Select>
+                                                                                    </FormControl>
+                                                                                    <i className="fa fa-arrow-down" />
+                                                                                </label>
                                                                 </div>
 
                                                                 <div className="col-sm-4 col-md-4 unit">
