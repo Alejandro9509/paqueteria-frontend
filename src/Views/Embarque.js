@@ -196,7 +196,7 @@ function Embarque(props) {
         contactoRemitente: "",
         ciudadDestino: {},
         nombreDestinatario: "",
-        RFCDestinatario: {},
+        RFCDestinatario: "",
         domicilioDestinatario: "",
         codigoPostalDestinatario: {},
         ciudadDestinatario: {},
@@ -218,7 +218,7 @@ function Embarque(props) {
         cantidadDeSobres: 0,
         fechaHoraSalida: "",
         fechaHoraLlegada: "",
-        diferenteEntrega: true,
+        diferenteEntrega: false,
         entregaEnSucursal: false,
         idSucursalEntrega: 0,
         idOperador: {},
@@ -716,6 +716,7 @@ function Embarque(props) {
 
     function handleShowModificar(id) {
         console.log(id);
+        clearAllInputs()
         obtenerEmbarquesId(id).then((respuesta) => {
             setState({
                 ...state,
@@ -806,15 +807,118 @@ function Embarque(props) {
                 // idUnidad: dataUnidad.find(
                 //     (o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad
                 // ),
-                paquetes: respuesta.data.m_arrPaquetes,
+                paquetes: respuesta.data.m_arrClsDetalle.filter(d => d.m_nTipo == 2),
+                sobres: respuesta.data.m_arrClsDetalle.filter(d => d.m_nTipo == 1),
+                //Las de abajo reemplazan a la de arriba, se puede quitar la de arriba cuando ya no se use asi
+                // paquetes: respuesta.data.m_arrPaquetes,
+                // sobres: respuesta.data.m_arrSobres,
+                entregaEnSucursal: respuesta.m_bEntregaEnSucursal,
+                diferenteEntrega: false,
+                idSucursalEntrega : respuesta.m_nIdSucursalEntrega,
             });
             $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
 
         });
+        console.log(state)
+    }
+
+    //Limpia todos los campos. Se usa al pasar del listado a consultar o modificar un registro
+    function clearAllInputs(){
+        setState({
+            DerechoBorrar: 139,
+            identificadorModal: "",
+            tipoModal: 0,
+            openDialog: false,
+            agregar: "Agregar",
+            idEmbarque: 0,
+            fechaInicial: "0",
+            fechaFinal: "",
+            sucursalListado: 0,
+            estatusListado: 0,
+            idSucursalAgregar: localStorage.getItem("Sucursal"),
+            folioRecoleccion: "",
+            folioEmbarque: "",
+            folioGuía: "",
+            folioInforme: "",
+            fechaHoraCreacion: "",
+            fechaHoraRegistro: "",
+            estatusEmbarque: 15,
+            moneda: 0,
+            tipoCambio: 0,
+            tipoCobro: 0,
+            nombreRemitente: {},
+            RFCRemitente: "",
+            domicilioRemitente: "",
+            codigoPostalRemitente: {},
+            ciudadRemitente: {},
+            correoRemitente: "",
+            telefonoRemitente: "",
+            contactoRemitente: "",
+            ciudadDestino: {},
+            nombreDestinatario: "",
+            RFCDestinatario: "",
+            domicilioDestinatario: "",
+            codigoPostalDestinatario: {},
+            ciudadDestinatario: {},
+            correoDestinatario: "",
+            telefonoDestinatario: "",
+            contactoDestinatario: "",
+            ciudadOrigen: {},
+            fechaEntrega: "",
+            horaEntrega: "",
+            codigoPostalEntrega: {},
+            ciudadEntrega: {},
+            zonaEntrega: "",
+            domicilioEntrega: "",
+            entregaEn: "",
+            countSobres: 1,
+            countPaquetes: 1,
+            datosAdicionalesEntrega: "",
+            cantidadDePaquetes: 0,
+            cantidadDeSobres: 0,
+            fechaHoraSalida: "",
+            fechaHoraLlegada: "",
+            diferenteEntrega: false,
+            entregaEnSucursal: false,
+            idSucursalEntrega: 0,
+            idOperador: {},
+            idTipoUnidad: {},
+            CreadoPor: localStorage.getItem("UsuarioId"),
+            ModificadoPor: localStorage.getItem("UsuarioId"),
+            idUnidad: {},
+            paquetes: [
+                {
+                    m_xPeso: "",
+                    m_xLargo: "",
+                    m_xAncho: "",
+                    m_xAlto: "",
+                    m_xVolumen: "",
+                    m_nIdTIpoEmpaque: "",
+                    m_cValorDeclarado: "",
+                    m_sDescripcion: "",
+                    m_nCantidad: "",
+                    m_nTipo: 2,
+                    m_sObservaciones: "",
+                },
+            ],
+            sobres: [
+                {
+                    m_nTipo: 1,
+                    m_sDescripcion: "",
+                },
+            ],
+            motivoCancelacion: "",
+            fechaCancelacion: "",
+            sucursalCancelacion: "",
+            usuario: localStorage.getItem("Usuario"),
+            height: window.innerHeight,
+        })
     }
 
     function handleShowConsultar(id) {
+        clearAllInputs()
         obtenerEmbarquesId(id).then((respuesta) => {
+            console.log(respuesta)
             setState({
                 ...state,
                 agregar: "Consultar",
@@ -824,12 +928,7 @@ function Embarque(props) {
                 folioEmbarque: respuesta.data.m_nFolioEmbarque,
                 folioGuía: respuesta.data.m_nFolioGuia,
                 folioInforme: respuesta.data.m_nFolioInforme,
-                fechaHoraCreacion:
-                    respuesta.data.m_dFecha +
-                    "T" +
-                    respuesta.data.m_tHora.split(":")[0] +
-                    ":" +
-                    respuesta.data.m_tHora.split(":")[1],
+                fechaHoraCreacion: respuesta.data.m_dFecha + "T" + respuesta.data.m_tHora.split(":")[0] + ":" + respuesta.data.m_tHora.split(":")[1],
                 moneda: respuesta.data.m_nIdMoneda,
                 tipoCambio: respuesta.data.m_cTIpoCambio,
                 tipoCobro: respuesta.data.m_nIdTIpoCobro,
@@ -850,7 +949,8 @@ function Embarque(props) {
                 ciudadOrigen: dataCiudad.find(
                     (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadOrigen
                 ),
-
+                RFCRemitente : respuesta.data.m_sRFCRemitente,
+                RFCDestinatario: respuesta.data.m_sRFCDestinatario,
                 nombreDestinatario: dataRemitenteDestinatario.find(
                     (o) => o.m_sRFC === respuesta.data.m_sRFCDestinatario
                 ),
@@ -868,6 +968,10 @@ function Embarque(props) {
                 ciudadDestino: dataCiudad.find(
                     (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadDestino
                 ),
+                zonaEntrega: respuesta.data.IdZonaEntrega,
+                domicilioEntrega: respuesta.data.DomicilioEntrega,
+                entregaEn: respuesta.data.EntregarEn,
+                datosAdicionalesEntrega: respuesta.data.DatosAdicionalesis,
                 fechaEntrega:
                     respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
                 codigoPostalEntrega: dataCodigoPostal.find(
@@ -892,15 +996,18 @@ function Embarque(props) {
                 idUnidad: dataUnidad.find(
                     (o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad
                 ), */
-                zonaEntrega: respuesta.data.IdZonaEntrega,
-                domicilioEntrega: respuesta.data.DomicilioEntrega,
-                entregaEn: respuesta.data.EntregarEn,
-                datosAdicionalesEntrega: respuesta.data.DatosAdicionalesis,
-                paquetes: respuesta.data.m_arrPaquetes,
+                paquetes: respuesta.data.m_arrClsDetalle.filter(d => d.m_nTipo == 2),
+                sobres: respuesta.data.m_arrClsDetalle.filter(d => d.m_nTipo == 1),
+                //Las de abajo reemplazan a la de arriba, se puede quitar la de arriba cuando ya no se use asi
+                // paquetes: respuesta.data.m_arrPaquetes,
+                // sobres: respuesta.data.m_arrSobres,
+                entregaEnSucursal: respuesta.m_bEntregaEnSucursal,
+                diferenteEntrega: false,
+                idSucursalEntrega : respuesta.m_nIdSucursalEntrega,
             });
             $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
-
         });
+        console.log(state)
     }
 
     function handleShowAgregar() {
@@ -4145,6 +4252,7 @@ function Embarque(props) {
                                                                         value={state.idSucursalEntrega}
                                                                         disabled={state.agregar === "Consultar"}
                                                                         id="idSucursalEntrega"
+                                                                        name="idSucursalEntrega"
                                                                         inputProps={{
                                                                             name: "idSucursalEntrega"
                                                                         }}
