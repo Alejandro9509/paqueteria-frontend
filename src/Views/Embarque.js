@@ -317,7 +317,7 @@ function Embarque(props) {
         e.preventDefault();
 
 
-        if (state.m_nIdCiudadDetalleEntrega = undefined) {
+        if (state.m_nIdCiudadDetalleEntrega == undefined) {
             var params = {
                 m_nIdEmbarque: state.idEmbarque,
                 m_nIdRecoleccion: props.location.idRecoleccion,
@@ -361,7 +361,7 @@ function Embarque(props) {
                 m_tHoraSalida: state.fechaHoraSalida.split("T")[1],
                 FechaLlegada: state.fechaHoraLlegada.split("T")[0],
                 HoraLlegada: state.fechaHoraLlegada.split("T")[1],
-                CodigoPostalEntrega: state.codigoPostalEntrega.m_nIdCP,
+                CodigoPostalEntrega: state.codigoPostalEntrega,
 
                 IdCiudadEntrega: state.ciudadEntrega.m_nIdCiudad,
                 IdZonaEntrega: state.zonaEntrega,
@@ -422,7 +422,7 @@ function Embarque(props) {
                 m_tHoraSalida: state.fechaHoraSalida.split("T")[1],
                 FechaLlegada: state.fechaHoraLlegada.split("T")[0],
                 HoraLlegada: state.fechaHoraLlegada.split("T")[1],
-                CodigoPostalEntrega: state.codigoPostalEntrega.m_nIdCP,
+                CodigoPostalEntrega: state.codigoPostalEntrega,
 
                 //  IdCiudadEntrega: state.ciudadEntrega.m_nIdCiudad,
                 IdZonaEntrega: state.zonaEntrega,
@@ -444,7 +444,7 @@ function Embarque(props) {
         console.log(params)
         console.log(JSON.stringify(params))
 
-        /*if (state.idEmbarque != 0) {
+        if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -473,7 +473,7 @@ function Embarque(props) {
                     console.log(err);
                     showSuccess(err);
                 });
-        }*/
+        }
     };
 
     function handleSelectCP(id, cp) {
@@ -991,6 +991,17 @@ function Embarque(props) {
             ...state,
             [event.target.name]: event.target.value,
         });
+    };
+
+    const handleChangeSucursalEntrega = (event) => {
+        console.log(event)
+        setState({
+            ...state,
+            [event.target.name]: event.target.value,
+            codigoPostalEntrega: dataSucursal.find(c => c.m_nIdSucursal == event.target.value).m_nIdCodigoPostal
+
+        });
+        console.log(state.codigoPostalEntrega)
     };
 
     const handleEntregaCheckboxChange = (event) => {
@@ -3720,7 +3731,7 @@ function Embarque(props) {
                                                                                                             state.agregar ===
                                                                                                             "Consultar"
                                                                                                         }
-                                                                                                        onClick={() => {
+                                                                                                        /*onClick={() => {
                                                                                                             setState({
                                                                                                                 ...state,
                                                                                                                 identificadorModal:
@@ -3728,8 +3739,8 @@ function Embarque(props) {
                                                                                                                 tipoModal: 5,
                                                                                                                 openDialog: true,
                                                                                                             });
-                                                                                                            open();
-                                                                                                        }}
+                                                                                                            // open();
+                                                                                                        }}*/
                                                                                                     >
                                                                                                         <PageviewIcon
                                                                                                             style={{
@@ -3741,7 +3752,7 @@ function Embarque(props) {
                                                                                                                 paddingLeft: 0,
                                                                                                                 paddingBlock: 0,
                                                                                                             }}
-                                                                                                            onClick={() => {
+                                                                                                            /*onClick={() => {
                                                                                                                 setState({
                                                                                                                     ...state,
                                                                                                                     identificadorModal:
@@ -3749,7 +3760,7 @@ function Embarque(props) {
                                                                                                                     tipoModal: 5,
                                                                                                                     openDialog: true,
                                                                                                                 });
-                                                                                                            }}
+                                                                                                            }}*/
                                                                                                         />
                                                                                                     </IconButton>
                                                                                                 </InputAdornment>
@@ -4112,7 +4123,7 @@ function Embarque(props) {
                                                                         label="Sucursal de Entrega"
                                                                         className="form-control"
                                                                         required = {state.entregaEnSucursal}
-                                                                        onChange={handleChange}
+                                                                        onChange={handleChangeSucursalEntrega}
                                                                         value={state.idSucursalEntrega}
                                                                         disabled={state.agregar === "Consultar"}
                                                                         id="idSucursalEntrega"
@@ -4124,6 +4135,7 @@ function Embarque(props) {
                                                                             <option
                                                                                 key={sucursal.m_nIdSucursal}
                                                                                 value={sucursal.m_nIdSucursal}
+                                                                                // value={sucursal}
                                                                             >
                                                                                 {sucursal.m_sSucursal}
                                                                             </option>
