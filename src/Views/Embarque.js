@@ -184,7 +184,7 @@ function Embarque(props) {
         fechaHoraRegistro: "",
         estatusEmbarque: 15,
         moneda: 0,
-        tipoCambio: "",
+        tipoCambio: 0,
         tipoCobro: 0,
         nombreRemitente: {},
         RFCRemitente: "",
@@ -234,7 +234,7 @@ function Embarque(props) {
                 m_xAlto: "",
                 m_xVolumen: "",
                 m_nIdTIpoEmpaque: "",
-                m_cyValorDeclarado: "",
+                m_cValorDeclarado: "",
                 m_sDescripcion: "",
                 m_nCantidad: "",
                 m_nTipo: 2,
@@ -315,7 +315,14 @@ function Embarque(props) {
 
     const handleAceptar = (e) => {
         e.preventDefault();
-
+        const { paquetes, sobres } = state;
+        sobres.forEach(s => {
+            paquetes.push(s)
+        })
+        setState({
+            ...state,
+            paquetes: paquetes
+        })
 
         if (state.m_nIdCiudadDetalleEntrega == undefined) {
             var params = {
@@ -377,7 +384,8 @@ function Embarque(props) {
                 m_bEntregaEnSucursal: state.entregaEnSucursal,
                 m_nIdSucursalEntrega: state.idSucursalEntrega
             }
-
+            console.log(state.m_nIdCiudadDetalleEntrega)
+            console.log(true)
         } else {
             var params = {
                 m_nIdEmbarque: state.idEmbarque,
@@ -437,14 +445,16 @@ function Embarque(props) {
                 m_tHoraDetalleEntrega: state.fechaEntrega.split("T")[1],
                 m_bEntregaEnSucursal: state.entregaEnSucursal,
                 m_nIdSucursalEntrega: state.idSucursalEntrega
-            }
 
+            }
+            console.log(true)
+            console.log(state.m_nIdCiudadDetalleEntrega)
         }
 
         console.log(params)
         console.log(JSON.stringify(params))
 
-        if (state.idEmbarque != 0) {
+        /*if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -473,7 +483,7 @@ function Embarque(props) {
                     console.log(err);
                     showSuccess(err);
                 });
-        }
+        }*/
     };
 
     function handleSelectCP(id, cp) {
@@ -531,7 +541,7 @@ function Embarque(props) {
             m_xAlto: "",
             m_xVolumen: "",
             m_nIdTIpoEmpaque: "",
-            m_cyValorDeclarado: "",
+            m_cValorDeclarado: "",
             m_sDescripcion: "",
             m_nCantidad: "",
             m_nTipo: 2,
@@ -570,7 +580,8 @@ function Embarque(props) {
     function addSobre() {
         const { sobres } = state;
         sobres.push({
-            descripcion: "",
+            m_nTipo: 1,
+            m_sDescripcion: "",
         });
         console.log(sobres);
         setState({ ...state, sobres: sobres, countSobres: state.countSobres + 1 });
@@ -924,14 +935,14 @@ function Embarque(props) {
                 today.getHours() +
                 ":" +
                 today.getMinutes(),
-            moneda: dataTipoMoneda ? dataTipoMoneda.length > 0 ? dataTipoMoneda[0].m_nIdMoneda : 0 : 0,
-            tipoCambio: dataTipoCambio.length !== 0 ? dataTipoCambio[0].m_nIdTipoCambio : 2,
-            tipoCobro: dataTipoCobro ? dataTipoCobro.length > 0 ? dataTipoCobro[0].m_nIdTipoCobro : 0 : 0,
-            estatusEmbarque: dataEstatusEmbarque ? dataEstatusEmbarque.length > 0 ? dataEstatusEmbarque[0].m_nIdEstatusEmbarque : 0 : 0,
+            moneda: 0,
+            tipoCambio: 0,
+            tipoCobro: 0,
+            estatusEmbarque: 0,
             nombreRemitente: {},
             RFCRemitente: "",
             domicilioRemitente: "",
-            codigoPostalRemitente: dataCodigoPostal ? dataCodigoPostal.length > 0 ? dataCodigoPostal[0] : {} : {},
+            codigoPostalRemitente: {},
             ciudadRemitente: {},
             correoRemitente: "",
             telefonoRemitente: "",
@@ -940,7 +951,7 @@ function Embarque(props) {
             nombreDestinatario: {},
             RFCDestinatario: "",
             domicilioDestinatario: "",
-            codigoPostalDestinatario: dataCodigoPostal ? dataCodigoPostal.length > 0 ? dataCodigoPostal[0] : {} : {},
+            codigoPostalDestinatario: {},
             ciudadDestino: {},
             correoDestinatario: "",
             telefonoDestinatario: "",
@@ -969,8 +980,14 @@ function Embarque(props) {
                     m_cValorDeclarado: "",
                     m_sDescripcion: "",
                     ctd: "",
-                    m_nTipo: dataEmbalaje ? dataEmbalaje.length > 0 ? dataEmbalaje[0].m_nIdEmbalaje : 0 : 0,
+                    m_nTipo: 2,
                     m_sObservaciones: "",
+                },
+            ],
+            sobres: [
+                {
+                    m_nTipo: 1,
+                    m_sDescripcion: "",
                 },
             ],
             cantidadDePaquetes: 0,
@@ -1369,7 +1386,7 @@ function Embarque(props) {
                             paquetesModificado[i]["m_nIdTIpoEmpaque"] =
                                 paquetesModificado[i].m_nIdTipoEmbalaje;
                             paquetesModificado[i]["m_cValorDeclarado"] =
-                                paquetesModificado[i].m_cyValorDeclarado;
+                                paquetesModificado[i].m_cValorDeclarado;
                         }
                         console.log(paquetesModificado);
                         setState({
@@ -2332,10 +2349,10 @@ function Embarque(props) {
                             onChange={(event) => handleChangePaquete(event, index)}
                             className="form-control"
                             type="text"
-                            value={state.paquetes[index].m_cyValorDeclarado}
+                            value={state.paquetes[index].m_cValorDeclarado}
                             disabled={state.agregar === "Consultar"}
                             placeholder="$"
-                            name="m_cyValorDeclarado"
+                            name="m_cValorDeclarado"
                         />
                     </div>
                 </div>
@@ -2398,10 +2415,10 @@ function Embarque(props) {
                             onChange={(event) => handleChangeSobre(event, index)}
                             className="form-control"
                             type="text"
-                            value={state.sobres[index].descripcion}
+                            value={state.sobres[index].m_sDescripcion}
                             disabled={state.agregar === "Consultar"}
                             placeholder="Descripción"
-                            name="descripcion"
+                            name="m_sDescripcion"
                         />
                     </div>
                 </div>
@@ -3146,6 +3163,7 @@ function Embarque(props) {
                                                                         disabled={state.agregar === "Consultar"}
                                                                         onChange={handleChange}
                                                                         id="moneda"
+                                                                        name="moneda"
                                                                         InputProps={{
                                                                             name: "moneda"
                                                                         }}

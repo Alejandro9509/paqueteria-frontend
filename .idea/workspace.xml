@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="94d8e9cf-07c8-4a10-b81b-63018b1e29c3" name="Default Changelist" comment="Ajustes al agregar usuarios">
+    <list default="true" id="94d8e9cf-07c8-4a10-b81b-63018b1e29c3" name="Default Changelist" comment="Ajustes en crear embarque">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Util/Contexts/EmbarquesContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/EmbarquesContext.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -238,7 +238,14 @@
       <option name="project" value="LOCAL" />
       <updated>1627521214583</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="Ajustes en crear embarque">
+      <created>1627523445560</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1627523445560</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -300,7 +307,8 @@
     <MESSAGE value="Se agregó validacion para hacer la fecha de vencimiento obligatoria" />
     <MESSAGE value="Se arreglo relleno de datos al modificar sucursal" />
     <MESSAGE value="Ajustes al agregar usuarios" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ajustes al agregar usuarios" />
+    <MESSAGE value="Ajustes en crear embarque" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ajustes en crear embarque" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
