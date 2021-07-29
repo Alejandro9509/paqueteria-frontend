@@ -454,7 +454,7 @@ function Embarque(props) {
         console.log(params)
         console.log(JSON.stringify(params))
 
-        /*if (state.idEmbarque != 0) {
+        if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -483,7 +483,7 @@ function Embarque(props) {
                     console.log(err);
                     showSuccess(err);
                 });
-        }*/
+        }
     };
 
     function handleSelectCP(id, cp) {
@@ -807,11 +807,11 @@ function Embarque(props) {
                 // idUnidad: dataUnidad.find(
                 //     (o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad
                 // ),
-                paquetes: respuesta.data.m_arrClsDetalle.filter(d => d.m_nTipo == 2),
-                sobres: respuesta.data.m_arrClsDetalle.filter(d => d.m_nTipo == 1),
+                // paquetes: respuesta.data.m_arrClsDetalle.filter(d => d.m_nTipo == 2),
+                // sobres: respuesta.data.m_arrClsDetalle.filter(d => d.m_nTipo == 1),
                 //Las de abajo reemplazan a la de arriba, se puede quitar la de arriba cuando ya no se use asi
-                // paquetes: respuesta.data.m_arrPaquetes,
-                // sobres: respuesta.data.m_arrSobres,
+                paquetes: respuesta.data.m_arrPaquetes,
+                sobres: respuesta.data.m_arrSobres,
                 entregaEnSucursal: respuesta.m_bEntregaEnSucursal,
                 diferenteEntrega: false,
                 idSucursalEntrega : respuesta.m_nIdSucursalEntrega,
@@ -996,11 +996,11 @@ function Embarque(props) {
                 idUnidad: dataUnidad.find(
                     (o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad
                 ), */
-                paquetes: respuesta.data.m_arrClsDetalle.filter(d => d.m_nTipo == 2),
-                sobres: respuesta.data.m_arrClsDetalle.filter(d => d.m_nTipo == 1),
+                // paquetes: respuesta.data.m_arrClsDetalle.filter(d => d.m_nTipo == 2),
+                // sobres: respuesta.data.m_arrClsDetalle.filter(d => d.m_nTipo == 1),
                 //Las de abajo reemplazan a la de arriba, se puede quitar la de arriba cuando ya no se use asi
-                // paquetes: respuesta.data.m_arrPaquetes,
-                // sobres: respuesta.data.m_arrSobres,
+                paquetes: respuesta.data.m_arrPaquetes,
+                sobres: respuesta.data.m_arrSobres,
                 entregaEnSucursal: respuesta.m_bEntregaEnSucursal,
                 diferenteEntrega: false,
                 idSucursalEntrega : respuesta.m_nIdSucursalEntrega,
