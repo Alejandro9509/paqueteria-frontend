@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="94d8e9cf-07c8-4a10-b81b-63018b1e29c3" name="Default Changelist" comment="Ajustes en embarque al mostrar informacion para modificar">
+    <list default="true" id="94d8e9cf-07c8-4a10-b81b-63018b1e29c3" name="Default Changelist" comment="Se resolvio el problema al mostrar los sobres y paquetes cuando se modifica o edita">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -259,7 +259,14 @@
       <option name="project" value="LOCAL" />
       <updated>1627540058341</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Se resolvio el problema al mostrar los sobres y paquetes cuando se modifica o edita">
+      <created>1627583587933</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1627583587934</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -324,7 +331,8 @@
     <MESSAGE value="Ajustes en crear embarque" />
     <MESSAGE value="Ajustes en embarque al agregar uno nuevo:&#10;*Campo moneda se modifica correctamente.&#10;*los sobres se agregan al listado de paquetes y se mandan a la base de datos." />
     <MESSAGE value="Ajustes en embarque al mostrar informacion para modificar" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ajustes en embarque al mostrar informacion para modificar" />
+    <MESSAGE value="Se resolvio el problema al mostrar los sobres y paquetes cuando se modifica o edita" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se resolvio el problema al mostrar los sobres y paquetes cuando se modifica o edita" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
