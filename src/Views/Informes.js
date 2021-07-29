@@ -624,6 +624,30 @@ function Informes({ history }) {
 
     }
 
+    const handleSelectSucursalEmisora = event => {
+        setState({
+            ...state,
+            sucursalEmisora: event.target.value
+        });
+      
+    }
+    const handleSelectSucursalReceptora = event => {
+        setState({
+            ...state,
+            sucursalReceptora: event.target.value
+        });
+      
+    }
+
+    const handleSelectEstatus = event => {
+        setState({
+            ...state,
+            EstatusInforme: event.target.value
+        });
+      
+    }
+
+
     function TableCiudades({ columns, data, select }) {
         const defaultColumn = React.useMemo(
             () => ({
@@ -1822,7 +1846,7 @@ function Informes({ history }) {
                                                                                             className="form-control"
                                                                                             required
                                                                                             id="sucursalEmisora"
-                                                                                            onChange={handleChange}
+                                                                                            onChange={handleSelectSucursalEmisora}
                                                                                         >
                                                                                             <option value="0">Todas</option>
                                                                                             {dataSucursal.map(
@@ -1857,7 +1881,7 @@ function Informes({ history }) {
                                                                                             className="form-control"
                                                                                             required
                                                                                             id="sucursalReceptora"
-                                                                                            onChange={handleChange}
+                                                                                            onChange={handleSelectSucursalReceptora}
                                                                                         >
                                                                                             <option value="0">Todas</option>
                                                                                             {dataSucursal.map(
@@ -1891,8 +1915,8 @@ function Informes({ history }) {
                                                                                             label="Estatus"
                                                                                             className="form-control"
                                                                                             v
-                                                                                            onChange={handleChange}
-                                                                                            //value={state.EstatusInforme}
+                                                                                            onChange={handleSelectEstatus}
+                                                                                            value={state.EstatusInforme}
                                                                                             id="EstatusInforme"
                                                                                         >
                                                                                             <option value="0">Todos</option>
