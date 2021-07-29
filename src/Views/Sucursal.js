@@ -82,6 +82,8 @@ function Sucursal(props) {
             "ZonaHoraria": state.zonaHoraria.split("|")[0],
             "DescripcionZonaHoraria": state.zonaHoraria.split("|")[1],
         }
+        console.log(JSON.stringify(params))
+
         if (state.idSucursal != 0) {
             modificarSucursales(state.idSucursal, params).then(respuesta => {
                 showSuccess(respuesta.data)

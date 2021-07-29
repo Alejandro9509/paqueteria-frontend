@@ -569,6 +569,8 @@ function Informes({ history }) {
             m_nCreadoPor: state.CreadoPor,
             m_arrClsProInformeGuia: dataGuias,
         };
+        console.log(JSON.stringify(params))
+
         if (state.IdInforme != 0) {
             modificarInformes(state.IdInforme, params)
                 .then((respuesta) => {
@@ -1229,6 +1231,12 @@ function Informes({ history }) {
         });
     }
 
+    function getAllUnidadesTipoDolly(id) {
+        obtenerUnidadesTipo(id).then((respuesta) => {
+            setDataUnidadesDol(respuesta.data);
+        });
+    }
+
     function getAllOperadores() {
         obtenerOperadores().then((respuesta) => {
             setDataOperadores(respuesta.data);
@@ -1324,7 +1332,7 @@ function Informes({ history }) {
         getFormatosImpresion();
         getAllCiudades();
         getAllUnidadesTipo(8);
-        getAllUnidadesTipo(9);
+        getAllUnidadesTipoDolly(9);
         //getAllTipoUnidad();
         getAllDataRutas();
     }, []);
