@@ -49,6 +49,23 @@ function obtenerGuia() {
         );
     return result
 }
+function obtenerGuiaUltimaMilla(zonasIds, tipoServicio) {
+    const url = `${process.env.REACT_APP_API_URL}/GetGuiasUltimaMilla`;
+    let result;
+    trackPromise(
+        result =  axios.post(url, Object.assign({}, {zonas: zonasIds.join(","), tipoServicio: tipoServicio}), { headers })
+    );
+    return result
+}
+
+function reasignarGuia(idParadaDestino, idParadaFuente, idGuia) {
+    const url = `${process.env.REACT_APP_API_URL}/ReasignarGuia/${idParadaDestino}/${idParadaFuente}/${idGuia}`;
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, {}), { headers })
+    );
+    return result
+}
 
 function obtenerGuiaPendientes(idOrigen, idDestino) {
     const url = `${process.env.REACT_APP_API_URL}/Guia/GetListadoPendientes/` +
@@ -107,4 +124,4 @@ function obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusLi
     return result
 }
 
-export { modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId, obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia }
+export { modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId, obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia, obtenerGuiaUltimaMilla, reasignarGuia }

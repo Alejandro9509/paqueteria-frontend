@@ -8,12 +8,22 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/.env">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/package-lock.json">
           <value>
             <set />
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/package.json">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/public/css/bootstrap-extend.css">
           <value>
             <set />
           </value>
@@ -68,6 +78,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Util.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Views/Clientes.js">
           <value>
             <set />
@@ -109,6 +124,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Views/GrupoCliente.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/Informes.js">
           <value>
             <set />
           </value>
@@ -168,6 +188,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/DetalleParadas.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/FiltersMap.js">
           <value>
             <set />
@@ -183,6 +208,16 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/Paradas.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/ParadasStyle.css">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/Rutas.js">
           <value>
             <set />
@@ -194,6 +229,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/Tour.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/TourUltimaMilla.js">
           <value>
             <set />
           </value>
@@ -243,6 +283,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/iconos/Mapa/flagIcon.svg">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/iconos/Mapa/fullscreen-exit.svg">
           <value>
             <set />
@@ -258,12 +303,22 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/iconos/Mapa/paradas.svg">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/iconos/Menu/IconoUltimaMilla/IconoUltimaMilla.svg">
           <value>
             <set />
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/iconos/Menu/palomita.svg">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/index.js">
           <value>
             <set />
           </value>
@@ -414,6 +469,36 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/../../Web/Cetys/sw-cetys-cercana-web/src/util/Contexts/TicketContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/sw-sierra-servicio-web/src/app/routes.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/sw-sierra-servicio-web/src/app/views/Dashboard/AnswerChart.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/sw-sierra-servicio-web/src/app/views/Dashboard/Dashboard.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/sw-sierra-servicio-web/src/app/views/category/categoryList.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/sw-sierra-servicio-web/src/app/views/ticket/TicketDetail.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/sw-sierra-servicio-web/src/assets/constants/index.js">
           <value>
             <set />
           </value>

@@ -31,9 +31,6 @@ class Tour extends Component {
 
     }
 
-    componentWillUnmount() {
-
-    }
 
     getRoute() {
 
@@ -53,7 +50,7 @@ class Tour extends Component {
             })
         })
         if (result.length !== 1) {
-            calcularRuta(result).then((result) => {
+            calcularRuta(result, this.props.data).then((result) => {
                 result.polyline.plain.polyline.map(c => {
                     polygon.push([c.y, c.x])
                 })
@@ -81,6 +78,11 @@ class Tour extends Component {
                         }
                     )
                 }
+
+                <Marker key={"sucursalPoint"}
+                        icon={<MarkerComponent color={this.props.tour.color} index={"s"}/>}
+                        position={[this.props.data.lat, this.props.data.lng]}>
+                </Marker>
 
                 {
                     this.state.polygon.length !== 0 &&
@@ -110,7 +112,10 @@ class MarkerComponent extends Component {
             width: "20px",
             height: "20px",
             borderRadius: "20px",
-            alignItems: "center"
+            alignItems: "center",
+            borderStyle: "solid",
+            borderColor: "white",
+            boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
         };
         return <div align={"center"} style={markerStyle}>{this.props.index}</div>;
     }

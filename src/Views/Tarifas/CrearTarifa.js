@@ -31,7 +31,7 @@ class CrearTarifa extends Component {
             dataSucursal: [],
             ciudades: [],
             tab: 0,
-            conceptosAdicionales: [],
+            conceptosAdicionales: props.edit ? props.select.m_arrArCobros : [],
             impuestos: [],
             tiposCobroSeleccionado: props.edit ? props.select.m_arrArCobros : [],
             tiposServicioSeleccionado: props.edit ? props.select.m_arrArServicios : [],
@@ -45,7 +45,7 @@ class CrearTarifa extends Component {
             ivaTraslada: [],
             ivaRetiene: [],
             sucursal: props.edit ? props.select.m_nIdSucursal : "0",
-            destino: props.edit ? props.select.m_sDestino : "0",
+            destino: props.edit ? props.select.m_nIdDestino : "0",
             precioFlete: props.edit ? props.select.m_cFleteMinimo : "",
             precioMinimo: props.edit ? props.select.m_cMontoMinimo : "",
             precioKilo: props.edit ? props.select.m_cPrecioKilo : "",
@@ -61,10 +61,36 @@ class CrearTarifa extends Component {
         this.handleChangeChecboxTiposCobro = this.handleChangeChecboxTiposCobro.bind(this)
         this.handleChangeChecboxTiposServicio = this.handleChangeChecboxTiposServicio.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
+        this.castConceptos = this.castConceptos.bind(this)
     }
 
-    handleEnableComponents(disabled){
-        this.setState({disabled: disabled})
+    castConceptos(){
+        if (this.props.edit){
+            const { conceptosAdicionales } = this.state
+            const { select } = this.props
+            console.log(select)
+            select.m_arrArConceptos.forEach( element =>{
+                var ivaTraslada = []
+                var ivaRetiene = []
+                conceptosAdicionales.push({
+                    idConcepto : element.m_nIdConceptosFacturacion,
+                    importe: element.m_cImporte,
+                    retiene: element.m_nIdImpuestoRetiene,
+                    traslada: element.m_nIdImpuestoTraslada,
+                    importeRet: element.m_cImporteRetiene,
+                    importeIVA: element.m_cImporteIva,
+                    rangoMinimo: element.m_xnRangoMinimo,
+                    rangoMaximo: element.m_xnRangoMaximo,
+                    nombreConcepto: element.m_sConcepto,
+                    tipoCalculo: element.m_nIdTipoCalculo,
+                    agregadoDesde: element.m_nIdAgregadoDesde
+                })
+                ivaTraslada = getUniqueListBy(conceptosAdicionales, "traslada").map(i => i.traslada);
+                ivaRetiene = getUniqueListBy(conceptosAdicionales, "retiene").map(i => i.retiene);
+                this.setState({ conceptosAdicionales: conceptosAdicionales, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
+            })
+        }
+
     }
 
     componentWillMount() {
@@ -82,12 +108,12 @@ class CrearTarifa extends Component {
         this.getAllSucursales()
         this.getAllCiudades()
         this.getAllImpuestos()
+        this.castConceptos()
     }
 
     getAllImpuestos() {
         const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetListado`;
         axios.get(url, { headers }).then(respuesta => {
-            console.log(respuesta.data)
             this.setState({ impuestos: respuesta.data })
         });
     };
@@ -103,17 +129,30 @@ class CrearTarifa extends Component {
         event.preventDefault()
         this.setState({
             [event.target.name]: event.target.value,
-            disabled: !(this.state.sucursal === "0" || this.state.destino === "0")
         });
+        if (event.target.name == "sucursal"){
+            if (event.target.name == 0 || this.state.destino == 0){
+                this.setState({disabled: true})
+            }else{
+                this.setState({disabled: false})
+            }
+        }else if (event.target.name == "destino"){
+            if (event.target.name == 0 || this.state.sucursal == 0){
+                this.setState({disabled: true})
+            }else{
+                this.setState({disabled: false})
+            }
+        }
+
     }
 
 
     addConcepto(data) {
-        console.log(data)
         const { conceptosAdicionales } = this.state
         var ivaTraslada = []
         var ivaRetiene = []
         conceptosAdicionales.push({
+            idConcepto : data.concepto.m_nIdConceptosFacturacion,
             concepto: data.concepto,
             importe: data.importe,
             retiene: data.retiene,
@@ -122,13 +161,12 @@ class CrearTarifa extends Component {
             importeIVA: data.importeIVA,
             rangoMinimo: data.rangoMinimo,
             rangoMaximo: data.rangoMaximo,
-            nombreConcepto: data.nombreConcepto,
+            nombreConcepto: data.concepto.m_sConcepto,
             tipoCalculo: data.tipoCalculo,
             agregadoDesde: data.agregadoDesde
         })
         ivaTraslada = getUniqueListBy(conceptosAdicionales, "traslada").map(i => i.traslada);
         ivaRetiene = getUniqueListBy(conceptosAdicionales, "retiene").map(i => i.retiene);
-        console.log(conceptosAdicionales)
         this.setState({ conceptosAdicionales: conceptosAdicionales, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
     }
 
@@ -210,6 +248,13 @@ class CrearTarifa extends Component {
     }
 
     render() {
+        const { disabled, conceptosAdicionales } = this.state
+        let { consult, edit } = this.props
+
+        if (!consult && !edit){
+            consult = disabled
+        }
+        console.log(conceptosAdicionales)
         return (
             <form className="j-forms" onSubmit={this.onSubmit}>
                 <div className="main-container" style={{ marginLeft: "0px", padding: "0px" }}>
@@ -235,7 +280,7 @@ class CrearTarifa extends Component {
                                                         required
                                                         onChange={this.handleChange}
                                                         value={this.state.sucursal}
-                                                        disabled={this.props.consult}
+
                                                         name="sucursal"
                                                         id="sucursal"
                                                     >
@@ -268,7 +313,7 @@ class CrearTarifa extends Component {
                                                         labelId="destinoLabel"
                                                         className="form-control"
                                                         required
-                                                        disabled={this.props.consult}
+
                                                         value={this.state.destino}
                                                         onChange={this.handleChange}
                                                         name="destino"
@@ -282,7 +327,7 @@ class CrearTarifa extends Component {
                                                         {this.state.ciudades.map((ciudad) => (
                                                             <option
                                                                 key={ciudad.m_nIdCiudad}
-                                                                value={ciudad.m_sCiudad}
+                                                                value={ciudad.m_nIdCiudad}
                                                             >
                                                                 {ciudad.m_sCiudad}
                                                             </option>
@@ -296,10 +341,10 @@ class CrearTarifa extends Component {
                                             <label className="checkbox">
                                                 Peso o Volumen
                                                 <input type="checkbox"
-                                                    checked={this.state.porPesoOVolumen}
-                                                    onChange={(e) => { this.setState({ porPesoOVolumen: !this.state.porPesoOVolumen, porRangos: !this.state.porRangos }) }}
-                                                    name="porPesoOVolumen"
-                                                       disabled={this.state.disabled}/>
+                                                        checked={this.state.porPesoOVolumen}
+                                                        onChange={(e) => { this.setState({ porPesoOVolumen: !this.state.porPesoOVolumen, porRangos: !this.state.porRangos }) }}
+                                                        name="porPesoOVolumen"
+                                                        disabled={this.state.disabled}/>
                                                 <i />
                                             </label>
                                         </div>
@@ -330,7 +375,7 @@ class CrearTarifa extends Component {
                                                                 labelId="unidadPesoLabel"
                                                                 className="form-control"
                                                                 required
-                                                                disabled={this.props.consult}
+                                                                disabled={consult}
                                                                 value={this.state.unidadPeso}
                                                                 onChange={this.handleChange}
                                                                 name="unidadPeso"
@@ -369,7 +414,7 @@ class CrearTarifa extends Component {
                                                             label={<div>{this.state.unidadPeso}/Kg</div>}
                                                             required
                                                             step="2"
-                                                            disabled={this.props.consult}
+                                                            disabled={consult}
                                                             value={this.state.factorConversion}
                                                             name="factorConversion"
                                                         />
@@ -385,7 +430,7 @@ class CrearTarifa extends Component {
                                                             type="number"
                                                             label={<div>Precio m<sup>3</sup></div>}
                                                             step="1"
-                                                            disabled={this.props.consult}
+                                                            disabled={consult}
                                                             value={this.state.precioM3}
                                                             name="precioM3"
                                                         />
@@ -401,7 +446,7 @@ class CrearTarifa extends Component {
                                                             label="Precio Kilo"
                                                             required={this.state.porPesoOVolumen}
                                                             step="2"
-                                                            disabled={this.props.consult}
+                                                            disabled={consult}
                                                             value={this.state.precioKilo}
                                                             name="precioKilo"
                                                         />
@@ -417,7 +462,7 @@ class CrearTarifa extends Component {
                                                             required={this.state.porPesoOVolumen}
                                                             label="Flete Minimo"
                                                             step="1"
-                                                            disabled={this.props.consult}
+                                                            disabled={consult}
                                                             value={this.state.precioFlete}
                                                             name="precioFlete"
                                                         />
@@ -432,7 +477,7 @@ class CrearTarifa extends Component {
                                                             type="number"
                                                             label="Precio Minimo"
                                                             required={this.state.porPesoOVolumen}
-                                                            disabled={this.props.consult}
+                                                            disabled={consult}
                                                             step="2"
                                                             value={this.state.precioMinimo}
                                                             name="precioMinimo"
@@ -512,7 +557,7 @@ class CrearTarifa extends Component {
                                                 >
                                                     Cancelar
                                                 </button>
-                                                {!this.props.consult &&
+                                                {!consult &&
                                                     <button
                                                         type="submit"
 
@@ -545,32 +590,32 @@ class CrearTarifa extends Component {
                                             </Tabs>
 
                                             <TabPanel value={this.state.tab} index={0}>
-                                                <ConceptosAdicionales consult={this.props.consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={this.state.conceptosAdicionales.filter(c => c.agregadoDesde === 0)} addConcepto={this.addConcepto} removeConcepto={this.removeConcepto} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada} mostrarRangos={true}>
+                                                <ConceptosAdicionales consult={consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={conceptosAdicionales.filter(c => c.agregadoDesde === 0)} addConcepto={this.addConcepto} removeConcepto={this.removeConcepto} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada} mostrarRangos={true}>
 
                                                 </ConceptosAdicionales>
                                             </TabPanel>
                                             <TabPanel value={this.state.tab} index={1}>
-                                                <ConceptosAdicionalesManiobra consult={this.props.consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={this.state.conceptosAdicionales.filter(c => c.agregadoDesde === 1)} addConcepto={this.addConcepto} removeConcepto={this.removeConcepto} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada}>
+                                                <ConceptosAdicionalesManiobra consult={consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={conceptosAdicionales.filter(c => c.agregadoDesde === 1)} addConcepto={this.addConcepto} removeConcepto={this.removeConcepto} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada}>
 
                                                 </ConceptosAdicionalesManiobra>
                                             </TabPanel>
                                             <TabPanel value={this.state.tab} index={2}>
-                                                <ConceptosAdicionalesEntrega consult={this.props.consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={this.state.conceptosAdicionales.filter(c => c.agregadoDesde === 2)} addConcepto={this.addConcepto} removeConcepto={this.removeConcepto} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada}>
+                                                <ConceptosAdicionalesEntrega consult={consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={conceptosAdicionales.filter(c => c.agregadoDesde === 2)} addConcepto={this.addConcepto} removeConcepto={this.removeConcepto} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada}>
 
                                                 </ConceptosAdicionalesEntrega>
                                             </TabPanel>
                                             <TabPanel value={this.state.tab} index={3}>
-                                                <ConceptosAdicionalesRecoleccion consult={this.props.consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={this.state.conceptosAdicionales.filter(c => c.agregadoDesde === 3)} addConcepto={this.addConcepto} removeConcepto={this.removeConcepto} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada}>
+                                                <ConceptosAdicionalesRecoleccion consult={consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={conceptosAdicionales.filter(c => c.agregadoDesde === 3)} addConcepto={this.addConcepto} removeConcepto={this.removeConcepto} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada}>
 
                                                 </ConceptosAdicionalesRecoleccion>
                                             </TabPanel>
                                             <TabPanel value={this.state.tab} index={4}>
-                                                <TipoCobro consult={this.props.consult} tiposCobroSeleccionado={this.state.tiposCobroSeleccionado} handleChange={this.handleChangeChecboxTiposCobro} all={this.state.tiposCobroAll}>
+                                                <TipoCobro consult={consult} tiposCobroSeleccionado={this.state.tiposCobroSeleccionado} handleChange={this.handleChangeChecboxTiposCobro} all={this.state.tiposCobroAll}>
 
                                                 </TipoCobro>
                                             </TabPanel>
                                             <TabPanel value={this.state.tab} index={5}>
-                                                <TipoServicio consult={this.props.consult} tiposServicioSeleccionado={this.state.tiposServicioSeleccionado} handleChange={this.handleChangeChecboxTiposServicio} all={this.state.tiposServicioAll}>
+                                                <TipoServicio consult={consult} tiposServicioSeleccionado={this.state.tiposServicioSeleccionado} handleChange={this.handleChangeChecboxTiposServicio} all={this.state.tiposServicioAll}>
 
                                                 </TipoServicio>
                                             </TabPanel>
@@ -584,17 +629,17 @@ class CrearTarifa extends Component {
                                                 <Tab label="Condiciones de Precio por Tipo de Servicio" {...this.a11yProps(2)} />
                                             </Tabs>
                                             <TabPanel value={this.state.tab} index={0}>
-                                                <ConceptosAdicionales consult={this.props.consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={this.state.conceptosAdicionales} addConcepto={this.addConcepto} removeConcepto={this.removeConcepto} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada} mostrarRangos={false}>
+                                                <ConceptosAdicionales consult={consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={this.state.conceptosAdicionales} addConcepto={this.addConcepto} removeConcepto={this.removeConcepto} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada} mostrarRangos={false}>
 
                                                 </ConceptosAdicionales>
                                             </TabPanel>
                                             <TabPanel value={this.state.tab} index={1}>
-                                                <TipoCobro consult={this.props.consult} tiposCobroSeleccionado={this.state.tiposCobroSeleccionado} handleChange={this.handleChangeChecboxTiposCobro} all={this.state.tiposCobroAll}>
+                                                <TipoCobro consult={consult} tiposCobroSeleccionado={this.state.tiposCobroSeleccionado} handleChange={this.handleChangeChecboxTiposCobro} all={this.state.tiposCobroAll}>
 
                                                 </TipoCobro>
                                             </TabPanel>
                                             <TabPanel value={this.state.tab} index={2}>
-                                                <TipoServicio consult={this.props.consult} tiposServicioSeleccionado={this.state.tiposServicioSeleccionado} handleChange={this.handleChangeChecboxTiposServicio} all={this.state.tiposServicioAll}>
+                                                <TipoServicio consult={consult} tiposServicioSeleccionado={this.state.tiposServicioSeleccionado} handleChange={this.handleChangeChecboxTiposServicio} all={this.state.tiposServicioAll}>
 
                                                 </TipoServicio>
                                             </TabPanel>
