@@ -105,8 +105,8 @@ class AgregarViaje extends Component {
      handleAceptar = (e) => {
         e.preventDefault();
             var params = {
-                m_dFecha: this.fechaHoraRegistro.split("T")[0],
-                m_tHora: this.fechaHoraRegistro.split("T")[1],
+                m_dFecha: this.state.fechaHoraRegistro.split("T")[0],
+                m_tHora: this.state.fechaHoraRegistro.split("T")[1],
                 m_nIdEstatusViaje: this.state.estatusListado,
                 m_nIdSucursal : this.state.idSucursalAgregar,
                 m_sCandadoOficial : this.state.candadoOficial,
