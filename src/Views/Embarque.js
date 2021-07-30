@@ -370,7 +370,7 @@ function Embarque(props) {
                 m_tHoraSalida: state.fechaHoraSalida.split("T")[1],
                 FechaLlegada: state.fechaHoraLlegada.split("T")[0],
                 HoraLlegada: state.fechaHoraLlegada.split("T")[1],
-                CodigoPostalEntrega: state.codigoPostalEntrega,
+                CodigoPostalEntrega: state.codigoPostalEntrega.m_nIdCP,
 
                 IdCiudadEntrega: state.ciudadEntrega.m_nIdCiudad,
                 IdZonaEntrega: state.zonaEntrega,
@@ -387,7 +387,7 @@ function Embarque(props) {
                 m_nIdSucursalEntrega: state.idSucursalEntrega
             }
             console.log(state.m_nIdCiudadDetalleEntrega)
-            console.log(true)
+            console.log(false)
         } else {
             var params = {
                 m_nIdEmbarque: state.idEmbarque,
@@ -432,7 +432,7 @@ function Embarque(props) {
                 m_tHoraSalida: state.fechaHoraSalida.split("T")[1],
                 FechaLlegada: state.fechaHoraLlegada.split("T")[0],
                 HoraLlegada: state.fechaHoraLlegada.split("T")[1],
-                CodigoPostalEntrega: state.codigoPostalEntrega,
+                CodigoPostalEntrega: state.codigoPostalEntrega.m_nIdCP,
 
                 //  IdCiudadEntrega: state.ciudadEntrega.m_nIdCiudad,
                 IdZonaEntrega: state.zonaEntrega,
@@ -457,7 +457,7 @@ function Embarque(props) {
         console.log(JSON.stringify(params))
 
         if (state.idEmbarque != 0) {
-            modificarEmbarques(state.idEmbarque, params)
+            /*modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     getAllEmbarque();
@@ -469,9 +469,9 @@ function Embarque(props) {
                 .catch((err) => {
                     console.log(err);
                     showSuccess("El Usuario no tiene derecho para modificar");
-                });
+                });*/
         } else {
-            agregarEmbarques(params)
+            /*agregarEmbarques(params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     console.log(respuesta.data);
@@ -484,7 +484,7 @@ function Embarque(props) {
                 .catch((err) => {
                     console.log(err);
                     showSuccess(err);
-                });
+                });*/
         }
     };
 
