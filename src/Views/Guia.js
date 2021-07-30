@@ -549,6 +549,7 @@ function Guia(props) {
             "usuarioCancelacion": localStorage.getItem("UsuarioId"),
             "fechaCancelacion": state.fechaCancelado
         }
+        console.log(JSON.stringify(params))
         cancelarGuia(state.idGuia, params).then((respuesta) => {
             console.log(respuesta.data)
         })
@@ -923,6 +924,7 @@ function Guia(props) {
                             "observacionesPaquete": respuesta.data.m_arrPaquetes[i].m_sObservaciones,
                             "id": respuesta.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle
                         });
+                        valorDeclaradoTotal = valorDeclaradoTotal + respuesta.data.m_arrPaquetes[i].m_cValorDeclarado
                     }
 
                     for (var i = 0; i < respuesta.data.m_arrSobres.length; i++) {
@@ -1151,7 +1153,7 @@ function Guia(props) {
             console.log(embarque);
             const paquetesTemp = [];
             const sobresTemp = [];
-            //console.log(paquetesTemp);
+            let valorDeclaradoTotal = 0
 
             for (var i = 0; i < respuesta.data.m_arrPaquetes.length; i++) {
 
@@ -1171,6 +1173,7 @@ function Guia(props) {
                     "observacionesPaquete": respuesta.data.m_arrPaquetes[i].m_sObservaciones,
                     "id": respuesta.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle
                 });
+                valorDeclaradoTotal = valorDeclaradoTotal + respuesta.data.m_arrPaquetes[i].m_cValorDeclarado
             }
 
             for (var i = 0; i < respuesta.data.m_arrSobres.length; i++) {
@@ -1228,7 +1231,8 @@ function Guia(props) {
                     CiudadDestino: respuesta.data.m_sCIudadDestinatario,
                     paquetes: paquetesTemp,
                     sobres: sobresTemp,
-                    conceptosAdicionales: conceptosTemp, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada
+                    conceptosAdicionales: conceptosTemp, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada,
+                    ValorDeclarado: valorDeclaradoTotal
                 })
             })
 
