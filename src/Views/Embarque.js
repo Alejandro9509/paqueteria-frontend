@@ -192,6 +192,7 @@ function Embarque(props) {
         RFCRemitente: "",
         domicilioRemitente: "",
         codigoPostalRemitente: {},
+        idCodigoPostalRemitenteTemp : 0,
         ciudadRemitente: {},
         correoRemitente: "",
         telefonoRemitente: "",
@@ -201,6 +202,7 @@ function Embarque(props) {
         RFCDestinatario: "",
         domicilioDestinatario: "",
         codigoPostalDestinatario: {},
+        idCodigoPostalDestinatarioTemp : 0,
         ciudadDestinatario: {},
         correoDestinatario: "",
         telefonoDestinatario: "",
@@ -372,7 +374,7 @@ function Embarque(props) {
                 HoraLlegada: state.fechaHoraLlegada.split("T")[1],
                 CodigoPostalEntrega: state.codigoPostalEntrega.m_nIdCP,
 
-                IdCiudadEntrega: state.ciudadEntrega.m_nIdCiudad,
+                // IdCiudadEntrega: state.ciudadEntrega.m_nIdCiudad,
                 IdZonaEntrega: state.zonaEntrega,
                 DomicilioEntrega: state.domicilioEntrega,
                 EntregarEn: state.entregaEn,
@@ -434,7 +436,7 @@ function Embarque(props) {
                 HoraLlegada: state.fechaHoraLlegada.split("T")[1],
                 CodigoPostalEntrega: state.codigoPostalEntrega.m_nIdCP,
 
-                //  IdCiudadEntrega: state.ciudadEntrega.m_nIdCiudad,
+                 IdCiudadEntrega: state.ciudadEntrega.m_nIdCiudad,
                 IdZonaEntrega: state.zonaEntrega,
                 DomicilioEntrega: state.domicilioEntrega,
                 EntregarEn: state.entregaEn,
@@ -457,7 +459,7 @@ function Embarque(props) {
         console.log(JSON.stringify(params))
 
         if (state.idEmbarque != 0) {
-            modificarEmbarques(state.idEmbarque, params)
+            /*modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     getAllEmbarque();
@@ -469,9 +471,9 @@ function Embarque(props) {
                 .catch((err) => {
                     console.log(err);
                     showSuccess("El Usuario no tiene derecho para modificar");
-                });
+                });*/
         } else {
-            agregarEmbarques(params)
+            /*agregarEmbarques(params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     console.log(respuesta.data);
@@ -484,7 +486,7 @@ function Embarque(props) {
                 .catch((err) => {
                     console.log(err);
                     showSuccess(err);
-                });
+                });*/
         }
     };
 
@@ -1498,7 +1500,7 @@ function Embarque(props) {
                     .then((respuesta) => {
 
                         var paquetesModificado = respuesta.data.m_parrPaquetes;
-                        console.log(paquetesModificado);
+                        console.log(respuesta);
                         for (let i = 0; i < respuesta.data.m_parrPaquetes.length; i++) {
                             paquetesModificado[i]["m_nTipo"] = 2;
                             paquetesModificado[i]["m_xPeso"] = paquetesModificado[i].m_rPeso;
@@ -1545,8 +1547,9 @@ function Embarque(props) {
                             RFCRemitente: respuesta.data.m_sRFCRemitente,
                             domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
                             codigoPostalRemitente: dataCodigoPostal.find(
-                                (o) => o.m_nIdCP === respuesta.data.m_sIdCodigoPostalRemitente
+                                (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalRemitente
                             ),
+                            idCodigoPostalRemitenteTemp: respuesta.data.m_sIdCodigoPostalRemitente,
                             ciudadRemitente: dataCiudad.find(
                                 (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadRemitente
                             ),
@@ -1563,8 +1566,9 @@ function Embarque(props) {
                             RFCDestinatario: respuesta.data.m_sRFCDestinatario,
                             domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
                             codigoPostalDestinatario: dataCodigoPostal.find(
-                                (o) => o.m_nIdCP === respuesta.data.m_sIdCodigoPostalDestinatario
+                                (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalDestinatario
                             ),
+                            idCodigoPostalRemitentTemp: respuesta.data.m_sIdCodigoPostalDestinatario,
                             ciudadDestinatario: dataCiudad.find(
                                 (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadDestinatario
                             ),
@@ -1708,6 +1712,16 @@ function Embarque(props) {
     async function getAllCodigosPostales() {
         obtenerCodigoPostal().then((respuesta) => {
             setDataCodigoPostal(respuesta.data);
+            console.log(respuesta.data)
+            setState({
+                ...state,
+                codigoPostalRemitente: respuesta.data.find(
+                    (o) => o.m_nIdCP == state.idCodigoPostalRemitenteTemp
+                ),
+                codigoPostalDestinatario: respuesta.data.find(
+                    (o) => o.m_nIdCP == state.idCodigoPostalDestinatarioTemp
+                ),
+            })
         });
     }
 
