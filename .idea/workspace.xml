@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="94d8e9cf-07c8-4a10-b81b-63018b1e29c3" name="Default Changelist" comment="Ajustes al crear guia a partir de embarque">
+    <list default="true" id="94d8e9cf-07c8-4a10-b81b-63018b1e29c3" name="Default Changelist" comment="Se recuperan las opciones de impuestos de los servicios en sucursales">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Util/Contexts/InformesContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/InformesContext.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Util/Contexts/SucursalContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/SucursalContext.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Sucursal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Sucursal.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Unidades.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Unidades.js" afterDir="false" />
     </list>
@@ -34,7 +33,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="support/embarque" />
+        <entry key="$PROJECT_DIR$" value="develop" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -275,7 +274,14 @@
       <option name="project" value="LOCAL" />
       <updated>1627606448194</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="Se recuperan las opciones de impuestos de los servicios en sucursales">
+      <created>1627628575701</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1627628575701</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -354,7 +360,8 @@
     <MESSAGE value="Ajustes en embarque al mostrar informacion para modificar" />
     <MESSAGE value="Se resolvio el problema al mostrar los sobres y paquetes cuando se modifica o edita" />
     <MESSAGE value="Ajustes al crear guia a partir de embarque" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ajustes al crear guia a partir de embarque" />
+    <MESSAGE value="Se recuperan las opciones de impuestos de los servicios en sucursales" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se recuperan las opciones de impuestos de los servicios en sucursales" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

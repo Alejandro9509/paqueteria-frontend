@@ -116,7 +116,7 @@ function Sucursal(props) {
         console.log(JSON.stringify(params))
 
         if (state.idSucursal != 0) {
-            /*modificarSucursales(state.idSucursal, params).then(respuesta => {
+            modificarSucursales(state.idSucursal, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 clearInputs()
                 getAllData();
@@ -125,9 +125,9 @@ function Sucursal(props) {
             }).catch(err => {
                 console.log(err)
                 showSuccess("err")
-            });*/
+            });
         } else {
-            /*agregarSucursales(params).then(respuesta => {
+            agregarSucursales(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 clearInputs()
                 getAllData();
@@ -135,7 +135,7 @@ function Sucursal(props) {
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
-            });*/
+            });
         }
 
     }
@@ -823,9 +823,10 @@ function Sucursal(props) {
                                                 </div>
                                                 <br></br>
                                                 <div className="form-footer" className="col-md-12">
-                                                    <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
-                                                    >
-                                                        Cancelar</button>
+                                                    <button data-layout="topCenter" data-type="information"
+                                                            className="btn btn-secondary secondary-btn">
+                                                        Cancelar
+                                                    </button>
                                                     {/** TODO Realizar correctamente el cancelar*/}
                                                     <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                                                 </div>
