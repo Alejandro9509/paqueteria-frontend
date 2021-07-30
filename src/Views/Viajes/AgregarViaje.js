@@ -18,6 +18,8 @@ import Historial from "./Historial";
 import { obtenerCiudades } from "../../Util/Contexts/CiudadesContext";
 import { obtenerCodigoPostal } from "../../Util/Contexts/CodigoPostalContext";
 import AsignarOperadorUnidad from "./AsignarOperadorUnidad";
+import { cancelarEmbarque, eliminarEmbarques, obtenerEmbarquesId, obtenerUltimoFolioEmbarques, obtenerEmbarqueCancelado, agregarViaje, modificarEmbarques, obtenerEmbarquesFiltro, obtenerEmbarques } from "../../Util/Contexts/ViajesContext";
+
 import { ContactsOutlined } from "@material-ui/icons";
   <Button
                                 variant={"contained"}
@@ -64,6 +66,8 @@ class AgregarViaje extends Component {
             candadoOficial: "",
             identificadorViaje: "",
             estatusListado: '',
+            CreadoPor: localStorage.getItem("UsuarioId"),
+            ModificadoPor: localStorage.getItem("UsuarioId"),
             placasDolly: "",
             placasRemolque1: "",
             placasRemolque2: "",
@@ -97,6 +101,43 @@ class AgregarViaje extends Component {
         this.getAllEstatusViaje();
         this.getAllUnidades();
     }
+
+     handleAceptar = (e) => {
+        e.preventDefault();
+            var params = {
+                m_dFecha: this.fechaHoraRegistro.split("T")[0],
+                m_tHora: this.fechaHoraRegistro.split("T")[1],
+                m_nIdEstatusViaje: this.state.estatus,
+                m_nIdSucursal : this.state.sucursal,
+                m_sCandadoOficial : this.state.candadoOficial,
+                m_sFolioViaje : this.state.folioViaje,
+                m_sIdentificador : this.state.identificadorViaje,
+                m_sNumViajeCliente : this.state.viajeCliente,
+                CreadoPor : this.state.CreadoPor,
+                m_arrInformes : this.state.dataInformes
+        
+        }
+
+
+        console.log(JSON.stringify(params))
+
+     
+            agregarViaje(params)
+                .then((respuesta) => {
+                    //showSuccess(respuesta.data);
+                    console.log(respuesta.data);
+                    //getAllEmbarque();
+                  /*   $('.nav-tabs li ').removeClass('active');
+                    $('.nav-tabs li').eq(0).addClass('active');
+                    $('.tab-content div ').removeClass('in show');
+                    $('#Listado').addClass('in show'); */
+                })
+                .catch((err) => {
+                    console.log(err);
+                   // showSuccess(err);
+                });
+        
+    };
 
     handleSelectCP(id, dobleClick, e) {
         clearTimeout(timer);
@@ -403,7 +444,7 @@ class AgregarViaje extends Component {
                     <div className="widget-content">
 
                         <div className="row" >
-                            <form className="j-forms">
+                        <form className="j-forms row" onSubmit={this.handleAceptar}>
                                 <div className={"row"} style={{ display: "flex" }}>
                                     {/* Sucursal */}
                                     <div className="col-sm-6 col-md-2 col-lg-2 unit">
@@ -1073,6 +1114,24 @@ class AgregarViaje extends Component {
 
 
                                     </div>
+                                </div>
+                                <div className="form-footer col-md-12">
+                                    <button
+                                        type="button"
+                                        onClick={(event) => { event.stopPropagation(); this.setState({ ...this.state, agregar: "Agregar" });
+                                        // $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }
+                                    }}
+                                        className="btn btn-secondary secondary-btn"
+                                    >
+                                        Cancelar
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="btn btn-primary primary-btn"
+                                        disabled={this.agregar === "Consultar"}
+                                    >
+                                        Aceptar
+                                    </button>
                                 </div>
                             </form>
                         </div>
