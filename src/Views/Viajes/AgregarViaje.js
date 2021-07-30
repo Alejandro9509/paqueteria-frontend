@@ -519,7 +519,7 @@ class AgregarViaje extends Component {
                                                 id="fechaHoraRegistro"
                                                 type="datetime-local"
                                                 name="fechaHoraRegistro"
-                                               disabled={state.agregar === "Consultar" || state.agregar === "Modificar"}
+                                               disabled={this.state.agregar === "Consultar" || this.state.agregar === "Modificar"}
 
                                             />
                                         </div>
