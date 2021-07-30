@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="94d8e9cf-07c8-4a10-b81b-63018b1e29c3" name="Default Changelist" comment="Se recuperan las opciones de impuestos de los servicios en sucursales" />
+    <list default="true" id="94d8e9cf-07c8-4a10-b81b-63018b1e29c3" name="Default Changelist" comment="Se recupera dato Tipo de servicio al modificar/ consultar una guia">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Util/Data.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Data.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -290,7 +294,14 @@
       <option name="project" value="LOCAL" />
       <updated>1627636188110</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Se recupera dato Tipo de servicio al modificar/ consultar una guia">
+      <created>1627639262638</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1627639262638</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -301,19 +312,7 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="FILTERS">
-                <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="support/embarque" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-            </State>
+            <State />
           </value>
         </entry>
       </map>
@@ -346,7 +345,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Vista de ultima milla" />
     <MESSAGE value="*Algunos pedazos de codigos se sustituyeron con componentes.&#10;*Listado de formatos se muestra correctamente&#10;*Mejor acomodo en pestaña domicilios" />
     <MESSAGE value="*Headers de tabla en pestaña formatos se ven correctamente.&#10;*Pestaña inputs de Procecsos especiales fueron reemplazados con componentes." />
     <MESSAGE value="*Se agregó campo numRegistroIdentidadFiscal en seccion General, pestaña Inf. Adicional.&#10;*Se reemplazaron inputs por componentes." />
@@ -371,7 +369,8 @@
     <MESSAGE value="Ajustes al crear guia a partir de embarque" />
     <MESSAGE value="Se recuperan las opciones de impuestos de los servicios en sucursales" />
     <MESSAGE value="Ajustes para registrar embarque cuando es entrega en domicilio" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ajustes para registrar embarque cuando es entrega en domicilio" />
+    <MESSAGE value="Se recupera dato Tipo de servicio al modificar/ consultar una guia" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se recupera dato Tipo de servicio al modificar/ consultar una guia" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
