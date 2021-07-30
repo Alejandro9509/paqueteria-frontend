@@ -51,4 +51,13 @@ function obtenerSucursalesId(id) {
     return result
 }
 
-export { modificarSucursales, agregarSucursales, eliminarSucursales, obtenerSucursalesId, obtenerSucursales }
+function obtenerListadoImpuestos(){
+    const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetListado`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
+export { modificarSucursales, agregarSucursales, eliminarSucursales, obtenerSucursalesId, obtenerSucursales, obtenerListadoImpuestos }
