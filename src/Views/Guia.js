@@ -446,7 +446,7 @@ function Guia(props) {
         //TODO
         //var valor2="";
         obtenerGuiaId(id).then(respuesta => {
-            //console.log(respuesta.data)
+            console.log(respuesta.data)
             // debugger;
             cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)
             handleEmbarqueModificar(respuesta)
@@ -472,7 +472,8 @@ function Guia(props) {
                 tracking: respuesta.data.m_nTracking,
                 arClsGuiaConceptos: respuesta.data.m_arClsGuiaConceptos,
                 creadoEl: respuesta.data.m_dCreadoEl,
-                idSucursal: respuesta.data.IdSucursal
+                idSucursal: respuesta.data.IdSucursal,
+                idTipoServicio: respuesta.data.m_nIdTipoServicio
 
             });
             //handleEmbarque (respuesta.data.m_nIdEmbarque)
@@ -1246,7 +1247,8 @@ function Guia(props) {
             const paquetesTemp = state.paquetes;
             const sobresTemp = state.sobres;
             const conceptosTemp = state.conceptos;
-            //console.log(paquetesTemp);
+            let valorTotal = 0;
+            console.log(respuesta);
 
             for (var i = 0; i < respuesta.data.m_arrPaquetes.length; i++) {
 
@@ -1266,6 +1268,7 @@ function Guia(props) {
                     "observacionesPaquete": respuesta.data.m_arrPaquetes[i].m_sObservaciones,
                     "id": respuesta.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle
                 });
+                valorTotal = valorTotal + respuesta.data.m_arrPaquetes[i].m_cValorDeclarado;
             }
             paquetesTemp.splice(0, 1);
 
@@ -1328,7 +1331,7 @@ function Guia(props) {
                 fecha: embarque.data.m_dFecha,
                 hora: embarque.data.m_sHora,
                 idEstatusGuia: embarque.data.m_nIdEstatusGuia,
-                ValorDeclarado: embarque.data.m_cValorDeclarado,
+                // ValorDeclarado: embarque.data.m_cValorDeclarado,
                 idMoneda: embarque.data.m_nIdMoneda,
                 tipoCambio: embarque.data.m_cTIpoCambio,
                 idTipoCobro: embarque.data.m_nIdTIpoCobro,
@@ -1339,7 +1342,8 @@ function Guia(props) {
                 idSucursal: embarque.data.IdSucursal,
                 paquetes: paquetesTemp,
                 sobres: sobresTemp,
-                conceptos: conceptosTemp
+                conceptos: conceptosTemp,
+                ValorDeclarado: valorTotal
             });
             //console.log(embarque.data.m_nIdEmbarque)
         });
