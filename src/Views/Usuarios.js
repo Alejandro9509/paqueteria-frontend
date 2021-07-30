@@ -16,7 +16,14 @@ import Noty from 'noty';
 import IPut from 'iput';
 import { dataGridLocaleText } from "../Constants";
 import { FormControl, InputLabel, Select, TextField, Tooltip } from "@material-ui/core";
-import { eliminarUsuarios, modificarUsuarios, obtenerUsuarios, obtenerUsuariosId, validarPermisos } from "../Util/Contexts/UsuarioContext";
+import {
+    agregarUsuarios,
+    eliminarUsuarios,
+    modificarUsuarios,
+    obtenerUsuarios,
+    obtenerUsuariosId,
+    validarPermisos
+} from "../Util/Contexts/UsuarioContext";
 import { agregarUnidades } from "../Util/Contexts/UnidadesContext";
 import Derechos from "./Usuarios/Derechos";
 import CopiarDerechos from "./Usuarios/CopiarDerechos";
@@ -61,7 +68,7 @@ function Usuarios() {
         password: "",
         confirmarPassword: "",
         correoElectronico: "",
-        idTipoUsuario: 0,
+        idTipoUsuario: 1,
         filtrarPorIP: false,
         ip: "",
         filtrarPorDiaHora: false,
@@ -118,7 +125,7 @@ function Usuarios() {
             "APaterno": state.apellidoPaternoUsuario,
             "AMaterno": state.apellidoMaternoUsuario,
             "Contrasena": state.password,
-            "TipoUsuario": state.idTipoUsuario,
+            "TipoUsuario": 1,
             "CorreoElectronico": state.correoElectronico,
             "IdSucursal": state.idSucursal,
             "Activo": state.activo,
@@ -163,6 +170,7 @@ function Usuarios() {
             "CreadoPor": localStorage.getItem("UsuarioId"),
             "ModificadoPor": localStorage.getItem("UsuarioId")
         }
+        console.log(JSON.stringify(params))
         if (state.idUsuario != 0) {
             modificarUsuarios(state.idUsuario, params).then(respuesta => {
                 showSuccess(respuesta.data)
@@ -172,7 +180,8 @@ function Usuarios() {
                 showSuccess("err")
             });
         } else {
-            agregarUnidades(params).then(respuesta => {
+
+            agregarUsuarios(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
             }).catch(err => {
@@ -372,10 +381,11 @@ function Usuarios() {
     }
 
     const handleChange = event => {
-        console.log(event.target.id + " : " + event.target.value)
+        console.log(event)
+        console.log(event.target.name + " : " + event.target.value)
         setState({
             ...state,
-            [event.target.id]: event.target.value
+            [event.target.name]: event.target.value
         });
     };
 
@@ -658,6 +668,7 @@ function Usuarios() {
                                                                             onChange={handleChange}
                                                                             disabled={state.agregar == "Consultar"}
                                                                             id="idSucursal"
+                                                                            name="idSucursal"
                                                                         >
                                                                             {dataSucursal.map((sucursal) => (
                                                                                 <option
@@ -698,6 +709,7 @@ function Usuarios() {
                                                                         readOnly={state.agregar == "Consultar"}
                                                                         value={state.usuario}
                                                                         id="usuario"
+                                                                        name="usuario"
                                                                     />
                                                                 </div>
                                                             </div>
@@ -711,6 +723,7 @@ function Usuarios() {
                                                                         readOnly={state.agregar == "Consultar"}
                                                                         value={state.nombreUsuario}
                                                                         id="nombreUsuario"
+                                                                        name="nombreUsuario"
                                                                     />
                                                                 </div>
                                                             </div>
@@ -725,6 +738,7 @@ function Usuarios() {
                                                                         readOnly={state.agregar == "Consultar"}
                                                                         value={state.apellidoPaternoUsuario}
                                                                         id="apellidoPaternoUsuario"
+                                                                        name="apellidoPaternoUsuario"
                                                                     />
                                                                 </div>
                                                             </div>
@@ -738,6 +752,7 @@ function Usuarios() {
                                                                         readOnly={state.agregar == "Consultar"}
                                                                         value={state.apellidoMaternoUsuario}
                                                                         id="apellidoMaternoUsuario"
+                                                                        name="apellidoMaternoUsuario"
                                                                     />
                                                                 </div>
                                                             </div>
@@ -752,6 +767,7 @@ function Usuarios() {
                                                                         readOnly={state.agregar == "Consultar"}
                                                                         value={state.password}
                                                                         id="password"
+                                                                        name="password"
                                                                     />
                                                                 </div>
                                                             </div>
@@ -765,6 +781,7 @@ function Usuarios() {
                                                                         readOnly={state.agregar == "Consultar"}
                                                                         value={state.confirmarPassword}
                                                                         id="confirmarPassword"
+                                                                        name="confirmarPassword"
                                                                     />
                                                                 </div>
                                                             </div>
@@ -779,6 +796,7 @@ function Usuarios() {
                                                                         readOnly={state.agregar == "Consultar"}
                                                                         value={state.correoElectronico}
                                                                         id="correoElectronico"
+                                                                        name="correoElectronico"
                                                                     />
                                                                 </div>
                                                             </div>
@@ -793,9 +811,10 @@ function Usuarios() {
                                                                             className="form-control"
                                                                             required
                                                                             value={state.sucursalListado}
-                                                                            onChange={handleChange}
+                                                                            // onChange={handleChange}
                                                                             disabled={state.agregar == "Consultar"}
                                                                             id="sucursalListado"
+                                                                            name="sucursalListado"
                                                                         >
                                                                             <option value="0">Todas</option>
                                                                             {dataSucursal.map((sucursal) => (

@@ -186,7 +186,7 @@ function Embarque(props) {
         fechaHoraRegistro: "",
         estatusEmbarque: 15,
         moneda: 0,
-        tipoCambio: "",
+        tipoCambio: 0,
         tipoCobro: 0,
         nombreRemitente: {},
         RFCRemitente: "",
@@ -198,7 +198,7 @@ function Embarque(props) {
         contactoRemitente: "",
         ciudadDestino: {},
         nombreDestinatario: "",
-        RFCDestinatario: {},
+        RFCDestinatario: "",
         domicilioDestinatario: "",
         codigoPostalDestinatario: {},
         ciudadDestinatario: {},
@@ -220,7 +220,7 @@ function Embarque(props) {
         cantidadDeSobres: 0,
         fechaHoraSalida: "",
         fechaHoraLlegada: "",
-        diferenteEntrega: true,
+        diferenteEntrega: false,
         entregaEnSucursal: false,
         idSucursalEntrega: 0,
         idOperador: {},
@@ -236,7 +236,7 @@ function Embarque(props) {
                 m_xAlto: "",
                 m_xVolumen: "",
                 m_nIdTIpoEmpaque: "",
-                m_cyValorDeclarado: "",
+                m_cValorDeclarado: "",
                 m_sDescripcion: "",
                 m_nCantidad: "",
                 m_nTipo: 2,
@@ -271,23 +271,24 @@ function Embarque(props) {
 
     function handleSelectRemitente(newValue) {
         console.log(newValue)
+        let user = newValue
         setState({
             ...state,
-            nombreRemitente: newValue,
-            RFCRemitente: newValue.m_sRFC,
-            domicilioRemitente: newValue.m_sDomicilio,
+            nombreRemitente: user,
+            RFCRemitente: user.m_sRFC,
+            domicilioRemitente: user.m_sDomicilio,
 
             codigoPostalRemitente: dataCodigoPostal.find(
-                (o) => o.m_nIdCP == newValue.m_nIdCP
+                (o) => o.m_nIdCP == user.m_nIdCP
             ),
 
             ciudadRemitente: dataCiudad.find(
-                (o) => o.m_nIdCiudad == dataCodigoPostal.find((o) => o.m_nIdCP == newValue.m_nIdCP).m_nIdCiudad
+                (o) => o.m_nIdCiudad == dataCodigoPostal.find((o) => o.m_nIdCP == user.m_nIdCP).m_nIdCiudad
             ),
 
-            correoRemitente: newValue.m_sCorreoElectronico,
-            telefonoRemitente: newValue.m_sTelefono,
-            contactoRemitente: newValue.m_sContacto,
+            correoRemitente: user.m_sCorreoElectronico,
+            telefonoRemitente: user.m_sTelefono,
+            contactoRemitente: user.m_sContacto,
         });
 
     }
@@ -316,9 +317,16 @@ function Embarque(props) {
 
     const handleAceptar = (e) => {
         e.preventDefault();
+        const { paquetes, sobres } = state;
+        sobres.forEach(s => {
+            paquetes.push(s)
+        })
+        setState({
+            ...state,
+            paquetes: paquetes
+        })
 
-
-        if (state.m_nIdCiudadDetalleEntrega = undefined) {
+        if (state.m_nIdCiudadDetalleEntrega == undefined) {
             var params = {
                 m_nIdEmbarque: state.idEmbarque,
                 m_nIdRecoleccion: props.location.idRecoleccion,
@@ -362,7 +370,7 @@ function Embarque(props) {
                 m_tHoraSalida: state.fechaHoraSalida.split("T")[1],
                 FechaLlegada: state.fechaHoraLlegada.split("T")[0],
                 HoraLlegada: state.fechaHoraLlegada.split("T")[1],
-                CodigoPostalEntrega: state.codigoPostalEntrega.m_nIdCP,
+                CodigoPostalEntrega: state.codigoPostalEntrega,
 
                 IdCiudadEntrega: state.ciudadEntrega.m_nIdCiudad,
                 IdZonaEntrega: state.zonaEntrega,
@@ -378,7 +386,8 @@ function Embarque(props) {
                 m_bEntregaEnSucursal: state.entregaEnSucursal,
                 m_nIdSucursalEntrega: state.idSucursalEntrega
             }
-
+            console.log(state.m_nIdCiudadDetalleEntrega)
+            console.log(true)
         } else {
             var params = {
                 m_nIdEmbarque: state.idEmbarque,
@@ -423,7 +432,7 @@ function Embarque(props) {
                 m_tHoraSalida: state.fechaHoraSalida.split("T")[1],
                 FechaLlegada: state.fechaHoraLlegada.split("T")[0],
                 HoraLlegada: state.fechaHoraLlegada.split("T")[1],
-                CodigoPostalEntrega: state.codigoPostalEntrega.m_nIdCP,
+                CodigoPostalEntrega: state.codigoPostalEntrega,
 
                 //  IdCiudadEntrega: state.ciudadEntrega.m_nIdCiudad,
                 IdZonaEntrega: state.zonaEntrega,
@@ -438,11 +447,13 @@ function Embarque(props) {
                 m_tHoraDetalleEntrega: state.fechaEntrega.split("T")[1],
                 m_bEntregaEnSucursal: state.entregaEnSucursal,
                 m_nIdSucursalEntrega: state.idSucursalEntrega
-            }
 
+            }
+            console.log(true)
+            console.log(state.m_nIdCiudadDetalleEntrega)
         }
 
-
+        console.log(params)
         console.log(JSON.stringify(params))
 
         if (state.idEmbarque != 0) {
@@ -478,10 +489,47 @@ function Embarque(props) {
     };
 
     function handleSelectCP(id, cp) {
-        setState({
-            ...state,
-            [state.identificadorModal]: id,
-        });
+        if (state.identificadorModal == "nombreRemitente"){
+            setState({
+                ...state,
+                [state.identificadorModal]: id,
+                RFCRemitente: id.m_sRFC,
+                domicilioRemitente: id.m_sDomicilio,
+
+                codigoPostalRemitente: dataCodigoPostal.find(
+                    (o) => o.m_nIdCP == id.m_nIdCP
+                ),
+
+                ciudadRemitente: dataCiudad.find(
+                    (o) => o.m_nIdCiudad == dataCodigoPostal.find((o) => o.m_nIdCP == id.m_nIdCP).m_nIdCiudad
+                ),
+
+                correoRemitente: id.m_sCorreoElectronico,
+                telefonoRemitente: id.m_sTelefono,
+                contactoRemitente: id.m_sContacto,
+            });
+        }else{
+            setState({
+                ...state,
+                [state.identificadorModal]: id,
+                RFCDestinatario: id.m_sRFC,
+                domicilioDestinatario: id.m_sDomicilio,
+
+                codigoPostalDestinatario: dataCodigoPostal.find(
+                    (o) => o.m_nIdCP == id.m_nIdCP
+                ),
+
+                ciudadDestinatario: dataCiudad.find(
+                    (o) => o.m_nIdCiudad ==
+                        dataCodigoPostal.find((o) => o.m_nIdCP == id.m_nIdCP).m_nIdCiudad
+                ),
+
+                correoDestinatario: id.m_sCorreoElectronico,
+                telefonoDestinatario: id.m_sTelefono,
+                contactoDestinatario: id.m_sContacto,
+            });
+        }
+
         console.log(id);
         console.log(state.identificadorModal);
     }
@@ -495,7 +543,7 @@ function Embarque(props) {
             m_xAlto: "",
             m_xVolumen: "",
             m_nIdTIpoEmpaque: "",
-            m_cyValorDeclarado: "",
+            m_cValorDeclarado: "",
             m_sDescripcion: "",
             m_nCantidad: "",
             m_nTipo: 2,
@@ -534,7 +582,8 @@ function Embarque(props) {
     function addSobre() {
         const { sobres } = state;
         sobres.push({
-            descripcion: "",
+            m_nTipo: 1,
+            m_sDescripcion: "",
         });
         console.log(sobres);
         setState({ ...state, sobres: sobres, countSobres: state.countSobres + 1 });
@@ -669,6 +718,7 @@ function Embarque(props) {
 
     function handleShowModificar(id) {
         console.log(id);
+        clearAllInputs()
         obtenerEmbarquesId(id).then((respuesta) => {
             setState({
                 ...state,
@@ -759,15 +809,118 @@ function Embarque(props) {
                 // idUnidad: dataUnidad.find(
                 //     (o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad
                 // ),
+                // paquetes: respuesta.data.m_arrClsDetalle.filter(d => d.m_nTipo == 2),
+                // sobres: respuesta.data.m_arrClsDetalle.filter(d => d.m_nTipo == 1),
+                //Las de abajo reemplazan a la de arriba, se puede quitar la de arriba cuando ya no se use asi
                 paquetes: respuesta.data.m_arrPaquetes,
+                sobres: respuesta.data.m_arrSobres,
+                entregaEnSucursal: respuesta.m_bEntregaEnSucursal,
+                diferenteEntrega: false,
+                idSucursalEntrega : respuesta.m_nIdSucursalEntrega,
             });
             $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
 
         });
+        console.log(state)
+    }
+
+    //Limpia todos los campos. Se usa al pasar del listado a consultar o modificar un registro
+    function clearAllInputs(){
+        setState({
+            DerechoBorrar: 139,
+            identificadorModal: "",
+            tipoModal: 0,
+            openDialog: false,
+            agregar: "Agregar",
+            idEmbarque: 0,
+            fechaInicial: "0",
+            fechaFinal: "",
+            sucursalListado: 0,
+            estatusListado: 0,
+            idSucursalAgregar: localStorage.getItem("Sucursal"),
+            folioRecoleccion: "",
+            folioEmbarque: "",
+            folioGuía: "",
+            folioInforme: "",
+            fechaHoraCreacion: "",
+            fechaHoraRegistro: "",
+            estatusEmbarque: 15,
+            moneda: 0,
+            tipoCambio: 0,
+            tipoCobro: 0,
+            nombreRemitente: {},
+            RFCRemitente: "",
+            domicilioRemitente: "",
+            codigoPostalRemitente: {},
+            ciudadRemitente: {},
+            correoRemitente: "",
+            telefonoRemitente: "",
+            contactoRemitente: "",
+            ciudadDestino: {},
+            nombreDestinatario: "",
+            RFCDestinatario: "",
+            domicilioDestinatario: "",
+            codigoPostalDestinatario: {},
+            ciudadDestinatario: {},
+            correoDestinatario: "",
+            telefonoDestinatario: "",
+            contactoDestinatario: "",
+            ciudadOrigen: {},
+            fechaEntrega: "",
+            horaEntrega: "",
+            codigoPostalEntrega: {},
+            ciudadEntrega: {},
+            zonaEntrega: "",
+            domicilioEntrega: "",
+            entregaEn: "",
+            countSobres: 1,
+            countPaquetes: 1,
+            datosAdicionalesEntrega: "",
+            cantidadDePaquetes: 0,
+            cantidadDeSobres: 0,
+            fechaHoraSalida: "",
+            fechaHoraLlegada: "",
+            diferenteEntrega: false,
+            entregaEnSucursal: false,
+            idSucursalEntrega: 0,
+            idOperador: {},
+            idTipoUnidad: {},
+            CreadoPor: localStorage.getItem("UsuarioId"),
+            ModificadoPor: localStorage.getItem("UsuarioId"),
+            idUnidad: {},
+            paquetes: [
+                {
+                    m_xPeso: "",
+                    m_xLargo: "",
+                    m_xAncho: "",
+                    m_xAlto: "",
+                    m_xVolumen: "",
+                    m_nIdTIpoEmpaque: "",
+                    m_cValorDeclarado: "",
+                    m_sDescripcion: "",
+                    m_nCantidad: "",
+                    m_nTipo: 2,
+                    m_sObservaciones: "",
+                },
+            ],
+            sobres: [
+                {
+                    m_nTipo: 1,
+                    m_sDescripcion: "",
+                },
+            ],
+            motivoCancelacion: "",
+            fechaCancelacion: "",
+            sucursalCancelacion: "",
+            usuario: localStorage.getItem("Usuario"),
+            height: window.innerHeight,
+        })
     }
 
     function handleShowConsultar(id) {
+        clearAllInputs()
         obtenerEmbarquesId(id).then((respuesta) => {
+            console.log(respuesta)
             setState({
                 ...state,
                 agregar: "Consultar",
@@ -777,12 +930,7 @@ function Embarque(props) {
                 folioEmbarque: respuesta.data.m_nFolioEmbarque,
                 folioGuía: respuesta.data.m_nFolioGuia,
                 folioInforme: respuesta.data.m_nFolioInforme,
-                fechaHoraCreacion:
-                    respuesta.data.m_dFecha +
-                    "T" +
-                    respuesta.data.m_tHora.split(":")[0] +
-                    ":" +
-                    respuesta.data.m_tHora.split(":")[1],
+                fechaHoraCreacion: respuesta.data.m_dFecha + "T" + respuesta.data.m_tHora.split(":")[0] + ":" + respuesta.data.m_tHora.split(":")[1],
                 moneda: respuesta.data.m_nIdMoneda,
                 tipoCambio: respuesta.data.m_cTIpoCambio,
                 tipoCobro: respuesta.data.m_nIdTIpoCobro,
@@ -803,7 +951,8 @@ function Embarque(props) {
                 ciudadOrigen: dataCiudad.find(
                     (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadOrigen
                 ),
-
+                RFCRemitente : respuesta.data.m_sRFCRemitente,
+                RFCDestinatario: respuesta.data.m_sRFCDestinatario,
                 nombreDestinatario: dataRemitenteDestinatario.find(
                     (o) => o.m_sRFC === respuesta.data.m_sRFCDestinatario
                 ),
@@ -821,6 +970,10 @@ function Embarque(props) {
                 ciudadDestino: dataCiudad.find(
                     (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadDestino
                 ),
+                zonaEntrega: respuesta.data.IdZonaEntrega,
+                domicilioEntrega: respuesta.data.DomicilioEntrega,
+                entregaEn: respuesta.data.EntregarEn,
+                datosAdicionalesEntrega: respuesta.data.DatosAdicionalesis,
                 fechaEntrega:
                     respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
                 codigoPostalEntrega: dataCodigoPostal.find(
@@ -845,15 +998,18 @@ function Embarque(props) {
                 idUnidad: dataUnidad.find(
                     (o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad
                 ), */
-                zonaEntrega: respuesta.data.IdZonaEntrega,
-                domicilioEntrega: respuesta.data.DomicilioEntrega,
-                entregaEn: respuesta.data.EntregarEn,
-                datosAdicionalesEntrega: respuesta.data.DatosAdicionalesis,
+                // paquetes: respuesta.data.m_arrClsDetalle.filter(d => d.m_nTipo == 2),
+                // sobres: respuesta.data.m_arrClsDetalle.filter(d => d.m_nTipo == 1),
+                //Las de abajo reemplazan a la de arriba, se puede quitar la de arriba cuando ya no se use asi
                 paquetes: respuesta.data.m_arrPaquetes,
+                sobres: respuesta.data.m_arrSobres,
+                entregaEnSucursal: respuesta.m_bEntregaEnSucursal,
+                diferenteEntrega: false,
+                idSucursalEntrega : respuesta.m_nIdSucursalEntrega,
             });
             $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
-
         });
+        console.log(state)
     }
 
     function handleShowAgregar() {
@@ -888,14 +1044,14 @@ function Embarque(props) {
                 today.getHours() +
                 ":" +
                 today.getMinutes(),
-            moneda: dataTipoMoneda ? dataTipoMoneda.length > 0 ? dataTipoMoneda[0].m_nIdMoneda : 0 : 0,
-            tipoCambio: dataTipoCambio.length !== 0 ? dataTipoCambio[0].m_nIdTipoCambio : 2,
-            tipoCobro: dataTipoCobro ? dataTipoCobro.length > 0 ? dataTipoCobro[0].m_nIdTipoCobro : 0 : 0,
-            estatusEmbarque: dataEstatusEmbarque ? dataEstatusEmbarque.length > 0 ? dataEstatusEmbarque[0].m_nIdEstatusEmbarque : 0 : 0,
+            moneda: 0,
+            tipoCambio: 0,
+            tipoCobro: 0,
+            estatusEmbarque: 0,
             nombreRemitente: {},
             RFCRemitente: "",
             domicilioRemitente: "",
-            codigoPostalRemitente: dataCodigoPostal ? dataCodigoPostal.length > 0 ? dataCodigoPostal[0] : {} : {},
+            codigoPostalRemitente: {},
             ciudadRemitente: {},
             correoRemitente: "",
             telefonoRemitente: "",
@@ -904,7 +1060,7 @@ function Embarque(props) {
             nombreDestinatario: {},
             RFCDestinatario: "",
             domicilioDestinatario: "",
-            codigoPostalDestinatario: dataCodigoPostal ? dataCodigoPostal.length > 0 ? dataCodigoPostal[0] : {} : {},
+            codigoPostalDestinatario: {},
             ciudadDestino: {},
             correoDestinatario: "",
             telefonoDestinatario: "",
@@ -933,8 +1089,14 @@ function Embarque(props) {
                     m_cValorDeclarado: "",
                     m_sDescripcion: "",
                     ctd: "",
-                    m_nTipo: dataEmbalaje ? dataEmbalaje.length > 0 ? dataEmbalaje[0].m_nIdEmbalaje : 0 : 0,
+                    m_nTipo: 2,
                     m_sObservaciones: "",
+                },
+            ],
+            sobres: [
+                {
+                    m_nTipo: 1,
+                    m_sDescripcion: "",
                 },
             ],
             cantidadDePaquetes: 0,
@@ -955,6 +1117,17 @@ function Embarque(props) {
             ...state,
             [event.target.name]: event.target.value,
         });
+    };
+
+    const handleChangeSucursalEntrega = (event) => {
+        console.log(event)
+        setState({
+            ...state,
+            [event.target.name]: event.target.value,
+            codigoPostalEntrega: dataSucursal.find(c => c.m_nIdSucursal == event.target.value).m_nIdCodigoPostal
+
+        });
+        console.log(state.codigoPostalEntrega)
     };
 
     const handleEntregaCheckboxChange = (event) => {
@@ -1339,7 +1512,7 @@ function Embarque(props) {
                             paquetesModificado[i]["m_nIdTIpoEmpaque"] =
                                 paquetesModificado[i].m_nIdTipoEmbalaje;
                             paquetesModificado[i]["m_cValorDeclarado"] =
-                                paquetesModificado[i].m_cyValorDeclarado;
+                                paquetesModificado[i].m_cValorDeclarado;
                         }
                         console.log(paquetesModificado);
                         setState({
@@ -2304,10 +2477,10 @@ function Embarque(props) {
                             onChange={(event) => handleChangePaquete(event, index)}
                             className="form-control"
                             type="text"
-                            value={state.paquetes[index].m_cyValorDeclarado}
+                            value={state.paquetes[index].m_cValorDeclarado}
                             disabled={state.agregar === "Consultar"}
                             placeholder="$"
-                            name="m_cyValorDeclarado"
+                            name="m_cValorDeclarado"
                         />
                     </div>
                 </div>
@@ -2370,10 +2543,10 @@ function Embarque(props) {
                             onChange={(event) => handleChangeSobre(event, index)}
                             className="form-control"
                             type="text"
-                            value={state.sobres[index].descripcion}
+                            value={state.sobres[index].m_sDescripcion}
                             disabled={state.agregar === "Consultar"}
                             placeholder="Descripción"
-                            name="descripcion"
+                            name="m_sDescripcion"
                         />
                     </div>
                 </div>
@@ -3118,6 +3291,7 @@ function Embarque(props) {
                                                                         disabled={state.agregar === "Consultar"}
                                                                         onChange={handleChange}
                                                                         id="moneda"
+                                                                        name="moneda"
                                                                         InputProps={{
                                                                             name: "moneda"
                                                                         }}
@@ -3703,15 +3877,16 @@ function Embarque(props) {
                                                                                                             state.agregar ===
                                                                                                             "Consultar"
                                                                                                         }
-                                                                                                        onClick={() => {
+                                                                                                        /*onClick={() => {
                                                                                                             setState({
                                                                                                                 ...state,
                                                                                                                 identificadorModal:
                                                                                                                     "nombreDestinatario",
                                                                                                                 tipoModal: 5,
+                                                                                                                openDialog: true,
                                                                                                             });
-                                                                                                            open();
-                                                                                                        }}
+                                                                                                            // open();
+                                                                                                        }}*/
                                                                                                     >
                                                                                                         <PageviewIcon
                                                                                                             style={{
@@ -3723,7 +3898,7 @@ function Embarque(props) {
                                                                                                                 paddingLeft: 0,
                                                                                                                 paddingBlock: 0,
                                                                                                             }}
-                                                                                                            onClick={() => {
+                                                                                                            /*onClick={() => {
                                                                                                                 setState({
                                                                                                                     ...state,
                                                                                                                     identificadorModal:
@@ -3731,7 +3906,7 @@ function Embarque(props) {
                                                                                                                     tipoModal: 5,
                                                                                                                     openDialog: true,
                                                                                                                 });
-                                                                                                            }}
+                                                                                                            }}*/
                                                                                                         />
                                                                                                     </IconButton>
                                                                                                 </InputAdornment>
@@ -4094,10 +4269,11 @@ function Embarque(props) {
                                                                         label="Sucursal de Entrega"
                                                                         className="form-control"
                                                                         required = {state.entregaEnSucursal}
-                                                                        onChange={handleChange}
+                                                                        onChange={handleChangeSucursalEntrega}
                                                                         value={state.idSucursalEntrega}
                                                                         disabled={state.agregar === "Consultar"}
                                                                         id="idSucursalEntrega"
+                                                                        name="idSucursalEntrega"
                                                                         inputProps={{
                                                                             name: "idSucursalEntrega"
                                                                         }}
@@ -4106,6 +4282,7 @@ function Embarque(props) {
                                                                             <option
                                                                                 key={sucursal.m_nIdSucursal}
                                                                                 value={sucursal.m_nIdSucursal}
+                                                                                // value={sucursal}
                                                                             >
                                                                                 {sucursal.m_sSucursal}
                                                                             </option>
