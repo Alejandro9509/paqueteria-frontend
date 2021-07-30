@@ -154,7 +154,7 @@ function Viajes() {
     }
 
     function handleShowModificar(id) {
-        // const url = `${process.env.REACT_APP_API_URL}/Departamento/GetById/` + id;
+        // const url = `${process.env.REACT_APP_API_URL}/Viajes/GetById/` + id;
         // axios.get(url, { headers }).then(respuesta => {
         //   console.log(respuesta.data)
         //   setState({
@@ -613,7 +613,7 @@ function Viajes() {
             width: 100,
             renderCell: (row) => {
                 return(
-                    <a onClick={() => showSalidaDialog(row.row)}>{row.row.m_nIdCiudadOrigen === 0 ? "Asignar" : "Quitar"}</a>
+                    <a onClick={() => showSalidaDialog(row.row)}>{row.row.m_nIdEstatusViaje === 0 ? "Asignar" : "Quitar"}</a>
                 )
             }
         },
