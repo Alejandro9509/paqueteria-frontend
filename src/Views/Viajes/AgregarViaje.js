@@ -107,8 +107,8 @@ class AgregarViaje extends Component {
             var params = {
                 m_dFecha: this.fechaHoraRegistro.split("T")[0],
                 m_tHora: this.fechaHoraRegistro.split("T")[1],
-                m_nIdEstatusViaje: this.state.estatus,
-                m_nIdSucursal : this.state.sucursal,
+                m_nIdEstatusViaje: this.state.estatusListado,
+                m_nIdSucursal : this.state.idSucursalAgregar,
                 m_sCandadoOficial : this.state.candadoOficial,
                 m_sFolioViaje : this.state.folioViaje,
                 m_sIdentificador : this.state.identificadorViaje,
