@@ -5,10 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="94d8e9cf-07c8-4a10-b81b-63018b1e29c3" name="Default Changelist" comment="Se recuperan las opciones de impuestos de los servicios en sucursales">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Util/Contexts/InformesContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/InformesContext.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Sucursal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Sucursal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Unidades.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Unidades.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -281,7 +278,14 @@
       <option name="project" value="LOCAL" />
       <updated>1627628575701</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Se recuperan las opciones de impuestos de los servicios en sucursales">
+      <created>1627629213333</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1627629213333</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

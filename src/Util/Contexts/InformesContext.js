@@ -43,7 +43,7 @@ function eliminarInformes(id, idEliminadoPor){
 }
 
 function obtenerInformes(){
-    const url = `${process.env.REACT_APP_API_URL}/Informes/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL}/Informes/GetListadoSinViajes`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
