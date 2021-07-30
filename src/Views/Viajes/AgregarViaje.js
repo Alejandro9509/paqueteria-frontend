@@ -225,7 +225,7 @@ class AgregarViaje extends Component {
         console.log(event)
         this.setState({ idRuta: newValue });
         if (newValue.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
-            this.getInformesByFiltro(event.target.value.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
+            this.getInformesByFiltro(newValue.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
                 this.state.IdRemolque1.m_nIdUnidad, this.state.IdRemolque2.m_nIdUnidad, this.state.IdDolly.m_nIdUnidad)
             
         }
@@ -519,7 +519,7 @@ class AgregarViaje extends Component {
                                                 id="fechaHoraRegistro"
                                                 type="datetime-local"
                                                 name="fechaHoraRegistro"
-                                            //disabled={state.agregar === "Consultar" || state.agregar === "Modificar"}
+                                               disabled={this.state.agregar === "Consultar" || this.state.agregar === "Modificar"}
 
                                             />
                                         </div>
