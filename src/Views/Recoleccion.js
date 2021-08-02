@@ -51,7 +51,11 @@ import {
 } from "@material-ui/core";
 import { dataGridLocaleText } from "../Constants";
 import { obtenerCiudades } from "../Util/Contexts/CiudadesContext";
-import { obtenerCodigoPostal } from "../Util/Contexts/CodigoPostalContext";
+import {
+    obtenerCodigoPostal,
+    obtenerCodigoPostalCiudad, obtenerCodigoPostalEstado,
+    obtenerCodigoPostalId
+} from "../Util/Contexts/CodigoPostalContext";
 import { obtenerRemitentesDestinatarios } from "../Util/Contexts/RemitenteDestinatarioContext";
 import { obtenerEmbalajes } from "../Util/Contexts/EmbalajesContext";
 import { obtenerEstatusRecoleccion } from "../Util/Contexts/EstatusContext";
@@ -246,27 +250,7 @@ function Recoleccion() {
         );
     }
 
-    function handleSelectRemitente(newValue) {
-        setState({
-            ...state,
-            nombreRemitente: newValue,
-            RFCRemitente: newValue.m_sRFC,
-            domicilioRemitente: newValue.m_sDomicilio,
 
-            codigoPostalRemitente: dataCodigoPostal.find(
-                (o) => o.m_nIdCP == parseInt(newValue.m_nIdCP)
-            ),
-
-            ciudadRemitente: dataCodigoPostal.find(
-                (o) => o.m_nIdCP == newValue.m_nIdCP
-            ).m_nIdCiudad,
-
-            correoRemitente: newValue.m_sCorreoElectronico,
-            telefonoRemitente: newValue.m_sTelefono,
-            contactoRemitente: newValue.m_sContacto,
-        })
-
-    }
 
     //Se ejecuta cada que el check de mismo paquete se clickea
     useEffect(value => {
@@ -295,6 +279,57 @@ function Recoleccion() {
         // console.log(dataTipoMoneda)
     }, [state.moneda])*/
 
+    //Se iba a usar para obtener los cps que correspondieran al estado del destinatario que se seleccionó
+    /*useEffect( value => {
+        obtenerCodigoPostalEstado(state.nombreRemitente.m_nIdEstado).then((respuesta) => {
+            setDataCodigoPostal(respuesta.data);
+            if (respuesta.data.length > 0){
+                setState({
+                    ...state,
+                    codigoPostalRemitente: respuesta.data.find(
+                        (o) => o.m_nIdCP == parseInt(state.nombreRemitente.m_nIdCP)
+                    ),
+
+                    ciudadRemitente: respuesta.data.find(
+                        (o) => o.m_nIdCP == state.nombreRemitente.m_nIdCP
+                    ).m_nIdCiudad,
+                })
+            }
+
+
+        });
+    }, [state.nombreRemitente])*/
+
+    //Se iba a usar para obtener los cps que correspondieran al estado del destinatario que se seleccionó
+    /*useEffect( value => {
+        obtenerCodigoPostalEstado(state.nombreDestinatario.m_nIdEstado).then((respuesta) => {
+            setDataCodigoPostal(respuesta.data);
+            if (respuesta.data.length > 0) {
+                setState({
+                    ...state,
+                    codigoPostalDestinatario: respuesta.data.find(
+                        (o) => o.m_nIdCP == parseInt(state.nombreDestinatario.m_nIdCP)
+                    ),
+
+                    ciudadDestinatario: respuesta.data.find(
+                        (o) => o.m_nIdCP == state.nombreDestinatario.m_nIdCP
+                    ).m_nIdCiudad,
+                })
+            }
+        });
+    }, [state.nombreDestinatario])*/
+
+    //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para el destinatario
+    /*useEffect( value => {
+        if (state.ciudadDestinatario != ""){
+            obtenerCodigoPostalCiudad(state.ciudadDestinatario).then((respuesta) => {
+                if (respuesta.data.length > 0){
+                    setDataCodigoPostal(respuesta.data);
+                }
+            });
+        }
+    }, [state.ciudadDestinatario])*/
+
     useEffect((value) => {
         if (
             localStorage.getItem("UsuarioId") === null ||
@@ -310,7 +345,7 @@ function Recoleccion() {
         getAllTipoCobro();
         getAllTipoMoneda();
         getAllCiudades();
-        // getAllCodigosPostales();
+        getAllCodigosPostales();
         //getAllCodigosPostalesRem(state.ciudadRemitente);
         //getAllCodigosPostalesDes(state.ciudadDestinatario);
 
@@ -323,6 +358,30 @@ function Recoleccion() {
         getFormatosImpresion()
         getUltimoFolioRecoleccion();
     }, []);
+
+    function handleSelectRemitente(newValue) {
+        setState({
+            ...state,
+            nombreRemitente: newValue,
+            RFCRemitente: newValue.m_sRFC,
+            domicilioRemitente: newValue.m_sDomicilio,
+
+            codigoPostalRemitente: dataCodigoPostal.find(
+                (o) => o.m_nIdCP == parseInt(newValue.m_nIdCP)
+            ),
+
+            ciudadRemitente: dataCodigoPostal.find(
+                (o) => o.m_nIdCP == newValue.m_nIdCP
+            ).m_nIdCiudad,
+
+            correoRemitente: newValue.m_sCorreoElectronico,
+            telefonoRemitente: newValue.m_sTelefono,
+            contactoRemitente: newValue.m_sContacto,
+        })
+
+        console.log('Remitente')
+        console.log(newValue)
+    }
 
     function handleSelectDestinatario(newValue) {
         setState({
@@ -343,6 +402,8 @@ function Recoleccion() {
             telefonoDestinatario: newValue.m_sTelefono,
             contactoDestinatario: newValue.m_sContacto,
         })
+        console.log('Destinatario')
+        console.log(newValue)
 
 
     }
@@ -444,6 +505,8 @@ function Recoleccion() {
                     showSuccess(err);
                 });*/
         }
+
+        // clearInputs()
     };
 
     function getTipoCambio() {
@@ -607,8 +670,6 @@ function Recoleccion() {
                 showSuccess(err);
             });
     }
-
-
 
     function handleShowModificar(id) {
         $('.nav-tabs li ').removeClass('active');
@@ -843,18 +904,19 @@ function Recoleccion() {
 
     function handleShowAgregar(event) {
         event.stopPropagation()
+        clearInputs()
         setState({
             ...state,
             /*nombreRemitente: dataRemitenteDestinatario[0],
-            nombreDestinatario: dataRemitenteDestinatario[0],*/
+            nombreDestinatario: dataRemitenteDestinatario[0],
 
             agregar: "Agregar",
             idRecoleccion: 0,
-            //folioRecoleccion: parseInt(dataFolioRecoleccion[0].m_sFolioRecoleccion.split("E")[1]),
+            //folioRecoleccion: parseInt(dataFolioRecoleccion[0].m_sFolioRecoleccion.split("E")[1]),*/
             folioRecoleccion: dataFolioRecoleccion.length !== 0 ? dataFolioRecoleccion[0].m_sFolioRecoleccion : "",
-            folioEmbarque: "",
+            /*folioEmbarque: "",
             folioGuía: "",
-            folioInforme: "",
+            folioInforme: "",*/
             fechaHoraRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() +
                 1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(
                     2,
@@ -864,43 +926,43 @@ function Recoleccion() {
                     0
                 )}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
             fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + "T" + today.getHours() + ":" + today.getMinutes(),
-            estatusRecoleccion: dataEstatusRecoleccion.length !== 0 ? dataEstatusRecoleccion[0].m_nIdEstatusRecoleccion : 2,
-            moneda: 1,
-            tipoCambio: dataTipoCambio.length !== 0 ? dataTipoCambio[0].m_nIdTipoCambio : 2,
-            tipoCobro: dataTipoCobro ? dataTipoCobro.length > 0 ? dataTipoCobro[0].m_nIdTipoCobro : 0 : 0,
+            /*estatusRecoleccion: ""/!*dataEstatusRecoleccion.length !== 0 ? dataEstatusRecoleccion[0].m_nIdEstatusRecoleccion : 2*!/,
+            moneda: "",
+            tipoCambio: ""/!*dataTipoCambio.length !== 0 ? dataTipoCambio[0].m_nIdTipoCambio : 2*!/,
+            tipoCobro: ""/!*dataTipoCobro ? dataTipoCobro.length > 0 ? dataTipoCobro[0].m_nIdTipoCobro : 0 : 0*!/,
             RFCRemitente: "",
             domicilioRemitente: "",
-            codigoPostalRemitente: ""/*dataCodigoPostal.find(cp => cp.m_nIdCiudad == dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1)*/,
+            codigoPostalRemitente: ""/!*dataCodigoPostal.find(cp => cp.m_nIdCiudad == dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1)*!/,
             correoRemitente: "",
             telefonoRemitente: "",
             contactoRemitente: "",
-            origenRemitente: ""/*dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1*/,
+            origenRemitente: ""/!*dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1*!/,
             RFCDestinatario: "",
             domicilioDestinatario: "",
-            codigoPostalDestinatario: ""/*dataCodigoPostal.find(cp => cp.m_nIdCiudad == dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1)*/,
+            codigoPostalDestinatario: ""/!*dataCodigoPostal.find(cp => cp.m_nIdCiudad == dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1)*!/,
             correoDestinatario: "",
             telefonoDestinatario: "",
             contactoDestinatario: "",
-            destinoDestinatario: ""/*dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1*/,
-            ciudadRemitente: ""/*dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1*/,
-            ciudadDestinatario: ""/*dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1*/,
+            destinoDestinatario: ""/!*dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1*!/,
+            ciudadRemitente: ""/!*dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1*!/,
+            ciudadDestinatario: ""/!*dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1*!/,
             fechaRecoleccion: "",
-            codigoPostalRecoleccion: ""/*dataCodigoPostal.find(cp => cp.m_nIdCiudad == dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1)*/,
-            ciudadRecoleccion: ""/*dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1*/,
+            codigoPostalRecoleccion: ""/!*dataCodigoPostal.find(cp => cp.m_nIdCiudad == dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1)*!/,
+            ciudadRecoleccion: ""/!*dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1*!/,
             zonaRecoleccion: "",
             domicilioRecoleccion: "",
             recogerEn: "",
             datosAdicionalesRecoleccion: "",
-            codigoPostalEntrega: ""/*dataCodigoPostal.find(cp => cp.m_nIdCiudad == dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1)*/,
-            ciudadEntrega: ""/*dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1*/,
+            codigoPostalEntrega: ""/!*dataCodigoPostal.find(cp => cp.m_nIdCiudad == dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1)*!/,
+            ciudadEntrega: ""/!*dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1*!/,
             zonaEntrega: "",
             domicilioEntrega: "",
             entregaEn: "",
             datosAdicionalesEntrega: "",
             cantidadDePaquetes: 0,
             cantidadDeSobres: 0,
-            operador: ""/*dataOperador.length !== 0 ? dataOperador[0].m_nIdOperador : 1*/,
-            unidad: ""/*dataUnidad.length !== 0 ? dataUnidad[0].m_nIdUnidad : 1*/,
+            operador: ""/!*dataOperador.length !== 0 ? dataOperador[0].m_nIdOperador : 1*!/,
+            unidad: ""/!*dataUnidad.length !== 0 ? dataUnidad[0].m_nIdUnidad : 1*!/,*/
             paquetes: [
                 {
                     m_rPeso: "",
@@ -925,6 +987,62 @@ function Recoleccion() {
         });
         $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
 
+    }
+
+    //Limpia todos los inputs
+    const clearInputs = () =>{
+        setState({
+            ...state,
+            nombreRemitente: "",
+            nombreDestinatario: "",
+            agregar: "Agregar",
+            idRecoleccion: 0,
+            folioRecoleccion: "",
+            folioEmbarque: "",
+            folioGuía: "",
+            folioInforme: "",
+            fechaHoraRegistro: "",
+            fechaHoraCreacion: "",
+            estatusRecoleccion: "",
+            moneda: "",
+            tipoCambio: "",
+            tipoCobro: "",
+            RFCRemitente: "",
+            domicilioRemitente: "",
+            codigoPostalRemitente: "",
+            correoRemitente: "",
+            telefonoRemitente: "",
+            contactoRemitente: "",
+            origenRemitente: "",
+            RFCDestinatario: "",
+            domicilioDestinatario: "",
+            codigoPostalDestinatario: "",
+            correoDestinatario: "",
+            telefonoDestinatario: "",
+            contactoDestinatario: "",
+            destinoDestinatario: "",
+            ciudadRemitente: "",
+            ciudadDestinatario: "",
+            fechaRecoleccion: "",
+            codigoPostalRecoleccion: "",
+            ciudadRecoleccion: "",
+            zonaRecoleccion: "",
+            domicilioRecoleccion: "",
+            recogerEn: "",
+            datosAdicionalesRecoleccion: "",
+            codigoPostalEntrega: "",
+            ciudadEntrega: "",
+            zonaEntrega: "",
+            domicilioEntrega: "",
+            entregaEn: "",
+            datosAdicionalesEntrega: "",
+            cantidadDePaquetes: 0,
+            cantidadDeSobres: 0,
+            operador: "",
+            unidad: "",
+            paquetes: [],
+            sobres: [],
+        });
     }
 
     const handleChange = (event) => {
@@ -1356,9 +1474,6 @@ function Recoleccion() {
             zonaEntrega: event.target.value,
         });
     }
-
-
-
 
     function getAllRemitentesDestinatarios() {
         obtenerRemitentesDestinatarios().then((respuesta) => {
@@ -2249,6 +2364,90 @@ function Recoleccion() {
 
                             </DialogActions>
                         </div>
+                    }
+                    {state.tipoModal === 7 &&
+                    <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+                        <div align="right">
+                            <button onClick={() => {
+                                history.push("/Ciudades")
+                            }} className="btn btn-primary primary-btn">Agregar
+                            </button>
+
+                        </div>
+
+                        {dataCodigoPostal.length !== 0 ? <TableCodigoPostal object={state}
+                                                                            select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP}
+                                                                            columns={columnsCP} data={dataCodigoPostal.filter((cp) => cp.m_nIdCiudad == state.ciudadDestinatario)}
+                                                                            identificadorModal={state.identificadorModal} /> :
+                            <div>No se encontró ningún registro</div>}
+
+                        <DialogActions style={{ justifyContent: "left" }}>
+
+                            <button onClick={() => setState({ ...state, openDialog: false })}
+                                    className="btn btn-primary primary-btn">Aceptar
+                            </button>
+                            <button onClick={() => setState({ ...state, openDialog: false })}
+                                    className="btn btn-secondary secondary-btn">Cerrar
+                            </button>
+
+                        </DialogActions>
+                    </div>
+                    }
+                    {state.tipoModal === 8 &&
+                    <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+                        <div align="right">
+                            <button onClick={() => {
+                                history.push("/Ciudades")
+                            }} className="btn btn-primary primary-btn">Agregar
+                            </button>
+
+                        </div>
+
+                        {dataCodigoPostal.length !== 0 ? <TableCodigoPostal object={state}
+                                                                            select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP}
+                                                                            columns={columnsCP} data={dataCodigoPostal.filter((cp) => cp.m_nIdCiudad == state.ciudadRecoleccion)}
+                                                                            identificadorModal={state.identificadorModal} /> :
+                            <div>No se encontró ningún registro</div>}
+
+                        <DialogActions style={{ justifyContent: "left" }}>
+
+                            <button onClick={() => setState({ ...state, openDialog: false })}
+                                    className="btn btn-primary primary-btn">Aceptar
+                            </button>
+                            <button onClick={() => setState({ ...state, openDialog: false })}
+                                    className="btn btn-secondary secondary-btn">Cerrar
+                            </button>
+
+                        </DialogActions>
+                    </div>
+                    }
+                    {state.tipoModal === 9 &&
+                    <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
+                        <div align="right">
+                            <button onClick={() => {
+                                history.push("/Ciudades")
+                            }} className="btn btn-primary primary-btn">Agregar
+                            </button>
+
+                        </div>
+
+                        {dataCodigoPostal.length !== 0 ? <TableCodigoPostal object={state}
+                                                                            select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP}
+                                                                            columns={columnsCP} data={dataCodigoPostal.filter((cp) => cp.m_nIdCiudad == state.ciudadEntrega)}
+                                                                            identificadorModal={state.identificadorModal} /> :
+                            <div>No se encontró ningún registro</div>}
+
+                        <DialogActions style={{ justifyContent: "left" }}>
+
+                            <button onClick={() => setState({ ...state, openDialog: false })}
+                                    className="btn btn-primary primary-btn">Aceptar
+                            </button>
+                            <button onClick={() => setState({ ...state, openDialog: false })}
+                                    className="btn btn-secondary secondary-btn">Cerrar
+                            </button>
+
+                        </DialogActions>
+                    </div>
                     }
                     {state.tipoModal === 1 &&
                         <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
@@ -3539,7 +3738,7 @@ function Recoleccion() {
                                                                                                                 ...state,
                                                                                                                 identificadorModal:
                                                                                                                     "codigoPostalDestinatario",
-                                                                                                                tipoModal: 0,
+                                                                                                                tipoModal: 7,
                                                                                                                 openDialog: true
                                                                                                             });
                                                                                                         }}
@@ -3985,7 +4184,7 @@ function Recoleccion() {
                                                                                                                     ...state,
                                                                                                                     identificadorModal:
                                                                                                                         "codigoPostalRecoleccion",
-                                                                                                                    tipoModal: 0,
+                                                                                                                    tipoModal: 8,
                                                                                                                     openDialog: true
                                                                                                                 });
                                                                                                             }}
@@ -4196,7 +4395,7 @@ function Recoleccion() {
                                                                                                                     ...state,
                                                                                                                     identificadorModal:
                                                                                                                         "codigoPostalEntrega",
-                                                                                                                    tipoModal: 0,
+                                                                                                                    tipoModal: 9,
                                                                                                                     openDialog: true
                                                                                                                 });
                                                                                                             }}
