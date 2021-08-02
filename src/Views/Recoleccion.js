@@ -250,8 +250,6 @@ function Recoleccion() {
         );
     }
 
-
-
     //Se ejecuta cada que el check de mismo paquete se clickea
     useEffect(value => {
         if (state.mismoPaquete) {
@@ -410,69 +408,101 @@ function Recoleccion() {
 
     const handleAceptar = (e) => {
         e.preventDefault();
+
         let params = {
+            //Informacion general
+            m_nIdRecoleccion: state.idRecoleccion,
+            m_nIdSucursal: state.idSucursalAgregar,
+            m_nIdEstatusRecoleccion: state.estatusRecoleccion,
+            m_nIdEmbarque: state.folioEmbarque,
+            m_nIdGuia: state.folioGuía,
+            m_nIdInforme: state.folioInforme,
+            m_dFecha: state.fechaHoraCreacion.split("T")[0],
+            m_tHora: state.fechaHoraCreacion.split("T")[1],
+            m_dFechaRegistro: state.fechaHoraRegistro.split("T")[0],
+            m_tHoraRegistro: state.fechaHoraRegistro.split("T")[1],
+            m_nMoneda: state.moneda,
+            m_rTipoCambio: state.tipoCambio,
+            m_nIdTipoDeCobro: state.tipoCobro,
 
-            "m_nIdRecoleccion": state.idRecoleccion,
-            "m_nIdSucursal": state.idSucursalAgregar,
-            "m_nIdEstatusRecoleccion": state.estatusRecoleccion,
-            "m_nIdEmbarque": state.folioEmbarque,
-            "m_nIdGuia": state.folioGuía,
-            "m_nIdInforme": state.folioInforme,
-            "m_dFecha": state.fechaHoraCreacion.split("T")[0],
-            "m_tHora": state.fechaHoraCreacion.split("T")[1],
+            //Remitente
+            m_sNombreRemitente: state.nombreRemitente.m_sNombreFiscal,
+            m_sRFCRemitente: state.RFCRemitente,
+            m_sDomicilioRemitente: state.domicilioRemitente,
+            m_sIdCodigoPostalRemitente: state.codigoPostalRemitente.m_nIdCP,
+            m_nIdCiudadRemitente: state.ciudadRemitente,
+            m_sCorreoRemitente: state.correoRemitente,
+            m_sTelefonoRemitente: state.telefonoRemitente,
+            m_sContactoRemitente: state.contactoRemitente,
+            m_nIdCiudadOrigen: state.origenRemitente.m_nIdCiudad,
 
-            "m_dFechaRegistro": state.fechaHoraRegistro.split("T")[0],
-            "m_tHoraRegistro": state.fechaHoraRegistro.split("T")[1],
-            "m_nMoneda": state.moneda,
-            "m_rTipoCambio": state.tipoCambio,
-            "m_nIdTipoDeCobro": state.tipoCobro,
-            "m_sNombreRemitente": state.nombreRemitente.m_sNombreFiscal,
-            "m_sNombreDestinatario": state.nombreDestinatario.m_sNombreFiscal,
-            "m_sRFCRemitente": state.RFCRemitente,
-            "m_sRFCDestinatario": state.RFCDestinatario,
-            "m_sDomicilioRemitente": state.domicilioRemitente,
-            "m_sDomicilioDestinatario": state.domicilioDestinatario,
-            "m_sIdCodigoPostalRemitente": state.codigoPostalRemitente.m_nIdCP,
-            "m_sIdCodigoPostalDestinatario": state.codigoPostalDestinatario.m_nIdCP,
-            "m_nIdCiudadRemitente": state.ciudadRemitente,
-            "m_nIdCiudadDestinatario": state.ciudadDestinatario,
-            "m_sCorreoRemitente": state.correoRemitente,
-            "m_sCorreoDestinatario": state.correoDestinatario,
-            "m_sTelefonoRemitente": state.telefonoRemitente,
-            "m_sTelefonoDestinatario": state.telefonoDestinatario,
-            "m_sContactoRemitente": state.contactoRemitente,
-            "m_sContactoDestinatario": state.contactoDestinatario,
-            "m_nIdCiudadOrigen": state.origenRemitente.m_nIdCiudad,
-            "m_nIdCiudadDestino": state.destinoDestinatario.m_nIdCiudad,
-            "m_dFechaDetalleRecoleccion": state.fechaRecoleccion.split("T")[0],
-            "m_tHoraDetalleRecoleccion": state.fechaRecoleccion.split("T")[1],
-            "m_nIdCPDetalleRecoleccion": state.codigoPostalRecoleccion.m_nIdCP,
-            "m_nIdCiudadDetalleRecoleccion": state.ciudadRecoleccion,
-            "m_nIdZonaDetalleRecoleccion": state.zonaRecoleccion,
-            "m_sDomicilioDetalleRecoleccion": state.domicilioRecoleccion,
-            "m_sRecogerEnDetalleRecoleccion": state.recogerEn,
-            "m_sDatosAdicionalesDetalleRecoleccion": state.datosAdicionalesRecoleccion,
-            "m_nIdCPDetalleEntrega": state.codigoPostalEntrega.m_nIdCP,
-            "m_nIdCiudadDetalleEntrega": state.ciudadEntrega,
-            "m_nIdZonaDetalleEntrega": state.zonaEntrega,
-            "m_sDomicilioDetalleEntrega": state.domicilioEntrega,
-            "m_sEntregarEnDetalleEntrega": state.entregaEn,
-            "m_sDatosAdicionalesDetalleEntrega": state.datosAdicionalesEntrega,
-            "m_dFechaSalida": state.fechaHoraSalida.split("T")[0],
-            "m_dFechaLlegada": state.fechaHoraLlegada.split("T")[0],
-            "m_tHoraSalida": state.fechaHoraSalida.split("T")[1],
-            "m_tHoraLlegada": state.fechaHoraLlegada.split("T")[1],
-            "m_parrPaquetes": state.paquetes,
-            "m_nNoPaquetes": state.paquetes.length,
-            "m_parrSobres": state.sobres,
-            "m_nNoSobres": state.sobres.length,
-            "m_nIdOperador": state.operador.m_nIdOperador,
-            "m_nIdUnidad": state.unidad.m_nIdUnidad,
-            "m_nIdRemolque": state.unidad.m_nIdUnidad,
-            "m_nCreadoPor": state.CreadoPor,
-            "m_nModificadoPor": state.ModificadoPor
+            //Destinatario
+            m_sNombreDestinatario: state.nombreDestinatario.m_sNombreFiscal,
+            m_sRFCDestinatario: state.RFCDestinatario,
+            m_sDomicilioDestinatario: state.domicilioDestinatario,
+            m_sIdCodigoPostalDestinatario: state.codigoPostalDestinatario.m_nIdCP,
+            m_nIdCiudadDestinatario: state.ciudadDestinatario,
+            m_sCorreoDestinatario: state.correoDestinatario,
+            m_sTelefonoDestinatario: state.telefonoDestinatario,
+            m_sContactoDestinatario: state.contactoDestinatario,
+            m_nIdCiudadDestino: state.destinoDestinatario.m_nIdCiudad,
 
+            //Recoleccion
+            m_dFechaDetalleRecoleccion: '',
+            m_tHoraDetalleRecoleccion: '',
+            m_nIdCPDetalleRecoleccion: '',
+            m_nIdCiudadDetalleRecoleccion: '',
+            m_nIdZonaDetalleRecoleccion: '',
+            m_sDomicilioDetalleRecoleccion: '',
+            m_sRecogerEnDetalleRecoleccion: '',
+            m_sDatosAdicionalesDetalleRecoleccion: '',
+            //state.diferenteRecoleccion
+
+            //Entrega
+            m_nIdCPDetalleEntrega: '',
+            m_nIdCiudadDetalleEntrega: '',
+            m_nIdZonaDetalleEntrega: '',
+            m_sDomicilioDetalleEntrega: '',
+            m_sEntregarEnDetalleEntrega: '',
+            m_sDatosAdicionalesDetalleEntrega: '',
+            //state.diferenteEntrega
+
+            //Detalles de la operación
+            m_dFechaSalida: state.fechaHoraSalida.split("T")[0],
+            m_dFechaLlegada: state.fechaHoraLlegada.split("T")[0],
+            m_tHoraSalida: state.fechaHoraSalida.split("T")[1],
+            m_tHoraLlegada: state.fechaHoraLlegada.split("T")[1],
+            m_parrPaquetes: state.paquetes,
+            m_nNoPaquetes: state.paquetes.length,
+            m_parrSobres: state.sobres,
+            m_nNoSobres: state.sobres.length,
+            m_nIdOperador: state.operador.m_nIdOperador,
+            m_nIdUnidad: state.unidad.m_nIdUnidad,
+            m_nIdRemolque: state.unidad.m_nIdUnidad,
+            m_nCreadoPor: state.CreadoPor,
+            m_nModificadoPor: state.ModificadoPor
         }
+        if (state.diferenteRecoleccion){
+            params.m_dFechaDetalleRecoleccion = state.fechaRecoleccion.split("T")[0]
+            params.m_tHoraDetalleRecoleccion = state.fechaRecoleccion.split("T")[1]
+            params.m_nIdCPDetalleRecoleccion = state.codigoPostalRecoleccion.m_nIdCP
+            params.m_nIdCiudadDetalleRecoleccion = state.ciudadRecoleccion
+            params.m_nIdZonaDetalleRecoleccion = state.zonaRecoleccion
+            params.m_sDomicilioDetalleRecoleccion = state.domicilioRecoleccion
+            params.m_sRecogerEnDetalleRecoleccion = state.recogerEn
+            params.m_sDatosAdicionalesDetalleRecoleccion = state.datosAdicionalesRecoleccion
+            //state.diferenteRecoleccion
+        }
+
+        if (state.diferenteEntrega){
+            params.m_nIdCPDetalleEntrega = state.codigoPostalEntrega.m_nIdCP
+            params.m_nIdCiudadDetalleEntrega = state.ciudadEntrega
+            params.m_nIdZonaDetalleEntrega = state.zonaEntrega
+            params.m_sDomicilioDetalleEntrega = state.domicilioEntrega
+            params.m_sEntregarEnDetalleEntrega = state.entregaEn
+            params.m_sDatosAdicionalesDetalleEntrega = state.datosAdicionalesEntrega
+        }
+
         console.log(params)
         console.log(JSON.stringify(params))
         if (state.idRecoleccion != 0) {
