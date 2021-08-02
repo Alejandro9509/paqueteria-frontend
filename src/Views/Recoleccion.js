@@ -129,8 +129,8 @@ function Recoleccion() {
     const [dataTipoUnidad, setDataTipoUnidad] = React.useState([]);
     const [dataUnidad, setDataUnidad] = React.useState([]);
     const [state, setState] = React.useState({
-        nombreRemitente: {},
-        nombreDestinatario: {},
+        nombreRemitente: "",
+        nombreDestinatario: "",
 
         shouldOpenList: false,
         showPopUp: false,
@@ -159,7 +159,7 @@ function Recoleccion() {
         countPaquetes: 1,
         RFCRemitente: "",
         domicilioRemitente: "",
-        codigoPostalRemitente: {},
+        codigoPostalRemitente: "",
         ciudadRemitente: "",
         correoRemitente: "",
         telefonoRemitente: "",
@@ -174,13 +174,13 @@ function Recoleccion() {
         contactoDestinatario: "",
         destinoDestinatario: "",
         fechaRecoleccion: "",
-        codigoPostalRecoleccion: {},
+        codigoPostalRecoleccion: "",
         ciudadRecoleccion: "",
         zonaRecoleccion: "",
         domicilioRecoleccion: "",
         recogerEn: "",
         datosAdicionalesRecoleccion: "",
-        codigoPostalEntrega: {},
+        codigoPostalEntrega: "",
         ciudadEntrega: "",
         zonaEntrega: "",
         domicilioEntrega: "",
@@ -191,7 +191,7 @@ function Recoleccion() {
         diferenteRecoleccion: false,
         diferenteEntrega: false,
         operador: 0,
-        tipoUnidad: {},
+        tipoUnidad: "",
         unidad: 0,
         CreadoPor: parseInt(localStorage.getItem("UsuarioId")),
         ModificadoPor: parseInt(localStorage.getItem("UsuarioId")),
@@ -4123,6 +4123,7 @@ function Recoleccion() {
                                                                                        value={state.fechaRecoleccion}
                                                                                        disabled={state.agregar === "Consultar"}
                                                                                        id="fechaRecoleccion"
+                                                                                       required={state.diferenteRecoleccion}
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -4138,7 +4139,7 @@ function Recoleccion() {
                                                                                     labelId="ciudadRecoleccionLabel"
                                                                                     label="Ciudad"
                                                                                     className="form-control"
-
+                                                                                    required={state.diferenteRecoleccion}
                                                                                     value={state.ciudadRecoleccion}
                                                                                     disabled={state.agregar === "Consultar"}
                                                                                     onChange={handleChangeCiudadRecoleccion}
@@ -4179,6 +4180,7 @@ function Recoleccion() {
                                                                                 getOptionLabel={(option) =>
                                                                                     option.m_sCP
                                                                                 }
+                                                                                required={state.diferenteRecoleccion}
                                                                                 variant="outlined"
                                                                                 style={{
                                                                                     transform: "translate(14px, 10px) scale(1) !important"
@@ -4248,7 +4250,7 @@ function Recoleccion() {
                                                                                     labelId="zonaRecoleccionLabel"
                                                                                     label="Zona"
                                                                                     className="form-control"
-
+                                                                                    required={state.diferenteRecoleccion}
                                                                                     value={state.zonaRecoleccion}
                                                                                     disabled={state.agregar === "Consultar"}
                                                                                     onChange={handleChangeZonaRecoleccion}
@@ -4284,6 +4286,7 @@ function Recoleccion() {
                                                                                        value={state.domicilioRecoleccion}
                                                                                        disabled={state.agregar === "Consultar"}
                                                                                        id="domicilioRecoleccion"
+                                                                                       required={state.diferenteRecoleccion}
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -4300,6 +4303,7 @@ function Recoleccion() {
                                                                                        value={state.recogerEn}
                                                                                        disabled={state.agregar === "Consultar"}
                                                                                        id="recogerEn"
+                                                                                       required={state.diferenteRecoleccion}
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -4318,6 +4322,7 @@ function Recoleccion() {
                                                                                        }
                                                                                        disabled={state.agregar === "Consultar"}
                                                                                        id="datosAdicionalesRecoleccion"
+                                                                                       required={state.diferenteRecoleccion}
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -4350,7 +4355,7 @@ function Recoleccion() {
                                                                                     labelId="ciudadEntregaLabel"
                                                                                     label="Ciudad"
                                                                                     className="form-control"
-
+                                                                                    required={state.diferenteEntrega}
                                                                                     value={state.ciudadEntrega}
                                                                                     disabled={state.agregar === "Consultar"}
                                                                                     onChange={handleChangeCiudadEntrega}
@@ -4390,6 +4395,7 @@ function Recoleccion() {
                                                                                 getOptionLabel={(option) =>
                                                                                     option.m_sCP
                                                                                 }
+                                                                                required={state.diferenteEntrega}
                                                                                 variant="outlined"
                                                                                 style={{
                                                                                     transform: "translate(14px, 10px) scale(1) !important"
@@ -4458,7 +4464,7 @@ function Recoleccion() {
                                                                                     labelId="zonaEntregaLabel"
                                                                                     label="Zona"
                                                                                     className="form-control"
-
+                                                                                    required={state.diferenteEntrega}
                                                                                     value={state.zonaEntrega}
                                                                                     disabled={state.agregar === "Consultar"}
                                                                                     onChange={handleChangeZonaEntrega}
@@ -4494,6 +4500,7 @@ function Recoleccion() {
                                                                                        value={state.domicilioEntrega}
                                                                                        disabled={state.agregar === "Consultar"}
                                                                                        id="domicilioEntrega"
+                                                                                       required={state.diferenteEntrega}
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -4511,6 +4518,7 @@ function Recoleccion() {
                                                                                        value={state.entregaEn}
                                                                                        disabled={state.agregar === "Consultar"}
                                                                                        id="entregaEn"
+                                                                                       required={state.diferenteEntrega}
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -4530,6 +4538,7 @@ function Recoleccion() {
                                                                                        }
                                                                                        disabled={state.agregar === "Consultar"}
                                                                                        id="datosAdicionalesEntrega"
+                                                                                       required={state.diferenteEntrega}
                                                                             />
                                                                         </div>
                                                                     </div>
