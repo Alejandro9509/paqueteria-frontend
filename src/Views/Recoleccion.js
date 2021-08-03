@@ -54,7 +54,7 @@ import { obtenerCiudades } from "../Util/Contexts/CiudadesContext";
 import {
     obtenerCodigoPostal,
     obtenerCodigoPostalCiudad, obtenerCodigoPostalEstado,
-    obtenerCodigoPostalId
+    obtenerCodigoPostalId, obtenerCodigosPostalesPorCiudad
 } from "../Util/Contexts/CodigoPostalContext";
 import { obtenerRemitentesDestinatarios } from "../Util/Contexts/RemitenteDestinatarioContext";
 import { obtenerEmbalajes } from "../Util/Contexts/EmbalajesContext";
@@ -122,6 +122,10 @@ function Recoleccion() {
     const [dataFolioRecoleccion, SetDataFolioRecoleccion] = React.useState([]);
 
     const [dataCodigoPostal, setDataCodigoPostal] = React.useState([]);
+    const [dataCodigosPostalesRemitente, setDataCodigosPostalesRemitente] = React.useState([]);
+    const [dataCodigosPostalesDestinatario, setDataCodigosPostalesDestinatario] = React.useState([]);
+    const [dataCodigosPostalesRecoleccion, setDataCodigosPostalesRecoleccion] = React.useState([]);
+    const [dataCodigosPostalesEntrega, setDataCodigosPostalesEntrega] = React.useState([]);
 
     const [dataRemitenteDestinatario, setDataRemitenteDestinatario] = React.useState([]);
     const [dataEmbalaje, setDataEmbalaje] = React.useState([]);
@@ -277,56 +281,51 @@ function Recoleccion() {
         // console.log(dataTipoMoneda)
     }, [state.moneda])*/
 
-    //Se iba a usar para obtener los cps que correspondieran al estado del destinatario que se seleccionó
-    /*useEffect( value => {
-        obtenerCodigoPostalEstado(state.nombreRemitente.m_nIdEstado).then((respuesta) => {
-            setDataCodigoPostal(respuesta.data);
-            if (respuesta.data.length > 0){
-                setState({
-                    ...state,
-                    codigoPostalRemitente: respuesta.data.find(
-                        (o) => o.m_nIdCP == parseInt(state.nombreRemitente.m_nIdCP)
-                    ),
-
-                    ciudadRemitente: respuesta.data.find(
-                        (o) => o.m_nIdCP == state.nombreRemitente.m_nIdCP
-                    ).m_nIdCiudad,
-                })
-            }
-
-
-        });
-    }, [state.nombreRemitente])*/
-
-    //Se iba a usar para obtener los cps que correspondieran al estado del destinatario que se seleccionó
-    /*useEffect( value => {
-        obtenerCodigoPostalEstado(state.nombreDestinatario.m_nIdEstado).then((respuesta) => {
-            setDataCodigoPostal(respuesta.data);
-            if (respuesta.data.length > 0) {
-                setState({
-                    ...state,
-                    codigoPostalDestinatario: respuesta.data.find(
-                        (o) => o.m_nIdCP == parseInt(state.nombreDestinatario.m_nIdCP)
-                    ),
-
-                    ciudadDestinatario: respuesta.data.find(
-                        (o) => o.m_nIdCP == state.nombreDestinatario.m_nIdCP
-                    ).m_nIdCiudad,
-                })
-            }
-        });
-    }, [state.nombreDestinatario])*/
-
-    //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para el destinatario
-    /*useEffect( value => {
-        if (state.ciudadDestinatario != ""){
-            obtenerCodigoPostalCiudad(state.ciudadDestinatario).then((respuesta) => {
+    //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para el remitente
+    useEffect( value => {
+        if (state.ciudadRemitente != ""){
+            obtenerCodigosPostalesPorCiudad(state.ciudadRemitente).then((respuesta) => {
+                console.log(respuesta.data)
                 if (respuesta.data.length > 0){
-                    setDataCodigoPostal(respuesta.data);
+                    setDataCodigosPostalesRemitente(respuesta.data);
                 }
             });
         }
-    }, [state.ciudadDestinatario])*/
+    }, [state.ciudadRemitente])
+
+    //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para el destinatario
+    useEffect( value => {
+        if (state.ciudadDestinatario != ""){
+            obtenerCodigosPostalesPorCiudad(state.ciudadDestinatario).then((respuesta) => {
+                console.log(respuesta.data)
+                if (respuesta.data.length > 0){
+                    setDataCodigosPostalesDestinatario(respuesta.data);
+                }
+            });
+        }
+    }, [state.ciudadDestinatario])
+
+    //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para recoleccion
+    useEffect( value => {
+        if (state.ciudadRecoleccion != ""){
+            obtenerCodigosPostalesPorCiudad(state.ciudadRecoleccion).then((respuesta) => {
+                if (respuesta.data.length > 0){
+                    setDataCodigosPostalesRecoleccion(respuesta.data);
+                }
+            });
+        }
+    }, [state.ciudadRecoleccion])
+
+    //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para entrega
+    useEffect( value => {
+        if (state.ciudadEntrega != ""){
+            obtenerCodigosPostalesPorCiudad(state.ciudadEntrega).then((respuesta) => {
+                if (respuesta.data.length > 0){
+                    setDataCodigosPostalesEntrega(respuesta.data);
+                }
+            });
+        }
+    }, [state.ciudadEntrega])
 
     useEffect((value) => {
         if (
@@ -343,7 +342,7 @@ function Recoleccion() {
         getAllTipoCobro();
         getAllTipoMoneda();
         getAllCiudades();
-        getAllCodigosPostales();
+        // getAllCodigosPostales();
         //getAllCodigosPostalesRem(state.ciudadRemitente);
         //getAllCodigosPostalesDes(state.ciudadDestinatario);
 
@@ -358,23 +357,21 @@ function Recoleccion() {
     }, []);
 
     function handleSelectRemitente(newValue) {
-        setState({
-            ...state,
-            nombreRemitente: newValue,
-            RFCRemitente: newValue.m_sRFC,
-            domicilioRemitente: newValue.m_sDomicilio,
+        obtenerCodigoPostalId(newValue.m_nIdCP).then(respuesta => {
+            setState({
+                ...state,
+                nombreRemitente: newValue,
+                RFCRemitente: newValue.m_sRFC,
+                domicilioRemitente: newValue.m_sDomicilio,
 
-            codigoPostalRemitente: dataCodigoPostal.find(
-                (o) => o.m_nIdCP == parseInt(newValue.m_nIdCP)
-            ),
+                codigoPostalRemitente: respuesta.data,
 
-            ciudadRemitente: dataCodigoPostal.find(
-                (o) => o.m_nIdCP == newValue.m_nIdCP
-            ).m_nIdCiudad,
+                ciudadRemitente: respuesta.data.m_nIdCiudad,
 
-            correoRemitente: newValue.m_sCorreoElectronico,
-            telefonoRemitente: newValue.m_sTelefono,
-            contactoRemitente: newValue.m_sContacto,
+                correoRemitente: newValue.m_sCorreoElectronico,
+                telefonoRemitente: newValue.m_sTelefono,
+                contactoRemitente: newValue.m_sContacto,
+            })
         })
 
         console.log('Remitente')
@@ -382,24 +379,23 @@ function Recoleccion() {
     }
 
     function handleSelectDestinatario(newValue) {
-        setState({
-            ...state,
-            nombreDestinatario: newValue,
-            RFCDestinatario: newValue.m_sRFC,
-            domicilioDestinatario: newValue.m_sDomicilio,
+        obtenerCodigoPostalId(newValue.m_nIdCP).then(respuesta => {
+            setState({
+                ...state,
+                nombreDestinatario: newValue,
+                RFCDestinatario: newValue.m_sRFC,
+                domicilioDestinatario: newValue.m_sDomicilio,
 
-            codigoPostalDestinatario: dataCodigoPostal.find(
-                (o) => o.m_nIdCP == newValue.m_nIdCP
-            ),
+                codigoPostalDestinatario: respuesta.data,
 
-            ciudadDestinatario: dataCodigoPostal.find(
-                (o) => o.m_nIdCP == newValue.m_nIdCP
-            ).m_nIdCiudad,
+                ciudadDestinatario: respuesta.data.m_nIdCiudad,
 
-            correoDestinatario: newValue.m_sCorreoElectronico,
-            telefonoDestinatario: newValue.m_sTelefono,
-            contactoDestinatario: newValue.m_sContacto,
+                correoDestinatario: newValue.m_sCorreoElectronico,
+                telefonoDestinatario: newValue.m_sTelefono,
+                contactoDestinatario: newValue.m_sContacto,
+            })
         })
+
         console.log('Destinatario')
         console.log(newValue)
 
@@ -450,7 +446,7 @@ function Recoleccion() {
             //Recoleccion
             m_dFechaDetalleRecoleccion: '',
             m_tHoraDetalleRecoleccion: '',
-            m_nIdCPDetalleRecoleccion: '',
+            m_nIdCPDetalleRecoleccion: state.codigoPostalRemitente.m_nIdCP,
             m_nIdCiudadDetalleRecoleccion: '',
             m_nIdZonaDetalleRecoleccion: '',
             m_sDomicilioDetalleRecoleccion: '',
@@ -459,7 +455,7 @@ function Recoleccion() {
             //state.diferenteRecoleccion
 
             //Entrega
-            m_nIdCPDetalleEntrega: '',
+            m_nIdCPDetalleEntrega: state.codigoPostalDestinatario.m_nIdCP,
             m_nIdCiudadDetalleEntrega: '',
             m_nIdZonaDetalleEntrega: '',
             m_sDomicilioDetalleEntrega: '',
@@ -708,7 +704,7 @@ function Recoleccion() {
         $('#Agregar').addClass('in show');
         obtenerRecoleccionId(id).then((respuesta) => {
             console.log(respuesta.data);
-            debugger;
+            // debugger;
             setState({
                 ...state,
                 agregar: "Modificar",
@@ -727,12 +723,13 @@ function Recoleccion() {
                 nombreRemitente: dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente),
                 RFCRemitente: respuesta.data.m_sRFCRemitente,
                 domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                codigoPostalRemitente: dataCodigoPostal.find(
+                /*codigoPostalRemitente: dataCodigoPostal.find(
                     (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalRemitente
-                ),
-                ciudadRemitente: dataCiudad.find(
+                ),*/
+                /*ciudadRemitente: dataCiudad.find(
                     (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadRemitente
-                ),
+                ),*/
+                ciudadRemitente: respuesta.data.m_nIdCiudadRemitente,
                 correoRemitente: respuesta.data.m_sCorreoRemitente,
                 telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
                 contactoRemitente: respuesta.data.m_sContactoRemitente,
@@ -753,30 +750,31 @@ function Recoleccion() {
                     (o) => o.m_nIdOperador == respuesta.data.m_nIdOperador
                 ) : {},
 
-                codigoPostalDestinatario: dataCodigoPostal.find(
+                /*codigoPostalDestinatario: dataCodigoPostal.find(
                     (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalDestinatario
-                ),
-                ciudadDestinatario: dataCiudad.find(
+                ),*/
+                /*ciudadDestinatario: dataCiudad.find(
                     (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestinatario
-                ),
+                ),*/
+                ciudadDestinatario: respuesta.data.m_nIdCiudadDestinatario,
                 correoDestinatario: respuesta.data.m_sCorreoDestinatario,
                 telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
                 contactoDestinatario: respuesta.data.m_sContactoDestinatario,
                 destinoDestinatario: dataCiudad.find(
                     (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino
                 ),
-                codigoPostalRecoleccion: dataCodigoPostal.find(
+                /*codigoPostalRecoleccion: dataCodigoPostal.find(
                     (o) => o.m_nIdCP == respuesta.data.m_nIdCPDetalleRecoleccion
-                ),
+                ),*/
                 ciudadRecoleccion: respuesta.data.m_nIdCiudadDetalleRecoleccion,
                 zonaRecoleccion: respuesta.data.m_nIdZonaDetalleRecoleccion,
                 domicilioRecoleccion: respuesta.data.m_sDomicilioDetalleRecoleccion,
                 recogerEn: respuesta.data.m_sRecogerEnDetalleRecoleccion,
                 datosAdicionalesRecoleccion:
                     respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
-                codigoPostalEntrega: dataCodigoPostal.find(
+                /*codigoPostalEntrega: dataCodigoPostal.find(
                     (o) => o.m_nIdCP == respuesta.data.m_nIdCPDetalleEntrega
-                ),
+                ),*/
                 ciudadEntrega: respuesta.data.m_nIdCiudadDetalleEntrega,
                 zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
                 domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
@@ -805,6 +803,35 @@ function Recoleccion() {
                 cantidadDePaquetes: respuesta.data.m_parrPaquetes.length,
                 cantidadDeSobres: respuesta.data.m_parrSobres.length,
             });
+
+           /* obtenerCodigoPostalId(respuesta.data.m_sIdCodigoPostalRemitente).then(cp => {
+                setState({
+                    ...state,
+                    codigoPostalRemitente: cp
+                })
+            })
+            obtenerCodigoPostalId(respuesta.data.m_sIdCodigoPostalDestinatario).then(cp => {
+                setState({
+                    ...state,
+                    codigoPostalDestinatario: cp
+                })
+            })
+            if (respuesta.data.m_nIdCPDetalleRecoleccion != respuesta.data.m_sIdCodigoPostalRemitente){
+                obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleRecoleccion).then(cp => {
+                    setState({
+                        ...state,
+                        codigoPostalRecoleccion: cp
+                    })
+                })
+            }
+            if (respuesta.data.m_sIdCodigoPostalDestinatario != respuesta.data.m_nIdCPDetalleEntrega){
+                obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleEntrega).then(cp => {
+                    setState({
+                        ...state,
+                        codigoPostalEntrega: cp
+                    })
+                })
+            }*/
         });
     }
 
@@ -833,9 +860,9 @@ function Recoleccion() {
                 nombreRemitente: dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente),
                 RFCRemitente: respuesta.data.m_sRFCRemitente,
                 domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                codigoPostalRemitente: dataCodigoPostal.find(
+                /*codigoPostalRemitente: dataCodigoPostal.find(
                     (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalRemitente
-                ),
+                ),*/
                 ciudadRemitente: dataCiudad.find(
                     (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadRemitente
                 ),
@@ -855,9 +882,9 @@ function Recoleccion() {
                 operador: dataOperador.find(
                     (o) => o.m_nIdOperador == respuesta.data.m_nIdOperador
                 ),
-                codigoPostalDestinatario: dataCodigoPostal.find(
+                /*codigoPostalDestinatario: dataCodigoPostal.find(
                     (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalDestinatario
-                ),
+                ),*/
                 ciudadDestinatario: dataCiudad.find(
                     (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestinatario
                 ),
@@ -867,18 +894,18 @@ function Recoleccion() {
                 destinoDestinatario: dataCiudad.find(
                     (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino
                 ),
-                codigoPostalRecoleccion: dataCodigoPostal.find(
+                /*codigoPostalRecoleccion: dataCodigoPostal.find(
                     (o) => o.m_nIdCP == respuesta.data.m_nIdCPDetalleRecoleccion
-                ),
+                ),*/
                 ciudadRecoleccion: respuesta.data.m_nIdCiudadDetalleRecoleccion,
                 zonaRecoleccion: respuesta.data.m_nIdZonaDetalleRecoleccion,
                 domicilioRecoleccion: respuesta.data.m_sDomicilioDetalleRecoleccion,
                 recogerEn: respuesta.data.m_sRecogerEnDetalleRecoleccion,
                 datosAdicionalesRecoleccion:
                     respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
-                codigoPostalEntrega: dataCodigoPostal.find(
+                /*codigoPostalEntrega: dataCodigoPostal.find(
                     (o) => o.m_nIdCP == respuesta.data.m_nIdCPDetalleEntrega
-                ),
+                ),*/
                 ciudadEntrega: respuesta.data.m_nIdCiudadDetalleEntrega,
                 zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
                 domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
@@ -1446,10 +1473,10 @@ function Recoleccion() {
     }
 
     async function getAllCodigosPostales() {
-        obtenerCodigoPostal().then((respuesta) => {
+        /*obtenerCodigoPostal().then((respuesta) => {
             console.log(respuesta.data)
             setDataCodigoPostal(respuesta.data);
-        });
+        });*/
     }
 
 
@@ -2377,9 +2404,9 @@ function Recoleccion() {
 
                             </div>
 
-                            {dataCodigoPostal.length !== 0 ? <TableCodigoPostal object={state}
+                            {dataCodigosPostalesRemitente.length !== 0 ? <TableCodigoPostal object={state}
                                 select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP}
-                                columns={columnsCP} data={dataCodigoPostal.filter((cp) => cp.m_nIdCiudad == state.ciudadRemitente)}
+                                columns={columnsCP} data={dataCodigosPostalesRemitente.filter((cp) => cp.m_nIdCiudad == state.ciudadRemitente)}
                                 identificadorModal={state.identificadorModal} /> :
                                 <div>No se encontró ningún registro</div>}
 
@@ -2405,9 +2432,9 @@ function Recoleccion() {
 
                         </div>
 
-                        {dataCodigoPostal.length !== 0 ? <TableCodigoPostal object={state}
+                        {dataCodigosPostalesDestinatario.length !== 0 ? <TableCodigoPostal object={state}
                                                                             select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP}
-                                                                            columns={columnsCP} data={dataCodigoPostal.filter((cp) => cp.m_nIdCiudad == state.ciudadDestinatario)}
+                                                                            columns={columnsCP} data={dataCodigosPostalesDestinatario.filter((cp) => cp.m_nIdCiudad == state.ciudadDestinatario)}
                                                                             identificadorModal={state.identificadorModal} /> :
                             <div>No se encontró ningún registro</div>}
 
@@ -2433,9 +2460,9 @@ function Recoleccion() {
 
                         </div>
 
-                        {dataCodigoPostal.length !== 0 ? <TableCodigoPostal object={state}
+                        {dataCodigosPostalesRecoleccion.length !== 0 ? <TableCodigoPostal object={state}
                                                                             select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP}
-                                                                            columns={columnsCP} data={dataCodigoPostal.filter((cp) => cp.m_nIdCiudad == state.ciudadRecoleccion)}
+                                                                            columns={columnsCP} data={dataCodigosPostalesRecoleccion.filter((cp) => cp.m_nIdCiudad == state.ciudadRecoleccion)}
                                                                             identificadorModal={state.identificadorModal} /> :
                             <div>No se encontró ningún registro</div>}
 
@@ -2461,9 +2488,9 @@ function Recoleccion() {
 
                         </div>
 
-                        {dataCodigoPostal.length !== 0 ? <TableCodigoPostal object={state}
+                        {dataCodigosPostalesEntrega.length !== 0 ? <TableCodigoPostal object={state}
                                                                             select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP}
-                                                                            columns={columnsCP} data={dataCodigoPostal.filter((cp) => cp.m_nIdCiudad == state.ciudadEntrega)}
+                                                                            columns={columnsCP} data={dataCodigosPostalesEntrega.filter((cp) => cp.m_nIdCiudad == state.ciudadEntrega)}
                                                                             identificadorModal={state.identificadorModal} /> :
                             <div>No se encontró ningún registro</div>}
 
@@ -3333,7 +3360,7 @@ function Recoleccion() {
                                                                                 onChange={(event, newValue) => {
                                                                                     console.log(state.ciudadRemitente)
                                                                                     console.log(
-                                                                                        dataCodigoPostal.filter(cp => cp.m_nIdCiudad == state.ciudadRemitente))
+                                                                                        dataCodigosPostalesRemitente.filter(cp => cp.m_nIdCiudad == state.ciudadRemitente))
                                                                                     setState({
                                                                                         ...state,
                                                                                         codigoPostalRemitente: newValue
@@ -3342,7 +3369,7 @@ function Recoleccion() {
                                                                                 id="codigoPostalRemitente"
                                                                                 disableClearable
                                                                                 forcePopupIcon={false}
-                                                                                options={dataCodigoPostal.filter((cp) => cp.m_nIdCiudad == state.ciudadRemitente)}
+                                                                                options={dataCodigosPostalesRemitente.filter((cp) => cp.m_nIdCiudad == state.ciudadRemitente)}
                                                                                 disabled={state.agregar === "Consultar"}
                                                                                 getOptionLabel={(option) =>
                                                                                     option.m_sCP
@@ -3731,7 +3758,7 @@ function Recoleccion() {
                                                                             disabled={state.agregar === "Consultar"}
                                                                             id="codigoPostalDestinatario"
                                                                             disableClearable
-                                                                            options={dataCodigoPostal.filter((cp) => cp.m_nIdCiudad == state.ciudadDestinatario)}
+                                                                            options={dataCodigosPostalesDestinatario.filter((cp) => cp.m_nIdCiudad == state.ciudadDestinatario)}
                                                                             getOptionLabel={(option) => option.m_sCP}
                                                                             variant="outlined"
                                                                             style={{
@@ -4175,7 +4202,7 @@ function Recoleccion() {
                                                                                 }
                                                                                 id="codigoPostalRecoleccion"
                                                                                 disableClearable
-                                                                                options={dataCodigoPostal.filter((cp) => cp.m_nIdCiudad == state.ciudadRecoleccion)}
+                                                                                options={dataCodigosPostalesRecoleccion.filter((cp) => cp.m_nIdCiudad == state.ciudadRecoleccion)}
                                                                                 disabled={state.agregar === "Consultar"}
                                                                                 getOptionLabel={(option) =>
                                                                                     option.m_sCP
@@ -4390,7 +4417,7 @@ function Recoleccion() {
                                                                                 value={state.codigoPostalEntrega}
                                                                                 id="codigoPostalEntrega"
                                                                                 disableClearable
-                                                                                options={dataCodigoPostal.filter((cp) => cp.m_nIdCiudad == state.ciudadEntrega)}
+                                                                                options={dataCodigosPostalesEntrega.filter((cp) => cp.m_nIdCiudad == state.ciudadEntrega)}
                                                                                 disabled={state.agregar === "Consultar"}
                                                                                 getOptionLabel={(option) =>
                                                                                     option.m_sCP
