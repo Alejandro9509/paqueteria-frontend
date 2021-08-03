@@ -140,7 +140,6 @@ function Embarque(props) {
     const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
     const [dataCiudad, setDataCiudad] = React.useState([]);
-    const [dataCodigoPostal, setDataCodigoPostal] = React.useState([]);
     const [dataCodigosPostalesRemitente, setDataCodigosPostalesRemitente] = React.useState([]);
     const [dataCodigosPostalesDestinatario, setDataCodigosPostalesDestinatario] = React.useState([]);
     const [dataCodigosPostalesEntrega, setDataCodigosPostalesEntrega] = React.useState([]);
@@ -152,12 +151,7 @@ function Embarque(props) {
     const [dataEmbalaje, setDataEmbalaje] = React.useState([]);
     const [dataFolioEmbarque, SetDataFolioEmbarque] = React.useState([]);
     const [dataFormatos, setFormatosImpresion] = React.useState([]);
-
-    const [
-        dataRemitenteDestinatario,
-        setDataRemitenteDestinatario,
-    ] = React.useState([]);
-
+    const [dataRemitenteDestinatario, setDataRemitenteDestinatario,] = React.useState([]);
     const [state, setState] = React.useState({
         DerechoBorrar: 139,
         identificadorModal: "",
@@ -269,14 +263,130 @@ function Embarque(props) {
         preventScroll: true,
     });
 
-    const history = useHistory();
+    const columnsRemitenteDestinatarios = React.useMemo(() => [
+        {
+            Name: "Número",
+            accessor: "m_nNumero",
+        },
+        {
+            Name: "RFC",
+            accessor: "m_sRFC",
+        },
+        {
+            Name: "Remitente-Destinatario",
+            accessor: "m_sNombre",
+        },
+        {
+            Name: "Núm.Cliente",
+            accessor: "m_nNumeroCliente",
+        },
+        {
+            Name: "Cliente",
+            accessor: "m_sNombreFiscal",
+        },
+    ]);
+    const columnsCP = React.useMemo(() => [
+        {
+            Name: "Codigo",
+            accessor: "m_sCP",
+        },
+        {
+            Name: "Estado",
+            accessor: "m_sEstado",
+        },
+        {
+            Name: "Ciudad",
+            accessor: "m_sCiudad",
+        },
+    ]);
+    const columnsCiudades = React.useMemo(() => [
+        {
+            Name: "Codigo",
+            accessor: "m_nCodigo",
+        },
+        {
+            Name: "Ciudad",
+            accessor: "m_sCiudad",
+        },
+        {
+            Name: "Abreviacion",
+            accessor: "m_sAbreviacion",
+        },
+        {
+            Name: "Estado",
+            accessor: "m_nIdEstado",
+        },
+    ]);
+    const columnsOperadores = React.useMemo(() => [
+        {
+            Name: "Numero Operador",
+            accessor: "m_nNumeroOperador",
+        },
+        {
+            Name: "Nombre",
+            accessor: "m_sNombreCompleto",
+        },
+        {
+            Name: "Activo",
+            accessor: "m_bActivo",
+            width: 100,
+            renderCell: (row) => {
+                return (
+                    <div
+                        style={{
+                            width: "100%",
+                            textAlign: "center",
+                            color: row.row.m_bActivo === "true" ? "green" : "red",
+                        }}
+                    >
+                        {row.row.m_bActivo ? (
+                            <SvgIcon component={Activo} />
+                        ) : (
+                            <SvgIcon component={NoActivo} />
+                        )}
+                    </div>
+                );
+            },
+        },
+    ]);
+    const columnsTipoUnidades = React.useMemo(() => [
+        {
+            Name: "Tipo de unidad",
+            accessor: "m_nIdTipoUnidad",
+        },
+        {
+            Name: "Identificador",
+            accessor: "m_nIdentificador",
+        },
+        {
+            Name: "Nomenclatura",
+            accessor: "m_sNomenclaturaSCT",
+        },
+        {
+            Name: "Estatus",
+            accessor: "m_bActivo",
+        },
+    ]);
+    const columnsUnidades = React.useMemo(() => [
+        {
+            Name: "Descripcion",
+            accessor: "m_sDescripcion",
+        },
+        {
+            Name: "Codigo",
+            accessor: "m_sCodigo",
+        },
+        {
+            Name: "Tipo de unidad",
+            accessor: "m_nIdTipoUnidad",
+        },
+        {
+            Name: "Estatus",
+            accessor: "m_bActivo",
+        },
+    ]);
 
-    function handleSelectCodigoPostal() {
-        //state.ciudadEntrega = state.codigoPostalEntrega.m_nIdCiudad
-        //setState.ciudadEntrega= dataCiudad.find(
-        //   (o) => o.m_nIdCiudad == state.codigoPostalEntrega.m_nIdCiudad
-        //)
-    }
+    const history = useHistory();
 
     //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para el remitente
     useEffect( value => {
@@ -574,29 +684,6 @@ function Embarque(props) {
         console.log(state.identificadorModal);
     }
 
-    function addPaquete() {
-        const { paquetes } = state;
-        paquetes.push({
-            m_xPeso: "",
-            m_xLargo: "",
-            m_xAncho: "",
-            m_xAlto: "",
-            m_xVolumen: "",
-            m_nIdTIpoEmpaque: "",
-            m_cValorDeclarado: "",
-            m_sDescripcion: "",
-            m_nCantidad: "",
-            m_nTipo: 2,
-            m_sObservaciones: "",
-        });
-        console.log(paquetes);
-        setState({
-            ...state,
-            paquetes: paquetes,
-            countPaquetes: state.countPaquetes + 1,
-        });
-    }
-
     function getTipoCambio() {
         obtenerTipoCambio().then(respuesta => {
             setDataTipoCambio(respuesta.data)
@@ -606,58 +693,6 @@ function Embarque(props) {
             })
         });
     }
-
-    function removePaquete(index) {
-        var { paquetes } = state;
-        if (paquetes.length !== 1) {
-            paquetes.pop();
-            setState({
-                ...state,
-                paquetes: paquetes,
-                countPaquetes: state.countPaquetes - 1,
-            });
-        }
-    }
-
-    function addSobre() {
-        const { sobres } = state;
-        sobres.push({
-            m_nTipo: 1,
-            m_sDescripcion: "",
-        });
-        console.log(sobres);
-        setState({ ...state, sobres: sobres, countSobres: state.countSobres + 1 });
-    }
-
-    function removeSobre(index) {
-        var { sobres } = state;
-        if (sobres.length !== 1) {
-            sobres.pop();
-            setState({
-                ...state,
-                sobres: sobres,
-                countSobres: state.countSobres - 1,
-            });
-        }
-    }
-
-    const handleChangePaquete = (event, index) => {
-        var { paquetes } = state;
-        paquetes[index][event.target.name] = event.target.value;
-        setState({
-            ...state,
-            paquetes: paquetes,
-        });
-    };
-
-    const handleChangeSobre = (event, index) => {
-        var { sobres } = state;
-        sobres[index][event.target.name] = event.target.value;
-        setState({
-            ...state,
-            sobres: sobres,
-        });
-    };
 
     function handleEliminar(id) {
         var derecho;
@@ -1262,7 +1297,6 @@ function Embarque(props) {
         });
     };
 
-
     function handleSelectDatos(id, cp) {
         setState({
             ...state,
@@ -1271,7 +1305,6 @@ function Embarque(props) {
         console.log(id);
         console.log(state.identificadorModal);
     }
-
 
     const columns = React.useMemo(() => [
         {
@@ -1414,14 +1447,12 @@ function Embarque(props) {
         },
     ]);
 
-    
     function getAllZonas() {
         const url = `${process.env.REACT_APP_API_URL}/Zonas/GetListado`;
         axios.get(url, { headers }).then((respuesta) => {
             setDataZona(respuesta.data);
         });
     }
-
 
     const handleChangeZonaEntrega = (event) => {
         event.preventDefault();
@@ -1430,134 +1461,6 @@ function Embarque(props) {
             zonaEntrega: event.target.value,
         });
     }
-
-    const columnsRemitenteDestinatarios = React.useMemo(() => [
-        {
-            Name: "Número",
-            accessor: "m_nNumero",
-        },
-        {
-            Name: "RFC",
-            accessor: "m_sRFC",
-        },
-        {
-            Name: "Remitente-Destinatario",
-            accessor: "m_sNombre",
-        },
-        {
-            Name: "Núm.Cliente",
-            accessor: "m_nNumeroCliente",
-        },
-        {
-            Name: "Cliente",
-            accessor: "m_sNombreFiscal",
-        },
-    ]);
-
-    const columnsCP = React.useMemo(() => [
-        {
-            Name: "Codigo",
-            accessor: "m_sCP",
-        },
-        {
-            Name: "Estado",
-            accessor: "m_sEstado",
-        },
-        {
-            Name: "Ciudad",
-            accessor: "m_sCiudad",
-        },
-    ]);
-
-    const columnsCiudades = React.useMemo(() => [
-        {
-            Name: "Codigo",
-            accessor: "m_nCodigo",
-        },
-        {
-            Name: "Ciudad",
-            accessor: "m_sCiudad",
-        },
-        {
-            Name: "Abreviacion",
-            accessor: "m_sAbreviacion",
-        },
-        {
-            Name: "Estado",
-            accessor: "m_nIdEstado",
-        },
-    ]);
-
-    const columnsOperadores = React.useMemo(() => [
-        {
-            Name: "Numero Operador",
-            accessor: "m_nNumeroOperador",
-        },
-        {
-            Name: "Nombre",
-            accessor: "m_sNombreCompleto",
-        },
-        {
-            Name: "Activo",
-            accessor: "m_bActivo",
-            width: 100,
-            renderCell: (row) => {
-                return (
-                    <div
-                        style={{
-                            width: "100%",
-                            textAlign: "center",
-                            color: row.row.m_bActivo === "true" ? "green" : "red",
-                        }}
-                    >
-                        {row.row.m_bActivo ? (
-                            <SvgIcon component={Activo} />
-                        ) : (
-                            <SvgIcon component={NoActivo} />
-                        )}
-                    </div>
-                );
-            },
-        },
-    ]);
-
-    const columnsTipoUnidades = React.useMemo(() => [
-        {
-            Name: "Tipo de unidad",
-            accessor: "m_nIdTipoUnidad",
-        },
-        {
-            Name: "Identificador",
-            accessor: "m_nIdentificador",
-        },
-        {
-            Name: "Nomenclatura",
-            accessor: "m_sNomenclaturaSCT",
-        },
-        {
-            Name: "Estatus",
-            accessor: "m_bActivo",
-        },
-    ]);
-
-    const columnsUnidades = React.useMemo(() => [
-        {
-            Name: "Descripcion",
-            accessor: "m_sDescripcion",
-        },
-        {
-            Name: "Codigo",
-            accessor: "m_sCodigo",
-        },
-        {
-            Name: "Tipo de unidad",
-            accessor: "m_nIdTipoUnidad",
-        },
-        {
-            Name: "Estatus",
-            accessor: "m_bActivo",
-        },
-    ]);
 
     useEffect(
         async (value) => {
@@ -1775,8 +1678,8 @@ function Embarque(props) {
         });
     }
 
-    async function getAllCodigosPostales() {
-        /*obtenerCodigoPostal().then((respuesta) => {
+    /*async function getAllCodigosPostales() {
+        /!*obtenerCodigoPostal().then((respuesta) => {
             setDataCodigoPostal(respuesta.data);
             console.log(respuesta.data)
             setState({
@@ -1788,8 +1691,8 @@ function Embarque(props) {
                     (o) => o.m_nIdCP == state.idCodigoPostalDestinatarioTemp
                 ),
             })
-        });*/
-    }
+        });*!/
+    }*/
 
     async function getAllOperadores() {
         obtenerOperadores().then((respuesta) => {
@@ -1815,8 +1718,6 @@ function Embarque(props) {
             setDataEmbalaje(respuesta.data);
         });
     }
-
-
 
     const headers = {
         "Content-Type": "application/json",
@@ -2422,8 +2323,6 @@ function Embarque(props) {
         );
     }
 
-
-
     if (redirect) {
         if (
             data.find((o) => o.m_nIdEmbarque == state.idEmbarque).m_sFolioGuia != ""
@@ -2441,6 +2340,83 @@ function Embarque(props) {
             );
         }
     }
+
+    /*=PAQUETES Y SOBRES=*/
+
+    function addPaquete() {
+        const { paquetes } = state;
+        paquetes.push({
+            m_xPeso: "",
+            m_xLargo: "",
+            m_xAncho: "",
+            m_xAlto: "",
+            m_xVolumen: "",
+            m_nIdTIpoEmpaque: "",
+            m_cValorDeclarado: "",
+            m_sDescripcion: "",
+            m_nCantidad: "",
+            m_nTipo: 2,
+            m_sObservaciones: "",
+        });
+        console.log(paquetes);
+        setState({
+            ...state,
+            paquetes: paquetes,
+            countPaquetes: state.countPaquetes + 1,
+        });
+    }
+
+    function removePaquete(index) {
+        var { paquetes } = state;
+        if (paquetes.length !== 1) {
+            paquetes.pop();
+            setState({
+                ...state,
+                paquetes: paquetes,
+                countPaquetes: state.countPaquetes - 1,
+            });
+        }
+    }
+
+    function addSobre() {
+        const { sobres } = state;
+        sobres.push({
+            m_nTipo: 1,
+            m_sDescripcion: "",
+        });
+        console.log(sobres);
+        setState({ ...state, sobres: sobres, countSobres: state.countSobres + 1 });
+    }
+
+    function removeSobre(index) {
+        var { sobres } = state;
+        if (sobres.length !== 1) {
+            sobres.pop();
+            setState({
+                ...state,
+                sobres: sobres,
+                countSobres: state.countSobres - 1,
+            });
+        }
+    }
+
+    const handleChangePaquete = (event, index) => {
+        var { paquetes } = state;
+        paquetes[index][event.target.name] = event.target.value;
+        setState({
+            ...state,
+            paquetes: paquetes,
+        });
+    };
+
+    const handleChangeSobre = (event, index) => {
+        var { sobres } = state;
+        sobres[index][event.target.name] = event.target.value;
+        setState({
+            ...state,
+            sobres: sobres,
+        });
+    };
 
     const framesPaquete = state.paquetes.map((p, index) => {
         return (
