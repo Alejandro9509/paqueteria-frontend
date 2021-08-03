@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="94d8e9cf-07c8-4a10-b81b-63018b1e29c3" name="Default Changelist" comment="Ahora cuando se selecciona entrega o recoleccion en diferente domicilio los campos de estos apartados se vuelven necesarios">
-      <change afterPath="$PROJECT_DIR$/src/Views/Recoleccion/CrearRecoleccion.js" afterDir="false" />
+    <list default="true" id="94d8e9cf-07c8-4a10-b81b-63018b1e29c3" name="Default Changelist" comment="Se optimizó el uso de codigos postales">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Util/Contexts/CodigoPostalContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/CodigoPostalContext.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Recoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Recoleccion.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -130,7 +129,7 @@
       <workItem from="1627663116282" duration="2349000" />
       <workItem from="1627705319350" duration="2047000" />
       <workItem from="1627918796294" duration="22555000" />
-      <workItem from="1628006990398" duration="7683000" />
+      <workItem from="1628006990398" duration="15129000" />
     </task>
     <task id="LOCAL-00001" summary="*Algunos pedazos de codigos se sustituyeron con componentes.&#10;*Listado de formatos se muestra correctamente&#10;*Mejor acomodo en pestaña domicilios">
       <created>1624952066000</created>
@@ -349,7 +348,14 @@
       <option name="project" value="LOCAL" />
       <updated>1627946738326</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="Se optimizó el uso de codigos postales">
+      <created>1628017386611</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1628017386612</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -404,7 +410,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="* Se traen los accesos directos de los servicios" />
     <MESSAGE value="Se agregaron filtros para conceptos de tarifas" />
     <MESSAGE value="Se agregaron los filtros necesarios" />
     <MESSAGE value="Se agregaron validacionees para obligar a seleccionar sucursal y destino antes de otros datos" />
@@ -429,14 +434,15 @@
     <MESSAGE value="Se arregló problema de espera por codigos postales" />
     <MESSAGE value="Se agregaron validaciones para mandar los datos correctos en caso de recoleccion en domicilio diferente y en caso de entrega en domicilio diferente" />
     <MESSAGE value="Ahora cuando se selecciona entrega o recoleccion en diferente domicilio los campos de estos apartados se vuelven necesarios" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ahora cuando se selecciona entrega o recoleccion en diferente domicilio los campos de estos apartados se vuelven necesarios" />
+    <MESSAGE value="Se optimizó el uso de codigos postales" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se optimizó el uso de codigos postales" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/Views/Recoleccion.js</url>
-          <line>2873</line>
+          <line>2875</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>

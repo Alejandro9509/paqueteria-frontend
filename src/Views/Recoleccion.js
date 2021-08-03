@@ -502,7 +502,7 @@ function Recoleccion() {
         console.log(params)
         console.log(JSON.stringify(params))
         if (state.idRecoleccion != 0) {
-            /*modificarRecoleccion(state.idRecoleccion, params)
+            modificarRecoleccion(state.idRecoleccion, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     getAllData();
@@ -510,13 +510,14 @@ function Recoleccion() {
                     $('.nav-tabs li').eq(0).addClass('active');
                     $('.tab-content div ').removeClass('in show');
                     $('#Listado').addClass('in show');
+                    clearInputs()
                 })
                 .catch((err) => {
                     console.log(err);
                     showSuccess("err");
-                });*/
+                });
         } else {
-            /*agregarRecoleccion(params)
+            agregarRecoleccion(params)
                 .then((respuesta) => {
                     console.log(respuesta.data);
                     showSuccess(respuesta.data);
@@ -525,14 +526,15 @@ function Recoleccion() {
                     $('.nav-tabs li').eq(0).addClass('active');
                     $('.tab-content div ').removeClass('in show');
                     $('#Listado').addClass('in show');
+                    clearInputs()
                 })
                 .catch((err) => {
                     console.log(err);
                     showSuccess(err);
-                });*/
+                });
         }
 
-        // clearInputs()
+
     };
 
     function getTipoCambio() {

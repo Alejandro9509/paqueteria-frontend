@@ -41,7 +41,11 @@ import { dataGridLocaleText } from "../Constants";
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import { obtenerCiudades } from "../Util/Contexts/CiudadesContext";
-import { obtenerCodigoPostal } from "../Util/Contexts/CodigoPostalContext";
+import {
+    obtenerCodigoPostal,
+    obtenerCodigoPostalId,
+    obtenerCodigosPostalesPorCiudad
+} from "../Util/Contexts/CodigoPostalContext";
 import { obtenerRemitentesDestinatarios } from "../Util/Contexts/RemitenteDestinatarioContext";
 import { obtenerEmbalajes } from "../Util/Contexts/EmbalajesContext";
 import { cancelarEmbarque, eliminarEmbarques, obtenerEmbarquesId, obtenerUltimoFolioEmbarques, obtenerEmbarqueCancelado, agregarEmbarques, modificarEmbarques, obtenerEmbarquesFiltro, obtenerEmbarques } from "../Util/Contexts/EmbarquesContext";
@@ -137,6 +141,9 @@ function Embarque(props) {
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
     const [dataCiudad, setDataCiudad] = React.useState([]);
     const [dataCodigoPostal, setDataCodigoPostal] = React.useState([]);
+    const [dataCodigosPostalesRemitente, setDataCodigosPostalesRemitente] = React.useState([]);
+    const [dataCodigosPostalesDestinatario, setDataCodigosPostalesDestinatario] = React.useState([]);
+    const [dataCodigosPostalesEntrega, setDataCodigosPostalesEntrega] = React.useState([]);
     const [dataOperador, setDataOperador] = React.useState([]);
     const [dataTipoUnidad, setDataTipoUnidad] = React.useState([]);
     const [dataUnidad, setDataUnidad] = React.useState([]);
@@ -193,25 +200,25 @@ function Embarque(props) {
         domicilioRemitente: "",
         codigoPostalRemitente: {},
         idCodigoPostalRemitenteTemp : 0,
-        ciudadRemitente: {},
+        ciudadRemitente: "",
         correoRemitente: "",
         telefonoRemitente: "",
         contactoRemitente: "",
-        ciudadDestino: {},
+        ciudadDestino: "",
         nombreDestinatario: "",
         RFCDestinatario: "",
         domicilioDestinatario: "",
-        codigoPostalDestinatario: {},
+        codigoPostalDestinatario: "",
         idCodigoPostalDestinatarioTemp : 0,
-        ciudadDestinatario: {},
+        ciudadDestinatario: "",
         correoDestinatario: "",
         telefonoDestinatario: "",
         contactoDestinatario: "",
         ciudadOrigen: {},
         fechaEntrega: "",
         horaEntrega: "",
-        codigoPostalEntrega: {},
-        ciudadEntrega: {},
+        codigoPostalEntrega: "",
+        ciudadEntrega: "",
         zonaEntrega: 0,
         domicilioEntrega: "",
         entregaEn: "",
@@ -271,50 +278,81 @@ function Embarque(props) {
         //)
     }
 
+    //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para el remitente
+    useEffect( value => {
+        if (state.ciudadRemitente != ""){
+            obtenerCodigosPostalesPorCiudad(state.ciudadRemitente).then((respuesta) => {
+                console.log(respuesta.data)
+                if (respuesta.data.length > 0){
+                    setDataCodigosPostalesRemitente(respuesta.data);
+                }
+            });
+        }
+    }, [state.ciudadRemitente])
+
+    //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para el destinatario
+    useEffect( value => {
+        if (state.ciudadDestinatario != ""){
+            obtenerCodigosPostalesPorCiudad(state.ciudadDestinatario).then((respuesta) => {
+                console.log(respuesta.data)
+                if (respuesta.data.length > 0){
+                    setDataCodigosPostalesDestinatario(respuesta.data);
+                }
+            });
+        }
+    }, [state.ciudadDestinatario])
+
+    //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para entrega
+    useEffect( value => {
+        if (state.ciudadEntrega != ""){
+            obtenerCodigosPostalesPorCiudad(state.ciudadEntrega).then((respuesta) => {
+                if (respuesta.data.length > 0){
+                    setDataCodigosPostalesEntrega(respuesta.data);
+                }
+            });
+        }
+    }, [state.ciudadEntrega])
+
     function handleSelectRemitente(newValue) {
         console.log(newValue)
         let user = newValue
-        setState({
-            ...state,
-            nombreRemitente: user,
-            RFCRemitente: user.m_sRFC,
-            domicilioRemitente: user.m_sDomicilio,
+        obtenerCodigoPostalId(newValue.m_nIdCP).then(respuesta => {
+            setState({
+                ...state,
+                nombreRemitente: user,
+                RFCRemitente: user.m_sRFC,
+                domicilioRemitente: user.m_sDomicilio,
 
-            codigoPostalRemitente: dataCodigoPostal.find(
-                (o) => o.m_nIdCP == user.m_nIdCP
-            ),
+                codigoPostalRemitente: respuesta.data,
 
-            ciudadRemitente: dataCiudad.find(
-                (o) => o.m_nIdCiudad == dataCodigoPostal.find((o) => o.m_nIdCP == user.m_nIdCP).m_nIdCiudad
-            ),
+                ciudadRemitente: respuesta.data.m_nIdCiudad,
 
-            correoRemitente: user.m_sCorreoElectronico,
-            telefonoRemitente: user.m_sTelefono,
-            contactoRemitente: user.m_sContacto,
-        });
+                correoRemitente: user.m_sCorreoElectronico,
+                telefonoRemitente: user.m_sTelefono,
+                contactoRemitente: user.m_sContacto,
+            });
+        })
 
     }
 
     function handleSelectDestinatario(newValue) {
-        setState({
-            ...state,
-            nombreDestinatario: newValue,
-            RFCDestinatario: newValue.m_sRFC,
-            domicilioDestinatario: newValue.m_sDomicilio,
+        obtenerCodigoPostalId(newValue.m_nIdCP).then(respuesta => {
+            setState({
+                ...state,
+                nombreDestinatario: newValue,
+                RFCDestinatario: newValue.m_sRFC,
+                domicilioDestinatario: newValue.m_sDomicilio,
 
-            codigoPostalDestinatario: dataCodigoPostal.find(
-                (o) => o.m_nIdCP == newValue.m_nIdCP
-            ),
+                codigoPostalDestinatario: respuesta.data,
 
-            ciudadDestinatario: dataCiudad.find(
-                (o) => o.m_nIdCiudad ==
-                    dataCodigoPostal.find((o) => o.m_nIdCP == newValue.m_nIdCP).m_nIdCiudad
-            ),
+                ciudadDestinatario: respuesta.data.m_nIdCiudad,
 
-            correoDestinatario: newValue.m_sCorreoElectronico,
-            telefonoDestinatario: newValue.m_sTelefono,
-            contactoDestinatario: newValue.m_sContacto,
-        });
+                correoDestinatario: newValue.m_sCorreoElectronico,
+                telefonoDestinatario: newValue.m_sTelefono,
+                contactoDestinatario: newValue.m_sContacto,
+            });
+        })
+
     }
 
     const handleAceptar = (e) => {
@@ -459,7 +497,7 @@ function Embarque(props) {
         console.log(JSON.stringify(params))
 
         if (state.idEmbarque != 0) {
-            modificarEmbarques(state.idEmbarque, params)
+            /*modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     getAllEmbarque();
@@ -471,9 +509,9 @@ function Embarque(props) {
                 .catch((err) => {
                     console.log(err);
                     showSuccess("El Usuario no tiene derecho para modificar");
-                });
+                });*/
         } else {
-            agregarEmbarques(params)
+            /*agregarEmbarques(params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     console.log(respuesta.data);
@@ -486,7 +524,7 @@ function Embarque(props) {
                 .catch((err) => {
                     console.log(err);
                     showSuccess(err);
-                });
+                });*/
         }
     };
 
@@ -498,12 +536,12 @@ function Embarque(props) {
                 RFCRemitente: id.m_sRFC,
                 domicilioRemitente: id.m_sDomicilio,
 
-                codigoPostalRemitente: dataCodigoPostal.find(
+                /*codigoPostalRemitente: dataCodigoPostal.find(
                     (o) => o.m_nIdCP == id.m_nIdCP
-                ),
+                ),*/
 
                 ciudadRemitente: dataCiudad.find(
-                    (o) => o.m_nIdCiudad == dataCodigoPostal.find((o) => o.m_nIdCP == id.m_nIdCP).m_nIdCiudad
+                    (o) => o.m_nIdCiudad == dataCodigosPostalesRemitente.find((o) => o.m_nIdCP == id.m_nIdCP).m_nIdCiudad
                 ),
 
                 correoRemitente: id.m_sCorreoElectronico,
@@ -517,13 +555,13 @@ function Embarque(props) {
                 RFCDestinatario: id.m_sRFC,
                 domicilioDestinatario: id.m_sDomicilio,
 
-                codigoPostalDestinatario: dataCodigoPostal.find(
+                /*codigoPostalDestinatario: dataCodigosPostalesDestinatario.find(
                     (o) => o.m_nIdCP == id.m_nIdCP
-                ),
+                ),*/
 
                 ciudadDestinatario: dataCiudad.find(
                     (o) => o.m_nIdCiudad ==
-                        dataCodigoPostal.find((o) => o.m_nIdCP == id.m_nIdCP).m_nIdCiudad
+                        dataCodigosPostalesDestinatario.find((o) => o.m_nIdCP == id.m_nIdCP).m_nIdCiudad
                 ),
 
                 correoDestinatario: id.m_sCorreoElectronico,
@@ -751,9 +789,9 @@ function Embarque(props) {
                     (o) => o.m_sRFC === respuesta.data.m_sRFCRemitente
                 ),
                 domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                codigoPostalRemitente: dataCodigoPostal.find(
+                /*codigoPostalRemitente: dataCodigoPostal.find(
                     (o) => o.m_nIdCP === respuesta.data.m_nIdCodigoPostalRemitente
-                ),
+                ),*/
                 ciudadRemitente: dataCiudad.find(
                     (o) => o.m_nIdCiudad === respuesta.data.m_nCiudadRemitente
                 ),
@@ -770,9 +808,9 @@ function Embarque(props) {
                     (o) => o.m_sRFC === respuesta.data.m_sRFCDestinatario
                 ),
                 domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                codigoPostalDestinatario: dataCodigoPostal.find(
+                /*codigoPostalDestinatario: dataCodigoPostal.find(
                     (o) => o.m_nIdCP === respuesta.data.m_nIdCodigoPostalDestinatario
-                ),
+                ),*/
                 ciudadDestinatario: dataCiudad.find(
                     (o) => o.m_nIdCiudad === respuesta.data.m_nIdCIudadDestinatario
                 ),
@@ -789,9 +827,9 @@ function Embarque(props) {
                 datosAdicionalesEntrega: respuesta.data.DatosAdicionalesis,
                 fechaEntrega:
                     respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
-                codigoPostalEntrega: dataCodigoPostal.find(
+                /*codigoPostalEntrega: dataCodigoPostal.find(
                     (o) => o.m_nIdCP === respuesta.data.CodigoPostalEntrega
-                ),
+                ),*/
                 ciudadEntrega: dataCiudad.find(
                     (o) => o.m_nIdCiudad === respuesta.data.IdCiudadEntrega
                 ),
@@ -854,16 +892,16 @@ function Embarque(props) {
             RFCRemitente: "",
             domicilioRemitente: "",
             codigoPostalRemitente: {},
-            ciudadRemitente: {},
+            ciudadRemitente: "",
             correoRemitente: "",
             telefonoRemitente: "",
             contactoRemitente: "",
-            ciudadDestino: {},
+            ciudadDestino: "",
             nombreDestinatario: "",
             RFCDestinatario: "",
             domicilioDestinatario: "",
             codigoPostalDestinatario: {},
-            ciudadDestinatario: {},
+            ciudadDestinatario: "",
             correoDestinatario: "",
             telefonoDestinatario: "",
             contactoDestinatario: "",
@@ -941,9 +979,9 @@ function Embarque(props) {
                     (o) => o.m_sRFC === respuesta.data.m_sRFCRemitente
                 ),
                 domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                codigoPostalRemitente: dataCodigoPostal.find(
+                /*codigoPostalRemitente: dataCodigoPostal.find(
                     (o) => o.m_nIdCP === respuesta.data.m_nIdCodigoPostalRemitente
-                ),
+                ),*/
                 ciudadRemitente: dataCiudad.find(
                     (o) => o.m_nIdCiudad === respuesta.data.m_nCiudadRemitente
                 ),
@@ -959,9 +997,9 @@ function Embarque(props) {
                     (o) => o.m_sRFC === respuesta.data.m_sRFCDestinatario
                 ),
                 domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                codigoPostalDestinatario: dataCodigoPostal.find(
+                /*codigoPostalDestinatario: dataCodigoPostal.find(
                     (o) => o.m_nIdCP === respuesta.data.m_nIdCodigoPostalDestinatario
-                ),
+                ),*/
                 ciudadDestinatario: dataCiudad.find(
                     (o) => o.m_nIdCiudad === respuesta.data.m_nIdCIudadDestinatario
                 ),
@@ -978,9 +1016,9 @@ function Embarque(props) {
                 datosAdicionalesEntrega: respuesta.data.DatosAdicionalesis,
                 fechaEntrega:
                     respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
-                codigoPostalEntrega: dataCodigoPostal.find(
+                /*codigoPostalEntrega: dataCodigoPostal.find(
                     (o) => o.m_nIdCP === respuesta.data.CodigoPostalEntrega
-                ),
+                ),*/
                 ciudadEntrega: dataCiudad.find(
                     (o) => o.m_nIdCiudad === respuesta.data.IdCiudadEntrega
                 ),
@@ -1054,7 +1092,7 @@ function Embarque(props) {
             RFCRemitente: "",
             domicilioRemitente: "",
             codigoPostalRemitente: {},
-            ciudadRemitente: {},
+            ciudadRemitente: "",
             correoRemitente: "",
             telefonoRemitente: "",
             contactoRemitente: "",
@@ -1063,14 +1101,14 @@ function Embarque(props) {
             RFCDestinatario: "",
             domicilioDestinatario: "",
             codigoPostalDestinatario: {},
-            ciudadDestino: {},
+            ciudadDestino: "",
             correoDestinatario: "",
             telefonoDestinatario: "",
             contactoDestinatario: "",
             fechaEntrega: "",
             horaEntrega: "",
             codigoPostalEntrega: {},
-            ciudadEntrega: {},
+            ciudadEntrega: "",
             idOperador: {},
             idTipoUnidad: {},
             idUnidad: {},
@@ -1148,13 +1186,41 @@ function Embarque(props) {
         });
     };
 
-    const handleSelectCiudadChange = (event) => {
+    //antigua implementacion para cambiar ciudad, si es muy vieja borrar (3 junio 2021)
+    /*const handleSelectCiudadChange = (event) => {
         console.log("diferenteEntrega : " + state.diferenteEntrega);
         setState({
             ...state,
             ciudadRemitente: event.target.value,
         });
-    };
+    };*/
+
+    const handleChangeCiudadRemitente = (event) => {
+        event.preventDefault();
+        setState({
+            ...state,
+            ciudadRemitente: event.target.value,
+            codigoPostalRemitente: null
+        });
+    }
+
+    const handleChangeCiudadDestinatario = (event) => {
+        event.preventDefault();
+        setState({
+            ...state,
+            ciudadDestinatario: event.target.value,
+            codigoPostalDestinatario: null
+        });
+    }
+
+    const handleChangeCiudadEntrega = (event) => {
+        event.preventDefault();
+        setState({
+            ...state,
+            ciudadEntrega: event.target.value,
+            codigoPostalEntrega: null
+        });
+    }
 
     const handleFechaInicialFiltro = async (event) => {
         setState({
@@ -1498,126 +1564,8 @@ function Embarque(props) {
             if (props.location.idRecoleccion != undefined) {
                 obtenerRecoleccionId(props.location.idRecoleccion)
                     .then((respuesta) => {
-
-                        var paquetesModificado = respuesta.data.m_parrPaquetes;
-                        console.log(respuesta);
-                        for (let i = 0; i < respuesta.data.m_parrPaquetes.length; i++) {
-                            paquetesModificado[i]["m_nTipo"] = 2;
-                            paquetesModificado[i]["m_xPeso"] = paquetesModificado[i].m_rPeso;
-                            paquetesModificado[i]["m_xLargo"] =
-                                paquetesModificado[i].m_rLargo;
-                            paquetesModificado[i]["m_xAncho"] =
-                                paquetesModificado[i].m_rAncho;
-                            paquetesModificado[i]["m_xAlto"] = paquetesModificado[i].m_rAlto;
-                            paquetesModificado[i]["m_xVolumen"] =
-                                paquetesModificado[i].m_rVolumen;
-                            paquetesModificado[i]["m_nIdTIpoEmpaque"] =
-                                paquetesModificado[i].m_nIdTipoEmbalaje;
-                            paquetesModificado[i]["m_cValorDeclarado"] =
-                                paquetesModificado[i].m_cValorDeclarado;
-                        }
-                        console.log(paquetesModificado);
-                        setState({
-                            ...state,
-                            idEmbarque: 0,
-                            idSucursalAgregar: respuesta.data.m_nIdSucursal,
-                            folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
-                            folioEmbarque:
-                                dataFolioEmbarque.length !== 0
-                                    ? dataFolioEmbarque[0].m_sFolioEmbarque
-                                    : null,
-                            folioGuía: respuesta.data.m_nFolioGuia,
-                            folioInforme: respuesta.data.m_nFolioInforme,
-                            fechaHoraCreacion:
-                                today.getDate() +
-                                "/" +
-                                (today.getMonth() + 1) +
-                                "/" +
-                                today.getFullYear() +
-                                " " +
-                                today.getHours() +
-                                ":" +
-                                today.getMinutes(),
-                            moneda: respuesta.data.m_nMoneda,
-                            tipoCambio: respuesta.data.m_rTipoCambio,
-                            tipoCobro: respuesta.data.m_nIdTipoDeCobro,
-                            nombreRemitente: dataRemitenteDestinatario.find(
-                                (o) => o.m_sRFC === respuesta.data.m_sRFCRemitente
-                            ),
-                            RFCRemitente: respuesta.data.m_sRFCRemitente,
-                            domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                            codigoPostalRemitente: dataCodigoPostal.find(
-                                (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalRemitente
-                            ),
-                            idCodigoPostalRemitenteTemp: respuesta.data.m_sIdCodigoPostalRemitente,
-                            ciudadRemitente: dataCiudad.find(
-                                (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadRemitente
-                            ),
-                            correoRemitente: respuesta.data.m_sCorreoRemitente,
-                            telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
-                            contactoRemitente: respuesta.data.m_sContactoRemitente,
-                            ciudadOrigen: dataCiudad.find(
-                                (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadOrigen
-                            ),
-
-                            nombreDestinatario: dataRemitenteDestinatario.find(
-                                (o) => o.m_sRFC === respuesta.data.m_sRFCDestinatario
-                            ),
-                            RFCDestinatario: respuesta.data.m_sRFCDestinatario,
-                            domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                            codigoPostalDestinatario: dataCodigoPostal.find(
-                                (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalDestinatario
-                            ),
-                            idCodigoPostalRemitentTemp: respuesta.data.m_sIdCodigoPostalDestinatario,
-                            ciudadDestinatario: dataCiudad.find(
-                                (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadDestinatario
-                            ),
-                            correoDestinatario: respuesta.data.m_sCorreoDestinatario,
-                            telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
-                            contactoDestinatario: respuesta.data.m_sContactoDestinatario,
-
-                            ciudadDestino: dataCiudad.find(
-                                (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadDestino
-                            ),
-                            zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
-                            domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
-                            entregaEn: respuesta.data.m_sEntregarEnDetalleEntrega,
-                            datosAdicionalesEntrega:
-                                respuesta.data.m_sDatosAdicionalesDetalleEntrega,
-                            fechaEntrega:
-                                respuesta.data.m_dFechaEntrega +
-                                "T" +
-                                respuesta.data.m_tHoraEntrega,
-                            codigoPostalEntrega: dataCodigoPostal.find(
-                                (o) => o.m_nIdCP === respuesta.data.m_nIdCPDetalleEntrega
-                            ),
-                            ciudadEntrega: dataCiudad.find(
-                                (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadDetalleEntrega
-                            ),
-                            fechaHoraSalida:
-                                respuesta.data.m_dFechaSalida +
-                                "T" +
-                                respuesta.data.m_tHoraSalida,
-                            fechaHoraLlegada:
-                                respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,
-                            idOperador: dataOperador.find(
-                                (o) => o.m_nIdOperador === respuesta.data.m_nIdOperador
-                            ),
-
-                            idUnidad: dataUnidad.find(
-                                (o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad
-                            ),
-                            paquetes: paquetesModificado,
-                        });
-                        console.log(
-                            dataRemitenteDestinatario.find(
-                                (o) => o.m_sRFC === respuesta.data.m_sRFCRemitente
-                            )
-                        );
+                        setDataOnState(respuesta)
                     })
-                    .then(() => {
-                        // handleSelectRemitente();
-                    });
             }
             if (
                 localStorage.getItem("UsuarioId") === null ||
@@ -1631,12 +1579,130 @@ function Embarque(props) {
         [
             dataRemitenteDestinatario,
             dataCiudad,
-            dataCodigoPostal,
+            // dataCodigoPostal,
             dataOperador,
             dataUnidad,
             dataTipoUnidad,
         ]
     );
+
+    function setDataOnState(respuesta){
+        let paquetesModificado = respuesta.data.m_parrPaquetes;
+        console.log(respuesta);
+        for (let i = 0; i < respuesta.data.m_parrPaquetes.length; i++) {
+            paquetesModificado[i]["m_nTipo"] = 2;
+            paquetesModificado[i]["m_xPeso"] = paquetesModificado[i].m_rPeso;
+            paquetesModificado[i]["m_xLargo"] =
+                paquetesModificado[i].m_rLargo;
+            paquetesModificado[i]["m_xAncho"] =
+                paquetesModificado[i].m_rAncho;
+            paquetesModificado[i]["m_xAlto"] = paquetesModificado[i].m_rAlto;
+            paquetesModificado[i]["m_xVolumen"] =
+                paquetesModificado[i].m_rVolumen;
+            paquetesModificado[i]["m_nIdTIpoEmpaque"] =
+                paquetesModificado[i].m_nIdTipoEmbalaje;
+            paquetesModificado[i]["m_cValorDeclarado"] =
+                paquetesModificado[i].m_cValorDeclarado;
+        }
+        console.log(paquetesModificado);
+        setState({
+            ...state,
+            idEmbarque: 0,
+            idSucursalAgregar: respuesta.data.m_nIdSucursal,
+            folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
+            folioEmbarque:
+                dataFolioEmbarque.length !== 0
+                    ? dataFolioEmbarque[0].m_sFolioEmbarque
+                    : null,
+            folioGuía: respuesta.data.m_nFolioGuia,
+            folioInforme: respuesta.data.m_nFolioInforme,
+            fechaHoraCreacion:
+                today.getDate() +
+                "/" +
+                (today.getMonth() + 1) +
+                "/" +
+                today.getFullYear() +
+                " " +
+                today.getHours() +
+                ":" +
+                today.getMinutes(),
+            moneda: respuesta.data.m_nMoneda,
+            tipoCambio: respuesta.data.m_rTipoCambio,
+            tipoCobro: respuesta.data.m_nIdTipoDeCobro,
+            nombreRemitente: dataRemitenteDestinatario.find(
+                (o) => o.m_sRFC === respuesta.data.m_sRFCRemitente
+            ),
+            RFCRemitente: respuesta.data.m_sRFCRemitente,
+            domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
+            /*codigoPostalRemitente: dataCodigoPostal.find(
+                (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalRemitente
+            ),*/
+            idCodigoPostalRemitenteTemp: respuesta.data.m_sIdCodigoPostalRemitente,
+            ciudadRemitente: dataCiudad.find(
+                (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadRemitente
+            ),
+            correoRemitente: respuesta.data.m_sCorreoRemitente,
+            telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
+            contactoRemitente: respuesta.data.m_sContactoRemitente,
+            ciudadOrigen: dataCiudad.find(
+                (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadOrigen
+            ),
+
+            nombreDestinatario: dataRemitenteDestinatario.find(
+                (o) => o.m_sRFC === respuesta.data.m_sRFCDestinatario
+            ),
+            RFCDestinatario: respuesta.data.m_sRFCDestinatario,
+            domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
+            /*codigoPostalDestinatario: dataCodigoPostal.find(
+                (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalDestinatario
+            ),*/
+            idCodigoPostalRemitentTemp: respuesta.data.m_sIdCodigoPostalDestinatario,
+            ciudadDestinatario: dataCiudad.find(
+                (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadDestinatario
+            ),
+            correoDestinatario: respuesta.data.m_sCorreoDestinatario,
+            telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
+            contactoDestinatario: respuesta.data.m_sContactoDestinatario,
+
+            ciudadDestino: dataCiudad.find(
+                (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadDestino
+            ),
+            zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
+            domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
+            entregaEn: respuesta.data.m_sEntregarEnDetalleEntrega,
+            datosAdicionalesEntrega:
+            respuesta.data.m_sDatosAdicionalesDetalleEntrega,
+            fechaEntrega:
+                respuesta.data.m_dFechaEntrega +
+                "T" +
+                respuesta.data.m_tHoraEntrega,
+            /*codigoPostalEntrega: dataCodigoPostal.find(
+                (o) => o.m_nIdCP === respuesta.data.m_nIdCPDetalleEntrega
+            ),*/
+            ciudadEntrega: dataCiudad.find(
+                (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadDetalleEntrega
+            ),
+            fechaHoraSalida:
+                respuesta.data.m_dFechaSalida +
+                "T" +
+                respuesta.data.m_tHoraSalida,
+            fechaHoraLlegada:
+                respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,
+            idOperador: dataOperador.find(
+                (o) => o.m_nIdOperador === respuesta.data.m_nIdOperador
+            ),
+
+            idUnidad: dataUnidad.find(
+                (o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad
+            ),
+            paquetes: paquetesModificado,
+        });
+        /*console.log(
+            dataRemitenteDestinatario.find(
+                (o) => o.m_sRFC === respuesta.data.m_sRFCRemitente
+            )
+        );*/
+    }
 
     useEffect((value) => {
         getAllData();
@@ -1651,7 +1717,7 @@ function Embarque(props) {
         getAllTipoCobro();
         getAllTipoMoneda();
         getAllCiudades();
-        getAllCodigosPostales();
+        // getAllCodigosPostales();
         getAllOperadores();
         getAllTipoUnidad();
         getAllRemitentesDestinatarios();
@@ -1710,7 +1776,7 @@ function Embarque(props) {
     }
 
     async function getAllCodigosPostales() {
-        obtenerCodigoPostal().then((respuesta) => {
+        /*obtenerCodigoPostal().then((respuesta) => {
             setDataCodigoPostal(respuesta.data);
             console.log(respuesta.data)
             setState({
@@ -1722,7 +1788,7 @@ function Embarque(props) {
                     (o) => o.m_nIdCP == state.idCodigoPostalDestinatarioTemp
                 ),
             })
-        });
+        });*/
     }
 
     async function getAllOperadores() {
@@ -2590,7 +2656,7 @@ function Embarque(props) {
                                 </button>
                             </div>
 
-                            {dataCodigoPostal.length != 0 ? (
+                            {dataCodigosPostalesRemitente.length != 0 ? (
                                 <TableCodigoPostal
                                     object={state}
                                     select={
@@ -2598,7 +2664,95 @@ function Embarque(props) {
                                         state[state.identificadorModal].m_nIdCP
                                     }
                                     columns={columnsCP}
-                                    data={dataCodigoPostal}
+                                    data={dataCodigosPostalesRemitente}
+                                    identificadorModal={state.identificadorModal}
+                                />
+                            ) : (
+                                <div>No se encontró ningún registro</div>
+                            )}
+
+                            <DialogActions style={{ justifyContent: "left" }}>
+                                <button
+                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    className="btn btn-secondary secondary-btn"
+                                >
+                                    Cerrar
+                                </button>
+                                <button
+                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    className="btn btn-primary primary-btn"
+                                >
+                                    Aceptar
+                                </button>
+                            </DialogActions>
+                        </div>
+                    )}
+                    {state.tipoModal === 7 && (
+                        <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
+                            <div align="right">
+                                <button
+                                    onClick={() => {
+                                        history.push("/Ciudades");
+                                    }}
+                                    className="btn btn-primary primary-btn"
+                                >
+                                    Agregar
+                                </button>
+                            </div>
+
+                            {dataCodigosPostalesDestinatario.length != 0 ? (
+                                <TableCodigoPostal
+                                    object={state}
+                                    select={
+                                        state[state.identificadorModal] &&
+                                        state[state.identificadorModal].m_nIdCP
+                                    }
+                                    columns={columnsCP}
+                                    data={dataCodigosPostalesDestinatario}
+                                    identificadorModal={state.identificadorModal}
+                                />
+                            ) : (
+                                <div>No se encontró ningún registro</div>
+                            )}
+
+                            <DialogActions style={{ justifyContent: "left" }}>
+                                <button
+                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    className="btn btn-secondary secondary-btn"
+                                >
+                                    Cerrar
+                                </button>
+                                <button
+                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    className="btn btn-primary primary-btn"
+                                >
+                                    Aceptar
+                                </button>
+                            </DialogActions>
+                        </div>
+                    )}
+                    {state.tipoModal === 9 && (
+                        <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
+                            <div align="right">
+                                <button
+                                    onClick={() => {
+                                        history.push("/Ciudades");
+                                    }}
+                                    className="btn btn-primary primary-btn"
+                                >
+                                    Agregar
+                                </button>
+                            </div>
+
+                            {dataCodigosPostalesEntrega.length != 0 ? (
+                                <TableCodigoPostal
+                                    object={state}
+                                    select={
+                                        state[state.identificadorModal] &&
+                                        state[state.identificadorModal].m_nIdCP
+                                    }
+                                    columns={columnsCP}
+                                    data={dataCodigosPostalesEntrega}
                                     identificadorModal={state.identificadorModal}
                                 />
                             ) : (
@@ -3526,92 +3680,8 @@ function Embarque(props) {
                                                                         </div>
                                                                     </div>
 
-                                                                    <div className="col-sm-12 col-md-12 unit">
-                                                                        <div className="input">
-                                                                            <Autocomplete
-                                                                                value={state.codigoPostalRemitente}
-                                                                                freeSolo
-                                                                                onChange={(event, newValue) =>
-                                                                                    setState({
-                                                                                        ...state,
-                                                                                        codigoPostalRemitente: newValue,
-                                                                                    })
-                                                                                }
-                                                                                id="codigoPostalRemitente"
-                                                                                value={state.codigoPostalRemitente}
-                                                                                disableClearable
-                                                                                disabled={state.agregar === "Consultar"}
-                                                                                forcePopupIcon={false}
-                                                                                options={dataCodigoPostal.filter(cp => cp.m_nIdCiudad == state.ciudadRemitente)}
-                                                                                getOptionLabel={(option) =>
-                                                                                    option.m_sCP
-                                                                                }
-                                                                                variant="outlined"
-                                                                                style={{
-                                                                                    transform: "translate(14px, 10px) scale(1) !important"
-                                                                                }}
-                                                                                renderInput={(params) => (
-                                                                                    <div>
-                                                                                        <TextField
-                                                                                            required
-                                                                                            margin="dense"
-                                                                                            variant="outlined"
-                                                                                            label={"Código Postal"}
-                                                                                            {...params}
-                                                                                            InputProps={{
-                                                                                                ...params.InputProps,
-                                                                                                style: {
-                                                                                                    height: "33px",
-                                                                                                    fontSize: "14px",
-                                                                                                },
-                                                                                                type: "search",
-                                                                                                disableUnderline: true,
-                                                                                                endAdornment: (
-                                                                                                    <InputAdornment
-                                                                                                        position="end">
-                                                                                                        <IconButton
-                                                                                                            padding="0px"
-                                                                                                            style={{
-                                                                                                                paddingRight: "0px",
-                                                                                                            }}
-                                                                                                            disabled={
-                                                                                                                state.agregar ===
-                                                                                                                "Consultar"
-                                                                                                            }
-                                                                                                            onClick={() => {
-                                                                                                                setState({
-                                                                                                                    ...state,
-                                                                                                                    identificadorModal:
-                                                                                                                        "codigoPostalRemitente",
-                                                                                                                    tipoModal: 0,
-                                                                                                                    openDialog: true,
-                                                                                                                });
-                                                                                                            }}
-                                                                                                        >
-                                                                                                            <PageviewIcon
-                                                                                                                style={{
-                                                                                                                    color: "#F9A03E",
-                                                                                                                    fontSize: 32,
-                                                                                                                    paddingInlineEnd: 0,
-                                                                                                                    paddingRight: 0,
-                                                                                                                    paddingBlockEnd: 0,
-                                                                                                                    paddingLeft: 0,
-                                                                                                                    paddingBlock: 0,
-                                                                                                                }}
-                                                                                                            />
-                                                                                                        </IconButton>
-                                                                                                    </InputAdornment>
-                                                                                                ),
-                                                                                            }}
-                                                                                        />
-                                                                                    </div>
-                                                                                )}
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-
                                                                     <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                                                        <div className="input">
+                                                                        {/*<div className="input">
                                                                             <Autocomplete
                                                                                 freeSolo
                                                                                 onChange={handleSelectCiudadChange}
@@ -3683,8 +3753,122 @@ function Embarque(props) {
                                                                                     </div>
                                                                                 )}
                                                                             />
+                                                                        </div>*/}
+                                                                        <label className="input select">
+                                                                            <FormControl fullWidth variant="outlined"
+                                                                                         margin="dense">
+                                                                                <InputLabel
+                                                                                    id="ciudadRemitenteLabel">Ciudad</InputLabel>
+                                                                                <Select
+                                                                                    labelId="ciudadRemitenteLabel"
+                                                                                    label="Ciudad"
+                                                                                    className="form-control"
+                                                                                    required
+                                                                                    value={state.ciudadRemitente}
+                                                                                    disabled={state.agregar === "Consultar"}
+                                                                                    onChange={handleChangeCiudadRemitente}
+                                                                                    //onSelect={ getAllCodigosPostales(state.ciudadRemitente)}
+
+                                                                                    id="ciudadRemitente"
+                                                                                >
+                                                                                    {dataCiudad.map((ciudad) => (
+                                                                                        <option
+                                                                                            key={ciudad.m_nIdCiudad}
+                                                                                            value={ciudad.m_nIdCiudad}
+                                                                                        >
+                                                                                            {ciudad.m_sCiudad}
+                                                                                        </option>
+                                                                                    ))}
+                                                                                </Select>
+                                                                            </FormControl>
+                                                                            <i className="fa fa-arrow-down" />
+                                                                        </label>
+                                                                    </div>
+
+                                                                    <div className="col-sm-12 col-md-12 unit">
+                                                                        <div className="input">
+                                                                            <Autocomplete
+                                                                                value={state.codigoPostalRemitente}
+                                                                                freeSolo
+                                                                                onChange={(event, newValue) =>
+                                                                                    setState({
+                                                                                        ...state,
+                                                                                        codigoPostalRemitente: newValue,
+                                                                                    })
+                                                                                }
+                                                                                id="codigoPostalRemitente"
+                                                                                value={state.codigoPostalRemitente}
+                                                                                disableClearable
+                                                                                disabled={state.agregar === "Consultar"}
+                                                                                forcePopupIcon={false}
+                                                                                options={dataCodigosPostalesRemitente.filter(cp => cp.m_nIdCiudad == state.ciudadRemitente)}
+                                                                                getOptionLabel={(option) =>
+                                                                                    option.m_sCP
+                                                                                }
+                                                                                variant="outlined"
+                                                                                style={{
+                                                                                    transform: "translate(14px, 10px) scale(1) !important"
+                                                                                }}
+                                                                                renderInput={(params) => (
+                                                                                    <div>
+                                                                                        <TextField
+                                                                                            required
+                                                                                            margin="dense"
+                                                                                            variant="outlined"
+                                                                                            label={"Código Postal"}
+                                                                                            {...params}
+                                                                                            InputProps={{
+                                                                                                ...params.InputProps,
+                                                                                                style: {
+                                                                                                    height: "33px",
+                                                                                                    fontSize: "14px",
+                                                                                                },
+                                                                                                type: "search",
+                                                                                                disableUnderline: true,
+                                                                                                endAdornment: (
+                                                                                                    <InputAdornment
+                                                                                                        position="end">
+                                                                                                        <IconButton
+                                                                                                            padding="0px"
+                                                                                                            style={{
+                                                                                                                paddingRight: "0px",
+                                                                                                            }}
+                                                                                                            disabled={
+                                                                                                                state.agregar ===
+                                                                                                                "Consultar"
+                                                                                                            }
+                                                                                                            onClick={() => {
+                                                                                                                setState({
+                                                                                                                    ...state,
+                                                                                                                    identificadorModal:
+                                                                                                                        "codigoPostalRemitente",
+                                                                                                                    tipoModal: 0,
+                                                                                                                    openDialog: true,
+                                                                                                                });
+                                                                                                            }}
+                                                                                                        >
+                                                                                                            <PageviewIcon
+                                                                                                                style={{
+                                                                                                                    color: "#F9A03E",
+                                                                                                                    fontSize: 32,
+                                                                                                                    paddingInlineEnd: 0,
+                                                                                                                    paddingRight: 0,
+                                                                                                                    paddingBlockEnd: 0,
+                                                                                                                    paddingLeft: 0,
+                                                                                                                    paddingBlock: 0,
+                                                                                                                }}
+                                                                                                            />
+                                                                                                        </IconButton>
+                                                                                                    </InputAdornment>
+                                                                                                ),
+                                                                                            }}
+                                                                                        />
+                                                                                    </div>
+                                                                                )}
+                                                                            />
                                                                         </div>
                                                                     </div>
+
                                                                     { }
                                                                     <div className="col-sm-12 col-md-12 unit">
                                                                         <div className="input">
@@ -3965,83 +4149,8 @@ function Embarque(props) {
                                                                     </div>
                                                                 </div>
 
-                                                                <div className="col-sm-12 col-md-12 unit">
-                                                                    <div className="input">
-                                                                        <Autocomplete
-                                                                            freeSolo
-                                                                            onChange={(event, newValue) =>
-                                                                                setState({
-                                                                                    ...state,
-                                                                                    codigoPostalDestinatario: newValue,
-                                                                                })
-                                                                            }
-                                                                            value={state.codigoPostalDestinatario}
-                                                                            id="codigoPostalDestinatario"
-                                                                            disableClearable
-                                                                            disabled={state.agregar === "Consultar"}
-                                                                            options={dataCodigoPostal.filter(cp => cp.m_nIdCiudad == state.ciudadDestinatario)}
-                                                                            getOptionLabel={(option) => option.m_sCP}
-                                                                            variant="outlined"
-                                                                            style={{
-                                                                                transform: "translate(14px, 10px) scale(1) !important"
-                                                                            }}
-                                                                            renderInput={(params) => (
-                                                                                <div>
-                                                                                    <TextField
-                                                                                        required
-                                                                                        margin="dense"
-                                                                                        variant="outlined"
-                                                                                        label={"Código Postal"}
-                                                                                        {...params}
-                                                                                        InputProps={{
-                                                                                            ...params.InputProps,
-                                                                                            style: {
-                                                                                                height: "33px",
-                                                                                                fontSize: "14px",
-                                                                                            },
-                                                                                            type: "search",
-                                                                                            disableUnderline: true,
-                                                                                            endAdornment: (
-                                                                                                <InputAdornment
-                                                                                                    position="end">
-                                                                                                    {" "}
-                                                                                                    <IconButton
-                                                                                                        style={{
-                                                                                                            paddingRight: "0px",
-                                                                                                        }}
-                                                                                                        disabled={
-                                                                                                            state.agregar ===
-                                                                                                            "Consultar"
-                                                                                                        }
-                                                                                                        onClick={() => {
-                                                                                                            setState({
-                                                                                                                ...state,
-                                                                                                                identificadorModal:
-                                                                                                                    "codigoPostalDestinatario",
-                                                                                                                tipoModal: 0,
-                                                                                                                openDialog: true,
-                                                                                                            });
-                                                                                                        }}
-                                                                                                    >
-                                                                                                        <PageviewIcon
-                                                                                                            style={{
-                                                                                                                color: "#F9A03E",
-                                                                                                                fontSize: 32,
-                                                                                                            }}
-                                                                                                        />
-                                                                                                    </IconButton>{" "}
-                                                                                                </InputAdornment>
-                                                                                            ),
-                                                                                        }}
-                                                                                    />
-                                                                                </div>
-                                                                            )}
-                                                                        />
-                                                                    </div>
-                                                                </div>
-
                                                                 <div className="col-sm-12 col-md-12  unit">
-                                                                    <div className="input">
+                                                                    {/*<div className="input">
                                                                         <Autocomplete
                                                                             freeSolo
                                                                             onChange={(event, newValue) =>
@@ -4111,6 +4220,109 @@ function Embarque(props) {
                                                                                                             }}
                                                                                                         />
                                                                                                     </IconButton>
+                                                                                                </InputAdornment>
+                                                                                            ),
+                                                                                        }}
+                                                                                    />
+                                                                                </div>
+                                                                            )}
+                                                                        />
+                                                                    </div>*/}
+                                                                    <label className="input select">
+                                                                        <FormControl fullWidth variant="outlined"
+                                                                                     margin="dense">
+                                                                            <InputLabel
+                                                                                id="ciudadDestinatarioLabel">Ciudad</InputLabel>
+                                                                            <Select
+                                                                                labelId="ciudadDestinatarioLabel"
+                                                                                label="Ciudad"
+                                                                                className="form-control"
+                                                                                required
+                                                                                value={state.ciudadDestinatario}
+                                                                                disabled={state.agregar === "Consultar"}
+                                                                                onChange={handleChangeCiudadDestinatario}
+                                                                                //onSelect={ getAllCodigosPostales(state.ciudadDestinatario)}
+                                                                                id="ciudadDestinatario"
+                                                                            >
+                                                                                {dataCiudad.map((ciudad) => (
+                                                                                    <option
+                                                                                        key={ciudad.m_nIdCiudad}
+                                                                                        value={ciudad.m_nIdCiudad}
+                                                                                    >
+                                                                                        {ciudad.m_sCiudad}
+                                                                                    </option>
+                                                                                ))}
+                                                                            </Select>
+                                                                        </FormControl>
+                                                                        <i className="fa fa-arrow-down" />
+                                                                    </label>
+                                                                </div>
+
+                                                                <div className="col-sm-12 col-md-12 unit">
+                                                                    <div className="input">
+                                                                        <Autocomplete
+                                                                            freeSolo
+                                                                            onChange={(event, newValue) =>
+                                                                                setState({
+                                                                                    ...state,
+                                                                                    codigoPostalDestinatario: newValue,
+                                                                                })
+                                                                            }
+                                                                            value={state.codigoPostalDestinatario}
+                                                                            id="codigoPostalDestinatario"
+                                                                            disableClearable
+                                                                            disabled={state.agregar === "Consultar"}
+                                                                            options={dataCodigosPostalesDestinatario.filter(cp => cp.m_nIdCiudad == state.ciudadDestinatario)}
+                                                                            getOptionLabel={(option) => option.m_sCP}
+                                                                            variant="outlined"
+                                                                            style={{
+                                                                                transform: "translate(14px, 10px) scale(1) !important"
+                                                                            }}
+                                                                            renderInput={(params) => (
+                                                                                <div>
+                                                                                    <TextField
+                                                                                        required
+                                                                                        margin="dense"
+                                                                                        variant="outlined"
+                                                                                        label={"Código Postal"}
+                                                                                        {...params}
+                                                                                        InputProps={{
+                                                                                            ...params.InputProps,
+                                                                                            style: {
+                                                                                                height: "33px",
+                                                                                                fontSize: "14px",
+                                                                                            },
+                                                                                            type: "search",
+                                                                                            disableUnderline: true,
+                                                                                            endAdornment: (
+                                                                                                <InputAdornment
+                                                                                                    position="end">
+                                                                                                    {" "}
+                                                                                                    <IconButton
+                                                                                                        style={{
+                                                                                                            paddingRight: "0px",
+                                                                                                        }}
+                                                                                                        disabled={
+                                                                                                            state.agregar ===
+                                                                                                            "Consultar"
+                                                                                                        }
+                                                                                                        onClick={() => {
+                                                                                                            setState({
+                                                                                                                ...state,
+                                                                                                                identificadorModal:
+                                                                                                                    "codigoPostalDestinatario",
+                                                                                                                tipoModal: 7,
+                                                                                                                openDialog: true,
+                                                                                                            });
+                                                                                                        }}
+                                                                                                    >
+                                                                                                        <PageviewIcon
+                                                                                                            style={{
+                                                                                                                color: "#F9A03E",
+                                                                                                                fontSize: 32,
+                                                                                                            }}
+                                                                                                        />
+                                                                                                    </IconButton>{" "}
                                                                                                 </InputAdornment>
                                                                                             ),
                                                                                         }}
@@ -4426,7 +4638,7 @@ function Embarque(props) {
                                                         <div className="row">
                                                             <div className="col-md-12">
                                                                 <div className="col-sm-6 col-md-4  unit">
-                                                                    <div className="input">
+                                                                    {/*<div className="input">
                                                                         <Autocomplete
                                                                             freeSolo
                                                                             onChange={(event, newValue) =>
@@ -4507,7 +4719,35 @@ function Embarque(props) {
                                                                                 </div>
                                                                             )}
                                                                         />
-                                                                    </div>
+                                                                    </div>*/}
+                                                                    <label className="input select">
+                                                                        <FormControl fullWidth
+                                                                                     variant="outlined"
+                                                                                     margin="dense">
+                                                                            <InputLabel
+                                                                                id="ciudadEntregaLabel">Ciudad</InputLabel>
+                                                                            <Select
+                                                                                labelId="ciudadEntregaLabel"
+                                                                                label="Ciudad"
+                                                                                className="form-control"
+                                                                                required={state.diferenteEntrega}
+                                                                                value={state.ciudadEntrega}
+                                                                                disabled={state.agregar === "Consultar"}
+                                                                                onChange={handleChangeCiudadEntrega}
+                                                                                id="ciudadEntrega"
+                                                                            >
+                                                                                {dataCiudad.map((ciudad) => (
+                                                                                    <option
+                                                                                        key={ciudad.m_nIdCiudad}
+                                                                                        value={ciudad.m_nIdCiudad}
+                                                                                    >
+                                                                                        {ciudad.m_sCiudad}
+                                                                                    </option>
+                                                                                ))}
+                                                                            </Select>
+                                                                        </FormControl>
+                                                                        <i className="fa fa-arrow-down" />
+                                                                    </label>
                                                                 </div>
 
 
@@ -4515,7 +4755,7 @@ function Embarque(props) {
                                                                     <div className="input">
                                                                         <Autocomplete
                                                                             freeSolo
-                                                                            onSelect={handleSelectCodigoPostal()}
+                                                                            // onSelect={handleSelectCodigoPostal()}
                                                                             onChange={(event, newValue) =>
                                                                                 setState({
                                                                                     ...state,
@@ -4529,7 +4769,7 @@ function Embarque(props) {
                                                                             id="codigoPostalEntrega"
                                                                             disableClearable
                                                                             forcePopupIcon={false}
-                                                                            options={dataCodigoPostal.filter(cp => cp.m_nIdCiudad == state.ciudadEntrega)}
+                                                                            options={dataCodigosPostalesEntrega.filter(cp => cp.m_nIdCiudad == state.ciudadEntrega)}
                                                                             getOptionLabel={(option) =>
                                                                                 option.m_sCP
                                                                             }
@@ -4570,7 +4810,7 @@ function Embarque(props) {
                                                                                                                 ...state,
                                                                                                                 identificadorModal:
                                                                                                                     "codigoPostalEntrega",
-                                                                                                                tipoModal: 0,
+                                                                                                                tipoModal: 9,
                                                                                                                 openDialog: true,
                                                                                                             });
                                                                                                         }}
