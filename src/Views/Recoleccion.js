@@ -395,11 +395,6 @@ function Recoleccion() {
                 contactoDestinatario: newValue.m_sContacto,
             })
         })
-
-        console.log('Destinatario')
-        console.log(newValue)
-
-
     }
 
     const handleAceptar = (e) => {

@@ -841,6 +841,32 @@ function Embarque(props) {
 
     };
 
+    useEffect((value) => {
+        getAllData();
+        getAllZonas();
+
+    }, []);
+
+    useEffect(async (value) => {
+            if (dataRemitenteDestinatario.length > 0 && dataCiudad.length > 0 && dataOperador.length > 0 && dataTipoUnidad.length > 0){
+                if (props.location.idRecoleccion != undefined) {
+                    console.log('id de recoleccion: ' + props.location.idRecoleccion)
+                    obtenerRecoleccionId(props.location.idRecoleccion)
+                        .then((respuesta) => {
+                            setDataOnState(respuesta)
+                        })
+                }
+
+                if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
+                    showSuccess("Es necesario iniciar sesion para acceder a este proceso");
+                    window.location.replace("login");
+                    return;
+                }
+            }
+        },
+        [dataRemitenteDestinatario, dataCiudad, dataOperador, dataTipoUnidad,]
+    );
+
     //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para el remitente
     useEffect( value => {
         if (state.ciudadRemitente != ""){
@@ -1343,33 +1369,6 @@ function Embarque(props) {
         console.log(state)
     }
 
-    useEffect(
-        async (value) => {
-            if (dataRemitenteDestinatario.length > 0 && dataCiudad.length > 0 && dataOperador.length > 0 && dataTipoUnidad.length > 0){
-                if (props.location.idRecoleccion != undefined) {
-                    console.log('id de recoleccion: ' + props.location.idRecoleccion)
-                    obtenerRecoleccionId(props.location.idRecoleccion)
-                        .then((respuesta) => {
-                            setDataOnState(respuesta)
-                        })
-                }
-
-                if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
-                    showSuccess("Es necesario iniciar sesion para acceder a este proceso");
-                    window.location.replace("login");
-                    return;
-                }
-            }
-
-        },
-        [
-            dataRemitenteDestinatario,
-            dataCiudad,
-            dataOperador,
-            dataTipoUnidad,
-        ]
-    );
-
     function setDataOnState(respuesta){
         let paquetesModificado = respuesta.data.m_parrPaquetes;
         console.log(respuesta);
@@ -1611,12 +1610,6 @@ function Embarque(props) {
             zonaEntrega: event.target.value,
         });
     }
-
-    useEffect((value) => {
-        getAllData();
-        getAllZonas();
-
-    }, []);
 
     async function getAllData() {
         getAllEmbarque();
