@@ -212,6 +212,7 @@ function Embarque(props) {
         fechaEntrega: "",
         horaEntrega: "",
         codigoPostalEntrega: "",
+        idCodigoPostalEntregaTemp: 0,
         ciudadEntrega: "",
         zonaEntrega: 0,
         domicilioEntrega: "",
@@ -385,43 +386,148 @@ function Embarque(props) {
             accessor: "m_bActivo",
         },
     ]);
+    const columns = React.useMemo(() => [
+        {
+            headerName: "Acciones",
+            sortable: false, filterable: false,
+            field: "",
+            renderCell: (row) => {
+                return (
+                    <div>
+                        <Tooltip title="Modificar">
+                            <a
+                                onClick={() => handleShowModificar(row.row.m_nIdEmbarque)}
+                                className="btn btn-default btn-xs"
+                            >
+                                <i
+                                    className="fa fa-pencil-square-o"
+                                    style={{ color: "#F9A03E" }}
+                                />
+                            </a>
+                        </Tooltip>
+                        <Tooltip title="Consultar">
+                            <a
+                                className="btn btn-default btn-xs"
+                                onClick={() => handleShowConsultar(row.row.m_nIdEmbarque)}
+                            >
+                                <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
+                            </a>
+                        </Tooltip>
+                        <Tooltip title="Eliminar">
+                            <a
+                                href="#"
+                                className="btn btn-default btn-xs"
+                                onClick={() => confirmAlert({
+                                    title: 'Confirmar Eliminar',
+                                    message: 'Está seguro de eliminar Embarque?',
+                                    buttons: [
+                                        {
+                                            label: 'Si',
+                                            onClick: () => handleEliminar(row.row.m_nIdEmbarque)
+                                        },
+                                        {
+                                            label: 'No',
+                                        }
+                                    ]
+                                })}
+                            >
+                                <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
+                            </a>
+                        </Tooltip>
+
+
+
+                    </div>
+                );
+            },
+        },
+        {
+            headerName: "Folio",
+            field: "m_nFolioEmbarque",
+            width: 125,
+        },
+        {
+            headerName: "Fecha/Hora Elaboración",
+            field: "m_sFechaHora",
+            width: 200,
+        },
+        {
+            headerName: "Sucursal",
+            field: "m_sSucursal",
+            width: 150,
+        },
+        {
+            headerName: "Estatus de la Orden",
+            field: "m_sEstatusEmbarque",
+            width: 200,
+        },
+        {
+            headerName: "Origen",
+            field: "m_sCiudadOrigen",
+            width: 150,
+        },
+        {
+            headerName: "Destino",
+            field: "m_sCiudadDestino",
+            width: 150,
+        },
+        {
+            headerName: "Folio Guía",
+            field: "m_sFolioGuia",
+            width: 150,
+        },
+        {
+            headerName: "Folio Informe",
+            field: "m_nFolioInforme",
+            width: 150,
+        },
+        {
+            headerName: "Es Recolecta",
+            field: "m_bEsRecolecta",
+            width: 125,
+            renderCell: (row) => {
+                return (
+                    <div
+                        style={{
+                            width: "100%",
+                            textAlign: "center",
+                            color: (row.row.m_bEsRecolecta != 0 ? "green" : "red"),
+                        }}
+                    >
+                        {
+                            (row.row.m_bEsRecolecta != 0 ? (
+                                <SvgIcon component={Activo} />
+                            ) : (
+                                <SvgIcon component={NoActivo} />
+                            ))
+                        }
+                    </div>
+                );
+            },
+        },
+        {
+            headerName: "Folio Recolección",
+            field: "m_sFolioRecoleccion",
+            width: 150,
+        },
+        {
+            headerName: "Cancelado",
+            field: "m_dtFechaCancelacion",
+            width: 150,
+        },
+        {
+            headerName: "Usuario que Cancela",
+            field: "m_sUsuarioCancelacion",
+            width: 200,
+            renderCell: (row) => {
+                <div>
+                    {row.row.m_sUsuarioCancelacion == "0" ? "N/A" : row.row.m_sUsuarioCancelacion}
+                </div>
+            }
+        },
+    ]);
 
     const history = useHistory();
-
-    //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para el remitente
-    useEffect( value => {
-        if (state.ciudadRemitente != ""){
-            obtenerCodigosPostalesPorCiudad(state.ciudadRemitente).then((respuesta) => {
-                console.log(respuesta.data)
-                if (respuesta.data.length > 0){
-                    setDataCodigosPostalesRemitente(respuesta.data);
-                }
-            });
-        }
-    }, [state.ciudadRemitente])
-
-    //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para el destinatario
-    useEffect( value => {
-        if (state.ciudadDestinatario != ""){
-            obtenerCodigosPostalesPorCiudad(state.ciudadDestinatario).then((respuesta) => {
-                console.log(respuesta.data)
-                if (respuesta.data.length > 0){
-                    setDataCodigosPostalesDestinatario(respuesta.data);
-                }
-            });
-        }
-    }, [state.ciudadDestinatario])
-
-    //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para entrega
-    useEffect( value => {
-        if (state.ciudadEntrega != ""){
-            obtenerCodigosPostalesPorCiudad(state.ciudadEntrega).then((respuesta) => {
-                if (respuesta.data.length > 0){
-                    setDataCodigosPostalesEntrega(respuesta.data);
-                }
-            });
-        }
-    }, [state.ciudadEntrega])
 
     function handleSelectRemitente(newValue) {
         console.log(newValue)
@@ -735,6 +841,60 @@ function Embarque(props) {
 
     };
 
+    //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para el remitente
+    useEffect( value => {
+        if (state.ciudadRemitente != ""){
+            obtenerCodigosPostalesPorCiudad(state.ciudadRemitente).then((respuesta) => {
+                if (respuesta.data.length > 0){
+                    setDataCodigosPostalesRemitente(respuesta.data);
+                    if (props.location.idRecoleccion != undefined){
+                        setState({
+                            ...state,
+                            codigoPostalRemitente: respuesta.data.find((o) => o.m_nIdCP == state.idCodigoPostalRemitenteTemp),
+                        })
+                    }
+                }
+            });
+        }
+    }, [state.ciudadRemitente])
+
+    //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para el destinatario
+    useEffect( value => {
+        if (state.ciudadDestinatario != ""){
+            obtenerCodigosPostalesPorCiudad(state.ciudadDestinatario).then((respuesta) => {
+                console.log(respuesta.data)
+                if (respuesta.data.length > 0){
+                    setDataCodigosPostalesDestinatario(respuesta.data);
+                    if (props.location.idRecoleccion != undefined){
+                        setState({
+                            ...state,
+                            codigoPostalDestinatario: respuesta.data.find((o) => o.m_nIdCP == state.idCodigoPostalDestinatarioTemp),
+                        })
+                    }
+                }
+            });
+        }
+    }, [state.ciudadDestinatario])
+
+    //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para entrega
+    useEffect( value => {
+        if (state.ciudadEntrega != ""){
+            obtenerCodigosPostalesPorCiudad(state.ciudadEntrega).then((respuesta) => {
+                if (respuesta.data.length > 0){
+                    setDataCodigosPostalesEntrega(respuesta.data);
+                    if(props.location.idRecoleccion != undefined){
+                        if (state.idCodigoPostalEntregaTemp != state.idCodigoPostalDestinatarioTemp){
+                            setState({
+                                ...state,
+                                codigoPostalEntrega: respuesta.data.find((o) => o.m_nIdCP == state.idCodigoPostalEntregaTemp)
+                            })
+                        }
+                    }
+                }
+            });
+        }
+    }, [state.ciudadEntrega])
+
     function handleShowCancelar() {
         var today = new Date();
         var hours = today.getHours();
@@ -773,130 +933,6 @@ function Embarque(props) {
 
             }
         });
-    }
-
-    function handleShowCancelarConfirmacion() {
-        confirmAlert({
-            title: 'Confirmar Eliminar',
-            message: 'Está seguro de cancelar Embarque?',
-            buttons: [
-                {
-                    label: 'Si',
-                    onClick: () => handleCancelar
-                },
-                {
-                    label: 'No',
-                }
-            ]
-        })
-    }
-
-    function handleShowModificar(id) {
-        console.log(id);
-        clearAllInputs()
-        obtenerEmbarquesId(id).then((respuesta) => {
-            setState({
-                ...state,
-                agregar: "Modificar",
-                idEmbarque: id,
-                idSucursalAgregar: respuesta.data.IdSucursal,
-                folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
-                folioEmbarque: respuesta.data.m_nFolioEmbarque,
-                folioGuía: respuesta.data.m_nFolioGuia,
-                folioInforme: respuesta.data.m_nFolioInforme,
-                fechaHoraCreacion:
-                    respuesta.data.m_dFecha +
-                    "T" +
-                    respuesta.data.m_tHora.split(":")[0] +
-                    ":" +
-                    respuesta.data.m_tHora.split(":")[1],
-                fechaHoraRegistro:
-                    respuesta.data.m_dFechaRegistro +
-                    "T" +
-                    respuesta.data.m_tHoraRegistro.slice(0, 5),
-                moneda: respuesta.data.m_nIdMoneda,
-                tipoCambio: respuesta.data.m_cTIpoCambio,
-                tipoCobro: respuesta.data.m_nIdTIpoCobro,
-                estatusEmbarque: respuesta.data.m_nIdEstatusEmbarque,
-
-
-                nombreRemitente: dataRemitenteDestinatario.find(
-                    (o) => o.m_sRFC === respuesta.data.m_sRFCRemitente
-                ),
-                domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                /*codigoPostalRemitente: dataCodigoPostal.find(
-                    (o) => o.m_nIdCP === respuesta.data.m_nIdCodigoPostalRemitente
-                ),*/
-                ciudadRemitente: dataCiudad.find(
-                    (o) => o.m_nIdCiudad === respuesta.data.m_nCiudadRemitente
-                ),
-                correoRemitente: respuesta.data.m_sCorreoRemitente,
-                telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
-                contactoRemitente: respuesta.data.m_sContactoRemitente,
-                ciudadOrigen: dataCiudad.find(
-                    (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadOrigen
-                ),
-
-                RFCRemitente: respuesta.data.m_sRFCRemitente,
-                RFCDestinatario: respuesta.data.m_sRFCDestinatario,
-                nombreDestinatario: dataRemitenteDestinatario.find(
-                    (o) => o.m_sRFC === respuesta.data.m_sRFCDestinatario
-                ),
-                domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                /*codigoPostalDestinatario: dataCodigoPostal.find(
-                    (o) => o.m_nIdCP === respuesta.data.m_nIdCodigoPostalDestinatario
-                ),*/
-                ciudadDestinatario: dataCiudad.find(
-                    (o) => o.m_nIdCiudad === respuesta.data.m_nIdCIudadDestinatario
-                ),
-                correoDestinatario: respuesta.data.m_sCorreoDestinatario,
-                telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
-                contactoDestinatario: respuesta.data.m_sContactoDestinatario,
-
-                ciudadDestino: dataCiudad.find(
-                    (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadDestino
-                ),
-                zonaEntrega: respuesta.data.IdZonaEntrega,
-                domicilioEntrega: respuesta.data.DomicilioEntrega,
-                entregaEn: respuesta.data.EntregarEn,
-                datosAdicionalesEntrega: respuesta.data.DatosAdicionalesis,
-                fechaEntrega:
-                    respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
-                /*codigoPostalEntrega: dataCodigoPostal.find(
-                    (o) => o.m_nIdCP === respuesta.data.CodigoPostalEntrega
-                ),*/
-                ciudadEntrega: dataCiudad.find(
-                    (o) => o.m_nIdCiudad === respuesta.data.IdCiudadEntrega
-                ),
-                fechaHoraSalida:
-                    respuesta.data.m_dFechaSalida + "T" + respuesta.data.m_tHoraSalida,
-                fechaHoraLlegada:
-                    respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,
-                idOperador: dataOperador.find(
-                    (o) => o.m_nIdOperador === respuesta.data.m_nIdOperador
-                ),
-                // idTipoUnidad: dataTipoUnidad.find(
-                //     (o) =>
-                //         o.m_nIdTipoUnidad ==
-                //             dataUnidad.find((o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad) ?
-                //             dataUnidad.find((o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad).m_nIdTipoUnidad : 0
-                // ),
-                // idUnidad: dataUnidad.find(
-                //     (o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad
-                // ),
-                // paquetes: respuesta.data.m_arrClsDetalle.filter(d => d.m_nTipo == 2),
-                // sobres: respuesta.data.m_arrClsDetalle.filter(d => d.m_nTipo == 1),
-                //Las de abajo reemplazan a la de arriba, se puede quitar la de arriba cuando ya no se use asi
-                paquetes: respuesta.data.m_arrPaquetes,
-                sobres: respuesta.data.m_arrSobres,
-                entregaEnSucursal: respuesta.m_bEntregaEnSucursal,
-                diferenteEntrega: false,
-                idSucursalEntrega : respuesta.m_nIdSucursalEntrega,
-            });
-            $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
-
-        });
-        console.log(state)
     }
 
     //Limpia todos los campos. Se usa al pasar del listado a consultar o modificar un registro
@@ -991,6 +1027,8 @@ function Embarque(props) {
             height: window.innerHeight,
         })
     }
+
+    /*=TABS NAVEGACION=*/
 
     function handleShowConsultar(id) {
         clearAllInputs()
@@ -1181,6 +1219,259 @@ function Embarque(props) {
 
     }
 
+    function handleShowCancelarConfirmacion() {
+        confirmAlert({
+            title: 'Confirmar Eliminar',
+            message: 'Está seguro de cancelar Embarque?',
+            buttons: [
+                {
+                    label: 'Si',
+                    onClick: () => handleCancelar
+                },
+                {
+                    label: 'No',
+                }
+            ]
+        })
+    }
+
+    function handleShowModificar(id) {
+        console.log(id);
+        clearAllInputs()
+        obtenerEmbarquesId(id).then((respuesta) => {
+            setState({
+                ...state,
+                agregar: "Modificar",
+                idEmbarque: id,
+                idSucursalAgregar: respuesta.data.IdSucursal,
+                folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
+                folioEmbarque: respuesta.data.m_nFolioEmbarque,
+                folioGuía: respuesta.data.m_nFolioGuia,
+                folioInforme: respuesta.data.m_nFolioInforme,
+                fechaHoraCreacion:
+                    respuesta.data.m_dFecha +
+                    "T" +
+                    respuesta.data.m_tHora.split(":")[0] +
+                    ":" +
+                    respuesta.data.m_tHora.split(":")[1],
+                fechaHoraRegistro:
+                    respuesta.data.m_dFechaRegistro +
+                    "T" +
+                    respuesta.data.m_tHoraRegistro.slice(0, 5),
+                moneda: respuesta.data.m_nIdMoneda,
+                tipoCambio: respuesta.data.m_cTIpoCambio,
+                tipoCobro: respuesta.data.m_nIdTIpoCobro,
+                estatusEmbarque: respuesta.data.m_nIdEstatusEmbarque,
+
+
+                nombreRemitente: dataRemitenteDestinatario.find(
+                    (o) => o.m_sRFC === respuesta.data.m_sRFCRemitente
+                ),
+                domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
+                /*codigoPostalRemitente: dataCodigoPostal.find(
+                    (o) => o.m_nIdCP === respuesta.data.m_nIdCodigoPostalRemitente
+                ),*/
+                ciudadRemitente: dataCiudad.find(
+                    (o) => o.m_nIdCiudad === respuesta.data.m_nCiudadRemitente
+                ).m_nIdCiudad,
+                correoRemitente: respuesta.data.m_sCorreoRemitente,
+                telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
+                contactoRemitente: respuesta.data.m_sContactoRemitente,
+                ciudadOrigen: dataCiudad.find(
+                    (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadOrigen
+                ),
+
+                RFCRemitente: respuesta.data.m_sRFCRemitente,
+                RFCDestinatario: respuesta.data.m_sRFCDestinatario,
+                nombreDestinatario: dataRemitenteDestinatario.find(
+                    (o) => o.m_sRFC === respuesta.data.m_sRFCDestinatario
+                ),
+                domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
+                /*codigoPostalDestinatario: dataCodigoPostal.find(
+                    (o) => o.m_nIdCP === respuesta.data.m_nIdCodigoPostalDestinatario
+                ),*/
+                ciudadDestinatario: dataCiudad.find(
+                    (o) => o.m_nIdCiudad === respuesta.data.m_nIdCIudadDestinatario
+                ).m_nIdCiudad,
+                correoDestinatario: respuesta.data.m_sCorreoDestinatario,
+                telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
+                contactoDestinatario: respuesta.data.m_sContactoDestinatario,
+
+                ciudadDestino: dataCiudad.find(
+                    (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadDestino
+                ),
+                zonaEntrega: respuesta.data.IdZonaEntrega,
+                domicilioEntrega: respuesta.data.DomicilioEntrega,
+                entregaEn: respuesta.data.EntregarEn,
+                datosAdicionalesEntrega: respuesta.data.DatosAdicionalesis,
+                fechaEntrega:
+                    respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
+                /*codigoPostalEntrega: dataCodigoPostal.find(
+                    (o) => o.m_nIdCP === respuesta.data.CodigoPostalEntrega
+                ),*/
+               /* ciudadEntrega: dataCiudad.find(
+                    (o) => o.m_nIdCiudad === respuesta.data.IdCiudadEntrega
+                ).m_nIdCiudad,*/
+                fechaHoraSalida:
+                    respuesta.data.m_dFechaSalida + "T" + respuesta.data.m_tHoraSalida,
+                fechaHoraLlegada:
+                    respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,
+                idOperador: dataOperador.find(
+                    (o) => o.m_nIdOperador === respuesta.data.m_nIdOperador
+                ),
+                // idTipoUnidad: dataTipoUnidad.find(
+                //     (o) =>
+                //         o.m_nIdTipoUnidad ==
+                //             dataUnidad.find((o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad) ?
+                //             dataUnidad.find((o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad).m_nIdTipoUnidad : 0
+                // ),
+                // idUnidad: dataUnidad.find(
+                //     (o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad
+                // ),
+                // paquetes: respuesta.data.m_arrClsDetalle.filter(d => d.m_nTipo == 2),
+                // sobres: respuesta.data.m_arrClsDetalle.filter(d => d.m_nTipo == 1),
+                //Las de abajo reemplazan a la de arriba, se puede quitar la de arriba cuando ya no se use asi
+                paquetes: respuesta.data.m_arrPaquetes,
+                sobres: respuesta.data.m_arrSobres,
+                entregaEnSucursal: respuesta.m_bEntregaEnSucursal,
+                diferenteEntrega: false,
+                idSucursalEntrega : respuesta.m_nIdSucursalEntrega,
+            });
+            $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
+
+        });
+        console.log(state)
+    }
+
+    useEffect(
+        async (value) => {
+            if (dataRemitenteDestinatario.length > 0 && dataCiudad.length > 0 && dataOperador.length > 0 && dataTipoUnidad.length > 0){
+                if (props.location.idRecoleccion != undefined) {
+                    console.log('id de recoleccion: ' + props.location.idRecoleccion)
+                    obtenerRecoleccionId(props.location.idRecoleccion)
+                        .then((respuesta) => {
+                            setDataOnState(respuesta)
+                        })
+                }
+
+                if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
+                    showSuccess("Es necesario iniciar sesion para acceder a este proceso");
+                    window.location.replace("login");
+                    return;
+                }
+            }
+
+        },
+        [
+            dataRemitenteDestinatario,
+            dataCiudad,
+            dataOperador,
+            dataTipoUnidad,
+        ]
+    );
+
+    function setDataOnState(respuesta){
+        let paquetesModificado = respuesta.data.m_parrPaquetes;
+        console.log(respuesta);
+        for (let i = 0; i < respuesta.data.m_parrPaquetes.length; i++) {
+            paquetesModificado[i]["m_nTipo"] = 2;
+            paquetesModificado[i]["m_xPeso"] = paquetesModificado[i].m_rPeso;
+            paquetesModificado[i]["m_xLargo"] =
+                paquetesModificado[i].m_rLargo;
+            paquetesModificado[i]["m_xAncho"] =
+                paquetesModificado[i].m_rAncho;
+            paquetesModificado[i]["m_xAlto"] = paquetesModificado[i].m_rAlto;
+            paquetesModificado[i]["m_xVolumen"] =
+                paquetesModificado[i].m_rVolumen;
+            paquetesModificado[i]["m_nIdTIpoEmpaque"] =
+                paquetesModificado[i].m_nIdTipoEmbalaje;
+            paquetesModificado[i]["m_cValorDeclarado"] =
+                paquetesModificado[i].m_cValorDeclarado;
+        }
+        setState({
+            ...state,
+            fechaHoraRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() +
+            1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(
+                2,
+                0
+            )}T${`${new Date().getHours()}`.padStart(
+                2,
+                0
+            )}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
+            idEmbarque: 0,
+            idSucursalAgregar: respuesta.data.m_nIdSucursal,
+            folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
+            folioEmbarque: dataFolioEmbarque.length !== 0 ? dataFolioEmbarque[0].m_sFolioEmbarque : null,
+            folioGuía: respuesta.data.m_nFolioGuia,
+            folioInforme: respuesta.data.m_nFolioInforme,
+            fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
+            moneda: respuesta.data.m_nMoneda,
+            tipoCambio: respuesta.data.m_rTipoCambio,
+            tipoCobro: respuesta.data.m_nIdTipoDeCobro,
+
+            //Datos remitente
+            nombreRemitente: dataRemitenteDestinatario.find((o) => o.m_sRFC === respuesta.data.m_sRFCRemitente),
+            RFCRemitente: respuesta.data.m_sRFCRemitente,
+            domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
+            idCodigoPostalRemitenteTemp: respuesta.data.m_sIdCodigoPostalRemitente,
+            ciudadRemitente: respuesta.data.m_nIdCiudadRemitente,
+            correoRemitente: respuesta.data.m_sCorreoRemitente,
+            telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
+            contactoRemitente: respuesta.data.m_sContactoRemitente,
+            ciudadOrigen: dataCiudad.find((o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadOrigen),
+
+            //Datos destinatario
+            nombreDestinatario: dataRemitenteDestinatario.find((o) => o.m_sRFC === respuesta.data.m_sRFCDestinatario),
+            RFCDestinatario: respuesta.data.m_sRFCDestinatario,
+            domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
+            idCodigoPostalDestinatarioTemp: respuesta.data.m_sIdCodigoPostalDestinatario,
+            ciudadDestinatario: respuesta.data.m_nIdCiudadDestinatario,
+            correoDestinatario: respuesta.data.m_sCorreoDestinatario,
+            telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
+            contactoDestinatario: respuesta.data.m_sContactoDestinatario,
+
+            //Datos destino?
+            ciudadDestino: dataCiudad.find((o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadDestino),
+
+            //fecha entrega?
+            fechaEntrega: respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
+
+            //detalles de la operacion
+            fechaHoraSalida: respuesta.data.m_dFechaSalida + "T" + respuesta.data.m_tHoraSalida,
+            fechaHoraLlegada: respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,
+            idOperador: dataOperador.find((o) => o.m_nIdOperador === respuesta.data.m_nIdOperador),
+            idUnidad: respuesta.data.m_nIdUnidad,
+
+            //paquetes
+            paquetes: paquetesModificado,
+
+            //Datos entrega
+            diferenteEntrega: false,
+            zonaEntrega: '',
+            domicilioEntrega: '',
+            entregaEn: '',
+            datosAdicionalesEntrega: '',
+            codigoPostalEntrega: '',
+            ciudadEntrega: '',
+        });
+
+        //si el cp de entrega es igual al de destinatario significa que no es entrega en diferente domicilio
+        if (respuesta.data.m_nIdCPDetalleEntrega != respuesta.data.m_sIdCodigoPostalDestinatario){
+            setState({
+                ...state,
+                diferenteEntrega: true,
+                zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
+                domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
+                entregaEn: respuesta.data.m_sEntregarEnDetalleEntrega,
+                datosAdicionalesEntrega: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
+                fechaEntrega: respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
+                // codigoPostalEntrega: dataCodigosPostalesEntrega.find((o) => o.m_nIdCP === respuesta.data.m_nIdCPDetalleEntrega),
+                idCodigoPostalEntregaTemp: respuesta.data.m_nIdCPDetalleEntrega,
+                ciudadEntrega: respuesta.data.m_nIdCiudadDetalleEntrega,
+            })
+        }
+    }
+
     function getUltimoFolioEmbarque() {
         obtenerUltimoFolioEmbarques().then((respuesta) => {
             SetDataFolioEmbarque(respuesta.data);
@@ -1306,147 +1597,6 @@ function Embarque(props) {
         console.log(state.identificadorModal);
     }
 
-    const columns = React.useMemo(() => [
-        {
-            headerName: "Acciones",
-            sortable: false, filterable: false,
-            field: "",
-            renderCell: (row) => {
-                return (
-                    <div>
-                        <Tooltip title="Modificar">
-                            <a
-                                onClick={() => handleShowModificar(row.row.m_nIdEmbarque)}
-                                className="btn btn-default btn-xs"
-                            >
-                                <i
-                                    className="fa fa-pencil-square-o"
-                                    style={{ color: "#F9A03E" }}
-                                />
-                            </a>
-                        </Tooltip>
-                        <Tooltip title="Consultar">
-                            <a
-                                className="btn btn-default btn-xs"
-                                onClick={() => handleShowConsultar(row.row.m_nIdEmbarque)}
-                            >
-                                <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                            </a>
-                        </Tooltip>
-                        <Tooltip title="Eliminar">
-                            <a
-                                href="#"
-                                className="btn btn-default btn-xs"
-                                onClick={() => confirmAlert({
-                                    title: 'Confirmar Eliminar',
-                                    message: 'Está seguro de eliminar Embarque?',
-                                    buttons: [
-                                        {
-                                            label: 'Si',
-                                            onClick: () => handleEliminar(row.row.m_nIdEmbarque)
-                                        },
-                                        {
-                                            label: 'No',
-                                        }
-                                    ]
-                                })}
-                            >
-                                <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
-                            </a>
-                        </Tooltip>
-
-
-
-                    </div>
-                );
-            },
-        },
-        {
-            headerName: "Folio",
-            field: "m_nFolioEmbarque",
-            width: 125,
-        },
-        {
-            headerName: "Fecha/Hora Elaboración",
-            field: "m_sFechaHora",
-            width: 200,
-        },
-        {
-            headerName: "Sucursal",
-            field: "m_sSucursal",
-            width: 150,
-        },
-        {
-            headerName: "Estatus de la Orden",
-            field: "m_sEstatusEmbarque",
-            width: 200,
-        },
-        {
-            headerName: "Origen",
-            field: "m_sCiudadOrigen",
-            width: 150,
-        },
-        {
-            headerName: "Destino",
-            field: "m_sCiudadDestino",
-            width: 150,
-        },
-        {
-            headerName: "Folio Guía",
-            field: "m_sFolioGuia",
-            width: 150,
-        },
-        {
-            headerName: "Folio Informe",
-            field: "m_nFolioInforme",
-            width: 150,
-        },
-        {
-            headerName: "Es Recolecta",
-            field: "m_bEsRecolecta",
-            width: 125,
-            renderCell: (row) => {
-                return (
-                    <div
-                        style={{
-                            width: "100%",
-                            textAlign: "center",
-                            color: (row.row.m_bEsRecolecta != 0 ? "green" : "red"),
-                        }}
-                    >
-                        {
-                            (row.row.m_bEsRecolecta != 0 ? (
-                                <SvgIcon component={Activo} />
-                            ) : (
-                                <SvgIcon component={NoActivo} />
-                            ))
-                        }
-                    </div>
-                );
-            },
-        },
-        {
-            headerName: "Folio Recolección",
-            field: "m_sFolioRecoleccion",
-            width: 150,
-        },
-        {
-            headerName: "Cancelado",
-            field: "m_dtFechaCancelacion",
-            width: 150,
-        },
-        {
-            headerName: "Usuario que Cancela",
-            field: "m_sUsuarioCancelacion",
-            width: 200,
-            renderCell: (row) => {
-                <div>
-                    {row.row.m_sUsuarioCancelacion == "0" ? "N/A" : row.row.m_sUsuarioCancelacion}
-                </div>
-            }
-        },
-    ]);
-
     function getAllZonas() {
         const url = `${process.env.REACT_APP_API_URL}/Zonas/GetListado`;
         axios.get(url, { headers }).then((respuesta) => {
@@ -1460,151 +1610,6 @@ function Embarque(props) {
             ...state,
             zonaEntrega: event.target.value,
         });
-    }
-
-    useEffect(
-        async (value) => {
-            if (props.location.idRecoleccion != undefined) {
-                obtenerRecoleccionId(props.location.idRecoleccion)
-                    .then((respuesta) => {
-                        setDataOnState(respuesta)
-                    })
-            }
-            if (
-                localStorage.getItem("UsuarioId") === null ||
-                localStorage.getItem("UsuarioId") <= 0
-            ) {
-                showSuccess("Es necesario iniciar sesion para acceder a este proceso");
-                window.location.replace("login");
-                return;
-            }
-        },
-        [
-            dataRemitenteDestinatario,
-            dataCiudad,
-            // dataCodigoPostal,
-            dataOperador,
-            dataUnidad,
-            dataTipoUnidad,
-        ]
-    );
-
-    function setDataOnState(respuesta){
-        let paquetesModificado = respuesta.data.m_parrPaquetes;
-        console.log(respuesta);
-        for (let i = 0; i < respuesta.data.m_parrPaquetes.length; i++) {
-            paquetesModificado[i]["m_nTipo"] = 2;
-            paquetesModificado[i]["m_xPeso"] = paquetesModificado[i].m_rPeso;
-            paquetesModificado[i]["m_xLargo"] =
-                paquetesModificado[i].m_rLargo;
-            paquetesModificado[i]["m_xAncho"] =
-                paquetesModificado[i].m_rAncho;
-            paquetesModificado[i]["m_xAlto"] = paquetesModificado[i].m_rAlto;
-            paquetesModificado[i]["m_xVolumen"] =
-                paquetesModificado[i].m_rVolumen;
-            paquetesModificado[i]["m_nIdTIpoEmpaque"] =
-                paquetesModificado[i].m_nIdTipoEmbalaje;
-            paquetesModificado[i]["m_cValorDeclarado"] =
-                paquetesModificado[i].m_cValorDeclarado;
-        }
-        console.log(paquetesModificado);
-        setState({
-            ...state,
-            idEmbarque: 0,
-            idSucursalAgregar: respuesta.data.m_nIdSucursal,
-            folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
-            folioEmbarque:
-                dataFolioEmbarque.length !== 0
-                    ? dataFolioEmbarque[0].m_sFolioEmbarque
-                    : null,
-            folioGuía: respuesta.data.m_nFolioGuia,
-            folioInforme: respuesta.data.m_nFolioInforme,
-            fechaHoraCreacion:
-                today.getDate() +
-                "/" +
-                (today.getMonth() + 1) +
-                "/" +
-                today.getFullYear() +
-                " " +
-                today.getHours() +
-                ":" +
-                today.getMinutes(),
-            moneda: respuesta.data.m_nMoneda,
-            tipoCambio: respuesta.data.m_rTipoCambio,
-            tipoCobro: respuesta.data.m_nIdTipoDeCobro,
-            nombreRemitente: dataRemitenteDestinatario.find(
-                (o) => o.m_sRFC === respuesta.data.m_sRFCRemitente
-            ),
-            RFCRemitente: respuesta.data.m_sRFCRemitente,
-            domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-            /*codigoPostalRemitente: dataCodigoPostal.find(
-                (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalRemitente
-            ),*/
-            idCodigoPostalRemitenteTemp: respuesta.data.m_sIdCodigoPostalRemitente,
-            ciudadRemitente: dataCiudad.find(
-                (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadRemitente
-            ),
-            correoRemitente: respuesta.data.m_sCorreoRemitente,
-            telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
-            contactoRemitente: respuesta.data.m_sContactoRemitente,
-            ciudadOrigen: dataCiudad.find(
-                (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadOrigen
-            ),
-
-            nombreDestinatario: dataRemitenteDestinatario.find(
-                (o) => o.m_sRFC === respuesta.data.m_sRFCDestinatario
-            ),
-            RFCDestinatario: respuesta.data.m_sRFCDestinatario,
-            domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-            /*codigoPostalDestinatario: dataCodigoPostal.find(
-                (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalDestinatario
-            ),*/
-            idCodigoPostalRemitentTemp: respuesta.data.m_sIdCodigoPostalDestinatario,
-            ciudadDestinatario: dataCiudad.find(
-                (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadDestinatario
-            ),
-            correoDestinatario: respuesta.data.m_sCorreoDestinatario,
-            telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
-            contactoDestinatario: respuesta.data.m_sContactoDestinatario,
-
-            ciudadDestino: dataCiudad.find(
-                (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadDestino
-            ),
-            zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
-            domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
-            entregaEn: respuesta.data.m_sEntregarEnDetalleEntrega,
-            datosAdicionalesEntrega:
-            respuesta.data.m_sDatosAdicionalesDetalleEntrega,
-            fechaEntrega:
-                respuesta.data.m_dFechaEntrega +
-                "T" +
-                respuesta.data.m_tHoraEntrega,
-            /*codigoPostalEntrega: dataCodigoPostal.find(
-                (o) => o.m_nIdCP === respuesta.data.m_nIdCPDetalleEntrega
-            ),*/
-            ciudadEntrega: dataCiudad.find(
-                (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadDetalleEntrega
-            ),
-            fechaHoraSalida:
-                respuesta.data.m_dFechaSalida +
-                "T" +
-                respuesta.data.m_tHoraSalida,
-            fechaHoraLlegada:
-                respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,
-            idOperador: dataOperador.find(
-                (o) => o.m_nIdOperador === respuesta.data.m_nIdOperador
-            ),
-
-            idUnidad: dataUnidad.find(
-                (o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad
-            ),
-            paquetes: paquetesModificado,
-        });
-        /*console.log(
-            dataRemitenteDestinatario.find(
-                (o) => o.m_sRFC === respuesta.data.m_sRFCRemitente
-            )
-        );*/
     }
 
     useEffect((value) => {
@@ -1733,9 +1738,7 @@ function Embarque(props) {
         return data.length != 0;
     }
 
-    function DefaultColumnFilter({
-        column: { filterValue, preFilteredRows, setFilter },
-    }) {
+    function DefaultColumnFilter({column: { filterValue, preFilteredRows, setFilter },}) {
         const count = preFilteredRows.length;
         const [showResults, setShowResults] = React.useState(false);
         const onClick = () => setShowResults(!showResults);
