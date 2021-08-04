@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="94d8e9cf-07c8-4a10-b81b-63018b1e29c3" name="Default Changelist" comment="Resolución parcial del error para obtener codigos postales que vienen de recolección">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="94d8e9cf-07c8-4a10-b81b-63018b1e29c3" name="Default Changelist" comment="Acomodo de codigo">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Recoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Recoleccion.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,7 +66,7 @@
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="preferences.general" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
@@ -131,7 +128,7 @@
       <workItem from="1627705319350" duration="2047000" />
       <workItem from="1627918796294" duration="22555000" />
       <workItem from="1628006990398" duration="27264000" />
-      <workItem from="1628061101591" duration="2110000" />
+      <workItem from="1628061101591" duration="3637000" />
     </task>
     <task id="LOCAL-00001" summary="*Algunos pedazos de codigos se sustituyeron con componentes.&#10;*Listado de formatos se muestra correctamente&#10;*Mejor acomodo en pestaña domicilios">
       <created>1624952066000</created>
@@ -378,7 +375,14 @@
       <option name="project" value="LOCAL" />
       <updated>1628054512323</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="Acomodo de codigo">
+      <created>1628096687339</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1628096687339</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -456,9 +460,9 @@
     <MESSAGE value="Ahora cuando se selecciona entrega o recoleccion en diferente domicilio los campos de estos apartados se vuelven necesarios" />
     <MESSAGE value="Se optimizó el uso de codigos postales" />
     <MESSAGE value="Se optimizó el uso de codigos postales en embarques y se reemplazaron componentes para homologar recoleccion" />
-    <MESSAGE value="Acomodo de codigo" />
     <MESSAGE value="Resolución parcial del error para obtener codigos postales que vienen de recolección" />
-    <option name="LAST_COMMIT_MESSAGE" value="Resolución parcial del error para obtener codigos postales que vienen de recolección" />
+    <MESSAGE value="Acomodo de codigo" />
+    <option name="LAST_COMMIT_MESSAGE" value="Acomodo de codigo" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
