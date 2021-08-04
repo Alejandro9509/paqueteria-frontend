@@ -439,7 +439,7 @@ function Rutas(props) {
         obtenerRutasId(id).then(respuesta => {
             setState({
                 ...state,
-                agregar: "Modificar",
+                agregar: "Consultar",
                 idRuta: id,
                 height: window.innerHeight,
                 showMap: true,
@@ -839,7 +839,7 @@ function Rutas(props) {
                                                                                     type="text"
                                                                                     pattern="[0-9]*"
                                                                                     required
-                                                                                    type="number"
+                                                                                    disabled={state.agregar === "Consultar"}
                                                                                     className="form-control"
                                                                                     name="folio"
                                                                                     value={state.folio}
@@ -856,6 +856,7 @@ function Rutas(props) {
                                                                                     onChange={(event, value) => handleChangeOrigen(value, parseInt(value.slice(0, value.indexOf(" "))))}
                                                                                     value={state.origin}
                                                                                     id="origin"
+                                                                                    disabled={state.agregar === "Consultar"}
                                                                                     name="origin"
                                                                                     onInputChange={(event, value) => setState({ ...state, origin: value })}
                                                                                     disableClearable
@@ -908,6 +909,7 @@ function Rutas(props) {
                                                                                     onChange={(event, value) => handleChangeDestino(value, parseInt(value.slice(0, value.indexOf(" "))))}
                                                                                     value={state.destiny}
                                                                                     id="destiny"
+                                                                                    disabled={state.agregar === "Consultar"}
                                                                                     name="destiny"
                                                                                     onInputChange={(event, value) => setState({ ...state, destiny: value })}
                                                                                     disableClearable
@@ -958,6 +960,7 @@ function Rutas(props) {
                                                                                     className="form-control"
                                                                                     type="text"
                                                                                     required
+                                                                                    disabled={state.agregar === "Consultar"}
                                                                                     InputLabelProps={{
                                                                                         shrink: true,
                                                                                     }}
@@ -977,7 +980,9 @@ function Rutas(props) {
 
                                                                             <label className="input select">
                                                                                 <FormControl fullWidth variant="outlined"
-                                                                                    margin="dense">
+                                                                                    margin="dense"
+                                                                                             disabled={state.agregar === "Consultar"}
+                                                                                >
                                                                                     <InputLabel
                                                                                         id="tipoViajeLabel">Tipo de viaje</InputLabel>
                                                                                     <Select
@@ -986,7 +991,6 @@ function Rutas(props) {
                                                                                         className="form-control"
                                                                                         required
                                                                                         value={state.tipoViaje}
-                                                                                        disabled={state.agregar == "Consultar"}
                                                                                         onChange={handleChange}
                                                                                         name="tipoViaje"
                                                                                     >
@@ -1006,7 +1010,9 @@ function Rutas(props) {
                                                                         <div className="col-md-4 unit">
                                                                             <label className="input select">
                                                                                 <FormControl fullWidth variant="outlined"
-                                                                                    margin="dense">
+                                                                                    margin="dense"
+                                                                                             disabled={state.agregar === "Consultar"}
+                                                                                >
                                                                                     <InputLabel
                                                                                         id="clasificacionLabel">Clasificación de viaje</InputLabel>
                                                                                     <Select
@@ -1015,7 +1021,6 @@ function Rutas(props) {
                                                                                         className="form-control"
                                                                                         required="true"
                                                                                         value={state.clasificacion}
-                                                                                        disabled={state.agregar == "Consultar"}
                                                                                         onChange={handleChange}
                                                                                         name="clasificacion"
                                                                                     >
@@ -1035,7 +1040,9 @@ function Rutas(props) {
                                                                         <div className="col-md-2 unit">
                                                                             <label className="input select">
                                                                                 <FormControl fullWidth variant="outlined"
-                                                                                    margin="dense">
+                                                                                    margin="dense"
+                                                                                             disabled={state.agregar === "Consultar"}
+                                                                                >
                                                                                     <InputLabel
                                                                                         id="tipoUnidadLabel">Tipo de Unidad</InputLabel>
                                                                                     <Select
@@ -1044,7 +1051,6 @@ function Rutas(props) {
                                                                                         className="form-control"
                                                                                         required
                                                                                         value={state.tipoUnidad}
-                                                                                        disabled={state.agregar == "Consultar"}
                                                                                         onChange={handleChange}
                                                                                         name="tipoUnidad"
                                                                                     >
@@ -1074,6 +1080,7 @@ function Rutas(props) {
                                                                                         type="radio"
                                                                                         value="1"
                                                                                         name="trayecto"
+                                                                                        disabled={state.agregar === "Consultar"}
                                                                                         //value="PERMANETE"
                                                                                         onChange={handleChange}
                                                                                         defaultChecked
@@ -1090,7 +1097,8 @@ function Rutas(props) {
                                                                                         type="radio"
                                                                                         onChange={handleChange}
                                                                                         name="trayecto"
-                                                                                    //checked={state.trayecto === "EVENTUAL"}
+                                                                                        disabled={state.agregar === "Consultar"}
+                                                                                        //checked={state.trayecto === "EVENTUAL"}
                                                                                     //checked={state.trayecto === 0}
                                                                                     />
                                                                                     <i />
@@ -1106,8 +1114,9 @@ function Rutas(props) {
                                                                                     type="number"
                                                                                     onChange={handleChange}
                                                                                     value={state.horas}
+                                                                                    disabled={state.agregar === "Consultar"}
                                                                                     InputLabelProps={{
-                                                                                        shrink: true,
+                                                                                    shrink: true,
                                                                                     }}
                                                                                     name="horas"
                                                                                 />
@@ -1118,6 +1127,7 @@ function Rutas(props) {
                                                                                 <TextField variant="outlined" margin="dense" label="ETA"
                                                                                     className="form-control"
                                                                                     type="text"
+                                                                                    disabled={state.agregar === "Consultar"}
                                                                                     onChange={handleChange}
                                                                                     value={state.eta}
                                                                                     name="eta"
@@ -1129,6 +1139,7 @@ function Rutas(props) {
                                                                                 <TextField variant="outlined" margin="dense" label="Kilometros"
                                                                                     className="form-control"
                                                                                     type="number"
+                                                                                    disabled={state.agregar === "Consultar"}
                                                                                     onChange={handleChange}
                                                                                     value={state.kilometros}
                                                                                     InputLabelProps={{
@@ -1145,6 +1156,7 @@ function Rutas(props) {
                                                                                     type="number"
                                                                                     onChange={handleChange}
                                                                                     value={state.millas}
+                                                                                    disabled={state.agregar === "Consultar"}
                                                                                     InputLabelProps={{
                                                                                         shrink: true,
                                                                                     }}
@@ -1161,6 +1173,7 @@ function Rutas(props) {
                                                                                 <label className="checkbox" >
                                                                                     <input
                                                                                         required
+                                                                                        disabled={state.agregar === "Consultar"}
                                                                                         checked={state.activa}
                                                                                         name="activa"
                                                                                         onChange={(e) => setState({ ...state, activa: e.target.checked })}
@@ -1228,6 +1241,7 @@ function Rutas(props) {
                                                                             native="true"
                                                                             name="activo"
                                                                             type="checkbox"
+                                                                            disabled={state.agregar === "Consultar"}
                                                                             onChange={(e) => handleTypeRoute(1, e.target.checked)}
                                                                             checked={state.isManual}
                                                                         />
@@ -1239,6 +1253,7 @@ function Rutas(props) {
                                                                             native="true"
                                                                             name="activo"
                                                                             type="checkbox"
+                                                                            disabled={state.agregar === "Consultar"}
                                                                             onChange={(e) => handleTypeRoute(2, e.target.checked)}
                                                                             checked={state.isTour}
                                                                         />
