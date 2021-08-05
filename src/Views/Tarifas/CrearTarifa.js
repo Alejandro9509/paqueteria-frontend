@@ -50,7 +50,7 @@ class CrearTarifa extends Component {
             precioMinimo: props.edit ? props.select.m_cMontoMinimo : "",
             precioKilo: props.edit ? props.select.m_cPrecioKilo : "",
             precioM3: props.edit ? props.select.m_cPrecioM3 : "",
-            disabled: true
+            disabled: true,
         }
         this.getAllSucursales = this.getAllSucursales.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -255,6 +255,8 @@ class CrearTarifa extends Component {
             consult = disabled
         }
         console.log(conceptosAdicionales)
+        console.log("aqui")
+        console.log(this.props.consult)
         return (
             <form className="j-forms" onSubmit={this.onSubmit}>
                 <div className="main-container" style={{ marginLeft: "0px", padding: "0px" }}>
@@ -276,6 +278,7 @@ class CrearTarifa extends Component {
                                                         native
                                                         labelId="sucursalLabel"
                                                         label="Sucursal"
+                                                        disabled={this.props.consult}
                                                         className="form-control"
                                                         required
                                                         onChange={this.handleChange}
@@ -310,6 +313,7 @@ class CrearTarifa extends Component {
                                                         native
                                                         className="form-control"
                                                         label="Destino"
+                                                        disabled={this.props.consult}
                                                         labelId="destinoLabel"
                                                         className="form-control"
                                                         required
@@ -344,7 +348,8 @@ class CrearTarifa extends Component {
                                                         checked={this.state.porPesoOVolumen}
                                                         onChange={(e) => { this.setState({ porPesoOVolumen: !this.state.porPesoOVolumen, porRangos: !this.state.porRangos }) }}
                                                         name="porPesoOVolumen"
-                                                        disabled={this.state.disabled}/>
+                                                       disabled={this.props.consult}
+                                                />
                                                 <i />
                                             </label>
                                         </div>
@@ -356,7 +361,8 @@ class CrearTarifa extends Component {
                                                     checked={this.state.porRangos}
                                                     onChange={(e) => { this.setState({ porRangos: !this.state.porRangos, porPesoOVolumen: !this.state.porPesoOVolumen }) }}
                                                     name="porRangos"
-                                                       disabled={this.state.disabled}/>
+                                                       disabled={this.props.consult}
+                                                />
                                                 <i />
                                             </label>
                                         </div>
@@ -375,7 +381,7 @@ class CrearTarifa extends Component {
                                                                 labelId="unidadPesoLabel"
                                                                 className="form-control"
                                                                 required
-                                                                disabled={consult}
+                                                                disabled={this.props.consult}
                                                                 value={this.state.unidadPeso}
                                                                 onChange={this.handleChange}
                                                                 name="unidadPeso"
@@ -414,8 +420,9 @@ class CrearTarifa extends Component {
                                                             label={<div>{this.state.unidadPeso}/Kg</div>}
                                                             required
                                                             step="2"
-                                                            disabled={consult}
-                                                            value={this.state.factorConversion}
+                                                                   disabled={this.props.consult}
+
+                                                                   value={this.state.factorConversion}
                                                             name="factorConversion"
                                                         />
                                                     </div>
@@ -430,8 +437,9 @@ class CrearTarifa extends Component {
                                                             type="number"
                                                             label={<div>Precio m<sup>3</sup></div>}
                                                             step="1"
-                                                            disabled={consult}
-                                                            value={this.state.precioM3}
+                                                                   disabled={this.props.consult}
+
+                                                                   value={this.state.precioM3}
                                                             name="precioM3"
                                                         />
                                                     </div>
@@ -446,8 +454,9 @@ class CrearTarifa extends Component {
                                                             label="Precio Kilo"
                                                             required={this.state.porPesoOVolumen}
                                                             step="2"
-                                                            disabled={consult}
-                                                            value={this.state.precioKilo}
+                                                                   disabled={this.props.consult}
+
+                                                                   value={this.state.precioKilo}
                                                             name="precioKilo"
                                                         />
                                                     </div>
@@ -462,8 +471,9 @@ class CrearTarifa extends Component {
                                                             required={this.state.porPesoOVolumen}
                                                             label="Flete Minimo"
                                                             step="1"
-                                                            disabled={consult}
-                                                            value={this.state.precioFlete}
+                                                                   disabled={this.props.consult}
+
+                                                                   value={this.state.precioFlete}
                                                             name="precioFlete"
                                                         />
                                                     </div>
@@ -477,8 +487,9 @@ class CrearTarifa extends Component {
                                                             type="number"
                                                             label="Precio Minimo"
                                                             required={this.state.porPesoOVolumen}
-                                                            disabled={consult}
-                                                            step="2"
+                                                                   disabled={this.props.consult}
+
+                                                                   step="2"
                                                             value={this.state.precioMinimo}
                                                             name="precioMinimo"
                                                         />
@@ -496,6 +507,7 @@ class CrearTarifa extends Component {
                                                                 value={this.state.traslada}
                                                                 onChange={this.handleChange}
                                                                 name="traslada"
+                                                                disabled={this.props.consult}
                                                             >
                                                                 <option
                                                                     key={0}
@@ -524,6 +536,7 @@ class CrearTarifa extends Component {
                                                                 label="Retiene"
                                                                 className="form-control"
                                                                 onChange={this.handleChange}
+                                                                disabled={this.props.consult}
                                                                 name="retiene"
                                                                 value={this.state.retiene}
                                                             >

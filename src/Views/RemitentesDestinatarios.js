@@ -318,6 +318,44 @@ function RemitenteDestinatario(props) {
         });
     }
 
+    function handleShowConsultar(id) {
+        obtenerRemitentesDestinatariosId(id).then((respuesta) => {
+            getAllEstados(respuesta.data.m_nIdPais);
+            setState({
+                ...state,
+                agregar: "Consultar",
+                idRemitenteDestinatario: id,
+                cliente: dataClientes.find(
+                    (o) => o.m_nIdCliente == respuesta.data.m_nIdCliente
+                ),
+                numero: respuesta.data.m_nNumero,
+                nombre: respuesta.data.m_sNombre,
+                rfc: respuesta.data.m_sRFC,
+                activo: respuesta.data.m_bActivo,
+                calle: respuesta.data.m_sCalle,
+                noExterior: respuesta.data.m_sNoExterior,
+                noInterior: respuesta.data.m_sNoInterior,
+                colonia: respuesta.data.m_sColonia,
+                localidad: respuesta.data.m_sLocalidad,
+                municipio: respuesta.data.m_sMunicipio,
+                idPais: respuesta.data.m_nIdPais,
+                idEstado: respuesta.data.m_nIdEstado,
+                idCodigoPostal: dataCodigoPostal.find(
+                    (o) => o.m_nIdCP == respuesta.data.m_nIdCP
+                ),
+                creadoPor: respuesta.data.m_nCreadoPor,
+                creadoEl: respuesta.data.m_dtCreadoEl,
+                modificadoPor: respuesta.data.m_nModificadoPor,
+                modificadoEl: respuesta.data.m_dtModificadoEl,
+                contacto: respuesta.data.m_sContacto,
+                correoElectronico: respuesta.data.m_sCorreoElectronico,
+                telefono: respuesta.data.m_sTelefono,
+            });
+            $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
+
+        });
+    }
+
     const columns = React.useMemo(() => [
         {
             headerName: "Acciones",
@@ -330,7 +368,7 @@ function RemitenteDestinatario(props) {
 
                         </Tooltip>
                         <Tooltip title="Consultar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdRemitenteDestinatario))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdRemitenteDestinatario))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
@@ -861,7 +899,8 @@ function RemitenteDestinatario(props) {
                                                                                 id="numero"
                                                                                 maxlength="4"
                                                                                 required
-                                                                                
+                                                                                disabled={state.agregar === "Consultar"}
+
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -872,6 +911,7 @@ function RemitenteDestinatario(props) {
                                                                                 onChange={handleChange}
                                                                                 className="form-control"
                                                                                 type="text"
+                                                                                disabled={state.agregar === "Consultar"}
                                                                                 pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
                                                                                 title="Favor de introducir un RFC válido."
                                                                                 value={state.rfc}
@@ -888,6 +928,7 @@ function RemitenteDestinatario(props) {
                                                                                 type="text"
                                                                                 value={state.nombre}
                                                                                 id="nombre"
+                                                                                disabled={state.agregar === "Consultar"}
                                                                                 required
                                                                             />
                                                                         </div>
@@ -896,6 +937,7 @@ function RemitenteDestinatario(props) {
                                                                         <div className="input">
                                                                             <Autocomplete
                                                                                 value={state.cliente}
+                                                                                disabled={state.agregar === "Consultar"}
                                                                                 freeSolo
                                                                                 onChange={(event, newValue) => {
                                                                                     handleSelectCliente(newValue)
@@ -973,6 +1015,7 @@ function RemitenteDestinatario(props) {
                                                                                 checked={state.activo}
                                                                                 id="activo"
                                                                                 name="activo"
+                                                                                disabled={state.agregar === "Consultar"}
                                                                             />
                                                                             <i />
                                     Activo
@@ -1003,6 +1046,7 @@ function RemitenteDestinatario(props) {
                                                                                 <Select
                                                                                     labelId="idPaisLabel"
                                                                                     label="País"
+                                                                                    disabled={state.agregar === "Consultar"}
                                                                                     onChange={handleSelectChange}
                                                                                     className="form-control"
                                                                                     value={state.idPais}
@@ -1033,6 +1077,7 @@ function RemitenteDestinatario(props) {
                                                                                 <Select
                                                                                     labelId="idEstadoLabel"
                                                                                     label="Estado"
+                                                                                    disabled={state.agregar === "Consultar"}
                                                                                     onChange={handleSelectEstadoChange}
                                                                                     className="form-control"
                                                                                     required
@@ -1069,6 +1114,7 @@ function RemitenteDestinatario(props) {
                                                                                 }
                                                                                 id="idCodigoPostal"
                                                                                 disableClearable
+                                                                                disabled={state.agregar === "Consultar"}
                                                                                 forcePopupIcon={false}
                                                                                 options={dataCodigoPostal}
                                                                                 getOptionLabel={(option) =>
@@ -1137,7 +1183,7 @@ function RemitenteDestinatario(props) {
                                                                                 onChange={handleChange}
                                                                                 className="form-control"
                                                                                 type="text"
-                                                                                id="text"
+                                                                                disabled={state.agregar === "Consultar"}
                                                                                 value={state.municipio}
                                                                                 id="municipio"
                                                                                 required
@@ -1150,6 +1196,7 @@ function RemitenteDestinatario(props) {
                                                                                 onChange={handleChange}
                                                                                 className="form-control"
                                                                                 type="text"
+                                                                                disabled={state.agregar === "Consultar"}
                                                                                 value={state.localidad}
                                                                                 id="localidad"
                                                                             />
@@ -1161,6 +1208,7 @@ function RemitenteDestinatario(props) {
                                                                                 onChange={handleChange}
                                                                                 className="form-control"
                                                                                 type="text"
+                                                                                disabled={state.agregar === "Consultar"}
                                                                                 value={state.colonia}
                                                                                 id="colonia"
                                                                             />
@@ -1176,6 +1224,7 @@ function RemitenteDestinatario(props) {
                                                                                 className="form-control"
                                                                                 type="text"
                                                                                 value={state.calle}
+                                                                                disabled={state.agregar === "Consultar"}
                                                                                 id="calle"
                                                                                 required
                                                                             />
@@ -1187,6 +1236,7 @@ function RemitenteDestinatario(props) {
                                                                                 onChange={handleChange}
                                                                                 className="form-control"
                                                                                 type="text"
+                                                                                disabled={state.agregar === "Consultar"}
                                                                                 value={state.noExterior}
                                                                                 id="noExterior"
                                                                             />
@@ -1198,6 +1248,7 @@ function RemitenteDestinatario(props) {
                                                                                 onChange={handleChange}
                                                                                 className="form-control"
                                                                                 type="text"
+                                                                                disabled={state.agregar === "Consultar"}
                                                                                 value={state.noInterior}
                                                                                 id="noInterior"
                                                                             />
@@ -1212,6 +1263,7 @@ function RemitenteDestinatario(props) {
                                                                                 onChange={handleChange}
                                                                                 className="form-control"
                                                                                 type="text"
+                                                                                disabled={state.agregar === "Consultar"}
                                                                                 value={state.contacto}
                                                                                 id="contacto"
                                                                             />
@@ -1223,6 +1275,7 @@ function RemitenteDestinatario(props) {
                                                                                 onChange={handleChange}
                                                                                 className="form-control"
                                                                                 type="text"
+                                                                                disabled={state.agregar === "Consultar"}
                                                                                 value={state.telefono}
                                                                                 id="telefono"
                                                                             />
@@ -1234,6 +1287,7 @@ function RemitenteDestinatario(props) {
                                                                                 onChange={handleChange}
                                                                                 className="form-control"
                                                                                 type="email"
+                                                                                disabled={state.agregar === "Consultar"}
                                                                                 value={state.correoElectronico}
                                                                                 id="correoElectronico"
                                                                             />

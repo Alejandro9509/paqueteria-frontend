@@ -116,12 +116,12 @@ class Zonas extends Component {
   handleAceptar(data) {
     console.log(data)
     var params = {
+      "m_nIdZona": this.state.idZona,
       "m_nFolio": data.folio,
       "m_sDescripcion": data.descripcion,
       "m_nIdSucursal": data.sucursal,
       "m_cyCostoRecolectar": data.costoRecolectar,
       "m_cyCostoEntregar": data.costoEntregar,
-      "m_arrZonasCiudades": [],
 
       "m_nCreadoPor": localStorage.getItem("UsuarioId"),
       "m_nModificadoPor": localStorage.getItem("UsuarioId"),
