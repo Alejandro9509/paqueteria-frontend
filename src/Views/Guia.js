@@ -239,6 +239,271 @@ function Guia(props) {
     const [dataImpuestoTraslado, setDataImpuestoTraslado] = React.useState([])
     const [dataImpuestoRetiene, setDataImpuestoRetiene] = React.useState([])
 
+    /*const embarqueRespuesta = {
+        "m_nIdEmbarque": 256,
+        "m_nIdRecoleccion": 0,
+        "m_nFolioEmbarque": "FE00000238",
+        "m_sFolioGuia": "",
+        "m_sFolioRecoleccion": "RE00000212",
+        "m_nFolioInforme": "",
+        "m_nIdEstatusEmbarque": 15,
+        "m_nIdMoneda": 1,
+        "m_cTIpoCambio": 16,
+        "m_nIdTIpoCobro": 3,
+        "IdSucursal": 24,
+
+
+        "m_sNOmbreRemitente": "CATALINA PAOR PAOC",
+        "m_sRFCRemitente": "PAOC761214IM9",
+        "m_sDomicilioRemitente": "Zapopan DELEGACIÓN BENITO JUÁREZ SAN COSME DÍAZ SUÁREZ Ext: 45 Int: ",
+        "m_nIdCodigoPostalRemitente": 2796,
+        "m_nCiudadRemitente": 7,
+        "m_sCiudadRemitente": "Tonalá",
+        "m_bEsRecolecta": 1,
+        "m_sCorreoRemitente": "caty@gmail.com",
+        "m_sTelefonoRemitente": "6863921532",
+        "m_sContactoRemitente": "ContactoCaty",
+        "m_nIdCiudadRemitente": 0,
+        "m_nIdCiudadOrigen": 136,
+        "m_sCiudadOrigen": "San Francisco de los Romo",
+
+
+        "m_sNombreDestinatario": "ULISES CUEVAS PÉREZ",
+        "m_sRFCDestinatario": "CUPU800825569",
+        "m_sDomicilioDestinatario": "CIUDAD DE MÉXICO DELEGACIÓN BENITO JUÁREZ SAN COSME DÍAZ SUÁREZ Ext: 44 Int: ",
+        "m_nIdCodigoPostalDestinatario": 538,
+        "m_sCorreoDestinatario": "Ulises@gmail.com",
+        "m_nIdCIudadDestinatario": 8,
+        "m_sCIudadDestinatario": "Tecate",
+        "m_sTelefonoDestinatario": "6862873234",
+        "m_sContactoDestinatario": "ContactoUlises",
+        "m_nIdCiudadDestino": 8,
+        "m_sCiudadDestino": "Tecate",
+
+
+        "m_tHoraEntrega": "00:00:00.000",
+        "m_dFechaEntrega": "1900-01-01",
+        "EntregarMismoDomicilio": false,
+        "CodigoPostalEntrega": 1099,
+        "IdCiudadEntrega": 1091,
+        "IdZonaEntrega": 41,
+        "DomicilioEntrega": "domicilio entrega prueba",
+        "EntregarEn": "entrega en prueba",
+        "DatosAdicionalesis": "datos adicionales entrega prueba",
+        "m_bEntregaEnSucursal": false,
+        "m_nIdSucursalEntrega": 0,
+
+
+        "m_nNoPaquetes": 4,
+        "m_nNoSobres": 2,
+        "m_arrPaquetes": [{
+            "m_nIdEmbarqueDetalle": 117,
+            "m_nIdEmbarque": 256,
+            "m_nTipo": 2,
+            "m_sDescripcion": "descripcion prueba",
+            "m_xPeso": 10,
+            "m_xLargo": 1,
+            "m_xAncho": 1,
+            "m_xAlto": 1,
+            "m_xVolumen": 1,
+            "m_nIdTIpoEmpaque": 15,
+            "m_cValorDeclarado": 100,
+            "m_sObservaciones": "observaciones prueba",
+            "m_bActivo": false,
+            "m_sUltimoError": "",
+            "ctd": 0
+        }, {
+            "m_nIdEmbarqueDetalle": 118,
+            "m_nIdEmbarque": 256,
+            "m_nTipo": 2,
+            "m_sDescripcion": "descripcion prueba2",
+            "m_xPeso": 20,
+            "m_xLargo": 2,
+            "m_xAncho": 2,
+            "m_xAlto": 2,
+            "m_xVolumen": 8,
+            "m_nIdTIpoEmpaque": 17,
+            "m_cValorDeclarado": 200,
+            "m_sObservaciones": "observacion prueba 2",
+            "m_bActivo": false,
+            "m_sUltimoError": "",
+            "ctd": 0
+        }],
+        "m_arrSobres": [{
+            "m_nIdEmbarqueDetalle": 119,
+            "m_nIdEmbarque": 256,
+            "m_nTipo": 1,
+            "m_sDescripcion": "sobre prueba",
+            "m_xPeso": 0,
+            "m_xLargo": 0,
+            "m_xAncho": 0,
+            "m_xAlto": 0,
+            "m_xVolumen": 0,
+            "m_nIdTIpoEmpaque": 0,
+            "m_cValorDeclarado": 0,
+            "m_sObservaciones": "0",
+            "m_bActivo": false,
+            "m_sUltimoError": "",
+            "ctd": 0
+        }, {
+            "m_nIdEmbarqueDetalle": 120,
+            "m_nIdEmbarque": 256,
+            "m_nTipo": 1,
+            "m_sDescripcion": "descripcion sobre 2",
+            "m_xPeso": 0,
+            "m_xLargo": 0,
+            "m_xAncho": 0,
+            "m_xAlto": 0,
+            "m_xVolumen": 0,
+            "m_nIdTIpoEmpaque": 0,
+            "m_cValorDeclarado": 0,
+            "m_sObservaciones": "0",
+            "m_bActivo": false,
+            "m_sUltimoError": "",
+            "ctd": 0
+        }],
+
+        "m_nIdOperador": 0,
+        "m_nIdUnidad": 0,
+        "m_dFechaSalida": "0000-00-00",
+        "m_tHoraSalida": "00:00:00.000",
+        "m_arrClsDetalle": [],
+        "m_sSucursal": "",
+        "m_sEstatusEmbarque": "",
+        "m_dtFechaCancelacion": "0000-00-00T00:00:00.000",
+        "m_sUsuarioCancelacion": "0",
+        "m_sMotivoCancelacion": "",
+        "FechaLlegada": "1900-01-01",
+        "HoraLlegada": "00:00:00.000",
+        "m_dFecha": "2021-08-04",
+        "m_tHora": "21:27:12.896",
+        "m_dFechaRegistro": "2021-08-05",
+        "m_tHoraRegistro": "21:22:00.000",
+        "m_nN_AGREGAR": 136,
+        "m_nN_MODIFICAR": 138,
+        "m_nN_ELIMINAR": 139,
+        "m_nN_IMPRIMIR": 141
+        "m_sFechaHora": "",
+        "CreadoPor": 0,
+        "m_nSePuedeCancelar": 0,
+    }*/
+    const [embarque, setEmbarque] = useState({
+
+        infoGeneral: {
+            m_sSucursal: "",
+            IdSucursal: 0,
+            m_nFolioEmbarque: "",
+            m_nFolioInforme: "",
+            m_nIdMoneda: 0,
+            m_cTIpoCambio: 0,
+            m_nIdTIpoCobro: 0,
+            m_nIdEmbarque: 0,
+            m_nIdRecoleccion: 0,
+            m_nIdEstatusEmbarque: 0,
+            m_sFolioGuia: "",
+            m_sFolioRecoleccion: "",
+        },
+        remitente: {
+            m_sNOmbreRemitente: "",
+            m_sRFCRemitente: "",
+            m_sDomicilioRemitente: "",
+            m_nIdCodigoPostalRemitente: 0,
+            m_nCiudadRemitente: 0,
+            m_sCiudadRemitente: "",
+            m_bEsRecolecta: 0,
+            m_sCorreoRemitente: "",
+            m_sTelefonoRemitente: "",
+            m_sContactoRemitente: "",
+            m_nIdCiudadRemitente: 0,
+            m_nIdCiudadOrigen: 0,
+            m_sCiudadOrigen: "",
+        },
+        destinatario: {
+            m_sNombreDestinatario: "",
+            m_sRFCDestinatario: "",
+            m_sDomicilioDestinatario: "",
+            m_nIdCodigoPostalDestinatario: 0,
+            m_sCorreoDestinatario: "",
+            m_nIdCIudadDestinatario: 0,
+            m_sCIudadDestinatario: "",
+            m_sTelefonoDestinatario: "",
+            m_sContactoDestinatario: "",
+            m_nIdCiudadDestino: 0,
+            m_sCiudadDestino: "",
+        },
+        entrega:{
+            m_dFechaEntrega: "",
+            m_tHoraEntrega: "",
+            CodigoPostalEntrega: 0,
+            IdCiudadEntrega: 0,
+            IdZonaEntrega: 0,
+            DomicilioEntrega: "",
+            EntregarEn: "",
+            DatosAdicionalesis: "",
+            m_bEntregaEnSucursal: false,
+            m_nIdSucursalEntrega: 0,
+        },
+        paquetes:{
+            m_arrClsDetalle: [],
+            m_nNoPaquetes: 0,
+            m_nNoSobres: 0,
+            m_arrPaquetes: [{
+                m_nIdEmbarqueDetalle: 0,
+                m_nIdEmbarque: 0,
+                m_nTipo: 0,
+                m_sDescripcion: "",
+                m_xPeso: 0,
+                m_xLargo: 0,
+                m_xAncho: 0,
+                m_xAlto: 0,
+                m_xVolumen: 0,
+                m_nIdTIpoEmpaque: 0,
+                m_cValorDeclarado: 0,
+                m_sObservaciones: "",
+                m_bActivo: false,
+                m_sUltimoError: "",
+                ctd: 0
+            }],
+            m_arrSobres: [{
+                m_nIdEmbarqueDetalle: 0,
+                m_nIdEmbarque: 0,
+                m_nTipo: 1,
+                m_sDescripcion: "",
+                m_xPeso: 0,
+                m_xLargo: 0,
+                m_xAncho: 0,
+                m_xAlto: 0,
+                m_xVolumen: 0,
+                m_nIdTIpoEmpaque: 0,
+                m_cValorDeclarado: 0,
+                m_sObservaciones: "",
+                m_bActivo: false,
+                m_sUltimoError: "",
+                ctd: 0
+            }],
+        },
+        otrosDatos:{
+            m_dFecha: "",
+            m_tHora: "",
+            m_dFechaRegistro: "",
+            m_tHoraRegistro: "",
+            m_sFechaHora: "",
+            m_nIdOperador: 0,
+            m_nIdUnidad: 0,
+            m_dFechaSalida: "",
+            m_tHoraSalida: "",
+            m_sEstatusEmbarque: "",
+            m_dtFechaCancelacion: "",
+            m_sUsuarioCancelacion: "",
+            m_sMotivoCancelacion: "",
+            EntregarMismoDomicilio: false,
+            FechaLlegada: "",
+            HoraLlegada: "",
+            CreadoPor: 0,
+            m_nSePuedeCancelar: 0,
+        },
+    })
+
     const [dataCiudad, setDataCiudad] = React.useState([])
 
     const [dataTipoServicio, setDataTipoServicio] = React.useState([])
@@ -324,15 +589,15 @@ function Guia(props) {
 
         // debugger;
         if (state.idGuia != 0) {
-            modificarGuia(state.idGuia, params).then(respuesta => {
+            /*modificarGuia(state.idGuia, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
-            });
+            });*/
         } else {
-            agregarGuia(params).then(respuesta => {
+            /*agregarGuia(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 //window.location.reload();
                 var resp = respuesta.data;
@@ -342,7 +607,7 @@ function Guia(props) {
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
-            });
+            });*/
         }
 
     }
@@ -903,6 +1168,8 @@ function Guia(props) {
             if (props.location.idEmbarque != undefined) {
                 // handleEmbarque(props.location.idEmbarque)
                 obtenerEmbarquesId(props.location.idEmbarque).then(respuesta => {
+                    console.log('Embarque datos:')
+                    console.log(respuesta.data)
                     const paquetesTemp = [];
                     const sobresTemp = [];
                     let valorDeclaradoTotal = 0
@@ -923,10 +1190,12 @@ function Guia(props) {
                             "valorDeclarado": respuesta.data.m_arrPaquetes[i].m_cValorDeclarado,
                             "descripcionPaquete": respuesta.data.m_arrPaquetes[i].m_sDescripcion,
                             "observacionesPaquete": respuesta.data.m_arrPaquetes[i].m_sObservaciones,
-                            "id": respuesta.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle
+                            "id": respuesta.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle,
+                            "ctd": respuesta.data.m_arrPaquetes[i].ctd
                         });
                         valorDeclaradoTotal = valorDeclaradoTotal + respuesta.data.m_arrPaquetes[i].m_cValorDeclarado
                     }
+                    console.log("")
 
                     for (var i = 0; i < respuesta.data.m_arrSobres.length; i++) {
 
@@ -940,36 +1209,38 @@ function Guia(props) {
                     }
                     //showSuccess(respuesta.data.m_nIdEmbarque);
                     //setDataEmbarque(respuesta.data)
-                    setState({
-                        ...state,
-                        fecha: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
-                        idEmbarque: respuesta.data.m_nIdEmbarque,
-                        idEmbarque2: respuesta.data.m_nIdEmbarque,
-                        idSucursal: respuesta.data.IdSucursal,
-                        idMoneda: respuesta.data.m_nIdMoneda,
-                        nombreRemitente: respuesta.data.m_sNOmbreRemitente,
-                        RFCRemitente: respuesta.data.m_sRFCRemitente,
-                        domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                        codigoPostalRemitente: respuesta.data.m_nIdCodigoPostalRemitente,
-                        ciudadRemitente: respuesta.data.m_sCiudadRemitente,
-                        correoRemitente: respuesta.data.m_sCorreoRemitente,
-                        tipoCambio: respuesta.data.m_cTIpoCambio,
-                        idTipoCobro: respuesta.data.m_nIdTIpoCobro,
-                        telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
-                        contactoRemitente: respuesta.data.m_sContactoRemitente,
-                        origenRemitente: respuesta.data.m_sCiudadRemitente,
-                        sNombreDestinatario: respuesta.data.m_sNombreDestinatario,
-                        sRFCDestinatario: respuesta.data.m_sRFCDestinatario,
-                        sDomicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                        idCodigoPostalDestinatario: respuesta.data.m_nIdCodigoPostalDestinatario,
-                        ciudadDestinatario: respuesta.data.m_sCIudadDestinatario,
-                        sCorreoDestinatario: respuesta.data.m_sCorreoDestinatario,
-                        sTelefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
-                        sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
-                        CiudadDestino: respuesta.data.m_sCIudadDestinatario,
-                        paquetes: paquetesTemp,
-                        sobres: sobresTemp,
-                        ValorDeclarado: valorDeclaradoTotal
+                    setState(state => {
+                        return{
+                            ...state,
+                            fecha: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
+                            idEmbarque: respuesta.data.m_nIdEmbarque,
+                            idEmbarque2: respuesta.data.m_nIdEmbarque,
+                            idSucursal: respuesta.data.IdSucursal,
+                            idMoneda: respuesta.data.m_nIdMoneda,
+                            nombreRemitente: respuesta.data.m_sNOmbreRemitente,
+                            RFCRemitente: respuesta.data.m_sRFCRemitente,
+                            domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
+                            codigoPostalRemitente: respuesta.data.m_nIdCodigoPostalRemitente,
+                            ciudadRemitente: respuesta.data.m_sCiudadRemitente,
+                            correoRemitente: respuesta.data.m_sCorreoRemitente,
+                            tipoCambio: respuesta.data.m_cTIpoCambio,
+                            idTipoCobro: respuesta.data.m_nIdTIpoCobro,
+                            telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
+                            contactoRemitente: respuesta.data.m_sContactoRemitente,
+                            origenRemitente: respuesta.data.m_sCiudadOrigen,
+                            sNombreDestinatario: respuesta.data.m_sNombreDestinatario,
+                            sRFCDestinatario: respuesta.data.m_sRFCDestinatario,
+                            sDomicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
+                            idCodigoPostalDestinatario: respuesta.data.m_nIdCodigoPostalDestinatario,
+                            ciudadDestinatario: respuesta.data.m_sCIudadDestinatario,
+                            sCorreoDestinatario: respuesta.data.m_sCorreoDestinatario,
+                            sTelefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
+                            sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
+                            CiudadDestino: respuesta.data.m_sCIudadDestinatario,
+                            paquetes: paquetesTemp,
+                            sobres: sobresTemp,
+                            ValorDeclarado: valorDeclaradoTotal
+                        }
                     })
                     obtenerEmbarqueMoneda(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, state.idGuia).then(respuesta => {
                         setDataEmbarque(respuesta.data)
@@ -1003,61 +1274,13 @@ function Guia(props) {
                             ivaRetiene = getUniqueListBy(conceptosTemp, "retiene").map(i => i.retiene);
                         }
 
-                        setState({
+                        setState(state => {
+                            return {
                             ...state,
-                            fecha: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
-                            /*idEmbarque: respuesta.data.m_nIdEmbarque,
-                            idEmbarque2: respuesta.data.m_nIdEmbarque,
-                            nombreRemitente: respuesta.data.m_sNOmbreRemitente,
-                            RFCRemitente: respuesta.data.m_sRFCRemitente,
-                            domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                            codigoPostalRemitente: respuesta.data.m_nIdCodigoPostalRemitente,
-                            ciudadRemitente: respuesta.data.m_sCiudadRemitente,
-                            correoRemitente: respuesta.data.m_sCorreoRemitente,
-                            tipoCambio: respuesta.data.m_cTIpoCambio,
-                            idTipoCobro: respuesta.data.m_nIdTIpoCobro,
-                            telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
-                            contactoRemitente: respuesta.data.m_sContactoRemitente,
-                            origenRemitente: respuesta.data.m_sCiudadRemitente,
-                            sNombreDestinatario: respuesta.data.m_sNombreDestinatario,
-                            sRFCDestinatario: respuesta.data.m_sRFCDestinatario,
-                            sDomicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                            idCodigoPostalDestinatario: respuesta.data.m_nIdCodigoPostalDestinatario,
-                            ciudadDestinatario: respuesta.data.m_sCIudadDestinatario,
-                            sCorreoDestinatario: respuesta.data.m_sCorreoDestinatario,
-                            sTelefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
-                            sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
-                            CiudadDestino: respuesta.data.m_sCIudadDestinatario,
-                            paquetes: paquetesTemp,
-                            sobres: sobresTemp,*/
+                                fecha: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
 
-                            idEmbarque: respuesta.data.m_nIdEmbarque,
-                            idEmbarque2: respuesta.data.m_nIdEmbarque,
-                            idSucursal: respuesta.data.IdSucursal,
-                            idMoneda: respuesta.data.m_nIdMoneda,
-                            nombreRemitente: respuesta.data.m_sNOmbreRemitente,
-                            RFCRemitente: respuesta.data.m_sRFCRemitente,
-                            domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                            codigoPostalRemitente: respuesta.data.m_nIdCodigoPostalRemitente,
-                            ciudadRemitente: respuesta.data.m_sCiudadRemitente,
-                            correoRemitente: respuesta.data.m_sCorreoRemitente,
-                            tipoCambio: respuesta.data.m_cTIpoCambio,
-                            idTipoCobro: respuesta.data.m_nIdTIpoCobro,
-                            telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
-                            contactoRemitente: respuesta.data.m_sContactoRemitente,
-                            origenRemitente: respuesta.data.m_sCiudadRemitente,
-                            sNombreDestinatario: respuesta.data.m_sNombreDestinatario,
-                            sRFCDestinatario: respuesta.data.m_sRFCDestinatario,
-                            sDomicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                            idCodigoPostalDestinatario: respuesta.data.m_nIdCodigoPostalDestinatario,
-                            ciudadDestinatario: respuesta.data.m_sCIudadDestinatario,
-                            sCorreoDestinatario: respuesta.data.m_sCorreoDestinatario,
-                            sTelefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
-                            sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
-                            CiudadDestino: respuesta.data.m_sCIudadDestinatario,
-                            paquetes: paquetesTemp,
-                            sobres: sobresTemp,
-                            conceptosAdicionales: conceptosTemp, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada
+                                conceptosAdicionales: conceptosTemp, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada
+                            }
                         })
                     })
                 });
@@ -1536,7 +1759,7 @@ function Guia(props) {
                             className="form-control"
                             type="text"
                             label="Ctd"
-                            value={state.paquetes[index].Ctd}
+                            value={state.paquetes[index].ctd}
                             placeholder="Ctd"
                             name="ctd"
                             disabled={true}

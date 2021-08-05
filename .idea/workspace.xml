@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="94d8e9cf-07c8-4a10-b81b-63018b1e29c3" name="Default Changelist" comment="Se descomentó codigo necesario">
+    <list default="true" id="94d8e9cf-07c8-4a10-b81b-63018b1e29c3" name="Default Changelist" comment="*Se resolvieron problemas al mostrar datos de embarque a partir de recoleccion.&#10;*Se arregló el seteo de paquetes y sobres que vienen de recoleccion">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -331,7 +332,14 @@
       <option name="project" value="LOCAL" />
       <updated>1628128754456</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="*Se resolvieron problemas al mostrar datos de embarque a partir de recoleccion.&#10;*Se arregló el seteo de paquetes y sobres que vienen de recoleccion">
+      <created>1628137907361</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1628137907361</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -375,7 +383,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="*Se integró listado de atajos en toolbar" />
     <MESSAGE value="* Se traen los accesos directos de los servicios" />
     <MESSAGE value="Se agregaron filtros para conceptos de tarifas" />
     <MESSAGE value="Se agregaron los filtros necesarios" />
@@ -400,7 +407,8 @@
     <MESSAGE value="Se corigio el envio de parametros para el modificar de Zonas" />
     <MESSAGE value="Se corigio la consulta de forma que esta no permita la modificacion de datos en los siguientes catalogos: Tarifas, Remitente/destinatario y Rutas" />
     <MESSAGE value="Se descomentó codigo necesario" />
-    <option name="LAST_COMMIT_MESSAGE" value="Se descomentó codigo necesario" />
+    <MESSAGE value="*Se resolvieron problemas al mostrar datos de embarque a partir de recoleccion.&#10;*Se arregló el seteo de paquetes y sobres que vienen de recoleccion" />
+    <option name="LAST_COMMIT_MESSAGE" value="*Se resolvieron problemas al mostrar datos de embarque a partir de recoleccion.&#10;*Se arregló el seteo de paquetes y sobres que vienen de recoleccion" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

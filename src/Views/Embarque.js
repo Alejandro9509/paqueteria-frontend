@@ -572,6 +572,10 @@ function Embarque(props) {
     const handleAceptar = (e) => {
         e.preventDefault();
         const { paquetes, sobres } = state;
+
+        paquetes.forEach(p => {
+            p["ctd"] = p.m_nCantidad
+        })
         sobres.forEach(s => {
             paquetes.push(s)
         })
