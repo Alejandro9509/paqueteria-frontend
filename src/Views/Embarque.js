@@ -793,7 +793,7 @@ function Embarque(props) {
         console.log(JSON.stringify(params))
 
         if (state.idEmbarque != 0) {
-            /*modificarEmbarques(state.idEmbarque, params)
+            modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     getAllEmbarque();
@@ -805,9 +805,9 @@ function Embarque(props) {
                 .catch((err) => {
                     console.log(err);
                     showSuccess("El Usuario no tiene derecho para modificar");
-                });*/
+                });
         } else {
-            /*agregarEmbarques(params)
+            agregarEmbarques(params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     console.log(respuesta.data);
@@ -820,7 +820,7 @@ function Embarque(props) {
                 .catch((err) => {
                     console.log(err);
                     showSuccess(err);
-                });*/
+                });
         }
     };
 
