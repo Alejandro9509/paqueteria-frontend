@@ -587,7 +587,7 @@ function Recoleccion() {
         console.log(params)
         console.log(JSON.stringify(params))
         if (state.idRecoleccion != 0) {
-            /*modificarRecoleccion(state.idRecoleccion, params)
+            modificarRecoleccion(state.idRecoleccion, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     getAllData();
@@ -600,9 +600,9 @@ function Recoleccion() {
                 .catch((err) => {
                     console.log(err);
                     showSuccess("err");
-                });*/
+                });
         } else {
-            /*agregarRecoleccion(params)
+            agregarRecoleccion(params)
                 .then((respuesta) => {
                     console.log(respuesta.data);
                     showSuccess(respuesta.data);
@@ -616,7 +616,7 @@ function Recoleccion() {
                 .catch((err) => {
                     console.log(err);
                     showSuccess(err);
-                });*/
+                });
         }
 
 
