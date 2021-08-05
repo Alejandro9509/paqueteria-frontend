@@ -533,19 +533,18 @@ function Embarque(props) {
         console.log(newValue)
         let user = newValue
         obtenerCodigoPostalId(newValue.m_nIdCP).then(respuesta => {
-            setState({
-                ...state,
-                nombreRemitente: user,
-                RFCRemitente: user.m_sRFC,
-                domicilioRemitente: user.m_sDomicilio,
-
-                codigoPostalRemitente: respuesta.data,
-
-                ciudadRemitente: respuesta.data.m_nIdCiudad,
-
-                correoRemitente: user.m_sCorreoElectronico,
-                telefonoRemitente: user.m_sTelefono,
-                contactoRemitente: user.m_sContacto,
+            setState(state => {
+                return{
+                    ...state,
+                    nombreRemitente: user,
+                    RFCRemitente: user.m_sRFC,
+                    domicilioRemitente: user.m_sDomicilio,
+                    codigoPostalRemitente: respuesta.data,
+                    ciudadRemitente: respuesta.data.m_nIdCiudad,
+                    correoRemitente: user.m_sCorreoElectronico,
+                    telefonoRemitente: user.m_sTelefono,
+                    contactoRemitente: user.m_sContacto,
+                }
             });
         })
 
@@ -553,19 +552,18 @@ function Embarque(props) {
 
     function handleSelectDestinatario(newValue) {
         obtenerCodigoPostalId(newValue.m_nIdCP).then(respuesta => {
-            setState({
-                ...state,
-                nombreDestinatario: newValue,
-                RFCDestinatario: newValue.m_sRFC,
-                domicilioDestinatario: newValue.m_sDomicilio,
-
-                codigoPostalDestinatario: respuesta.data,
-
-                ciudadDestinatario: respuesta.data.m_nIdCiudad,
-
-                correoDestinatario: newValue.m_sCorreoElectronico,
-                telefonoDestinatario: newValue.m_sTelefono,
-                contactoDestinatario: newValue.m_sContacto,
+            setState(state => {
+                return{
+                    ...state,
+                    nombreDestinatario: newValue,
+                    RFCDestinatario: newValue.m_sRFC,
+                    domicilioDestinatario: newValue.m_sDomicilio,
+                    codigoPostalDestinatario: respuesta.data,
+                    ciudadDestinatario: respuesta.data.m_nIdCiudad,
+                    correoDestinatario: newValue.m_sCorreoElectronico,
+                    telefonoDestinatario: newValue.m_sTelefono,
+                    contactoDestinatario: newValue.m_sContacto,
+                }
             });
         })
 
@@ -584,6 +582,8 @@ function Embarque(props) {
 
         if (state.m_nIdCiudadDetalleEntrega == undefined) {
             var params = {
+
+                //
                 m_nIdEmbarque: state.idEmbarque,
                 m_nIdRecoleccion: props.location.idRecoleccion,
                 m_nFolioEmbarque: state.folioEmbarque,
@@ -645,21 +645,23 @@ function Embarque(props) {
             console.log(state.m_nIdCiudadDetalleEntrega)
             console.log(false)
         } else {
-            var params = {
+            let params = {
                 m_nIdEmbarque: state.idEmbarque,
                 m_nIdRecoleccion: props.location.idRecoleccion,
+                IdSucursal: state.idSucursalAgregar,
+                //folio recoleccion
                 m_nFolioEmbarque: state.folioEmbarque,
                 m_nFolioGuia: state.folioGuía,
                 m_nFolioInforme: state.folioInforme,
-                m_dFecha: state.fechaHoraCreacion.split("T")[0],
-                m_tHora: state.fechaHoraCreacion.split("T")[1],
-
                 m_dFechaRegistro: state.fechaHoraRegistro.split("T")[0],
                 m_tHoraRegistro: state.fechaHoraRegistro.split("T")[1],
                 m_nIdEstatusEmbarque: state.estatusEmbarque,
                 m_nIdMoneda: state.moneda,
                 m_cTIpoCambio: state.tipoCambio,
                 m_nIdTIpoCobro: state.tipoCobro,
+                m_dFecha: state.fechaHoraCreacion.split("T")[0],
+                m_tHora: state.fechaHoraCreacion.split("T")[1],
+
                 m_sNOmbreRemitente: state.nombreRemitente.m_sNombreFiscal,
                 m_sRFCRemitente: state.RFCRemitente,
                 m_sDomicilioRemitente: state.domicilioRemitente,
@@ -669,6 +671,7 @@ function Embarque(props) {
                 m_sTelefonoRemitente: state.telefonoRemitente,
                 m_sContactoRemitente: state.contactoRemitente,
                 m_nIdCiudadOrigen: state.ciudadOrigen.m_nIdCiudad,
+
                 m_sNombreDestinatario: state.nombreDestinatario.m_sNombreFiscal,
                 m_sRFCDestinatario: state.RFCDestinatario,
                 m_sDomicilioDestinatario: state.domicilioDestinatario,
@@ -678,42 +681,119 @@ function Embarque(props) {
                 m_sTelefonoDestinatario: state.telefonoDestinatario,
                 m_sContactoDestinatario: state.contactoDestinatario,
                 m_nIdCiudadDestino: state.ciudadDestino.m_nIdCiudad,
+
+                IdCiudadEntrega: state.ciudadEntrega.m_nIdCiudad,
+                CodigoPostalEntrega: state.codigoPostalEntrega.m_nIdCP,
+                IdZonaEntrega: state.zonaEntrega,
+                DomicilioEntrega: state.domicilioEntrega,
+                EntregarEn: state.entregaEn,
+                DatosAdicionales: state.datosAdicionalesEntrega,
+                m_tFechaDetalleEntrega: state.fechaEntrega.split("T")[0],
+                m_tHoraDetalleEntrega: state.fechaEntrega.split("T")[1],
                 m_dFechaEntrega: "",
                 m_tHoraEntrega: "",
+
                 m_nNoPaquetes: state.paquetes.length,
                 m_nNoSobres: state.sobres.length,
+                m_arrClsDetalle: state.paquetes,
                 //m_nIdOperador: state.idOperador.m_nIdOperador,
                 // m_nIdUnidad: state.idUnidad.m_nIdUnidad,
                 m_dFechaSalida: state.fechaHoraSalida.split("T")[0],
                 m_tHoraSalida: state.fechaHoraSalida.split("T")[1],
                 FechaLlegada: state.fechaHoraLlegada.split("T")[0],
                 HoraLlegada: state.fechaHoraLlegada.split("T")[1],
-                CodigoPostalEntrega: state.codigoPostalEntrega.m_nIdCP,
-
-                 IdCiudadEntrega: state.ciudadEntrega.m_nIdCiudad,
-                IdZonaEntrega: state.zonaEntrega,
-                DomicilioEntrega: state.domicilioEntrega,
-                EntregarEn: state.entregaEn,
-                DatosAdicionales: state.datosAdicionalesEntrega,
-                IdSucursal: state.idSucursalAgregar,
-                m_arrClsDetalle: state.paquetes,
                 CreadoPor: state.CreadoPor,
                 ModificadoPor: state.ModificadoPor,
-                m_tFechaDetalleEntrega: state.fechaEntrega.split("T")[0],
-                m_tHoraDetalleEntrega: state.fechaEntrega.split("T")[1],
                 m_bEntregaEnSucursal: state.entregaEnSucursal,
                 m_nIdSucursalEntrega: state.idSucursalEntrega
-
             }
             console.log(true)
             console.log(state.m_nIdCiudadDetalleEntrega)
         }
 
+        const infoGeneral = {
+            m_nIdEmbarque: state.idEmbarque,
+            m_nIdRecoleccion: props.location.idRecoleccion,
+            IdSucursal: state.idSucursalAgregar,
+            //folio recoleccion
+            m_nFolioEmbarque: state.folioEmbarque,
+            m_nFolioGuia: state.folioGuía,
+            m_nFolioInforme: state.folioInforme,
+            m_dFechaRegistro: state.fechaHoraRegistro.split("T")[0],
+            m_tHoraRegistro: state.fechaHoraRegistro.split("T")[1],
+            m_nIdEstatusEmbarque: state.estatusEmbarque,
+            m_nIdMoneda: state.moneda,
+            m_cTIpoCambio: state.tipoCambio,
+            m_nIdTIpoCobro: state.tipoCobro,
+            m_dFecha: state.fechaHoraCreacion.split("T")[0],
+            m_tHora: state.fechaHoraCreacion.split("T")[1],
+        }
+        console.log('informacion general:')
+        console.log(infoGeneral)
+        const remitenteData = {
+            m_sNOmbreRemitente: state.nombreRemitente.m_sNombreFiscal,
+            m_sRFCRemitente: state.RFCRemitente,
+            m_sDomicilioRemitente: state.domicilioRemitente,
+            m_nIdCodigoPostalRemitente: state.codigoPostalRemitente.m_nIdCP,
+            m_nCiudadRemitente: state.ciudadRemitente.m_nIdCiudad,
+            m_sCorreoRemitente: state.correoRemitente,
+            m_sTelefonoRemitente: state.telefonoRemitente,
+            m_sContactoRemitente: state.contactoRemitente,
+            m_nIdCiudadOrigen: state.ciudadOrigen.m_nIdCiudad,
+        }
+        console.log('remitente:')
+        console.log(remitenteData)
+        const destinatarioData = {
+            m_sNombreDestinatario: state.nombreDestinatario.m_sNombreFiscal,
+            m_sRFCDestinatario: state.RFCDestinatario,
+            m_sDomicilioDestinatario: state.domicilioDestinatario,
+            m_nIdCodigoPostalDestinatario: state.codigoPostalDestinatario.m_nIdCP,
+            m_nIdCIudadDestinatario: state.ciudadDestinatario.m_nIdCiudad,
+            m_sCorreoDestinatario: state.correoDestinatario,
+            m_sTelefonoDestinatario: state.telefonoDestinatario,
+            m_sContactoDestinatario: state.contactoDestinatario,
+            m_nIdCiudadDestino: state.ciudadDestino.m_nIdCiudad,
+        }
+        console.log('destinatario:')
+        console.log(destinatarioData)
+        const entregaData = {
+            IdCiudadEntrega: state.ciudadEntrega.m_nIdCiudad,
+            CodigoPostalEntrega: state.codigoPostalEntrega.m_nIdCP,
+            IdZonaEntrega: state.zonaEntrega,
+            DomicilioEntrega: state.domicilioEntrega,
+            EntregarEn: state.entregaEn,
+            DatosAdicionales: state.datosAdicionalesEntrega,
+            m_tFechaDetalleEntrega: state.fechaEntrega.split("T")[0],
+            m_tHoraDetalleEntrega: state.fechaEntrega.split("T")[1],
+            m_dFechaEntrega: "",
+            m_tHoraEntrega: "",
+        }
+        console.log('entrega: ')
+        console.log(entregaData)
+
+        const otros = {
+            m_nNoPaquetes: state.paquetes.length,
+            m_nNoSobres: state.sobres.length,
+            m_arrClsDetalle: state.paquetes,
+            //m_nIdOperador: state.idOperador.m_nIdOperador,
+            // m_nIdUnidad: state.idUnidad.m_nIdUnidad,
+            m_dFechaSalida: state.fechaHoraSalida.split("T")[0],
+            m_tHoraSalida: state.fechaHoraSalida.split("T")[1],
+            FechaLlegada: state.fechaHoraLlegada.split("T")[0],
+            HoraLlegada: state.fechaHoraLlegada.split("T")[1],
+            CreadoPor: state.CreadoPor,
+            ModificadoPor: state.ModificadoPor,
+            m_bEntregaEnSucursal: state.entregaEnSucursal,
+            m_nIdSucursalEntrega: state.idSucursalEntrega
+        }
+        console.log('otros datos:')
+        console.log(otros)
+
         console.log(params)
         console.log(JSON.stringify(params))
 
         if (state.idEmbarque != 0) {
-            modificarEmbarques(state.idEmbarque, params)
+            /*modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     getAllEmbarque();
@@ -725,9 +805,9 @@ function Embarque(props) {
                 .catch((err) => {
                     console.log(err);
                     showSuccess("El Usuario no tiene derecho para modificar");
-                });
+                });*/
         } else {
-            agregarEmbarques(params)
+            /*agregarEmbarques(params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     console.log(respuesta.data);
@@ -740,7 +820,7 @@ function Embarque(props) {
                 .catch((err) => {
                     console.log(err);
                     showSuccess(err);
-                });
+                });*/
         }
     };
 
@@ -847,38 +927,18 @@ function Embarque(props) {
 
     }, []);
 
-    useEffect(async (value) => {
-            if (dataRemitenteDestinatario.length > 0 && dataCiudad.length > 0 && dataOperador.length > 0 && dataTipoUnidad.length > 0){
-                if (props.location.idRecoleccion != undefined) {
-                    console.log('id de recoleccion: ' + props.location.idRecoleccion)
-                    obtenerRecoleccionId(props.location.idRecoleccion)
-                        .then((respuesta) => {
-                            setDataOnState(respuesta)
-                        })
-                }
-
-                if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
-                    showSuccess("Es necesario iniciar sesion para acceder a este proceso");
-                    window.location.replace("login");
-                    return;
-                }
-            }
-        },
-        [dataRemitenteDestinatario, dataCiudad, dataOperador, dataTipoUnidad,]
-    );
-
     //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para el remitente
     useEffect( value => {
         if (state.ciudadRemitente != ""){
             obtenerCodigosPostalesPorCiudad(state.ciudadRemitente).then((respuesta) => {
                 if (respuesta.data.length > 0){
                     setDataCodigosPostalesRemitente(respuesta.data);
-                    if (props.location.idRecoleccion != undefined){
+                    /*if (props.location.idRecoleccion != undefined){
                         setState({
                             ...state,
                             codigoPostalRemitente: respuesta.data.find((o) => o.m_nIdCP == state.idCodigoPostalRemitenteTemp),
                         })
-                    }
+                    }*/
                 }
             });
         }
@@ -891,12 +951,12 @@ function Embarque(props) {
                 console.log(respuesta.data)
                 if (respuesta.data.length > 0){
                     setDataCodigosPostalesDestinatario(respuesta.data);
-                    if (props.location.idRecoleccion != undefined){
+                    /*if (props.location.idRecoleccion != undefined){
                         setState({
                             ...state,
                             codigoPostalDestinatario: respuesta.data.find((o) => o.m_nIdCP == state.idCodigoPostalDestinatarioTemp),
                         })
-                    }
+                    }*/
                 }
             });
         }
@@ -908,18 +968,38 @@ function Embarque(props) {
             obtenerCodigosPostalesPorCiudad(state.ciudadEntrega).then((respuesta) => {
                 if (respuesta.data.length > 0){
                     setDataCodigosPostalesEntrega(respuesta.data);
-                    if(props.location.idRecoleccion != undefined){
+                    /*if(props.location.idRecoleccion != undefined){
                         if (state.idCodigoPostalEntregaTemp != state.idCodigoPostalDestinatarioTemp){
                             setState({
                                 ...state,
                                 codigoPostalEntrega: respuesta.data.find((o) => o.m_nIdCP == state.idCodigoPostalEntregaTemp)
                             })
                         }
-                    }
+                    }*/
                 }
             });
         }
     }, [state.ciudadEntrega])
+
+    useEffect(async (value) => {
+            if (dataRemitenteDestinatario.length > 0 && dataCiudad.length > 0 && dataOperador.length > 0 && dataTipoUnidad.length > 0){
+                if (props.location.idRecoleccion != undefined) {
+                    console.log('id de recoleccion: ' + props.location.idRecoleccion)
+                    obtenerRecoleccionId(props.location.idRecoleccion)
+                        .then((respuesta) => {
+                            setDataRecoleccionOnState(respuesta)
+                        })
+                }
+
+                if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
+                    showSuccess("Es necesario iniciar sesion para acceder a este proceso");
+                    window.location.replace("login");
+                    return;
+                }
+            }
+        },
+        [dataRemitenteDestinatario, dataCiudad, dataOperador, dataTipoUnidad,]
+    );
 
     function handleShowCancelar() {
         var today = new Date();
@@ -1369,7 +1449,7 @@ function Embarque(props) {
         console.log(state)
     }
 
-    function setDataOnState(respuesta){
+    function setDataRecoleccionOnState(respuesta){
         let paquetesModificado = respuesta.data.m_parrPaquetes;
         console.log(respuesta);
         for (let i = 0; i < respuesta.data.m_parrPaquetes.length; i++) {
@@ -1384,89 +1464,77 @@ function Embarque(props) {
                 paquetesModificado[i].m_rVolumen;
             paquetesModificado[i]["m_nIdTIpoEmpaque"] =
                 paquetesModificado[i].m_nIdTipoEmbalaje;
-            paquetesModificado[i]["m_cValorDeclarado"] =
-                paquetesModificado[i].m_cValorDeclarado;
+            paquetesModificado[i]["m_cyValorDeclarado"] =
+                paquetesModificado[i].m_cyValorDeclarado;
         }
-        setState({
-            ...state,
-            fechaHoraRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() +
-            1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(
-                2,
-                0
-            )}T${`${new Date().getHours()}`.padStart(
-                2,
-                0
-            )}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
-            idEmbarque: 0,
-            idSucursalAgregar: respuesta.data.m_nIdSucursal,
-            folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
-            folioEmbarque: dataFolioEmbarque.length !== 0 ? dataFolioEmbarque[0].m_sFolioEmbarque : null,
-            folioGuía: respuesta.data.m_nFolioGuia,
-            folioInforme: respuesta.data.m_nFolioInforme,
-            fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
-            moneda: respuesta.data.m_nMoneda,
-            tipoCambio: respuesta.data.m_rTipoCambio,
-            tipoCobro: respuesta.data.m_nIdTipoDeCobro,
 
-            //Datos remitente
-            nombreRemitente: dataRemitenteDestinatario.find((o) => o.m_sRFC === respuesta.data.m_sRFCRemitente),
-            RFCRemitente: respuesta.data.m_sRFCRemitente,
-            domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-            idCodigoPostalRemitenteTemp: respuesta.data.m_sIdCodigoPostalRemitente,
-            ciudadRemitente: respuesta.data.m_nIdCiudadRemitente,
-            correoRemitente: respuesta.data.m_sCorreoRemitente,
-            telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
-            contactoRemitente: respuesta.data.m_sContactoRemitente,
-            ciudadOrigen: dataCiudad.find((o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadOrigen),
+        const { m_nIdSucursal, m_sFolioRecoleccion, m_nMoneda, m_rTipoCambio, m_nIdTipoDeCobro } = respuesta.data
+        const { m_sRFCRemitente, m_sRFCDestinatario } = respuesta.data
 
-            //Datos destinatario
-            nombreDestinatario: dataRemitenteDestinatario.find((o) => o.m_sRFC === respuesta.data.m_sRFCDestinatario),
-            RFCDestinatario: respuesta.data.m_sRFCDestinatario,
-            domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-            idCodigoPostalDestinatarioTemp: respuesta.data.m_sIdCodigoPostalDestinatario,
-            ciudadDestinatario: respuesta.data.m_nIdCiudadDestinatario,
-            correoDestinatario: respuesta.data.m_sCorreoDestinatario,
-            telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
-            contactoDestinatario: respuesta.data.m_sContactoDestinatario,
+        handleSelectRemitente(dataRemitenteDestinatario.find((o) => o.m_sRFC === m_sRFCRemitente))
+        handleSelectDestinatario(dataRemitenteDestinatario.find((o) => o.m_sRFC === m_sRFCDestinatario))
 
-            //Datos destino?
-            ciudadDestino: dataCiudad.find((o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadDestino),
+        setState(state => {
+            return{
+                ...state,
+                fechaHoraRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() +
+                1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(
+                    2,
+                    0
+                )}T${`${new Date().getHours()}`.padStart(
+                    2,
+                    0
+                )}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
+                idSucursalAgregar: m_nIdSucursal,
+                folioRecoleccion: m_sFolioRecoleccion,
+                folioEmbarque: dataFolioEmbarque.length !== 0 ? dataFolioEmbarque[0].m_sFolioEmbarque : null,
+                fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
+                moneda: m_nMoneda,
+                tipoCambio: m_rTipoCambio,
+                tipoCobro: m_nIdTipoDeCobro,
 
-            //fecha entrega?
-            fechaEntrega: respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
+                ciudadOrigen: dataCiudad.find((o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadOrigen),
+                ciudadDestino: dataCiudad.find((o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadDestino),
 
-            //detalles de la operacion
-            fechaHoraSalida: respuesta.data.m_dFechaSalida + "T" + respuesta.data.m_tHoraSalida,
-            fechaHoraLlegada: respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,
-            idOperador: dataOperador.find((o) => o.m_nIdOperador === respuesta.data.m_nIdOperador),
-            idUnidad: respuesta.data.m_nIdUnidad,
+                //fecha entrega?
+                fechaEntrega: respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
 
-            //paquetes
-            paquetes: paquetesModificado,
+                //detalles de la operacion
+                fechaHoraSalida: respuesta.data.m_dFechaSalida + "T" + respuesta.data.m_tHoraSalida,
+                fechaHoraLlegada: respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,
+                idOperador: dataOperador.find((o) => o.m_nIdOperador === respuesta.data.m_nIdOperador),
+                idUnidad: respuesta.data.m_nIdUnidad,
 
-            //Datos entrega
-            diferenteEntrega: false,
-            zonaEntrega: '',
-            domicilioEntrega: '',
-            entregaEn: '',
-            datosAdicionalesEntrega: '',
-            codigoPostalEntrega: '',
-            ciudadEntrega: '',
+                //paquetes
+                paquetes: paquetesModificado,
+
+                //Datos entrega
+                diferenteEntrega: false,
+                zonaEntrega: '',
+                domicilioEntrega: '',
+                entregaEn: '',
+                datosAdicionalesEntrega: '',
+                codigoPostalEntrega: '',
+                ciudadEntrega: '',
+            }
         });
 
         //si el cp de entrega es igual al de destinatario significa que no es entrega en diferente domicilio
         if (respuesta.data.m_nIdCPDetalleEntrega != respuesta.data.m_sIdCodigoPostalDestinatario){
-            setState({
-                ...state,
-                diferenteEntrega: true,
-                zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
-                domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
-                entregaEn: respuesta.data.m_sEntregarEnDetalleEntrega,
-                datosAdicionalesEntrega: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
-                fechaEntrega: respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
-                // codigoPostalEntrega: dataCodigosPostalesEntrega.find((o) => o.m_nIdCP === respuesta.data.m_nIdCPDetalleEntrega),
-                idCodigoPostalEntregaTemp: respuesta.data.m_nIdCPDetalleEntrega,
-                ciudadEntrega: respuesta.data.m_nIdCiudadDetalleEntrega,
+            obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleEntrega).then(cp => {
+                setState(state => {
+                    return{
+                        ...state,
+                        diferenteEntrega: true,
+                        zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
+                        domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
+                        entregaEn: respuesta.data.m_sEntregarEnDetalleEntrega,
+                        datosAdicionalesEntrega: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
+                        fechaEntrega: respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
+                        codigoPostalEntrega: cp.data,
+                        ciudadEntrega: cp.data.m_nIdCiudad,
+                    }
+                })
             })
         }
     }

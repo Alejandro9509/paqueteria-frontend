@@ -494,10 +494,100 @@ function Recoleccion() {
             params.m_sDatosAdicionalesDetalleEntrega = state.datosAdicionalesEntrega
         }
 
+        const infoGeneral = {
+            m_nIdRecoleccion: state.idRecoleccion,
+            m_nIdSucursal: state.idSucursalAgregar,
+            m_nIdEstatusRecoleccion: state.estatusRecoleccion,
+            m_nIdEmbarque: state.folioEmbarque,
+            m_nIdGuia: state.folioGuía,
+            m_nIdInforme: state.folioInforme,
+            m_dFecha: state.fechaHoraCreacion.split("T")[0],
+            m_tHora: state.fechaHoraCreacion.split("T")[1],
+            m_dFechaRegistro: state.fechaHoraRegistro.split("T")[0],
+            m_tHoraRegistro: state.fechaHoraRegistro.split("T")[1],
+            m_nMoneda: state.moneda,
+            m_rTipoCambio: state.tipoCambio,
+            m_nIdTipoDeCobro: state.tipoCobro,
+        }
+        console.log('info general:')
+        console.log(infoGeneral)
+
+        const remitente = {
+            m_sNombreRemitente: state.nombreRemitente.m_sNombreFiscal,
+            m_sRFCRemitente: state.RFCRemitente,
+            m_sDomicilioRemitente: state.domicilioRemitente,
+            m_sIdCodigoPostalRemitente: state.codigoPostalRemitente.m_nIdCP,
+            m_nIdCiudadRemitente: state.ciudadRemitente,
+            m_sCorreoRemitente: state.correoRemitente,
+            m_sTelefonoRemitente: state.telefonoRemitente,
+            m_sContactoRemitente: state.contactoRemitente,
+            m_nIdCiudadOrigen: state.origenRemitente.m_nIdCiudad,
+        }
+        console.log('remitente:')
+        console.log(remitente)
+
+        const destinatario = {
+            m_sNombreDestinatario: state.nombreDestinatario.m_sNombreFiscal,
+            m_sRFCDestinatario: state.RFCDestinatario,
+            m_sDomicilioDestinatario: state.domicilioDestinatario,
+            m_sIdCodigoPostalDestinatario: state.codigoPostalDestinatario.m_nIdCP,
+            m_nIdCiudadDestinatario: state.ciudadDestinatario,
+            m_sCorreoDestinatario: state.correoDestinatario,
+            m_sTelefonoDestinatario: state.telefonoDestinatario,
+            m_sContactoDestinatario: state.contactoDestinatario,
+            m_nIdCiudadDestino: state.destinoDestinatario.m_nIdCiudad,
+        }
+        console.log('destinatario:')
+        console.log(destinatario)
+
+        const recoleccion = {
+            diferenteRecoleccion : state.diferenteRecoleccion,
+            m_dFechaDetalleRecoleccion: params.m_dFechaDetalleRecoleccion,
+            m_tHoraDetalleRecoleccion: params.m_tHoraDetalleRecoleccion,
+            m_nIdCPDetalleRecoleccion: params.m_nIdCPDetalleRecoleccion,
+            m_nIdCiudadDetalleRecoleccion: params.m_nIdCiudadDetalleRecoleccion,
+            m_nIdZonaDetalleRecoleccion: params.m_nIdZonaDetalleRecoleccion,
+            m_sDomicilioDetalleRecoleccion: params.m_sDomicilioDetalleRecoleccion,
+            m_sRecogerEnDetalleRecoleccion: params.m_sRecogerEnDetalleRecoleccion,
+            m_sDatosAdicionalesDetalleRecoleccion: params.m_sDatosAdicionalesDetalleRecoleccion,
+        }
+        console.log('recoleccion:')
+        console.log(recoleccion)
+
+        const entrega = {
+            m_nIdCPDetalleEntrega: params.m_nIdCPDetalleEntrega,
+            m_nIdCiudadDetalleEntrega: params.m_nIdCiudadDetalleEntrega,
+            m_nIdZonaDetalleEntrega: params.m_nIdZonaDetalleEntrega,
+            m_sDomicilioDetalleEntrega: params.m_sDomicilioDetalleEntrega,
+            m_sEntregarEnDetalleEntrega: params.m_sEntregarEnDetalleEntrega,
+            m_sDatosAdicionalesDetalleEntrega: params.m_sDatosAdicionalesDetalleEntrega,
+            diferenteEntrega: state.diferenteEntrega
+        }
+        console.log('entrega:')
+        console.log(entrega)
+
+        const otrosDatos = {
+            m_dFechaSalida: state.fechaHoraSalida.split("T")[0],
+            m_dFechaLlegada: state.fechaHoraLlegada.split("T")[0],
+            m_tHoraSalida: state.fechaHoraSalida.split("T")[1],
+            m_tHoraLlegada: state.fechaHoraLlegada.split("T")[1],
+            m_parrPaquetes: state.paquetes,
+            m_nNoPaquetes: state.paquetes.length,
+            m_parrSobres: state.sobres,
+            m_nNoSobres: state.sobres.length,
+            m_nIdOperador: state.operador.m_nIdOperador,
+            m_nIdUnidad: state.unidad.m_nIdUnidad,
+            m_nIdRemolque: state.unidad.m_nIdUnidad,
+            m_nCreadoPor: state.CreadoPor,
+            m_nModificadoPor: state.ModificadoPor
+        }
+        console.log('otros datos:')
+        console.log(otrosDatos)
+
         console.log(params)
         console.log(JSON.stringify(params))
         if (state.idRecoleccion != 0) {
-            modificarRecoleccion(state.idRecoleccion, params)
+            /*modificarRecoleccion(state.idRecoleccion, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     getAllData();
@@ -510,9 +600,9 @@ function Recoleccion() {
                 .catch((err) => {
                     console.log(err);
                     showSuccess("err");
-                });
+                });*/
         } else {
-            agregarRecoleccion(params)
+            /*agregarRecoleccion(params)
                 .then((respuesta) => {
                     console.log(respuesta.data);
                     showSuccess(respuesta.data);
@@ -526,7 +616,7 @@ function Recoleccion() {
                 .catch((err) => {
                     console.log(err);
                     showSuccess(err);
-                });
+                });*/
         }
 
 
