@@ -585,15 +585,15 @@ function Guia(props) {
 
         // debugger;
         if (state.idGuia != 0) {
-            /*modificarGuia(state.idGuia, params).then(respuesta => {
+            modificarGuia(state.idGuia, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
-            });*/
+            });
         } else {
-            /*agregarGuia(params).then(respuesta => {
+            agregarGuia(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 //window.location.reload();
                 var resp = respuesta.data;
@@ -603,7 +603,7 @@ function Guia(props) {
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
-            });*/
+            });
         }
 
     }
