@@ -53,7 +53,7 @@ window.jQuery = window.$ = $;
 const styles = {
     paqueteCarrusel: {
         height: "170px !important",
-        position: "initial !important"
+        // position: "initial !important"
     },
     conceptoCarrusel: {
         height: "70px !important",
@@ -3034,7 +3034,72 @@ function Guia(props) {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="widget-wrap" id="paquetesSobres">
+
+
+                                    <div className="row" id="paquetesSobres">
+                                        <div className="row">
+
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-md-6"  >
+                                                <div className="widget-wrap">
+                                                    <div className="widget-header">
+                                                        <div className="col-md-12">
+                                                            <h2>Número de Paquetes</h2>
+                                                        </div>
+                                                    </div>
+                                                    <div className="widget-container">
+                                                        <div className="widget-content">
+                                                            <div className="row">
+                                                                <div className="col-md-12">
+                                                                    <form className="j-forms">
+                                                                        <div className="form-content">
+                                                                            <Carousel
+                                                                                className={classes.paqueteCarrusel}
+                                                                                widgets={[IndicatorDots, Buttons]}
+                                                                                frames={framesPaquete}
+                                                                            />
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-6"  >
+                                                <div className="widget-wrap">
+                                                    <div className="widget-header">
+                                                        <div className="col-md-12">
+                                                            <h2>Número de Sobres</h2>
+                                                        </div>
+
+                                                    </div>
+                                                    <div className="widget-container">
+                                                        <div className="widget-content">
+                                                            <div className="row">
+                                                                <div className="col-md-12">
+                                                                    <form className="j-forms">
+                                                                        <div className="form-content">
+                                                                            <Carousel
+                                                                                className={classes.paqueteCarrusel}
+                                                                                widgets={[IndicatorDots, Buttons]}
+                                                                                frames={framesSobres}
+                                                                            />
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                    </div>
+                                    {/*<div className="widget-wrap" id="paquetesSobres">
                                         <div className="widget-header">
                                             <div className="col-md-6">
                                                 <h2>Número de Paquetes</h2>
@@ -3090,7 +3155,7 @@ function Guia(props) {
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>*/}
                                     <div className="widget-wrap" id="detalleFacturacion">
                                         <div className="widget-header">
 
