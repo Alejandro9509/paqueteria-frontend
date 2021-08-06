@@ -128,7 +128,7 @@ function Guia(props) {
         idEmbarque: 0,
         idEmbarque2: 0,
         hora: "",
-        idEstatusGuia: 0,
+        idEstatusGuia: '',
         estatusGuia: "",
         idMoneda: 0,
         tipoCambio: 0,
@@ -220,6 +220,7 @@ function Guia(props) {
             }
         ],
         tab: 0,
+        idTipoServicio: '',
         height: window.innerHeight
     })
 
@@ -940,10 +941,10 @@ function Guia(props) {
     }
 
     const handleChange = event => {
-        console.log(event.target.id + " : " + event.target.value)
+        console.log(event.target.name + " : " + event.target.value)
         setState({
             ...state,
-            [event.target.id]: event.target.value
+            [event.target.name]: event.target.value
         });
     };
 
@@ -2346,6 +2347,7 @@ function Guia(props) {
                                                                         value={state.idSucursalAgregar}
                                                                         onChange={handleChange}
                                                                         id="idSucursalAgregar"
+                                                                        name="idSucursalAgregar"
                                                                         label="Sucursal"
                                                                         disabled="disabled"
                                                                         InputLabelProps={{
@@ -2376,6 +2378,7 @@ function Guia(props) {
                                                                     placeholder={state.folioGuia}
                                                                     readOnly={state.agregar == "Consultar"}
                                                                     id="folioGuia"
+                                                                    name="folioGuia"
                                                                     disabled="disabled"
                                                                 />
                                                             </div>
@@ -2424,6 +2427,7 @@ function Guia(props) {
                                                                     placeholder={state.folioInforme}
                                                                     readOnly={state.agregar == "Consultar"}
                                                                     id="folioInforme"
+                                                                    name="folioInforme"
                                                                     disabled="disabled"
                                                                 />
                                                             </div>
@@ -2439,6 +2443,7 @@ function Guia(props) {
                                                                     placeholder={state.tracking}
                                                                     readOnly={state.agregar == "Consultar"}
                                                                     id="tracking"
+                                                                    name="tracking"
                                                                     disabled="disabled"
                                                                 />
                                                             </div>
@@ -2458,6 +2463,7 @@ function Guia(props) {
                                                                     placeholder={state.fecha}
                                                                     readOnly={state.agregar == "Consultar"}
                                                                     id="fecha"
+                                                                    name="fecha"
                                                                     disabled="disabled"
                                                                 />
                                                             </div>
@@ -2474,13 +2480,12 @@ function Guia(props) {
                                                                         required
                                                                         onChange={handleChange}
                                                                         id="idEstatusGuia"
+                                                                        name="idEstatusGuia"
                                                                         read="true"
                                                                         value={state.idEstatusGuia}
                                                                         disabled={state.agregar == "Consultar"}
                                                                     >
-                                                                        <option value="0">
-                                                                            Seleccionar
-                                                                        </option>
+                                                                        <option value=""></option>
                                                                         {dataEstatusGuia.map(
                                                                             (estatusGuia) => (
                                                                                 <option key={estatusGuia.m_nIdEstatusGuia} value={estatusGuia.m_nIdEstatusGuia} >
@@ -2510,7 +2515,8 @@ function Guia(props) {
                                                                         id="idMoneda"
                                                                         read="true"
                                                                         value={state.idMoneda}
-                                                                        disabled={state.agregar == "Consultar"}
+                                                                        // disabled={state.agregar == "Consultar"}
+                                                                        disabled
                                                                     >
                                                                         <option value="0">
                                                                             Seleccionar
@@ -2542,8 +2548,10 @@ function Guia(props) {
                                                                         required
                                                                         value={state.tipoCambio}
                                                                         onChange={handleChange}
-                                                                        disabled={state.agregar == "Consultar"}
+                                                                        // disabled={state.agregar == "Consultar"}
+                                                                        disabled
                                                                         id="tipoCambio"
+                                                                        name="tipoCambio"
                                                                     >
                                                                         <option value="0">Seleccionar</option>
                                                                         {dataTipoCambio.map((cambio) => (
@@ -2601,6 +2609,7 @@ function Guia(props) {
                                                                                     value={state.nombreRemitente}
                                                                                     readOnly={state.agregar == "Consultar"}
                                                                                     id="nombreRemitente"
+                                                                                    name="nombreRemitente"
                                                                                     disabled="disabled"
                                                                                 />
                                                                             </div>
@@ -2620,6 +2629,7 @@ function Guia(props) {
                                                                                     value={state.RFCRemitente}
                                                                                     readOnly={state.agregar == "Consultar"}
                                                                                     id="RFCRemitente"
+                                                                                    name="RFCRemitente"
                                                                                     disabled="disabled"
                                                                                 />
                                                                             </div>
@@ -2639,6 +2649,7 @@ function Guia(props) {
                                                                                     value={state.domicilioRemitente}
                                                                                     readOnly={state.agregar == "Consultar"}
                                                                                     id="domicilioRemitente"
+                                                                                    name="domicilioRemitente"
                                                                                     disabled="disabled"
                                                                                 />
                                                                             </div>
@@ -2658,6 +2669,7 @@ function Guia(props) {
                                                                                     value={state.codigoPostalRemitente}
                                                                                     readOnly={state.agregar == "Consultar"}
                                                                                     id="codigoPostalRemitente"
+                                                                                    name="codigoPostalRemitente"
                                                                                     disabled="disabled"
                                                                                 />
                                                                             </div>
@@ -2677,6 +2689,7 @@ function Guia(props) {
                                                                                     value={state.ciudadRemitente}
                                                                                     readOnly={state.agregar == "Consultar"}
                                                                                     id="ciudadRemitente"
+                                                                                    name="ciudadRemitente"
                                                                                     disabled="disabled"
                                                                                 />
 
@@ -2697,6 +2710,7 @@ function Guia(props) {
                                                                                     value={state.correoRemitente}
                                                                                     readOnly={state.agregar == "Consultar"}
                                                                                     id="correoRemitente"
+                                                                                    name="correoRemitente"
                                                                                     disabled="disabled"
                                                                                 />
                                                                             </div>
@@ -2716,6 +2730,7 @@ function Guia(props) {
                                                                                     value={state.telefonoRemitente}
                                                                                     readOnly={state.agregar == "Consultar"}
                                                                                     id="telefonoRemitente"
+                                                                                    name="telefonoRemitente"
                                                                                     disabled="disabled"
                                                                                 />
                                                                             </div>
@@ -2735,6 +2750,7 @@ function Guia(props) {
                                                                                     value={state.contactoRemitente}
                                                                                     readOnly={state.agregar == "Consultar"}
                                                                                     id="contactoRemitente"
+                                                                                    name="contactoRemitente"
                                                                                     disabled="disabled"
                                                                                 />
                                                                             </div>
@@ -2754,6 +2770,7 @@ function Guia(props) {
                                                                                     value={state.origenRemitente}
                                                                                     readOnly={state.agregar == "Consultar"}
                                                                                     id="origenRemitente"
+                                                                                    name="origenRemitente"
                                                                                     disabled="disabled"
                                                                                 />
                                                                             </div>
@@ -3081,7 +3098,7 @@ function Guia(props) {
                                                     <div className="widget-content">
                                                         <div className="row">
                                                             <div className="col-md-12">
-                                                                <form className="j-forms">
+                                                                {/*<form className="j-forms">*/}
                                                                     <div className="form-content">
                                                                         <div className="col-sm-4 col-md-2-5 unit">
 
@@ -3096,9 +3113,10 @@ function Guia(props) {
                                                                                         required
                                                                                         onChange={handleChange}
                                                                                         id="idTipoCobro"
+                                                                                        name="idTipoCobro"
                                                                                         read="true"
                                                                                         value={state.idTipoCobro}
-                                                                                        disabled={state.agregar == "Consultar"}
+                                                                                        // disabled={state.agregar == "Consultar"}
                                                                                         disabled="disabled">
 
                                                                                         <option value="0">
@@ -3131,13 +3149,14 @@ function Guia(props) {
                                                                                         onChange={handleChange}
                                                                                         disabled={state.agregar == "Consultar"}
                                                                                         id="idTipoServicio"
+                                                                                        name="idTipoServicio"
                                                                                         read="true"
                                                                                         value={state.idTipoServicio}
                                                                                         InputLabelProps={{
                                                                                             shrink: true,
                                                                                         }}
                                                                                     >
-                                                                                        <option value="0"></option>
+                                                                                        <option value=""></option>
                                                                                         {dataTipoServicio.map(
                                                                                             (tipoServicio) => (
                                                                                                 <option key={tipoServicio.m_nIdTipoServicio} value={tipoServicio.m_nIdTipoServicio}>
@@ -3155,17 +3174,19 @@ function Guia(props) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined" margin="dense"
-                                                                                        onChange={handleChange}
-                                                                                        className="form-control"
-                                                                                        type="text"
-                                                                                        InputLabelProps={{
-                                                                                            shrink: true,
-                                                                                        }}
-                                                                                        label="Valor Declarado"
-                                                                                        placeholder={state.ValorDeclarado}
-                                                                                        readOnly={state.agregar == "Consultar"}
-                                                                                        value={state.ValorDeclarado}
-                                                                                        id="ValorDeclarado"
+                                                                                           onChange={handleChange}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           InputLabelProps={{
+                                                                                                shrink: true,
+                                                                                            }}
+                                                                                           label="Valor Declarado"
+                                                                                           placeholder={state.ValorDeclarado}
+                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           value={state.ValorDeclarado}
+                                                                                           disabled
+                                                                                           id="ValorDeclarado"
+                                                                                           name="ValorDeclarado"
                                                                                            startAdornment={<InputAdornment position="start">$</InputAdornment>}
                                                                                 />
                                                                             </div>
@@ -3173,7 +3194,7 @@ function Guia(props) {
 
 
                                                                     </div>
-                                                                </form>
+                                                                {/*</form>*/}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3306,6 +3327,7 @@ function Guia(props) {
                                                                 }}
                                                                 value={state.folioGuia}
                                                                 id="folioGuia"
+                                                                name="folioGuia"
                                                                 readOnly
                                                             />
                                                         </div>
@@ -3320,6 +3342,7 @@ function Guia(props) {
                                                                 type="text"
                                                                 value={state.sucursalCancelacion}
                                                                 id="sucursalCancelacion"
+                                                                name="sucursalCancelacion"
                                                                 readOnly
                                                             />
                                                         </div>
@@ -3337,6 +3360,7 @@ function Guia(props) {
                                                                 }}
                                                                 value={state.fechaCancelado}
                                                                 id="fechaCancelado"
+                                                                name="fechaCancelado"
                                                                 readOnly
                                                             />
                                                         </div>
@@ -3354,6 +3378,7 @@ function Guia(props) {
                                                                 }}
                                                                 value={state.usuarioCancela}
                                                                 id="usuarioCancela"
+                                                                name="usuarioCancela"
                                                                 readOnly
                                                             />
                                                         </div>
@@ -3371,6 +3396,7 @@ function Guia(props) {
                                                                 }}
                                                                 value={state.estatusGuia}
                                                                 id="estatusGuia"
+                                                                name="estatusGuia"
                                                                 readOnly
                                                             />
                                                         </div>
@@ -3388,6 +3414,7 @@ function Guia(props) {
                                                                 }}
                                                                 value={state.MotivoCancelacion}
                                                                 id="MotivoCancelacion"
+                                                                name="MotivoCancelacion"
                                                             />
                                                         </div>
                                                     </div>
