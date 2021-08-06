@@ -33,7 +33,7 @@ class CodigoPostal extends Component {
 
     componentDidUpdate(prevProps) {
         console.log(this.props.codigoPostalesSeleccionado)
-        if (this.props.idCiudadSeleccionado != prevProps.idCiudadSeleccionado) // Check if it's a new user, you can also use some unique property, like the ID  (this.props.user.id !== prevProps.user.id)
+        if (this.props.idCiudadSeleccionado !== prevProps.idCiudadSeleccionado) // Check if it's a new user, you can also use some unique property, like the ID  (this.props.user.id !== prevProps.user.id)
         {
             this.getAllCodigoPostales();
         }
@@ -46,6 +46,13 @@ class CodigoPostal extends Component {
     getAllCodigoPostales() {
         obtenerCodigoPostalCiudad(this.props.idCiudadSeleccionado).then(respuesta => {
             this.setState({ dataCodigoPostales: respuesta.data, anchorEl: null })
+            this.state.dataCodigoPostales.forEach( (i, index) => {
+                var isCheked = this.props.codigoPostalesSeleccionado.find(t => t.m_nIdCP === i.m_nIdCP) != null
+               // this.setState({ checked: isCheked })
+                if (isCheked){
+                    this.props.handleChange(isCheked, index, respuesta.data, false)
+                }
+            })
         });
     }
 
@@ -78,8 +85,8 @@ class CodigoPostal extends Component {
                             <tr key={index} >
                                 <td style={{ width: "50px" }}>
                                     <label className="checkbox">
-                                        <input disabled={this.props.consult} type="checkbox"
-                                            onChange={(event) => this.props.handleChange(event, index, this.state.dataCodigoPostales, false)}
+                                        <input disabled={this.props.editar} type="checkbox"
+                                            onChange={(event) => this.props.handleChange(event.target.checked, index, this.state.dataCodigoPostales, false)}
                                             checked={this.props.codigoPostalesSeleccionado.find(t => t.m_nIdCP === i.m_nIdCP) != null}
                                         />
                                         <i />

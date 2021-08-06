@@ -39,6 +39,7 @@ class Zonas extends Component {
       height: window.innerHeight,
       selected: {},
       edit: true,
+      consult: false,
       data: [],
       columns: [
         {
@@ -131,7 +132,7 @@ class Zonas extends Component {
       "m_arrZonasLocalidades": data.localidadesSeleccionado
     }
     console.log(JSON.stringify(params))
-    if (this.state.idZona != 0) {
+    if (this.state.idZona !== 0) {
       const url = `${process.env.REACT_APP_API_URL}/Zonas/Modificar/` + this.state.idZona;
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         showSuccess(respuesta.data)
@@ -189,6 +190,7 @@ class Zonas extends Component {
         agregar: "Modificar",
         showPopUp: true,
         edit: true,
+        consult: false,
         selected: respuesta.data
       })
     });
@@ -207,6 +209,7 @@ class Zonas extends Component {
         agregar: "Consultar",
         showPopUp: true,
         edit: true,
+        consult: true,
         selected: respuesta.data
       })
     });
@@ -305,8 +308,8 @@ class Zonas extends Component {
 
               <div className="widget-wrap" id="Agregar" className="tab-pane fade">
                 {
-                  this.state.pantalla == 2 &&
-                  <ZonasAgregar edit={this.state.edit} select={this.state.selected} onSubmit={this.handleAceptar}></ZonasAgregar>
+                  this.state.pantalla === 2 &&
+                  <ZonasAgregar edit={this.state.edit} consult={this.state.consult} select={this.state.selected} onSubmit={this.handleAceptar}></ZonasAgregar>
                 }
               </div>
             </div>

@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import Ciudad from './Ciudad';
 import CodigoPostal from './CodigoPostal';
 import Localidad from './Localidad';
 import PropTypes from 'prop-types';
 import axios from "axios";
-import { AppBar, Box, FormControl, InputLabel, Select, Tab, Tabs, TextField, Typography } from '@material-ui/core';
+import {AppBar, Box, FormControl, InputLabel, Select, Tab, Tabs, TextField, Typography} from '@material-ui/core';
 
 const headers = {
     'Content-Type': 'application/json',
@@ -17,6 +17,7 @@ function a11yProps(index) {
         'aria-controls': `simple-tabpanel-${index}`,
     };
 }
+
 class ZonasAgregar extends Component {
     constructor(props) {
         super(props);
@@ -36,8 +37,9 @@ class ZonasAgregar extends Component {
             sucursal: props.edit ? props.select.m_nIdSucursal : 0,
             folio: props.edit ? props.select.m_nFolio : "0",
             descripcion: props.edit ? props.select.m_sDescripcion : "",
-            costoRecolectar: props.edit ? props.select.m_cMontoMinimo : "",
-            costoEntregar: props.edit ? props.select.m_cPrecioKilo : "",
+            costoRecolectar: props.edit ? props.select.m_cyCostoRecolectar : "",
+            costoEntregar: props.edit ? props.select.m_cyCostoEntregar : "",
+            editar: props.consult
         }
         this.getAllSucursales = this.getAllSucursales.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -53,13 +55,15 @@ class ZonasAgregar extends Component {
 
     componentWillMount() {
         this.getAllSucursales().then(o => {
-            console.log(this.state.ciudadesSeleccionado)
-            console.log(this.state.codigoPostalesSeleccionado)
-            console.log(this.state.localidadesSeleccionado)
+            //console.log(this.state.ciudadesSeleccionado)
+            //console.log(this.state.codigoPostalesSeleccionado)
+            //console.log(this.state.localidadesSeleccionado)
             if (this.state.sucursal) {
                 this.setEstadoId()
             }
         })
+        //console.log("editar aqui")
+        //console.log(this.state.editar)
     }
 
     a11yProps(index) {
@@ -75,7 +79,7 @@ class ZonasAgregar extends Component {
     }
 
     setEstadoId() {
-        var idEstado = this.state.dataSucursal.find(s => s.m_nIdSucursal == this.state.sucursal).m_nIdEstado
+        var idEstado = this.state.dataSucursal.find(s => s.m_nIdSucursal === this.state.sucursal).m_nIdEstado
         this.setState({
             idEstadoSucursal: idEstado,
             idCiudadSeleccionado: 0,
@@ -85,8 +89,8 @@ class ZonasAgregar extends Component {
 
     async getAllSucursales() {
         const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-        await axios.get(url, { headers }).then((respuesta) => {
-            this.setState({ dataSucursal: respuesta.data });
+        await axios.get(url, {headers}).then((respuesta) => {
+            this.setState({dataSucursal: respuesta.data});
         });
     }
 
@@ -97,16 +101,12 @@ class ZonasAgregar extends Component {
         });
     }
 
-
-
-   
-
     handleSucursalChange(event) {
         event.preventDefault()
         this.setState({
             sucursal: event.target.value
         });
-        var idEstado = this.state.dataSucursal.find(s => s.m_nIdSucursal == event.target.value).m_nIdEstado
+        var idEstado = this.state.dataSucursal.find(s => s.m_nIdSucursal === event.target.value).m_nIdEstado
         this.setState({
             idEstadoSucursal: idEstado,
             idCiudadSeleccionado: 0,
@@ -126,7 +126,7 @@ class ZonasAgregar extends Component {
     }
 
     handleTabChange(event, newValue) {
-        this.setState({ tab: newValue });
+        this.setState({tab: newValue});
     }
 
     handleChangeChecboxCiudad(event, index, arrayCiudades, all) {
@@ -139,8 +139,7 @@ class ZonasAgregar extends Component {
             });
             return
         }
-        if (event.target.checked) {
-
+        if (event) {
             array.push(arrayCiudades[index])
             this.setState({
                 ciudadesSeleccionado: array,
@@ -157,9 +156,6 @@ class ZonasAgregar extends Component {
                 idCodigoPostalSeleccionado: 0
             });
         }
-
-
-
     }
 
     handleChangeChecboxCodigoPostal(event, index, arrayCodigoPostales, all) {
@@ -173,7 +169,7 @@ class ZonasAgregar extends Component {
             });
             return
         }
-        if (event.target.checked) {
+        if (event) {
             array.push(arrayCodigoPostales[index])
             this.setState({
                 codigoPostalesSeleccionado: array,
@@ -203,7 +199,7 @@ class ZonasAgregar extends Component {
             return
         }
         if (event.target.checked) {
-            console.log(index)
+            //console.log(index)
             array.push(arrayLocalidades[index])
             this.setState({
                 localidadesSeleccionado: array
@@ -227,7 +223,7 @@ class ZonasAgregar extends Component {
     render() {
         return (
             <form className="j-forms" onSubmit={this.onSubmit}>
-                <div className="main-container" style={{ marginLeft: "0px", padding: "0px" }}>
+                <div className="main-container" style={{marginLeft: "0px", padding: "0px"}}>
                     <div className="row">
                         <div className="col-md-12 col-sm-12">
                             <div className="widget-wrap">
@@ -238,42 +234,45 @@ class ZonasAgregar extends Component {
                                         </div>
                                     </div>
                                     <div className="row">
-                                        <div className="col-md-4 col-sm-12" style={{ padding: "5px" }}>
+                                        <div className="col-md-4 col-sm-12" style={{padding: "5px"}}>
 
                                             <div className="input">
                                                 <TextField variant="outlined" margin="dense"
-                                                    onChange={this.handleChange}
-                                                    className="form-control"
-                                                    type="number"
-                                                    label={<div>Folio</div>}
-                                                    step="1"
-                                                    value={this.state.folio}
-                                                    name="folio"
+                                                           onChange={this.handleChange}
+                                                           disabled={this.state.editar}
+                                                           className="form-control"
+                                                           type="number"
+                                                           label={<div>Folio</div>}
+                                                           step="1"
+                                                           value={this.state.folio}
+                                                           name="folio"
                                                 />
                                             </div>
                                         </div>
-                                        <div className="col-md-4 col-sm-12" style={{ padding: "5px" }}>
+                                        <div className="col-md-4 col-sm-12" style={{padding: "5px"}}>
 
                                             <div className="input">
                                                 <TextField variant="outlined" margin="dense"
-                                                    onChange={this.handleChange}
-                                                    className="form-control"
-                                                    type="text"
-                                                    label="Descripción"
-                                                    required
-                                                    value={this.state.descripcion}
-                                                    name="descripcion"
+                                                           onChange={this.handleChange}
+                                                           disabled={this.state.editar}
+                                                           className="form-control"
+                                                           type="text"
+                                                           label="Descripción"
+                                                           required
+                                                           value={this.state.descripcion}
+                                                           name="descripcion"
                                                 />
                                             </div>
                                         </div>
-                                        <div className="col-md-4 col-sm-12" style={{ padding: "5px" }}>
-                                            <label className="input select" style={{ width: "100%" }}>
+                                        <div className="col-md-4 col-sm-12" style={{padding: "5px"}}>
+                                            <label className="input select" style={{width: "100%"}}>
                                                 <FormControl fullWidth variant="outlined" margin="dense">
                                                     <InputLabel id="sucursalLabel">Sucursal</InputLabel>
                                                     <Select
                                                         native
                                                         labelId="sucursalLabel"
                                                         label="Sucursal"
+                                                        disabled={this.state.editar}
                                                         className="form-control"
                                                         required
                                                         onChange={this.handleSucursalChange}
@@ -286,7 +285,7 @@ class ZonasAgregar extends Component {
                                                             value={"0"}
                                                         >
                                                             Seleccionar
-                            </option>
+                                                        </option>
                                                         {this.state.dataSucursal.map((sucursal) => (
                                                             <option
                                                                 key={sucursal.m_nIdSucursal}
@@ -300,12 +299,17 @@ class ZonasAgregar extends Component {
                                             </label>
                                         </div>
 
-                                        <div className="col-md-4 col-sm-12" style={{ height: this.state.height - 375, overflowY: "auto", padding: "5px" }}>
+                                        <div className="col-md-4 col-sm-12" style={{
+                                            height: this.state.height - 375,
+                                            overflowY: "auto",
+                                            padding: "5px"
+                                        }}>
                                             {this.state.sucursal != 0 ?
                                                 <Ciudad
                                                     idEstadoSucursal={this.state.idEstadoSucursal}
                                                     ciudadesSeleccionado={this.state.ciudadesSeleccionado}
                                                     handleChangeChecboxCiudad={this.handleChangeChecboxCiudad}
+                                                    editar={this.state.editar}
                                                     all={this.state.ciudadesAll}
                                                 >
                                                 </Ciudad>
@@ -316,12 +320,17 @@ class ZonasAgregar extends Component {
 
                                         </div>
 
-                                        <div className="col-md-4 col-sm-12" style={{ height: this.state.height - 375, overflowY: "auto", padding: "5px" }}>
+                                        <div className="col-md-4 col-sm-12" style={{
+                                            height: this.state.height - 375,
+                                            overflowY: "auto",
+                                            padding: "5px"
+                                        }}>
                                             {this.state.idCiudadSeleccionado != 0 ?
                                                 <CodigoPostal
                                                     idCiudadSeleccionado={this.state.idCiudadSeleccionado}
                                                     codigoPostalesSeleccionado={this.state.codigoPostalesSeleccionado}
                                                     handleChange={this.handleChangeChecboxCodigoPostal}
+                                                    editar={this.state.editar}
                                                     all={this.state.codigoPostalesAll}
                                                 >
                                                 </CodigoPostal>
@@ -330,12 +339,17 @@ class ZonasAgregar extends Component {
                                             }
                                         </div>
 
-                                        <div className="col-md-4 col-sm-12" style={{ height: this.state.height - 375, overflowY: "auto", padding: "5px" }}>
+                                        <div className="col-md-4 col-sm-12" style={{
+                                            height: this.state.height - 375,
+                                            overflowY: "auto",
+                                            padding: "5px"
+                                        }}>
                                             {this.state.idCodigoPostalSeleccionado != 0 ?
                                                 <Localidad
                                                     localidadesSeleccionado={this.state.localidadesSeleccionado}
                                                     idCodigoPostalSeleccionado={this.state.idCodigoPostalSeleccionado}
                                                     handleChange={this.handleChangeChecboxLocalidad}
+                                                    editar={this.state.editar}
                                                     all={this.state.localidadesAll}
                                                 >
                                                 </Localidad>
@@ -346,39 +360,45 @@ class ZonasAgregar extends Component {
 
                                         </div>
 
-                                        <div style={{ float: "right", marginRight: "0px" }}>
+                                        <div style={{float: "right", marginRight: "0px"}}>
                                         </div>
 
-                                        <div className="col-md-12 col-sm-12" style={{ padding: "5px", display: "inline-flex" }}>
-                                            <div className="form-footer " className="col-md-12" style={{ padding: "10px" }}>
+                                        <div className="col-md-12 col-sm-12"
+                                             style={{padding: "5px", display: "inline-flex"}}>
+                                            <div className="form-footer " className="col-md-12"
+                                                 style={{padding: "10px"}}>
 
-                                                <div className="col-md-2 col-sm-2" style={{ float: "right", padding: "5px" }}>
+                                                <div className="col-md-2 col-sm-2"
+                                                     style={{float: "right", padding: "5px"}}>
 
                                                     <div className="input">
                                                         <TextField variant="outlined" margin="dense"
-                                                            onChange={this.handleChange}
-                                                            className="form-control"
-                                                            type="number"
-                                                            required
-                                                            label="Costo Recolectar"
-                                                            step="0.01"
-                                                            value={this.state.costoRecolectar}
-                                                            name="costoRecolectar"
+                                                                   onChange={this.handleChange}
+                                                                   className="form-control"
+                                                                   type="number"
+                                                                   disabled={this.state.editar}
+                                                                   required
+                                                                   label="Costo Recolectar"
+                                                                   step="0.01"
+                                                                   value={this.state.costoRecolectar}
+                                                                   name="costoRecolectar"
                                                         />
                                                     </div>
                                                 </div>
-                                                <div className="col-md-2 col-sm-2" style={{ float: "right", padding: "5px" }}>
+                                                <div className="col-md-2 col-sm-2"
+                                                     style={{float: "right", padding: "5px"}}>
 
                                                     <div className="input">
                                                         <TextField variant="outlined" margin="dense"
-                                                            onChange={this.handleChange}
-                                                            className="form-control"
-                                                            type="number"
-                                                            label="Costo Entregar"
-                                                            required
-                                                            step="0.01"
-                                                            value={this.state.costoEntregar}
-                                                            name="costoEntregar"
+                                                                   onChange={this.handleChange}
+                                                                   className="form-control"
+                                                                   type="number"
+                                                                   label="Costo Entregar"
+                                                                   disabled={this.state.editar}
+                                                                   required
+                                                                   step="0.01"
+                                                                   value={this.state.costoEntregar}
+                                                                   name="costoEntregar"
                                                         />
                                                     </div>
                                                 </div>
@@ -393,13 +413,13 @@ class ZonasAgregar extends Component {
                                                     href="#Listado"
                                                 >
                                                     Cancelar
-                                    </button>
+                                                </button>
                                                 <button
                                                     type="submit"
                                                     className="btn btn-primary primary-btn"
                                                 >
                                                     Aceptar
-                                    </button>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -414,8 +434,6 @@ class ZonasAgregar extends Component {
     }
 }
 
-ZonasAgregar.propTypes = {
-
-};
+ZonasAgregar.propTypes = {};
 
 export default ZonasAgregar;

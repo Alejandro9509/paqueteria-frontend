@@ -81,7 +81,7 @@ class Localidad extends Component {
                             <tr key={index}>
                                 <td style={{ width: "50px" }}>
                                     <label className="checkbox">
-                                        <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.props.handleChange(event, index, this.state.dataLocalidades, false)} checked={this.props.localidadesSeleccionado.find(t => t.m_nIdLocalidad === i.m_nIdLocalidad) != null} />
+                                        <input disabled={this.props.editar} type="checkbox" onChange={(event) => this.props.handleChange(event, index, this.state.dataLocalidades, false)} checked={this.props.localidadesSeleccionado.find(t => t.m_nIdLocalidad === i.m_nIdLocalidad) != null} />
                                         <i />
                                     </label>
                                 </td>
