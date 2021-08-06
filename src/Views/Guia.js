@@ -37,6 +37,7 @@ import { obtenerTipoCobro } from "../Util/Contexts/TipoCobroContext";
 import { obtenerTipoServicio } from "../Util/Contexts/TipoServiciosContext";
 import { obtenerImpuestosTipo } from "../Util/Contexts/ImpuestosContext";
 import { imprimirFormatosId, obtenerFormatosImpresion } from "../Util/Contexts/FormatosImpresionContext";
+import {obtenerCodigoPostalId} from "../Util/Contexts/CodigoPostalContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -145,6 +146,7 @@ function Guia(props) {
         sRFCDestinatario: "",
         sDomicilioDestinatario: "",
         idCodigoPostalDestinatario: "",
+        codigoPostalDestinatario: "",
         sCorreoDestinatario: "",
         idCIudadDestinatario: 0,
         sTelefonoDestinatario: "",
@@ -1213,6 +1215,23 @@ function Guia(props) {
             });
         }
 
+        obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalRemitente).then(respuesta => {
+          setState( state => {
+              return{
+                  ...state,
+                  codigoPostalRemitente: respuesta.data.m_sCP,
+              }
+          })
+        })
+        obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalDestinatario).then(respuesta => {
+            setState(state => {
+                return {
+                    ...state,
+                    codigoPostalDestinatario: respuesta.data.m_sCP
+                }
+            })
+        })
+
         setState(state => {
             return{
                 ...state,
@@ -1228,7 +1247,7 @@ function Guia(props) {
                 nombreRemitente: respuesta.data.m_sNOmbreRemitente,
                 RFCRemitente: respuesta.data.m_sRFCRemitente,
                 domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                codigoPostalRemitente: respuesta.data.m_nIdCodigoPostalRemitente,
+                // codigoPostalRemitente: respuesta.data.m_nIdCodigoPostalRemitente,
                 idCodigoPostalRemitente: respuesta.data.m_nIdCodigoPostalRemitente,
                 ciudadRemitente: respuesta.data.m_sCiudadRemitente,
                 correoRemitente: respuesta.data.m_sCorreoRemitente,
@@ -1241,11 +1260,12 @@ function Guia(props) {
                 sRFCDestinatario: respuesta.data.m_sRFCDestinatario,
                 sDomicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
                 idCodigoPostalDestinatario: respuesta.data.m_nIdCodigoPostalDestinatario,
+                // codigoPostalDestinatario: respuesta.data.m_nIdCodigoPostalDestinatario,
                 ciudadDestinatario: respuesta.data.m_sCIudadDestinatario,
                 sCorreoDestinatario: respuesta.data.m_sCorreoDestinatario,
                 sTelefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
                 sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
-                CiudadDestino: respuesta.data.m_sCIudadDestinatario,
+                CiudadDestino: respuesta.data.m_sCiudadDestino,
 
                 paquetes: paquetesTemp,
                 sobres: sobresTemp,
@@ -1456,7 +1476,7 @@ function Guia(props) {
                     sCorreoDestinatario: respuesta.data.m_sCorreoDestinatario,
                     sTelefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
                     sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
-                    CiudadDestino: respuesta.data.m_sCIudadDestinatario,
+                    CiudadDestino: respuesta.data.m_sCiudadDestino,
                     paquetes: paquetesTemp,
                     sobres: sobresTemp,
                     conceptosAdicionales: conceptosTemp, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada,
@@ -1548,7 +1568,7 @@ function Guia(props) {
                 sCorreoDestinatario: respuesta.data.m_sCorreoDestinatario,
                 sTelefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
                 sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
-                CiudadDestino: respuesta.data.m_sCIudadDestinatario,
+                CiudadDestino: respuesta.data.m_sCiudadDestino,
                 showPopUp: true,
                 idEmbarque: embarque.data.m_nIdEmbarque,
                 folioGuia: embarque.data.m_nFolioGuia,
@@ -2908,7 +2928,7 @@ function Guia(props) {
                                                                                         shrink: true,
                                                                                     }}
                                                                                     label="Código Postal"
-                                                                                    value={state.idCodigoPostalDestinatario}
+                                                                                    value={state.codigoPostalDestinatario}
                                                                                     readOnly={state.agregar == "Consultar"}
                                                                                     id="idCodigoPostalDestinatario"
                                                                                     disabled="disabled"
