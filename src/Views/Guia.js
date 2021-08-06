@@ -1162,16 +1162,14 @@ function Guia(props) {
             setDataConcepto(respuestaConceptos.data)
             console.log(respuestaConceptos.data)
             if (props.location.idEmbarque != undefined) {
-                // handleEmbarque(props.location.idEmbarque)
                 obtenerEmbarquesId(props.location.idEmbarque).then(respuesta => {
                     console.log('Embarque datos:')
                     console.log(respuesta.data)
 
-                    setDataFromEmbarque(respuesta, respuestaConceptos)
+                    setDataFromEmbarque(respuesta, respuestaConceptos.data)
                     obtenerEmbarqueMoneda(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, state.idGuia).then(respuesta => {
                         setDataEmbarque(respuesta.data)
                     })
-                    obtenerTarifasPorEmbarque(props.location.idEmbarque, respuestaConceptos)
 
                 });
             }
@@ -1272,20 +1270,20 @@ function Guia(props) {
                 ValorDeclarado: valorDeclaradoTotal
             }
         })
-        obtenerTarifasPorEmbarque(props.location.idEmbarque, respuestaConceptos)
+        obtenerTarifasPorEmbarque(respuesta.data.m_nIdEmbarque, respuestaConceptos)
     }
 
     const obtenerTarifasPorEmbarque = (idEmbarque, respuestaConceptos) => {
         const conceptosTemp = []
         let ivaTraslada = []
         let ivaRetiene = []
-        axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${props.location.idEmbarque}`, { headers }).then(tarifa => {
+        axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${idEmbarque}`, { headers }).then(tarifa => {
             console.log(tarifa)
 
             if (tarifa.data.length !== 0) {
                 tarifa.data[0].m_arrArConceptos.forEach(element => {
                     conceptosTemp.push({
-                        concepto: respuestaConceptos.data.find(c => c.m_nIdConceptosFacturacion == element.m_nIdConceptosFacturacion),
+                        concepto: respuestaConceptos.find(c => c.m_nIdConceptosFacturacion == element.m_nIdConceptosFacturacion),
                         importe: element.m_cImporte,
                         retiene: element.m_nIdImpuestoRetiene,
                         traslada: element.m_nIdImpuestoTraslada,
@@ -1396,95 +1394,8 @@ function Guia(props) {
     };
 
     function handleEmbarque(embarque) {
-
         obtenerEmbarquesId(embarque).then(respuesta => {
-            console.log(embarque);
-            const paquetesTemp = [];
-            const sobresTemp = [];
-            let valorDeclaradoTotal = 0
-
-            for (var i = 0; i < respuesta.data.m_arrPaquetes.length; i++) {
-
-                if (respuesta.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle === "" || respuesta.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle === "0")
-                    continue;
-
-                paquetesTemp.push({
-
-                    "peso": respuesta.data.m_arrPaquetes[i].m_xPeso,
-                    "largo": respuesta.data.m_arrPaquetes[i].m_xLargo,
-                    "ancho": respuesta.data.m_arrPaquetes[i].m_xAncho,
-                    "alto": respuesta.data.m_arrPaquetes[i].m_xAlto,
-                    "volumen": respuesta.data.m_arrPaquetes[i].m_xVolumen,
-                    "tipoEmbalaje": respuesta.data.m_arrPaquetes[i].m_nTipo,
-                    "valorDeclarado": respuesta.data.m_arrPaquetes[i].m_cValorDeclarado,
-                    "descripcionPaquete": respuesta.data.m_arrPaquetes[i].m_sDescripcion,
-                    "observacionesPaquete": respuesta.data.m_arrPaquetes[i].m_sObservaciones,
-                    "id": respuesta.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle
-                });
-                valorDeclaradoTotal = valorDeclaradoTotal + respuesta.data.m_arrPaquetes[i].m_cValorDeclarado
-            }
-
-            for (var i = 0; i < respuesta.data.m_arrSobres.length; i++) {
-
-                if (respuesta.data.m_arrSobres[i].m_nIdEmbarqueDetalle === "" || respuesta.data.m_arrSobres[i].m_nIdEmbarqueDetalle === "0")
-                    continue;
-
-                sobresTemp.push({
-                    "descripcionSobre": respuesta.data.m_arrSobres[i].m_sDescripcion,
-                    "id": respuesta.data.m_arrSobres[i].m_nIdEmbarqueDetalle
-                });
-            }
-            //showSuccess(respuesta.data.m_nIdEmbarque);
-            //setDataEmbarque(respuesta.data)
-            var conceptosTemp = []
-            var ivaTraslada = []
-            var ivaRetiene = []
-            //var flete = dataConcepto.find(c => c.m_nIdConceptosFacturacion === 22)
-            axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${embarque}`, { headers }).then(tarifa => {
-                console.log(tarifa)
-
-                if (tarifa.data.length !== 0) {
-                    //setDataConcepto(tarifa.m_arrArConceptos)
-                    tarifa.data[0].m_arrArConceptos.forEach(element => {
-                        conceptosTemp.push({ concepto: dataConcepto.find(c => c.m_nIdConceptosFacturacion === element.m_nIdConceptosFacturacion), importe: element.m_cImporte, retiene: element.m_nIdImpuestoRetiene, traslada: element.m_nIdImpuestoTraslada, importeRet: element.m_cImporteRetiene, importeIVA: element.m_cImporteIva, rangoMinimo: element.m_xnRangoMinimo, rangoMaximo: element.m_xnRangoMaximo, nombreConcepto: element.m_sConcepto, tipoCalculo: element.m_nIdTipoCalculo })
-
-                    })
-                    ivaTraslada = getUniqueListBy(conceptosTemp, "traslada").map(i => i.traslada);
-                    ivaRetiene = getUniqueListBy(conceptosTemp, "retiene").map(i => i.retiene);
-                }
-
-                setState({
-                    ...state,
-                    idEmbarque: respuesta.data.m_nIdEmbarque,
-                    idEmbarque2: respuesta.data.m_nIdEmbarque,
-                    nombreRemitente: respuesta.data.m_sNOmbreRemitente,
-                    RFCRemitente: respuesta.data.m_sRFCRemitente,
-                    domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                    codigoPostalRemitente: respuesta.data.m_nIdCodigoPostalRemitente,
-                    ciudadRemitente: respuesta.data.m_sCiudadRemitente,
-                    correoRemitente: respuesta.data.m_sCorreoRemitente,
-                    tipoCambio: respuesta.data.m_cTIpoCambio,
-                    idTipoCobro: respuesta.data.m_nIdTIpoCobro,
-                    telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
-                    contactoRemitente: respuesta.data.m_sContactoRemitente,
-                    origenRemitente: respuesta.data.m_sCiudadRemitente,
-                    sNombreDestinatario: respuesta.data.m_sNombreDestinatario,
-                    sRFCDestinatario: respuesta.data.m_sRFCDestinatario,
-                    sDomicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                    idCodigoPostalDestinatario: respuesta.data.m_nIdCodigoPostalDestinatario,
-                    ciudadDestinatario: respuesta.data.m_sCIudadDestinatario,
-                    sCorreoDestinatario: respuesta.data.m_sCorreoDestinatario,
-                    sTelefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
-                    sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
-                    CiudadDestino: respuesta.data.m_sCiudadDestino,
-                    paquetes: paquetesTemp,
-                    sobres: sobresTemp,
-                    conceptosAdicionales: conceptosTemp, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada,
-                    ValorDeclarado: valorDeclaradoTotal
-                })
-            })
-
-
+            setDataFromEmbarque(respuesta, dataConcepto)
         });
     };
 
