@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Se agregaron comentarios a funciones">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Se comentó codigo innecesario">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
     </list>
@@ -373,7 +373,28 @@
       <option name="project" value="LOCAL" />
       <updated>1628374931152</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="*Se agregó funcion para limpiar campos al hacer una modificacion o agregar exitosamente.">
+      <created>1628377919791</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1628377919791</updated>
+    </task>
+    <task id="LOCAL-00037" summary="*Se comentó codigo innecesario">
+      <created>1628378116328</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1628378116328</updated>
+    </task>
+    <task id="LOCAL-00038" summary="*Se comentó codigo innecesario">
+      <created>1628379591917</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1628379591917</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -417,8 +438,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se habilitaron campos de minimo y maximo para pastaña de conceptos de entrega por rangos" />
-    <MESSAGE value="Se arregló problema de duplicidad de registros y la funcion modificar ya funciona" />
     <MESSAGE value="Ajustes" />
     <MESSAGE value="Se autocompleta la informacion de remitente y destinatario al seleccionar" />
     <MESSAGE value="Se agregó validacion para hacer la fecha de vencimiento obligatoria" />
@@ -442,7 +461,9 @@
     <MESSAGE value="*Se comentó codigo innecesario de momento.&#10;*Se habilitó campo para seleccionar moneda y filtrar embarques por tipo de moneda&#10;*Se agregaron comentarios al codigo" />
     <MESSAGE value="*Se comentó codigo innecesario de momento.&#10;*Se habilitó campo para seleccionar moneda y filtrar embarques por tipo de moneda" />
     <MESSAGE value="*Se agregaron comentarios a funciones" />
-    <option name="LAST_COMMIT_MESSAGE" value="*Se agregaron comentarios a funciones" />
+    <MESSAGE value="*Se agregó funcion para limpiar campos al hacer una modificacion o agregar exitosamente." />
+    <MESSAGE value="*Se comentó codigo innecesario" />
+    <option name="LAST_COMMIT_MESSAGE" value="*Se comentó codigo innecesario" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

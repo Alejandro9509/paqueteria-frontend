@@ -759,14 +759,14 @@ function Guia(props) {
             window.location.replace("login");
             return;
         }
-        getAllData();
-        getAllDataSucursal();
-        getAllDataMoneda();
-        getAllDataTipoCobro();
-        getAllDataTipoServicio();
-        getAllDataEstatusGuia();
+        getAllData()
+        getAllDataSucursal()
+        getAllDataMoneda()
+        getAllDataTipoCobro()
+        getAllDataTipoServicio()
+        getAllDataEstatusGuia()
         // getAllCiudades();
-        getAllConceptos();
+        getAllConceptos()
         // getAllImpuestosTraslado();
         // getAllImpuestosRetiene();
         getUltimoFolioGuia()
