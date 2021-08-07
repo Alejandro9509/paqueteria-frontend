@@ -238,157 +238,9 @@ function Guia(props) {
     const [dataEstatusGuia, setDataEstatusGuia] = React.useState([])
     const [dataEmbarque, setDataEmbarque] = React.useState([])
     const [dataConcepto, setDataConcepto] = React.useState([])
-    const [dataImpuestoTraslado, setDataImpuestoTraslado] = React.useState([])
-    const [dataImpuestoRetiene, setDataImpuestoRetiene] = React.useState([])
+    // const [dataImpuestoTraslado, setDataImpuestoTraslado] = React.useState([])
+    // const [dataImpuestoRetiene, setDataImpuestoRetiene] = React.useState([])
 
-    /*const embarqueRespuesta = {
-        "m_nIdEmbarque": 256,
-        "m_nIdRecoleccion": 0,
-        "m_nFolioEmbarque": "FE00000238",
-        "m_sFolioGuia": "",
-        "m_sFolioRecoleccion": "RE00000212",
-        "m_nFolioInforme": "",
-        "m_nIdEstatusEmbarque": 15,
-        "m_nIdMoneda": 1,
-        "m_cTIpoCambio": 16,
-        "m_nIdTIpoCobro": 3,
-        "IdSucursal": 24,
-
-
-        "m_sNOmbreRemitente": "CATALINA PAOR PAOC",
-        "m_sRFCRemitente": "PAOC761214IM9",
-        "m_sDomicilioRemitente": "Zapopan DELEGACIÓN BENITO JUÁREZ SAN COSME DÍAZ SUÁREZ Ext: 45 Int: ",
-        "m_nIdCodigoPostalRemitente": 2796,
-        "m_nCiudadRemitente": 7,
-        "m_sCiudadRemitente": "Tonalá",
-        "m_bEsRecolecta": 1,
-        "m_sCorreoRemitente": "caty@gmail.com",
-        "m_sTelefonoRemitente": "6863921532",
-        "m_sContactoRemitente": "ContactoCaty",
-        "m_nIdCiudadRemitente": 0,
-        "m_nIdCiudadOrigen": 136,
-        "m_sCiudadOrigen": "San Francisco de los Romo",
-
-
-        "m_sNombreDestinatario": "ULISES CUEVAS PÉREZ",
-        "m_sRFCDestinatario": "CUPU800825569",
-        "m_sDomicilioDestinatario": "CIUDAD DE MÉXICO DELEGACIÓN BENITO JUÁREZ SAN COSME DÍAZ SUÁREZ Ext: 44 Int: ",
-        "m_nIdCodigoPostalDestinatario": 538,
-        "m_sCorreoDestinatario": "Ulises@gmail.com",
-        "m_nIdCIudadDestinatario": 8,
-        "m_sCIudadDestinatario": "Tecate",
-        "m_sTelefonoDestinatario": "6862873234",
-        "m_sContactoDestinatario": "ContactoUlises",
-        "m_nIdCiudadDestino": 8,
-        "m_sCiudadDestino": "Tecate",
-
-
-        "m_tHoraEntrega": "00:00:00.000",
-        "m_dFechaEntrega": "1900-01-01",
-        "EntregarMismoDomicilio": false,
-        "CodigoPostalEntrega": 1099,
-        "IdCiudadEntrega": 1091,
-        "IdZonaEntrega": 41,
-        "DomicilioEntrega": "domicilio entrega prueba",
-        "EntregarEn": "entrega en prueba",
-        "DatosAdicionalesis": "datos adicionales entrega prueba",
-        "m_bEntregaEnSucursal": false,
-        "m_nIdSucursalEntrega": 0,
-
-
-        "m_nNoPaquetes": 4,
-        "m_nNoSobres": 2,
-        "m_arrPaquetes": [{
-            "m_nIdEmbarqueDetalle": 117,
-            "m_nIdEmbarque": 256,
-            "m_nTipo": 2,
-            "m_sDescripcion": "descripcion prueba",
-            "m_xPeso": 10,
-            "m_xLargo": 1,
-            "m_xAncho": 1,
-            "m_xAlto": 1,
-            "m_xVolumen": 1,
-            "m_nIdTIpoEmpaque": 15,
-            "m_cValorDeclarado": 100,
-            "m_sObservaciones": "observaciones prueba",
-            "m_bActivo": false,
-            "m_sUltimoError": "",
-            "ctd": 0
-        }, {
-            "m_nIdEmbarqueDetalle": 118,
-            "m_nIdEmbarque": 256,
-            "m_nTipo": 2,
-            "m_sDescripcion": "descripcion prueba2",
-            "m_xPeso": 20,
-            "m_xLargo": 2,
-            "m_xAncho": 2,
-            "m_xAlto": 2,
-            "m_xVolumen": 8,
-            "m_nIdTIpoEmpaque": 17,
-            "m_cValorDeclarado": 200,
-            "m_sObservaciones": "observacion prueba 2",
-            "m_bActivo": false,
-            "m_sUltimoError": "",
-            "ctd": 0
-        }],
-        "m_arrSobres": [{
-            "m_nIdEmbarqueDetalle": 119,
-            "m_nIdEmbarque": 256,
-            "m_nTipo": 1,
-            "m_sDescripcion": "sobre prueba",
-            "m_xPeso": 0,
-            "m_xLargo": 0,
-            "m_xAncho": 0,
-            "m_xAlto": 0,
-            "m_xVolumen": 0,
-            "m_nIdTIpoEmpaque": 0,
-            "m_cValorDeclarado": 0,
-            "m_sObservaciones": "0",
-            "m_bActivo": false,
-            "m_sUltimoError": "",
-            "ctd": 0
-        }, {
-            "m_nIdEmbarqueDetalle": 120,
-            "m_nIdEmbarque": 256,
-            "m_nTipo": 1,
-            "m_sDescripcion": "descripcion sobre 2",
-            "m_xPeso": 0,
-            "m_xLargo": 0,
-            "m_xAncho": 0,
-            "m_xAlto": 0,
-            "m_xVolumen": 0,
-            "m_nIdTIpoEmpaque": 0,
-            "m_cValorDeclarado": 0,
-            "m_sObservaciones": "0",
-            "m_bActivo": false,
-            "m_sUltimoError": "",
-            "ctd": 0
-        }],
-
-        "m_nIdOperador": 0,
-        "m_nIdUnidad": 0,
-        "m_dFechaSalida": "0000-00-00",
-        "m_tHoraSalida": "00:00:00.000",
-        "m_arrClsDetalle": [],
-        "m_sSucursal": "",
-        "m_sEstatusEmbarque": "",
-        "m_dtFechaCancelacion": "0000-00-00T00:00:00.000",
-        "m_sUsuarioCancelacion": "0",
-        "m_sMotivoCancelacion": "",
-        "FechaLlegada": "1900-01-01",
-        "HoraLlegada": "00:00:00.000",
-        "m_dFecha": "2021-08-04",
-        "m_tHora": "21:27:12.896",
-        "m_dFechaRegistro": "2021-08-05",
-        "m_tHoraRegistro": "21:22:00.000",
-        "m_nN_AGREGAR": 136,
-        "m_nN_MODIFICAR": 138,
-        "m_nN_ELIMINAR": 139,
-        "m_nN_IMPRIMIR": 141
-        "m_sFechaHora": "",
-        "CreadoPor": 0,
-        "m_nSePuedeCancelar": 0,
-    }*/
 
 
     const [dataCiudad, setDataCiudad] = React.useState([])
@@ -431,6 +283,7 @@ function Guia(props) {
             modificarGuia(state.idGuia, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
+                limpiarCampos()
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
@@ -439,9 +292,9 @@ function Guia(props) {
             agregarGuia(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 //window.location.reload();
-                var resp = respuesta.data;
-                //debugger;
-                var vGuia = resp.substring(resp.indexOf(":") + 2);
+                let resp = respuesta.data;
+                let vGuia = resp.substring(resp.indexOf(":") + 2);
+                limpiarCampos()
                 getImpresion(vGuia);
             }).catch(err => {
                 console.log(err)
@@ -454,7 +307,6 @@ function Guia(props) {
     function getUltimoFolioGuia() {
         ultimoFolioGuia().then((respuesta) => { SetDataFolioGuia(respuesta.data); });
     }
-
 
     async function getImpresion(id) {
         //showSuccess (state.nGuiaId);		
@@ -710,7 +562,7 @@ function Guia(props) {
             fechaCancelado: "",
             idGuia: 0,
             hora: "",
-            idEstatusGuia: 4,
+            idEstatusGuia: '',
             idMoneda: 0,
             tipoCambio: 0,
             idTipoCobro: 0,
@@ -831,7 +683,6 @@ function Guia(props) {
         });
     };
 
-
     const columns = React.useMemo(() => [
         {
             headerName: "Acciones",
@@ -916,8 +767,8 @@ function Guia(props) {
         getAllDataEstatusGuia();
         getAllCiudades();
         getAllConceptos();
-        getAllImpuestosTraslado();
-        getAllImpuestosRetiene();
+        // getAllImpuestosTraslado();
+        // getAllImpuestosRetiene();
         getUltimoFolioGuia()
         getTipoCambio()
         getFormatosImpresion()
@@ -927,7 +778,7 @@ function Guia(props) {
         obtenerGuia().then(respuesta => {
             setData(respuesta.data)
         });
-    };
+    }
 
     function addConcepto(data) {
         const { conceptosAdicionales } = state
@@ -970,7 +821,7 @@ function Guia(props) {
         obtenerSucursales().then(respuesta => {
             setDataSucursal(respuesta.data)
         });
-    };
+    }
 
     async function getAllConceptos() {
         obtenerConceptosFacturacion().then(respuestaConceptos => {
@@ -997,7 +848,7 @@ function Guia(props) {
                 });
             }
         });
-    };
+    }
 
     const setDataFromEmbarque = (respuesta, respuestaConceptos) => {
         console.log('Embarque datos:')
@@ -1147,17 +998,71 @@ function Guia(props) {
         })
     }
 
-    async function getAllImpuestosRetiene() {
+    const limpiarCampos = () => {
+        setState(state => {
+            return{
+                ...state,
+                //Informacion general
+                idSucursal: '',
+                folioGuia: '',
+                IdEmbarque: '',
+                folioInforme: '',
+                tracking: '',
+                fecha: '',
+                idEstatusGuia: '',
+                idMoneda: '',
+                tipoCambio: '',
+                //Datos remitente
+                nombreRemitente: '',
+                RFCRemitente: '',
+                domicilioRemitente: '',
+                idCodigoPostalRemitente: '',
+                ciudadRemitente: '',
+                correoRemitente: '',
+                telefonoRemitente: '',
+                contactoRemitente: '',
+                origenRemitente: '',
+                idCiudadOrigen: '',
+                //Datos destinatario
+                sNombreDestinatario: '',
+                sRFCDestinatario: '',
+                sDomicilioDestinatario: '',
+                idCodigoPostalDestinatario: '',
+                ciudadDestinatario: '',
+                sCorreoDestinatario: '',
+                sTelefonoDestinatario: '',
+                sContactoDestinatario: '',
+                CiudadDestino: '',
+                //Paquetes
+                paquetes: [],
+                sobres: [],
+                //Detalles de facturacion
+                idTipoCobro: '',
+                idTipoServicio: '',
+                ValorDeclarado: '',
+                //Conceptos de facturacion
+                arClsGuiaConceptos: [],
+                //Otros datos  no visuales
+                folioRecoleccion: '',
+                idGuia: '',
+                hora: '',
+                idEmbarque: '',
+                creadoEl: '',
+            }
+        })
+    }
+
+    /*async function getAllImpuestosRetiene() {
         obtenerImpuestosTipo(2).then(respuesta => {
             setDataImpuestoRetiene(respuesta.data)
         });
-    };
+    };*/
 
-    async function getAllImpuestosTraslado() {
+    /*async function getAllImpuestosTraslado() {
         obtenerImpuestosTipo(1).then(respuesta => {
             setDataImpuestoTraslado(respuesta.data)
         });
-    };
+    };*/
 
     async function getAllDataMoneda() {
         obtenerMonedas().then(respuesta => {

@@ -4,7 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Se comentó codigo innecesario de momento.&#10;*Se habilitó campo para seleccionar moneda y filtrar embarques por tipo de moneda">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Se agregaron comentarios a funciones">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -67,7 +68,7 @@
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
@@ -365,7 +366,14 @@
       <option name="project" value="LOCAL" />
       <updated>1628374139202</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="*Se agregaron comentarios a funciones">
+      <created>1628374931152</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1628374931152</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -409,7 +417,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se hicieron ajustes para mandar el id de destino en lugar el nombre a los servicios" />
     <MESSAGE value="Se habilitaron campos de minimo y maximo para pastaña de conceptos de entrega por rangos" />
     <MESSAGE value="Se arregló problema de duplicidad de registros y la funcion modificar ya funciona" />
     <MESSAGE value="Ajustes" />
@@ -434,7 +441,8 @@
     <MESSAGE value="Se actualizó la sintaxis para pasar los paquetes y sobres a arreglos con nombres adecuados.&#10;*Se hicieron filtros para tarifas localmente." />
     <MESSAGE value="*Se comentó codigo innecesario de momento.&#10;*Se habilitó campo para seleccionar moneda y filtrar embarques por tipo de moneda&#10;*Se agregaron comentarios al codigo" />
     <MESSAGE value="*Se comentó codigo innecesario de momento.&#10;*Se habilitó campo para seleccionar moneda y filtrar embarques por tipo de moneda" />
-    <option name="LAST_COMMIT_MESSAGE" value="*Se comentó codigo innecesario de momento.&#10;*Se habilitó campo para seleccionar moneda y filtrar embarques por tipo de moneda" />
+    <MESSAGE value="*Se agregaron comentarios a funciones" />
+    <option name="LAST_COMMIT_MESSAGE" value="*Se agregaron comentarios a funciones" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
