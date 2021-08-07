@@ -79,7 +79,7 @@ class ZonasAgregar extends Component {
     }
 
     setEstadoId() {
-        var idEstado = this.state.dataSucursal.find(s => s.m_nIdSucursal === this.state.sucursal).m_nIdEstado
+        var idEstado = this.state.dataSucursal.find(s => s.m_nIdSucursal == this.state.sucursal).m_nIdEstado
         this.setState({
             idEstadoSucursal: idEstado,
             idCiudadSeleccionado: 0,
@@ -106,7 +106,7 @@ class ZonasAgregar extends Component {
         this.setState({
             sucursal: event.target.value
         });
-        var idEstado = this.state.dataSucursal.find(s => s.m_nIdSucursal === event.target.value).m_nIdEstado
+        var idEstado = this.state.dataSucursal.find(s => s.m_nIdSucursal == event.target.value).m_nIdEstado
         this.setState({
             idEstadoSucursal: idEstado,
             idCiudadSeleccionado: 0,
@@ -147,7 +147,7 @@ class ZonasAgregar extends Component {
                 idCodigoPostalSeleccionado: 0
             });
         } else {
-            var position = array.findIndex(a => a.m_nIdCiudad === arrayCiudades[index].m_nIdCiudad)
+            var position = array.findIndex(a => a.m_nIdCiudad == arrayCiudades[index].m_nIdCiudad)
             array.splice(position, 1)
             this.setState({
                 ciudadesAll: false,
@@ -176,7 +176,7 @@ class ZonasAgregar extends Component {
                 idCodigoPostalSeleccionado: arrayCodigoPostales[index].m_nIdCP
             });
         } else {
-            var position = array.findIndex(a => a.m_nIdCP === arrayCodigoPostales[index].m_nIdCP)
+            var position = array.findIndex(a => a.m_nIdCP == arrayCodigoPostales[index].m_nIdCP)
             array.splice(position, 1)
             this.setState({
                 codigoPostalesAll: false,
@@ -205,7 +205,7 @@ class ZonasAgregar extends Component {
                 localidadesSeleccionado: array
             });
         } else {
-            var position = array.findIndex(a => a.m_nIdLocalidad === arrayLocalidades[index].m_nIdLocalidad)
+            var position = array.findIndex(a => a.m_nIdLocalidad == arrayLocalidades[index].m_nIdLocalidad)
             array.splice(position, 1)
             this.setState({
                 localidadesAll: false,
@@ -367,42 +367,6 @@ class ZonasAgregar extends Component {
                                              style={{padding: "5px", display: "inline-flex"}}>
                                             <div className="form-footer " className="col-md-12"
                                                  style={{padding: "10px"}}>
-
-                                                <div className="col-md-2 col-sm-2"
-                                                     style={{float: "right", padding: "5px"}}>
-
-                                                    <div className="input">
-                                                        <TextField variant="outlined" margin="dense"
-                                                                   onChange={this.handleChange}
-                                                                   className="form-control"
-                                                                   type="number"
-                                                                   disabled={this.state.editar}
-                                                                   required
-                                                                   label="Costo Recolectar"
-                                                                   step="0.01"
-                                                                   value={this.state.costoRecolectar}
-                                                                   name="costoRecolectar"
-                                                        />
-                                                    </div>
-                                                </div>
-                                                <div className="col-md-2 col-sm-2"
-                                                     style={{float: "right", padding: "5px"}}>
-
-                                                    <div className="input">
-                                                        <TextField variant="outlined" margin="dense"
-                                                                   onChange={this.handleChange}
-                                                                   className="form-control"
-                                                                   type="number"
-                                                                   label="Costo Entregar"
-                                                                   disabled={this.state.editar}
-                                                                   required
-                                                                   step="0.01"
-                                                                   value={this.state.costoEntregar}
-                                                                   name="costoEntregar"
-                                                        />
-                                                    </div>
-                                                </div>
-
                                                 <div className="col-md-12 col-sm-12">
                                                 </div>
 
