@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se actualizó la sintaxis para pasar los paquetes y sobres a arreglos con nombres adecuados.&#10;*Se hicieron filtros para tarifas localmente.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Se comentó codigo innecesario de momento.&#10;*Se habilitó campo para seleccionar moneda y filtrar embarques por tipo de moneda">
       <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -352,7 +351,21 @@
       <option name="project" value="LOCAL" />
       <updated>1628323582660</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="*Se comentó codigo innecesario de momento.&#10;*Se habilitó campo para seleccionar moneda y filtrar embarques por tipo de moneda">
+      <created>1628373998487</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1628373998487</updated>
+    </task>
+    <task id="LOCAL-00034" summary="*Se comentó codigo innecesario de momento.&#10;*Se habilitó campo para seleccionar moneda y filtrar embarques por tipo de moneda">
+      <created>1628374139202</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1628374139202</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -396,8 +409,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se agregaron los filtros necesarios" />
-    <MESSAGE value="Se agregaron validacionees para obligar a seleccionar sucursal y destino antes de otros datos" />
     <MESSAGE value="Se hicieron ajustes para mandar el id de destino en lugar el nombre a los servicios" />
     <MESSAGE value="Se habilitaron campos de minimo y maximo para pastaña de conceptos de entrega por rangos" />
     <MESSAGE value="Se arregló problema de duplicidad de registros y la funcion modificar ya funciona" />
@@ -421,7 +432,9 @@
     <MESSAGE value="*Se resolvieron problemas al mostrar datos de embarque a partir de recoleccion.&#10;*Se arregló el seteo de paquetes y sobres que vienen de recoleccion" />
     <MESSAGE value="*Se resolvieron problemas visuales, donde no se mostraba informacion correcta" />
     <MESSAGE value="Se actualizó la sintaxis para pasar los paquetes y sobres a arreglos con nombres adecuados.&#10;*Se hicieron filtros para tarifas localmente." />
-    <option name="LAST_COMMIT_MESSAGE" value="Se actualizó la sintaxis para pasar los paquetes y sobres a arreglos con nombres adecuados.&#10;*Se hicieron filtros para tarifas localmente." />
+    <MESSAGE value="*Se comentó codigo innecesario de momento.&#10;*Se habilitó campo para seleccionar moneda y filtrar embarques por tipo de moneda&#10;*Se agregaron comentarios al codigo" />
+    <MESSAGE value="*Se comentó codigo innecesario de momento.&#10;*Se habilitó campo para seleccionar moneda y filtrar embarques por tipo de moneda" />
+    <option name="LAST_COMMIT_MESSAGE" value="*Se comentó codigo innecesario de momento.&#10;*Se habilitó campo para seleccionar moneda y filtrar embarques por tipo de moneda" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -552,7 +552,7 @@ function Guia(props) {
             //Primero se obtienen las monedas que corresponden a la sucursal
             //Despues se obtienen los datos del embarque al que pertenece la guia para mostrar los datos
             cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)
-            handleEmbarqueModificar(respuesta)
+            handleEmbarque(respuesta.data.m_nIdEmbarque)
             setState(state => {
                 return {
                     ...state,
@@ -583,7 +583,7 @@ function Guia(props) {
             console.log('Consulta guia:')
             console.log(respuesta.data)
             cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)
-            handleEmbarqueModificar(respuesta)
+            handleEmbarque(respuesta.data.m_nIdEmbarque)
 
             setState(state => {
                 return {
@@ -1207,9 +1207,7 @@ function Guia(props) {
     };*/
 
     function cargaEmbarqueModificar(valorSucursal, valorMoneda, valorGuia) {
-        //showSuccess(valorSucursal + "-" + valorMoneda)
         obtenerEmbarqueMoneda(valorSucursal, valorMoneda, valorGuia).then(respuesta => {
-            //console.log(respuesta);
             setDataEmbarque(respuesta.data)
         });
     };
@@ -1229,17 +1227,19 @@ function Guia(props) {
         });
     };
 
+    //Recibe el id de embarque para obtener sus datos del servidor y mostrarlos en pantalla
     function handleEmbarque(embarque) {
         obtenerEmbarquesId(embarque).then(respuesta => {
             setDataFromEmbarque(respuesta, dataConcepto)
         });
     };
 
-    function handleEmbarqueModificar(embarque) {
-        obtenerEmbarquesId(embarque.data.m_nIdEmbarque).then(respuesta => {
+    //Recibe la guia para tomar el id del embarque y buscar sus datos para mostrarlos en pantalla
+    /*function handleEmbarqueModificar(guia) {
+        obtenerEmbarquesId(guia.data.m_nIdEmbarque).then(respuesta => {
             setDataFromEmbarque(respuesta, dataConcepto)
         });
-    };
+    };*/
 
     const headers = {
         'Content-Type': 'application/json'
