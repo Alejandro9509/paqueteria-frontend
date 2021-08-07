@@ -74,9 +74,9 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 function Guia(props) {
-    var today = new Date();
-    var React = require('react');
-    var QRCode = require('qrcode.react');
+    let today = new Date();
+    let React = require('react');
+    let QRCode = require('qrcode.react');
     const classes = useStyles();
     localStorage.getItem("UsuarioId");
 
@@ -243,7 +243,7 @@ function Guia(props) {
 
 
 
-    const [dataCiudad, setDataCiudad] = React.useState([])
+    // const [dataCiudad, setDataCiudad] = React.useState([])
 
     const [dataTipoServicio, setDataTipoServicio] = React.useState([])
 
@@ -765,7 +765,7 @@ function Guia(props) {
         getAllDataTipoCobro();
         getAllDataTipoServicio();
         getAllDataEstatusGuia();
-        getAllCiudades();
+        // getAllCiudades();
         getAllConceptos();
         // getAllImpuestosTraslado();
         // getAllImpuestosRetiene();
@@ -1089,11 +1089,11 @@ function Guia(props) {
         });
     };
 
-    async function getAllCiudades() {
+    /*async function getAllCiudades() {
         obtenerCiudades().then(respuesta => {
             setDataCiudad(respuesta.data)
         });
-    };
+    };*/
 
     /*async function cargaEmbarqueSucursal(valor) {
         //showSuccess(valor);
