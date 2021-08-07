@@ -688,9 +688,9 @@ function Guia(props) {
           );
     }*/
 
-    function handleShowImprimir() {
+    /*function handleShowImprimir() {
         //getImpresion(38);
-    }
+    }*/
 
     function handleShowAgregar() {
         setState({
@@ -809,13 +809,6 @@ function Guia(props) {
         obtenerGuiasFiltro(state.fechaInicial, state.fechaFinal, state.sucursalListado, event.target.value).then(respuesta => {
             setData(respuesta.data)
         })
-    }
-
-    function handleSelectRow(id, event) {
-        setState({
-            ...state,
-            idGuia: id
-        });
     }
 
     const handleChangePaquete = (event, index) => {
@@ -1197,7 +1190,7 @@ function Guia(props) {
         });
     };
 
-    async function cargaEmbarqueSucursal(valor) {
+    /*async function cargaEmbarqueSucursal(valor) {
         //showSuccess(valor);
         setState({
             ...state,
@@ -1211,7 +1204,7 @@ function Guia(props) {
         obtenerEmbarqueMoneda(valor, state.idMoneda, state.idGuia).then(respuesta => {
             setDataEmbarque(respuesta.data)
         });
-    };
+    };*/
 
     function cargaEmbarqueModificar(valorSucursal, valorMoneda, valorGuia) {
         //showSuccess(valorSucursal + "-" + valorMoneda)
@@ -1221,18 +1214,17 @@ function Guia(props) {
         });
     };
 
-    async function cargaEmbarqueMoneda(valor) {
-        //showSuccess(valor);
+    //Recibe el id de moneda seleccionado para traer los embarques registrados con ese tipo de moneda
+    async function cargaEmbarqueMoneda(idMoneda) {
         setState({
             ...state,
-            idMoneda: valor
+            idMoneda: idMoneda
         });
-        //showSuccess (state.idSucursal +"-" +state.idMoneda);
 
         if (state.idSucursal === "" || state.idSucursal === "0") return;
-        if (valor === "" || valor === "0") return;
+        if (idMoneda === "" || idMoneda === "0") return;
 
-        obtenerEmbarqueMoneda(state.idSucursal, valor, state.idGuia).then(respuesta => {
+        obtenerEmbarqueMoneda(state.idSucursal, idMoneda, state.idGuia).then(respuesta => {
             setDataEmbarque(respuesta.data)
         });
     };
@@ -2259,8 +2251,8 @@ function Guia(props) {
                                                                         id="idMoneda"
                                                                         read="true"
                                                                         value={state.idMoneda}
-                                                                        // disabled={state.agregar == "Consultar"}
-                                                                        disabled
+                                                                        disabled={state.agregar == "Consultar"}
+                                                                        // disabled
                                                                     >
                                                                         <option value="0">
                                                                             Seleccionar
