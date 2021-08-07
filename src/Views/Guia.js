@@ -389,122 +389,7 @@ function Guia(props) {
         "CreadoPor": 0,
         "m_nSePuedeCancelar": 0,
     }*/
-    const [embarque, setEmbarque] = useState({
 
-        infoGeneral: {
-            m_sSucursal: "",
-            IdSucursal: 0,
-            m_nFolioEmbarque: "",
-            m_nFolioInforme: "",
-            m_nIdMoneda: 0,
-            m_cTIpoCambio: 0,
-            m_nIdTIpoCobro: 0,
-            m_nIdEmbarque: 0,
-            m_nIdRecoleccion: 0,
-            m_nIdEstatusEmbarque: 0,
-            m_sFolioGuia: "",
-            m_sFolioRecoleccion: "",
-        },
-        remitente: {
-            m_sNOmbreRemitente: "",
-            m_sRFCRemitente: "",
-            m_sDomicilioRemitente: "",
-            m_nIdCodigoPostalRemitente: 0,
-            m_nCiudadRemitente: 0,
-            m_sCiudadRemitente: "",
-            m_bEsRecolecta: 0,
-            m_sCorreoRemitente: "",
-            m_sTelefonoRemitente: "",
-            m_sContactoRemitente: "",
-            m_nIdCiudadRemitente: 0,
-            m_nIdCiudadOrigen: 0,
-            m_sCiudadOrigen: "",
-        },
-        destinatario: {
-            m_sNombreDestinatario: "",
-            m_sRFCDestinatario: "",
-            m_sDomicilioDestinatario: "",
-            m_nIdCodigoPostalDestinatario: 0,
-            m_sCorreoDestinatario: "",
-            m_nIdCIudadDestinatario: 0,
-            m_sCIudadDestinatario: "",
-            m_sTelefonoDestinatario: "",
-            m_sContactoDestinatario: "",
-            m_nIdCiudadDestino: 0,
-            m_sCiudadDestino: "",
-        },
-        entrega:{
-            m_dFechaEntrega: "",
-            m_tHoraEntrega: "",
-            CodigoPostalEntrega: 0,
-            IdCiudadEntrega: 0,
-            IdZonaEntrega: 0,
-            DomicilioEntrega: "",
-            EntregarEn: "",
-            DatosAdicionalesis: "",
-            m_bEntregaEnSucursal: false,
-            m_nIdSucursalEntrega: 0,
-        },
-        paquetes:{
-            m_arrClsDetalle: [],
-            m_nNoPaquetes: 0,
-            m_nNoSobres: 0,
-            m_arrPaquetes: [{
-                m_nIdEmbarqueDetalle: 0,
-                m_nIdEmbarque: 0,
-                m_nTipo: 0,
-                m_sDescripcion: "",
-                m_xPeso: 0,
-                m_xLargo: 0,
-                m_xAncho: 0,
-                m_xAlto: 0,
-                m_xVolumen: 0,
-                m_nIdTIpoEmpaque: 0,
-                m_cValorDeclarado: 0,
-                m_sObservaciones: "",
-                m_bActivo: false,
-                m_sUltimoError: "",
-                ctd: 0
-            }],
-            m_arrSobres: [{
-                m_nIdEmbarqueDetalle: 0,
-                m_nIdEmbarque: 0,
-                m_nTipo: 1,
-                m_sDescripcion: "",
-                m_xPeso: 0,
-                m_xLargo: 0,
-                m_xAncho: 0,
-                m_xAlto: 0,
-                m_xVolumen: 0,
-                m_nIdTIpoEmpaque: 0,
-                m_cValorDeclarado: 0,
-                m_sObservaciones: "",
-                m_bActivo: false,
-                m_sUltimoError: "",
-                ctd: 0
-            }],
-        },
-        otrosDatos:{
-            m_dFecha: "",
-            m_tHora: "",
-            m_dFechaRegistro: "",
-            m_tHoraRegistro: "",
-            m_sFechaHora: "",
-            m_nIdOperador: 0,
-            m_nIdUnidad: 0,
-            m_dFechaSalida: "",
-            m_tHoraSalida: "",
-            m_sEstatusEmbarque: "",
-            m_dtFechaCancelacion: "",
-            m_sUsuarioCancelacion: "",
-            m_sMotivoCancelacion: "",
-            EntregarMismoDomicilio: false,
-            FechaLlegada: "",
-            HoraLlegada: "",
-            CreadoPor: 0,
-            m_nSePuedeCancelar: 0,
-        },
-    })
 
     const [dataCiudad, setDataCiudad] = React.useState([])
 
@@ -535,48 +420,6 @@ function Guia(props) {
                 m_cImporteIva: c.importeIva,
                 m_bActivo: true,
             })),
-            /*"NombreRemitente": state.nombreRemitente,
-            "RfcRemitente": state.RFCRemitente,
-            "DomicilioRemitente": state.domicilioRemitente,
-            "IdCodigoPostalRemitente": state.idCodigoPostalRemitente,
-            "ciudadRemitente": state.ciudadRemitente,
-            "CorreoRemitente": state.correoRemitente,
-            "TelefonoRemitente": state.telefonoRemitente,
-            "ContactoRemitente": state.contactoRemitente,
-            "IdCiudadOrigen": state.idCiudadOrigen,*/
-
-            /*"SNombreDestinatario": state.sNombreDestinatario,
-            "SRFCDestinatario": state.sRFCDestinatario,
-            "SDomicilioDestinatario": state.sDomicilioDestinatario,
-            "IdCodigoPostalDestinatario": state.idCodigoPostalDestinatario,
-            "SCorreoDestinatario": state.sCorreoDestinatario,
-            "IdCIudadDestinatario": state.idCIudadDestinatario,
-            "STelefonoDestinatario": state.sTelefonoDestinatario,
-            "SContactoDestinatario": state.sContactoDestinatario,
-            "IdCiudadDestino": state.idCiudadDestino,*/
-
-            /*"FechaEntrega": state.fechaEntrega,
-            "HoraEntrega": state.HoraEntrega,
-            "NoPaquetes": state.NoPaquetes,
-            "NoSobres": state.NoSobres,
-            "IdOperador": state.idOperador,
-            "IdUnidad": state.idUnidad,
-            "FechaSalida": state.fechaSalida,
-            "HoraSalida": state.horaSalida,
-            "arrClsDetalle": [],
-            "FechaCancelacion": state.FechaCancelacion,
-            "UsuarioCancelacion": state.usuarioCancelacion,
-            "MotivoCancelacion": state.MotivoCancelacion,*/
-
-            /*"EntregarMismoDomicilio": state.entregarMismoDomicilio,
-            "FechaLlegada": state.fechaLlegada,
-            "HoraLlegada": state.horaLlegada,
-            "CodigoPostalEntrega": state.codigoPostalEntrega,
-            "IdCiudadEntrega": state.idCiudadEntrega,
-            "IdZonaEntrega": state.idZonaEntrega,
-            "DomicilioEntrega": state.domicilioEntrega,
-            "EntregarEn": state.entregarEn,
-            "DatosAdicionalesis": state.datosAdicionalesis,*/
 
         }
 
@@ -1170,37 +1013,34 @@ function Guia(props) {
         const sobresTemp = [];
         let valorDeclaradoTotal = 0
 
-        for (let i = 0; i < respuesta.data.m_arrPaquetes.length; i++) {
+        const {m_arrPaquetes: paquetes, m_arrSobres: sobres} = respuesta.data
 
-            if (respuesta.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle === "" || respuesta.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle === "0")
-                continue;
+        paquetes.forEach((paq) => {
+            if (!(paq.m_nIdEmbarqueDetalle === "" || paq.m_nIdEmbarqueDetalle === "0")){
+                paquetesTemp.push({
+                    peso: paq.m_xPeso,
+                    largo: paq.m_xLargo,
+                    ancho: paq.m_xAncho,
+                    alto: paq.m_xAlto,
+                    volumen: paq.m_xVolumen,
+                    tipoEmbalaje: paq.m_nTipo,
+                    valorDeclarado: paq.m_cValorDeclarado,
+                    descripcionPaquete: paq.m_sDescripcion,
+                    id: paq.m_nIdEmbarqueDetalle,
+                    ctd: paq.ctd
+                })
+                valorDeclaradoTotal = valorDeclaradoTotal + paq.m_cValorDeclarado
+            }
+        })
 
-            paquetesTemp.push({
-
-                "peso": respuesta.data.m_arrPaquetes[i].m_xPeso,
-                "largo": respuesta.data.m_arrPaquetes[i].m_xLargo,
-                "ancho": respuesta.data.m_arrPaquetes[i].m_xAncho,
-                "alto": respuesta.data.m_arrPaquetes[i].m_xAlto,
-                "volumen": respuesta.data.m_arrPaquetes[i].m_xVolumen,
-                "tipoEmbalaje": respuesta.data.m_arrPaquetes[i].m_nTipo,
-                "valorDeclarado": respuesta.data.m_arrPaquetes[i].m_cValorDeclarado,
-                "descripcionPaquete": respuesta.data.m_arrPaquetes[i].m_sDescripcion,
-                "observacionesPaquete": respuesta.data.m_arrPaquetes[i].m_sObservaciones,
-                "id": respuesta.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle,
-                "ctd": respuesta.data.m_arrPaquetes[i].ctd
-            });
-            valorDeclaradoTotal = valorDeclaradoTotal + respuesta.data.m_arrPaquetes[i].m_cValorDeclarado
-        }
-        for (let i = 0; i < respuesta.data.m_arrSobres.length; i++) {
-
-            if (respuesta.data.m_arrSobres[i].m_nIdEmbarqueDetalle === "" || respuesta.data.m_arrSobres[i].m_nIdEmbarqueDetalle === "0")
-                continue;
-
-            sobresTemp.push({
-                "descripcionSobre": respuesta.data.m_arrSobres[i].m_sDescripcion,
-                "id": respuesta.data.m_arrSobres[i].m_nIdEmbarqueDetalle
-            });
-        }
+        sobres.forEach((sob) => {
+            if (!(sob.m_nIdEmbarqueDetalle === "" || sob.m_nIdEmbarqueDetalle === "0")){
+                sobresTemp.push({
+                    descripcionSobre: sob.m_sDescripcion,
+                    id: sob.m_nIdEmbarqueDetalle
+                })
+            }
+        })
 
         obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalRemitente).then(respuesta => {
           setState( state => {
@@ -1266,30 +1106,36 @@ function Guia(props) {
 
             }
         })
-        obtenerTarifasPorEmbarque(respuesta.data.m_nIdEmbarque, respuestaConceptos)
+        obtenerTarifasPorEmbarque(respuesta.data.m_nIdEmbarque, respuestaConceptos, paquetesTemp)
     }
 
-    const obtenerTarifasPorEmbarque = (idEmbarque, respuestaConceptos) => {
+    const obtenerTarifasPorEmbarque = (idEmbarque, respuestaConceptos,paquetesTemp) => {
         const conceptosTemp = []
         let ivaTraslada = []
         let ivaRetiene = []
         axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${idEmbarque}`, { headers }).then(tarifa => {
-            console.log(tarifa)
-
+            console.log('tarifas by embarque')
+            console.log(tarifa.data)
+            let pesoTotal = 0
+            paquetesTemp.forEach( (p) => {
+                pesoTotal = pesoTotal + p.peso
+            })
             if (tarifa.data.length !== 0) {
                 tarifa.data[0].m_arrArConceptos.forEach(element => {
-                    conceptosTemp.push({
-                        concepto: respuestaConceptos.find(c => c.m_nIdConceptosFacturacion == element.m_nIdConceptosFacturacion),
-                        importe: element.m_cImporte,
-                        retiene: element.m_nIdImpuestoRetiene,
-                        traslada: element.m_nIdImpuestoTraslada,
-                        importeRet: element.m_cImporteRetiene,
-                        importeIVA: element.m_cImporteIva,
-                        rangoMinimo: element.m_xnRangoMinimo,
-                        rangoMaximo: element.m_xnRangoMaximo,
-                        nombreConcepto: element.m_sConcepto,
-                        tipoCalculo: element.m_nIdTipoCalculo
-                    })
+                    if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal ){
+                        conceptosTemp.push({
+                            concepto: respuestaConceptos.find(c => c.m_nIdConceptosFacturacion == element.m_nIdConceptosFacturacion),
+                            importe: element.m_cImporte,
+                            retiene: element.m_nIdImpuestoRetiene,
+                            traslada: element.m_nIdImpuestoTraslada,
+                            importeRet: element.m_cImporteRetiene,
+                            importeIVA: element.m_cImporteIva,
+                            rangoMinimo: element.m_xnRangoMinimo,
+                            rangoMaximo: element.m_xnRangoMaximo,
+                            nombreConcepto: element.m_sConcepto,
+                            tipoCalculo: element.m_nIdTipoCalculo
+                        })
+                    }
                 })
                 ivaTraslada = getUniqueListBy(conceptosTemp, "traslada").map(i => i.traslada);
                 ivaRetiene = getUniqueListBy(conceptosTemp, "retiene").map(i => i.retiene);
@@ -1299,7 +1145,9 @@ function Guia(props) {
                 return {
                     ...state,
                     fecha: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
-                    conceptosAdicionales: conceptosTemp, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada
+                    conceptosAdicionales: conceptosTemp,
+                    ivaRetiene: ivaRetiene,
+                    ivaTraslada: ivaTraslada
                 }
             })
 
