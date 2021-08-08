@@ -152,6 +152,11 @@ class Zonas extends Component {
         console.log(err)
         showSuccess(err)
       });
+      this.setState({pantalla: 1, edit: false, consult: false, agregar: "Agregar"});
+      $('.nav-tabs li ').removeClass('active');
+      $('.nav-tabs li').eq(0).addClass('active');
+      $('.tab-content div ').removeClass('in show');
+      $('#Listado').addClass('in show');
     }
 
   }

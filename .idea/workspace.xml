@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Limpieza de código">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Se arregló validacion para que mande a modificar o agregar respectivamente">
       <change beforePath="$PROJECT_DIR$/src/Views/Zonas/Zonas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Zonas/Zonas.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -366,7 +365,14 @@
       <option name="project" value="LOCAL" />
       <updated>1628397519080</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="*Se arregló validacion para que mande a modificar o agregar respectivamente">
+      <created>1628399351166</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1628399351166</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -410,7 +416,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se hicieron ajustes para mandar el id de destino en lugar el nombre a los servicios" />
     <MESSAGE value="Se habilitaron campos de minimo y maximo para pastaña de conceptos de entrega por rangos" />
     <MESSAGE value="Se arregló problema de duplicidad de registros y la funcion modificar ya funciona" />
     <MESSAGE value="Ajustes" />
@@ -435,7 +440,8 @@
     <MESSAGE value="*Los codigos postales ya se acumulan por ciudad" />
     <MESSAGE value="*Las localidades ya se acumulan" />
     <MESSAGE value="*Limpieza de código" />
-    <option name="LAST_COMMIT_MESSAGE" value="*Limpieza de código" />
+    <MESSAGE value="*Se arregló validacion para que mande a modificar o agregar respectivamente" />
+    <option name="LAST_COMMIT_MESSAGE" value="*Se arregló validacion para que mande a modificar o agregar respectivamente" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
