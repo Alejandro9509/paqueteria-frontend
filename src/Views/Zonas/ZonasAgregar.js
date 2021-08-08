@@ -221,7 +221,9 @@ class ZonasAgregar extends Component {
     }
 
     render() {
+        //Pueden estar en la misma linea pero quedaría muy largo
         const {sucursal, idEstadoSucursal, ciudadesSeleccionado, editar, seleccionarTodoCiudades} = this.state
+        const {idCiudadSeleccionado, codigoPostalesSeleccionado,seleccionarTodoCodigoPostales} = this.state
         console.log('sucursal: ', sucursal)
         console.log('idEstadoSucursal: ', idEstadoSucursal)
         console.log('ciudadesSeleccionado: ', ciudadesSeleccionado)
@@ -327,13 +329,14 @@ class ZonasAgregar extends Component {
                                             overflowY: "auto",
                                             padding: "5px"
                                         }}>
-                                            {this.state.idCiudadSeleccionado != 0 &&
+                                            {idCiudadSeleccionado != 0 &&
                                                 <CodigoPostal
-                                                    idCiudadSeleccionado={this.state.idCiudadSeleccionado}
-                                                    codigoPostalesSeleccionado={this.state.codigoPostalesSeleccionado}
+                                                    ciudadesSeleccionado={ciudadesSeleccionado}
+                                                    idCiudadSeleccionado={idCiudadSeleccionado}
+                                                    codigoPostalesSeleccionado={codigoPostalesSeleccionado}
                                                     handleChange={this.handleChangeChecboxCodigoPostal}
-                                                    editar={this.state.editar}
-                                                    seleccionarTodoCodigoPostales={this.state.seleccionarTodoCodigoPostales}
+                                                    editar={editar}
+                                                    seleccionarTodoCodigoPostales={seleccionarTodoCodigoPostales}
                                                 />
 
                                             }

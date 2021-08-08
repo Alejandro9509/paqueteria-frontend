@@ -44,13 +44,17 @@ class CodigoPostal extends Component {
     }
 
     getAllCodigoPostales() {
-        obtenerCodigoPostalCiudad(this.props.idCiudadSeleccionado).then(respuesta => {
+        const {idCiudadSeleccionado, handleChange, ciudadesSeleccionado} = this.props
+        const todosCodigosPostales = []
+
+
+        obtenerCodigoPostalCiudad(idCiudadSeleccionado).then(respuesta => {
             this.setState({ dataCodigoPostales: respuesta.data, anchorEl: null })
             this.state.dataCodigoPostales.forEach( (i, index) => {
                 var isCheked = this.props.codigoPostalesSeleccionado.find(t => t.m_nIdCP === i.m_nIdCP) != null
                // this.setState({ checked: isCheked })
                 if (isCheked){
-                    this.props.handleChange(isCheked, index, respuesta.data, false)
+                    handleChange(isCheked, index, respuesta.data, false)
                 }
             })
         });
@@ -67,27 +71,29 @@ class CodigoPostal extends Component {
     }
 
     render() {
+        const {consult, seleccionarTodoCodigoPostales, handleChange, editar, codigoPostalesSeleccionado} = this.props
+        const {dataCodigoPostales} = this.state
 
         return (
             <table style={{ overflowY: "scroll", width: "100%" }}>
                 <tr>
                     <th>
                         <label className="checkbox">
-                            <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.props.handleChange(event, 0, this.state.dataCodigoPostales, true)} checked={this.props.all} />
+                            <input disabled={consult} type="checkbox" onChange={(event) => handleChange(event, 0, dataCodigoPostales, true)} checked={seleccionarTodoCodigoPostales} />
                             <i />
                         </label>
                     </th>
                     <th>Código Postales</th>
                 </tr>
                 {
-                    this.state.dataCodigoPostales.map((i, index) => {
+                    dataCodigoPostales.map((i, index) => {
                         return (
                             <tr key={index} >
                                 <td style={{ width: "50px" }}>
                                     <label className="checkbox">
-                                        <input disabled={this.props.editar} type="checkbox"
-                                            onChange={(event) => this.props.handleChange(event.target.checked, index, this.state.dataCodigoPostales, false)}
-                                            checked={this.props.codigoPostalesSeleccionado.find(t => t.m_nIdCP === i.m_nIdCP) != null}
+                                        <input disabled={editar} type="checkbox"
+                                            onChange={(event) => handleChange(event.target.checked, index, dataCodigoPostales, false)}
+                                            checked={codigoPostalesSeleccionado.find(t => t.m_nIdCP === i.m_nIdCP) != null}
                                         />
                                         <i />
                                     </label>
