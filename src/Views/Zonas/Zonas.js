@@ -309,7 +309,8 @@ class Zonas extends Component {
               <div className="widget-wrap" id="Agregar" className="tab-pane fade">
                 {
                   this.state.pantalla === 2 &&
-                  <ZonasAgregar edit={this.state.edit} consult={this.state.consult} select={this.state.selected} onSubmit={this.handleAceptar}></ZonasAgregar>
+                  //    Cuando se entra a agregar directamente valores: edit= true, consult = false, select = {}
+                  <ZonasAgregar edit={this.state.edit} consult={this.state.consult} select={this.state.selected} onSubmit={this.handleAceptar}/>
                 }
               </div>
             </div>

@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se elimino el codigo que no se estaba usando, se corrigieron los consultar y como se interactua con la informacion, se arreglo el problema de que consultar modificaba">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="* Se agregó funcion para limpiar campos una vez que se cree o modifique una guia">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Zonas/Ciudad.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Zonas/Ciudad.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Zonas/Zonas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Zonas/Zonas.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Zonas/ZonasAgregar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Zonas/ZonasAgregar.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
