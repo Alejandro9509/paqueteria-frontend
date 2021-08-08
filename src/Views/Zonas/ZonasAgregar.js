@@ -5,6 +5,7 @@ import Localidad from './Localidad';
 import PropTypes from 'prop-types';
 import axios from "axios";
 import {AppBar, Box, FormControl, InputLabel, Select, Tab, Tabs, TextField, Typography} from '@material-ui/core';
+import {obtenerCodigoPostalCiudad} from "../../Util/Contexts/CodigoPostalContext";
 
 const headers = {
     'Content-Type': 'application/json',
@@ -26,9 +27,9 @@ class ZonasAgregar extends Component {
             dataSucursal: [],
             idEstadoSucursal: 0,
             tab: 0,
-            ciudadesAll: false,
-            codigoPostalesAll: false,
-            localidadesAll: false,
+            seleccionarTodoCiudades: false,
+            seleccionarTodoCodigoPostales: false,
+            seleccionarTodoLocalidades: false,
             idCiudadSeleccionado: 0,
             idCodigoPostalSeleccionado: 0,
             ciudadesSeleccionado: props.edit ? props.select.m_arrZonasCiudades : [],
@@ -39,7 +40,9 @@ class ZonasAgregar extends Component {
             descripcion: props.edit ? props.select.m_sDescripcion : "",
             costoRecolectar: props.edit ? props.select.m_cyCostoRecolectar : "",
             costoEntregar: props.edit ? props.select.m_cyCostoEntregar : "",
-            editar: props.consult
+            editar: props.consult,
+            dataCodigoPostales: [],
+            dataLocalidades: [],
         }
         this.getAllSucursales = this.getAllSucursales.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -51,19 +54,16 @@ class ZonasAgregar extends Component {
         this.handleChangeChecboxLocalidad = this.handleChangeChecboxLocalidad.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
         this.setEstadoId = this.setEstadoId.bind(this)
+        this.getAllCodigoPostales = this.getAllCodigoPostales.bind(this)
+        this.getAllLocalidades = this.getAllLocalidades.bind(this)
     }
 
     componentWillMount() {
         this.getAllSucursales().then(o => {
-            //console.log(this.state.ciudadesSeleccionado)
-            //console.log(this.state.codigoPostalesSeleccionado)
-            //console.log(this.state.localidadesSeleccionado)
             if (this.state.sucursal) {
                 this.setEstadoId()
             }
         })
-        //console.log("editar aqui")
-        //console.log(this.state.editar)
     }
 
     a11yProps(index) {
@@ -106,7 +106,7 @@ class ZonasAgregar extends Component {
         this.setState({
             sucursal: event.target.value
         });
-        var idEstado = this.state.dataSucursal.find(s => s.m_nIdSucursal == event.target.value).m_nIdEstado
+        let idEstado = this.state.dataSucursal.find(s => s.m_nIdSucursal == event.target.value).m_nIdEstado
         this.setState({
             idEstadoSucursal: idEstado,
             idCiudadSeleccionado: 0,
@@ -129,16 +129,17 @@ class ZonasAgregar extends Component {
         this.setState({tab: newValue});
     }
 
-    handleChangeChecboxCiudad(event, index, arrayCiudades, all) {
+    handleChangeChecboxCiudad(event, index, arrayCiudades, seleccionarTodoCiudades) {
         const array = this.state.ciudadesSeleccionado
-        if (all) {
+        if (seleccionarTodoCiudades) {
             let arrayAll = Object.assign([], arrayCiudades)
             this.setState({
-                ciudadesAll: !this.state.ciudadesAll,
-                ciudadesSeleccionado: !this.state.ciudadesAll ? arrayAll : []
+                seleccionarTodoCiudades: !this.state.seleccionarTodoCiudades,
+                ciudadesSeleccionado: !this.state.seleccionarTodoCiudades ? arrayAll : []
             });
             return
         }
+        console.log(event)
         if (event) {
             array.push(arrayCiudades[index])
             this.setState({
@@ -147,14 +148,41 @@ class ZonasAgregar extends Component {
                 idCodigoPostalSeleccionado: 0
             });
         } else {
-            var position = array.findIndex(a => a.m_nIdCiudad == arrayCiudades[index].m_nIdCiudad)
+            let position = array.findIndex(a => a.m_nIdCiudad == arrayCiudades[index].m_nIdCiudad)
             array.splice(position, 1)
             this.setState({
-                ciudadesAll: false,
+                seleccionarTodoCiudades: false,
                 ciudadesSeleccionado: array,
                 idCiudadSeleccionado: 0,
                 idCodigoPostalSeleccionado: 0
             });
+        }
+        console.log(array)
+        this.getAllCodigoPostales(array)
+    }
+
+    getAllCodigoPostales(ciudadesSeleccionado) {
+        const {codigoPostalesSeleccionado} = this.state
+        const todosCodigosPostales = []
+
+        if (ciudadesSeleccionado.length > 0){
+            ciudadesSeleccionado.forEach( ciudad => {
+                obtenerCodigoPostalCiudad(ciudad.m_nIdCiudad).then(respuesta => {
+                    respuesta.data.forEach( item => {
+                        todosCodigosPostales.push(item)
+                    })
+                    todosCodigosPostales.forEach( (i, index) => {
+                        let isCheked = codigoPostalesSeleccionado.find(t => t.m_nIdCP === i.m_nIdCP) != null
+                        if (isCheked){
+                            this.handleChangeChecboxCodigoPostal(isCheked, index, todosCodigosPostales, false)
+                        }
+                    })
+                    this.setState({
+                        dataCodigoPostales: todosCodigosPostales,
+                        anchorEl: null
+                    })
+                });
+            })
         }
     }
 
@@ -164,8 +192,8 @@ class ZonasAgregar extends Component {
         if (all) {
             let arrayAll = Object.assign([], arrayCodigoPostales)
             this.setState({
-                codigoPostalesAll: !this.state.codigoPostalesAll,
-                codigoPostalesSeleccionado: !this.state.codigoPostalesAll ? arrayAll : []
+                seleccionarTodoCodigoPostales: !this.state.seleccionarTodoCodigoPostales,
+                codigoPostalesSeleccionado: !this.state.seleccionarTodoCodigoPostales ? arrayAll : []
             });
             return
         }
@@ -173,16 +201,34 @@ class ZonasAgregar extends Component {
             array.push(arrayCodigoPostales[index])
             this.setState({
                 codigoPostalesSeleccionado: array,
-                idCodigoPostalSeleccionado: arrayCodigoPostales[index].m_nIdCP
+                idCodigoPostalSeleccionado: arrayCodigoPostales[index].m_nIdCP,
             });
         } else {
-            var position = array.findIndex(a => a.m_nIdCP == arrayCodigoPostales[index].m_nIdCP)
+            let position = array.findIndex(a => a.m_nIdCP == arrayCodigoPostales[index].m_nIdCP)
             array.splice(position, 1)
             this.setState({
-                codigoPostalesAll: false,
+                seleccionarTodoCodigoPostales: false,
                 codigoPostalesSeleccionado: array,
                 idCodigoPostalSeleccionado: 0
             });
+        }
+        this.getAllLocalidades(array)
+
+    }
+
+    getAllLocalidades(codigosPostalesSeleccionados) {
+
+        const todasLocalidades = []
+        if (codigosPostalesSeleccionados.length > 0){
+            codigosPostalesSeleccionados.forEach( cp => {
+                const url = `${process.env.REACT_APP_API_URL}/Asentamiento/GetListadoByCodigoPostal/${cp.m_nIdCP}`;
+                axios.get(url, { headers }).then(respuesta => {
+                    respuesta.data.forEach( local => {
+                        todasLocalidades.push(local)
+                    })
+                    this.setState({ dataLocalidades: todasLocalidades, anchorEl: null })
+                });
+            })
         }
 
     }
@@ -193,8 +239,8 @@ class ZonasAgregar extends Component {
         if (all) {
             let arrayAll = Object.assign([], arrayLocalidades)
             this.setState({
-                localidadesAll: !this.state.localidadesAll,
-                localidadesSeleccionado: !this.state.localidadesAll ? arrayAll : []
+                seleccionarTodoLocalidades: !this.state.seleccionarTodoLocalidades,
+                localidadesSeleccionado: !this.state.seleccionarTodoLocalidades ? arrayAll : []
             });
             return
         }
@@ -208,7 +254,7 @@ class ZonasAgregar extends Component {
             var position = array.findIndex(a => a.m_nIdLocalidad == arrayLocalidades[index].m_nIdLocalidad)
             array.splice(position, 1)
             this.setState({
-                localidadesAll: false,
+                seleccionarTodoLocalidades: false,
                 localidadesSeleccionado: array
             });
         }
@@ -221,6 +267,13 @@ class ZonasAgregar extends Component {
     }
 
     render() {
+        //Pueden estar en la misma linea pero quedaría muy largo
+        const {sucursal, idEstadoSucursal, ciudadesSeleccionado, editar, seleccionarTodoCiudades} = this.state
+        const {idCiudadSeleccionado, codigoPostalesSeleccionado,seleccionarTodoCodigoPostales, dataCodigoPostales} = this.state
+        const {dataLocalidades, localidadesSeleccionado, idCodigoPostalSeleccionado, seleccionarTodoLocalidades} = this.state
+
+
+
         return (
             <form className="j-forms" onSubmit={this.onSubmit}>
                 <div className="main-container" style={{marginLeft: "0px", padding: "0px"}}>
@@ -304,18 +357,14 @@ class ZonasAgregar extends Component {
                                             overflowY: "auto",
                                             padding: "5px"
                                         }}>
-                                            {this.state.sucursal != 0 ?
+                                            {sucursal != 0 &&
                                                 <Ciudad
-                                                    idEstadoSucursal={this.state.idEstadoSucursal}
-                                                    ciudadesSeleccionado={this.state.ciudadesSeleccionado}
+                                                    idEstadoSucursal={idEstadoSucursal}
+                                                    ciudadesSeleccionado={ciudadesSeleccionado}
                                                     handleChangeChecboxCiudad={this.handleChangeChecboxCiudad}
-                                                    editar={this.state.editar}
-                                                    all={this.state.ciudadesAll}
-                                                >
-                                                </Ciudad>
-                                                :
-                                                <div></div>
-
+                                                    editar={editar}
+                                                    seleccionarTodoCiudades={seleccionarTodoCiudades}
+                                                />
                                             }
 
                                         </div>
@@ -325,17 +374,17 @@ class ZonasAgregar extends Component {
                                             overflowY: "auto",
                                             padding: "5px"
                                         }}>
-                                            {this.state.idCiudadSeleccionado != 0 ?
+                                            {ciudadesSeleccionado.length > 0 &&
                                                 <CodigoPostal
-                                                    idCiudadSeleccionado={this.state.idCiudadSeleccionado}
-                                                    codigoPostalesSeleccionado={this.state.codigoPostalesSeleccionado}
+                                                    ciudadesSeleccionado={ciudadesSeleccionado}
+                                                    idCiudadSeleccionado={idCiudadSeleccionado}
+                                                    codigoPostalesSeleccionado={codigoPostalesSeleccionado}
                                                     handleChange={this.handleChangeChecboxCodigoPostal}
-                                                    editar={this.state.editar}
-                                                    all={this.state.codigoPostalesAll}
-                                                >
-                                                </CodigoPostal>
-                                                :
-                                                <div></div>
+                                                    editar={editar}
+                                                    seleccionarTodoCodigoPostales={seleccionarTodoCodigoPostales}
+                                                    dataCodigoPostales={dataCodigoPostales}
+                                                />
+
                                             }
                                         </div>
 
@@ -344,17 +393,15 @@ class ZonasAgregar extends Component {
                                             overflowY: "auto",
                                             padding: "5px"
                                         }}>
-                                            {this.state.idCodigoPostalSeleccionado != 0 ?
+                                            {codigoPostalesSeleccionado.length > 0 &&
                                                 <Localidad
-                                                    localidadesSeleccionado={this.state.localidadesSeleccionado}
-                                                    idCodigoPostalSeleccionado={this.state.idCodigoPostalSeleccionado}
+                                                    localidadesSeleccionado={localidadesSeleccionado}
+                                                    idCodigoPostalSeleccionado={idCodigoPostalSeleccionado}
                                                     handleChange={this.handleChangeChecboxLocalidad}
-                                                    editar={this.state.editar}
-                                                    all={this.state.localidadesAll}
-                                                >
-                                                </Localidad>
-                                                :
-                                                <div></div>
+                                                    editar={editar}
+                                                    seleccionarTodoLocalidades={seleccionarTodoLocalidades}
+                                                    dataLocalidades={dataLocalidades}
+                                                />
 
                                             }
 

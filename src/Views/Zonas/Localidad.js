@@ -17,21 +17,16 @@ class Localidad extends Component {
             codigo: "",
             descripcion: ""
         }
-        this.getAllLocalidades = this.getAllLocalidades.bind(this)
         this.handleClose = this.handleClose.bind(this)
         this.handleClick = this.handleClick.bind(this)
         this.handleChange = this.handleChange.bind(this)
     }
 
     componentWillMount() {
-        this.getAllLocalidades()
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props.idCodigoPostalSeleccionado != prevProps.idCodigoPostalSeleccionado) // Check if it's a new user, you can also use some unique property, like the ID  (this.props.user.id !== prevProps.user.id)
-        {
-            this.getAllLocalidades();
-        }
+
     }
 
     componentDidMount() {
@@ -40,13 +35,6 @@ class Localidad extends Component {
 
     componentWillUnmount() {
 
-    }
-
-    getAllLocalidades() {
-        const url = `${process.env.REACT_APP_API_URL}/Asentamiento/GetListadoByCodigoPostal/${this.props.idCodigoPostalSeleccionado}`;
-        axios.get(url, { headers }).then(respuesta => {
-            this.setState({ dataLocalidades: respuesta.data, anchorEl: null })
-        });
     }
 
     handleChange(event) {
@@ -63,25 +51,28 @@ class Localidad extends Component {
     }
 
     render() {
+        const {seleccionarTodoLocalidades, dataLocalidades, handleChange, consult, editar, localidadesSeleccionado} = this.props
 
         return (
             <table style={{ overflow: "scroll", width: "100%" }}>
                 <tr>
                     <th>
                         <label className="checkbox">
-                            <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.props.handleChange(event, 0, this.state.dataLocalidades, true)} checked={this.props.all} />
+                            <input disabled={consult} type="checkbox" onChange={(event) => handleChange(event, 0, dataLocalidades, true)} checked={seleccionarTodoLocalidades} />
                             <i />
                         </label>
                     </th>
                     <th>Localidad</th>
                 </tr>
                 {
-                    this.state.dataLocalidades.map((i, index) => {
+                    dataLocalidades.map((i, index) => {
                         return (
                             <tr key={index}>
                                 <td style={{ width: "50px" }}>
                                     <label className="checkbox">
-                                        <input disabled={this.props.editar} type="checkbox" onChange={(event) => this.props.handleChange(event, index, this.state.dataLocalidades, false)} checked={this.props.localidadesSeleccionado.find(t => t.m_nIdLocalidad === i.m_nIdLocalidad) != null} />
+                                        <input disabled={editar} type="checkbox"
+                                               onChange={(event) => handleChange(event, index, dataLocalidades, false)}
+                                               checked={localidadesSeleccionado.find(t => t.m_nIdLocalidad === i.m_nIdLocalidad) != null}/>
                                         <i />
                                     </label>
                                 </td>

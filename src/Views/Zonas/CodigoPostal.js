@@ -18,13 +18,11 @@ class CodigoPostal extends Component {
             codigo: "",
             descripcion: ""
         }
-        this.getAllCodigoPostales = this.getAllCodigoPostales.bind(this)
         this.handleClose = this.handleClose.bind(this)
         this.handleChange = this.handleChange.bind(this)
     }
 
     componentWillMount() {
-        this.getAllCodigoPostales()
     }
 
     componentDidMount() {
@@ -32,28 +30,11 @@ class CodigoPostal extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        console.log(this.props.codigoPostalesSeleccionado)
-        if (this.props.idCiudadSeleccionado !== prevProps.idCiudadSeleccionado) // Check if it's a new user, you can also use some unique property, like the ID  (this.props.user.id !== prevProps.user.id)
-        {
-            this.getAllCodigoPostales();
-        }
+
     }
 
     componentWillUnmount() {
 
-    }
-
-    getAllCodigoPostales() {
-        obtenerCodigoPostalCiudad(this.props.idCiudadSeleccionado).then(respuesta => {
-            this.setState({ dataCodigoPostales: respuesta.data, anchorEl: null })
-            this.state.dataCodigoPostales.forEach( (i, index) => {
-                var isCheked = this.props.codigoPostalesSeleccionado.find(t => t.m_nIdCP === i.m_nIdCP) != null
-               // this.setState({ checked: isCheked })
-                if (isCheked){
-                    this.props.handleChange(isCheked, index, respuesta.data, false)
-                }
-            })
-        });
     }
 
     handleChange(event) {
@@ -67,27 +48,28 @@ class CodigoPostal extends Component {
     }
 
     render() {
+        const {consult, seleccionarTodoCodigoPostales, handleChange, editar, codigoPostalesSeleccionado, dataCodigoPostales} = this.props
 
         return (
             <table style={{ overflowY: "scroll", width: "100%" }}>
                 <tr>
                     <th>
                         <label className="checkbox">
-                            <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.props.handleChange(event, 0, this.state.dataCodigoPostales, true)} checked={this.props.all} />
+                            <input disabled={consult} type="checkbox" onChange={(event) => handleChange(event, 0, dataCodigoPostales, true)} checked={seleccionarTodoCodigoPostales} />
                             <i />
                         </label>
                     </th>
                     <th>Código Postales</th>
                 </tr>
                 {
-                    this.state.dataCodigoPostales.map((i, index) => {
+                    dataCodigoPostales.map((i, index) => {
                         return (
                             <tr key={index} >
                                 <td style={{ width: "50px" }}>
                                     <label className="checkbox">
-                                        <input disabled={this.props.editar} type="checkbox"
-                                            onChange={(event) => this.props.handleChange(event.target.checked, index, this.state.dataCodigoPostales, false)}
-                                            checked={this.props.codigoPostalesSeleccionado.find(t => t.m_nIdCP === i.m_nIdCP) != null}
+                                        <input disabled={editar} type="checkbox"
+                                            onChange={(event) => handleChange(event.target.checked, index, dataCodigoPostales, false)}
+                                            checked={codigoPostalesSeleccionado.find(t => t.m_nIdCP === i.m_nIdCP) != null}
                                         />
                                         <i />
                                     </label>
