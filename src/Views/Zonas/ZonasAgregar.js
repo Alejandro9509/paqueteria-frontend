@@ -5,6 +5,7 @@ import Localidad from './Localidad';
 import PropTypes from 'prop-types';
 import axios from "axios";
 import {AppBar, Box, FormControl, InputLabel, Select, Tab, Tabs, TextField, Typography} from '@material-ui/core';
+import {obtenerCodigoPostalCiudad} from "../../Util/Contexts/CodigoPostalContext";
 
 const headers = {
     'Content-Type': 'application/json',
@@ -39,7 +40,9 @@ class ZonasAgregar extends Component {
             descripcion: props.edit ? props.select.m_sDescripcion : "",
             costoRecolectar: props.edit ? props.select.m_cyCostoRecolectar : "",
             costoEntregar: props.edit ? props.select.m_cyCostoEntregar : "",
-            editar: props.consult
+            editar: props.consult,
+            dataCodigoPostales: [],
+            dataZonas: [],
         }
         this.getAllSucursales = this.getAllSucursales.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -51,6 +54,7 @@ class ZonasAgregar extends Component {
         this.handleChangeChecboxLocalidad = this.handleChangeChecboxLocalidad.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
         this.setEstadoId = this.setEstadoId.bind(this)
+        this.getAllCodigoPostales = this.getAllCodigoPostales.bind(this)
     }
 
     componentWillMount() {
@@ -139,6 +143,7 @@ class ZonasAgregar extends Component {
             });
             return
         }
+        console.log(event)
         if (event) {
             array.push(arrayCiudades[index])
             this.setState({
@@ -147,7 +152,7 @@ class ZonasAgregar extends Component {
                 idCodigoPostalSeleccionado: 0
             });
         } else {
-            var position = array.findIndex(a => a.m_nIdCiudad == arrayCiudades[index].m_nIdCiudad)
+            let position = array.findIndex(a => a.m_nIdCiudad == arrayCiudades[index].m_nIdCiudad)
             array.splice(position, 1)
             this.setState({
                 seleccionarTodoCiudades: false,
@@ -156,6 +161,47 @@ class ZonasAgregar extends Component {
                 idCodigoPostalSeleccionado: 0
             });
         }
+        console.log(array)
+        this.getAllCodigoPostales(array)
+    }
+
+    getAllCodigoPostales(ciudadesSeleccionado) {
+        // const {idCiudadSeleccionado, handleChange, ciudadesSeleccionado, codigoPostalesSeleccionado} = this.props
+        const {codigoPostalesSeleccionado} = this.state
+        const todosCodigosPostales = []
+
+        if (ciudadesSeleccionado.length > 0){
+            ciudadesSeleccionado.forEach( ciudad => {
+                obtenerCodigoPostalCiudad(ciudad.m_nIdCiudad).then(respuesta => {
+                    respuesta.data.forEach( item => {
+                        todosCodigosPostales.push(item)
+                    })
+                    todosCodigosPostales.forEach( (i, index) => {
+                        let isCheked = codigoPostalesSeleccionado.find(t => t.m_nIdCP === i.m_nIdCP) != null
+                        if (isCheked){
+                            this.handleChangeChecboxCodigoPostal(isCheked, index, todosCodigosPostales, false)
+                        }
+                    })
+                    this.setState({
+                        dataCodigoPostales: todosCodigosPostales,
+                        anchorEl: null
+                    }, () => {
+                        // console.log('todosCodigosPostales: ', todosCodigosPostales)
+                    })
+                });
+            })
+        }
+
+        /*obtenerCodigoPostalCiudad(idCiudadSeleccionado).then(respuesta => {
+            this.setState({ dataCodigoPostales: respuesta.data, anchorEl: null })
+            dataCodigoPostales.forEach( (i, index) => {
+                var isCheked = this.props.codigoPostalesSeleccionado.find(t => t.m_nIdCP === i.m_nIdCP) != null
+               // this.setState({ checked: isCheked })
+                if (isCheked){
+                    handleChange(isCheked, index, respuesta.data, false)
+                }
+            })
+        });*/
     }
 
     handleChangeChecboxCodigoPostal(event, index, arrayCodigoPostales, all) {
@@ -173,7 +219,7 @@ class ZonasAgregar extends Component {
             array.push(arrayCodigoPostales[index])
             this.setState({
                 codigoPostalesSeleccionado: array,
-                idCodigoPostalSeleccionado: arrayCodigoPostales[index].m_nIdCP
+                idCodigoPostalSeleccionado: arrayCodigoPostales[index].m_nIdCP,
             });
         } else {
             var position = array.findIndex(a => a.m_nIdCP == arrayCodigoPostales[index].m_nIdCP)
@@ -223,12 +269,18 @@ class ZonasAgregar extends Component {
     render() {
         //Pueden estar en la misma linea pero quedaría muy largo
         const {sucursal, idEstadoSucursal, ciudadesSeleccionado, editar, seleccionarTodoCiudades} = this.state
-        const {idCiudadSeleccionado, codigoPostalesSeleccionado,seleccionarTodoCodigoPostales} = this.state
-        console.log('sucursal: ', sucursal)
-        console.log('idEstadoSucursal: ', idEstadoSucursal)
-        console.log('ciudadesSeleccionado: ', ciudadesSeleccionado)
-        console.log('editar: ', editar)
-        console.log('seleccionarTodoCiudades: ', seleccionarTodoCiudades)
+        const {idCiudadSeleccionado, codigoPostalesSeleccionado,seleccionarTodoCodigoPostales, dataCodigoPostales} = this.state
+        const {dataZonas} = this.state
+        // console.log('sucursal: ', sucursal)
+        // console.log('idEstadoSucursal: ', idEstadoSucursal)
+        // console.log('ciudadesSeleccionado: ', ciudadesSeleccionado)
+        // console.log('editar: ', editar)
+        // console.log('seleccionarTodoCiudades: ', seleccionarTodoCiudades)
+        // console.log('idCiudadSeleccionado: ', idCiudadSeleccionado)
+        // console.log('codigoPostalesSeleccionado: ', codigoPostalesSeleccionado)
+        // console.log('seleccionarTodoCodigoPostales: ', seleccionarTodoCodigoPostales)
+
+
         return (
             <form className="j-forms" onSubmit={this.onSubmit}>
                 <div className="main-container" style={{marginLeft: "0px", padding: "0px"}}>
@@ -329,7 +381,7 @@ class ZonasAgregar extends Component {
                                             overflowY: "auto",
                                             padding: "5px"
                                         }}>
-                                            {idCiudadSeleccionado != 0 &&
+                                            {ciudadesSeleccionado.length > 0 &&
                                                 <CodigoPostal
                                                     ciudadesSeleccionado={ciudadesSeleccionado}
                                                     idCiudadSeleccionado={idCiudadSeleccionado}
@@ -337,6 +389,7 @@ class ZonasAgregar extends Component {
                                                     handleChange={this.handleChangeChecboxCodigoPostal}
                                                     editar={editar}
                                                     seleccionarTodoCodigoPostales={seleccionarTodoCodigoPostales}
+                                                    dataCodigoPostales={dataCodigoPostales}
                                                 />
 
                                             }
@@ -347,7 +400,7 @@ class ZonasAgregar extends Component {
                                             overflowY: "auto",
                                             padding: "5px"
                                         }}>
-                                            {this.state.idCodigoPostalSeleccionado != 0 ?
+                                            {dataZonas.length > 0 ?
                                                 <Localidad
                                                     localidadesSeleccionado={this.state.localidadesSeleccionado}
                                                     idCodigoPostalSeleccionado={this.state.idCodigoPostalSeleccionado}

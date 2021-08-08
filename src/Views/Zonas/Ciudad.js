@@ -32,7 +32,7 @@ class Ciudad extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        console.log(this.props.ciudadesSeleccionado)
+        // console.log(this.props.ciudadesSeleccionado)
         if (this.props.idEstadoSucursal !== prevProps.idEstadoSucursal) // Check if it's a new user, you can also use some unique property, like the ID  (this.props.user.id !== prevProps.user.id)
         {
             this.getAllCiudades();
