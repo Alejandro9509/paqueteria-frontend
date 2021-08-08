@@ -60,15 +60,10 @@ class ZonasAgregar extends Component {
 
     componentWillMount() {
         this.getAllSucursales().then(o => {
-            //console.log(this.state.ciudadesSeleccionado)
-            //console.log(this.state.codigoPostalesSeleccionado)
-            //console.log(this.state.localidadesSeleccionado)
             if (this.state.sucursal) {
                 this.setEstadoId()
             }
         })
-        //console.log("editar aqui")
-        //console.log(this.state.editar)
     }
 
     a11yProps(index) {
@@ -185,8 +180,6 @@ class ZonasAgregar extends Component {
                     this.setState({
                         dataCodigoPostales: todosCodigosPostales,
                         anchorEl: null
-                    }, () => {
-                        // console.log('todosCodigosPostales: ', todosCodigosPostales)
                     })
                 });
             })

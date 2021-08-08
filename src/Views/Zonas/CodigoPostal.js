@@ -18,13 +18,11 @@ class CodigoPostal extends Component {
             codigo: "",
             descripcion: ""
         }
-        // this.getAllCodigoPostales = this.getAllCodigoPostales.bind(this)
         this.handleClose = this.handleClose.bind(this)
         this.handleChange = this.handleChange.bind(this)
     }
 
     componentWillMount() {
-        // this.getAllCodigoPostales()
     }
 
     componentDidMount() {
@@ -32,58 +30,12 @@ class CodigoPostal extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        /*const {ciudadesSeleccionado} = this.props
-        const {dataCodigoPostales} = this.state
-        console.log('ciudadesSeleccionado: ',ciudadesSeleccionado)
-        console.log('prevprops : ',prevProps.ciudadesSeleccionado)
-        if (ciudadesSeleccionado !== prevProps.ciudadesSeleccionado) // Check if it's a new user, you can also use some unique property, like the ID  (this.props.user.id !== prevProps.user.id)
-        {
-            this.getAllCodigoPostales();
-        }*/
-        // this.getAllCodigoPostales();
+
     }
 
     componentWillUnmount() {
 
     }
-
-    /*getAllCodigoPostales() {
-        const {idCiudadSeleccionado, handleChange, ciudadesSeleccionado, codigoPostalesSeleccionado} = this.props
-        const {dataCodigoPostales} = this.state
-        const todosCodigosPostales = []
-
-        if (ciudadesSeleccionado.length > 0){
-            ciudadesSeleccionado.forEach( ciudad => {
-                obtenerCodigoPostalCiudad(ciudad.m_nIdCiudad).then(respuesta => {
-                    respuesta.data.forEach( item => {
-                        todosCodigosPostales.push(item)
-                    })
-                    todosCodigosPostales.forEach( (i, index) => {
-                        let isCheked = codigoPostalesSeleccionado.find(t => t.m_nIdCP === i.m_nIdCP) != null
-                        if (isCheked){
-                            handleChange(isCheked, index, todosCodigosPostales, false)
-                        }
-                    })
-                    this.setState({
-                        dataCodigoPostales: todosCodigosPostales, anchorEl: null
-                    }, () => {
-                        console.log('todosCodigosPostales: ', todosCodigosPostales)
-                    })
-                });
-            })
-        }
-
-        /!*obtenerCodigoPostalCiudad(idCiudadSeleccionado).then(respuesta => {
-            this.setState({ dataCodigoPostales: respuesta.data, anchorEl: null })
-            dataCodigoPostales.forEach( (i, index) => {
-                var isCheked = this.props.codigoPostalesSeleccionado.find(t => t.m_nIdCP === i.m_nIdCP) != null
-               // this.setState({ checked: isCheked })
-                if (isCheked){
-                    handleChange(isCheked, index, respuesta.data, false)
-                }
-            })
-        });*!/
-    }*/
 
     handleChange(event) {
         this.setState({
@@ -97,7 +49,6 @@ class CodigoPostal extends Component {
 
     render() {
         const {consult, seleccionarTodoCodigoPostales, handleChange, editar, codigoPostalesSeleccionado, dataCodigoPostales} = this.props
-        // const {dataCodigoPostales} = this.state
 
         return (
             <table style={{ overflowY: "scroll", width: "100%" }}>

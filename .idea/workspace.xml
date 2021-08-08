@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Los codigos postales ya se acumulan por ciudad">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Zonas/Localidad.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Zonas/Localidad.js" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Las localidades ya se acumulan">
+      <change beforePath="$PROJECT_DIR$/src/Views/Zonas/Ciudad.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Zonas/Ciudad.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Zonas/CodigoPostal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Zonas/CodigoPostal.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Zonas/ZonasAgregar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Zonas/ZonasAgregar.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -353,7 +353,14 @@
       <option name="project" value="LOCAL" />
       <updated>1628396161531</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="*Las localidades ya se acumulan">
+      <created>1628397385643</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1628397385643</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -397,7 +404,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se agregaron los filtros necesarios" />
     <MESSAGE value="Se agregaron validacionees para obligar a seleccionar sucursal y destino antes de otros datos" />
     <MESSAGE value="Se hicieron ajustes para mandar el id de destino en lugar el nombre a los servicios" />
     <MESSAGE value="Se habilitaron campos de minimo y maximo para pastaña de conceptos de entrega por rangos" />
@@ -422,7 +428,8 @@
     <MESSAGE value="* Se renombraron variables para mayor entendimiento en ciudades" />
     <MESSAGE value="* Se renombraron variables para mayor entendimiento en zonas" />
     <MESSAGE value="*Los codigos postales ya se acumulan por ciudad" />
-    <option name="LAST_COMMIT_MESSAGE" value="*Los codigos postales ya se acumulan por ciudad" />
+    <MESSAGE value="*Las localidades ya se acumulan" />
+    <option name="LAST_COMMIT_MESSAGE" value="*Las localidades ya se acumulan" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -32,7 +32,6 @@ class Ciudad extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        // console.log(this.props.ciudadesSeleccionado)
         if (this.props.idEstadoSucursal !== prevProps.idEstadoSucursal) // Check if it's a new user, you can also use some unique property, like the ID  (this.props.user.id !== prevProps.user.id)
         {
             this.getAllCiudades();
@@ -46,7 +45,6 @@ class Ciudad extends Component {
             this.setState({ dataCiudades: respuesta.data, anchorEl: null })
             this.state.dataCiudades.forEach( (i, index) => {
                 var isCheked = this.props.ciudadesSeleccionado.find(t => t.m_nIdCiudad === i.m_nIdCiudad) != null
-                //this.setState({ checked: isCheked })
                 if (isCheked){
                     this.props.handleChangeChecboxCiudad(isCheked, index, respuesta.data, false)
                 }
