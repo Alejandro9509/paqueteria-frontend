@@ -279,16 +279,9 @@ function Guia(props) {
         console.log(JSON.stringify(params));
 
         // debugger;
-        if (state.idGuia != 0) {
-            modificarGuia(state.idGuia, params).then(respuesta => {
-                showSuccess(respuesta.data)
-                getAllData()
-                limpiarCampos()
-            }).catch(err => {
-                console.log(err)
-                showSuccess(err)
-            });
-        } else {
+        console.log('id guia')
+        console.log(state.idGuia)
+        if (state.idGuia == 0 || state.idGuia == '' || state.idGuia == undefined) {
             agregarGuia(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 //window.location.reload();
@@ -300,6 +293,19 @@ function Guia(props) {
                 console.log(err)
                 showSuccess(err)
             });
+            /*showSuccess('Guia agregada')
+            limpiarCampos()*/
+        } else {
+            modificarGuia(state.idGuia, params).then(respuesta => {
+                showSuccess(respuesta.data)
+                getAllData()
+                limpiarCampos()
+            }).catch(err => {
+                console.log(err)
+                showSuccess(err)
+            });
+            /*showSuccess('Guia modificada')
+            limpiarCampos()*/
         }
 
     }
@@ -1004,14 +1010,14 @@ function Guia(props) {
                 ...state,
                 //Informacion general
                 idSucursal: '',
-                folioGuia: '',
-                IdEmbarque: '',
+                folioGuia: 0,
+                IdEmbarque: 0,
                 folioInforme: '',
                 tracking: '',
                 fecha: '',
                 idEstatusGuia: '',
-                idMoneda: '',
-                tipoCambio: '',
+                idMoneda: 0,
+                tipoCambio: 0,
                 //Datos remitente
                 nombreRemitente: '',
                 RFCRemitente: '',
@@ -1037,7 +1043,7 @@ function Guia(props) {
                 paquetes: [],
                 sobres: [],
                 //Detalles de facturacion
-                idTipoCobro: '',
+                idTipoCobro: 0,
                 idTipoServicio: '',
                 ValorDeclarado: '',
                 //Conceptos de facturacion
