@@ -56,6 +56,7 @@ class ConceptosAdicionales extends Component {
         this.onSubmit = this.onSubmit.bind(this)
         this.removeConcepto = this.removeConcepto.bind(this)
         this.handleSelectCP = this.handleSelectCP.bind(this)
+        this.handleRowClick = this.handleRowClick.bind(this)
     }
 
     componentWillMount() {

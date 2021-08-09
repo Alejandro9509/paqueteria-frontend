@@ -4,11 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Ajustes menores de codigo">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Los conceptos adicionales ahora se pueden modificar">
       <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionales.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionales.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/CrearTarifa.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/CrearTarifa.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/Tarifas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/Tarifas.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesEntrega.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesEntrega.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesManiobra.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesManiobra.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesRecoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesRecoleccion.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -438,7 +438,14 @@
       <option name="project" value="LOCAL" />
       <updated>1628497858353</updated>
     </task>
-    <option name="localTasksCounter" value="45" />
+    <task id="LOCAL-00045" summary="*Los conceptos adicionales ahora se pueden modificar">
+      <created>1628541218067</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1628541218067</updated>
+    </task>
+    <option name="localTasksCounter" value="46" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -482,7 +489,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Ajustes en crear embarque" />
     <MESSAGE value="Ajustes en embarque al agregar uno nuevo:&#10;*Campo moneda se modifica correctamente.&#10;*los sobres se agregan al listado de paquetes y se mandan a la base de datos." />
     <MESSAGE value="Ajustes en embarque al mostrar informacion para modificar" />
     <MESSAGE value="Se resolvio el problema al mostrar los sobres y paquetes cuando se modifica o edita" />
@@ -507,7 +513,8 @@
     <MESSAGE value="*Se hizo limpieza de codigo" />
     <MESSAGE value="*Se ocultaron botones de cancelar para obligar la navegacion con tabs.&#10;*Se mejor limpieza de campos." />
     <MESSAGE value="*Ajustes menores de codigo" />
-    <option name="LAST_COMMIT_MESSAGE" value="*Ajustes menores de codigo" />
+    <MESSAGE value="*Los conceptos adicionales ahora se pueden modificar" />
+    <option name="LAST_COMMIT_MESSAGE" value="*Los conceptos adicionales ahora se pueden modificar" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
