@@ -87,105 +87,51 @@ function Guia(props) {
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
     const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [state, setState] = React.useState({
-        showPopUp: false,
-        idGuia: 0,
-        agregar: "Agregar",
-        fechaInicial: "",
-        conceptosAdicionales: [],
-        ivaTraslada: [],
-        ivaRetiene: [],
-        fechaFinal: today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate(),
+        //VARIABLES PARA LISTADO DE GUIAS
         sucursalListado: 0,
+        fechaFinal: today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate(),
+        fechaInicial: "",
         estatusListado: 0,
-        sucursal: "",
-        folioRecoleccion: "",
-        folioEmbarque: "",
-        folioGuia: "",
-        folioInforme: "",
-        fecha: "",
-        DerechoBorrar: 145,
-        paquetesI: [{
-            CiudadOrigen: "",
-            Remitente: "",
-            CiudadRemitente: "",
-            RFC: "",
-            Direccion: "",
-            Zona: "",
-            CP: 0,
-            Telefono: "",
-            CiudadDestino: "",
-            RFCDestinatario: "",
-            DireccionDestinatario: "",
-            ZonaDestinatario: "",
-            CPDestinatario: 0,
-            CiudadDestinatario: "",
-            TelefonoDestinatario: "",
-            FolioPaquete: "",
-            Cantidad: 0,
-            Descripcion: ""
-        }],
-        origen: "",
-        destino: "",
+        idGuia: 0,
+        //VARIABLES PARA CANCELAR GUIA
+        //variable de folioGuia es la misma que en agregar
         usuarioCancela: "",
         fechaCancelado: "",
-        idEmbarque: 0,
-        hora: "",
-        idEstatusGuia: '',
+        usuarioCancelacion: 0,
         estatusGuia: "",
+        MotivoCancelacion: "",
+        //VARIABLES PARA AGREGAR GUIA
+        //Informacion General
+        idSucursalAgregar: localStorage.getItem("Sucursal"),
+        folioGuia: "",
+        idEmbarque: 0,
+        folioInforme: "",
+        tracking: "",
+        fecha: "",
+        idEstatusGuia: '',
         idMoneda: 0,
         tipoCambio: 0,
-        idTipoCobro: 0,
+        //Remitente
         nombreRemitente: "",
-        rfcRemitente: "",
+        RFCRemitente: "",
         domicilioRemitente: "",
-        idCodigoPostalRemitente: 0,
+        codigoPostalRemitente: "",
         ciudadRemitente: 0,
         correoRemitente: "",
         telefonoRemitente: "",
         contactoRemitente: "",
-        idCiudadOrigen: 0,
+        origenRemitente: "",
+        //Destinatario
         sNombreDestinatario: "",
         sRFCDestinatario: "",
         sDomicilioDestinatario: "",
-        idCodigoPostalDestinatario: "",
         codigoPostalDestinatario: "",
+        ciudadDestinatario: "",
         sCorreoDestinatario: "",
-        idCIudadDestinatario: 0,
         sTelefonoDestinatario: "",
         sContactoDestinatario: "",
-        idCiudadDestino: 0,
-        fechaEntrega: "",
-        HoraEntrega: "",
-        NoPaquetes: 0,
-        NoSobres: 0,
-        idOperador: 0,
-        idCiudadRemitente: 0,
-        idUnidad: 0,
-        fechaSalida: "",
-        horaSalida: "",
-        arrClsDetalle: [],
-        FechaCancelacion: "",
-        usuarioCancelacion: 0,
-        MotivoCancelacion: "",
-        entregarMismoDomicilio: false,
-        fechaLlegada: "",
-        horaLlegada: "",
-        codigoPostalEntrega: 0,
-        idCiudadEntrega: 0,
-        idZonaEntrega: 0,
-        domicilioEntrega: "",
-        entregarEn: "",
-        datosAdicionalesis: "",
-        tracking: 0,
-        arClsGuiaConceptos: [],
-        creadoPor: localStorage.getItem("UsuarioId"),
-        modificadoPor: localStorage.getItem("UsuarioId"),
-        creadoEl: "",
-        modificadoEl: "",
-        idSucursal: localStorage.getItem("Sucursal"),
-        idSucursalAgregar: localStorage.getItem("Sucursal"),
-        valorDeclarado: 0,
         CiudadDestino: "",
+        //Paquetes/sobres
         paquetes: [
             {
                 peso: "",
@@ -207,23 +153,47 @@ function Guia(props) {
                 id: ""
             },
         ],
-        conceptos: [
-            {
-                IdConceptoFacturacion: 0,
-                Importe: 0,
-                IdImpuestoTraslada: 0,
-                ImporteIva: 0,
-                IdImpuestoRetiene: 0,
-                ImporteRetiene: 0,
-                Total: 0,
-                PorcentajeIva: 0,
-                PorcentajeRetiene: 0,
-                IdGuiaConcepto: 0
-            }
-        ],
-        tab: 0,
+        //Detalle de faturación
+        idTipoCobro: 0,
         idTipoServicio: '',
-        height: window.innerHeight
+        ValorDeclarado: "",
+        //Conceptos de facturacion
+        conceptosAdicionales: [],
+        ivaTraslada: [],
+        ivaRetiene: [],
+        //Aqui se almacenaran los conceptos de las guias que ya fueron creadas
+        arClsGuiaConceptos: [],
+
+        //VARIABLES PARA TAB IMPRIMIR (creo)
+        paquetesI: [{
+            CiudadOrigen: "",
+            Remitente: "",
+            CiudadRemitente: "",
+            RFC: "",
+            Direccion: "",
+            Zona: "",
+            CP: 0,
+            Telefono: "",
+            CiudadDestino: "",
+            RFCDestinatario: "",
+            DireccionDestinatario: "",
+            ZonaDestinatario: "",
+            CPDestinatario: 0,
+            CiudadDestinatario: "",
+            TelefonoDestinatario: "",
+            FolioPaquete: "",
+            Cantidad: 0,
+            Descripcion: ""
+        }],
+
+        //VARIABLES PARA VISTAEN GENERAL
+        agregar: "Agregar",
+        height: window.innerHeight,
+        creadoPor: localStorage.getItem("UsuarioId"),
+        modificadoPor: localStorage.getItem("UsuarioId"),
+        creadoEl: "",
+        modificadoEl: "",
+
     })
 
     function cargaDiv(indice, valor) {
@@ -233,6 +203,7 @@ function Guia(props) {
     const [dataFolioGuia, SetDataFolioGuia] = React.useState([]);
     const [fileUploaded, setFileUploaded] = React.useState([])
     const [stepActive, setStepActive] = React.useState(1);
+    //Listado de sucursales. Se usa en listado y agregar.
     const [dataSucursal, setDataSucursal] = React.useState([])
     const [dataMoneda, setDataMoneda] = React.useState([])
     const [dataTipoCobro, setDataTipoCobro] = React.useState([])
@@ -254,7 +225,7 @@ function Guia(props) {
 
             "CreadoPor": state.creadoPor,
             "ModificadoPor": state.modificadoPor,
-            "IdSucursal": state.idSucursal,
+            "IdSucursal": state.idSucursalAgregar,
             "ValorDeclarado": state.ValorDeclarado,
             "idTipoServicio": state.idTipoServicio,
 
@@ -282,25 +253,26 @@ function Guia(props) {
                 //window.location.reload();
                 let resp = respuesta.data;
                 let vGuia = resp.substring(resp.indexOf(":") + 2);
-                limpiarCampos()
+                limpiarCamposAgregar()
+                getAllData()
                 getImpresion(vGuia);
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
             });
             /*showSuccess('Guia agregada')
-            limpiarCampos()*/
+            limpiarCamposAgregar()*/
         } else {
             modificarGuia(state.idGuia, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
-                limpiarCampos()
+                limpiarCamposAgregar()
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
             });
             /*showSuccess('Guia modificada')
-            limpiarCampos()*/
+            limpiarCamposAgregar()*/
         }
     }
 
@@ -409,15 +381,12 @@ function Guia(props) {
                 return {
                     ...state,
                     agregar: "Modificar",
-                    showPopUp: true,
                     dTipoServicio: respuesta.data.m_nIdTipoServicio,
                     idEstatusGuia: respuesta.data.m_nIdEstatusGuia,
 
                     fecha: respuesta.data.m_dFecha,
                     folioGuia: respuesta.data.m_nFolioGuia,
-                    folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
                     idGuia: respuesta.data.m_nIdGuia,
-                    hora: respuesta.data.m_sHora,
                     tracking: respuesta.data.m_nTracking,
                     arClsGuiaConceptos: respuesta.data.m_arClsGuiaConceptos,
                     creadoEl: respuesta.data.m_dCreadoEl,
@@ -441,15 +410,12 @@ function Guia(props) {
                 return {
                 ...state,
                     agregar: "Consultar",
-                    showPopUp: true,
                     idTipoServicio: respuesta.data.m_nIdTipoServicio,
                     idEstatusGuia: respuesta.data.m_nIdEstatusGuia,
 
                     fecha: respuesta.data.m_dFecha,
                     folioGuia: respuesta.data.m_nFolioGuia,
-                    folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
                     idGuia: respuesta.data.m_nIdGuia,
-                    hora: respuesta.data.m_sHora,
                     tracking: respuesta.data.m_nTracking,
                     arClsGuiaConceptos: respuesta.data.m_arClsGuiaConceptos,
                     creadoEl: respuesta.data.m_dCreadoEl,
@@ -459,10 +425,11 @@ function Guia(props) {
         }).catch(function (err) {
             console.log(err.data)
         });
-
     }
 
+    //Muestra la pestaña de cancelar
     function handleShowCancelar() {
+        limpiarCamposAgregar()
         obtenerGuiaId(state.idGuia).then((respuesta) => {
             setState({
                 ...state,
@@ -478,6 +445,7 @@ function Guia(props) {
         })
     }
 
+    //Funcion para cancelar una guia. Se usa en pestaña cancelar.
     const handleCancelar = (e) => {
         e.preventDefault();
         var params = {
@@ -488,6 +456,7 @@ function Guia(props) {
         console.log(JSON.stringify(params))
         cancelarGuia(state.idGuia, params).then((respuesta) => {
             console.log(respuesta.data)
+            showSuccess(respuesta.data)
         })
     }
 
@@ -544,73 +513,22 @@ function Guia(props) {
         //getImpresion(38);
     }*/
 
+    //Prepara campos para agregar guia
     function handleShowAgregar() {
-        setState({
+        setState(state => {
+            return {
             ...state,
-            agregar: "Agregar",
-            showPopUp: true,
-
-            sucursal: "",
-            folioRecoleccion: "",
-            folioEmbarque: "",
-            folioGuia: dataFolioGuia.length !== 0 ? dataFolioGuia[0].m_sFolioGuia : null,
-            folioInforme: "",
-            fecha: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
-            origen: "",
-            destino: "",
-            usuarioCancela: "",
-            fechaCancelado: "",
-            idGuia: 0,
-            hora: "",
-            idEstatusGuia: '',
-            idMoneda: 0,
-            tipoCambio: 0,
-            idTipoCobro: 0,
-            nombreRemitente: "",
-            rfcRemitente: "",
-            domicilioRemitente: "",
-            idCodigoPostalRemitente: 0,
-            ciudadRemitente: 0,
-            correoRemitente: "",
-            telefonoRemitente: "",
-            contactoRemitente: "",
-            idCiudadOrigen: 0,
-            sNombreDestinatario: "",
-            sRFCDestinatario: "",
-            sDomicilioDestinatario: "",
-            idCodigoPostalDestinatario: "",
-            sCorreoDestinatario: "",
-            idCIudadDestinatario: 0,
-            sTelefonoDestinatario: "",
-            sContactoDestinatario: "",
-            idCiudadDestino: 0,
-            fechaEntrega: "",
-            HoraEntrega: "",
-            NoPaquetes: 0,
-            NoSobres: 0,
-            idOperador: 0,
-            idCiudadRemitente: 0,
-            idUnidad: 0,
-            fechaSalida: "",
-            horaSalida: "",
-            arrClsDetalle: [],
-            FechaCancelacion: "",
-            usuarioCancelacion: 0,
-            entregarMismoDomicilio: false,
-            fechaLlegada: "",
-            horaLlegada: "",
-            codigoPostalEntrega: 0,
-            idCiudadEntrega: 0,
-            idZonaEntrega: 0,
-            domicilioEntrega: "",
-            entregarEn: "",
-            datosAdicionalesis: "",
-            tracking: 0,
-            arClsGuiaConceptos: [],
-            creadoEl: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
-            modificadoEl: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
+                agregar: "Agregar",
+                fecha: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
+            }
         });
+        limpiarCamposAgregar()
         //getImpresion(38);
+    }
+
+    const handleShowListado = () => {
+        limpiarCamposAgregar()
+        getAllData()
     }
 
     const handleChange = event => {
@@ -621,6 +539,7 @@ function Guia(props) {
         });
     };
 
+    //Hace filtrado de guias por fechas. Se usa en listado de guias
     const handleFechaInicialFiltro = async (event) => {
         setState({
             ...state,
@@ -632,6 +551,7 @@ function Guia(props) {
             })
     }
 
+    //Hace filtrado de guias por fechas. Se usa en listado de guias
     const handleFechaFinalFiltro = async (event) => {
         setState({
             ...state,
@@ -643,6 +563,7 @@ function Guia(props) {
         })
     }
 
+    //Hace filtrado de guias por sucursal. Se usa en listado de guias
     const handleSucursalFiltro = async (event) => {
         setState({
             ...state,
@@ -653,6 +574,7 @@ function Guia(props) {
         })
     }
 
+    //Hace filtrado de guias por estatus. Se usa en listado de guias
     const handleEstatusFiltro = async (event) => {
         setState({
             ...state,
@@ -904,7 +826,7 @@ function Guia(props) {
             return{
                 ...state,
                 idEmbarque: respuesta.data.m_nIdEmbarque,
-                idSucursal: respuesta.data.IdSucursal,
+                idSucursalAgregar: respuesta.data.IdSucursal,
                 idMoneda: respuesta.data.m_nIdMoneda,
                 tipoCambio: respuesta.data.m_cTIpoCambio,
                 idTipoCobro: respuesta.data.m_nIdTIpoCobro,
@@ -913,18 +835,15 @@ function Guia(props) {
                 nombreRemitente: respuesta.data.m_sNOmbreRemitente,
                 RFCRemitente: respuesta.data.m_sRFCRemitente,
                 domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                idCodigoPostalRemitente: respuesta.data.m_nIdCodigoPostalRemitente,
                 ciudadRemitente: respuesta.data.m_sCiudadRemitente,
                 correoRemitente: respuesta.data.m_sCorreoRemitente,
                 telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
                 contactoRemitente: respuesta.data.m_sContactoRemitente,
                 origenRemitente: respuesta.data.m_sCiudadOrigen,
-                idCiudadOrigen: respuesta.data.m_nIdCiudadOrigen,
 
                 sNombreDestinatario: respuesta.data.m_sNombreDestinatario,
                 sRFCDestinatario: respuesta.data.m_sRFCDestinatario,
                 sDomicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                idCodigoPostalDestinatario: respuesta.data.m_nIdCodigoPostalDestinatario,
                 ciudadDestinatario: respuesta.data.m_sCIudadDestinatario,
                 sCorreoDestinatario: respuesta.data.m_sCorreoDestinatario,
                 sTelefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
@@ -938,9 +857,7 @@ function Guia(props) {
                 ValorDeclarado: valorDeclaradoTotal,
 
                 folioGuia: respuesta.data.m_nFolioGuia,
-                folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
                 idGuia: respuesta.data.m_nIdGuia,
-                hora: respuesta.data.m_sHora,
                 tracking: respuesta.data.m_nTracking,
                 arClsGuiaConceptos: respuesta.data.m_arClsGuiaConceptos,
                 creadoEl: respuesta.data.m_dCreadoEl,
@@ -1116,56 +1033,72 @@ function Guia(props) {
         })
     }
 
-    const limpiarCampos = () => {
+    const limpiarCamposAgregar = () => {
         setState(state => {
             return{
                 ...state,
-                //Informacion general
-                idSucursal: '',
-                folioGuia: 0,
-                IdEmbarque: 0,
-                folioInforme: '',
-                tracking: '',
-                fecha: '',
+                //Informacion General
+                idSucursalAgregar: localStorage.getItem("Sucursal"),
+                folioGuia: "",
+                idEmbarque: 0,
+                folioInforme: "",
+                tracking: "",
+                fecha: "",
                 idEstatusGuia: '',
                 idMoneda: 0,
                 tipoCambio: 0,
-                //Datos remitente
-                nombreRemitente: '',
-                RFCRemitente: '',
-                domicilioRemitente: '',
-                idCodigoPostalRemitente: '',
-                ciudadRemitente: '',
-                correoRemitente: '',
-                telefonoRemitente: '',
-                contactoRemitente: '',
-                origenRemitente: '',
-                idCiudadOrigen: '',
-                //Datos destinatario
-                sNombreDestinatario: '',
-                sRFCDestinatario: '',
-                sDomicilioDestinatario: '',
-                idCodigoPostalDestinatario: '',
-                ciudadDestinatario: '',
-                sCorreoDestinatario: '',
-                sTelefonoDestinatario: '',
-                sContactoDestinatario: '',
-                CiudadDestino: '',
-                //Paquetes
-                paquetes: [],
-                sobres: [],
-                //Detalles de facturacion
+                //Remitente
+                nombreRemitente: "",
+                RFCRemitente: "",
+                domicilioRemitente: "",
+                codigoPostalRemitente: "",
+                ciudadRemitente: 0,
+                correoRemitente: "",
+                telefonoRemitente: "",
+                contactoRemitente: "",
+                origenRemitente: "",
+                //Destinatario
+                sNombreDestinatario: "",
+                sRFCDestinatario: "",
+                sDomicilioDestinatario: "",
+                codigoPostalDestinatario: "",
+                ciudadDestinatario: "",
+                sCorreoDestinatario: "",
+                sTelefonoDestinatario: "",
+                sContactoDestinatario: "",
+                CiudadDestino: "",
+                //Paquetes/sobres
+                paquetes: [
+                    {
+                        peso: "",
+                        largo: "",
+                        ancho: "",
+                        alto: "",
+                        volumen: "",
+                        tipoEmbalaje: "",
+                        valorDeclarado: "",
+                        descripcionPaquete: "",
+                        ctd: "",
+                        observacionesPaquete: "",
+                        id: ""
+                    },
+                ],
+                sobres: [
+                    {
+                        descripcionSobre: "",
+                        id: ""
+                    },
+                ],
+                //Detalle de faturación
                 idTipoCobro: 0,
                 idTipoServicio: '',
-                ValorDeclarado: '',
+                ValorDeclarado: "",
                 //Conceptos de facturacion
+                conceptosAdicionales: [],
+                ivaTraslada: [],
+                ivaRetiene: [],
+                //Aqui se almacenaran los conceptos de las guias que ya fueron creadas
                 arClsGuiaConceptos: [],
-                //Otros datos  no visuales
-                folioRecoleccion: '',
-                idGuia: '',
-                hora: '',
-                idEmbarque: '',
-                creadoEl: '',
             }
         })
     }
@@ -1208,10 +1141,10 @@ function Guia(props) {
             idMoneda: idMoneda
         });
 
-        if (state.idSucursal === "" || state.idSucursal === "0") return;
+        if (state.idSucursalAgregar === "" || state.idSucursalAgregar === "0") return;
         if (idMoneda === "" || idMoneda === "0") return;
 
-        obtenerEmbarqueMoneda(state.idSucursal, idMoneda, state.idGuia).then(respuesta => {
+        obtenerEmbarqueMoneda(state.idSucursalAgregar, idMoneda, state.idGuia).then(respuesta => {
             setDataEmbarque(respuesta.data)
         });
     };
@@ -1834,12 +1767,10 @@ function Guia(props) {
             <section className="main-container">
 
                 <div className="container-fluid">
-
-
-
+                    {/*tabs de pantalla*/}
                     <ul className="nav navStatica nav-tabs">
                         <li className={props.location.idEmbarque != undefined ? "" : "active"}>
-                            <a data-toggle="tab" href="#Listado">
+                            <a data-toggle="tab" href="#Listado" onClick={() => handleShowListado()}>
                                 <i className="fa fa-list" /> Listado
                             </a>
                         </li>
@@ -2740,9 +2671,6 @@ function Guia(props) {
                                                 </div>
                                             </div>
                                         </div>
-
-
-
                                     </div>
                                     {/*<div className="widget-wrap" id="paquetesSobres">
                                         <div className="widget-header">

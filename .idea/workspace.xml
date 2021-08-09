@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Se eliminan tarifas correctamente en guias">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Se escribió codigo inicial para implementacion de que tarifas se rellenen campos al seleccionar concepto.&#10;*Se borro codigo innecesario">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
     </list>
@@ -408,7 +408,14 @@
       <option name="project" value="LOCAL" />
       <updated>1628477851778</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="*Se escribió codigo inicial para implementacion de que tarifas se rellenen campos al seleccionar concepto.&#10;*Se borro codigo innecesario">
+      <created>1628488787670</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1628488787670</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -452,7 +459,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se autocompleta la informacion de remitente y destinatario al seleccionar" />
     <MESSAGE value="Se agregó validacion para hacer la fecha de vencimiento obligatoria" />
     <MESSAGE value="Se arreglo relleno de datos al modificar sucursal" />
     <MESSAGE value="Ajustes al agregar usuarios" />
@@ -477,7 +483,8 @@
     <MESSAGE value="*Se agregó funcion para limpiar campos al hacer una modificacion o agregar exitosamente." />
     <MESSAGE value="*Se comentó codigo innecesario" />
     <MESSAGE value="*Se eliminan tarifas correctamente en guias" />
-    <option name="LAST_COMMIT_MESSAGE" value="*Se eliminan tarifas correctamente en guias" />
+    <MESSAGE value="*Se escribió codigo inicial para implementacion de que tarifas se rellenen campos al seleccionar concepto.&#10;*Se borro codigo innecesario" />
+    <option name="LAST_COMMIT_MESSAGE" value="*Se escribió codigo inicial para implementacion de que tarifas se rellenen campos al seleccionar concepto.&#10;*Se borro codigo innecesario" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
