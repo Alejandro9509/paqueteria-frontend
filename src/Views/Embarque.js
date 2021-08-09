@@ -646,6 +646,7 @@ function Embarque(props) {
         }
 
         if (state.entregaEnSucursal){
+            params.m_bEntregaEnSucursal = true
             params.m_nIdSucursalEntrega = state.idSucursalEntrega
         }
         if (state.diferenteEntrega){
