@@ -154,16 +154,17 @@ class ConceptosAdicionales extends Component {
         this.props.addConcepto(this.state)
     }
 
-    removeConcepto(event) {
+    removeConcepto(event, index) {
         event.preventDefault()
-        this.props.removeConcepto(this.state)
+        console.log('eliminar concepto: ', index)
+        this.props.removeConcepto(index)
     }
 
 
 
     render() {
 
-
+        const {removeConcepto} = this.props
 
         return (
             <div>
@@ -422,7 +423,7 @@ class ConceptosAdicionales extends Component {
                                             <td style={{ textAlign: "left" }}>{this.state.impuestos.length !== 0 && (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.retiene)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.retiene)).m_sImpuesto : "No Aplica")}</td>
                                             <td style={{ textAlign: "left" }}>${parseFloat(c.importeRet).toFixed(2)}</td>
                                             <td>
-                                                <IconButton onClick={this.removeConcepto}>
+                                                <IconButton onClick={(e) => this.removeConcepto(e,index)}>
                                                     <CancelIcon style={{ fill: "red", fontSize: "x-large" }} />
                                                 </IconButton>
                                             </td>
