@@ -139,7 +139,6 @@ class Tarifas extends Component {
 
         const url = `${process.env.REACT_APP_API_URL}/Tarifas/GetById/` + id;
         axios.get(url, { headers }).then(respuesta => {
-            console.log(respuesta.data)
             this.setState({
                 pantalla: 2,
                 openDialog: true,
@@ -199,7 +198,7 @@ class Tarifas extends Component {
     handleAceptar(data) {
         var params = {
             m_nIdSucursal: data.sucursal,
-            m_sDestino: data.destino,
+            m_nIdDestino: data.destino,
             m_cFleteMinimo: data.precioFlete,
             m_bActivo: data.activo ? 1 : 0,
             m_cMontoMinimo: data.precioMinimo,
@@ -211,7 +210,7 @@ class Tarifas extends Component {
             m_arrArCobros: data.tiposCobroSeleccionado.map(c => ({ m_nIdTipoCobro: c.m_nIdTipoCobro })),
             m_arrArServicios: data.tiposServicioSeleccionado.map(s => ({ m_nIdTipoServicio: s.m_nIdTipoServicio })),
             m_arrArConceptos: data.conceptosAdicionales.map(c => ({
-                m_nIdConceptosFacturacion: c.concepto.m_nIdConceptosFacturacion,
+                m_nIdConceptosFacturacion: c.idConcepto,
                 m_cImporte: c.importe,
                 m_nIdImpuestoTraslada: c.traslada,
                 m_nIdImpuestoRetiene: c.retiene,
@@ -266,7 +265,6 @@ class Tarifas extends Component {
         const url = `${process.env.REACT_APP_API_URL}/Tarifas/GetListado`;
         axios.get(url, { headers }).then(respuesta => {
             this.setState({ data: respuesta.data, agregar: "Agregar" })
-            console.log(respuesta.data)
         });
     }
 

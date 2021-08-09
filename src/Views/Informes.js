@@ -569,6 +569,8 @@ function Informes({ history }) {
             m_nCreadoPor: state.CreadoPor,
             m_arrClsProInformeGuia: dataGuias,
         };
+        console.log(JSON.stringify(params))
+
         if (state.IdInforme != 0) {
             modificarInformes(state.IdInforme, params)
                 .then((respuesta) => {
@@ -621,6 +623,30 @@ function Informes({ history }) {
         setDataGuias(guiasArray)
 
     }
+
+    const handleSelectSucursalEmisora = event => {
+        setState({
+            ...state,
+            sucursalEmisora: event.target.value
+        });
+      
+    }
+    const handleSelectSucursalReceptora = event => {
+        setState({
+            ...state,
+            sucursalReceptora: event.target.value
+        });
+      
+    }
+
+    const handleSelectEstatus = event => {
+        setState({
+            ...state,
+            EstatusInforme: event.target.value
+        });
+      
+    }
+
 
     function TableCiudades({ columns, data, select }) {
         const defaultColumn = React.useMemo(
@@ -1229,6 +1255,12 @@ function Informes({ history }) {
         });
     }
 
+    function getAllUnidadesTipoDolly(id) {
+        obtenerUnidadesTipo(id).then((respuesta) => {
+            setDataUnidadesDol(respuesta.data);
+        });
+    }
+
     function getAllOperadores() {
         obtenerOperadores().then((respuesta) => {
             setDataOperadores(respuesta.data);
@@ -1324,7 +1356,7 @@ function Informes({ history }) {
         getFormatosImpresion();
         getAllCiudades();
         getAllUnidadesTipo(8);
-        getAllUnidadesTipo(9);
+        getAllUnidadesTipoDolly(9);
         //getAllTipoUnidad();
         getAllDataRutas();
     }, []);
@@ -1814,7 +1846,7 @@ function Informes({ history }) {
                                                                                             className="form-control"
                                                                                             required
                                                                                             id="sucursalEmisora"
-                                                                                            onChange={handleChange}
+                                                                                            onChange={handleSelectSucursalEmisora}
                                                                                         >
                                                                                             <option value="0">Todas</option>
                                                                                             {dataSucursal.map(
@@ -1849,7 +1881,7 @@ function Informes({ history }) {
                                                                                             className="form-control"
                                                                                             required
                                                                                             id="sucursalReceptora"
-                                                                                            onChange={handleChange}
+                                                                                            onChange={handleSelectSucursalReceptora}
                                                                                         >
                                                                                             <option value="0">Todas</option>
                                                                                             {dataSucursal.map(
@@ -1883,8 +1915,8 @@ function Informes({ history }) {
                                                                                             label="Estatus"
                                                                                             className="form-control"
                                                                                             v
-                                                                                            onChange={handleChange}
-                                                                                            //value={state.EstatusInforme}
+                                                                                            onChange={handleSelectEstatus}
+                                                                                            value={state.EstatusInforme}
                                                                                             id="EstatusInforme"
                                                                                         >
                                                                                             <option value="0">Todos</option>

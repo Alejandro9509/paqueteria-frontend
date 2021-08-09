@@ -41,7 +41,11 @@ import { dataGridLocaleText } from "../Constants";
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import { obtenerCiudades } from "../Util/Contexts/CiudadesContext";
-import { obtenerCodigoPostal } from "../Util/Contexts/CodigoPostalContext";
+import {
+    obtenerCodigoPostal,
+    obtenerCodigoPostalId,
+    obtenerCodigosPostalesPorCiudad
+} from "../Util/Contexts/CodigoPostalContext";
 import { obtenerRemitentesDestinatarios } from "../Util/Contexts/RemitenteDestinatarioContext";
 import { obtenerEmbalajes } from "../Util/Contexts/EmbalajesContext";
 import { cancelarEmbarque, eliminarEmbarques, obtenerEmbarquesId, obtenerUltimoFolioEmbarques, obtenerEmbarqueCancelado, agregarEmbarques, modificarEmbarques, obtenerEmbarquesFiltro, obtenerEmbarques } from "../Util/Contexts/EmbarquesContext";
@@ -136,19 +140,18 @@ function Embarque(props) {
     const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
     const [dataCiudad, setDataCiudad] = React.useState([]);
-    const [dataCodigoPostal, setDataCodigoPostal] = React.useState([]);
+    const [dataCodigosPostalesRemitente, setDataCodigosPostalesRemitente] = React.useState([]);
+    const [dataCodigosPostalesDestinatario, setDataCodigosPostalesDestinatario] = React.useState([]);
+    const [dataCodigosPostalesEntrega, setDataCodigosPostalesEntrega] = React.useState([]);
     const [dataOperador, setDataOperador] = React.useState([]);
     const [dataTipoUnidad, setDataTipoUnidad] = React.useState([]);
     const [dataUnidad, setDataUnidad] = React.useState([]);
+    const [dataZona, setDataZona] = React.useState([]);
+
     const [dataEmbalaje, setDataEmbalaje] = React.useState([]);
     const [dataFolioEmbarque, SetDataFolioEmbarque] = React.useState([]);
     const [dataFormatos, setFormatosImpresion] = React.useState([]);
-
-    const [
-        dataRemitenteDestinatario,
-        setDataRemitenteDestinatario,
-    ] = React.useState([]);
-
+    const [dataRemitenteDestinatario, setDataRemitenteDestinatario,] = React.useState([]);
     const [state, setState] = React.useState({
         DerechoBorrar: 139,
         identificadorModal: "",
@@ -184,31 +187,34 @@ function Embarque(props) {
         fechaHoraRegistro: "",
         estatusEmbarque: 15,
         moneda: 0,
-        tipoCambio: "",
+        tipoCambio: 0,
         tipoCobro: 0,
         nombreRemitente: {},
         RFCRemitente: "",
         domicilioRemitente: "",
         codigoPostalRemitente: {},
-        ciudadRemitente: {},
+        idCodigoPostalRemitenteTemp : 0,
+        ciudadRemitente: "",
         correoRemitente: "",
         telefonoRemitente: "",
         contactoRemitente: "",
-        ciudadDestino: {},
+        ciudadDestino: "",
         nombreDestinatario: "",
-        RFCDestinatario: {},
+        RFCDestinatario: "",
         domicilioDestinatario: "",
-        codigoPostalDestinatario: {},
-        ciudadDestinatario: {},
+        codigoPostalDestinatario: "",
+        idCodigoPostalDestinatarioTemp : 0,
+        ciudadDestinatario: "",
         correoDestinatario: "",
         telefonoDestinatario: "",
         contactoDestinatario: "",
         ciudadOrigen: {},
         fechaEntrega: "",
         horaEntrega: "",
-        codigoPostalEntrega: {},
-        ciudadEntrega: {},
-        zonaEntrega: "",
+        codigoPostalEntrega: "",
+        idCodigoPostalEntregaTemp: 0,
+        ciudadEntrega: "",
+        zonaEntrega: 0,
         domicilioEntrega: "",
         entregaEn: "",
         countSobres: 1,
@@ -218,7 +224,7 @@ function Embarque(props) {
         cantidadDeSobres: 0,
         fechaHoraSalida: "",
         fechaHoraLlegada: "",
-        diferenteEntrega: true,
+        diferenteEntrega: false,
         entregaEnSucursal: false,
         idSucursalEntrega: 0,
         idOperador: {},
@@ -258,778 +264,128 @@ function Embarque(props) {
         preventScroll: true,
     });
 
-    const history = useHistory();
-
-    function handleSelectCodigoPostal() {
-        //state.ciudadEntrega = state.codigoPostalEntrega.m_nIdCiudad
-        //setState.ciudadEntrega= dataCiudad.find(
-        //   (o) => o.m_nIdCiudad == state.codigoPostalEntrega.m_nIdCiudad
-        //)
-    }
-
-    function handleSelectRemitente(newValue) {
-        console.log(newValue)
-        setState({
-            ...state,
-            nombreRemitente: newValue,
-            RFCRemitente: newValue.m_sRFC,
-            domicilioRemitente: newValue.m_sDomicilio,
-
-            codigoPostalRemitente: dataCodigoPostal.find(
-                (o) => o.m_nIdCP == newValue.m_nIdCP
-            ),
-
-            ciudadRemitente: dataCiudad.find(
-                (o) => o.m_nIdCiudad == dataCodigoPostal.find((o) => o.m_nIdCP == newValue.m_nIdCP).m_nIdCiudad
-            ),
-
-            correoRemitente: newValue.m_sCorreoElectronico,
-            telefonoRemitente: newValue.m_sTelefono,
-            contactoRemitente: newValue.m_sContacto,
-        });
-
-    }
-
-    function handleSelectDestinatario(newValue) {
-        setState({
-            ...state,
-            nombreDestinatario: newValue,
-            RFCDestinatario: newValue.m_sRFC,
-            domicilioDestinatario: newValue.m_sDomicilio,
-
-            codigoPostalDestinatario: dataCodigoPostal.find(
-                (o) => o.m_nIdCP == newValue.m_nIdCP
-            ),
-
-            ciudadDestinatario: dataCiudad.find(
-                (o) => o.m_nIdCiudad ==
-                    dataCodigoPostal.find((o) => o.m_nIdCP == newValue.m_nIdCP).m_nIdCiudad
-            ),
-
-            correoDestinatario: newValue.m_sCorreoElectronico,
-            telefonoDestinatario: newValue.m_sTelefono,
-            contactoDestinatario: newValue.m_sContacto,
-        });
-    }
-
-    const handleAceptar = (e) => {
-        e.preventDefault();
-
-
-        if (state.m_nIdCiudadDetalleEntrega = undefined) {
-            var params = {
-                m_nIdEmbarque: state.idEmbarque,
-                m_nIdRecoleccion: props.location.idRecoleccion,
-                m_nFolioEmbarque: state.folioEmbarque,
-                m_nFolioGuia: state.folioGuía,
-                m_nFolioInforme: state.folioInforme,
-                m_dFecha: state.fechaHoraCreacion.split("T")[0],
-                m_tHora: state.fechaHoraCreacion.split("T")[1],
-
-                m_dFechaRegistro: state.fechaHoraRegistro.split("T")[0],
-                m_tHoraRegistro: state.fechaHoraRegistro.split("T")[1],
-                m_nIdEstatusEmbarque: state.estatusEmbarque,
-                m_nIdMoneda: state.moneda,
-                m_cTIpoCambio: state.tipoCambio,
-                m_nIdTIpoCobro: state.tipoCobro,
-                m_sNOmbreRemitente: state.nombreRemitente.m_sNombreFiscal,
-                m_sRFCRemitente: state.RFCRemitente,
-                m_sDomicilioRemitente: state.domicilioRemitente,
-                m_nIdCodigoPostalRemitente: state.codigoPostalRemitente.m_nIdCP,
-                m_nCiudadRemitente: state.ciudadRemitente.m_nIdCiudad,
-                m_sCorreoRemitente: state.correoRemitente,
-                m_sTelefonoRemitente: state.telefonoRemitente,
-                m_sContactoRemitente: state.contactoRemitente,
-                m_nIdCiudadOrigen: state.ciudadOrigen.m_nIdCiudad,
-                m_sNombreDestinatario: state.nombreDestinatario.m_sNombreFiscal,
-                m_sRFCDestinatario: state.RFCDestinatario,
-                m_sDomicilioDestinatario: state.domicilioDestinatario,
-                m_nIdCodigoPostalDestinatario: state.codigoPostalDestinatario.m_nIdCP,
-                m_nIdCIudadDestinatario: state.ciudadDestinatario.m_nIdCiudad,
-                m_sCorreoDestinatario: state.correoDestinatario,
-                m_sTelefonoDestinatario: state.telefonoDestinatario,
-                m_sContactoDestinatario: state.contactoDestinatario,
-                m_nIdCiudadDestino: state.ciudadDestino.m_nIdCiudad,
-                m_dFechaEntrega: "",
-                m_tHoraEntrega: "",
-                m_nNoPaquetes: state.paquetes.length,
-                m_nNoSobres: state.sobres.length,
-                //m_nIdOperador: state.idOperador.m_nIdOperador,
-                // m_nIdUnidad: state.idUnidad.m_nIdUnidad,
-                m_dFechaSalida: state.fechaHoraSalida.split("T")[0],
-                m_tHoraSalida: state.fechaHoraSalida.split("T")[1],
-                FechaLlegada: state.fechaHoraLlegada.split("T")[0],
-                HoraLlegada: state.fechaHoraLlegada.split("T")[1],
-                CodigoPostalEntrega: state.codigoPostalEntrega.m_nIdCP,
-
-                IdCiudadEntrega: state.ciudadEntrega.m_nIdCiudad,
-                IdZonaEntrega: state.zonaEntrega,
-                DomicilioEntrega: state.domicilioEntrega,
-                EntregarEn: state.entregaEn,
-                DatosAdicionales: state.datosAdicionalesEntrega,
-                IdSucursal: state.idSucursalAgregar,
-                m_arrClsDetalle: state.paquetes,
-                CreadoPor: state.CreadoPor,
-                ModificadoPor: state.ModificadoPor,
-                m_tFechaDetalleEntrega: state.fechaEntrega.split("T")[0],
-                m_tHoraDetalleEntrega: state.fechaEntrega.split("T")[1],
-                m_bEntregaEnSucursal: state.entregaEnSucursal,
-                m_nIdSucursalEntrega: state.idSucursalEntrega
-            }
-
-        } else {
-            var params = {
-                m_nIdEmbarque: state.idEmbarque,
-                m_nIdRecoleccion: props.location.idRecoleccion,
-                m_nFolioEmbarque: state.folioEmbarque,
-                m_nFolioGuia: state.folioGuía,
-                m_nFolioInforme: state.folioInforme,
-                m_dFecha: state.fechaHoraCreacion.split("T")[0],
-                m_tHora: state.fechaHoraCreacion.split("T")[1],
-
-                m_dFechaRegistro: state.fechaHoraRegistro.split("T")[0],
-                m_tHoraRegistro: state.fechaHoraRegistro.split("T")[1],
-                m_nIdEstatusEmbarque: state.estatusEmbarque,
-                m_nIdMoneda: state.moneda,
-                m_cTIpoCambio: state.tipoCambio,
-                m_nIdTIpoCobro: state.tipoCobro,
-                m_sNOmbreRemitente: state.nombreRemitente.m_sNombreFiscal,
-                m_sRFCRemitente: state.RFCRemitente,
-                m_sDomicilioRemitente: state.domicilioRemitente,
-                m_nIdCodigoPostalRemitente: state.codigoPostalRemitente.m_nIdCP,
-                m_nCiudadRemitente: state.ciudadRemitente.m_nIdCiudad,
-                m_sCorreoRemitente: state.correoRemitente,
-                m_sTelefonoRemitente: state.telefonoRemitente,
-                m_sContactoRemitente: state.contactoRemitente,
-                m_nIdCiudadOrigen: state.ciudadOrigen.m_nIdCiudad,
-                m_sNombreDestinatario: state.nombreDestinatario.m_sNombreFiscal,
-                m_sRFCDestinatario: state.RFCDestinatario,
-                m_sDomicilioDestinatario: state.domicilioDestinatario,
-                m_nIdCodigoPostalDestinatario: state.codigoPostalDestinatario.m_nIdCP,
-                m_nIdCIudadDestinatario: state.ciudadDestinatario.m_nIdCiudad,
-                m_sCorreoDestinatario: state.correoDestinatario,
-                m_sTelefonoDestinatario: state.telefonoDestinatario,
-                m_sContactoDestinatario: state.contactoDestinatario,
-                m_nIdCiudadDestino: state.ciudadDestino.m_nIdCiudad,
-                m_dFechaEntrega: "",
-                m_tHoraEntrega: "",
-                m_nNoPaquetes: state.paquetes.length,
-                m_nNoSobres: state.sobres.length,
-                //m_nIdOperador: state.idOperador.m_nIdOperador,
-                // m_nIdUnidad: state.idUnidad.m_nIdUnidad,
-                m_dFechaSalida: state.fechaHoraSalida.split("T")[0],
-                m_tHoraSalida: state.fechaHoraSalida.split("T")[1],
-                FechaLlegada: state.fechaHoraLlegada.split("T")[0],
-                HoraLlegada: state.fechaHoraLlegada.split("T")[1],
-                CodigoPostalEntrega: state.codigoPostalEntrega.m_nIdCP,
-
-                //  IdCiudadEntrega: state.ciudadEntrega.m_nIdCiudad,
-                IdZonaEntrega: state.zonaEntrega,
-                DomicilioEntrega: state.domicilioEntrega,
-                EntregarEn: state.entregaEn,
-                DatosAdicionales: state.datosAdicionalesEntrega,
-                IdSucursal: state.idSucursalAgregar,
-                m_arrClsDetalle: state.paquetes,
-                CreadoPor: state.CreadoPor,
-                ModificadoPor: state.ModificadoPor,
-                m_tFechaDetalleEntrega: state.fechaEntrega.split("T")[0],
-                m_tHoraDetalleEntrega: state.fechaEntrega.split("T")[1],
-                m_bEntregaEnSucursal: state.entregaEnSucursal,
-                m_nIdSucursalEntrega: state.idSucursalEntrega
-            }
-
-        }
-
-
-        console.log(JSON.stringify(params))
-
-        if (state.idEmbarque != 0) {
-            modificarEmbarques(state.idEmbarque, params)
-                .then((respuesta) => {
-                    showSuccess(respuesta.data);
-                    getAllEmbarque();
-                    $('.nav-tabs li ').removeClass('active');
-                    $('.nav-tabs li').eq(0).addClass('active');
-                    $('.tab-content div ').removeClass('in show');
-                    $('#Listado').addClass('in show');
-                })
-                .catch((err) => {
-                    console.log(err);
-                    showSuccess("El Usuario no tiene derecho para modificar");
-                });
-        } else {
-            agregarEmbarques(params)
-                .then((respuesta) => {
-                    showSuccess(respuesta.data);
-                    console.log(respuesta.data);
-                    getAllEmbarque();
-                    $('.nav-tabs li ').removeClass('active');
-                    $('.nav-tabs li').eq(0).addClass('active');
-                    $('.tab-content div ').removeClass('in show');
-                    $('#Listado').addClass('in show');
-                })
-                .catch((err) => {
-                    console.log(err);
-                    showSuccess(err);
-                });
-        }
-    };
-
-    function handleSelectCP(id, cp) {
-        setState({
-            ...state,
-            [state.identificadorModal]: id,
-        });
-        console.log(id);
-        console.log(state.identificadorModal);
-    }
-
-    function addPaquete() {
-        const { paquetes } = state;
-        paquetes.push({
-            m_xPeso: "",
-            m_xLargo: "",
-            m_xAncho: "",
-            m_xAlto: "",
-            m_xVolumen: "",
-            m_nIdTIpoEmpaque: "",
-            m_cyValorDeclarado: "",
-            m_sDescripcion: "",
-            m_nCantidad: "",
-            m_nTipo: 2,
-            m_sObservaciones: "",
-        });
-        console.log(paquetes);
-        setState({
-            ...state,
-            paquetes: paquetes,
-            countPaquetes: state.countPaquetes + 1,
-        });
-    }
-
-    function getTipoCambio() {
-        obtenerTipoCambio().then(respuesta => {
-            setDataTipoCambio(respuesta.data)
-            setState({
-                ...state,
-                tipoCambio: respuesta.data[0].m_cTipoCambio
-            })
-        });
-    }
-
-    function removePaquete(index) {
-        var { paquetes } = state;
-        if (paquetes.length !== 1) {
-            paquetes.pop();
-            setState({
-                ...state,
-                paquetes: paquetes,
-                countPaquetes: state.countPaquetes - 1,
-            });
-        }
-    }
-
-    function addSobre() {
-        const { sobres } = state;
-        sobres.push({
-            descripcion: "",
-        });
-        console.log(sobres);
-        setState({ ...state, sobres: sobres, countSobres: state.countSobres + 1 });
-    }
-
-    function removeSobre(index) {
-        var { sobres } = state;
-        if (sobres.length !== 1) {
-            sobres.pop();
-            setState({
-                ...state,
-                sobres: sobres,
-                countSobres: state.countSobres - 1,
-            });
-        }
-    }
-
-    const handleChangePaquete = (event, index) => {
-        var { paquetes } = state;
-        paquetes[index][event.target.name] = event.target.value;
-        setState({
-            ...state,
-            paquetes: paquetes,
-        });
-    };
-
-    const handleChangeSobre = (event, index) => {
-        var { sobres } = state;
-        sobres[index][event.target.name] = event.target.value;
-        setState({
-            ...state,
-            sobres: sobres,
-        });
-    };
-
-    function handleEliminar(id) {
-        var derecho;
-        validarPermisos(state)
-            .then((respuesta) => {
-                //showSuccess(respuesta.data)
-
-                derecho = respuesta.data;
-                if (derecho === false) {
-                    showSuccess("El usuario no tiene derechos para realizar el proceso");
-                    return;
-                }
-
-                eliminarEmbarques(id, state.CreadoPor)
-                    .then((respuesta) => {
-                        showSuccess(respuesta.data);
-                        getAllEmbarque();
-                    })
-                    .catch((err) => {
-                        showSuccess(err);
-                    });
-            })
-            .catch((err) => {
-                showSuccess(err);
-            });
-    }
-
-    const handleCancelar = (e) => {
-        e.preventDefault();
-
-        var params = {
-            motivoCancelacion: state.motivoCancelacion,
-            usuarioCancelacion: localStorage.getItem("UsuarioId"),
-            fechaCancelacion: state.fechaCancelacion,
-        };
-        cancelarEmbarque(state, params).then((respuesta) => {
-            console.log(respuesta.data);
-        });
-        $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(2).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Cancelar').addClass('in show');
-
-    };
-
-    function handleShowCancelar() {
-        var today = new Date();
-        var hours = today.getHours();
-        var minutes = today.getMinutes();
-        var ampm = hours >= 12 ? "pm" : "am";
-        hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-        var strTime = hours + ":" + minutes + " " + ampm;
-        obtenerEmbarqueCancelado(state).then((respuesta) => {
-            console.log(respuesta.data.m_nSePuedeCancelar);
-            setState({
-                ...state,
-                folioEmbarque: respuesta.data.m_nFolioEmbarque,
-                sucursalCancelacion: dataSucursal.find(
-                    (o) => o.m_nIdSucursal === respuesta.data.IdSucursal
-                ).m_sSucursal,
-                fechaCancelacion:
-                    today.getDate() +
-                    "/" +
-                    (today.getMonth() + 1) +
-                    "/" +
-                    today.getFullYear() +
-                    " " +
-                    today.getHours() +
-                    ":" +
-                    today.getMinutes(),
-                estatusEmbarque: dataEstatusEmbarque.find(
-                    (o) => o.m_nIdEstatusEmbarque === respuesta.data.m_nIdEstatusEmbarque
-                ).m_sEstatus,
-                motivoCancelacion: respuesta.data.m_sMotivoCancelacion,
-            });
-            if (respuesta.data.m_nSePuedeCancelar === 0) {
-                showSuccess("Embarque no se puede cancelar");
-            } else {
-
-            }
-        });
-    }
-
-    function handleShowCancelarConfirmacion() {
-        confirmAlert({
-            title: 'Confirmar Eliminar',
-            message: 'Está seguro de cancelar Embarque?',
-            buttons: [
-                {
-                    label: 'Si',
-                    onClick: () => handleCancelar
-                },
-                {
-                    label: 'No',
-                }
-            ]
-        })
-    }
-
-    function handleShowModificar(id) {
-        console.log(id);
-        obtenerEmbarquesId(id).then((respuesta) => {
-            setState({
-                ...state,
-                agregar: "Modificar",
-                idEmbarque: id,
-                idSucursalAgregar: respuesta.data.IdSucursal,
-                folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
-                folioEmbarque: respuesta.data.m_nFolioEmbarque,
-                folioGuía: respuesta.data.m_nFolioGuia,
-                folioInforme: respuesta.data.m_nFolioInforme,
-                fechaHoraCreacion:
-                    respuesta.data.m_dFecha +
-                    "T" +
-                    respuesta.data.m_tHora.split(":")[0] +
-                    ":" +
-                    respuesta.data.m_tHora.split(":")[1],
-                fechaHoraRegistro:
-                    respuesta.data.m_dFechaRegistro +
-                    "T" +
-                    respuesta.data.m_tHoraRegistro.slice(0, 5),
-                moneda: respuesta.data.m_nIdMoneda,
-                tipoCambio: respuesta.data.m_cTIpoCambio,
-                tipoCobro: respuesta.data.m_nIdTIpoCobro,
-                estatusEmbarque: respuesta.data.m_nIdEstatusEmbarque,
-
-
-                nombreRemitente: dataRemitenteDestinatario.find(
-                    (o) => o.m_sRFC === respuesta.data.m_sRFCRemitente
-                ),
-                domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                codigoPostalRemitente: dataCodigoPostal.find(
-                    (o) => o.m_nIdCP === respuesta.data.m_nIdCodigoPostalRemitente
-                ),
-                ciudadRemitente: dataCiudad.find(
-                    (o) => o.m_nIdCiudad === respuesta.data.m_nCiudadRemitente
-                ),
-                correoRemitente: respuesta.data.m_sCorreoRemitente,
-                telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
-                contactoRemitente: respuesta.data.m_sContactoRemitente,
-                ciudadOrigen: dataCiudad.find(
-                    (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadOrigen
-                ),
-
-                RFCRemitente: respuesta.data.m_sRFCRemitente,
-                RFCDestinatario: respuesta.data.m_sRFCDestinatario,
-                nombreDestinatario: dataRemitenteDestinatario.find(
-                    (o) => o.m_sRFC === respuesta.data.m_sRFCDestinatario
-                ),
-                domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                codigoPostalDestinatario: dataCodigoPostal.find(
-                    (o) => o.m_nIdCP === respuesta.data.m_nIdCodigoPostalDestinatario
-                ),
-                ciudadDestinatario: dataCiudad.find(
-                    (o) => o.m_nIdCiudad === respuesta.data.m_nIdCIudadDestinatario
-                ),
-                correoDestinatario: respuesta.data.m_sCorreoDestinatario,
-                telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
-                contactoDestinatario: respuesta.data.m_sContactoDestinatario,
-
-                ciudadDestino: dataCiudad.find(
-                    (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadDestino
-                ),
-                zonaEntrega: respuesta.data.IdZonaEntrega,
-                domicilioEntrega: respuesta.data.DomicilioEntrega,
-                entregaEn: respuesta.data.EntregarEn,
-                datosAdicionalesEntrega: respuesta.data.DatosAdicionalesis,
-                fechaEntrega:
-                    respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
-                codigoPostalEntrega: dataCodigoPostal.find(
-                    (o) => o.m_nIdCP === respuesta.data.CodigoPostalEntrega
-                ),
-                ciudadEntrega: dataCiudad.find(
-                    (o) => o.m_nIdCiudad === respuesta.data.IdCiudadEntrega
-                ),
-                fechaHoraSalida:
-                    respuesta.data.m_dFechaSalida + "T" + respuesta.data.m_tHoraSalida,
-                fechaHoraLlegada:
-                    respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,
-                idOperador: dataOperador.find(
-                    (o) => o.m_nIdOperador === respuesta.data.m_nIdOperador
-                ),
-                // idTipoUnidad: dataTipoUnidad.find(
-                //     (o) =>
-                //         o.m_nIdTipoUnidad ==
-                //             dataUnidad.find((o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad) ?
-                //             dataUnidad.find((o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad).m_nIdTipoUnidad : 0
-                // ),
-                // idUnidad: dataUnidad.find(
-                //     (o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad
-                // ),
-                paquetes: respuesta.data.m_arrPaquetes,
-            });
-            $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
-
-        });
-    }
-
-    function handleShowConsultar(id) {
-        obtenerEmbarquesId(id).then((respuesta) => {
-            setState({
-                ...state,
-                agregar: "Consultar",
-                idEmbarque: id,
-                idSucursalAgregar: respuesta.data.IdSucursal,
-                folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
-                folioEmbarque: respuesta.data.m_nFolioEmbarque,
-                folioGuía: respuesta.data.m_nFolioGuia,
-                folioInforme: respuesta.data.m_nFolioInforme,
-                fechaHoraCreacion:
-                    respuesta.data.m_dFecha +
-                    "T" +
-                    respuesta.data.m_tHora.split(":")[0] +
-                    ":" +
-                    respuesta.data.m_tHora.split(":")[1],
-                moneda: respuesta.data.m_nIdMoneda,
-                tipoCambio: respuesta.data.m_cTIpoCambio,
-                tipoCobro: respuesta.data.m_nIdTIpoCobro,
-                estatusEmbarque: respuesta.data.m_nIdEstatusEmbarque,
-                nombreRemitente: dataRemitenteDestinatario.find(
-                    (o) => o.m_sRFC === respuesta.data.m_sRFCRemitente
-                ),
-                domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                codigoPostalRemitente: dataCodigoPostal.find(
-                    (o) => o.m_nIdCP === respuesta.data.m_nIdCodigoPostalRemitente
-                ),
-                ciudadRemitente: dataCiudad.find(
-                    (o) => o.m_nIdCiudad === respuesta.data.m_nCiudadRemitente
-                ),
-                correoRemitente: respuesta.data.m_sCorreoRemitente,
-                telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
-                contactoRemitente: respuesta.data.m_sContactoRemitente,
-                ciudadOrigen: dataCiudad.find(
-                    (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadOrigen
-                ),
-
-                nombreDestinatario: dataRemitenteDestinatario.find(
-                    (o) => o.m_sRFC === respuesta.data.m_sRFCDestinatario
-                ),
-                domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                codigoPostalDestinatario: dataCodigoPostal.find(
-                    (o) => o.m_nIdCP === respuesta.data.m_nIdCodigoPostalDestinatario
-                ),
-                ciudadDestinatario: dataCiudad.find(
-                    (o) => o.m_nIdCiudad === respuesta.data.m_nIdCIudadDestinatario
-                ),
-                correoDestinatario: respuesta.data.m_sCorreoDestinatario,
-                telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
-                contactoDestinatario: respuesta.data.m_sContactoDestinatario,
-
-                ciudadDestino: dataCiudad.find(
-                    (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadDestino
-                ),
-                fechaEntrega:
-                    respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
-                codigoPostalEntrega: dataCodigoPostal.find(
-                    (o) => o.m_nIdCP === respuesta.data.CodigoPostalEntrega
-                ),
-                ciudadEntrega: dataCiudad.find(
-                    (o) => o.m_nIdCiudad === respuesta.data.IdCiudadEntrega
-                ),
-                fechaHoraSalida:
-                    respuesta.data.m_dFechaSalida + "T" + respuesta.data.m_tHoraSalida,
-                fechaHoraLlegada:
-                    respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,
-                idOperador: dataOperador.find(
-                    (o) => o.m_nIdOperador === respuesta.data.m_nIdOperador
-                ),
-              /*   idTipoUnidad: dataTipoUnidad.find(
-                    (o) =>
-                        o.m_sTipoUnidad ==
-                        dataUnidad.find((o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad)
-                            .m_sTipoUnidad
-                ),
-                idUnidad: dataUnidad.find(
-                    (o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad
-                ), */
-                zonaEntrega: respuesta.data.IdZonaEntrega,
-                domicilioEntrega: respuesta.data.DomicilioEntrega,
-                entregaEn: respuesta.data.EntregarEn,
-                datosAdicionalesEntrega: respuesta.data.DatosAdicionalesis,
-                paquetes: respuesta.data.m_arrPaquetes,
-            });
-            $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
-
-        });
-    }
-
-    function handleShowAgregar() {
-        var today = new Date();
-        setState({
-            ...state,
-            agregar: "Agregar",
-            idEmbarque: 0,
-            folioRecoleccion: "",
-            folioEmbarque:
-                dataFolioEmbarque.length !== 0
-                    ? dataFolioEmbarque[0].m_sFolioEmbarque
-                    : null,
-            fechaHoraRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() +
-                1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(
-                    2,
-                    0
-                )}T${`${new Date().getHours()}`.padStart(
-                    2,
-                    0
-                )}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
-
-            folioGuía: "",
-            folioInforme: "",
-            fechaHoraCreacion:
-                today.getDate() +
-                "/" +
-                (today.getMonth() + 1) +
-                "/" +
-                today.getFullYear() +
-                " " +
-                today.getHours() +
-                ":" +
-                today.getMinutes(),
-            moneda: dataTipoMoneda ? dataTipoMoneda.length > 0 ? dataTipoMoneda[0].m_nIdMoneda : 0 : 0,
-            tipoCambio: dataTipoCambio.length !== 0 ? dataTipoCambio[0].m_nIdTipoCambio : 2,
-            tipoCobro: dataTipoCobro ? dataTipoCobro.length > 0 ? dataTipoCobro[0].m_nIdTipoCobro : 0 : 0,
-            estatusEmbarque: dataEstatusEmbarque ? dataEstatusEmbarque.length > 0 ? dataEstatusEmbarque[0].m_nIdEstatusEmbarque : 0 : 0,
-            nombreRemitente: {},
-            RFCRemitente: "",
-            domicilioRemitente: "",
-            codigoPostalRemitente: dataCodigoPostal ? dataCodigoPostal.length > 0 ? dataCodigoPostal[0] : {} : {},
-            ciudadRemitente: {},
-            correoRemitente: "",
-            telefonoRemitente: "",
-            contactoRemitente: "",
-            ciudadOrigen: {},
-            nombreDestinatario: {},
-            RFCDestinatario: "",
-            domicilioDestinatario: "",
-            codigoPostalDestinatario: dataCodigoPostal ? dataCodigoPostal.length > 0 ? dataCodigoPostal[0] : {} : {},
-            ciudadDestino: {},
-            correoDestinatario: "",
-            telefonoDestinatario: "",
-            contactoDestinatario: "",
-            fechaEntrega: "",
-            horaEntrega: "",
-            codigoPostalEntrega: {},
-            ciudadEntrega: {},
-            idOperador: {},
-            idTipoUnidad: {},
-            idUnidad: {},
-            zonaEntrega: "",
-            domicilioEntrega: "",
-            entregaEn: "",
-            datosAdicionalesEntrega: "",
-            fechaHoraSalida: "",
-            fechaHoraLlegada: "",
-            paquetes: [
-                {
-                    m_xPeso: "",
-                    m_xLargo: "",
-                    m_xAncho: "",
-                    m_xAlto: "",
-                    m_xVolumen: "",
-                    m_nIdTIpoEmpaque: "",
-                    m_cValorDeclarado: "",
-                    m_sDescripcion: "",
-                    ctd: "",
-                    m_nTipo: dataEmbalaje ? dataEmbalaje.length > 0 ? dataEmbalaje[0].m_nIdEmbalaje : 0 : 0,
-                    m_sObservaciones: "",
-                },
-            ],
-            cantidadDePaquetes: 0,
-            cantidadDeSobres: 0,
-        });
-        $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
-
-    }
-
-    function getUltimoFolioEmbarque() {
-        obtenerUltimoFolioEmbarques().then((respuesta) => {
-            SetDataFolioEmbarque(respuesta.data);
-        });
-    }
-
-    const handleChange = (event) => {
-        setState({
-            ...state,
-            [event.target.name]: event.target.value,
-        });
-    };
-
-    const handleEntregaCheckboxChange = (event) => {
-        setState({
-            ...state,
-            diferenteEntrega: !state.diferenteEntrega,
-            entregaEnSucursal: false
-        });
-    };
-
-    const handleEntregaEnSucursalCheckbox = (event) => {
-        setState({
-            ...state,
-            entregaEnSucursal: !state.entregaEnSucursal,
-            diferenteEntrega: false
-        });
-    };
-
-    const handleSelectCiudadChange = (event) => {
-        console.log("diferenteEntrega : " + state.diferenteEntrega);
-        setState({
-            ...state,
-            ciudadRemitente: event.target.value,
-        });
-    };
-
-    const handleFechaInicialFiltro = async (event) => {
-        setState({
-            ...state,
-            fechaInicial: event.target.value,
-        });
-        obtenerEmbarquesFiltro(event.target.value, state.fechaInicial, state.sucursalListado, state.estatusListado).then((respuesta) => {
-            setData(respuesta.data);
-        });
-    };
-
-    const handleFechaFinalFiltro = async (event) => {
-        setState({
-            ...state,
-            fechaFinal: event.target.value,
-        });
-        obtenerEmbarquesFiltro(state.fechaInicial, event.target.value, state.sucursalListado, state.estatusListado).then((respuesta) => {
-            setData(respuesta.data);
-        });
-    };
-
-    const handleSucursalFiltro = async (event) => {
-        setState({
-            ...state,
-            sucursalListado: event.target.value,
-        });
-        obtenerEmbarquesFiltro(state.fechaInicial, state.fechaFinal, event.target.value, state.estatusListado).then((respuesta) => {
-            setData(respuesta.data);
-        });
-    };
-
-    const handleEstatusFiltro = async (event) => {
-        setState({
-            ...state,
-            estatusListado: event.target.value,
-        });
-        obtenerEmbarquesFiltro(state.fechaInicial, state.fechaFinal, state.sucursalListado, event.target.value).then((respuesta) => {
-            setData(respuesta.data);
-        });
-    };
-
-
-    function handleSelectDatos(id, cp) {
-        setState({
-            ...state,
-            [state.identificadorModal]: id,
-        });
-        console.log(id);
-        console.log(state.identificadorModal);
-    }
-
-
+    const columnsRemitenteDestinatarios = React.useMemo(() => [
+        {
+            Name: "Número",
+            accessor: "m_nNumero",
+        },
+        {
+            Name: "RFC",
+            accessor: "m_sRFC",
+        },
+        {
+            Name: "Remitente-Destinatario",
+            accessor: "m_sNombre",
+        },
+        {
+            Name: "Núm.Cliente",
+            accessor: "m_nNumeroCliente",
+        },
+        {
+            Name: "Cliente",
+            accessor: "m_sNombreFiscal",
+        },
+    ]);
+    const columnsCP = React.useMemo(() => [
+        {
+            Name: "Codigo",
+            accessor: "m_sCP",
+        },
+        {
+            Name: "Estado",
+            accessor: "m_sEstado",
+        },
+        {
+            Name: "Ciudad",
+            accessor: "m_sCiudad",
+        },
+    ]);
+    const columnsCiudades = React.useMemo(() => [
+        {
+            Name: "Codigo",
+            accessor: "m_nCodigo",
+        },
+        {
+            Name: "Ciudad",
+            accessor: "m_sCiudad",
+        },
+        {
+            Name: "Abreviacion",
+            accessor: "m_sAbreviacion",
+        },
+        {
+            Name: "Estado",
+            accessor: "m_nIdEstado",
+        },
+    ]);
+    const columnsOperadores = React.useMemo(() => [
+        {
+            Name: "Numero Operador",
+            accessor: "m_nNumeroOperador",
+        },
+        {
+            Name: "Nombre",
+            accessor: "m_sNombreCompleto",
+        },
+        {
+            Name: "Activo",
+            accessor: "m_bActivo",
+            width: 100,
+            renderCell: (row) => {
+                return (
+                    <div
+                        style={{
+                            width: "100%",
+                            textAlign: "center",
+                            color: row.row.m_bActivo === "true" ? "green" : "red",
+                        }}
+                    >
+                        {row.row.m_bActivo ? (
+                            <SvgIcon component={Activo} />
+                        ) : (
+                            <SvgIcon component={NoActivo} />
+                        )}
+                    </div>
+                );
+            },
+        },
+    ]);
+    const columnsTipoUnidades = React.useMemo(() => [
+        {
+            Name: "Tipo de unidad",
+            accessor: "m_nIdTipoUnidad",
+        },
+        {
+            Name: "Identificador",
+            accessor: "m_nIdentificador",
+        },
+        {
+            Name: "Nomenclatura",
+            accessor: "m_sNomenclaturaSCT",
+        },
+        {
+            Name: "Estatus",
+            accessor: "m_bActivo",
+        },
+    ]);
+    const columnsUnidades = React.useMemo(() => [
+        {
+            Name: "Descripcion",
+            accessor: "m_sDescripcion",
+        },
+        {
+            Name: "Codigo",
+            accessor: "m_sCodigo",
+        },
+        {
+            Name: "Tipo de unidad",
+            accessor: "m_nIdTipoUnidad",
+        },
+        {
+            Name: "Estatus",
+            accessor: "m_bActivo",
+        },
+    ]);
     const columns = React.useMemo(() => [
         {
             headerName: "Acciones",
@@ -1171,280 +527,1111 @@ function Embarque(props) {
         },
     ]);
 
-    const columnsRemitenteDestinatarios = React.useMemo(() => [
-        {
-            Name: "Número",
-            accessor: "m_nNumero",
-        },
-        {
-            Name: "RFC",
-            accessor: "m_sRFC",
-        },
-        {
-            Name: "Remitente-Destinatario",
-            accessor: "m_sNombre",
-        },
-        {
-            Name: "Núm.Cliente",
-            accessor: "m_nNumeroCliente",
-        },
-        {
-            Name: "Cliente",
-            accessor: "m_sNombreFiscal",
-        },
-    ]);
+    const history = useHistory();
 
-    const columnsCP = React.useMemo(() => [
-        {
-            Name: "Codigo",
-            accessor: "m_sCP",
-        },
-        {
-            Name: "Estado",
-            accessor: "m_sEstado",
-        },
-        {
-            Name: "Ciudad",
-            accessor: "m_sCiudad",
-        },
-    ]);
+    function handleSelectRemitente(newValue) {
+        console.log(newValue)
+        let user = newValue
+        obtenerCodigoPostalId(newValue.m_nIdCP).then(respuesta => {
+            setState(state => {
+                return{
+                    ...state,
+                    nombreRemitente: user,
+                    RFCRemitente: user.m_sRFC,
+                    domicilioRemitente: user.m_sDomicilio,
+                    codigoPostalRemitente: respuesta.data,
+                    ciudadRemitente: respuesta.data.m_nIdCiudad,
+                    correoRemitente: user.m_sCorreoElectronico,
+                    telefonoRemitente: user.m_sTelefono,
+                    contactoRemitente: user.m_sContacto,
+                }
+            });
+        })
 
-    const columnsCiudades = React.useMemo(() => [
-        {
-            Name: "Codigo",
-            accessor: "m_nCodigo",
-        },
-        {
-            Name: "Ciudad",
-            accessor: "m_sCiudad",
-        },
-        {
-            Name: "Abreviacion",
-            accessor: "m_sAbreviacion",
-        },
-        {
-            Name: "Estado",
-            accessor: "m_nIdEstado",
-        },
-    ]);
+    }
 
-    const columnsOperadores = React.useMemo(() => [
-        {
-            Name: "Numero Operador",
-            accessor: "m_nNumeroOperador",
-        },
-        {
-            Name: "Nombre",
-            accessor: "m_sNombreCompleto",
-        },
-        {
-            Name: "Activo",
-            accessor: "m_bActivo",
-            width: 100,
-            renderCell: (row) => {
-                return (
-                    <div
-                        style={{
-                            width: "100%",
-                            textAlign: "center",
-                            color: row.row.m_bActivo === "true" ? "green" : "red",
-                        }}
-                    >
-                        {row.row.m_bActivo ? (
-                            <SvgIcon component={Activo} />
-                        ) : (
-                            <SvgIcon component={NoActivo} />
-                        )}
-                    </div>
-                );
-            },
-        },
-    ]);
+    function handleSelectDestinatario(newValue) {
+        obtenerCodigoPostalId(newValue.m_nIdCP).then(respuesta => {
+            setState(state => {
+                return{
+                    ...state,
+                    nombreDestinatario: newValue,
+                    RFCDestinatario: newValue.m_sRFC,
+                    domicilioDestinatario: newValue.m_sDomicilio,
+                    codigoPostalDestinatario: respuesta.data,
+                    ciudadDestinatario: respuesta.data.m_nIdCiudad,
+                    correoDestinatario: newValue.m_sCorreoElectronico,
+                    telefonoDestinatario: newValue.m_sTelefono,
+                    contactoDestinatario: newValue.m_sContacto,
+                }
+            });
+        })
 
-    const columnsTipoUnidades = React.useMemo(() => [
-        {
-            Name: "Tipo de unidad",
-            accessor: "m_nIdTipoUnidad",
-        },
-        {
-            Name: "Identificador",
-            accessor: "m_nIdentificador",
-        },
-        {
-            Name: "Nomenclatura",
-            accessor: "m_sNomenclaturaSCT",
-        },
-        {
-            Name: "Estatus",
-            accessor: "m_bActivo",
-        },
-    ]);
+    }
 
-    const columnsUnidades = React.useMemo(() => [
-        {
-            Name: "Descripcion",
-            accessor: "m_sDescripcion",
-        },
-        {
-            Name: "Codigo",
-            accessor: "m_sCodigo",
-        },
-        {
-            Name: "Tipo de unidad",
-            accessor: "m_nIdTipoUnidad",
-        },
-        {
-            Name: "Estatus",
-            accessor: "m_bActivo",
-        },
-    ]);
+    const handleAceptar = (e) => {
+        e.preventDefault();
+        const { paquetes, sobres } = state;
 
-    useEffect(
-        async (value) => {
-            if (props.location.idRecoleccion != undefined) {
-                obtenerRecoleccionId(props.location.idRecoleccion)
+        paquetes.forEach(p => {
+            p["ctd"] = p.m_nCantidad
+        })
+        sobres.forEach(s => {
+            paquetes.push(s)
+        })
+        setState({
+            ...state,
+            paquetes: paquetes
+        })
+
+        const params = {
+            m_nIdEmbarque: state.idEmbarque,
+            m_nIdRecoleccion: props.location.idRecoleccion,
+            IdSucursal: state.idSucursalAgregar,
+            m_nFolioEmbarque: state.folioEmbarque,
+            m_nFolioGuia: state.folioGuía,
+            m_nFolioInforme: state.folioInforme,
+            m_dFechaRegistro: state.fechaHoraRegistro.split("T")[0],
+            m_tHoraRegistro: state.fechaHoraRegistro.split("T")[1],
+            m_nIdEstatusEmbarque: state.estatusEmbarque,
+            m_nIdMoneda: state.moneda,
+            m_cTIpoCambio: state.tipoCambio,
+            m_nIdTIpoCobro: state.tipoCobro,
+            m_dFecha: state.fechaHoraCreacion.split("T")[0],
+            m_tHora: state.fechaHoraCreacion.split("T")[1],
+
+            m_sNOmbreRemitente: state.nombreRemitente.m_sNombreFiscal,
+            m_sRFCRemitente: state.RFCRemitente,
+            m_sDomicilioRemitente: state.domicilioRemitente,
+            m_nIdCodigoPostalRemitente: state.codigoPostalRemitente.m_nIdCP,
+            m_nCiudadRemitente: state.ciudadRemitente,
+            m_sCorreoRemitente: state.correoRemitente,
+            m_sTelefonoRemitente: state.telefonoRemitente,
+            m_sContactoRemitente: state.contactoRemitente,
+            m_nIdCiudadOrigen: state.ciudadOrigen.m_nIdCiudad,
+
+            m_sNombreDestinatario: state.nombreDestinatario.m_sNombreFiscal,
+            m_sRFCDestinatario: state.RFCDestinatario,
+            m_sDomicilioDestinatario: state.domicilioDestinatario,
+            m_nIdCodigoPostalDestinatario: state.codigoPostalDestinatario.m_nIdCP,
+            m_nIdCIudadDestinatario: state.ciudadDestinatario,
+            m_sCorreoDestinatario: state.correoDestinatario,
+            m_sTelefonoDestinatario: state.telefonoDestinatario,
+            m_sContactoDestinatario: state.contactoDestinatario,
+            m_nIdCiudadDestino: state.ciudadDestino.m_nIdCiudad,
+
+            m_nNoPaquetes: state.paquetes.length,
+            m_nNoSobres: state.sobres.length,
+            m_arrClsDetalle: state.paquetes,
+            m_dFechaSalida: state.fechaHoraSalida.split("T")[0],
+            m_tHoraSalida: state.fechaHoraSalida.split("T")[1],
+            FechaLlegada: state.fechaHoraLlegada.split("T")[0],
+            HoraLlegada: state.fechaHoraLlegada.split("T")[1],
+            CreadoPor: state.CreadoPor,
+            ModificadoPor: state.ModificadoPor,
+            m_bEntregaEnSucursal: false,
+            m_nIdSucursalEntrega: 0,
+
+            IdCiudadEntrega: state.ciudadDestinatario,
+            CodigoPostalEntrega: state.codigoPostalDestinatario.m_nIdCP,
+            IdZonaEntrega: 0,
+            DomicilioEntrega: state.domicilioDestinatario,
+            EntregarEn: '',
+            DatosAdicionales: '',
+            m_tFechaDetalleEntrega: '',
+            m_tHoraDetalleEntrega: '',
+            m_dFechaEntrega: "",
+            m_tHoraEntrega: "",
+
+        }
+
+        if (state.entregaEnSucursal){
+            params.m_nIdSucursalEntrega = state.idSucursalEntrega
+        }
+        if (state.diferenteEntrega){
+            params.IdCiudadEntrega = state.ciudadEntrega
+            params.CodigoPostalEntrega = state.codigoPostalEntrega.m_nIdCP
+            params.IdZonaEntrega = state.zonaEntrega
+            params.DomicilioEntrega = state.domicilioEntrega
+            params.EntregarEn = state.entregaEn
+            params.DatosAdicionales = state.datosAdicionalesEntrega
+            params.m_tFechaDetalleEntrega = state.fechaEntrega.split("T")[0]
+            params.m_tHoraDetalleEntrega = state.fechaEntrega.split("T")[1]
+            params.m_dFechaEntrega = ""
+            params.m_tHoraEntrega = ""
+        }
+
+        const infoGeneral = {
+            m_nIdEmbarque: state.idEmbarque,
+            m_nIdRecoleccion: props.location.idRecoleccion,
+            IdSucursal: state.idSucursalAgregar,
+            m_nFolioEmbarque: state.folioEmbarque,
+            m_nFolioGuia: state.folioGuía,
+            m_nFolioInforme: state.folioInforme,
+            m_dFechaRegistro: state.fechaHoraRegistro.split("T")[0],
+            m_tHoraRegistro: state.fechaHoraRegistro.split("T")[1],
+            m_nIdEstatusEmbarque: state.estatusEmbarque,
+            m_nIdMoneda: state.moneda,
+            m_cTIpoCambio: state.tipoCambio,
+            m_nIdTIpoCobro: state.tipoCobro,
+            m_dFecha: state.fechaHoraCreacion.split("T")[0],
+            m_tHora: state.fechaHoraCreacion.split("T")[1],
+        }
+        console.log('informacion general:')
+        console.log(infoGeneral)
+        const remitenteData = {
+            m_sNOmbreRemitente: state.nombreRemitente.m_sNombreFiscal,
+            m_sRFCRemitente: state.RFCRemitente,
+            m_sDomicilioRemitente: state.domicilioRemitente,
+            m_nIdCodigoPostalRemitente: state.codigoPostalRemitente.m_nIdCP,
+            m_nCiudadRemitente: state.ciudadRemitente,
+            m_sCorreoRemitente: state.correoRemitente,
+            m_sTelefonoRemitente: state.telefonoRemitente,
+            m_sContactoRemitente: state.contactoRemitente,
+            m_nIdCiudadOrigen: state.ciudadOrigen.m_nIdCiudad,
+        }
+        console.log('remitente:')
+        console.log(remitenteData)
+        const destinatarioData = {
+            m_sNombreDestinatario: state.nombreDestinatario.m_sNombreFiscal,
+            m_sRFCDestinatario: state.RFCDestinatario,
+            m_sDomicilioDestinatario: state.domicilioDestinatario,
+            m_nIdCodigoPostalDestinatario: state.codigoPostalDestinatario.m_nIdCP,
+            m_nIdCIudadDestinatario: state.ciudadDestinatario,
+            m_sCorreoDestinatario: state.correoDestinatario,
+            m_sTelefonoDestinatario: state.telefonoDestinatario,
+            m_sContactoDestinatario: state.contactoDestinatario,
+            m_nIdCiudadDestino: state.ciudadDestino.m_nIdCiudad,
+        }
+        console.log('destinatario:')
+        console.log(destinatarioData)
+        const entregaData = {
+            IdCiudadEntrega: state.ciudadEntrega,
+            CodigoPostalEntrega: state.codigoPostalEntrega.m_nIdCP,
+            IdZonaEntrega: state.zonaEntrega,
+            DomicilioEntrega: state.domicilioEntrega,
+            EntregarEn: state.entregaEn,
+            DatosAdicionales: state.datosAdicionalesEntrega,
+            m_tFechaDetalleEntrega: state.fechaEntrega.split("T")[0],
+            m_tHoraDetalleEntrega: state.fechaEntrega.split("T")[1],
+            m_dFechaEntrega: "",
+            m_tHoraEntrega: "",
+        }
+        console.log('entrega: ')
+        console.log(entregaData)
+
+        const otros = {
+            m_nNoPaquetes: state.paquetes.length,
+            m_nNoSobres: state.sobres.length,
+            m_arrClsDetalle: state.paquetes,
+            //m_nIdOperador: state.idOperador.m_nIdOperador,
+            // m_nIdUnidad: state.idUnidad.m_nIdUnidad,
+            m_dFechaSalida: state.fechaHoraSalida.split("T")[0],
+            m_tHoraSalida: state.fechaHoraSalida.split("T")[1],
+            FechaLlegada: state.fechaHoraLlegada.split("T")[0],
+            HoraLlegada: state.fechaHoraLlegada.split("T")[1],
+            CreadoPor: state.CreadoPor,
+            ModificadoPor: state.ModificadoPor,
+            m_bEntregaEnSucursal: state.entregaEnSucursal,
+            m_nIdSucursalEntrega: state.idSucursalEntrega
+        }
+        console.log('otros datos:')
+        console.log(otros)
+
+        console.log(params)
+        console.log(JSON.stringify(params))
+
+        if (state.idEmbarque != 0) {
+            modificarEmbarques(state.idEmbarque, params)
+                .then((respuesta) => {
+                    showSuccess(respuesta.data);
+                    getAllEmbarque();
+                    $('.nav-tabs li ').removeClass('active');
+                    $('.nav-tabs li').eq(0).addClass('active');
+                    $('.tab-content div ').removeClass('in show');
+                    $('#Listado').addClass('in show');
+                })
+                .catch((err) => {
+                    console.log(err);
+                    showSuccess("El Usuario no tiene derecho para modificar");
+                });
+        } else {
+            agregarEmbarques(params)
+                .then((respuesta) => {
+                    showSuccess(respuesta.data);
+                    console.log(respuesta.data);
+                    getAllEmbarque();
+                    $('.nav-tabs li ').removeClass('active');
+                    $('.nav-tabs li').eq(0).addClass('active');
+                    $('.tab-content div ').removeClass('in show');
+                    $('#Listado').addClass('in show');
+                })
+                .catch((err) => {
+                    console.log(err);
+                    showSuccess(err);
+                });
+        }
+    };
+
+    function handleSelectCP(id, cp) {
+        if (state.identificadorModal == "nombreRemitente"){
+            setState({
+                ...state,
+                [state.identificadorModal]: id,
+                RFCRemitente: id.m_sRFC,
+                domicilioRemitente: id.m_sDomicilio,
+
+                /*codigoPostalRemitente: dataCodigoPostal.find(
+                    (o) => o.m_nIdCP == id.m_nIdCP
+                ),*/
+
+                ciudadRemitente: dataCiudad.find(
+                    (o) => o.m_nIdCiudad == dataCodigosPostalesRemitente.find((o) => o.m_nIdCP == id.m_nIdCP).m_nIdCiudad
+                ),
+
+                correoRemitente: id.m_sCorreoElectronico,
+                telefonoRemitente: id.m_sTelefono,
+                contactoRemitente: id.m_sContacto,
+            });
+        }else{
+            setState({
+                ...state,
+                [state.identificadorModal]: id,
+                RFCDestinatario: id.m_sRFC,
+                domicilioDestinatario: id.m_sDomicilio,
+
+                /*codigoPostalDestinatario: dataCodigosPostalesDestinatario.find(
+                    (o) => o.m_nIdCP == id.m_nIdCP
+                ),*/
+
+                ciudadDestinatario: dataCiudad.find(
+                    (o) => o.m_nIdCiudad ==
+                        dataCodigosPostalesDestinatario.find((o) => o.m_nIdCP == id.m_nIdCP).m_nIdCiudad
+                ),
+
+                correoDestinatario: id.m_sCorreoElectronico,
+                telefonoDestinatario: id.m_sTelefono,
+                contactoDestinatario: id.m_sContacto,
+            });
+        }
+
+        console.log(id);
+        console.log(state.identificadorModal);
+    }
+
+    function getTipoCambio() {
+        obtenerTipoCambio().then(respuesta => {
+            setDataTipoCambio(respuesta.data)
+            setState({
+                ...state,
+                tipoCambio: respuesta.data[0].m_cTipoCambio
+            })
+        });
+    }
+
+    function handleEliminar(id) {
+        var derecho;
+        validarPermisos(state)
+            .then((respuesta) => {
+                //showSuccess(respuesta.data)
+
+                derecho = respuesta.data;
+                if (derecho === false) {
+                    showSuccess("El usuario no tiene derechos para realizar el proceso");
+                    return;
+                }
+
+                eliminarEmbarques(id, state.CreadoPor)
                     .then((respuesta) => {
-
-                        var paquetesModificado = respuesta.data.m_parrPaquetes;
-                        console.log(paquetesModificado);
-                        for (let i = 0; i < respuesta.data.m_parrPaquetes.length; i++) {
-                            paquetesModificado[i]["m_nTipo"] = 2;
-                            paquetesModificado[i]["m_xPeso"] = paquetesModificado[i].m_rPeso;
-                            paquetesModificado[i]["m_xLargo"] =
-                                paquetesModificado[i].m_rLargo;
-                            paquetesModificado[i]["m_xAncho"] =
-                                paquetesModificado[i].m_rAncho;
-                            paquetesModificado[i]["m_xAlto"] = paquetesModificado[i].m_rAlto;
-                            paquetesModificado[i]["m_xVolumen"] =
-                                paquetesModificado[i].m_rVolumen;
-                            paquetesModificado[i]["m_nIdTIpoEmpaque"] =
-                                paquetesModificado[i].m_nIdTipoEmbalaje;
-                            paquetesModificado[i]["m_cValorDeclarado"] =
-                                paquetesModificado[i].m_cyValorDeclarado;
-                        }
-                        console.log(paquetesModificado);
-                        setState({
-                            ...state,
-                            idEmbarque: 0,
-                            idSucursalAgregar: respuesta.data.m_nIdSucursal,
-                            folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
-                            folioEmbarque:
-                                dataFolioEmbarque.length !== 0
-                                    ? dataFolioEmbarque[0].m_sFolioEmbarque
-                                    : null,
-                            folioGuía: respuesta.data.m_nFolioGuia,
-                            folioInforme: respuesta.data.m_nFolioInforme,
-                            fechaHoraCreacion:
-                                today.getDate() +
-                                "/" +
-                                (today.getMonth() + 1) +
-                                "/" +
-                                today.getFullYear() +
-                                " " +
-                                today.getHours() +
-                                ":" +
-                                today.getMinutes(),
-                            moneda: respuesta.data.m_nMoneda,
-                            tipoCambio: respuesta.data.m_rTipoCambio,
-                            tipoCobro: respuesta.data.m_nIdTipoDeCobro,
-                            nombreRemitente: dataRemitenteDestinatario.find(
-                                (o) => o.m_sRFC === respuesta.data.m_sRFCRemitente
-                            ),
-                            RFCRemitente: respuesta.data.m_sRFCRemitente,
-                            domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                            codigoPostalRemitente: dataCodigoPostal.find(
-                                (o) => o.m_nIdCP === respuesta.data.m_sIdCodigoPostalRemitente
-                            ),
-                            ciudadRemitente: dataCiudad.find(
-                                (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadRemitente
-                            ),
-                            correoRemitente: respuesta.data.m_sCorreoRemitente,
-                            telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
-                            contactoRemitente: respuesta.data.m_sContactoRemitente,
-                            ciudadOrigen: dataCiudad.find(
-                                (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadOrigen
-                            ),
-
-                            nombreDestinatario: dataRemitenteDestinatario.find(
-                                (o) => o.m_sRFC === respuesta.data.m_sRFCDestinatario
-                            ),
-                            RFCDestinatario: respuesta.data.m_sRFCDestinatario,
-                            domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                            codigoPostalDestinatario: dataCodigoPostal.find(
-                                (o) => o.m_nIdCP === respuesta.data.m_sIdCodigoPostalDestinatario
-                            ),
-                            ciudadDestinatario: dataCiudad.find(
-                                (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadDestinatario
-                            ),
-                            correoDestinatario: respuesta.data.m_sCorreoDestinatario,
-                            telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
-                            contactoDestinatario: respuesta.data.m_sContactoDestinatario,
-
-                            ciudadDestino: dataCiudad.find(
-                                (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadDestino
-                            ),
-                            zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
-                            domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
-                            entregaEn: respuesta.data.m_sEntregarEnDetalleEntrega,
-                            datosAdicionalesEntrega:
-                                respuesta.data.m_sDatosAdicionalesDetalleEntrega,
-                            fechaEntrega:
-                                respuesta.data.m_dFechaEntrega +
-                                "T" +
-                                respuesta.data.m_tHoraEntrega,
-                            codigoPostalEntrega: dataCodigoPostal.find(
-                                (o) => o.m_nIdCP === respuesta.data.m_nIdCPDetalleEntrega
-                            ),
-                            ciudadEntrega: dataCiudad.find(
-                                (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadDetalleEntrega
-                            ),
-                            fechaHoraSalida:
-                                respuesta.data.m_dFechaSalida +
-                                "T" +
-                                respuesta.data.m_tHoraSalida,
-                            fechaHoraLlegada:
-                                respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,
-                            idOperador: dataOperador.find(
-                                (o) => o.m_nIdOperador === respuesta.data.m_nIdOperador
-                            ),
-
-                            idUnidad: dataUnidad.find(
-                                (o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad
-                            ),
-                            paquetes: paquetesModificado,
-                        });
-                        console.log(
-                            dataRemitenteDestinatario.find(
-                                (o) => o.m_sRFC === respuesta.data.m_sRFCRemitente
-                            )
-                        );
+                        showSuccess(respuesta.data);
+                        getAllEmbarque();
                     })
-                    .then(() => {
-                        // handleSelectRemitente();
+                    .catch((err) => {
+                        showSuccess(err);
                     });
-            }
-            if (
-                localStorage.getItem("UsuarioId") === null ||
-                localStorage.getItem("UsuarioId") <= 0
-            ) {
-                showSuccess("Es necesario iniciar sesion para acceder a este proceso");
-                window.location.replace("login");
-                return;
-            }
-        },
-        [
-            dataRemitenteDestinatario,
-            dataCiudad,
-            dataCodigoPostal,
-            dataOperador,
-            dataUnidad,
-            dataTipoUnidad,
-        ]
-    );
+            })
+            .catch((err) => {
+                showSuccess(err);
+            });
+    }
+
+    const handleCancelar = (e) => {
+        e.preventDefault();
+
+        var params = {
+            motivoCancelacion: state.motivoCancelacion,
+            usuarioCancelacion: localStorage.getItem("UsuarioId"),
+            fechaCancelacion: state.fechaCancelacion,
+        };
+        cancelarEmbarque(state, params).then((respuesta) => {
+            console.log(respuesta.data);
+        });
+        $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(2).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Cancelar').addClass('in show');
+
+    };
 
     useEffect((value) => {
         getAllData();
+        getAllZonas();
+
     }, []);
+
+    //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para el remitente
+    useEffect( value => {
+        if (state.ciudadRemitente != ""){
+            obtenerCodigosPostalesPorCiudad(state.ciudadRemitente).then((respuesta) => {
+                if (respuesta.data.length > 0){
+                    setDataCodigosPostalesRemitente(respuesta.data);
+                    /*if (props.location.idRecoleccion != undefined){
+                        setState({
+                            ...state,
+                            codigoPostalRemitente: respuesta.data.find((o) => o.m_nIdCP == state.idCodigoPostalRemitenteTemp),
+                        })
+                    }*/
+                }
+            });
+        }
+    }, [state.ciudadRemitente])
+
+    //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para el destinatario
+    useEffect( value => {
+        if (state.ciudadDestinatario != ""){
+            obtenerCodigosPostalesPorCiudad(state.ciudadDestinatario).then((respuesta) => {
+                console.log(respuesta.data)
+                if (respuesta.data.length > 0){
+                    setDataCodigosPostalesDestinatario(respuesta.data);
+                    /*if (props.location.idRecoleccion != undefined){
+                        setState({
+                            ...state,
+                            codigoPostalDestinatario: respuesta.data.find((o) => o.m_nIdCP == state.idCodigoPostalDestinatarioTemp),
+                        })
+                    }*/
+                }
+            });
+        }
+    }, [state.ciudadDestinatario])
+
+    //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para entrega
+    useEffect( value => {
+        if (state.ciudadEntrega != ""){
+            obtenerCodigosPostalesPorCiudad(state.ciudadEntrega).then((respuesta) => {
+                if (respuesta.data.length > 0){
+                    setDataCodigosPostalesEntrega(respuesta.data);
+                    /*if(props.location.idRecoleccion != undefined){
+                        if (state.idCodigoPostalEntregaTemp != state.idCodigoPostalDestinatarioTemp){
+                            setState({
+                                ...state,
+                                codigoPostalEntrega: respuesta.data.find((o) => o.m_nIdCP == state.idCodigoPostalEntregaTemp)
+                            })
+                        }
+                    }*/
+                }
+            });
+        }
+    }, [state.ciudadEntrega])
+
+    useEffect(async (value) => {
+            if (dataRemitenteDestinatario.length > 0 && dataCiudad.length > 0 && dataOperador.length > 0 && dataTipoUnidad.length > 0){
+                if (props.location.idRecoleccion != undefined) {
+                    console.log('id de recoleccion: ' + props.location.idRecoleccion)
+                    obtenerRecoleccionId(props.location.idRecoleccion)
+                        .then((respuesta) => {
+                            setDataRecoleccionOnState(respuesta)
+                        })
+                }
+
+                if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
+                    showSuccess("Es necesario iniciar sesion para acceder a este proceso");
+                    window.location.replace("login");
+                    return;
+                }
+            }
+        },
+        [dataRemitenteDestinatario, dataCiudad, dataOperador, dataTipoUnidad,]
+    );
+
+    function handleShowCancelar() {
+        var today = new Date();
+        var hours = today.getHours();
+        var minutes = today.getMinutes();
+        var ampm = hours >= 12 ? "pm" : "am";
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        var strTime = hours + ":" + minutes + " " + ampm;
+        obtenerEmbarqueCancelado(state).then((respuesta) => {
+            console.log(respuesta.data.m_nSePuedeCancelar);
+            setState({
+                ...state,
+                folioEmbarque: respuesta.data.m_nFolioEmbarque,
+                sucursalCancelacion: dataSucursal.find(
+                    (o) => o.m_nIdSucursal === respuesta.data.IdSucursal
+                ).m_sSucursal,
+                fechaCancelacion:
+                    today.getDate() +
+                    "/" +
+                    (today.getMonth() + 1) +
+                    "/" +
+                    today.getFullYear() +
+                    " " +
+                    today.getHours() +
+                    ":" +
+                    today.getMinutes(),
+                estatusEmbarque: dataEstatusEmbarque.find(
+                    (o) => o.m_nIdEstatusEmbarque === respuesta.data.m_nIdEstatusEmbarque
+                ).m_sEstatus,
+                motivoCancelacion: respuesta.data.m_sMotivoCancelacion,
+            });
+            if (respuesta.data.m_nSePuedeCancelar === 0) {
+                showSuccess("Embarque no se puede cancelar");
+            } else {
+
+            }
+        });
+    }
+
+    //Limpia todos los campos. Se usa al pasar del listado a consultar o modificar un registro
+    function clearAllInputs(){
+        setState({
+            DerechoBorrar: 139,
+            identificadorModal: "",
+            tipoModal: 0,
+            openDialog: false,
+            agregar: "Agregar",
+            idEmbarque: 0,
+            fechaInicial: "0",
+            fechaFinal: "",
+            sucursalListado: 0,
+            estatusListado: 0,
+            idSucursalAgregar: localStorage.getItem("Sucursal"),
+            folioRecoleccion: "",
+            folioEmbarque: "",
+            folioGuía: "",
+            folioInforme: "",
+            fechaHoraCreacion: "",
+            fechaHoraRegistro: "",
+            estatusEmbarque: 15,
+            moneda: 0,
+            tipoCambio: 0,
+            tipoCobro: 0,
+            nombreRemitente: {},
+            RFCRemitente: "",
+            domicilioRemitente: "",
+            codigoPostalRemitente: {},
+            ciudadRemitente: "",
+            correoRemitente: "",
+            telefonoRemitente: "",
+            contactoRemitente: "",
+            ciudadDestino: "",
+            nombreDestinatario: "",
+            RFCDestinatario: "",
+            domicilioDestinatario: "",
+            codigoPostalDestinatario: {},
+            ciudadDestinatario: "",
+            correoDestinatario: "",
+            telefonoDestinatario: "",
+            contactoDestinatario: "",
+            ciudadOrigen: {},
+            fechaEntrega: "",
+            horaEntrega: "",
+            codigoPostalEntrega: {},
+            ciudadEntrega: {},
+            zonaEntrega: "",
+            domicilioEntrega: "",
+            entregaEn: "",
+            countSobres: 1,
+            countPaquetes: 1,
+            datosAdicionalesEntrega: "",
+            cantidadDePaquetes: 0,
+            cantidadDeSobres: 0,
+            fechaHoraSalida: "",
+            fechaHoraLlegada: "",
+            diferenteEntrega: false,
+            entregaEnSucursal: false,
+            idSucursalEntrega: 0,
+            idOperador: {},
+            idTipoUnidad: {},
+            CreadoPor: localStorage.getItem("UsuarioId"),
+            ModificadoPor: localStorage.getItem("UsuarioId"),
+            idUnidad: {},
+            paquetes: [
+                {
+                    m_xPeso: "",
+                    m_xLargo: "",
+                    m_xAncho: "",
+                    m_xAlto: "",
+                    m_xVolumen: "",
+                    m_nIdTIpoEmpaque: "",
+                    m_cValorDeclarado: "",
+                    m_sDescripcion: "",
+                    m_nCantidad: "",
+                    m_nTipo: 2,
+                    m_sObservaciones: "",
+                },
+            ],
+            sobres: [
+                {
+                    m_nTipo: 1,
+                    m_sDescripcion: "",
+                },
+            ],
+            motivoCancelacion: "",
+            fechaCancelacion: "",
+            sucursalCancelacion: "",
+            usuario: localStorage.getItem("Usuario"),
+            height: window.innerHeight,
+        })
+    }
+
+    /*=TABS NAVEGACION=*/
+
+    function handleShowConsultar(id) {
+        clearAllInputs()
+        obtenerEmbarquesId(id).then((respuesta) => {
+            console.log(respuesta)
+            setState({
+                ...state,
+                agregar: "Consultar",
+                idEmbarque: id,
+                idSucursalAgregar: respuesta.data.IdSucursal,
+                folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
+                folioEmbarque: respuesta.data.m_nFolioEmbarque,
+                folioGuía: respuesta.data.m_nFolioGuia,
+                folioInforme: respuesta.data.m_nFolioInforme,
+                fechaHoraCreacion: respuesta.data.m_dFecha + "T" + respuesta.data.m_tHora.split(":")[0] + ":" + respuesta.data.m_tHora.split(":")[1],
+                moneda: respuesta.data.m_nIdMoneda,
+                tipoCambio: respuesta.data.m_cTIpoCambio,
+                tipoCobro: respuesta.data.m_nIdTIpoCobro,
+                estatusEmbarque: respuesta.data.m_nIdEstatusEmbarque,
+                nombreRemitente: dataRemitenteDestinatario.find(
+                    (o) => o.m_sRFC === respuesta.data.m_sRFCRemitente
+                ),
+                domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
+                /*codigoPostalRemitente: dataCodigoPostal.find(
+                    (o) => o.m_nIdCP === respuesta.data.m_nIdCodigoPostalRemitente
+                ),*/
+                ciudadRemitente: dataCiudad.find(
+                    (o) => o.m_nIdCiudad === respuesta.data.m_nCiudadRemitente
+                ),
+                correoRemitente: respuesta.data.m_sCorreoRemitente,
+                telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
+                contactoRemitente: respuesta.data.m_sContactoRemitente,
+                ciudadOrigen: dataCiudad.find(
+                    (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadOrigen
+                ),
+                RFCRemitente : respuesta.data.m_sRFCRemitente,
+                RFCDestinatario: respuesta.data.m_sRFCDestinatario,
+                nombreDestinatario: dataRemitenteDestinatario.find(
+                    (o) => o.m_sRFC === respuesta.data.m_sRFCDestinatario
+                ),
+                domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
+                /*codigoPostalDestinatario: dataCodigoPostal.find(
+                    (o) => o.m_nIdCP === respuesta.data.m_nIdCodigoPostalDestinatario
+                ),*/
+                ciudadDestinatario: dataCiudad.find(
+                    (o) => o.m_nIdCiudad === respuesta.data.m_nIdCIudadDestinatario
+                ),
+                correoDestinatario: respuesta.data.m_sCorreoDestinatario,
+                telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
+                contactoDestinatario: respuesta.data.m_sContactoDestinatario,
+
+                ciudadDestino: dataCiudad.find(
+                    (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadDestino
+                ),
+                zonaEntrega: respuesta.data.IdZonaEntrega,
+                domicilioEntrega: respuesta.data.DomicilioEntrega,
+                entregaEn: respuesta.data.EntregarEn,
+                datosAdicionalesEntrega: respuesta.data.DatosAdicionalesis,
+                fechaEntrega:
+                    respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
+                /*codigoPostalEntrega: dataCodigoPostal.find(
+                    (o) => o.m_nIdCP === respuesta.data.CodigoPostalEntrega
+                ),*/
+                ciudadEntrega: dataCiudad.find(
+                    (o) => o.m_nIdCiudad === respuesta.data.IdCiudadEntrega
+                ),
+                fechaHoraSalida:
+                    respuesta.data.m_dFechaSalida + "T" + respuesta.data.m_tHoraSalida,
+                fechaHoraLlegada:
+                    respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,
+                idOperador: dataOperador.find(
+                    (o) => o.m_nIdOperador === respuesta.data.m_nIdOperador
+                ),
+              /*   idTipoUnidad: dataTipoUnidad.find(
+                    (o) =>
+                        o.m_sTipoUnidad ==
+                        dataUnidad.find((o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad)
+                            .m_sTipoUnidad
+                ),
+                idUnidad: dataUnidad.find(
+                    (o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad
+                ), */
+                // paquetes: respuesta.data.m_arrClsDetalle.filter(d => d.m_nTipo == 2),
+                // sobres: respuesta.data.m_arrClsDetalle.filter(d => d.m_nTipo == 1),
+                //Las de abajo reemplazan a la de arriba, se puede quitar la de arriba cuando ya no se use asi
+                paquetes: respuesta.data.m_arrPaquetes,
+                sobres: respuesta.data.m_arrSobres,
+                entregaEnSucursal: respuesta.m_bEntregaEnSucursal,
+                diferenteEntrega: false,
+                idSucursalEntrega : respuesta.m_nIdSucursalEntrega,
+            });
+            $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
+        });
+        console.log(state)
+    }
+
+    function handleShowAgregar() {
+        var today = new Date();
+        setState({
+            ...state,
+            agregar: "Agregar",
+            idEmbarque: 0,
+            folioRecoleccion: "",
+            folioEmbarque:
+                dataFolioEmbarque.length !== 0
+                    ? dataFolioEmbarque[0].m_sFolioEmbarque
+                    : null,
+            fechaHoraRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() +
+                1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(
+                    2,
+                    0
+                )}T${`${new Date().getHours()}`.padStart(
+                    2,
+                    0
+                )}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
+
+            folioGuía: "",
+            folioInforme: "",
+            fechaHoraCreacion:
+                today.getDate() +
+                "/" +
+                (today.getMonth() + 1) +
+                "/" +
+                today.getFullYear() +
+                " " +
+                today.getHours() +
+                ":" +
+                today.getMinutes(),
+            moneda: 0,
+            tipoCambio: 0,
+            tipoCobro: 0,
+            estatusEmbarque: 0,
+            nombreRemitente: {},
+            RFCRemitente: "",
+            domicilioRemitente: "",
+            codigoPostalRemitente: {},
+            ciudadRemitente: "",
+            correoRemitente: "",
+            telefonoRemitente: "",
+            contactoRemitente: "",
+            ciudadOrigen: {},
+            nombreDestinatario: {},
+            RFCDestinatario: "",
+            domicilioDestinatario: "",
+            codigoPostalDestinatario: {},
+            ciudadDestino: "",
+            correoDestinatario: "",
+            telefonoDestinatario: "",
+            contactoDestinatario: "",
+            fechaEntrega: "",
+            horaEntrega: "",
+            codigoPostalEntrega: {},
+            ciudadEntrega: "",
+            idOperador: {},
+            idTipoUnidad: {},
+            idUnidad: {},
+            zonaEntrega: 0,
+            domicilioEntrega: "",
+            entregaEn: "",
+            datosAdicionalesEntrega: "",
+            fechaHoraSalida: "",
+            fechaHoraLlegada: "",
+            paquetes: [
+                {
+                    m_xPeso: "",
+                    m_xLargo: "",
+                    m_xAncho: "",
+                    m_xAlto: "",
+                    m_xVolumen: "",
+                    m_nIdTIpoEmpaque: "",
+                    m_cValorDeclarado: "",
+                    m_sDescripcion: "",
+                    ctd: "",
+                    m_nTipo: 2,
+                    m_sObservaciones: "",
+                },
+            ],
+            sobres: [
+                {
+                    m_nTipo: 1,
+                    m_sDescripcion: "",
+                },
+            ],
+            cantidadDePaquetes: 0,
+            cantidadDeSobres: 0,
+        });
+        $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
+
+    }
+
+    function handleShowCancelarConfirmacion() {
+        confirmAlert({
+            title: 'Confirmar Eliminar',
+            message: 'Está seguro de cancelar Embarque?',
+            buttons: [
+                {
+                    label: 'Si',
+                    onClick: () => handleCancelar
+                },
+                {
+                    label: 'No',
+                }
+            ]
+        })
+    }
+
+    function handleShowModificar(id) {
+        console.log(id);
+        clearAllInputs()
+        obtenerEmbarquesId(id).then((respuesta) => {
+            setState({
+                ...state,
+                agregar: "Modificar",
+                idEmbarque: id,
+                idSucursalAgregar: respuesta.data.IdSucursal,
+                folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
+                folioEmbarque: respuesta.data.m_nFolioEmbarque,
+                folioGuía: respuesta.data.m_nFolioGuia,
+                folioInforme: respuesta.data.m_nFolioInforme,
+                fechaHoraCreacion:
+                    respuesta.data.m_dFecha +
+                    "T" +
+                    respuesta.data.m_tHora.split(":")[0] +
+                    ":" +
+                    respuesta.data.m_tHora.split(":")[1],
+                fechaHoraRegistro:
+                    respuesta.data.m_dFechaRegistro +
+                    "T" +
+                    respuesta.data.m_tHoraRegistro.slice(0, 5),
+                moneda: respuesta.data.m_nIdMoneda,
+                tipoCambio: respuesta.data.m_cTIpoCambio,
+                tipoCobro: respuesta.data.m_nIdTIpoCobro,
+                estatusEmbarque: respuesta.data.m_nIdEstatusEmbarque,
+
+
+                nombreRemitente: dataRemitenteDestinatario.find(
+                    (o) => o.m_sRFC === respuesta.data.m_sRFCRemitente
+                ),
+                domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
+                /*codigoPostalRemitente: dataCodigoPostal.find(
+                    (o) => o.m_nIdCP === respuesta.data.m_nIdCodigoPostalRemitente
+                ),*/
+                ciudadRemitente: dataCiudad.find(
+                    (o) => o.m_nIdCiudad === respuesta.data.m_nCiudadRemitente
+                ).m_nIdCiudad,
+                correoRemitente: respuesta.data.m_sCorreoRemitente,
+                telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
+                contactoRemitente: respuesta.data.m_sContactoRemitente,
+                ciudadOrigen: dataCiudad.find(
+                    (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadOrigen
+                ),
+
+                RFCRemitente: respuesta.data.m_sRFCRemitente,
+                RFCDestinatario: respuesta.data.m_sRFCDestinatario,
+                nombreDestinatario: dataRemitenteDestinatario.find(
+                    (o) => o.m_sRFC === respuesta.data.m_sRFCDestinatario
+                ),
+                domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
+                /*codigoPostalDestinatario: dataCodigoPostal.find(
+                    (o) => o.m_nIdCP === respuesta.data.m_nIdCodigoPostalDestinatario
+                ),*/
+                ciudadDestinatario: dataCiudad.find(
+                    (o) => o.m_nIdCiudad === respuesta.data.m_nIdCIudadDestinatario
+                ).m_nIdCiudad,
+                correoDestinatario: respuesta.data.m_sCorreoDestinatario,
+                telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
+                contactoDestinatario: respuesta.data.m_sContactoDestinatario,
+
+                ciudadDestino: dataCiudad.find(
+                    (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadDestino
+                ),
+                zonaEntrega: respuesta.data.IdZonaEntrega,
+                domicilioEntrega: respuesta.data.DomicilioEntrega,
+                entregaEn: respuesta.data.EntregarEn,
+                datosAdicionalesEntrega: respuesta.data.DatosAdicionalesis,
+                fechaEntrega:
+                    respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
+                /*codigoPostalEntrega: dataCodigoPostal.find(
+                    (o) => o.m_nIdCP === respuesta.data.CodigoPostalEntrega
+                ),*/
+               /* ciudadEntrega: dataCiudad.find(
+                    (o) => o.m_nIdCiudad === respuesta.data.IdCiudadEntrega
+                ).m_nIdCiudad,*/
+                fechaHoraSalida:
+                    respuesta.data.m_dFechaSalida + "T" + respuesta.data.m_tHoraSalida,
+                fechaHoraLlegada:
+                    respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,
+                idOperador: dataOperador.find(
+                    (o) => o.m_nIdOperador === respuesta.data.m_nIdOperador
+                ),
+                // idTipoUnidad: dataTipoUnidad.find(
+                //     (o) =>
+                //         o.m_nIdTipoUnidad ==
+                //             dataUnidad.find((o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad) ?
+                //             dataUnidad.find((o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad).m_nIdTipoUnidad : 0
+                // ),
+                // idUnidad: dataUnidad.find(
+                //     (o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad
+                // ),
+                // paquetes: respuesta.data.m_arrClsDetalle.filter(d => d.m_nTipo == 2),
+                // sobres: respuesta.data.m_arrClsDetalle.filter(d => d.m_nTipo == 1),
+                //Las de abajo reemplazan a la de arriba, se puede quitar la de arriba cuando ya no se use asi
+                paquetes: respuesta.data.m_arrPaquetes,
+                sobres: respuesta.data.m_arrSobres,
+                entregaEnSucursal: respuesta.m_bEntregaEnSucursal,
+                diferenteEntrega: false,
+                idSucursalEntrega : respuesta.m_nIdSucursalEntrega,
+            });
+            $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
+
+        });
+        console.log(state)
+    }
+
+    function setDataRecoleccionOnState(respuesta){
+        const {m_parrPaquetes, m_parrSobres } = respuesta.data;
+        let paquetesModificado = m_parrPaquetes
+        console.log(respuesta);
+        for (let i = 0; i < respuesta.data.m_parrPaquetes.length; i++) {
+            paquetesModificado[i]["m_nTipo"] = 2;
+            paquetesModificado[i]["m_xPeso"] = paquetesModificado[i].m_rPeso;
+            paquetesModificado[i]["m_xLargo"] =
+                paquetesModificado[i].m_rLargo;
+            paquetesModificado[i]["m_xAncho"] =
+                paquetesModificado[i].m_rAncho;
+            paquetesModificado[i]["m_xAlto"] = paquetesModificado[i].m_rAlto;
+            paquetesModificado[i]["m_xVolumen"] =
+                paquetesModificado[i].m_rVolumen;
+            paquetesModificado[i]["m_nIdTIpoEmpaque"] =
+                paquetesModificado[i].m_nIdTipoEmbalaje;
+            paquetesModificado[i]["m_cValorDeclarado"] =
+                paquetesModificado[i].m_cyValorDeclarado;
+        }
+        m_parrSobres.forEach( sobre => {
+            sobre["m_nTipo"] = 1
+        })
+
+        const { m_nIdSucursal, m_sFolioRecoleccion, m_nMoneda, m_rTipoCambio, m_nIdTipoDeCobro } = respuesta.data
+        const { m_sRFCRemitente, m_sRFCDestinatario } = respuesta.data
+
+        handleSelectRemitente(dataRemitenteDestinatario.find((o) => o.m_sRFC === m_sRFCRemitente))
+        handleSelectDestinatario(dataRemitenteDestinatario.find((o) => o.m_sRFC === m_sRFCDestinatario))
+
+        setState(state => {
+            return{
+                ...state,
+                fechaHoraRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() +
+                1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(
+                    2,
+                    0
+                )}T${`${new Date().getHours()}`.padStart(
+                    2,
+                    0
+                )}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
+                idSucursalAgregar: m_nIdSucursal,
+                folioRecoleccion: m_sFolioRecoleccion,
+                folioEmbarque: dataFolioEmbarque.length !== 0 ? dataFolioEmbarque[0].m_sFolioEmbarque : null,
+                fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
+                moneda: m_nMoneda,
+                tipoCambio: m_rTipoCambio,
+                tipoCobro: m_nIdTipoDeCobro,
+
+                ciudadOrigen: dataCiudad.find((o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadOrigen),
+                ciudadDestino: dataCiudad.find((o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadDestino),
+
+                //fecha entrega?
+                fechaEntrega: respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
+
+                //detalles de la operacion
+                fechaHoraSalida: respuesta.data.m_dFechaSalida + "T" + respuesta.data.m_tHoraSalida,
+                fechaHoraLlegada: respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,
+                idOperador: dataOperador.find((o) => o.m_nIdOperador === respuesta.data.m_nIdOperador),
+                idUnidad: respuesta.data.m_nIdUnidad,
+
+                //paquetes
+                paquetes: paquetesModificado,
+                sobres: m_parrSobres,
+
+                //Datos entrega
+                diferenteEntrega: false,
+                zonaEntrega: '',
+                domicilioEntrega: '',
+                entregaEn: '',
+                datosAdicionalesEntrega: '',
+                codigoPostalEntrega: '',
+                ciudadEntrega: '',
+            }
+        });
+
+        //si el cp de entrega es igual al de destinatario significa que no es entrega en diferente domicilio
+        if (respuesta.data.m_nIdCPDetalleEntrega != respuesta.data.m_sIdCodigoPostalDestinatario){
+            obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleEntrega).then(cp => {
+                setState(state => {
+                    return{
+                        ...state,
+                        diferenteEntrega: true,
+                        zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
+                        domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
+                        entregaEn: respuesta.data.m_sEntregarEnDetalleEntrega,
+                        datosAdicionalesEntrega: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
+                        fechaEntrega: respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
+                        codigoPostalEntrega: cp.data,
+                        ciudadEntrega: cp.data.m_nIdCiudad,
+                    }
+                })
+            })
+        }
+    }
+
+    function getUltimoFolioEmbarque() {
+        obtenerUltimoFolioEmbarques().then((respuesta) => {
+            SetDataFolioEmbarque(respuesta.data);
+        });
+    }
+
+    const handleChange = (event) => {
+        setState({
+            ...state,
+            [event.target.name]: event.target.value,
+        });
+    };
+
+    const handleChangeSucursalEntrega = (event) => {
+        console.log(event)
+        setState({
+            ...state,
+            [event.target.name]: event.target.value,
+            codigoPostalEntrega: dataSucursal.find(c => c.m_nIdSucursal == event.target.value).m_nIdCodigoPostal
+
+        });
+        console.log(state.codigoPostalEntrega)
+    };
+
+    const handleEntregaCheckboxChange = (event) => {
+        setState({
+            ...state,
+            diferenteEntrega: !state.diferenteEntrega,
+            entregaEnSucursal: false
+        });
+    };
+
+    const handleEntregaEnSucursalCheckbox = (event) => {
+        setState({
+            ...state,
+            entregaEnSucursal: !state.entregaEnSucursal,
+            diferenteEntrega: false
+        });
+    };
+
+    //antigua implementacion para cambiar ciudad, si es muy vieja borrar (3 junio 2021)
+    /*const handleSelectCiudadChange = (event) => {
+        console.log("diferenteEntrega : " + state.diferenteEntrega);
+        setState({
+            ...state,
+            ciudadRemitente: event.target.value,
+        });
+    };*/
+
+    const handleChangeCiudadRemitente = (event) => {
+        event.preventDefault();
+        setState({
+            ...state,
+            ciudadRemitente: event.target.value,
+            codigoPostalRemitente: null
+        });
+    }
+
+    const handleChangeCiudadDestinatario = (event) => {
+        event.preventDefault();
+        setState({
+            ...state,
+            ciudadDestinatario: event.target.value,
+            codigoPostalDestinatario: null
+        });
+    }
+
+    const handleChangeCiudadEntrega = (event) => {
+        event.preventDefault();
+        setState({
+            ...state,
+            ciudadEntrega: event.target.value,
+            codigoPostalEntrega: null
+        });
+    }
+
+    const handleFechaInicialFiltro = async (event) => {
+        setState({
+            ...state,
+            fechaInicial: event.target.value,
+        });
+        obtenerEmbarquesFiltro(event.target.value, state.fechaInicial, state.sucursalListado, state.estatusListado).then((respuesta) => {
+            setData(respuesta.data);
+        });
+    };
+
+    const handleFechaFinalFiltro = async (event) => {
+        setState({
+            ...state,
+            fechaFinal: event.target.value,
+        });
+        obtenerEmbarquesFiltro(state.fechaInicial, event.target.value, state.sucursalListado, state.estatusListado).then((respuesta) => {
+            setData(respuesta.data);
+        });
+    };
+
+    const handleSucursalFiltro = async (event) => {
+        setState({
+            ...state,
+            sucursalListado: event.target.value,
+        });
+        obtenerEmbarquesFiltro(state.fechaInicial, state.fechaFinal, event.target.value, state.estatusListado).then((respuesta) => {
+            setData(respuesta.data);
+        });
+    };
+
+    const handleEstatusFiltro = async (event) => {
+        setState({
+            ...state,
+            estatusListado: event.target.value,
+        });
+        obtenerEmbarquesFiltro(state.fechaInicial, state.fechaFinal, state.sucursalListado, event.target.value).then((respuesta) => {
+            setData(respuesta.data);
+        });
+    };
+
+    function handleSelectDatos(id, cp) {
+        setState({
+            ...state,
+            [state.identificadorModal]: id,
+        });
+        console.log(id);
+        console.log(state.identificadorModal);
+    }
+
+    function getAllZonas() {
+        const url = `${process.env.REACT_APP_API_URL}/Zonas/GetListado`;
+        axios.get(url, { headers }).then((respuesta) => {
+            setDataZona(respuesta.data);
+        });
+    }
+
+    const handleChangeZonaEntrega = (event) => {
+        event.preventDefault();
+        setState({
+            ...state,
+            zonaEntrega: event.target.value,
+        });
+    }
 
     async function getAllData() {
         getAllEmbarque();
@@ -1453,7 +1640,7 @@ function Embarque(props) {
         getAllTipoCobro();
         getAllTipoMoneda();
         getAllCiudades();
-        getAllCodigosPostales();
+        // getAllCodigosPostales();
         getAllOperadores();
         getAllTipoUnidad();
         getAllRemitentesDestinatarios();
@@ -1511,12 +1698,6 @@ function Embarque(props) {
         });
     }
 
-    async function getAllCodigosPostales() {
-        obtenerCodigoPostal().then((respuesta) => {
-            setDataCodigoPostal(respuesta.data);
-        });
-    }
-
     async function getAllOperadores() {
         obtenerOperadores().then((respuesta) => {
             setDataOperador(respuesta.data);
@@ -1542,8 +1723,6 @@ function Embarque(props) {
         });
     }
 
-
-
     const headers = {
         "Content-Type": "application/json",
     };
@@ -1558,9 +1737,7 @@ function Embarque(props) {
         return data.length != 0;
     }
 
-    function DefaultColumnFilter({
-        column: { filterValue, preFilteredRows, setFilter },
-    }) {
+    function DefaultColumnFilter({column: { filterValue, preFilteredRows, setFilter },}) {
         const count = preFilteredRows.length;
         const [showResults, setShowResults] = React.useState(false);
         const onClick = () => setShowResults(!showResults);
@@ -2148,8 +2325,6 @@ function Embarque(props) {
         );
     }
 
-
-
     if (redirect) {
         if (
             data.find((o) => o.m_nIdEmbarque == state.idEmbarque).m_sFolioGuia != ""
@@ -2167,6 +2342,83 @@ function Embarque(props) {
             );
         }
     }
+
+    /*=PAQUETES Y SOBRES=*/
+
+    function addPaquete() {
+        const { paquetes } = state;
+        paquetes.push({
+            m_xPeso: "",
+            m_xLargo: "",
+            m_xAncho: "",
+            m_xAlto: "",
+            m_xVolumen: "",
+            m_nIdTIpoEmpaque: "",
+            m_cValorDeclarado: "",
+            m_sDescripcion: "",
+            m_nCantidad: "",
+            m_nTipo: 2,
+            m_sObservaciones: "",
+        });
+        console.log(paquetes);
+        setState({
+            ...state,
+            paquetes: paquetes,
+            countPaquetes: paquetes.length,
+        });
+    }
+
+    function removePaquete(index) {
+        var { paquetes } = state;
+        if (paquetes.length !== 1) {
+            paquetes.pop();
+            setState({
+                ...state,
+                paquetes: paquetes,
+                countPaquetes: state.paquetes.length,
+            });
+        }
+    }
+
+    function addSobre() {
+        const { sobres } = state;
+        sobres.push({
+            m_nTipo: 1,
+            m_sDescripcion: "",
+        });
+        console.log(sobres);
+        setState({ ...state, sobres: sobres, countSobres: state.sobres.length });
+    }
+
+    function removeSobre(index) {
+        var { sobres } = state;
+        if (sobres.length !== 1) {
+            sobres.pop();
+            setState({
+                ...state,
+                sobres: sobres,
+                countSobres: state.sobres.length,
+            });
+        }
+    }
+
+    const handleChangePaquete = (event, index) => {
+        var { paquetes } = state;
+        paquetes[index][event.target.name] = event.target.value;
+        setState({
+            ...state,
+            paquetes: paquetes,
+        });
+    };
+
+    const handleChangeSobre = (event, index) => {
+        var { sobres } = state;
+        sobres[index][event.target.name] = event.target.value;
+        setState({
+            ...state,
+            sobres: sobres,
+        });
+    };
 
     const framesPaquete = state.paquetes.map((p, index) => {
         return (
@@ -2283,10 +2535,10 @@ function Embarque(props) {
                             onChange={(event) => handleChangePaquete(event, index)}
                             className="form-control"
                             type="text"
-                            value={state.paquetes[index].m_cyValorDeclarado}
+                            value={state.paquetes[index].m_cValorDeclarado}
                             disabled={state.agregar === "Consultar"}
                             placeholder="$"
-                            name="m_cyValorDeclarado"
+                            name="m_cValorDeclarado"
                         />
                     </div>
                 </div>
@@ -2349,10 +2601,10 @@ function Embarque(props) {
                             onChange={(event) => handleChangeSobre(event, index)}
                             className="form-control"
                             type="text"
-                            value={state.sobres[index].descripcion}
+                            value={state.sobres[index].m_sDescripcion}
                             disabled={state.agregar === "Consultar"}
                             placeholder="Descripción"
-                            name="descripcion"
+                            name="m_sDescripcion"
                         />
                     </div>
                 </div>
@@ -2382,7 +2634,7 @@ function Embarque(props) {
                                 </button>
                             </div>
 
-                            {dataCodigoPostal.length != 0 ? (
+                            {dataCodigosPostalesRemitente.length != 0 ? (
                                 <TableCodigoPostal
                                     object={state}
                                     select={
@@ -2390,7 +2642,95 @@ function Embarque(props) {
                                         state[state.identificadorModal].m_nIdCP
                                     }
                                     columns={columnsCP}
-                                    data={dataCodigoPostal}
+                                    data={dataCodigosPostalesRemitente}
+                                    identificadorModal={state.identificadorModal}
+                                />
+                            ) : (
+                                <div>No se encontró ningún registro</div>
+                            )}
+
+                            <DialogActions style={{ justifyContent: "left" }}>
+                                <button
+                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    className="btn btn-secondary secondary-btn"
+                                >
+                                    Cerrar
+                                </button>
+                                <button
+                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    className="btn btn-primary primary-btn"
+                                >
+                                    Aceptar
+                                </button>
+                            </DialogActions>
+                        </div>
+                    )}
+                    {state.tipoModal === 7 && (
+                        <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
+                            <div align="right">
+                                <button
+                                    onClick={() => {
+                                        history.push("/Ciudades");
+                                    }}
+                                    className="btn btn-primary primary-btn"
+                                >
+                                    Agregar
+                                </button>
+                            </div>
+
+                            {dataCodigosPostalesDestinatario.length != 0 ? (
+                                <TableCodigoPostal
+                                    object={state}
+                                    select={
+                                        state[state.identificadorModal] &&
+                                        state[state.identificadorModal].m_nIdCP
+                                    }
+                                    columns={columnsCP}
+                                    data={dataCodigosPostalesDestinatario}
+                                    identificadorModal={state.identificadorModal}
+                                />
+                            ) : (
+                                <div>No se encontró ningún registro</div>
+                            )}
+
+                            <DialogActions style={{ justifyContent: "left" }}>
+                                <button
+                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    className="btn btn-secondary secondary-btn"
+                                >
+                                    Cerrar
+                                </button>
+                                <button
+                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    className="btn btn-primary primary-btn"
+                                >
+                                    Aceptar
+                                </button>
+                            </DialogActions>
+                        </div>
+                    )}
+                    {state.tipoModal === 9 && (
+                        <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
+                            <div align="right">
+                                <button
+                                    onClick={() => {
+                                        history.push("/Ciudades");
+                                    }}
+                                    className="btn btn-primary primary-btn"
+                                >
+                                    Agregar
+                                </button>
+                            </div>
+
+                            {dataCodigosPostalesEntrega.length != 0 ? (
+                                <TableCodigoPostal
+                                    object={state}
+                                    select={
+                                        state[state.identificadorModal] &&
+                                        state[state.identificadorModal].m_nIdCP
+                                    }
+                                    columns={columnsCP}
+                                    data={dataCodigosPostalesEntrega}
                                     identificadorModal={state.identificadorModal}
                                 />
                             ) : (
@@ -3097,6 +3437,7 @@ function Embarque(props) {
                                                                         disabled={state.agregar === "Consultar"}
                                                                         onChange={handleChange}
                                                                         id="moneda"
+                                                                        name="moneda"
                                                                         InputProps={{
                                                                             name: "moneda"
                                                                         }}
@@ -3317,92 +3658,8 @@ function Embarque(props) {
                                                                         </div>
                                                                     </div>
 
-                                                                    <div className="col-sm-12 col-md-12 unit">
-                                                                        <div className="input">
-                                                                            <Autocomplete
-                                                                                value={state.codigoPostalRemitente}
-                                                                                freeSolo
-                                                                                onChange={(event, newValue) =>
-                                                                                    setState({
-                                                                                        ...state,
-                                                                                        codigoPostalRemitente: newValue,
-                                                                                    })
-                                                                                }
-                                                                                id="codigoPostalRemitente"
-                                                                                value={state.codigoPostalRemitente}
-                                                                                disableClearable
-                                                                                disabled={state.agregar === "Consultar"}
-                                                                                forcePopupIcon={false}
-                                                                                options={dataCodigoPostal.filter(cp => cp.m_nIdCiudad == state.ciudadRemitente)}
-                                                                                getOptionLabel={(option) =>
-                                                                                    option.m_sCP
-                                                                                }
-                                                                                variant="outlined"
-                                                                                style={{
-                                                                                    transform: "translate(14px, 10px) scale(1) !important"
-                                                                                }}
-                                                                                renderInput={(params) => (
-                                                                                    <div>
-                                                                                        <TextField
-                                                                                            required
-                                                                                            margin="dense"
-                                                                                            variant="outlined"
-                                                                                            label={"Código Postal"}
-                                                                                            {...params}
-                                                                                            InputProps={{
-                                                                                                ...params.InputProps,
-                                                                                                style: {
-                                                                                                    height: "33px",
-                                                                                                    fontSize: "14px",
-                                                                                                },
-                                                                                                type: "search",
-                                                                                                disableUnderline: true,
-                                                                                                endAdornment: (
-                                                                                                    <InputAdornment
-                                                                                                        position="end">
-                                                                                                        <IconButton
-                                                                                                            padding="0px"
-                                                                                                            style={{
-                                                                                                                paddingRight: "0px",
-                                                                                                            }}
-                                                                                                            disabled={
-                                                                                                                state.agregar ===
-                                                                                                                "Consultar"
-                                                                                                            }
-                                                                                                            onClick={() => {
-                                                                                                                setState({
-                                                                                                                    ...state,
-                                                                                                                    identificadorModal:
-                                                                                                                        "codigoPostalRemitente",
-                                                                                                                    tipoModal: 0,
-                                                                                                                    openDialog: true,
-                                                                                                                });
-                                                                                                            }}
-                                                                                                        >
-                                                                                                            <PageviewIcon
-                                                                                                                style={{
-                                                                                                                    color: "#F9A03E",
-                                                                                                                    fontSize: 32,
-                                                                                                                    paddingInlineEnd: 0,
-                                                                                                                    paddingRight: 0,
-                                                                                                                    paddingBlockEnd: 0,
-                                                                                                                    paddingLeft: 0,
-                                                                                                                    paddingBlock: 0,
-                                                                                                                }}
-                                                                                                            />
-                                                                                                        </IconButton>
-                                                                                                    </InputAdornment>
-                                                                                                ),
-                                                                                            }}
-                                                                                        />
-                                                                                    </div>
-                                                                                )}
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-
                                                                     <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                                                        <div className="input">
+                                                                        {/*<div className="input">
                                                                             <Autocomplete
                                                                                 freeSolo
                                                                                 onChange={handleSelectCiudadChange}
@@ -3474,8 +3731,122 @@ function Embarque(props) {
                                                                                     </div>
                                                                                 )}
                                                                             />
+                                                                        </div>*/}
+                                                                        <label className="input select">
+                                                                            <FormControl fullWidth variant="outlined"
+                                                                                         margin="dense">
+                                                                                <InputLabel
+                                                                                    id="ciudadRemitenteLabel">Ciudad</InputLabel>
+                                                                                <Select
+                                                                                    labelId="ciudadRemitenteLabel"
+                                                                                    label="Ciudad"
+                                                                                    className="form-control"
+                                                                                    required
+                                                                                    value={state.ciudadRemitente}
+                                                                                    disabled={state.agregar === "Consultar"}
+                                                                                    onChange={handleChangeCiudadRemitente}
+                                                                                    //onSelect={ getAllCodigosPostales(state.ciudadRemitente)}
+
+                                                                                    id="ciudadRemitente"
+                                                                                >
+                                                                                    {dataCiudad.map((ciudad) => (
+                                                                                        <option
+                                                                                            key={ciudad.m_nIdCiudad}
+                                                                                            value={ciudad.m_nIdCiudad}
+                                                                                        >
+                                                                                            {ciudad.m_sCiudad}
+                                                                                        </option>
+                                                                                    ))}
+                                                                                </Select>
+                                                                            </FormControl>
+                                                                            <i className="fa fa-arrow-down" />
+                                                                        </label>
+                                                                    </div>
+
+                                                                    <div className="col-sm-12 col-md-12 unit">
+                                                                        <div className="input">
+                                                                            <Autocomplete
+                                                                                value={state.codigoPostalRemitente}
+                                                                                freeSolo
+                                                                                onChange={(event, newValue) =>
+                                                                                    setState({
+                                                                                        ...state,
+                                                                                        codigoPostalRemitente: newValue,
+                                                                                    })
+                                                                                }
+                                                                                id="codigoPostalRemitente"
+                                                                                value={state.codigoPostalRemitente}
+                                                                                disableClearable
+                                                                                disabled={state.agregar === "Consultar"}
+                                                                                forcePopupIcon={false}
+                                                                                options={dataCodigosPostalesRemitente.filter(cp => cp.m_nIdCiudad == state.ciudadRemitente)}
+                                                                                getOptionLabel={(option) =>
+                                                                                    option.m_sCP
+                                                                                }
+                                                                                variant="outlined"
+                                                                                style={{
+                                                                                    transform: "translate(14px, 10px) scale(1) !important"
+                                                                                }}
+                                                                                renderInput={(params) => (
+                                                                                    <div>
+                                                                                        <TextField
+                                                                                            required
+                                                                                            margin="dense"
+                                                                                            variant="outlined"
+                                                                                            label={"Código Postal"}
+                                                                                            {...params}
+                                                                                            InputProps={{
+                                                                                                ...params.InputProps,
+                                                                                                style: {
+                                                                                                    height: "33px",
+                                                                                                    fontSize: "14px",
+                                                                                                },
+                                                                                                type: "search",
+                                                                                                disableUnderline: true,
+                                                                                                endAdornment: (
+                                                                                                    <InputAdornment
+                                                                                                        position="end">
+                                                                                                        <IconButton
+                                                                                                            padding="0px"
+                                                                                                            style={{
+                                                                                                                paddingRight: "0px",
+                                                                                                            }}
+                                                                                                            disabled={
+                                                                                                                state.agregar ===
+                                                                                                                "Consultar"
+                                                                                                            }
+                                                                                                            onClick={() => {
+                                                                                                                setState({
+                                                                                                                    ...state,
+                                                                                                                    identificadorModal:
+                                                                                                                        "codigoPostalRemitente",
+                                                                                                                    tipoModal: 0,
+                                                                                                                    openDialog: true,
+                                                                                                                });
+                                                                                                            }}
+                                                                                                        >
+                                                                                                            <PageviewIcon
+                                                                                                                style={{
+                                                                                                                    color: "#F9A03E",
+                                                                                                                    fontSize: 32,
+                                                                                                                    paddingInlineEnd: 0,
+                                                                                                                    paddingRight: 0,
+                                                                                                                    paddingBlockEnd: 0,
+                                                                                                                    paddingLeft: 0,
+                                                                                                                    paddingBlock: 0,
+                                                                                                                }}
+                                                                                                            />
+                                                                                                        </IconButton>
+                                                                                                    </InputAdornment>
+                                                                                                ),
+                                                                                            }}
+                                                                                        />
+                                                                                    </div>
+                                                                                )}
+                                                                            />
                                                                         </div>
                                                                     </div>
+
                                                                     { }
                                                                     <div className="col-sm-12 col-md-12 unit">
                                                                         <div className="input">
@@ -3682,15 +4053,16 @@ function Embarque(props) {
                                                                                                             state.agregar ===
                                                                                                             "Consultar"
                                                                                                         }
-                                                                                                        onClick={() => {
+                                                                                                        /*onClick={() => {
                                                                                                             setState({
                                                                                                                 ...state,
                                                                                                                 identificadorModal:
                                                                                                                     "nombreDestinatario",
                                                                                                                 tipoModal: 5,
+                                                                                                                openDialog: true,
                                                                                                             });
-                                                                                                            open();
-                                                                                                        }}
+                                                                                                            // open();
+                                                                                                        }}*/
                                                                                                     >
                                                                                                         <PageviewIcon
                                                                                                             style={{
@@ -3702,7 +4074,7 @@ function Embarque(props) {
                                                                                                                 paddingLeft: 0,
                                                                                                                 paddingBlock: 0,
                                                                                                             }}
-                                                                                                            onClick={() => {
+                                                                                                            /*onClick={() => {
                                                                                                                 setState({
                                                                                                                     ...state,
                                                                                                                     identificadorModal:
@@ -3710,7 +4082,7 @@ function Embarque(props) {
                                                                                                                     tipoModal: 5,
                                                                                                                     openDialog: true,
                                                                                                                 });
-                                                                                                            }}
+                                                                                                            }}*/
                                                                                                         />
                                                                                                     </IconButton>
                                                                                                 </InputAdornment>
@@ -3755,83 +4127,8 @@ function Embarque(props) {
                                                                     </div>
                                                                 </div>
 
-                                                                <div className="col-sm-12 col-md-12 unit">
-                                                                    <div className="input">
-                                                                        <Autocomplete
-                                                                            freeSolo
-                                                                            onChange={(event, newValue) =>
-                                                                                setState({
-                                                                                    ...state,
-                                                                                    codigoPostalDestinatario: newValue,
-                                                                                })
-                                                                            }
-                                                                            value={state.codigoPostalDestinatario}
-                                                                            id="codigoPostalDestinatario"
-                                                                            disableClearable
-                                                                            disabled={state.agregar === "Consultar"}
-                                                                            options={dataCodigoPostal.filter(cp => cp.m_nIdCiudad == state.ciudadDestinatario)}
-                                                                            getOptionLabel={(option) => option.m_sCP}
-                                                                            variant="outlined"
-                                                                            style={{
-                                                                                transform: "translate(14px, 10px) scale(1) !important"
-                                                                            }}
-                                                                            renderInput={(params) => (
-                                                                                <div>
-                                                                                    <TextField
-                                                                                        required
-                                                                                        margin="dense"
-                                                                                        variant="outlined"
-                                                                                        label={"Código Postal"}
-                                                                                        {...params}
-                                                                                        InputProps={{
-                                                                                            ...params.InputProps,
-                                                                                            style: {
-                                                                                                height: "33px",
-                                                                                                fontSize: "14px",
-                                                                                            },
-                                                                                            type: "search",
-                                                                                            disableUnderline: true,
-                                                                                            endAdornment: (
-                                                                                                <InputAdornment
-                                                                                                    position="end">
-                                                                                                    {" "}
-                                                                                                    <IconButton
-                                                                                                        style={{
-                                                                                                            paddingRight: "0px",
-                                                                                                        }}
-                                                                                                        disabled={
-                                                                                                            state.agregar ===
-                                                                                                            "Consultar"
-                                                                                                        }
-                                                                                                        onClick={() => {
-                                                                                                            setState({
-                                                                                                                ...state,
-                                                                                                                identificadorModal:
-                                                                                                                    "codigoPostalDestinatario",
-                                                                                                                tipoModal: 0,
-                                                                                                                openDialog: true,
-                                                                                                            });
-                                                                                                        }}
-                                                                                                    >
-                                                                                                        <PageviewIcon
-                                                                                                            style={{
-                                                                                                                color: "#F9A03E",
-                                                                                                                fontSize: 32,
-                                                                                                            }}
-                                                                                                        />
-                                                                                                    </IconButton>{" "}
-                                                                                                </InputAdornment>
-                                                                                            ),
-                                                                                        }}
-                                                                                    />
-                                                                                </div>
-                                                                            )}
-                                                                        />
-                                                                    </div>
-                                                                </div>
-
                                                                 <div className="col-sm-12 col-md-12  unit">
-                                                                    <div className="input">
+                                                                    {/*<div className="input">
                                                                         <Autocomplete
                                                                             freeSolo
                                                                             onChange={(event, newValue) =>
@@ -3901,6 +4198,109 @@ function Embarque(props) {
                                                                                                             }}
                                                                                                         />
                                                                                                     </IconButton>
+                                                                                                </InputAdornment>
+                                                                                            ),
+                                                                                        }}
+                                                                                    />
+                                                                                </div>
+                                                                            )}
+                                                                        />
+                                                                    </div>*/}
+                                                                    <label className="input select">
+                                                                        <FormControl fullWidth variant="outlined"
+                                                                                     margin="dense">
+                                                                            <InputLabel
+                                                                                id="ciudadDestinatarioLabel">Ciudad</InputLabel>
+                                                                            <Select
+                                                                                labelId="ciudadDestinatarioLabel"
+                                                                                label="Ciudad"
+                                                                                className="form-control"
+                                                                                required
+                                                                                value={state.ciudadDestinatario}
+                                                                                disabled={state.agregar === "Consultar"}
+                                                                                onChange={handleChangeCiudadDestinatario}
+                                                                                //onSelect={ getAllCodigosPostales(state.ciudadDestinatario)}
+                                                                                id="ciudadDestinatario"
+                                                                            >
+                                                                                {dataCiudad.map((ciudad) => (
+                                                                                    <option
+                                                                                        key={ciudad.m_nIdCiudad}
+                                                                                        value={ciudad.m_nIdCiudad}
+                                                                                    >
+                                                                                        {ciudad.m_sCiudad}
+                                                                                    </option>
+                                                                                ))}
+                                                                            </Select>
+                                                                        </FormControl>
+                                                                        <i className="fa fa-arrow-down" />
+                                                                    </label>
+                                                                </div>
+
+                                                                <div className="col-sm-12 col-md-12 unit">
+                                                                    <div className="input">
+                                                                        <Autocomplete
+                                                                            freeSolo
+                                                                            onChange={(event, newValue) =>
+                                                                                setState({
+                                                                                    ...state,
+                                                                                    codigoPostalDestinatario: newValue,
+                                                                                })
+                                                                            }
+                                                                            value={state.codigoPostalDestinatario}
+                                                                            id="codigoPostalDestinatario"
+                                                                            disableClearable
+                                                                            disabled={state.agregar === "Consultar"}
+                                                                            options={dataCodigosPostalesDestinatario.filter(cp => cp.m_nIdCiudad == state.ciudadDestinatario)}
+                                                                            getOptionLabel={(option) => option.m_sCP}
+                                                                            variant="outlined"
+                                                                            style={{
+                                                                                transform: "translate(14px, 10px) scale(1) !important"
+                                                                            }}
+                                                                            renderInput={(params) => (
+                                                                                <div>
+                                                                                    <TextField
+                                                                                        required
+                                                                                        margin="dense"
+                                                                                        variant="outlined"
+                                                                                        label={"Código Postal"}
+                                                                                        {...params}
+                                                                                        InputProps={{
+                                                                                            ...params.InputProps,
+                                                                                            style: {
+                                                                                                height: "33px",
+                                                                                                fontSize: "14px",
+                                                                                            },
+                                                                                            type: "search",
+                                                                                            disableUnderline: true,
+                                                                                            endAdornment: (
+                                                                                                <InputAdornment
+                                                                                                    position="end">
+                                                                                                    {" "}
+                                                                                                    <IconButton
+                                                                                                        style={{
+                                                                                                            paddingRight: "0px",
+                                                                                                        }}
+                                                                                                        disabled={
+                                                                                                            state.agregar ===
+                                                                                                            "Consultar"
+                                                                                                        }
+                                                                                                        onClick={() => {
+                                                                                                            setState({
+                                                                                                                ...state,
+                                                                                                                identificadorModal:
+                                                                                                                    "codigoPostalDestinatario",
+                                                                                                                tipoModal: 7,
+                                                                                                                openDialog: true,
+                                                                                                            });
+                                                                                                        }}
+                                                                                                    >
+                                                                                                        <PageviewIcon
+                                                                                                            style={{
+                                                                                                                color: "#F9A03E",
+                                                                                                                fontSize: 32,
+                                                                                                            }}
+                                                                                                        />
+                                                                                                    </IconButton>{" "}
                                                                                                 </InputAdornment>
                                                                                             ),
                                                                                         }}
@@ -4073,10 +4473,11 @@ function Embarque(props) {
                                                                         label="Sucursal de Entrega"
                                                                         className="form-control"
                                                                         required = {state.entregaEnSucursal}
-                                                                        onChange={handleChange}
+                                                                        onChange={handleChangeSucursalEntrega}
                                                                         value={state.idSucursalEntrega}
                                                                         disabled={state.agregar === "Consultar"}
                                                                         id="idSucursalEntrega"
+                                                                        name="idSucursalEntrega"
                                                                         inputProps={{
                                                                             name: "idSucursalEntrega"
                                                                         }}
@@ -4085,6 +4486,7 @@ function Embarque(props) {
                                                                             <option
                                                                                 key={sucursal.m_nIdSucursal}
                                                                                 value={sucursal.m_nIdSucursal}
+                                                                                // value={sucursal}
                                                                             >
                                                                                 {sucursal.m_sSucursal}
                                                                             </option>
@@ -4124,7 +4526,7 @@ function Embarque(props) {
                                                             </a>
                                                             <input
                                                                 type="number"
-                                                                value={state.countPaquetes}
+                                                                value={state.paquetes.length}
                                                                 style={{ width: "40px", textAlign: "center" }}
                                                             />
                                                             <a
@@ -4158,7 +4560,7 @@ function Embarque(props) {
                                                     </a>
                                                     <input
                                                         type="number"
-                                                        value={state.countSobres}
+                                                        value={state.sobres.length}
                                                         style={{ width: "40px", textAlign: "center" }}
                                                     />
 
@@ -4214,7 +4616,7 @@ function Embarque(props) {
                                                         <div className="row">
                                                             <div className="col-md-12">
                                                                 <div className="col-sm-6 col-md-4  unit">
-                                                                    <div className="input">
+                                                                    {/*<div className="input">
                                                                         <Autocomplete
                                                                             freeSolo
                                                                             onChange={(event, newValue) =>
@@ -4295,7 +4697,35 @@ function Embarque(props) {
                                                                                 </div>
                                                                             )}
                                                                         />
-                                                                    </div>
+                                                                    </div>*/}
+                                                                    <label className="input select">
+                                                                        <FormControl fullWidth
+                                                                                     variant="outlined"
+                                                                                     margin="dense">
+                                                                            <InputLabel
+                                                                                id="ciudadEntregaLabel">Ciudad</InputLabel>
+                                                                            <Select
+                                                                                labelId="ciudadEntregaLabel"
+                                                                                label="Ciudad"
+                                                                                className="form-control"
+                                                                                required={state.diferenteEntrega}
+                                                                                value={state.ciudadEntrega}
+                                                                                disabled={state.agregar === "Consultar"}
+                                                                                onChange={handleChangeCiudadEntrega}
+                                                                                id="ciudadEntrega"
+                                                                            >
+                                                                                {dataCiudad.map((ciudad) => (
+                                                                                    <option
+                                                                                        key={ciudad.m_nIdCiudad}
+                                                                                        value={ciudad.m_nIdCiudad}
+                                                                                    >
+                                                                                        {ciudad.m_sCiudad}
+                                                                                    </option>
+                                                                                ))}
+                                                                            </Select>
+                                                                        </FormControl>
+                                                                        <i className="fa fa-arrow-down" />
+                                                                    </label>
                                                                 </div>
 
 
@@ -4303,7 +4733,7 @@ function Embarque(props) {
                                                                     <div className="input">
                                                                         <Autocomplete
                                                                             freeSolo
-                                                                            onSelect={handleSelectCodigoPostal()}
+                                                                            // onSelect={handleSelectCodigoPostal()}
                                                                             onChange={(event, newValue) =>
                                                                                 setState({
                                                                                     ...state,
@@ -4317,7 +4747,7 @@ function Embarque(props) {
                                                                             id="codigoPostalEntrega"
                                                                             disableClearable
                                                                             forcePopupIcon={false}
-                                                                            options={dataCodigoPostal.filter(cp => cp.m_nIdCiudad == state.ciudadEntrega)}
+                                                                            options={dataCodigosPostalesEntrega.filter(cp => cp.m_nIdCiudad == state.ciudadEntrega)}
                                                                             getOptionLabel={(option) =>
                                                                                 option.m_sCP
                                                                             }
@@ -4358,7 +4788,7 @@ function Embarque(props) {
                                                                                                                 ...state,
                                                                                                                 identificadorModal:
                                                                                                                     "codigoPostalEntrega",
-                                                                                                                tipoModal: 0,
+                                                                                                                tipoModal: 9,
                                                                                                                 openDialog: true,
                                                                                                             });
                                                                                                         }}
@@ -4381,20 +4811,37 @@ function Embarque(props) {
                                                                 </div>
 
                                                                 <div className="col-sm-6 col-md-4 unit">
-                                                                    <div className="input">
-                                                                        <TextField variant="outlined" margin="dense"
-                                                                            label="Zona"
-                                                                            onChange={handleChange}
-                                                                            className="form-control"
-                                                                            type="text"
-                                                                            required
-                                                                            value={state.zonaEntrega}
-                                                                            disabled={
-                                                                                state.agregar == "Consultar"
-                                                                            }
-                                                                            name="zonaEntrega"
-                                                                        />
-                                                                    </div>
+                                                                <label className="input select">
+                                                                                    <FormControl fullWidth
+                                                                                        variant="outlined"
+                                                                                        margin="dense">
+                                                                                        <InputLabel
+                                                                                            id="zonaEntregaLabel">Zona</InputLabel>
+                                                                                        <Select
+                                                                                            labelId="zonaEntregaLabel"
+                                                                                            label="Zona"
+                                                                                            className="form-control"
+
+                                                                                            value={state.zonaEntrega}
+                                                                                            disabled={state.agregar === "Consultar"}
+                                                                                            onChange={handleChangeZonaEntrega}
+                                                                                            id="zonaEntrega"
+                                                                                        >
+                                                                                            <option value="">Selecciona
+                                                                                        </option>
+
+                                                                                            {dataZona.map((zona) => (
+                                                                                                <option
+                                                                                                    key={zona.m_nIdZona}
+                                                                                                    value={zona.m_nIdZona}
+                                                                                                >
+                                                                                                    {zona.m_sDescripcion}
+                                                                                                </option>
+                                                                                            ))}
+                                                                                        </Select>
+                                                                                    </FormControl>
+                                                                                    <i className="fa fa-arrow-down" />
+                                                                                </label>
                                                                 </div>
 
                                                                 <div className="col-sm-4 col-md-4 unit">

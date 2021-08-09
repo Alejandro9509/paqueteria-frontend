@@ -39,6 +39,7 @@ class Zonas extends Component {
       height: window.innerHeight,
       selected: {},
       edit: true,
+      consult: false,
       data: [],
       columns: [
         {
@@ -116,12 +117,12 @@ class Zonas extends Component {
   handleAceptar(data) {
     console.log(data)
     var params = {
+      "m_nIdZona": this.state.idZona,
       "m_nFolio": data.folio,
       "m_sDescripcion": data.descripcion,
       "m_nIdSucursal": data.sucursal,
       "m_cyCostoRecolectar": data.costoRecolectar,
       "m_cyCostoEntregar": data.costoEntregar,
-      "m_arrZonasCiudades": [],
 
       "m_nCreadoPor": localStorage.getItem("UsuarioId"),
       "m_nModificadoPor": localStorage.getItem("UsuarioId"),
@@ -131,8 +132,9 @@ class Zonas extends Component {
       "m_arrZonasLocalidades": data.localidadesSeleccionado
     }
     console.log(JSON.stringify(params))
-    if (this.state.idZona != 0) {
+    if (this.state.idZona != 0 && this.state.idZona != '' && this.state.idZona != undefined) {
       const url = `${process.env.REACT_APP_API_URL}/Zonas/Modificar/` + this.state.idZona;
+      console.log(url)
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         showSuccess(respuesta.data)
         this.getAllData()
@@ -142,6 +144,7 @@ class Zonas extends Component {
       });
     } else {
       const url = `${process.env.REACT_APP_API_URL}/Zonas/Agregar`;
+      console.log(url)
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         showSuccess(respuesta.data)
         this.getAllData()
@@ -149,6 +152,11 @@ class Zonas extends Component {
         console.log(err)
         showSuccess(err)
       });
+      this.setState({pantalla: 1, edit: false, consult: false, agregar: "Agregar"});
+      $('.nav-tabs li ').removeClass('active');
+      $('.nav-tabs li').eq(0).addClass('active');
+      $('.tab-content div ').removeClass('in show');
+      $('#Listado').addClass('in show');
     }
 
   }
@@ -189,6 +197,7 @@ class Zonas extends Component {
         agregar: "Modificar",
         showPopUp: true,
         edit: true,
+        consult: false,
         selected: respuesta.data
       })
     });
@@ -207,6 +216,7 @@ class Zonas extends Component {
         agregar: "Consultar",
         showPopUp: true,
         edit: true,
+        consult: true,
         selected: respuesta.data
       })
     });
@@ -305,8 +315,9 @@ class Zonas extends Component {
 
               <div className="widget-wrap" id="Agregar" className="tab-pane fade">
                 {
-                  this.state.pantalla == 2 &&
-                  <ZonasAgregar edit={this.state.edit} select={this.state.selected} onSubmit={this.handleAceptar}></ZonasAgregar>
+                  this.state.pantalla === 2 &&
+                  //    Cuando se entra a agregar directamente valores: edit= true, consult = false, select = {}
+                  <ZonasAgregar edit={this.state.edit} consult={this.state.consult} select={this.state.selected} onSubmit={this.handleAceptar}/>
                 }
               </div>
             </div>

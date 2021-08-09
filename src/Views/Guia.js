@@ -4,7 +4,7 @@ import Cabecera from "../Components/Template/Cabecera";
 
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import { Tab, Tabs, Box } from '@material-ui/core';
+import {Tab, Tabs, Box, InputAdornment} from '@material-ui/core';
 import ConceptosAdicionalesManiobra from './Tarifas/ConceptosAdicionalesManiobra';
 import ConceptosAdicionalesEntrega from './Tarifas/ConceptosAdicionalesEntrega';
 import ConceptosAdicionalesRecoleccion from './Tarifas/ConceptosAdicionalesRecoleccion';
@@ -37,6 +37,7 @@ import { obtenerTipoCobro } from "../Util/Contexts/TipoCobroContext";
 import { obtenerTipoServicio } from "../Util/Contexts/TipoServiciosContext";
 import { obtenerImpuestosTipo } from "../Util/Contexts/ImpuestosContext";
 import { imprimirFormatosId, obtenerFormatosImpresion } from "../Util/Contexts/FormatosImpresionContext";
+import {obtenerCodigoPostalId} from "../Util/Contexts/CodigoPostalContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -52,7 +53,7 @@ window.jQuery = window.$ = $;
 const styles = {
     paqueteCarrusel: {
         height: "170px !important",
-        position: "initial !important"
+        // position: "initial !important"
     },
     conceptoCarrusel: {
         height: "70px !important",
@@ -73,9 +74,9 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 function Guia(props) {
-    var today = new Date();
-    var React = require('react');
-    var QRCode = require('qrcode.react');
+    let today = new Date();
+    let React = require('react');
+    let QRCode = require('qrcode.react');
     const classes = useStyles();
     localStorage.getItem("UsuarioId");
 
@@ -96,7 +97,7 @@ function Guia(props) {
         sucursal: "",
         folioRecoleccion: "",
         folioEmbarque: "",
-        folioGuía: "",
+        folioGuia: "",
         folioInforme: "",
         fecha: "",
         DerechoBorrar: 145,
@@ -125,9 +126,8 @@ function Guia(props) {
         usuarioCancela: "",
         fechaCancelado: "",
         idEmbarque: 0,
-        idEmbarque2: 0,
         hora: "",
-        idEstatusGuia: 0,
+        idEstatusGuia: '',
         estatusGuia: "",
         idMoneda: 0,
         tipoCambio: 0,
@@ -145,6 +145,7 @@ function Guia(props) {
         sRFCDestinatario: "",
         sDomicilioDestinatario: "",
         idCodigoPostalDestinatario: "",
+        codigoPostalDestinatario: "",
         sCorreoDestinatario: "",
         idCIudadDestinatario: 0,
         sTelefonoDestinatario: "",
@@ -218,6 +219,7 @@ function Guia(props) {
             }
         ],
         tab: 0,
+        idTipoServicio: '',
         height: window.innerHeight
     })
 
@@ -236,105 +238,74 @@ function Guia(props) {
     const [dataEstatusGuia, setDataEstatusGuia] = React.useState([])
     const [dataEmbarque, setDataEmbarque] = React.useState([])
     const [dataConcepto, setDataConcepto] = React.useState([])
-    const [dataImpuestoTraslado, setDataImpuestoTraslado] = React.useState([])
-    const [dataImpuestoRetiene, setDataImpuestoRetiene] = React.useState([])
+    // const [dataImpuestoTraslado, setDataImpuestoTraslado] = React.useState([])
+    // const [dataImpuestoRetiene, setDataImpuestoRetiene] = React.useState([])
 
-    const [dataCiudad, setDataCiudad] = React.useState([])
+
+
+    // const [dataCiudad, setDataCiudad] = React.useState([])
 
     const [dataTipoServicio, setDataTipoServicio] = React.useState([])
 
     const handleAceptar = (e) => {
         e.preventDefault()
-        var params = {
-
-            "IdSucursal": state.idSucursal,
-            "FolioGuía": state.folioGuia,
-            "Fecha": state.fecha,
+        console.log(state.conceptosAdicionales)
+        let params = {
+            "TIpoCambio": state.tipoCambio,
+            "FolioGuia": state.folioGuia,
             "IdEstatusGuia": state.idEstatusGuia,
-            "idEmbarque": state.idEmbarque,
-            "idEmbarque2": state.idEmbarque2,
-            "IdOrigen": state.origen,
-            "destino": state.destino,
-            "UsuarioCancela": state.usuarioCancela,
-            "FechaCancelado": state.fechaCancelado,
-            "Hora": state.hora,
+            "IdEmbarque": state.idEmbarque,
             "IdMoneda": state.idMoneda,
-            "TipoCambio": state.tipoCambio,
-            "IdTipoCobro": state.idTipoCobro,
-            "NombreRemitente": state.nombreRemitente,
-            "RfcRemitente": state.rfcRemitente,
-            "DomicilioRemitente": state.domicilioRemitente,
-            "IdCodigoPostalRemitente": state.idCodigoPostalRemitente,
-            "ciudadRemitente": state.ciudadRemitente,
-            "CorreoRemitente": state.correoRemitente,
-            "TelefonoRemitente": state.telefonoRemitente,
-            "ContactoRemitente": state.contactoRemitente,
-            "IdCiudadOrigen": state.idCiudadOrigen,
-            "SNombreDestinatario": state.sNombreDestinatario,
-            "SRFCDestinatario": state.sRFCDestinatario,
-            "SDomicilioDestinatario": state.sDomicilioDestinatario,
-            "IdCodigoPostalDestinatario": state.idCodigoPostalDestinatario,
-            "SCorreoDestinatario": state.sCorreoDestinatario,
-            "IdCIudadDestinatario": state.idCIudadDestinatario,
-            "STelefonoDestinatario": state.sTelefonoDestinatario,
-            "SContactoDestinatario": state.sContactoDestinatario,
-            "IdCiudadDestino": state.idCiudadDestino,
-            "FechaEntrega": state.fechaEntrega,
-            "HoraEntrega": state.HoraEntrega,
-            "NoPaquetes": state.NoPaquetes,
-            "NoSobres": state.NoSobres,
-            "IdOperador": state.idOperador,
-            "IdUnidad": state.idUnidad,
-            "FechaSalida": state.fechaSalida,
-            "HoraSalida": state.horaSalida,
-            "arrClsDetalle": [],
-            "FechaCancelacion": state.FechaCancelacion,
-            "UsuarioCancelacion": state.usuarioCancelacion,
-            "MotivoCancelacion": state.MotivoCancelacion,
-            "EntregarMismoDomicilio": state.entregarMismoDomicilio,
-            "FechaLlegada": state.fechaLlegada,
-            "HoraLlegada": state.horaLlegada,
-            "CodigoPostalEntrega": state.codigoPostalEntrega,
-            "IdCiudadEntrega": state.idCiudadEntrega,
-            "IdZonaEntrega": state.idZonaEntrega,
-            "DomicilioEntrega": state.domicilioEntrega,
-            "EntregarEn": state.entregarEn,
-            "DatosAdicionalesis": state.datosAdicionalesis,
-            "Tracking": state.tracking,
-            "arClsGuiaConceptos": state.conceptosAdicionales.map(c => ({ m_nIdConceptosFacturacion: c.concepto.m_nIdConceptosFacturacion, m_cImporte: c.importe, m_nIdImpuestoTraslada: c.traslada, m_nIdImpuestoRetiene: c.retiene, m_cImporteRetiene: c.importeRet, m_cImporteIva: c.importeIva })),
+
             "CreadoPor": state.creadoPor,
             "ModificadoPor": state.modificadoPor,
-            "CreadoEl": state.creadoEl,
-            "ModificadoEl": state.modificadoEl,
-            "Idguia": state.IdGuia,
+            "IdSucursal": state.idSucursal,
             "ValorDeclarado": state.ValorDeclarado,
             "idTipoServicio": state.idTipoServicio,
 
+            "arClsGuiaConceptos": state.conceptosAdicionales.map(c => ({
+                m_nIdConceptosFacturacion: c.concepto.m_nIdConceptosFacturacion,
+                m_cImporte: c.importe,
+                m_nIdImpuestoTraslada: c.traslada,
+                m_nIdImpuestoRetiene: c.retiene,
+                m_cImporteRetiene: c.importeRet,
+                m_cImporteIva: c.importeIva,
+                m_bActivo: true,
+            })),
 
         }
+
+        console.log(params)
         console.log(JSON.stringify(params));
 
-        debugger;
-        if (state.idGuia != 0) {
-            modificarGuia(state.idGuia, params).then(respuesta => {
-                showSuccess(respuesta.data)
-                getAllData()
-            }).catch(err => {
-                console.log(err)
-                showSuccess(err)
-            });
-        } else {
+        // debugger;
+        console.log('id guia')
+        console.log(state.idGuia)
+        if (state.idGuia == 0 || state.idGuia == '' || state.idGuia == undefined) {
             agregarGuia(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 //window.location.reload();
-                var resp = respuesta.data;
-                //debugger;
-                var vGuia = resp.substring(resp.indexOf(":") + 2);
+                let resp = respuesta.data;
+                let vGuia = resp.substring(resp.indexOf(":") + 2);
+                limpiarCampos()
                 getImpresion(vGuia);
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
             });
+            /*showSuccess('Guia agregada')
+            limpiarCampos()*/
+        } else {
+            modificarGuia(state.idGuia, params).then(respuesta => {
+                showSuccess(respuesta.data)
+                getAllData()
+                limpiarCampos()
+            }).catch(err => {
+                console.log(err)
+                showSuccess(err)
+            });
+            /*showSuccess('Guia modificada')
+            limpiarCampos()*/
         }
 
     }
@@ -342,7 +313,6 @@ function Guia(props) {
     function getUltimoFolioGuia() {
         ultimoFolioGuia().then((respuesta) => { SetDataFolioGuia(respuesta.data); });
     }
-
 
     async function getImpresion(id) {
         //showSuccess (state.nGuiaId);		
@@ -434,87 +404,67 @@ function Guia(props) {
     }
 
     function handleShowModificar(id) {
-        //console.log(row.original.m_nIdGuia)
-        //TODO
-        //var valor2="";
         obtenerGuiaId(id).then(respuesta => {
-            //console.log(respuesta.data)
-            // debugger;
+            console.log('MOdifica guia:')
+            console.log(respuesta.data)
+            //Primero se obtienen las monedas que corresponden a la sucursal
+            //Despues se obtienen los datos del embarque al que pertenece la guia para mostrar los datos
             cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)
-            handleEmbarqueModificar(respuesta)
-            //valor2=respuesta.data.m_nIdEmbarque;
-            //     debugger;
-            setState({
-                ...state,
-                agregar: "Modificar",
-                showPopUp: true,
-                IdEmbarque: respuesta.data.m_nIdEmbarque,
-                folioGuía: respuesta.data.m_sFolioGuia,
-                folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
-                folioInforme: respuesta.data.m_sFolioInforme,
-                idGuia: respuesta.data.m_nIdGuia,
-                fecha: respuesta.data.m_dFecha,
-                hora: respuesta.data.m_sHora,
-                idEstatusGuia: respuesta.data.m_nIdEstatusGuia,
-                valorDeclardao: respuesta.data.m_cValorDeclarado,
-                idMoneda: respuesta.data.m_nIdMoneda,
-                tipoCambio: respuesta.data.m_cTIpoCambio,
-                idTipoCobro: respuesta.data.m_nIdTIpoCobro,
-                arrClsDetalle: respuesta.data.m_arrClsDetalle,
-                tracking: respuesta.data.m_nTracking,
-                arClsGuiaConceptos: respuesta.data.m_arClsGuiaConceptos,
-                creadoEl: respuesta.data.m_dCreadoEl,
-                idSucursal: respuesta.data.IdSucursal
+            handleEmbarque(respuesta.data.m_nIdEmbarque)
+            setState(state => {
+                return {
+                    ...state,
+                    agregar: "Modificar",
+                    showPopUp: true,
+                    dTipoServicio: respuesta.data.m_nIdTipoServicio,
+                    idEstatusGuia: respuesta.data.m_nIdEstatusGuia,
 
-            });
-            //handleEmbarque (respuesta.data.m_nIdEmbarque)
-            // showSuccess(state.idMoneda)
+                    fecha: respuesta.data.m_dFecha,
+                    folioGuia: respuesta.data.m_nFolioGuia,
+                    folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
+                    idGuia: respuesta.data.m_nIdGuia,
+                    hora: respuesta.data.m_sHora,
+                    tracking: respuesta.data.m_nTracking,
+                    arClsGuiaConceptos: respuesta.data.m_arClsGuiaConceptos,
+                    creadoEl: respuesta.data.m_dCreadoEl,
+                }
+            })
+
         }).catch(function (err) {
             console.log(err.data)
         });
-        // debugger;
-        // handleEmbarqueModificar (valor2)      
 
     }
 
     function handleShowConsultar(id) {
         obtenerGuiaId(id).then(respuesta => {
-            // debugger;
-            console.log(respuesta)
+            console.log('Consulta guia:')
+            console.log(respuesta.data)
             cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)
-            handleEmbarqueModificar(respuesta)
-            //valor2=respuesta.data.m_nIdEmbarque;
-            //     debugger;
-            setState({
-                ...state,
-                agregar: "Consultar",
-                showPopUp: true,
-                IdEmbarque: respuesta.data.m_nIdEmbarque,
-                folioGuía: respuesta.data.m_nFolioGuia,
-                folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
-                folioInforme: respuesta.data.m_nFolioInforme,
-                idGuia: respuesta.data.m_nIdGuia,
-                fecha: respuesta.data.m_dFecha,
-                hora: respuesta.data.m_sHora,
-                idEstatusGuia: respuesta.data.m_nIdEstatusGuia,
-                valorDeclardao: respuesta.data.m_cValorDeclarado,
-                idMoneda: respuesta.data.m_nIdMoneda,
-                tipoCambio: respuesta.data.m_cTIpoCambio,
-                idTipoCobro: respuesta.data.m_nIdTIpoCobro,
-                arrClsDetalle: respuesta.data.m_arrClsDetalle,
-                tracking: respuesta.data.m_nTracking,
-                arClsGuiaConceptos: respuesta.data.m_arClsGuiaConceptos,
-                creadoEl: respuesta.data.m_dCreadoEl,
-                idSucursal: respuesta.data.IdSucursal
+            handleEmbarque(respuesta.data.m_nIdEmbarque)
 
+            setState(state => {
+                return {
+                ...state,
+                    agregar: "Consultar",
+                    showPopUp: true,
+                    idTipoServicio: respuesta.data.m_nIdTipoServicio,
+                    idEstatusGuia: respuesta.data.m_nIdEstatusGuia,
+
+                    fecha: respuesta.data.m_dFecha,
+                    folioGuia: respuesta.data.m_nFolioGuia,
+                    folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
+                    idGuia: respuesta.data.m_nIdGuia,
+                    hora: respuesta.data.m_sHora,
+                    tracking: respuesta.data.m_nTracking,
+                    arClsGuiaConceptos: respuesta.data.m_arClsGuiaConceptos,
+                    creadoEl: respuesta.data.m_dCreadoEl,
+
+                }
             });
-            //handleEmbarque (respuesta.data.m_nIdEmbarque)
-            // showSuccess(state.idMoneda)
         }).catch(function (err) {
             console.log(err.data)
         });
-        // debugger;
-        // handleEmbarqueModificar (valor2)      
 
     }
 
@@ -523,7 +473,7 @@ function Guia(props) {
             setState({
                 ...state,
                 usuarioCancela: respuesta.data.m_nUsuarioCancelacion != 0 ? respuesta.data.m_nUsuarioCancelacion : localStorage.getItem("Usuario"),
-                folioGuía: respuesta.data.m_nFolioGuia,
+                folioGuia: respuesta.data.m_nFolioGuia,
                 sucursalCancelacion: respuesta.data.m_sSucursal,
                 fechaCancelado: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear(),
                 estatusGuia: respuesta.data.m_sEstatusGuia,
@@ -541,6 +491,7 @@ function Guia(props) {
             "usuarioCancelacion": localStorage.getItem("UsuarioId"),
             "fechaCancelacion": state.fechaCancelado
         }
+        console.log(JSON.stringify(params))
         cancelarGuia(state.idGuia, params).then((respuesta) => {
             console.log(respuesta.data)
         })
@@ -595,9 +546,9 @@ function Guia(props) {
           );
     }*/
 
-    function handleShowImprimir() {
+    /*function handleShowImprimir() {
         //getImpresion(38);
-    }
+    }*/
 
     function handleShowAgregar() {
         setState({
@@ -608,7 +559,7 @@ function Guia(props) {
             sucursal: "",
             folioRecoleccion: "",
             folioEmbarque: "",
-            folioGuía: dataFolioGuia.length !== 0 ? dataFolioGuia[0].m_sFolioGuia : null,
+            folioGuia: dataFolioGuia.length !== 0 ? dataFolioGuia[0].m_sFolioGuia : null,
             folioInforme: "",
             fecha: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
             origen: "",
@@ -617,7 +568,7 @@ function Guia(props) {
             fechaCancelado: "",
             idGuia: 0,
             hora: "",
-            idEstatusGuia: 4,
+            idEstatusGuia: '',
             idMoneda: 0,
             tipoCambio: 0,
             idTipoCobro: 0,
@@ -669,10 +620,10 @@ function Guia(props) {
     }
 
     const handleChange = event => {
-        //console.log(event.target.id + " : " + event.target.value)
+        console.log(event.target.name + " : " + event.target.value)
         setState({
             ...state,
-            [event.target.id]: event.target.value
+            [event.target.name]: event.target.value
         });
     };
 
@@ -718,13 +669,6 @@ function Guia(props) {
         })
     }
 
-    function handleSelectRow(id, event) {
-        setState({
-            ...state,
-            idGuia: id
-        });
-    }
-
     const handleChangePaquete = (event, index) => {
 
         var { paquetes } = state
@@ -745,7 +689,6 @@ function Guia(props) {
         });
     };
 
-
     const columns = React.useMemo(() => [
         {
             headerName: "Acciones",
@@ -759,7 +702,7 @@ function Guia(props) {
 
                         </Tooltip>
                         <Tooltip title="Consultar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdGuia))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdGuia))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
@@ -817,96 +760,21 @@ function Guia(props) {
     ]);
 
     useEffect(value => {
-        if (props.location.idEmbarque != undefined) {
-            obtenerEmbarquesId(props.location.idEmbarque).then(respuesta => {
-
-                const paquetesTemp = [];
-                const sobresTemp = [];
-                console.log(respuesta.data.m_arrPaquetes);
-
-                for (var i = 0; i < respuesta.data.m_arrPaquetes.length; i++) {
-
-                    if (respuesta.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle === "" || respuesta.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle === "0")
-                        continue;
-
-                    paquetesTemp.push({
-                        "peso": respuesta.data.m_arrPaquetes[i].m_xPeso,
-                        "largo": respuesta.data.m_arrPaquetes[i].m_xLargo,
-                        "ancho": respuesta.data.m_arrPaquetes[i].m_xAncho,
-                        "alto": respuesta.data.m_arrPaquetes[i].m_xAlto,
-                        "volumen": respuesta.data.m_arrPaquetes[i].m_xVolumen,
-                        "tipoEmbalaje": respuesta.data.m_arrPaquetes[i].m_nTipo,
-                        "valorDeclarado": respuesta.data.m_arrPaquetes[i].m_cValorDeclarado,
-                        "descripcionPaquete": respuesta.data.m_arrPaquetes[i].m_sDescripcion,
-                        "observacionesPaquete": respuesta.data.m_arrPaquetes[i].m_sObservaciones,
-                        "id": respuesta.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle
-                    });
-                }
-                paquetesTemp.splice(0, 1);
-
-                for (var i = 0; i < respuesta.data.m_arrSobres.length; i++) {
-
-                    if (respuesta.data.m_arrSobres[i].m_nIdEmbarqueDetalle == "" || respuesta.data.m_arrSobres[i].m_nIdEmbarqueDetalle == "0")
-                        continue;
-
-                    sobresTemp.push({
-                        "descripcionSobre": respuesta.data.m_arrSobres[i].m_sDescripcion,
-                        "id": respuesta.data.m_arrSobres[i].m_nIdEmbarqueDetalle
-                    });
-                }
-                sobresTemp.splice(0, 1);
-                //showSuccess(respuesta.data.m_nIdEmbarque);
-                //setDataEmbarque(respuesta.data)
-                setState({
-                    ...state,
-                    fecha: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
-                    idEmbarque: respuesta.data.m_nIdEmbarque,
-                    idEmbarque2: respuesta.data.m_nIdEmbarque,
-                    idSucursal: respuesta.data.IdSucursal,
-                    idMoneda: respuesta.data.m_nIdMoneda,
-                    nombreRemitente: respuesta.data.m_sNOmbreRemitente,
-                    RFCRemitente: respuesta.data.m_sRFCRemitente,
-                    domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                    codigoPostalRemitente: respuesta.data.m_nIdCodigoPostalRemitente,
-                    ciudadRemitente: respuesta.data.m_sCiudadRemitente,
-                    correoRemitente: respuesta.data.m_sCorreoRemitente,
-                    tipoCambio: respuesta.data.m_cTIpoCambio,
-                    idTipoCobro: respuesta.data.m_nIdTIpoCobro,
-                    telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
-                    contactoRemitente: respuesta.data.m_sContactoRemitente,
-                    origenRemitente: respuesta.data.m_sCiudadRemitente,
-                    sNombreDestinatario: respuesta.data.m_sNombreDestinatario,
-                    sRFCDestinatario: respuesta.data.m_sRFCDestinatario,
-                    sDomicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                    idCodigoPostalDestinatario: respuesta.data.m_nIdCodigoPostalDestinatario,
-                    ciudadDestinatario: respuesta.data.m_sCIudadDestinatario,
-                    sCorreoDestinatario: respuesta.data.m_sCorreoDestinatario,
-                    sTelefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
-                    sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
-                    CiudadDestino: respuesta.data.m_sCIudadDestinatario,
-                    paquetes: paquetesTemp,
-                    sobres: sobresTemp
-                })
-                obtenerEmbarqueMoneda(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, state.idGuia).then(respuesta => {
-                    setDataEmbarque(respuesta.data)
-                })
-            });
-        }
         if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
             showSuccess("Es necesario iniciar sesion para acceder a este proceso");
             window.location.replace("login");
             return;
         }
-        getAllData();
-        getAllDataSucursal();
-        getAllDataMoneda();
-        getAllDataTipoCobro();
-        getAllDataTipoServicio();
-        getAllDataEstatusGuia();
-        getAllCiudades();
-        getAllConceptos();
-        getAllImpuestosTraslado();
-        getAllImpuestosRetiene();
+        getAllData()
+        getAllDataSucursal()
+        getAllDataMoneda()
+        getAllDataTipoCobro()
+        getAllDataTipoServicio()
+        getAllDataEstatusGuia()
+        // getAllCiudades();
+        getAllConceptos()
+        // getAllImpuestosTraslado();
+        // getAllImpuestosRetiene();
         getUltimoFolioGuia()
         getTipoCambio()
         getFormatosImpresion()
@@ -916,7 +784,7 @@ function Guia(props) {
         obtenerGuia().then(respuesta => {
             setData(respuesta.data)
         });
-    };
+    }
 
     function addConcepto(data) {
         const { conceptosAdicionales } = state
@@ -959,25 +827,248 @@ function Guia(props) {
         obtenerSucursales().then(respuesta => {
             setDataSucursal(respuesta.data)
         });
-    };
+    }
 
     async function getAllConceptos() {
-        obtenerConceptosFacturacion().then(respuesta => {
-            setDataConcepto(respuesta.data)
-        });
-    };
+        obtenerConceptosFacturacion().then(respuestaConceptos => {
+            setDataConcepto(respuestaConceptos.data)
+            if (props.location.idEmbarque != undefined) {
 
-    async function getAllImpuestosRetiene() {
+                obtenerEmbarquesId(props.location.idEmbarque).then(respuesta => {
+                    setState(state => {
+                        return {
+                            ...state,
+                            fecha: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
+                        }
+                    })
+
+                    console.log('Embarque datos:')
+                    console.log(respuesta.data)
+
+
+                    setDataFromEmbarque(respuesta, respuestaConceptos.data)
+                    obtenerEmbarqueMoneda(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, state.idGuia).then(respuesta => {
+                        setDataEmbarque(respuesta.data)
+                    })
+
+                });
+            }
+        });
+    }
+
+    const setDataFromEmbarque = (respuesta, respuestaConceptos) => {
+        console.log('Embarque datos:')
+        console.log(respuesta.data)
+        const paquetesTemp = [];
+        const sobresTemp = [];
+        let valorDeclaradoTotal = 0
+
+        const {m_arrPaquetes: paquetes, m_arrSobres: sobres} = respuesta.data
+
+        paquetes.forEach((paq) => {
+            if (!(paq.m_nIdEmbarqueDetalle === "" || paq.m_nIdEmbarqueDetalle === "0")){
+                paquetesTemp.push({
+                    peso: paq.m_xPeso,
+                    largo: paq.m_xLargo,
+                    ancho: paq.m_xAncho,
+                    alto: paq.m_xAlto,
+                    volumen: paq.m_xVolumen,
+                    tipoEmbalaje: paq.m_nTipo,
+                    valorDeclarado: paq.m_cValorDeclarado,
+                    descripcionPaquete: paq.m_sDescripcion,
+                    id: paq.m_nIdEmbarqueDetalle,
+                    ctd: paq.ctd
+                })
+                valorDeclaradoTotal = valorDeclaradoTotal + paq.m_cValorDeclarado
+            }
+        })
+
+        sobres.forEach((sob) => {
+            if (!(sob.m_nIdEmbarqueDetalle === "" || sob.m_nIdEmbarqueDetalle === "0")){
+                sobresTemp.push({
+                    descripcionSobre: sob.m_sDescripcion,
+                    id: sob.m_nIdEmbarqueDetalle
+                })
+            }
+        })
+
+        obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalRemitente).then(respuesta => {
+          setState( state => {
+              return{
+                  ...state,
+                  codigoPostalRemitente: respuesta.data.m_sCP,
+              }
+          })
+        })
+        obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalDestinatario).then(respuesta => {
+            setState(state => {
+                return {
+                    ...state,
+                    codigoPostalDestinatario: respuesta.data.m_sCP
+                }
+            })
+        })
+
+        setState(state => {
+            return{
+                ...state,
+                idEmbarque: respuesta.data.m_nIdEmbarque,
+                idSucursal: respuesta.data.IdSucursal,
+                idMoneda: respuesta.data.m_nIdMoneda,
+                tipoCambio: respuesta.data.m_cTIpoCambio,
+                idTipoCobro: respuesta.data.m_nIdTIpoCobro,
+                folioInforme: respuesta.data.m_nFolioInforme != "" ? respuesta.data.m_nFolioInforme : '',
+
+                nombreRemitente: respuesta.data.m_sNOmbreRemitente,
+                RFCRemitente: respuesta.data.m_sRFCRemitente,
+                domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
+                idCodigoPostalRemitente: respuesta.data.m_nIdCodigoPostalRemitente,
+                ciudadRemitente: respuesta.data.m_sCiudadRemitente,
+                correoRemitente: respuesta.data.m_sCorreoRemitente,
+                telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
+                contactoRemitente: respuesta.data.m_sContactoRemitente,
+                origenRemitente: respuesta.data.m_sCiudadOrigen,
+                idCiudadOrigen: respuesta.data.m_nIdCiudadOrigen,
+
+                sNombreDestinatario: respuesta.data.m_sNombreDestinatario,
+                sRFCDestinatario: respuesta.data.m_sRFCDestinatario,
+                sDomicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
+                idCodigoPostalDestinatario: respuesta.data.m_nIdCodigoPostalDestinatario,
+                ciudadDestinatario: respuesta.data.m_sCIudadDestinatario,
+                sCorreoDestinatario: respuesta.data.m_sCorreoDestinatario,
+                sTelefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
+                sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
+                CiudadDestino: respuesta.data.m_sCiudadDestino,
+
+                paquetes: paquetesTemp,
+                sobres: sobresTemp,
+
+                IdEmbarque: respuesta.data.m_nIdEmbarque,
+                ValorDeclarado: valorDeclaradoTotal,
+
+                folioGuia: respuesta.data.m_nFolioGuia,
+                folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
+                idGuia: respuesta.data.m_nIdGuia,
+                hora: respuesta.data.m_sHora,
+                tracking: respuesta.data.m_nTracking,
+                arClsGuiaConceptos: respuesta.data.m_arClsGuiaConceptos,
+                creadoEl: respuesta.data.m_dCreadoEl,
+
+            }
+        })
+        obtenerTarifasPorEmbarque(respuesta.data.m_nIdEmbarque, respuestaConceptos, paquetesTemp)
+    }
+
+    const obtenerTarifasPorEmbarque = (idEmbarque, respuestaConceptos,paquetesTemp) => {
+        const conceptosTemp = []
+        let ivaTraslada = []
+        let ivaRetiene = []
+        axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${idEmbarque}`, { headers }).then(tarifa => {
+            console.log('tarifas by embarque')
+            console.log(tarifa.data)
+            let pesoTotal = 0
+            paquetesTemp.forEach( (p) => {
+                pesoTotal = pesoTotal + p.peso
+            })
+            if (tarifa.data.length !== 0) {
+                tarifa.data[0].m_arrArConceptos.forEach(element => {
+                    if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal ){
+                        conceptosTemp.push({
+                            concepto: respuestaConceptos.find(c => c.m_nIdConceptosFacturacion == element.m_nIdConceptosFacturacion),
+                            importe: element.m_cImporte,
+                            retiene: element.m_nIdImpuestoRetiene,
+                            traslada: element.m_nIdImpuestoTraslada,
+                            importeRet: element.m_cImporteRetiene,
+                            importeIVA: element.m_cImporteIva,
+                            rangoMinimo: element.m_xnRangoMinimo,
+                            rangoMaximo: element.m_xnRangoMaximo,
+                            nombreConcepto: element.m_sConcepto,
+                            tipoCalculo: element.m_nIdTipoCalculo
+                        })
+                    }
+                })
+                ivaTraslada = getUniqueListBy(conceptosTemp, "traslada").map(i => i.traslada);
+                ivaRetiene = getUniqueListBy(conceptosTemp, "retiene").map(i => i.retiene);
+            }
+
+            setState(state => {
+                return {
+                    ...state,
+                    fecha: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
+                    conceptosAdicionales: conceptosTemp,
+                    ivaRetiene: ivaRetiene,
+                    ivaTraslada: ivaTraslada
+                }
+            })
+
+        })
+    }
+
+    const limpiarCampos = () => {
+        setState(state => {
+            return{
+                ...state,
+                //Informacion general
+                idSucursal: '',
+                folioGuia: 0,
+                IdEmbarque: 0,
+                folioInforme: '',
+                tracking: '',
+                fecha: '',
+                idEstatusGuia: '',
+                idMoneda: 0,
+                tipoCambio: 0,
+                //Datos remitente
+                nombreRemitente: '',
+                RFCRemitente: '',
+                domicilioRemitente: '',
+                idCodigoPostalRemitente: '',
+                ciudadRemitente: '',
+                correoRemitente: '',
+                telefonoRemitente: '',
+                contactoRemitente: '',
+                origenRemitente: '',
+                idCiudadOrigen: '',
+                //Datos destinatario
+                sNombreDestinatario: '',
+                sRFCDestinatario: '',
+                sDomicilioDestinatario: '',
+                idCodigoPostalDestinatario: '',
+                ciudadDestinatario: '',
+                sCorreoDestinatario: '',
+                sTelefonoDestinatario: '',
+                sContactoDestinatario: '',
+                CiudadDestino: '',
+                //Paquetes
+                paquetes: [],
+                sobres: [],
+                //Detalles de facturacion
+                idTipoCobro: 0,
+                idTipoServicio: '',
+                ValorDeclarado: '',
+                //Conceptos de facturacion
+                arClsGuiaConceptos: [],
+                //Otros datos  no visuales
+                folioRecoleccion: '',
+                idGuia: '',
+                hora: '',
+                idEmbarque: '',
+                creadoEl: '',
+            }
+        })
+    }
+
+    /*async function getAllImpuestosRetiene() {
         obtenerImpuestosTipo(2).then(respuesta => {
             setDataImpuestoRetiene(respuesta.data)
         });
-    };
+    };*/
 
-    async function getAllImpuestosTraslado() {
+    /*async function getAllImpuestosTraslado() {
         obtenerImpuestosTipo(1).then(respuesta => {
             setDataImpuestoTraslado(respuesta.data)
         });
-    };
+    };*/
 
     async function getAllDataMoneda() {
         obtenerMonedas().then(respuesta => {
@@ -1004,13 +1095,13 @@ function Guia(props) {
         });
     };
 
-    async function getAllCiudades() {
+    /*async function getAllCiudades() {
         obtenerCiudades().then(respuesta => {
             setDataCiudad(respuesta.data)
         });
-    };
+    };*/
 
-    async function cargaEmbarqueSucursal(valor) {
+    /*async function cargaEmbarqueSucursal(valor) {
         //showSuccess(valor);
         setState({
             ...state,
@@ -1024,226 +1115,42 @@ function Guia(props) {
         obtenerEmbarqueMoneda(valor, state.idMoneda, state.idGuia).then(respuesta => {
             setDataEmbarque(respuesta.data)
         });
-    };
+    };*/
 
     function cargaEmbarqueModificar(valorSucursal, valorMoneda, valorGuia) {
-        //showSuccess(valorSucursal + "-" + valorMoneda)
         obtenerEmbarqueMoneda(valorSucursal, valorMoneda, valorGuia).then(respuesta => {
-            //console.log(respuesta);
             setDataEmbarque(respuesta.data)
         });
     };
 
-    async function cargaEmbarqueMoneda(valor) {
-        //showSuccess(valor);
+    //Recibe el id de moneda seleccionado para traer los embarques registrados con ese tipo de moneda
+    async function cargaEmbarqueMoneda(idMoneda) {
         setState({
             ...state,
-            idMoneda: valor
+            idMoneda: idMoneda
         });
-        //showSuccess (state.idSucursal +"-" +state.idMoneda);
 
         if (state.idSucursal === "" || state.idSucursal === "0") return;
-        if (valor === "" || valor === "0") return;
+        if (idMoneda === "" || idMoneda === "0") return;
 
-        obtenerEmbarqueMoneda(state.idSucursal, valor, state.idGuia).then(respuesta => {
+        obtenerEmbarqueMoneda(state.idSucursal, idMoneda, state.idGuia).then(respuesta => {
             setDataEmbarque(respuesta.data)
         });
     };
 
+    //Recibe el id de embarque para obtener sus datos del servidor y mostrarlos en pantalla
     function handleEmbarque(embarque) {
-
         obtenerEmbarquesId(embarque).then(respuesta => {
-            console.log(embarque);
-            const paquetesTemp = [];
-            const sobresTemp = [];
-            //console.log(paquetesTemp);
-
-            for (var i = 0; i < respuesta.data.m_arrPaquetes.length; i++) {
-
-                if (respuesta.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle === "" || respuesta.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle === "0")
-                    continue;
-
-                paquetesTemp.push({
-
-                    "peso": respuesta.data.m_arrPaquetes[i].m_xPeso,
-                    "largo": respuesta.data.m_arrPaquetes[i].m_xLargo,
-                    "ancho": respuesta.data.m_arrPaquetes[i].m_xAncho,
-                    "alto": respuesta.data.m_arrPaquetes[i].m_xAlto,
-                    "volumen": respuesta.data.m_arrPaquetes[i].m_xVolumen,
-                    "tipoEmbalaje": respuesta.data.m_arrPaquetes[i].m_nTipo,
-                    "valorDeclarado": respuesta.data.m_arrPaquetes[i].m_cValorDeclarado,
-                    "descripcionPaquete": respuesta.data.m_arrPaquetes[i].m_sDescripcion,
-                    "observacionesPaquete": respuesta.data.m_arrPaquetes[i].m_sObservaciones,
-                    "id": respuesta.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle
-                });
-            }
-
-            for (var i = 0; i < respuesta.data.m_arrSobres.length; i++) {
-
-                if (respuesta.data.m_arrSobres[i].m_nIdEmbarqueDetalle === "" || respuesta.data.m_arrSobres[i].m_nIdEmbarqueDetalle === "0")
-                    continue;
-
-                sobresTemp.push({
-                    "descripcionSobre": respuesta.data.m_arrSobres[i].m_sDescripcion,
-                    "id": respuesta.data.m_arrSobres[i].m_nIdEmbarqueDetalle
-                });
-            }
-            //showSuccess(respuesta.data.m_nIdEmbarque);
-            //setDataEmbarque(respuesta.data)
-            var conceptosTemp = []
-            var ivaTraslada = []
-            var ivaRetiene = []
-            //var flete = dataConcepto.find(c => c.m_nIdConceptosFacturacion === 22)
-            axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${embarque}`, { headers }).then(tarifa => {
-
-                if (tarifa.data.length !== 0) {
-                    //setDataConcepto(tarifa.m_arrArConceptos)
-                    tarifa.data[0].m_arrArConceptos.forEach(element => {
-                        conceptosTemp.push({ concepto: dataConcepto.find(c => c.m_nIdConceptosFacturacion === element.m_nIdConceptosFacturacion), importe: element.m_cImporte, retiene: element.m_nIdImpuestoRetiene, traslada: element.m_nIdImpuestoTraslada, importeRet: element.m_cImporteRetiene, importeIVA: element.m_cImporteIva, rangoMinimo: element.m_xnRangoMinimo, rangoMaximo: element.m_xnRangoMaximo, nombreConcepto: element.m_sConcepto, tipoCalculo: element.m_nIdTipoCalculo })
-
-                    })
-                    ivaTraslada = getUniqueListBy(conceptosTemp, "traslada").map(i => i.traslada);
-                    ivaRetiene = getUniqueListBy(conceptosTemp, "retiene").map(i => i.retiene);
-                }
-
-                setState({
-                    ...state,
-                    idEmbarque: respuesta.data.m_nIdEmbarque,
-                    idEmbarque2: respuesta.data.m_nIdEmbarque,
-                    nombreRemitente: respuesta.data.m_sNOmbreRemitente,
-                    RFCRemitente: respuesta.data.m_sRFCRemitente,
-                    domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                    codigoPostalRemitente: respuesta.data.m_nIdCodigoPostalRemitente,
-                    ciudadRemitente: respuesta.data.m_sCiudadRemitente,
-                    correoRemitente: respuesta.data.m_sCorreoRemitente,
-                    tipoCambio: respuesta.data.m_cTIpoCambio,
-                    idTipoCobro: respuesta.data.m_nIdTIpoCobro,
-                    telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
-                    contactoRemitente: respuesta.data.m_sContactoRemitente,
-                    origenRemitente: respuesta.data.m_sCiudadRemitente,
-                    sNombreDestinatario: respuesta.data.m_sNombreDestinatario,
-                    sRFCDestinatario: respuesta.data.m_sRFCDestinatario,
-                    sDomicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                    idCodigoPostalDestinatario: respuesta.data.m_nIdCodigoPostalDestinatario,
-                    ciudadDestinatario: respuesta.data.m_sCIudadDestinatario,
-                    sCorreoDestinatario: respuesta.data.m_sCorreoDestinatario,
-                    sTelefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
-                    sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
-                    CiudadDestino: respuesta.data.m_sCIudadDestinatario,
-                    paquetes: paquetesTemp,
-                    sobres: sobresTemp,
-                    conceptosAdicionales: conceptosTemp, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada
-                })
-            })
-
-
+            setDataFromEmbarque(respuesta, dataConcepto)
         });
     };
 
-    function handleEmbarqueModificar(embarque) {
-        obtenerEmbarquesId(embarque.data.m_nIdEmbarque).then(respuesta => {
-            //setDataEmbarque(respuesta.data)
-            const paquetesTemp = state.paquetes;
-            const sobresTemp = state.sobres;
-            const conceptosTemp = state.conceptos;
-            //console.log(paquetesTemp);
-
-            for (var i = 0; i < respuesta.data.m_arrPaquetes.length; i++) {
-
-                if (respuesta.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle == "" || respuesta.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle == "0")
-                    continue;
-
-                paquetesTemp.push({
-
-                    "peso": respuesta.data.m_arrPaquetes[i].m_xPeso,
-                    "largo": respuesta.data.m_arrPaquetes[i].m_xLargo,
-                    "ancho": respuesta.data.m_arrPaquetes[i].m_xAncho,
-                    "alto": respuesta.data.m_arrPaquetes[i].m_xAlto,
-                    "volumen": respuesta.data.m_arrPaquetes[i].m_xVolumen,
-                    "tipoEmbalaje": respuesta.data.m_arrPaquetes[i].m_nTipo,
-                    "valorDeclarado": respuesta.data.m_arrPaquetes[i].m_cValorDeclarado,
-                    "descripcionPaquete": respuesta.data.m_arrPaquetes[i].m_sDescripcion,
-                    "observacionesPaquete": respuesta.data.m_arrPaquetes[i].m_sObservaciones,
-                    "id": respuesta.data.m_arrPaquetes[i].m_nIdEmbarqueDetalle
-                });
-            }
-            paquetesTemp.splice(0, 1);
-
-            for (var i = 0; i < respuesta.data.m_arrSobres.length; i++) {
-
-                if (respuesta.data.m_arrSobres[i].m_nIdEmbarqueDetalle === "" || respuesta.data.m_arrSobres[i].m_nIdEmbarqueDetalle === "0")
-                    continue;
-
-                sobresTemp.push({
-                    "descripcionSobre": respuesta.data.m_arrSobres[i].m_sDescripcion,
-                    "id": respuesta.data.m_arrSobres[i].m_nIdEmbarqueDetalle
-                });
-            }
-            for (var i = 0; i < embarque.data.m_arClsGuiaConceptos.length; i++) {
-
-                if (embarque.data.m_arClsGuiaConceptos[i].m_nIdConceptosFacturacion === "" || embarque.data.m_arClsGuiaConceptos[i].m_nIdConceptosFacturacion === "0")
-                    continue;
-
-                conceptosTemp.push({
-                    IdConceptoFacturacion: embarque.data.m_arClsGuiaConceptos[i].m_nIdConceptosFacturacion,
-                    Importe: embarque.data.m_arClsGuiaConceptos[i].m_cImporte,
-                    IdImpuestoTraslada: embarque.data.m_arClsGuiaConceptos[i].m_nIdImpuestoTraslada,
-                    ImporteIva: embarque.data.m_arClsGuiaConceptos[i].m_cImporteIva,
-                    IdImpuestoRetiene: embarque.data.m_arClsGuiaConceptos[i].m_nIdImpuestoRetiene,
-                    ImporteRetiene: embarque.data.m_arClsGuiaConceptos[i].m_cImporteRetiene,
-                    PorcentajeIva: embarque.data.m_arClsGuiaConceptos[i].m_cPorcentajeTraslada,
-                    PorcentajeRetiene: embarque.data.m_arClsGuiaConceptos[i].m_cPorcentajeRetiene,
-                    Total: embarque.data.m_arClsGuiaConceptos[i].m_cTotal,
-                    IdGuiaConcepto: embarque.data.m_arClsGuiaConceptos[i].m_nIdGuiaConcepto
-                });
-            }
-            conceptosTemp.splice(0, 1);
-            console.log(conceptosTemp);
-            setState({
-                ...state,
-                nombreRemitente: respuesta.data.m_sNOmbreRemitente,
-                RFCRemitente: respuesta.data.m_sRFCRemitente,
-                domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                codigoPostalRemitente: respuesta.data.m_nIdCodigoPostalRemitente,
-                ciudadRemitente: respuesta.data.m_sCiudadRemitente,
-                correoRemitente: respuesta.data.m_sCorreoRemitente,
-                telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
-                contactoRemitente: respuesta.data.m_sContactoRemitente,
-                origenRemitente: respuesta.data.m_sCiudadRemitente,
-                sNombreDestinatario: respuesta.data.m_sNombreDestinatario,
-                sRFCDestinatario: respuesta.data.m_sRFCDestinatario,
-                sDomicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                idCodigoPostalDestinatario: respuesta.data.m_nIdCodigoPostalDestinatario,
-                ciudadDestinatario: respuesta.data.m_sCIudadDestinatario,
-                sCorreoDestinatario: respuesta.data.m_sCorreoDestinatario,
-                sTelefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
-                sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
-                CiudadDestino: respuesta.data.m_sCIudadDestinatario,
-                showPopUp: true,
-                idEmbarque: embarque.data.m_nIdEmbarque,
-                folioGuía: embarque.data.m_nFolioGuia,
-                folioRecoleccion: embarque.data.m_nFolioRecoleccion,
-                folioInforme: embarque.data.m_nFolioInforme,
-                idGuia: embarque.data.m_nIdGuia,
-                fecha: embarque.data.m_dFecha,
-                hora: embarque.data.m_sHora,
-                idEstatusGuia: embarque.data.m_nIdEstatusGuia,
-                ValorDeclarado: embarque.data.m_cValorDeclarado,
-                idMoneda: embarque.data.m_nIdMoneda,
-                tipoCambio: embarque.data.m_cTIpoCambio,
-                idTipoCobro: embarque.data.m_nIdTIpoCobro,
-                arrClsDetalle: embarque.data.m_arrClsDetalle,
-                tracking: embarque.data.m_nTracking,
-                arClsGuiaConceptos: embarque.data.m_arClsGuiaConceptos,
-                creadoEl: embarque.data.m_dCreadoEl,
-                idSucursal: embarque.data.IdSucursal,
-                paquetes: paquetesTemp,
-                sobres: sobresTemp,
-                conceptos: conceptosTemp
-            });
-            //console.log(embarque.data.m_nIdEmbarque)
+    //Recibe la guia para tomar el id del embarque y buscar sus datos para mostrarlos en pantalla
+    /*function handleEmbarqueModificar(guia) {
+        obtenerEmbarquesId(guia.data.m_nIdEmbarque).then(respuesta => {
+            setDataFromEmbarque(respuesta, dataConcepto)
         });
-    };
+    };*/
 
     const headers = {
         'Content-Type': 'application/json'
@@ -1432,7 +1339,7 @@ function Guia(props) {
                             className="form-control"
                             type="text"
                             label="Ctd"
-                            value={state.paquetes[index].Ctd}
+                            value={state.paquetes[index].ctd}
                             placeholder="Ctd"
                             name="ctd"
                             disabled={true}
@@ -1958,7 +1865,9 @@ function Guia(props) {
                                                             value={state.sucursalListado}
                                                             onChange={handleSucursalFiltro}
                                                             id="sucursalListado"
-                                                        >
+                                                            InputLabelProps={{
+                                                                shrink: true,
+                                                            }}>
                                                             <option value="0">Todas</option>
                                                             {dataSucursal.map((sucursal) => (
                                                                 <option
@@ -2082,9 +1991,14 @@ function Guia(props) {
                                                                         value={state.idSucursalAgregar}
                                                                         onChange={handleChange}
                                                                         id="idSucursalAgregar"
+                                                                        name="idSucursalAgregar"
                                                                         label="Sucursal"
                                                                         disabled="disabled"
+                                                                        InputLabelProps={{
+                                                                            shrink: true,
+                                                                        }}
                                                                     >
+                                                                        <option value="0"></option>
                                                                         {dataSucursal.map((sucursal) => (
                                                                             <option
                                                                                 key={sucursal.m_nIdSucursal}
@@ -2105,9 +2019,10 @@ function Guia(props) {
                                                                     className="form-control"
                                                                     type="text"
                                                                     label="Folio Guia"
-                                                                    placeholder={state.folioGuía}
+                                                                    placeholder={state.folioGuia}
                                                                     readOnly={state.agregar == "Consultar"}
                                                                     id="folioGuia"
+                                                                    name="folioGuia"
                                                                     disabled="disabled"
                                                                 />
                                                             </div>
@@ -2156,6 +2071,7 @@ function Guia(props) {
                                                                     placeholder={state.folioInforme}
                                                                     readOnly={state.agregar == "Consultar"}
                                                                     id="folioInforme"
+                                                                    name="folioInforme"
                                                                     disabled="disabled"
                                                                 />
                                                             </div>
@@ -2171,6 +2087,7 @@ function Guia(props) {
                                                                     placeholder={state.tracking}
                                                                     readOnly={state.agregar == "Consultar"}
                                                                     id="tracking"
+                                                                    name="tracking"
                                                                     disabled="disabled"
                                                                 />
                                                             </div>
@@ -2190,6 +2107,7 @@ function Guia(props) {
                                                                     placeholder={state.fecha}
                                                                     readOnly={state.agregar == "Consultar"}
                                                                     id="fecha"
+                                                                    name="fecha"
                                                                     disabled="disabled"
                                                                 />
                                                             </div>
@@ -2206,13 +2124,15 @@ function Guia(props) {
                                                                         required
                                                                         onChange={handleChange}
                                                                         id="idEstatusGuia"
+                                                                        name="idEstatusGuia"
                                                                         read="true"
                                                                         value={state.idEstatusGuia}
                                                                         disabled={state.agregar == "Consultar"}
+                                                                        InputLabelProps={{
+                                                                            shrink: true,
+                                                                        }}
                                                                     >
-                                                                        <option value="0">
-                                                                            Seleccionar
-                                                                        </option>
+                                                                        <option value=""></option>
                                                                         {dataEstatusGuia.map(
                                                                             (estatusGuia) => (
                                                                                 <option key={estatusGuia.m_nIdEstatusGuia} value={estatusGuia.m_nIdEstatusGuia} >
@@ -2243,6 +2163,7 @@ function Guia(props) {
                                                                         read="true"
                                                                         value={state.idMoneda}
                                                                         disabled={state.agregar == "Consultar"}
+                                                                        // disabled
                                                                     >
                                                                         <option value="0">
                                                                             Seleccionar
@@ -2274,8 +2195,10 @@ function Guia(props) {
                                                                         required
                                                                         value={state.tipoCambio}
                                                                         onChange={handleChange}
-                                                                        disabled={state.agregar == "Consultar"}
+                                                                        // disabled={state.agregar == "Consultar"}
+                                                                        disabled
                                                                         id="tipoCambio"
+                                                                        name="tipoCambio"
                                                                     >
                                                                         <option value="0">Seleccionar</option>
                                                                         {dataTipoCambio.map((cambio) => (
@@ -2298,7 +2221,6 @@ function Guia(props) {
                                         </div>
                                     </div>
 
-                                    {/*remitente*/}
                                     <div className="widget-wrap" id="remitenteDestinatario">
 
                                         <div className="widget-header">
@@ -2333,6 +2255,7 @@ function Guia(props) {
                                                                                     value={state.nombreRemitente}
                                                                                     readOnly={state.agregar == "Consultar"}
                                                                                     id="nombreRemitente"
+                                                                                    name="nombreRemitente"
                                                                                     disabled="disabled"
                                                                                 />
                                                                             </div>
@@ -2352,6 +2275,7 @@ function Guia(props) {
                                                                                     value={state.RFCRemitente}
                                                                                     readOnly={state.agregar == "Consultar"}
                                                                                     id="RFCRemitente"
+                                                                                    name="RFCRemitente"
                                                                                     disabled="disabled"
                                                                                 />
                                                                             </div>
@@ -2371,6 +2295,7 @@ function Guia(props) {
                                                                                     value={state.domicilioRemitente}
                                                                                     readOnly={state.agregar == "Consultar"}
                                                                                     id="domicilioRemitente"
+                                                                                    name="domicilioRemitente"
                                                                                     disabled="disabled"
                                                                                 />
                                                                             </div>
@@ -2390,6 +2315,7 @@ function Guia(props) {
                                                                                     value={state.codigoPostalRemitente}
                                                                                     readOnly={state.agregar == "Consultar"}
                                                                                     id="codigoPostalRemitente"
+                                                                                    name="codigoPostalRemitente"
                                                                                     disabled="disabled"
                                                                                 />
                                                                             </div>
@@ -2409,6 +2335,7 @@ function Guia(props) {
                                                                                     value={state.ciudadRemitente}
                                                                                     readOnly={state.agregar == "Consultar"}
                                                                                     id="ciudadRemitente"
+                                                                                    name="ciudadRemitente"
                                                                                     disabled="disabled"
                                                                                 />
 
@@ -2429,6 +2356,7 @@ function Guia(props) {
                                                                                     value={state.correoRemitente}
                                                                                     readOnly={state.agregar == "Consultar"}
                                                                                     id="correoRemitente"
+                                                                                    name="correoRemitente"
                                                                                     disabled="disabled"
                                                                                 />
                                                                             </div>
@@ -2448,6 +2376,7 @@ function Guia(props) {
                                                                                     value={state.telefonoRemitente}
                                                                                     readOnly={state.agregar == "Consultar"}
                                                                                     id="telefonoRemitente"
+                                                                                    name="telefonoRemitente"
                                                                                     disabled="disabled"
                                                                                 />
                                                                             </div>
@@ -2467,6 +2396,7 @@ function Guia(props) {
                                                                                     value={state.contactoRemitente}
                                                                                     readOnly={state.agregar == "Consultar"}
                                                                                     id="contactoRemitente"
+                                                                                    name="contactoRemitente"
                                                                                     disabled="disabled"
                                                                                 />
                                                                             </div>
@@ -2486,6 +2416,7 @@ function Guia(props) {
                                                                                     value={state.origenRemitente}
                                                                                     readOnly={state.agregar == "Consultar"}
                                                                                     id="origenRemitente"
+                                                                                    name="origenRemitente"
                                                                                     disabled="disabled"
                                                                                 />
                                                                             </div>
@@ -2571,7 +2502,7 @@ function Guia(props) {
                                                                                         shrink: true,
                                                                                     }}
                                                                                     label="Código Postal"
-                                                                                    value={state.idCodigoPostalDestinatario}
+                                                                                    value={state.codigoPostalDestinatario}
                                                                                     readOnly={state.agregar == "Consultar"}
                                                                                     id="idCodigoPostalDestinatario"
                                                                                     disabled="disabled"
@@ -2677,7 +2608,72 @@ function Guia(props) {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="widget-wrap" id="paquetesSobres">
+
+
+                                    <div className="row" id="paquetesSobres">
+                                        <div className="row">
+
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-md-6"  >
+                                                <div className="widget-wrap">
+                                                    <div className="widget-header">
+                                                        <div className="col-md-12">
+                                                            <h2>Número de Paquetes</h2>
+                                                        </div>
+                                                    </div>
+                                                    <div className="widget-container">
+                                                        <div className="widget-content">
+                                                            <div className="row">
+                                                                <div className="col-md-12">
+                                                                    <form className="j-forms">
+                                                                        <div className="form-content">
+                                                                            <Carousel
+                                                                                className={classes.paqueteCarrusel}
+                                                                                widgets={[IndicatorDots, Buttons]}
+                                                                                frames={framesPaquete}
+                                                                            />
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-6"  >
+                                                <div className="widget-wrap">
+                                                    <div className="widget-header">
+                                                        <div className="col-md-12">
+                                                            <h2>Número de Sobres</h2>
+                                                        </div>
+
+                                                    </div>
+                                                    <div className="widget-container">
+                                                        <div className="widget-content">
+                                                            <div className="row">
+                                                                <div className="col-md-12">
+                                                                    <form className="j-forms">
+                                                                        <div className="form-content">
+                                                                            <Carousel
+                                                                                className={classes.paqueteCarrusel}
+                                                                                widgets={[IndicatorDots, Buttons]}
+                                                                                frames={framesSobres}
+                                                                            />
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                    </div>
+                                    {/*<div className="widget-wrap" id="paquetesSobres">
                                         <div className="widget-header">
                                             <div className="col-md-6">
                                                 <h2>Número de Paquetes</h2>
@@ -2733,9 +2729,7 @@ function Guia(props) {
                                                 </div>
                                             </div>
                                         </div>
-
-
-                                    </div>
+                                    </div>*/}
                                     <div className="widget-wrap" id="detalleFacturacion">
                                         <div className="widget-header">
 
@@ -2750,7 +2744,7 @@ function Guia(props) {
                                                     <div className="widget-content">
                                                         <div className="row">
                                                             <div className="col-md-12">
-                                                                <form className="j-forms">
+                                                                {/*<form className="j-forms">*/}
                                                                     <div className="form-content">
                                                                         <div className="col-sm-4 col-md-2-5 unit">
 
@@ -2765,9 +2759,10 @@ function Guia(props) {
                                                                                         required
                                                                                         onChange={handleChange}
                                                                                         id="idTipoCobro"
+                                                                                        name="idTipoCobro"
                                                                                         read="true"
                                                                                         value={state.idTipoCobro}
-                                                                                        disabled={state.agregar == "Consultar"}
+                                                                                        // disabled={state.agregar == "Consultar"}
                                                                                         disabled="disabled">
 
                                                                                         <option value="0">
@@ -2800,9 +2795,14 @@ function Guia(props) {
                                                                                         onChange={handleChange}
                                                                                         disabled={state.agregar == "Consultar"}
                                                                                         id="idTipoServicio"
+                                                                                        name="idTipoServicio"
                                                                                         read="true"
                                                                                         value={state.idTipoServicio}
+                                                                                        InputLabelProps={{
+                                                                                            shrink: true,
+                                                                                        }}
                                                                                     >
+                                                                                        <option value=""></option>
                                                                                         {dataTipoServicio.map(
                                                                                             (tipoServicio) => (
                                                                                                 <option key={tipoServicio.m_nIdTipoServicio} value={tipoServicio.m_nIdTipoServicio}>
@@ -2820,23 +2820,27 @@ function Guia(props) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined" margin="dense"
-                                                                                    onChange={handleChange}
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    InputLabelProps={{
-                                                                                        shrink: true,
-                                                                                    }}
-                                                                                    label="Valor Declarado"
-                                                                                    placeholder={state.ValorDeclarado}
-                                                                                    readOnly={state.agregar == "Consultar"}
-                                                                                    id="ValorDeclarado"
+                                                                                           onChange={handleChange}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           InputLabelProps={{
+                                                                                                shrink: true,
+                                                                                            }}
+                                                                                           label="Valor Declarado"
+                                                                                           placeholder={state.ValorDeclarado}
+                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           value={state.ValorDeclarado}
+                                                                                           disabled
+                                                                                           id="ValorDeclarado"
+                                                                                           name="ValorDeclarado"
+                                                                                           startAdornment={<InputAdornment position="start">$</InputAdornment>}
                                                                                 />
                                                                             </div>
                                                                         </div>
 
 
                                                                     </div>
-                                                                </form>
+                                                                {/*</form>*/}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2967,8 +2971,9 @@ function Guia(props) {
                                                                 InputLabelProps={{
                                                                     shrink: true,
                                                                 }}
-                                                                value={state.folioGuía}
-                                                                id="folioGuía"
+                                                                value={state.folioGuia}
+                                                                id="folioGuia"
+                                                                name="folioGuia"
                                                                 readOnly
                                                             />
                                                         </div>
@@ -2983,6 +2988,7 @@ function Guia(props) {
                                                                 type="text"
                                                                 value={state.sucursalCancelacion}
                                                                 id="sucursalCancelacion"
+                                                                name="sucursalCancelacion"
                                                                 readOnly
                                                             />
                                                         </div>
@@ -3000,6 +3006,7 @@ function Guia(props) {
                                                                 }}
                                                                 value={state.fechaCancelado}
                                                                 id="fechaCancelado"
+                                                                name="fechaCancelado"
                                                                 readOnly
                                                             />
                                                         </div>
@@ -3017,6 +3024,7 @@ function Guia(props) {
                                                                 }}
                                                                 value={state.usuarioCancela}
                                                                 id="usuarioCancela"
+                                                                name="usuarioCancela"
                                                                 readOnly
                                                             />
                                                         </div>
@@ -3034,6 +3042,7 @@ function Guia(props) {
                                                                 }}
                                                                 value={state.estatusGuia}
                                                                 id="estatusGuia"
+                                                                name="estatusGuia"
                                                                 readOnly
                                                             />
                                                         </div>
@@ -3051,6 +3060,7 @@ function Guia(props) {
                                                                 }}
                                                                 value={state.MotivoCancelacion}
                                                                 id="MotivoCancelacion"
+                                                                name="MotivoCancelacion"
                                                             />
                                                         </div>
                                                     </div>

@@ -18,6 +18,7 @@ function modificarEmbarques(id, params){
 function agregarEmbarques( params){
     const url = `${process.env.REACT_APP_API_URL}/Embarques/Agregar`;
     let result;
+    console.log()
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
         );

@@ -18,7 +18,14 @@ import { FormControl, InputLabel, Select, Tooltip } from "@material-ui/core";
 import { obtenerCodigoPostal } from "../Util/Contexts/CodigoPostalContext";
 import { obtenerPaises } from "../Util/Contexts/PaisesContext";
 import { obtenerEstadosPais } from "../Util/Contexts/EstadosContext";
-import { agregarSucursales, eliminarSucursales, modificarSucursales, obtenerSucursales, obtenerSucursalesId } from "../Util/Contexts/SucursalContext";
+import {
+    agregarSucursales,
+    eliminarSucursales,
+    modificarSucursales,
+    obtenerListadoImpuestos,
+    obtenerSucursales,
+    obtenerSucursalesId
+} from "../Util/Contexts/SucursalContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 
 function showSuccess(mensaje) {
@@ -50,16 +57,39 @@ function Sucursal(props) {
         calle: "",
         numInterior: 0,
         numExterior: 0,
-        iva: "18",
+        iva: "",
         zonaHoraria: "",
         activo: false,
         height: window.innerHeight,
         CreadoPor: localStorage.getItem("UsuarioId"),
-        ModificadoPor: localStorage.getItem("UsuarioId")
+        ModificadoPor: localStorage.getItem("UsuarioId"),
+        codigoPostalRemitente: "",
     })
+    const [listadoImpuestos, setListadoImpuestos] = React.useState([]);
 
 
-
+    function clearInputs(){
+        setState({
+            agregar: "Agregar",
+            idSucursal: 0,
+            sucursal: "",
+            abreviacion: "",
+            idPais: 0,
+            idEstado: {},
+            codigoPostal: 0,
+            municipio: "",
+            DerechoBorrar: 17,
+            localidad: "",
+            colonia: "",
+            calle: "",
+            numInterior: 0,
+            numExterior: 0,
+            iva: "",
+            zonaHoraria: "",
+            activo: false,
+            codigoPostalRemitente: "",
+        })
+    }
 
     const handleAceptar = (e) => {
         e.preventDefault()
@@ -81,12 +111,17 @@ function Sucursal(props) {
             "ModificadoPor": state.ModificadoPor,
             "ZonaHoraria": state.zonaHoraria.split("|")[0],
             "DescripcionZonaHoraria": state.zonaHoraria.split("|")[1],
+            "IdCodigoPostal": state.codigoPostal.m_nIdCP,
         }
+        console.log(JSON.stringify(params))
+
         if (state.idSucursal != 0) {
             modificarSucursales(state.idSucursal, params).then(respuesta => {
                 showSuccess(respuesta.data)
+                clearInputs()
                 getAllData();
                 //window.location.reload();
+                clearInputs()
             }).catch(err => {
                 console.log(err)
                 showSuccess("err")
@@ -94,6 +129,7 @@ function Sucursal(props) {
         } else {
             agregarSucursales(params).then(respuesta => {
                 showSuccess(respuesta.data)
+                clearInputs()
                 getAllData();
                 //window.location.reload();
             }).catch(err => {
@@ -111,8 +147,8 @@ function Sucursal(props) {
             setState
             ({
                 ...state,
-                idPais: respuesta.data[0].m_nIdPais ,   
-         
+                idPais: respuesta.data[0].m_nIdPais ,
+
             idEstado: dataEstado.find(
                 (o) => o.m_nIdEstado === respuesta.data[0].m_nIdEstado
             ),   })
@@ -144,6 +180,7 @@ function Sucursal(props) {
 
     function handleShowModificar(id) {
         obtenerSucursalesId(id).then(respuesta => {
+            let cpObject = dataCodigoPostal.find(c => c.m_nIdCP == respuesta.data.m_nIdCodigoPostal)
             console.log(respuesta.data)
             setState({
                 ...state,
@@ -154,8 +191,9 @@ function Sucursal(props) {
                 idPais:  respuesta.data.m_nIdPais,
                 idEstado: dataEstado.find(
                     (o) => o.m_nIdEstado === respuesta.data.m_nIdEstado
-                ),                
-                codigoPostal: 0,
+                ),
+                codigoPostal: respuesta.data.m_nIdCodigoPostal,
+                codigoPostalRemitente: cpObject,
                 municipio: respuesta.data.m_sMunicipio,
                 localidad: respuesta.data.m_sLocalidad,
                 colonia: respuesta.data.m_sColonia,
@@ -184,7 +222,7 @@ function Sucursal(props) {
             calle: "",
             numInterior: 0,
             numExterior: 0,
-            iva: "18",
+            iva: "",
             zonaHoraria: "",
             activo: false
         })
@@ -281,6 +319,7 @@ function Sucursal(props) {
         getAllData();
         getAllPais();
         getAllCodigosPostales();
+        getListadoImpuestos()
     }, []);
 
     function getAllData() {
@@ -306,6 +345,12 @@ function Sucursal(props) {
         obtenerCodigoPostal().then((respuesta) => {
             setDataCodigoPostal(respuesta.data);
         });
+    }
+
+    function getListadoImpuestos(){
+        obtenerListadoImpuestos().then((respuesta) => {
+            setListadoImpuestos(respuesta.data)
+        })
     }
 
     const headers = {
@@ -540,10 +585,10 @@ function Sucursal(props) {
                                                                                  console.log(state.codigoPostal)
                                                                                     obtenerPaisEstadoByCP(state.codigoPostal.m_nIdCP)
                                                                                 }
-                                                                               
+
                                                                             }
-                                                                          
-                                                                            
+
+
                                                                                 id="codigoPostal"
                                                                                 disableClearable
                                                                                 forcePopupIcon={false}
@@ -719,12 +764,12 @@ function Sucursal(props) {
                                                                         onChange={handleSelectIva}
                                                                         id="iva"
                                                                     >
-                                                                        <option value="18">
-                                                                            18%
-                              </option>
-                                                                        <option value="16">
-                                                                            16%
-                              </option>
+                                                                        <option value={""}></option>
+                                                                        {
+                                                                            listadoImpuestos.map((i) => (
+                                                                                <option key={i.m_nIdImpuesto} value={i.m_nIdImpuesto}>{i.m_sImpuesto}</option>
+                                                                            ))
+                                                                        }
                                                                     </Select>
                                                                 </FormControl>
                                                             </label>
@@ -769,7 +814,7 @@ function Sucursal(props) {
                                                                         <option value="-08:00|America/Tijuana">
                                                                             America/Tijuana
                                                                         </option>
-                                                                       
+
                                                                     </Select>
                                                                 </FormControl>
                                                             </label>
@@ -778,9 +823,10 @@ function Sucursal(props) {
                                                 </div>
                                                 <br></br>
                                                 <div className="form-footer" className="col-md-12">
-                                                    <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
-                                                    >
-                                                        Cancelar</button>
+                                                    <button data-layout="topCenter" data-type="information"
+                                                            className="btn btn-secondary secondary-btn">
+                                                        Cancelar
+                                                    </button>
                                                     {/** TODO Realizar correctamente el cancelar*/}
                                                     <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                                                 </div>
