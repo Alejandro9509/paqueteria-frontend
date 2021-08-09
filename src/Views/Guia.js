@@ -231,23 +231,14 @@ function Guia(props) {
         $("#idBarra" + indice).barcode(valor, "code128");
     }
     const [dataFolioGuia, SetDataFolioGuia] = React.useState([]);
-
     const [fileUploaded, setFileUploaded] = React.useState([])
     const [stepActive, setStepActive] = React.useState(1);
     const [dataSucursal, setDataSucursal] = React.useState([])
-
     const [dataMoneda, setDataMoneda] = React.useState([])
     const [dataTipoCobro, setDataTipoCobro] = React.useState([])
     const [dataEstatusGuia, setDataEstatusGuia] = React.useState([])
     const [dataEmbarque, setDataEmbarque] = React.useState([])
-    const [dataConcepto, setDataConcepto] = React.useState([])
     const [dataConceptosDefecto, setDataConceptosDefecto] = useState([])
-    // const [dataImpuestoTraslado, setDataImpuestoTraslado] = React.useState([])
-    // const [dataImpuestoRetiene, setDataImpuestoRetiene] = React.useState([])
-
-
-
-    // const [dataCiudad, setDataCiudad] = React.useState([])
 
     const [dataTipoServicio, setDataTipoServicio] = React.useState([])
 
@@ -311,7 +302,6 @@ function Guia(props) {
             /*showSuccess('Guia modificada')
             limpiarCampos()*/
         }
-
     }
 
     function getUltimoFolioGuia() {
@@ -776,10 +766,6 @@ function Guia(props) {
         getAllDataTipoCobro()
         getAllDataTipoServicio()
         getAllDataEstatusGuia()
-        // getAllCiudades();
-        getAllConceptos()
-        // getAllImpuestosTraslado();
-        // getAllImpuestosRetiene();
         getUltimoFolioGuia()
         getTipoCambio()
         getFormatosImpresion()
@@ -858,12 +844,6 @@ function Guia(props) {
     async function getAllDataSucursal() {
         obtenerSucursales().then(respuesta => {
             setDataSucursal(respuesta.data)
-        });
-    }
-
-    async function getAllConceptos() {
-        obtenerConceptosFacturacion().then(respuestaConceptos => {
-            setDataConcepto(respuestaConceptos.data)
         });
     }
 
@@ -975,6 +955,7 @@ function Guia(props) {
         let ivaTraslada = []
         let ivaRetiene = []
         axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${idEmbarque}`, { headers }).then(tarifa => {
+            obtenerConceptosByTarifa(tarifa.data[0].m_nIdTarifa)
             console.log('tarifas by embarque')
             console.log(tarifa.data)
             let pesoTotal = 0
@@ -1124,6 +1105,16 @@ function Guia(props) {
 
         })
     }
+    const [dataTodosConceptosByEmbarque, setDataTodosConceptosByEmbarque] = useState([])
+
+    const obtenerConceptosByTarifa = (idTarifa) => {
+        console.log('idtarifa: ', idTarifa)
+        axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetById/${idTarifa}`, { headers }).then(tarifa => {
+            console.log(tarifa.data)
+            setDataTodosConceptosByEmbarque(tarifa.data.m_arrArConceptos)
+
+        })
+    }
 
     const limpiarCampos = () => {
         setState(state => {
@@ -1179,18 +1170,6 @@ function Guia(props) {
         })
     }
 
-    /*async function getAllImpuestosRetiene() {
-        obtenerImpuestosTipo(2).then(respuesta => {
-            setDataImpuestoRetiene(respuesta.data)
-        });
-    };*/
-
-    /*async function getAllImpuestosTraslado() {
-        obtenerImpuestosTipo(1).then(respuesta => {
-            setDataImpuestoTraslado(respuesta.data)
-        });
-    };*/
-
     async function getAllDataMoneda() {
         obtenerMonedas().then(respuesta => {
             setDataMoneda(respuesta.data)
@@ -1215,28 +1194,6 @@ function Guia(props) {
             setDataEstatusGuia(respuesta.data)
         });
     };
-
-    /*async function getAllCiudades() {
-        obtenerCiudades().then(respuesta => {
-            setDataCiudad(respuesta.data)
-        });
-    };*/
-
-    /*async function cargaEmbarqueSucursal(valor) {
-        //showSuccess(valor);
-        setState({
-            ...state,
-            idSucursal: valor
-        });
-        //showSuccess (state.idSucursal +"-" +state.idMoneda);
-
-        if (valor == "" || valor == "0") return;
-        if (state.idMoneda == "" || state.idMoneda == "0") return;
-
-        obtenerEmbarqueMoneda(valor, state.idMoneda, state.idGuia).then(respuesta => {
-            setDataEmbarque(respuesta.data)
-        });
-    };*/
 
     function cargaEmbarqueModificar(valorSucursal, valorMoneda, valorGuia) {
         obtenerEmbarqueMoneda(valorSucursal, valorMoneda, valorGuia).then(respuesta => {
@@ -1265,13 +1222,6 @@ function Guia(props) {
             setDataFromEmbarque(respuesta, dataConceptosDefecto)
         });
     };
-
-    //Recibe la guia para tomar el id del embarque y buscar sus datos para mostrarlos en pantalla
-    /*function handleEmbarqueModificar(guia) {
-        obtenerEmbarquesId(guia.data.m_nIdEmbarque).then(respuesta => {
-            setDataFromEmbarque(respuesta, dataConcepto)
-        });
-    };*/
 
     const headers = {
         'Content-Type': 'application/json'
@@ -2990,9 +2940,15 @@ function Guia(props) {
                                                                     <Tabs value={state.tab} onChange={handleTabChange} aria-label="simple tabs example" variant="scrollable" scrollButtons="auto">
                                                                         <Tab label="Concetos Adicionales por Destino" {...a11yProps(0)} className={{ backgroundColor: "white !important" }} />
                                                                     </Tabs>
-                                                                    <ConceptosAdicionales guias={true} conceptosAdicionales={state.conceptosAdicionales} addConcepto={addConcepto} removeConcepto={removeConcepto} ivaRetiene={state.ivaRetiene} ivaTraslada={state.ivaTraslada} noMostrarRangos={false}>
-
-                                                                    </ConceptosAdicionales>
+                                                                    <ConceptosAdicionales guias={true}
+                                                                                          conceptosAdicionales={state.conceptosAdicionales}
+                                                                                          addConcepto={addConcepto}
+                                                                                          removeConcepto={removeConcepto}
+                                                                                          ivaRetiene={state.ivaRetiene}
+                                                                                          ivaTraslada={state.ivaTraslada}
+                                                                                          noMostrarRangos={false}
+                                                                                          customConceptos={true}
+                                                                                          listadoConceptosAlternativos={dataTodosConceptosByEmbarque}/>
                                                                 </div>
 
                                                             }

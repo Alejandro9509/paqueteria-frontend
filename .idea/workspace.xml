@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Se comentó codigo innecesario">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Se eliminan tarifas correctamente en guias">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionales.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionales.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -401,7 +401,14 @@
       <option name="project" value="LOCAL" />
       <updated>1628379629199</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="*Se eliminan tarifas correctamente en guias">
+      <created>1628477851778</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1628477851778</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -445,7 +452,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Ajustes" />
     <MESSAGE value="Se autocompleta la informacion de remitente y destinatario al seleccionar" />
     <MESSAGE value="Se agregó validacion para hacer la fecha de vencimiento obligatoria" />
     <MESSAGE value="Se arreglo relleno de datos al modificar sucursal" />
@@ -470,7 +476,8 @@
     <MESSAGE value="*Se agregaron comentarios a funciones" />
     <MESSAGE value="*Se agregó funcion para limpiar campos al hacer una modificacion o agregar exitosamente." />
     <MESSAGE value="*Se comentó codigo innecesario" />
-    <option name="LAST_COMMIT_MESSAGE" value="*Se comentó codigo innecesario" />
+    <MESSAGE value="*Se eliminan tarifas correctamente en guias" />
+    <option name="LAST_COMMIT_MESSAGE" value="*Se eliminan tarifas correctamente en guias" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
