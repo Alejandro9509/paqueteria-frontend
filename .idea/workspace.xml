@@ -5,7 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Se arregló validacion para que mande a modificar o agregar respectivamente">
-      <change beforePath="$PROJECT_DIR$/src/Views/Zonas/Zonas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Zonas/Zonas.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Zonas/CodigoPostal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Zonas/CodigoPostal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Zonas/Localidad.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Zonas/Localidad.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Zonas/ZonasAgregar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Zonas/ZonasAgregar.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

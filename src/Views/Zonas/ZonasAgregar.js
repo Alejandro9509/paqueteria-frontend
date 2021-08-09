@@ -139,13 +139,14 @@ class ZonasAgregar extends Component {
             });
             return
         }
-        console.log(event)
         if (event) {
             array.push(arrayCiudades[index])
             this.setState({
                 ciudadesSeleccionado: array,
                 idCiudadSeleccionado: arrayCiudades[index].m_nIdCiudad,
-                idCodigoPostalSeleccionado: 0
+                idCodigoPostalSeleccionado: 0,
+                dataCodigoPostales: [],
+                dataLocalidades: []
             });
         } else {
             let position = array.findIndex(a => a.m_nIdCiudad == arrayCiudades[index].m_nIdCiudad)
@@ -154,10 +155,11 @@ class ZonasAgregar extends Component {
                 seleccionarTodoCiudades: false,
                 ciudadesSeleccionado: array,
                 idCiudadSeleccionado: 0,
-                idCodigoPostalSeleccionado: 0
+                idCodigoPostalSeleccionado: 0,
+                dataCodigoPostales: [],
+                dataLocalidades: []
             });
         }
-        console.log(array)
         this.getAllCodigoPostales(array)
     }
 
@@ -202,6 +204,7 @@ class ZonasAgregar extends Component {
             this.setState({
                 codigoPostalesSeleccionado: array,
                 idCodigoPostalSeleccionado: arrayCodigoPostales[index].m_nIdCP,
+                dataLocalidades: []
             });
         } else {
             let position = array.findIndex(a => a.m_nIdCP == arrayCodigoPostales[index].m_nIdCP)
@@ -209,7 +212,8 @@ class ZonasAgregar extends Component {
             this.setState({
                 seleccionarTodoCodigoPostales: false,
                 codigoPostalesSeleccionado: array,
-                idCodigoPostalSeleccionado: 0
+                idCodigoPostalSeleccionado: 0,
+                dataLocalidades: []
             });
         }
         this.getAllLocalidades(array)
@@ -271,6 +275,10 @@ class ZonasAgregar extends Component {
         const {sucursal, idEstadoSucursal, ciudadesSeleccionado, editar, seleccionarTodoCiudades} = this.state
         const {idCiudadSeleccionado, codigoPostalesSeleccionado,seleccionarTodoCodigoPostales, dataCodigoPostales} = this.state
         const {dataLocalidades, localidadesSeleccionado, idCodigoPostalSeleccionado, seleccionarTodoLocalidades} = this.state
+        console.log('ciudades selec: ', ciudadesSeleccionado)
+        console.log('cp selec: ', codigoPostalesSeleccionado)
+        console.log('localidades data: ', dataLocalidades)
+
 
 
 
@@ -376,8 +384,8 @@ class ZonasAgregar extends Component {
                                         }}>
                                             {ciudadesSeleccionado.length > 0 &&
                                                 <CodigoPostal
-                                                    ciudadesSeleccionado={ciudadesSeleccionado}
-                                                    idCiudadSeleccionado={idCiudadSeleccionado}
+                                                    // ciudadesSeleccionado={ciudadesSeleccionado}
+                                                    // idCiudadSeleccionado={idCiudadSeleccionado}
                                                     codigoPostalesSeleccionado={codigoPostalesSeleccionado}
                                                     handleChange={this.handleChangeChecboxCodigoPostal}
                                                     editar={editar}
@@ -396,7 +404,7 @@ class ZonasAgregar extends Component {
                                             {codigoPostalesSeleccionado.length > 0 &&
                                                 <Localidad
                                                     localidadesSeleccionado={localidadesSeleccionado}
-                                                    idCodigoPostalSeleccionado={idCodigoPostalSeleccionado}
+                                                    // idCodigoPostalSeleccionado={idCodigoPostalSeleccionado}
                                                     handleChange={this.handleChangeChecboxLocalidad}
                                                     editar={editar}
                                                     seleccionarTodoLocalidades={seleccionarTodoLocalidades}

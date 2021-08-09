@@ -48,14 +48,14 @@ class CodigoPostal extends Component {
     }
 
     render() {
-        const {consult, seleccionarTodoCodigoPostales, handleChange, editar, codigoPostalesSeleccionado, dataCodigoPostales} = this.props
+        const {seleccionarTodoCodigoPostales, handleChange, editar, codigoPostalesSeleccionado, dataCodigoPostales} = this.props
 
         return (
             <table style={{ overflowY: "scroll", width: "100%" }}>
                 <tr>
                     <th>
                         <label className="checkbox">
-                            <input disabled={consult} type="checkbox" onChange={(event) => handleChange(event, 0, dataCodigoPostales, true)} checked={seleccionarTodoCodigoPostales} />
+                            <input disabled={editar} type="checkbox" onChange={(event) => handleChange(event, 0, dataCodigoPostales, true)} checked={seleccionarTodoCodigoPostales} />
                             <i />
                         </label>
                     </th>
