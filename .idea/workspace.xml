@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Se hizo limpieza de codigo">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Se ocultaron botones de cancelar para obligar la navegacion con tabs.&#10;*Se mejor limpieza de campos.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
     </list>
@@ -422,7 +422,14 @@
       <option name="project" value="LOCAL" />
       <updated>1628495650605</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="*Se ocultaron botones de cancelar para obligar la navegacion con tabs.&#10;*Se mejor limpieza de campos.">
+      <created>1628496798374</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1628496798374</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -466,7 +473,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se arreglo relleno de datos al modificar sucursal" />
     <MESSAGE value="Ajustes al agregar usuarios" />
     <MESSAGE value="Ajustes en crear embarque" />
     <MESSAGE value="Ajustes en embarque al agregar uno nuevo:&#10;*Campo moneda se modifica correctamente.&#10;*los sobres se agregan al listado de paquetes y se mandan a la base de datos." />
@@ -491,7 +497,8 @@
     <MESSAGE value="*Se eliminan tarifas correctamente en guias" />
     <MESSAGE value="*Se escribió codigo inicial para implementacion de que tarifas se rellenen campos al seleccionar concepto.&#10;*Se borro codigo innecesario" />
     <MESSAGE value="*Se hizo limpieza de codigo" />
-    <option name="LAST_COMMIT_MESSAGE" value="*Se hizo limpieza de codigo" />
+    <MESSAGE value="*Se ocultaron botones de cancelar para obligar la navegacion con tabs.&#10;*Se mejor limpieza de campos." />
+    <option name="LAST_COMMIT_MESSAGE" value="*Se ocultaron botones de cancelar para obligar la navegacion con tabs.&#10;*Se mejor limpieza de campos." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

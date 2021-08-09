@@ -210,9 +210,6 @@ function Guia(props) {
     const [dataEstatusGuia, setDataEstatusGuia] = React.useState([])
     const [dataEmbarque, setDataEmbarque] = React.useState([])
     const [dataConceptosDefecto, setDataConceptosDefecto] = useState([])
-    const [tabListadoActivo, setTabListadoActivo] = useState(true)
-    const [tabAgregarActivo, setTabAgregarActivo] = useState(true)
-    const [tabCancelarActivo, setTabCancalarActivo] = useState(true)
 
     const [dataTipoServicio, setDataTipoServicio] = React.useState([])
 
@@ -268,7 +265,6 @@ function Guia(props) {
             modificarGuia(state.idGuia, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 handleShowListado()
-                setTabListadoActivo(true)
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
@@ -373,7 +369,7 @@ function Guia(props) {
 
     function handleShowModificar(id) {
         obtenerGuiaId(id).then(respuesta => {
-            console.log('MOdifica guia:')
+            console.log('Modifica guia:')
             console.log(respuesta.data)
             //Primero se obtienen las monedas que corresponden a la sucursal
             //Despues se obtienen los datos del embarque al que pertenece la guia para mostrar los datos
@@ -383,14 +379,14 @@ function Guia(props) {
                 return {
                     ...state,
                     agregar: "Modificar",
-                    dTipoServicio: respuesta.data.m_nIdTipoServicio,
+                    idTipoServicio: respuesta.data.m_nIdTipoServicio,
                     idEstatusGuia: respuesta.data.m_nIdEstatusGuia,
 
                     fecha: respuesta.data.m_dFecha,
                     folioGuia: respuesta.data.m_nFolioGuia,
                     idGuia: respuesta.data.m_nIdGuia,
                     tracking: respuesta.data.m_nTracking,
-                    arClsGuiaConceptos: respuesta.data.m_arClsGuiaConceptos,
+                    conceptosAdicionales: respuesta.data.m_arClsGuiaConceptos,
                     creadoEl: respuesta.data.m_dCreadoEl,
                 }
             })
@@ -398,7 +394,6 @@ function Guia(props) {
         }).catch(function (err) {
             console.log(err.data)
         });
-
     }
 
     function handleShowConsultar(id) {
@@ -419,7 +414,7 @@ function Guia(props) {
                     folioGuia: respuesta.data.m_nFolioGuia,
                     idGuia: respuesta.data.m_nIdGuia,
                     tracking: respuesta.data.m_nTracking,
-                    arClsGuiaConceptos: respuesta.data.m_arClsGuiaConceptos,
+                    conceptosAdicionales: respuesta.data.m_arClsGuiaConceptos,
                     creadoEl: respuesta.data.m_dCreadoEl,
 
                 }
@@ -531,7 +526,6 @@ function Guia(props) {
     const handleShowListado = () => {
         limpiarCamposAgregar()
         getAllData()
-        setTabListadoActivo(true)
     }
 
     const handleChange = event => {
@@ -769,6 +763,13 @@ function Guia(props) {
     async function getAllDataSucursal() {
         obtenerSucursales().then(respuesta => {
             setDataSucursal(respuesta.data)
+        });
+    }
+
+    //Recibe el id de embarque para obtener sus datos del servidor y mostrarlos en pantalla
+    function handleEmbarque(embarque) {
+        obtenerEmbarquesId(embarque).then(respuesta => {
+            setDataFromEmbarque(respuesta, dataConceptosDefecto)
         });
     }
 
@@ -1025,6 +1026,7 @@ function Guia(props) {
 
         })
     }
+
     const [dataTodosConceptosByEmbarque, setDataTodosConceptosByEmbarque] = useState([])
 
     const obtenerConceptosByTarifa = (idTarifa) => {
@@ -1124,7 +1126,6 @@ function Guia(props) {
         });
     };
 
-
     async function getAllDataEstatusGuia() {
         obtenerEstatusGuia().then(respuesta => {
             setDataEstatusGuia(respuesta.data)
@@ -1149,13 +1150,6 @@ function Guia(props) {
 
         obtenerEmbarqueMoneda(state.idSucursalAgregar, idMoneda, state.idGuia).then(respuesta => {
             setDataEmbarque(respuesta.data)
-        });
-    };
-
-    //Recibe el id de embarque para obtener sus datos del servidor y mostrarlos en pantalla
-    function handleEmbarque(embarque) {
-        obtenerEmbarquesId(embarque).then(respuesta => {
-            setDataFromEmbarque(respuesta, dataConceptosDefecto)
         });
     };
 
