@@ -210,6 +210,9 @@ function Guia(props) {
     const [dataEstatusGuia, setDataEstatusGuia] = React.useState([])
     const [dataEmbarque, setDataEmbarque] = React.useState([])
     const [dataConceptosDefecto, setDataConceptosDefecto] = useState([])
+    const [tabListadoActivo, setTabListadoActivo] = useState(true)
+    const [tabAgregarActivo, setTabAgregarActivo] = useState(true)
+    const [tabCancelarActivo, setTabCancalarActivo] = useState(true)
 
     const [dataTipoServicio, setDataTipoServicio] = React.useState([])
 
@@ -253,8 +256,7 @@ function Guia(props) {
                 //window.location.reload();
                 let resp = respuesta.data;
                 let vGuia = resp.substring(resp.indexOf(":") + 2);
-                limpiarCamposAgregar()
-                getAllData()
+                handleShowListado()
                 getImpresion(vGuia);
             }).catch(err => {
                 console.log(err)
@@ -265,8 +267,8 @@ function Guia(props) {
         } else {
             modificarGuia(state.idGuia, params).then(respuesta => {
                 showSuccess(respuesta.data)
-                getAllData()
-                limpiarCamposAgregar()
+                handleShowListado()
+                setTabListadoActivo(true)
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
@@ -441,7 +443,7 @@ function Guia(props) {
                 motivoCancelacion: respuesta.data.m_sMotivoCancelacion
             })
             if (respuesta.data.m_nFolioInforme != 0)
-                showSuccess("Guía no se puede cancelar")
+                showSuccess("Guía no se puede cancelar ya que no pertenece a ningun informe.")
         })
     }
 
@@ -529,6 +531,7 @@ function Guia(props) {
     const handleShowListado = () => {
         limpiarCamposAgregar()
         getAllData()
+        setTabListadoActivo(true)
     }
 
     const handleChange = event => {
@@ -2672,63 +2675,6 @@ function Guia(props) {
                                             </div>
                                         </div>
                                     </div>
-                                    {/*<div className="widget-wrap" id="paquetesSobres">
-                                        <div className="widget-header">
-                                            <div className="col-md-6">
-                                                <h2>Número de Paquetes</h2>
-                                            </div>
-                                            <div className="col-md-6">
-                                                <h2>Número de Sobres</h2>
-                                            </div>
-
-                                        </div>
-                                        <div className="row">
-                                            <div className="col-md-6"  >
-                                                <div className="widget-container">
-                                                    <div className="widget-content">
-                                                        <div className="row">
-                                                            <div className="col-md-12">
-                                                                <form className="j-forms">
-                                                                    <div className="form-content">
-
-
-                                                                        <div style={{ padding: "20px" }}>
-                                                                            <Carousel
-                                                                                className={classes.paqueteCarrusel}
-                                                                                widgets={[IndicatorDots, Buttons]}
-                                                                                frames={framesPaquete}
-                                                                            ></Carousel>
-                                                                        </div>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="col-md-6"  >
-                                                <div className="widget-container">
-                                                    <div className="widget-content">
-                                                        <div className="clone-widget">
-                                                            <form className="j-forms">
-                                                                <div className="form-content">
-
-
-                                                                    <div style={{ padding: "20px" }}>
-                                                                        <Carousel
-                                                                            className={classes.paqueteCarrusel}
-                                                                            widgets={[IndicatorDots, Buttons]}
-                                                                            frames={framesSobres}
-                                                                        ></Carousel>
-                                                                    </div>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>*/}
                                     <div className="widget-wrap" id="detalleFacturacion">
                                         <div className="widget-header">
 
@@ -2886,14 +2832,14 @@ function Guia(props) {
 
                                                     <div className="form-footer" className="col-md-12">
 
-                                                        <button
+                                                        {/*<button
                                                             href="#Listado"
                                                             role="tab"
                                                             data-toggle="tab"
                                                             className="btn btn-secondary secondary-btn"
                                                         >
                                                             Cancelar
-                                                        </button>
+                                                        </button>*/}
                                                         <button type="submit" className="btn btn-primary primary-btn" disabled={state.agregar == "Consultar"}>
                                                             Aceptar
                                                         </button>
@@ -3071,14 +3017,15 @@ function Guia(props) {
                                                     </div>
 
                                                     <div className="form-footer" className="col-md-12">
-                                                        <button
+                                                        {/*<button
                                                             href="#Listado"
                                                             role="tab"
                                                             data-toggle="tab"
                                                             className="btn btn-secondary secondary-btn"
+                                                            onClick={handleShowListado}
                                                         >
                                                             Cancelar
-                                                        </button>
+                                                        </button>*/}
                                                         <button
                                                             type="submit"
                                                             className="btn btn-primary primary-btn"
