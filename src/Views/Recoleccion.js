@@ -142,6 +142,7 @@ function Recoleccion() {
 
         // ===VARIABLES DE CANCELAR===
         // folioRecoleccion: '', Se usa en agregar tambien
+        // folioRecoleccion:'', se usa en agregar tambien
         sucursalCancelacion: '',
         mostrarFechaCancelacion: '',
         usuario: localStorage.getItem("Usuario"),
@@ -743,43 +744,25 @@ function Recoleccion() {
         console.log(dobleClick);
     }
 
-    function handleShowCancelar() {
-        var hours = today.getHours();
-        var mostrarHora = today.getHours();
-        var minutes = today.getMinutes();
-        var ampm = hours >= 12 ? 'pm' : 'am';
-        hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
-        minutes = minutes < 10 ? '0' + minutes : minutes;
-        var strTime = hours + ':' + minutes + ' ' + ampm;
-        obtenerRecoleccionCancelada(state.idRecoleccion).then((respuesta) => {
-            setState({
-                ...state,
-                folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
-                sucursalCancelacion: dataSucursal.find(o => o.m_nIdSucursal == respuesta.data.m_nIdSucursal).m_sSucursal,
-                fechaCancelacion: respuesta.data.m_nIdEstatusRecoleccion == "0" ? respuesta.data.m_dtFechaCancelacion :
-                    today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate() + " " + mostrarHora + ":" + minutes,
-                mostrarFechaCancelacion: respuesta.data.m_nIdEstatusRecoleccion == "0" ? respuesta.data.m_dtFechaCancelacion :
-                    today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + strTime,
-                estatusRecoleccion: dataEstatusRecoleccion.find(o => o.m_nIdEstatusRecoleccion == respuesta.data.m_nIdEstatusRecoleccion).m_sEstatus,
-                motivoCancelacion: respuesta.data.m_sMotivoCancelacion
-            })
-            console.log(respuesta.data)
-            if (respuesta.data.m_nSePuedeCancelar == 0)
-                showSuccess("Recolección no se puede cancelar")
-        })
-    }
-
     //funcion para cancelar un embarque. Se usa en tab cancelar.
     const handleCancelar = (e) => {
         e.preventDefault();
-        var params = {
+        let params = {
             "motivoCancelacion": state.motivoCancelacion,
             "usuarioCancelacion": localStorage.getItem("UsuarioId"),
             "fechaCancelacion": state.fechaCancelacion
         }
         cancelarRecoleccion(state.idRecoleccion, params).then((respuesta) => {
             showSuccess(respuesta.data)
+            setState({
+                ...state,
+                idRecoleccion: 0,
+                folioRecoleccion:'',
+                sucursalCancelacion: '',
+                mostrarFechaCancelacion: '',
+                estatusRecoleccion: '',
+                motivoCancelacion: '',
+            })
         })
     }
 
@@ -1148,7 +1131,10 @@ function Recoleccion() {
 
             }
         });
-        $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Agregar').addClass('in show');
 
     }
 
@@ -1157,7 +1143,6 @@ function Recoleccion() {
         setState(state =>{
             return {
                 ...state,
-                idRecoleccion: 0,
                 fechaInicial: '',
                 sucursalListado: 0,
                 estatusListado: 0,
@@ -1171,6 +1156,38 @@ function Recoleccion() {
         $('.nav-tabs li').eq(0).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Listado').addClass('in show');
+    }
+
+    function handleShowCancelar() {
+        let hours = today.getHours();
+        let mostrarHora = today.getHours();
+        let minutes = today.getMinutes();
+        let ampm = hours >= 12 ? 'pm' : 'am';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        let strTime = hours + ':' + minutes + ' ' + ampm;
+        obtenerRecoleccionCancelada(state.idRecoleccion).then((respuesta) => {
+            const {m_sFolioRecoleccion, m_nIdSucursal, m_nIdEstatusRecoleccion, m_dtFechaCancelacion, m_sMotivoCancelacion} = respuesta.data
+            setState({
+                ...state,
+                folioRecoleccion: m_sFolioRecoleccion,
+                sucursalCancelacion: dataSucursal.find(o => o.m_nIdSucursal == m_nIdSucursal).m_sSucursal,
+                fechaCancelacion: m_nIdEstatusRecoleccion == "0" ? m_dtFechaCancelacion :
+                    today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate() + " " + mostrarHora + ":" + minutes,
+                mostrarFechaCancelacion: m_nIdEstatusRecoleccion == "0" ? m_dtFechaCancelacion :
+                    today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + strTime,
+                estatusRecoleccion: dataEstatusRecoleccion.find(o => o.m_nIdEstatusRecoleccion == m_nIdEstatusRecoleccion).m_sEstatus,
+                motivoCancelacion: m_sMotivoCancelacion,
+            })
+            console.log(respuesta.data)
+            if (respuesta.data.m_nSePuedeCancelar == 0)
+                showSuccess("Recolección no se puede cancelar")
+        })
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(3).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Cancelar').addClass('in show');
     }
 
     //Limpia todos los inputs
@@ -1786,10 +1803,6 @@ function Recoleccion() {
         "Content-Type": "application/json",
         //    'access-control-allow-origin': '*'
     };
-
-    /*function conDatos() {
-        return data.length != 0;
-    }*/
 
     function DefaultColumnFilter({
         column: { filterValue, preFilteredRows, setFilter },
@@ -2918,6 +2931,7 @@ function Recoleccion() {
                                 <i className="fa fa-list" /> Listado
                             </a>
                         </li>
+
                         <li>
                             <a data-toggle="tab" onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
@@ -2939,7 +2953,6 @@ function Recoleccion() {
                             </a>
                         </li>
 
-
                         <li>
                             <a data-toggle="tab" href="#Cancelar" onClick={handleShowCancelar}
                                 className={state.idRecoleccion === 0 ? classes.disabled : ""}>
@@ -2953,6 +2966,7 @@ function Recoleccion() {
                                 <i className="fa fa-times-circle" /> Salida
                             </a>
                         </li>
+
                         <li>
                             <a data-toggle="tab" href="#Salida-Llegada" onClick={() => handleShowSalidaLlegada(5)}
                                 className={state.idRecoleccion === 0 ? classes.disabled : ""}>
@@ -3073,29 +3087,6 @@ function Recoleccion() {
                                     </div>
                                 </form>
                                 <div className="row" style={{ height: state.height - 250, width: '100%' }}>
-                                    {/*{conDatos() ? (
-                                        <DataGrid
-                                            localeText={dataGridLocaleText}
-                                            className={classes.root}
-                                            components={{
-                                                LoadingOverlay: CustomLoadingOverlay,
-                                            }}
-                                            loading={data == undefined}
-                                            rows={data}
-                                            columns={columns}
-                                            density="compact"
-                                            pageSize={Math.floor((state.height - 310) / 30)}
-                                            getRowId={(row) => row.m_nIdRecoleccion}
-                                            onRowSelected={(row) => {
-                                                setState({
-                                                    ...state,
-                                                    idRecoleccion: row.data.m_nIdRecoleccion
-                                                })
-                                            }}
-                                        />
-                                    ) : (
-                                        <div>No se encontró ningún registro</div>
-                                    )}*/}
                                     <DataGrid
                                         localeText={dataGridLocaleText}
                                         className={classes.root}
@@ -4344,6 +4335,7 @@ function Recoleccion() {
                                             </div>
                                         </div>
                                     </div>
+
                                     <div className="col-md-12">
                                         <div className="widget-wrap" id="detallesRecoleccion">
                                             {state.diferenteRecoleccion ? (
@@ -4809,7 +4801,6 @@ function Recoleccion() {
                                             )}*/}
                                         </div>
 
-
                                         <div className="widget-wrap" id="detallesOperacion">
                                             <div className="row">
                                                 <div className="col-md-12">
@@ -5122,17 +5113,18 @@ function Recoleccion() {
                                                     </div>
                                                 </div>
                                             </div>
+
                                         </div>
+
                                     </div>
 
-
                                     <div className="form-footer col-md-12">
-                                        <button
+                                        {/*<button
                                             onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}
                                             className="btn btn-secondary secondary-btn"
                                         >
                                             Cancelar
-                                        </button>
+                                        </button>*/}
                                         <button
                                             type="submit"
                                             className="btn btn-primary primary-btn"
@@ -5224,7 +5216,6 @@ function Recoleccion() {
                                                         </div>
                                                     </div>
 
-
                                                     <div className="col-sm-12 col-md-12 col-lg-12 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
@@ -5239,13 +5230,13 @@ function Recoleccion() {
                                                     </div>
 
                                                     <div className="form-footer col-md-12">
-                                                        <button
+                                                        {/*<button
                                                             onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}
 
                                                             className="btn btn-secondary secondary-btn"
                                                         >
                                                             Cancelar
-                                                        </button>
+                                                        </button>*/}
                                                         <button
                                                             type="submit"
                                                             className="btn btn-primary primary-btn"
@@ -5273,13 +5264,13 @@ function Recoleccion() {
                                                     <div className="col-sm-6 col-md-3 col-lg-3 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
                                                                 className="form-control"
                                                                 type="text"
                                                                 label="Sucursal"
                                                                 value={state.sucursalCancelacion}
                                                                 id="sucursalCancelacion"
-                                                                readOnly
+                                                                name="sucursalCancelacion"
+                                                                disabled
                                                             />
                                                         </div>
                                                     </div>
@@ -5287,13 +5278,13 @@ function Recoleccion() {
                                                     <div className="col-sm-6 col-md-3 col-lg-3 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
                                                                 className="form-control"
                                                                 type="text"
                                                                 label="Folio Recolección"
                                                                 value={state.folioRecoleccion}
                                                                 id="folioRecoleccion"
-                                                                readOnly
+                                                                name="folioRecoleccion"
+                                                                disabled
                                                             />
                                                         </div>
                                                     </div>
@@ -5301,13 +5292,13 @@ function Recoleccion() {
                                                     <div className="col-sm-6 col-md-3 col-lg-3 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Fecha Elaboracion"
-                                                                value={state.fechaHoraCreacion}
-                                                                id="fechaHoraCreacion"
-                                                                readOnly
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Fecha Elaboracion"
+                                                                       value={state.fechaHoraCreacion}
+                                                                       id="fechaHoraCreacion"
+                                                                       name="fechaHoraCreacion"
+                                                                       disabled
                                                             />
                                                         </div>
                                                     </div>
@@ -5315,13 +5306,13 @@ function Recoleccion() {
                                                     <div className="col-sm-6 col-md-3 col-lg-3 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Fecha Recoleccion"
-                                                                value={state.fechaRecoleccion}
-                                                                id="fechaRecoleccion"
-                                                                readOnly
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Fecha Recoleccion"
+                                                                       value={state.fechaRecoleccion}
+                                                                       id="fechaRecoleccion"
+                                                                       name="fechaRecoleccion"
+                                                                       disabled
                                                             />
                                                         </div>
                                                     </div>
@@ -5329,13 +5320,13 @@ function Recoleccion() {
                                                     <div className="col-sm-6 col-md-6 col-lg-6 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Zona"
-                                                                value={state.zonaRecoleccion}
-                                                                id="zonaRecoleccion"
-                                                                readOnly
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Zona"
+                                                                       value={state.zonaRecoleccion}
+                                                                       id="zonaRecoleccion"
+                                                                       name="zonaRecoleccion"
+                                                                       disabled
                                                             />
                                                         </div>
                                                     </div>
@@ -5343,13 +5334,13 @@ function Recoleccion() {
                                                     <div className="col-sm-6 col-md-6 col-lg-6 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Recoger En"
-                                                                value={state.recogerEn}
-                                                                id="recogerEn"
-                                                                readOnly
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Recoger En"
+                                                                       value={state.recogerEn}
+                                                                       id="recogerEn"
+                                                                       name="recogerEn"
+                                                                       disabled
                                                             />
                                                         </div>
                                                     </div>
@@ -5357,12 +5348,13 @@ function Recoleccion() {
                                                     <div className="col-sm-12 col-md-6 col-lg-6 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Operador"
-                                                                value={state.operador ? state.operador.m_sNombreCompleto : ""}
-                                                                id="operador"
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Operador"
+                                                                       value={state.operador ? state.operador.m_sNombreCompleto : ""}
+                                                                       id="operador"
+                                                                       name="operador"
+                                                                       disabled
                                                             />
                                                         </div>
                                                     </div>
@@ -5370,12 +5362,13 @@ function Recoleccion() {
                                                     <div className="col-sm-12 col-md-6 col-lg-6 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Estatus"
-                                                                value={state.motivoCancelacion}
-                                                                id="motivoCancelacion"
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Estatus"
+                                                                       value={''}
+                                                                       id="estatusOperador"
+                                                                       name="estatusOperador"
+                                                                       disabled
                                                             />
                                                         </div>
                                                     </div>
@@ -5383,12 +5376,13 @@ function Recoleccion() {
                                                     <div className="col-sm-12 col-md-6 col-lg-6 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Unidad"
-                                                                value={state.unidad ? state.unidad.m_sDescripcion : ""}
-                                                                id="unidad"
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Unidad"
+                                                                       value={state.unidad ? state.unidad.m_sDescripcion : ""}
+                                                                       id="unidad"
+                                                                       name="unidad"
+                                                                       disabled
                                                             />
                                                         </div>
                                                     </div>
@@ -5396,12 +5390,13 @@ function Recoleccion() {
                                                     <div className="col-sm-12 col-md-6 col-lg-6 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Estatus"
-                                                                value={state.motivoCancelacion}
-                                                                id="motivoCancelacion"
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Estatus"
+                                                                       value={''}
+                                                                       id="estatusUnidad"
+                                                                       name="estatusUnidad"
+                                                                       disabled
                                                             />
                                                         </div>
                                                     </div>
@@ -5409,12 +5404,13 @@ function Recoleccion() {
                                                     <div className="col-sm-12 col-md-6 col-lg-6 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Remolque"
-                                                                value={state.motivoCancelacion}
-                                                                id="motivoCancelacion"
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Remolque"
+                                                                       value={''}
+                                                                       id="remolqueSalida"
+                                                                       name="remolqueSalida"
+                                                                       disabled
                                                             />
                                                         </div>
                                                     </div>
@@ -5422,12 +5418,13 @@ function Recoleccion() {
                                                     <div className="col-sm-12 col-md-3 col-lg-3 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Estatus"
-                                                                value={state.motivoCancelacion}
-                                                                id="motivoCancelacion"
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Estatus"
+                                                                       value={''}
+                                                                       id="estatusRemolque"
+                                                                       name="estatusRemolque"
+                                                                       disabled
                                                             />
                                                         </div>
                                                     </div>
@@ -5435,12 +5432,12 @@ function Recoleccion() {
                                                     <div className="col-sm-12 col-md-3 col-lg-3 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Cargado"
-                                                                value={state.motivoCancelacion}
-                                                                id="motivoCancelacion"
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Cargado"
+                                                                       value={''}
+                                                                       id="cargado"
+                                                                       disabled
                                                             />
                                                         </div>
                                                     </div>
@@ -5448,17 +5445,18 @@ function Recoleccion() {
                                                     <div className="col-sm-12 col-md-4 col-lg-4 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                label="Fecha Salida"
-                                                                value={state.motivoCancelacion}
-                                                                id="motivoCancelacion"
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Fecha Salida"
+                                                                       value={''}
+                                                                       id="fechaSalida"
+                                                                       name="fechaSalida"
+                                                                       disabled={true}
                                                             />
                                                         </div>
                                                     </div>
 
-                                                    <div className="form-footer" className="col-md-12">
+                                                    {/*<div className="form-footer" className="col-md-12">
                                                         <button
                                                             onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}
 
@@ -5472,7 +5470,7 @@ function Recoleccion() {
                                                         >
                                                             Aceptar
                                                         </button>
-                                                    </div>
+                                                    </div>*/}
                                                 </div>
                                             </form>
                                         </div>
