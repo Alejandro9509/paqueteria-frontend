@@ -56,6 +56,7 @@ class ConceptosAdicionales extends Component {
         this.onSubmit = this.onSubmit.bind(this)
         this.removeConcepto = this.removeConcepto.bind(this)
         this.handleSelectCP = this.handleSelectCP.bind(this)
+        this.handleRowClick = this.handleRowClick.bind(this)
     }
 
     componentWillMount() {
@@ -152,18 +153,43 @@ class ConceptosAdicionales extends Component {
     onSubmit(event) {
         event.preventDefault()
         this.props.addConcepto(this.state)
+        this.setState({
+            concepto: null,
+            importe: 0,
+            nombreConcepto: "",
+            importeRet: "0",
+            retiene: 0,
+            traslada: 0,
+            importeIVA: "0"
+        })
     }
 
-    removeConcepto(event) {
+    removeConcepto(event, index) {
         event.preventDefault()
-        this.props.removeConcepto(this.state)
+        console.log('eliminar concepto: ', index)
+        this.props.removeConcepto(index)
     }
 
-
+    handleRowClick(event, index, concepto) {
+        const {conceptosAdicionales,removeConcepto} = this.props
+        removeConcepto(index)
+        const conceptoSelect = this.state.conceptos.find((c) => c.m_nIdConceptosFacturacion == concepto.idConcepto)
+        console.log('concepto click', conceptoSelect)
+        console.log('concepto completo', concepto)
+        this.setState({
+            concepto: conceptoSelect,
+            importe: concepto.importe,
+            nombreConcepto: concepto.m_sConcepto,
+            importeRet: concepto.importeRet,
+            retiene: concepto.retiene,
+            traslada: concepto.traslada,
+            importeIVA: concepto.importeIVA
+        })
+    }
 
     render() {
 
-
+        const {removeConcepto} = this.props
 
         return (
             <div>
@@ -412,7 +438,7 @@ class ConceptosAdicionales extends Component {
                                 </tr>
                                 {
                                     this.props.conceptosAdicionales.map((c, index) => (
-                                        <tr>
+                                        <tr onClick={(e) => this.handleRowClick(e, index, c)}>
                                             <td style={{ textAlign: "left" }}>{c.nombreConcepto}</td>
                                             {this.props.mostrarRangos ? <td style={{ textAlign: "left" }}>{c.rangoMinimo} Kg</td> : <td></td>}
                                             {this.props.mostrarRangos ? <td style={{ textAlign: "left" }}>{c.rangoMaximo} Kg</td> : <td></td>}
@@ -422,7 +448,7 @@ class ConceptosAdicionales extends Component {
                                             <td style={{ textAlign: "left" }}>{this.state.impuestos.length !== 0 && (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.retiene)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.retiene)).m_sImpuesto : "No Aplica")}</td>
                                             <td style={{ textAlign: "left" }}>${parseFloat(c.importeRet).toFixed(2)}</td>
                                             <td>
-                                                <IconButton onClick={this.removeConcepto}>
+                                                <IconButton onClick={(e) => this.removeConcepto(e,index)}>
                                                     <CancelIcon style={{ fill: "red", fontSize: "x-large" }} />
                                                 </IconButton>
                                             </td>
