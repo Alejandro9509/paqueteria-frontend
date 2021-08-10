@@ -206,15 +206,19 @@ function Recoleccion() {
                 m_rAlto: "",
                 m_rVolumen: "",
                 m_nIdTipoEmbalaje: "",
-                m_cyValorDeclarado: "",
                 m_sDescripcion: "",
                 m_nCantidad: "",
                 m_sObservaciones: "",
+                //checar cual de las dos es la que se usa
+                m_cyValorDeclarado: "",
+                m_cValorDeclarado: "",
+                m_nTipo: 2,
             },
         ],
         sobres: [
             {
                 m_sDescripcion: "",
+                m_nTipo: 2,
             },
         ],
 
@@ -1134,133 +1138,64 @@ function Recoleccion() {
     function handleShowAgregar(event) {
         event.stopPropagation()
         limpiarInputsAgregar()
-        setState({
-            ...state,
-            /*nombreRemitente: dataRemitenteDestinatario[0],
-            nombreDestinatario: dataRemitenteDestinatario[0],
+        setState(state => {
+            return {
+                ...state,
+                idSucursalAgregar: localStorage.getItem("Sucursal"),
+                folioRecoleccion: dataFolioRecoleccion.length !== 0 ? dataFolioRecoleccion[0].m_sFolioRecoleccion : "",
+                fechaHoraRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() +
+            1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
 
-            agregar: "Agregar",
-            idRecoleccion: 0,
-            //folioRecoleccion: parseInt(dataFolioRecoleccion[0].m_sFolioRecoleccion.split("E")[1]),*/
-            folioRecoleccion: dataFolioRecoleccion.length !== 0 ? dataFolioRecoleccion[0].m_sFolioRecoleccion : "",
-            /*folioEmbarque: "",
-            folioGuia: "",
-            folioInforme: "",*/
-            fechaHoraRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() +
-                1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(
-                    2,
-                    0
-                )}T${`${new Date().getHours()}`.padStart(
-                    2,
-                    0
-                )}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
-            fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + "T" + today.getHours() + ":" + today.getMinutes(),
-            /*estatusRecoleccion: ""/!*dataEstatusRecoleccion.length !== 0 ? dataEstatusRecoleccion[0].m_nIdEstatusRecoleccion : 2*!/,
-            moneda: "",
-            tipoCambio: ""/!*dataTipoCambio.length !== 0 ? dataTipoCambio[0].m_nIdTipoCambio : 2*!/,
-            tipoCobro: ""/!*dataTipoCobro ? dataTipoCobro.length > 0 ? dataTipoCobro[0].m_nIdTipoCobro : 0 : 0*!/,
-            RFCRemitente: "",
-            domicilioRemitente: "",
-            codigoPostalRemitente: ""/!*dataCodigoPostal.find(cp => cp.m_nIdCiudad == dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1)*!/,
-            correoRemitente: "",
-            telefonoRemitente: "",
-            contactoRemitente: "",
-            origenRemitente: ""/!*dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1*!/,
-            RFCDestinatario: "",
-            domicilioDestinatario: "",
-            codigoPostalDestinatario: ""/!*dataCodigoPostal.find(cp => cp.m_nIdCiudad == dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1)*!/,
-            correoDestinatario: "",
-            telefonoDestinatario: "",
-            contactoDestinatario: "",
-            destinoDestinatario: ""/!*dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1*!/,
-            ciudadRemitente: ""/!*dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1*!/,
-            ciudadDestinatario: ""/!*dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1*!/,
-            fechaRecoleccion: "",
-            codigoPostalRecoleccion: ""/!*dataCodigoPostal.find(cp => cp.m_nIdCiudad == dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1)*!/,
-            ciudadRecoleccion: ""/!*dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1*!/,
-            zonaRecoleccion: "",
-            domicilioRecoleccion: "",
-            recogerEn: "",
-            datosAdicionalesRecoleccion: "",
-            codigoPostalEntrega: ""/!*dataCodigoPostal.find(cp => cp.m_nIdCiudad == dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1)*!/,
-            ciudadEntrega: ""/!*dataCiudad.length !== 0 ? dataCiudad[0].m_nIdCiudad : 1*!/,
-            zonaEntrega: "",
-            domicilioEntrega: "",
-            entregaEn: "",
-            datosAdicionalesEntrega: "",
-            cantidadDePaquetes: 0,
-            cantidadDeSobres: 0,
-            operador: ""/!*dataOperador.length !== 0 ? dataOperador[0].m_nIdOperador : 1*!/,
-            unidad: ""/!*dataUnidad.length !== 0 ? dataUnidad[0].m_nIdUnidad : 1*!/,*/
-            paquetes: [
-                {
-                    m_rPeso: "",
-                    m_rLargo: "",
-                    m_rAncho: "",
-                    m_rAlto: "",
-                    m_rVolumen: "",
-                    m_nIdTipoEmbalaje: "",
-                    m_cValorDeclarado: "",
-                    m_sDescripcion: "",
-                    m_nCantidad: "",
-                    m_sObservaciones: "",
-                    m_nTipo: 2,
-                },
-            ],
-            sobres: [
-                {
-                    m_nTipo: 1,
-                    m_sDescripcion: "",
-                },
-            ],
+            }
         });
         $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
 
     }
 
     //Limpia todos los inputs
-    const limpiarInputsAgregar = () =>{
-        setState({
+    const limpiarInputsAgregar = () => {
+        setState(state => {
+            return {
             ...state,
-            idSucursalAgregar: localStorage.getItem("Sucursal"),
-            folioRecoleccion: '',
-            folioEmbarque: '',
-            folioGuia: '',
-            folioInforme: '',
-            fechaHoraRegistro: '',
-            estatusRecoleccion: '',
-            moneda: '',
-            tipoCambio: '',
-            tipoCobro: '',
+                idSucursalAgregar: '',
+                folioRecoleccion: '',
+                folioEmbarque: '',
+                folioGuia: '',
+                folioInforme: '',
+                fechaHoraRegistro: '',
+                estatusRecoleccion: '',
+                moneda: '',
+                tipoCambio: '',
+                tipoCobro: '',
 
-            //Remitente
-            nombreRemitente: '',
-            RFCRemitente: '',
-            domicilioRemitente: '',
-            ciudadRemitente: '',
-            codigoPostalRemitente: '',
-            correoRemitente: '',
-            telefonoRemitente: '',
-            contactoRemitente: '',
-            origenRemitente: '',
+                //Remitente
+                nombreRemitente: '',
+                RFCRemitente: '',
+                domicilioRemitente: '',
+                ciudadRemitente: '',
+                codigoPostalRemitente: '',
+                correoRemitente: '',
+                telefonoRemitente: '',
+                contactoRemitente: '',
+                origenRemitente: '',
 
-            //Destinatario
-            nombreDestinatario: '',
-            RFCDestinatario: '',
-            domicilioDestinatario: '',
-            ciudadDestinatario: '',
-            codigoPostalDestinatario: '',
-            correoDestinatario: '',
-            telefonoDestinatario: '',
-            contactoDestinatario: '',
-            destinoDestinatario: '',
+                //Destinatario
+                nombreDestinatario: '',
+                RFCDestinatario: '',
+                domicilioDestinatario: '',
+                ciudadDestinatario: '',
+                codigoPostalDestinatario: '',
+                correoDestinatario: '',
+                telefonoDestinatario: '',
+                contactoDestinatario: '',
+                destinoDestinatario: '',
 
-            //Paquetes/Sobres
-            countPaquetes: 1,
-            countSobres: 1,
-            mismoPaquete: false,
-            mismoSobre: false,
-            paquetes: [
+                //Paquetes/Sobres
+                countPaquetes: 1,
+                countSobres: 1,
+                mismoPaquete: false,
+                mismoSobre: false,
+                paquetes: [
                 {
                     m_rPeso: "",
                     m_rLargo: "",
@@ -1274,37 +1209,38 @@ function Recoleccion() {
                     m_sObservaciones: "",
                 },
             ],
-            sobres: [
+                sobres: [
                 {
                     m_sDescripcion: "",
                 },
             ],
 
-            //Entrega
-            diferenteEntrega: false,
-            ciudadEntrega: '',
-            codigoPostalEntrega: '',
-            zonaEntrega: '',
-            domicilioEntrega: '',
-            entregaEn: '',
-            datosAdicionalesEntrega: '',
+                //Entrega
+                diferenteEntrega: false,
+                ciudadEntrega: '',
+                codigoPostalEntrega: '',
+                zonaEntrega: '',
+                domicilioEntrega: '',
+                entregaEn: '',
+                datosAdicionalesEntrega: '',
 
-            //Recoleccion
-            diferenteRecoleccion: false,
-            fechaRecoleccion: '',
-            ciudadRecoleccion: '',
-            codigoPostalRecoleccion: '',
-            zonaRecoleccion: '',
-            domicilioRecoleccion: '',
-            recogerEn: '',
-            datosAdicionalesRecoleccion: '',
+                //Recoleccion
+                diferenteRecoleccion: false,
+                fechaRecoleccion: '',
+                ciudadRecoleccion: '',
+                codigoPostalRecoleccion: '',
+                zonaRecoleccion: '',
+                domicilioRecoleccion: '',
+                recogerEn: '',
+                datosAdicionalesRecoleccion: '',
 
-            //Operador
-            operador: '',
-            tipoUnidad: '',
-            unidad: '',
-            fechaHoraSalida: '',
-            fechaHoraLlegada: '',
+                //Operador
+                operador: '',
+                tipoUnidad: '',
+                unidad: '',
+                fechaHoraSalida: '',
+                fechaHoraLlegada: '',
+            }
         });
     }
 
