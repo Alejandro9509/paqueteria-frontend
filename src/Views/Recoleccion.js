@@ -134,11 +134,11 @@ function Recoleccion() {
     const [dataUnidad, setDataUnidad] = React.useState([]);
     const [state, setState] = React.useState({
         // ===VARIABLES DE LISTADO===
-        idRecoleccion: '',
+        idRecoleccion: 0,
         fechaInicial: '',
-        fechaFinal: (today.getMonth() + 1) + "-" + today.getDate() + "-" + today.getFullYear(),
-        sucursalListado: '',
-        estatusListado: '',
+        fechaFinal: '',
+        sucursalListado: 0,
+        estatusListado: 0,
 
         // ===VARIABLES DE CANCELAR===
         // folioRecoleccion: '', Se usa en agregar tambien
@@ -1152,6 +1152,27 @@ function Recoleccion() {
 
     }
 
+    const handleShowListado = (event) => {
+        event.stopPropagation();
+        setState(state =>{
+            return {
+                ...state,
+                idRecoleccion: 0,
+                fechaInicial: '',
+                sucursalListado: 0,
+                estatusListado: 0,
+                height: window.height,
+                agregar: "Agregar",
+                fechaFinal: (today.getMonth() + 1) + "-" + today.getDate() + "-" + today.getFullYear(),
+            }
+        });
+        getAllSucursales()
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(0).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Listado').addClass('in show');
+    }
+
     //Limpia todos los inputs
     const limpiarInputsAgregar = () => {
         setState(state => {
@@ -1297,50 +1318,87 @@ function Recoleccion() {
 
     //Maneja filtrado de listado embarque
     const handleFechaInicialFiltro = async (event) => {
-        event.preventDefault();
         setState({
             ...state,
             fechaInicial: event.target.value,
         })
-        obtenerRecoleccionFiltro(event.target.value, state.fechaInicial, state.sucursalListado, state.estatusListado).then(respuesta => {
-            setData(respuesta.data)
-        })
+        const {fechaFinal, sucursalListado, estatusListado} = state
+        if (sucursalListado == 0 && estatusListado == 0){
+            getAllData()
+        }else {
+            obtenerRecoleccionFiltro(event.target.value, fechaFinal, sucursalListado, estatusListado).then(respuesta => {
+                if (respuesta.data == "Vacio"){
+                    setData([])
+                }else {
+                    setData(respuesta.data)
+                }
+            })
+        }
     }
+
     //Maneja filtrado de listado embarque
     const handleFechaFinalFiltro = async (event) => {
-        event.preventDefault();
         setState({
             ...state,
             fechaFinal: event.target.value,
         })
-        obtenerRecoleccionFiltro(state.fechaInicial, event.target.value, state.sucursalListado, state.estatusListado).then(respuesta => {
-            setData(respuesta.data)
-        })
+        const {fechaInicial, sucursalListado, estatusListado} = state
+        if (sucursalListado == 0 && estatusListado == 0){
+            getAllData()
+        }else{
+            obtenerRecoleccionFiltro(fechaInicial, event.target.value, sucursalListado, estatusListado).then(respuesta => {
+                if (respuesta.data == "Vacio"){
+                    setData([])
+                }else {
+                    setData(respuesta.data)
+                }
+            })
+        }
     }
+
     //Maneja filtrado de listado embarque
     const handleSucursalFiltro = async (event) => {
-        event.preventDefault();
         setState({
             ...state,
             sucursalListado: event.target.value,
         })
-        obtenerRecoleccionFiltro(state.fechaInicial, state.fechaFinal, event.target.value, state.estatusListado).then(respuesta => {
-            setData(respuesta.data)
-        })
+        const {fechaInicial, fechaFinal, estatusListado} = state
+        console.log('sucursal: ', event.target.value)
+        console.log('fechaInicial ', fechaInicial)
+        console.log('fechaFinal ', fechaFinal)
+        console.log('estatusListado ', estatusListado)
+        if (event.target.value == 0 && estatusListado == 0){
+            getAllData()
+        }else{
+            obtenerRecoleccionFiltro(fechaInicial, fechaFinal, event.target.value, estatusListado).then(respuesta => {
+                if (respuesta.data == "Vacio"){
+                    setData([])
+                }else {
+                    setData(respuesta.data)
+                }
+            })
+        }
     }
+
     //Maneja filtrado de listado embarque
     const handleEstatusFiltro = async (event) => {
-        event.preventDefault();
         setState({
             ...state,
             estatusListado: event.target.value,
         })
-        obtenerRecoleccionFiltro(state.fechaInicial, state.fechaFinal, state.sucursalListado, event.target.value).then(respuesta => {
-            setData(respuesta.data)
-        })
+        const {fechaInicial, fechaFinal, sucursalListado} = state
+        if (event.target.value == 0 && sucursalListado == 0){
+            getAllData()
+        }else {
+            obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, event.target.value).then(respuesta => {
+                if (respuesta.data == "Vacio"){
+                    setData([])
+                }else {
+                    setData(respuesta.data)
+                }
+            })
+        }
     }
-
-
 
     const columns = React.useMemo(() => [
         {
@@ -1557,15 +1615,12 @@ function Recoleccion() {
         },
     ]);
 
-
-
     function getAllData() {
         obtenerRecoleccion().then((respuesta) => {
-            console.log(respuesta.data);
+            console.log('Recolecciones listado',respuesta.data);
             setData(respuesta.data);
         });
     }
-
 
     function getAllEmbalajes() {
         obtenerEmbalajes().then((respuesta) => {
@@ -1575,6 +1630,7 @@ function Recoleccion() {
 
     function getAllSucursales() {
         obtenerSucursales().then((respuesta) => {
+            console.log('sucursales', respuesta.data)
             setDataSucursal(respuesta.data);
         });
     }
@@ -1731,9 +1787,9 @@ function Recoleccion() {
         //    'access-control-allow-origin': '*'
     };
 
-    function conDatos() {
+    /*function conDatos() {
         return data.length != 0;
-    }
+    }*/
 
     function DefaultColumnFilter({
         column: { filterValue, preFilteredRows, setFilter },
@@ -2858,7 +2914,7 @@ function Recoleccion() {
 
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
-                            <a data-toggle="tab" onClick={(event) => { event.stopPropagation(); setState({ ...state, height: window.height, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
+                            <a data-toggle="tab" onClick={(event) => handleShowListado(event)}>
                                 <i className="fa fa-list" /> Listado
                             </a>
                         </li>
@@ -3017,7 +3073,7 @@ function Recoleccion() {
                                     </div>
                                 </form>
                                 <div className="row" style={{ height: state.height - 250, width: '100%' }}>
-                                    {conDatos() ? (
+                                    {/*{conDatos() ? (
                                         <DataGrid
                                             localeText={dataGridLocaleText}
                                             className={classes.root}
@@ -3039,7 +3095,26 @@ function Recoleccion() {
                                         />
                                     ) : (
                                         <div>No se encontró ningún registro</div>
-                                    )}
+                                    )}*/}
+                                    <DataGrid
+                                        localeText={dataGridLocaleText}
+                                        className={classes.root}
+                                        components={{
+                                            LoadingOverlay: CustomLoadingOverlay,
+                                        }}
+                                        loading={data == undefined}
+                                        rows={data}
+                                        columns={columns}
+                                        density="compact"
+                                        pageSize={Math.floor((state.height - 310) / 30)}
+                                        getRowId={(row) => row.m_nIdRecoleccion}
+                                        onRowSelected={(row) => {
+                                            setState({
+                                                ...state,
+                                                idRecoleccion: row.data.m_nIdRecoleccion
+                                            })
+                                        }}
+                                    />
                                 </div>
                             </div>
 

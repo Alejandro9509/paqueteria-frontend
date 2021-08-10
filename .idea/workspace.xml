@@ -449,7 +449,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/Views/Recoleccion.js</url>
-          <line>2757</line>
+          <line>2813</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
