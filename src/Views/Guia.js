@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, {useEffect, useState, useMemo} from "react";
 import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
 
@@ -8,22 +8,22 @@ import {Tab, Tabs, Box, InputAdornment} from '@material-ui/core';
 import ConceptosAdicionalesManiobra from './Tarifas/ConceptosAdicionalesManiobra';
 import ConceptosAdicionalesEntrega from './Tarifas/ConceptosAdicionalesEntrega';
 import ConceptosAdicionalesRecoleccion from './Tarifas/ConceptosAdicionalesRecoleccion';
-import Carousel, { propTypes } from "re-carousel";
+import Carousel, {propTypes} from "re-carousel";
 import IndicatorDots from "../Util/Dots";
 import Buttons from "../Util/CarruselButtons";
-import { makeStyles } from "@material-ui/core/styles";
+import {makeStyles} from "@material-ui/core/styles";
 import * as XLSX from 'xlsx';
-import { useTable, useFilters, useAsyncDebounce, useSortBy } from 'react-table'
+import {useTable, useFilters, useAsyncDebounce, useSortBy} from 'react-table'
 import $ from 'jquery';
-import { getUniqueListBy, remove_array_element } from "../Util/Util";
+import {getUniqueListBy, remove_array_element} from "../Util/Util";
 import Barra from "../Util/jquery-barcode"
-import { DataGrid } from '@material-ui/data-grid';
+import {DataGrid} from '@material-ui/data-grid';
 
 import Noty from 'noty';
-import { SignalCellularNoSimOutlined } from "@material-ui/icons";
+import {SignalCellularNoSimOutlined} from "@material-ui/icons";
 import ConceptosAdicionales from "./Tarifas/ConceptosAdicionales";
 import { Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, Select, Step, StepLabel, Stepper, TextField, Tooltip } from "@material-ui/core";
-import { dataGridLocaleText } from "../Constants";
+import {dataGridLocaleText, TICKET_ZABRA_TAMPLATE} from "../Constants";
 import { obtenerCiudades } from "../Util/Contexts/CiudadesContext";
 import { obtenerEstatusGuia } from "../Util/Contexts/EstatusContext";
 import { obtenerEmbarquesId, obtenerEmbarqueMoneda } from "../Util/Contexts/EmbarquesContext";
@@ -53,6 +53,7 @@ function showSuccess(mensaje) {
 
 
 window.jQuery = window.$ = $;
+var EB = window.EB;
 const styles = {
     paqueteCarrusel: {
         height: "170px !important",
@@ -200,6 +201,7 @@ function Guia(props) {
         //	showSuccess(indice);
         $("#idBarra" + indice).barcode(valor, "code128");
     }
+
     const [dataFolioGuia, SetDataFolioGuia] = React.useState([]);
     const [fileUploaded, setFileUploaded] = React.useState([])
     const [stepActive, setStepActive] = React.useState(1);
@@ -275,7 +277,9 @@ function Guia(props) {
     }
 
     function getUltimoFolioGuia() {
-        ultimoFolioGuia().then((respuesta) => { SetDataFolioGuia(respuesta.data); });
+        ultimoFolioGuia().then((respuesta) => {
+            SetDataFolioGuia(respuesta.data);
+        });
     }
 
     async function getImpresion(id) {
@@ -405,7 +409,7 @@ function Guia(props) {
 
             setState(state => {
                 return {
-                ...state,
+                    ...state,
                     agregar: "Consultar",
                     idTipoServicio: respuesta.data.m_nIdTipoServicio,
                     idEstatusGuia: respuesta.data.m_nIdEstatusGuia,
@@ -544,8 +548,8 @@ function Guia(props) {
         })
         obtenerGuiasFiltro(
             event.target.value, state.fechaFinal, state.sucursalListado, state.estatusListado).then(respuesta => {
-                setData(respuesta.data)
-            })
+            setData(respuesta.data)
+        })
     }
 
     //Hace filtrado de guias por fechas. Se usa en listado de guias
@@ -584,7 +588,7 @@ function Guia(props) {
 
     const handleChangePaquete = (event, index) => {
 
-        var { paquetes } = state
+        var {paquetes} = state
         paquetes[index][event.target.name] = event.target.value
         setState({
             ...state,
@@ -594,13 +598,31 @@ function Guia(props) {
 
     const handleChangeSobre = (event, index) => {
 
-        var { sobres } = state
+        var {sobres} = state
         sobres[index][event.target.name] = event.target.value
         setState({
             ...state,
             sobres: sobres
         });
     };
+
+    function printTicket() {
+        EB = window.EB
+        EB.PrinterZebra.searchPrinters({
+            "deviceAddress": "192.148.1.143",
+            "devicePort": 9600,
+            "connectionType": EB.Printer.CONNECTION_TYPE_TCP
+        }, function (cb) {
+
+            var myPrinter = EB.PrinterZebra.getPrinterByID(cb.printerID)
+            myPrinter.connect(function (cb) {
+
+                myPrinter.printRawString(TICKET_ZABRA_TAMPLATE, {}, function (cb) {
+
+                })
+            })
+        })
+    }
 
     const columns = React.useMemo(() => [
         {
@@ -611,17 +633,32 @@ function Guia(props) {
                 return (
                     <div>
                         <Tooltip title="Modificar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdGuia))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                            <a href="#Agregar" role="tab" data-toggle="tab"
+                               onClick={() => (handleShowModificar(row.row.m_nIdGuia))}
+                               className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
+                                                                     style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         <Tooltip title="Consultar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdGuia))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs"
+                               onClick={() => (handleShowConsultar(row.row.m_nIdGuia))}><i className="fa fa-eye"
+                                                                                           style={{color: "#F9A03E"}}/></a>
+
+                        </Tooltip>
+                        <Tooltip title="iMPRIMIR">
+                            <a href="#" className="btn btn-default btn-xs"
+                               onClick={() => printTicket()}><i className="zmdi zmdi-print"
+                                                                style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
-                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdGuia))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                            <a href="#" className="btn btn-default btn-xs"
+                               onClick={() => (handleEliminar(row.row.m_nIdGuia))}><i className="zmdi zmdi-delete"
+                                                                                      style={{color: "#F30B0B"}}/></a>
 
                         </Tooltip>
+
+
                     </div>
                 )
             }
@@ -724,19 +761,35 @@ function Guia(props) {
     }
 
     function addConcepto(data) {
-        const { conceptosAdicionales } = state
+        const {conceptosAdicionales} = state
         var ivaTraslada = []
         var ivaRetiene = []
-        conceptosAdicionales.push({ concepto: data.concepto, importe: data.importe, retiene: data.retiene, traslada: data.traslada, importeRet: data.importeRet, importeIVA: data.importeIVA, rangoMinimo: data.rangoMinimo, rangoMaximo: data.rangoMaximo, nombreConcepto: data.nombreConcepto, tipoCalculo: data.tipoCalculo })
+        conceptosAdicionales.push({
+            concepto: data.concepto,
+            importe: data.importe,
+            retiene: data.retiene,
+            traslada: data.traslada,
+            importeRet: data.importeRet,
+            importeIVA: data.importeIVA,
+            rangoMinimo: data.rangoMinimo,
+            rangoMaximo: data.rangoMaximo,
+            nombreConcepto: data.nombreConcepto,
+            tipoCalculo: data.tipoCalculo
+        })
         ivaTraslada = getUniqueListBy(conceptosAdicionales, "traslada").map(i => i.traslada);
         ivaRetiene = getUniqueListBy(conceptosAdicionales, "retiene").map(i => i.retiene);
-        setState({ ...state, conceptosAdicionales: conceptosAdicionales, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
+        setState({
+            ...state,
+            conceptosAdicionales: conceptosAdicionales,
+            ivaRetiene: ivaRetiene,
+            ivaTraslada: ivaTraslada
+        })
     }
 
     function removeConcepto(index) {
-        const { conceptosAdicionales } = state
+        const {conceptosAdicionales} = state
         conceptosAdicionales.splice(index, 1)
-        setState({ ...state, conceptosAdicionales: conceptosAdicionales })
+        setState({...state, conceptosAdicionales: conceptosAdicionales})
     }
 
     const handleUpload = (e) => {
@@ -748,12 +801,12 @@ function Guia(props) {
         reader.onload = function (e) {
             console.log("Nothing Happened")
             var data = e.target.result;
-            let readedData = XLSX.read(data, { type: 'binary' });
+            let readedData = XLSX.read(data, {type: 'binary'});
             const wsname = readedData.SheetNames[0];
             const ws = readedData.Sheets[wsname];
 
             /* Convert array to json*/
-            const dataParse = XLSX.utils.sheet_to_json(ws, { header: 1 });
+            const dataParse = XLSX.utils.sheet_to_json(ws, {header: 1});
             console.log("dataParse : " + dataParse)
             setFileUploaded(dataParse);
         };
@@ -783,7 +836,7 @@ function Guia(props) {
         const {m_arrPaquetes: paquetes, m_arrSobres: sobres} = respuesta.data
 
         paquetes.forEach((paq) => {
-            if (!(paq.m_nIdEmbarqueDetalle === "" || paq.m_nIdEmbarqueDetalle === "0")){
+            if (!(paq.m_nIdEmbarqueDetalle === "" || paq.m_nIdEmbarqueDetalle === "0")) {
                 paquetesTemp.push({
                     peso: paq.m_xPeso,
                     largo: paq.m_xLargo,
@@ -801,7 +854,7 @@ function Guia(props) {
         })
 
         sobres.forEach((sob) => {
-            if (!(sob.m_nIdEmbarqueDetalle === "" || sob.m_nIdEmbarqueDetalle === "0")){
+            if (!(sob.m_nIdEmbarqueDetalle === "" || sob.m_nIdEmbarqueDetalle === "0")) {
                 sobresTemp.push({
                     descripcionSobre: sob.m_sDescripcion,
                     id: sob.m_nIdEmbarqueDetalle
@@ -810,12 +863,12 @@ function Guia(props) {
         })
 
         obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalRemitente).then(respuesta => {
-          setState( state => {
-              return{
-                  ...state,
-                  codigoPostalRemitente: respuesta.data.m_sCP,
-              }
-          })
+            setState(state => {
+                return {
+                    ...state,
+                    codigoPostalRemitente: respuesta.data.m_sCP,
+                }
+            })
         })
         obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalDestinatario).then(respuesta => {
             setState(state => {
@@ -827,7 +880,7 @@ function Guia(props) {
         })
 
         setState(state => {
-            return{
+            return {
                 ...state,
                 idEmbarque: respuesta.data.m_nIdEmbarque,
                 idSucursalAgregar: respuesta.data.IdSucursal,
@@ -880,7 +933,7 @@ function Guia(props) {
             console.log('tarifas by embarque')
             console.log(tarifa.data)
             let pesoTotal = 0
-            paquetesTemp.forEach( (p) => {
+            paquetesTemp.forEach((p) => {
                 pesoTotal = pesoTotal + p.peso
             })
             if (tarifa.data.length !== 0) {
@@ -1040,7 +1093,7 @@ function Guia(props) {
 
     const limpiarCamposAgregar = () => {
         setState(state => {
-            return{
+            return {
                 ...state,
                 //Informacion General
                 idSucursalAgregar: localStorage.getItem("Sucursal"),
@@ -1159,7 +1212,7 @@ function Guia(props) {
 
     const handleImprimir = () => {
         imprimirFormatosId(state.formatoSeleccionado).then((response) => {
-            var file = new Blob([response.data], { type: 'application/pdf' })
+            var file = new Blob([response.data], {type: 'application/pdf'})
             var fileURL = URL.createObjectURL(file)
             console.log(fileURL)
             window.open(fileURL);
@@ -1209,6 +1262,7 @@ function Guia(props) {
         }, 200);
 
     }
+
     //objeto de paquetes
     const framesPaquete = state.paquetes.map((p, index) => {
         return (
@@ -1216,14 +1270,14 @@ function Guia(props) {
                 <div className="col-sm-4 col-md-1-5 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
-                            onChange={(event) => handleChangePaquete(event, index)}
-                            className="form-control"
-                            type="text"
-                            label="Peso"
-                            value={state.paquetes[index].peso}
-                            placeholder="Peso"
-                            name="peso"
-                            disabled={true}
+                                   onChange={(event) => handleChangePaquete(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   label="Peso"
+                                   value={state.paquetes[index].peso}
+                                   placeholder="Peso"
+                                   name="peso"
+                                   disabled={true}
                         />
                     </div>
                 </div>
@@ -1231,14 +1285,14 @@ function Guia(props) {
                 <div className="col-sm-4 col-md-1-5 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
-                            label="Largo"
-                            onChange={(event) => handleChangePaquete(event, index)}
-                            className="form-control"
-                            type="text"
-                            value={state.paquetes[index].largo}
-                            placeholder="Largo"
-                            name="largo"
-                            disabled={true}
+                                   label="Largo"
+                                   onChange={(event) => handleChangePaquete(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   value={state.paquetes[index].largo}
+                                   placeholder="Largo"
+                                   name="largo"
+                                   disabled={true}
                         />
                     </div>
                 </div>
@@ -1246,14 +1300,14 @@ function Guia(props) {
                 <div className="col-sm-4 col-md-1-5 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
-                            onChange={(event) => handleChangePaquete(event, index)}
-                            className="form-control"
-                            type="text"
-                            label="Ancho"
-                            value={state.paquetes[index].ancho}
-                            placeholder="Ancho"
-                            name="ancho"
-                            disabled={true}
+                                   onChange={(event) => handleChangePaquete(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   label="Ancho"
+                                   value={state.paquetes[index].ancho}
+                                   placeholder="Ancho"
+                                   name="ancho"
+                                   disabled={true}
                         />
                     </div>
                 </div>
@@ -1261,14 +1315,14 @@ function Guia(props) {
                 <div className="col-sm-4 col-md-1-5 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
-                            onChange={(event) => handleChangePaquete(event, index)}
-                            className="form-control"
-                            type="text"
-                            label="Alto"
-                            value={state.paquetes[index].alto}
-                            placeholder="Alto"
-                            name="alto"
-                            disabled={true}
+                                   onChange={(event) => handleChangePaquete(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   label="Alto"
+                                   value={state.paquetes[index].alto}
+                                   placeholder="Alto"
+                                   name="alto"
+                                   disabled={true}
                         />
                     </div>
                 </div>
@@ -1276,14 +1330,14 @@ function Guia(props) {
                 <div className="col-sm-4 col-md-1-5 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
-                            onChange={(event) => handleChangePaquete(event, index)}
-                            className="form-control"
-                            type="text"
-                            label="Volumen"
-                            value={state.paquetes[index].volumen}
-                            placeholder="Volumen"
-                            name="volumen"
-                            disabled={true}
+                                   onChange={(event) => handleChangePaquete(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   label="Volumen"
+                                   value={state.paquetes[index].volumen}
+                                   placeholder="Volumen"
+                                   name="volumen"
+                                   disabled={true}
                         />
                     </div>
                 </div>
@@ -1291,14 +1345,14 @@ function Guia(props) {
                 <div className="col-sm-4 col-md-4-5 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
-                            onChange={(event) => handleChangePaquete(event, index)}
-                            className="form-control"
-                            type="text"
-                            label="Tipo de Embalaje"
-                            value={state.paquetes[index].tipoEmbalaje}
-                            placeholder="Tipo de Embarje"
-                            name="tipoEmbalaje"
-                            disabled={true}
+                                   onChange={(event) => handleChangePaquete(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   label="Tipo de Embalaje"
+                                   value={state.paquetes[index].tipoEmbalaje}
+                                   placeholder="Tipo de Embarje"
+                                   name="tipoEmbalaje"
+                                   disabled={true}
                         />
                     </div>
                 </div>
@@ -1306,14 +1360,14 @@ function Guia(props) {
                 <div className="col-sm-4 col-md-3 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
-                            onChange={(event) => handleChangePaquete(event, index)}
-                            className="form-control"
-                            type="text"
-                            label="Valor Declarado"
-                            value={state.paquetes[index].valorDeclarado}
-                            placeholder="Valor Declarado"
-                            name="valorDeclarado"
-                            disabled={true}
+                                   onChange={(event) => handleChangePaquete(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   label="Valor Declarado"
+                                   value={state.paquetes[index].valorDeclarado}
+                                   placeholder="Valor Declarado"
+                                   name="valorDeclarado"
+                                   disabled={true}
                         />
                     </div>
                 </div>
@@ -1321,14 +1375,14 @@ function Guia(props) {
                 <div className="col-sm-4 col-md-7-5 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
-                            onChange={(event) => handleChangePaquete(event, index)}
-                            className="form-control"
-                            type="text"
-                            label="Descripción"
-                            value={state.paquetes[index].descripcionPaquete}
-                            placeholder="Descripción"
-                            name="descripcionPaquete"
-                            disabled={true}
+                                   onChange={(event) => handleChangePaquete(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   label="Descripción"
+                                   value={state.paquetes[index].descripcionPaquete}
+                                   placeholder="Descripción"
+                                   name="descripcionPaquete"
+                                   disabled={true}
                         />
                     </div>
                 </div>
@@ -1336,14 +1390,14 @@ function Guia(props) {
                 <div className="col-sm-4 col-md-1-5 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
-                            onChange={(event) => handleChangePaquete(event, index)}
-                            className="form-control"
-                            type="text"
-                            label="Ctd"
-                            value={state.paquetes[index].ctd}
-                            placeholder="Ctd"
-                            name="ctd"
-                            disabled={true}
+                                   onChange={(event) => handleChangePaquete(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   label="Ctd"
+                                   value={state.paquetes[index].ctd}
+                                   placeholder="Ctd"
+                                   name="ctd"
+                                   disabled={true}
                         />
                     </div>
                 </div>
@@ -1351,14 +1405,14 @@ function Guia(props) {
                 <div className="col-sm-4 col-md-12 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
-                            onChange={(event) => handleChangePaquete(event, index)}
-                            className="form-control"
-                            type="text"
-                            label="Observaciones"
-                            value={state.paquetes[index].observacionesPaquete}
-                            placeholder="Observaciones"
-                            name="observacionesPaquete"
-                            disabled={true}
+                                   onChange={(event) => handleChangePaquete(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   label="Observaciones"
+                                   value={state.paquetes[index].observacionesPaquete}
+                                   placeholder="Observaciones"
+                                   name="observacionesPaquete"
+                                   disabled={true}
                         />
                     </div>
                 </div>
@@ -1394,7 +1448,8 @@ function Guia(props) {
                                 <h3>{state.paquetesI[index].FolioPaquete}</h3>
                             </div>
                         </div>
-                    </div>	<div className="widget-container">
+                    </div>
+                    <div className="widget-container">
                         <div className="widget-content">
                             <div className="row">
                                 <div className="col-md-12">
@@ -1405,12 +1460,12 @@ function Guia(props) {
 
                                                     <div className="input">
                                                         <TextField variant="outlined" margin="dense"
-                                                            className="form-control"
-                                                            type="text"
-                                                            label="Remitente"
-                                                            placeholder={state.paquetesI[index].Remitente}
-                                                            id={"Remitente" + index}
-                                                            disabled="disabled"
+                                                                   className="form-control"
+                                                                   type="text"
+                                                                   label="Remitente"
+                                                                   placeholder={state.paquetesI[index].Remitente}
+                                                                   id={"Remitente" + index}
+                                                                   disabled="disabled"
                                                         />
                                                     </div>
                                                 </div>
@@ -1418,12 +1473,12 @@ function Guia(props) {
 
                                                     <div className="input">
                                                         <TextField variant="outlined" margin="dense"
-                                                            className="form-control"
-                                                            type="text"
-                                                            label="RFC"
-                                                            placeholder={state.paquetesI[index].RFC}
-                                                            id={"RFC" + index}
-                                                            disabled="disabled"
+                                                                   className="form-control"
+                                                                   type="text"
+                                                                   label="RFC"
+                                                                   placeholder={state.paquetesI[index].RFC}
+                                                                   id={"RFC" + index}
+                                                                   disabled="disabled"
                                                         />
                                                     </div>
                                                 </div>
@@ -1431,12 +1486,12 @@ function Guia(props) {
 
                                                     <div className="input">
                                                         <TextField variant="outlined" margin="dense"
-                                                            className="form-control"
-                                                            type="text"
-                                                            label="Dirección"
-                                                            placeholder={state.paquetesI[index].Direccion}
-                                                            id={"Direccion" + index}
-                                                            disabled="disabled"
+                                                                   className="form-control"
+                                                                   type="text"
+                                                                   label="Dirección"
+                                                                   placeholder={state.paquetesI[index].Direccion}
+                                                                   id={"Direccion" + index}
+                                                                   disabled="disabled"
                                                         />
                                                     </div>
                                                 </div>
@@ -1444,12 +1499,12 @@ function Guia(props) {
 
                                                     <div className="input">
                                                         <TextField variant="outlined" margin="dense"
-                                                            className="form-control"
-                                                            type="text"
-                                                            label="Zona"
-                                                            placeholder={state.paquetesI[index].Zona}
-                                                            id={"Zona" + index}
-                                                            disabled="disabled"
+                                                                   className="form-control"
+                                                                   type="text"
+                                                                   label="Zona"
+                                                                   placeholder={state.paquetesI[index].Zona}
+                                                                   id={"Zona" + index}
+                                                                   disabled="disabled"
                                                         />
                                                     </div>
                                                 </div>
@@ -1457,12 +1512,12 @@ function Guia(props) {
 
                                                     <div className="input">
                                                         <TextField variant="outlined" margin="dense"
-                                                            className="form-control"
-                                                            type="text"
-                                                            label="CP"
-                                                            placeholder={state.paquetesI[index].CP}
-                                                            id={"CP" + index}
-                                                            disabled="disabled"
+                                                                   className="form-control"
+                                                                   type="text"
+                                                                   label="CP"
+                                                                   placeholder={state.paquetesI[index].CP}
+                                                                   id={"CP" + index}
+                                                                   disabled="disabled"
                                                         />
                                                     </div>
                                                 </div>
@@ -1470,12 +1525,12 @@ function Guia(props) {
 
                                                     <div className="input">
                                                         <TextField variant="outlined" margin="dense"
-                                                            className="form-control"
-                                                            type="text"
-                                                            label="Ciudad"
-                                                            placeholder={state.paquetesI[index].CiudadRemitente}
-                                                            id={"CiudadRemitente" + index}
-                                                            disabled="disabled"
+                                                                   className="form-control"
+                                                                   type="text"
+                                                                   label="Ciudad"
+                                                                   placeholder={state.paquetesI[index].CiudadRemitente}
+                                                                   id={"CiudadRemitente" + index}
+                                                                   disabled="disabled"
                                                         />
                                                     </div>
                                                 </div>
@@ -1483,12 +1538,12 @@ function Guia(props) {
 
                                                     <div className="input">
                                                         <TextField variant="outlined" margin="dense"
-                                                            className="form-control"
-                                                            type="text"
-                                                            label="Teléfono"
-                                                            placeholder={state.paquetesI[index].Telefono}
-                                                            id={"Telefono" + index}
-                                                            disabled="disabled"
+                                                                   className="form-control"
+                                                                   type="text"
+                                                                   label="Teléfono"
+                                                                   placeholder={state.paquetesI[index].Telefono}
+                                                                   id={"Telefono" + index}
+                                                                   disabled="disabled"
                                                         />
                                                     </div>
                                                 </div>
@@ -1500,12 +1555,12 @@ function Guia(props) {
 
                                                     <div className="input">
                                                         <TextField variant="outlined" margin="dense"
-                                                            className="form-control"
-                                                            type="text"
-                                                            label="Destinatario"
-                                                            placeholder={state.paquetesI[index].Destinatario}
-                                                            id={"CiudadDestino" + index}
-                                                            disabled="disabled"
+                                                                   className="form-control"
+                                                                   type="text"
+                                                                   label="Destinatario"
+                                                                   placeholder={state.paquetesI[index].Destinatario}
+                                                                   id={"CiudadDestino" + index}
+                                                                   disabled="disabled"
                                                         />
                                                     </div>
                                                 </div>
@@ -1513,12 +1568,12 @@ function Guia(props) {
 
                                                     <div className="input">
                                                         <TextField variant="outlined" margin="dense"
-                                                            className="form-control"
-                                                            type="text"
-                                                            label="RFC"
-                                                            placeholder={state.paquetesI[index].RFCDestinatario}
-                                                            id={"RFC" + index}
-                                                            disabled="disabled"
+                                                                   className="form-control"
+                                                                   type="text"
+                                                                   label="RFC"
+                                                                   placeholder={state.paquetesI[index].RFCDestinatario}
+                                                                   id={"RFC" + index}
+                                                                   disabled="disabled"
                                                         />
                                                     </div>
                                                 </div>
@@ -1526,12 +1581,12 @@ function Guia(props) {
 
                                                     <div className="input">
                                                         <TextField variant="outlined" margin="dense"
-                                                            className="form-control"
-                                                            type="text"
-                                                            label="Dirección"
-                                                            placeholder={state.paquetesI[index].DireccionDestinatario}
-                                                            id={"Direccion" + index}
-                                                            disabled="disabled"
+                                                                   className="form-control"
+                                                                   type="text"
+                                                                   label="Dirección"
+                                                                   placeholder={state.paquetesI[index].DireccionDestinatario}
+                                                                   id={"Direccion" + index}
+                                                                   disabled="disabled"
                                                         />
                                                     </div>
                                                 </div>
@@ -1541,12 +1596,12 @@ function Guia(props) {
                                                     </label>
                                                     <div className="input">
                                                         <TextField variant="outlined" margin="dense"
-                                                            className="form-control"
-                                                            type="text"
-                                                            label="Zona"
-                                                            placeholder={state.paquetesI[index].ZonaDestinatario}
-                                                            id={"Zona" + index}
-                                                            disabled="disabled"
+                                                                   className="form-control"
+                                                                   type="text"
+                                                                   label="Zona"
+                                                                   placeholder={state.paquetesI[index].ZonaDestinatario}
+                                                                   id={"Zona" + index}
+                                                                   disabled="disabled"
                                                         />
                                                     </div>
                                                 </div>
@@ -1554,12 +1609,12 @@ function Guia(props) {
 
                                                     <div className="input">
                                                         <TextField variant="outlined" margin="dense"
-                                                            className="form-control"
-                                                            type="text"
-                                                            label="CP"
-                                                            placeholder={state.paquetesI[index].CPDestinatario}
-                                                            id={"CP" + index}
-                                                            disabled="disabled"
+                                                                   className="form-control"
+                                                                   type="text"
+                                                                   label="CP"
+                                                                   placeholder={state.paquetesI[index].CPDestinatario}
+                                                                   id={"CP" + index}
+                                                                   disabled="disabled"
                                                         />
                                                     </div>
                                                 </div>
@@ -1567,12 +1622,12 @@ function Guia(props) {
 
                                                     <div className="input">
                                                         <TextField variant="outlined" margin="dense"
-                                                            className="form-control"
-                                                            type="text"
-                                                            label="Ciudad"
-                                                            placeholder={state.paquetesI[index].CiudadDestinatario}
-                                                            id={"Ciudad" + index}
-                                                            disabled="disabled"
+                                                                   className="form-control"
+                                                                   type="text"
+                                                                   label="Ciudad"
+                                                                   placeholder={state.paquetesI[index].CiudadDestinatario}
+                                                                   id={"Ciudad" + index}
+                                                                   disabled="disabled"
                                                         />
                                                     </div>
                                                 </div>
@@ -1580,12 +1635,12 @@ function Guia(props) {
 
                                                     <div className="input">
                                                         <TextField variant="outlined" margin="dense"
-                                                            className="form-control"
-                                                            type="text"
-                                                            label="Teléfono"
-                                                            placeholder={state.paquetesI[index].TelefonoDestinatario}
-                                                            id={"Telefono" + index}
-                                                            disabled="disabled"
+                                                                   className="form-control"
+                                                                   type="text"
+                                                                   label="Teléfono"
+                                                                   placeholder={state.paquetesI[index].TelefonoDestinatario}
+                                                                   id={"Telefono" + index}
+                                                                   disabled="disabled"
                                                         />
                                                     </div>
                                                 </div>
@@ -1593,12 +1648,12 @@ function Guia(props) {
 
                                                     <div className="input">
                                                         <TextField variant="outlined" margin="dense"
-                                                            className="form-control"
-                                                            type="text"
-                                                            label="Cantidad"
-                                                            placeholder={state.paquetesI[index].PaqueteCant}
-                                                            id={"Cantidad" + index}
-                                                            disabled="disabled"
+                                                                   className="form-control"
+                                                                   type="text"
+                                                                   label="Cantidad"
+                                                                   placeholder={state.paquetesI[index].PaqueteCant}
+                                                                   id={"Cantidad" + index}
+                                                                   disabled="disabled"
                                                         />
                                                     </div>
                                                 </div>
@@ -1606,12 +1661,12 @@ function Guia(props) {
 
                                                     <div className="input">
                                                         <TextField variant="outlined" margin="dense"
-                                                            className="form-control"
-                                                            type="text"
-                                                            label="Descripcion"
-                                                            placeholder={state.paquetesI[index].DescripcionPaquete}
-                                                            id="Cantidad"
-                                                            disabled="disabled"
+                                                                   className="form-control"
+                                                                   type="text"
+                                                                   label="Descripcion"
+                                                                   placeholder={state.paquetesI[index].DescripcionPaquete}
+                                                                   id="Cantidad"
+                                                                   disabled="disabled"
                                                         />
                                                     </div>
                                                 </div>
@@ -1651,14 +1706,14 @@ function Guia(props) {
                 <div className="col-sm-12 col-md-12 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
-                            className="form-control"
-                            label="Descripcion"
-                            onChange={event => (handleChangeSobre(event, index))}
-                            id="descripcionSobre"
-                            name="descripcionSobre"
-                            read="true"
-                            disabled={true}
-                            value={state.sobres[index].descripcionSobre}
+                                   className="form-control"
+                                   label="Descripcion"
+                                   onChange={event => (handleChangeSobre(event, index))}
+                                   id="descripcionSobre"
+                                   name="descripcionSobre"
+                                   read="true"
+                                   disabled={true}
+                                   value={state.sobres[index].descripcionSobre}
                         />
                     </div>
                 </div>
@@ -1687,58 +1742,61 @@ function Guia(props) {
     }
 
     function handleTabChange(event, newValue) {
-        setState({ ...state, tab: newValue });
+        setState({...state, tab: newValue});
     }
 
     return (
-        <div >
+        <div>
             <Dialog
                 open={state.openDialog}
-                onClose={() => setState({ ...state, openDialog: false })}
+                onClose={() => setState({...state, openDialog: false})}
                 fullWidth maxWidth="md"
             >
                 <DialogContent>
                     {state.tipoModal === 6 &&
-                        <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-                            <DialogTitle style={{ padding: "0px" }}><h4>Selecciona el Formato</h4></DialogTitle>
-                            <div>
-                                <label className="input select" style={{ width: "100%" }}>
-                                    <FormControl fullWidth variant="outlined" margin="dense">
-                                        <InputLabel id="sucursalListadoLabel">Formato</InputLabel>
-                                        <Select
-                                            labelId="sucursalListadoLabel"
-                                            label="Formato"
-                                            className="form-control"
-                                            required
-                                            value={state.formatoSeleccionado}
-                                            onChange={(event) => setState({ ...state, formatoSeleccionado: event.target.value })}
-                                            id="formatoSeleccionado"
-                                            name="formatoSeleccionado"
-                                        >
-                                            {dataFormatos.map((formato) => (
-                                                <option
-                                                    key={formato.m_nIdFormato}
-                                                    value={formato.m_nIdFormato}
-                                                >
-                                                    {formato.m_sFormato}
-                                                </option>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                    <i></i>
-                                </label>
-                            </div>
-
-                            <DialogActions style={{ justifyContent: "left" }}>
-
-                                <button onClick={() => handleImprimir()} className="btn btn-primary primary-btn">Aceptar
-                                </button>
-                                <button onClick={() => setState({ ...state, openDialog: false })}
-                                    className="btn btn-secondary secondary-btn">Cerrar
-                                </button>
-
-                            </DialogActions>
+                    <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                        <DialogTitle style={{padding: "0px"}}><h4>Selecciona el Formato</h4></DialogTitle>
+                        <div>
+                            <label className="input select" style={{width: "100%"}}>
+                                <FormControl fullWidth variant="outlined" margin="dense">
+                                    <InputLabel id="sucursalListadoLabel">Formato</InputLabel>
+                                    <Select
+                                        labelId="sucursalListadoLabel"
+                                        label="Formato"
+                                        className="form-control"
+                                        required
+                                        value={state.formatoSeleccionado}
+                                        onChange={(event) => setState({
+                                            ...state,
+                                            formatoSeleccionado: event.target.value
+                                        })}
+                                        id="formatoSeleccionado"
+                                        name="formatoSeleccionado"
+                                    >
+                                        {dataFormatos.map((formato) => (
+                                            <option
+                                                key={formato.m_nIdFormato}
+                                                value={formato.m_nIdFormato}
+                                            >
+                                                {formato.m_sFormato}
+                                            </option>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                <i></i>
+                            </label>
                         </div>
+
+                        <DialogActions style={{justifyContent: "left"}}>
+
+                            <button onClick={() => handleImprimir()} className="btn btn-primary primary-btn">Aceptar
+                            </button>
+                            <button onClick={() => setState({...state, openDialog: false})}
+                                    className="btn btn-secondary secondary-btn">Cerrar
+                            </button>
+
+                        </DialogActions>
+                    </div>
                     }
                 </DialogContent>
             </Dialog>
@@ -1756,7 +1814,7 @@ function Guia(props) {
 
             {/*Leftbar Start Here*/}
             <aside className="iconic-leftbar">
-                <BarraLateralIzquierda />
+                <BarraLateralIzquierda/>
             </aside>
             {/*Leftbar End Here*/}
 
@@ -1773,7 +1831,7 @@ function Guia(props) {
                         </li>
                         <li className={props.location.idEmbarque != undefined ? "active" : ""}>
                             <a data-toggle="tab" href="#Agregar" onClick={() => handleShowAgregar()}>
-                                <i className="fa fa-plus-circle" /> {state.agregar}
+                                <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
                         <li>
@@ -1787,18 +1845,19 @@ function Guia(props) {
                                     openDialog: true
                                 });
                             }}>
-                                <i className="fa fa-print" /> Imprimir
+                                <i className="fa fa-print"/> Imprimir
                             </a>
                         </li>
 
                         <li className="hide">
                             <a data-toggle="tab" href="#Importar">
-                                <i className="fa fa-upload" /> Importar
+                                <i className="fa fa-upload"/> Importar
                             </a>
                         </li>
                         <li>
-                            <a data-toggle="tab" href="#Cancelar" onClick={handleShowCancelar} className={state.idGuia == 0 ? classes.disabled : ""}>
-                                <i className="fa fa-times-circle" /> Cancelar
+                            <a data-toggle="tab" href="#Cancelar" onClick={handleShowCancelar}
+                               className={state.idGuia == 0 ? classes.disabled : ""}>
+                                <i className="fa fa-times-circle"/> Cancelar
                             </a>
                         </li>
                         {/*<li>*/}
@@ -1810,12 +1869,13 @@ function Guia(props) {
                     </ul>
 
                     <div className="row" className="tab-content">
-                        <div id="Listado" className={props.location.idEmbarque != undefined ? "tab-pane fade" : "tab-pane fade in active"}>
+                        <div id="Listado"
+                             className={props.location.idEmbarque != undefined ? "tab-pane fade" : "tab-pane fade in active"}>
                             <div className="widget-wrap">
                                 <div className="widget-content">
                                     <form className="j-forms">
-                                        <div className="row " style={{ display: "flex" }}>
-                                            <div className="col-sm-6 col-md-3 unit" style={{ paddingLeft: "0px" }}>
+                                        <div className="row " style={{display: "flex"}}>
+                                            <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
                                                 <div className="input">
                                                     <TextField
                                                         autoFocus
@@ -1834,24 +1894,24 @@ function Guia(props) {
                                                 </div>
                                             </div>
 
-                                            <div className="col-sm-6 col-md-3 unit" style={{ paddingLeft: "0px" }}>
+                                            <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
                                                 <div className="input">
                                                     <TextField variant="outlined" margin="dense"
-                                                        type="date"
-                                                        className="form-control"
-                                                        label="Fecha Final"
-                                                        InputLabelProps={{
-                                                            shrink: true,
-                                                        }}
-                                                        value={state.fechaFinal}
-                                                        onChange={handleFechaFinalFiltro}
-                                                        id="fechaFinal"
+                                                               type="date"
+                                                               className="form-control"
+                                                               label="Fecha Final"
+                                                               InputLabelProps={{
+                                                                   shrink: true,
+                                                               }}
+                                                               value={state.fechaFinal}
+                                                               onChange={handleFechaFinalFiltro}
+                                                               id="fechaFinal"
                                                     />
                                                 </div>
 
                                             </div>
 
-                                            <div className="col-sm-6 col-md-3 unit" style={{ paddingLeft: "0px" }}>
+                                            <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
                                                 <label className="input select">
                                                     <FormControl fullWidth variant="outlined" margin="dense">
                                                         <InputLabel id="sucursalListadoLabel">Sucursal</InputLabel>
@@ -1884,7 +1944,7 @@ function Guia(props) {
 
                                             </div>
 
-                                            <div className="col-sm-6 col-md-3 unit" style={{ paddingLeft: "0px" }}>
+                                            <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
                                                 <label className="input select">
                                                     <FormControl fullWidth variant="outlined" margin="dense">
                                                         <InputLabel id="estatusListadoLabel">Estatus</InputLabel>
@@ -1914,7 +1974,7 @@ function Guia(props) {
                                         </div>
                                     </form>
 
-                                    <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                                    <div className="row" style={{height: state.height - 250, width: '100%'}}>
                                         {data.length != 0 ? (
                                             <DataGrid
                                                 localeText={dataGridLocaleText}
@@ -1938,7 +1998,8 @@ function Guia(props) {
                                 </div>
                             </div>
                         </div>
-                        <div id="Agregar" className={props.location.idEmbarque != undefined ? "tab-pane fade in active" : "tab-pane fade"}>
+                        <div id="Agregar"
+                             className={props.location.idEmbarque != undefined ? "tab-pane fade in active" : "tab-pane fade"}>
                             <form className="j-forms" onSubmit={handleAceptar}>
                                 <div className="form-content">
 
@@ -1958,8 +2019,9 @@ function Guia(props) {
                                             <Stepper activeStep={stepActive - 1}>
                                                 {
                                                     ["Información General", "Remitentes/Destinatario", "Detalles de la Recolección", "Detalle de Facturación", "Conceptos de Facturación"].map((s, index) => (
-                                                        <Step key={s} completed={false} onClick={() => openSection(index + 1)}>
-                                                            <StepLabel >{s}</StepLabel>
+                                                        <Step key={s} completed={false}
+                                                              onClick={() => openSection(index + 1)}>
+                                                            <StepLabel>{s}</StepLabel>
                                                         </Step>
                                                     ))
                                                 }
@@ -1980,8 +2042,10 @@ function Guia(props) {
 
                                                         <div className="col-sm-4 col-md-2-5 unit">
                                                             <label className="input select">
-                                                                <FormControl fullWidth variant="outlined" margin="dense">
-                                                                    <InputLabel id="idSucursalAgregarLabel">Sucursal</InputLabel>
+                                                                <FormControl fullWidth variant="outlined"
+                                                                             margin="dense">
+                                                                    <InputLabel
+                                                                        id="idSucursalAgregarLabel">Sucursal</InputLabel>
                                                                     <Select
                                                                         native
                                                                         labelId="idSucursalAgregarLabel"
@@ -2014,22 +2078,24 @@ function Guia(props) {
 
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
-                                                                    onChange={handleChange}
-                                                                    className="form-control"
-                                                                    type="text"
-                                                                    label="Folio Guia"
-                                                                    placeholder={state.folioGuia}
-                                                                    readOnly={state.agregar == "Consultar"}
-                                                                    id="folioGuia"
-                                                                    name="folioGuia"
-                                                                    disabled="disabled"
+                                                                           onChange={handleChange}
+                                                                           className="form-control"
+                                                                           type="text"
+                                                                           label="Folio Guia"
+                                                                           placeholder={state.folioGuia}
+                                                                           readOnly={state.agregar == "Consultar"}
+                                                                           id="folioGuia"
+                                                                           name="folioGuia"
+                                                                           disabled="disabled"
                                                                 />
                                                             </div>
                                                         </div>
                                                         <div className="col-sm-4 col-md-2-5 unit">
                                                             <label className="label">
-                                                                <FormControl fullWidth variant="outlined" margin="dense">
-                                                                    <InputLabel id="idEmbarqueLabel">Folio Embarque</InputLabel>
+                                                                <FormControl fullWidth variant="outlined"
+                                                                             margin="dense">
+                                                                    <InputLabel id="idEmbarqueLabel">Folio
+                                                                        Embarque</InputLabel>
                                                                     <Select
                                                                         native
                                                                         labelId="idEmbarqueLabel"
@@ -2048,7 +2114,8 @@ function Guia(props) {
                                                                         </option>
                                                                         {dataEmbarque.map(
                                                                             (embarque) => (
-                                                                                <option key={embarque.m_nIdEmbarque} value={embarque.m_nIdEmbarque} >
+                                                                                <option key={embarque.m_nIdEmbarque}
+                                                                                        value={embarque.m_nIdEmbarque}>
                                                                                     {
                                                                                         embarque.m_nFolioEmbarque
                                                                                     }
@@ -2063,15 +2130,15 @@ function Guia(props) {
 
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
-                                                                    onChange={handleChange}
-                                                                    className="form-control"
-                                                                    type="text"
-                                                                    label="Folio Informe"
-                                                                    placeholder={state.folioInforme}
-                                                                    readOnly={state.agregar == "Consultar"}
-                                                                    id="folioInforme"
-                                                                    name="folioInforme"
-                                                                    disabled="disabled"
+                                                                           onChange={handleChange}
+                                                                           className="form-control"
+                                                                           type="text"
+                                                                           label="Folio Informe"
+                                                                           placeholder={state.folioInforme}
+                                                                           readOnly={state.agregar == "Consultar"}
+                                                                           id="folioInforme"
+                                                                           name="folioInforme"
+                                                                           disabled="disabled"
                                                                 />
                                                             </div>
                                                         </div>
@@ -2079,15 +2146,15 @@ function Guia(props) {
 
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
-                                                                    onChange={handleChange}
-                                                                    className="form-control"
-                                                                    type="text"
-                                                                    label="Tracking"
-                                                                    placeholder={state.tracking}
-                                                                    readOnly={state.agregar == "Consultar"}
-                                                                    id="tracking"
-                                                                    name="tracking"
-                                                                    disabled="disabled"
+                                                                           onChange={handleChange}
+                                                                           className="form-control"
+                                                                           type="text"
+                                                                           label="Tracking"
+                                                                           placeholder={state.tracking}
+                                                                           readOnly={state.agregar == "Consultar"}
+                                                                           id="tracking"
+                                                                           name="tracking"
+                                                                           disabled="disabled"
                                                                 />
                                                             </div>
                                                         </div>
@@ -2096,25 +2163,27 @@ function Guia(props) {
 
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
-                                                                    onChange={handleChange}
-                                                                    className="form-control"
-                                                                    type="text"
-                                                                    InputLabelProps={{
-                                                                        shrink: true,
-                                                                    }}
-                                                                    label="Fecha / Hora"
-                                                                    placeholder={state.fecha}
-                                                                    readOnly={state.agregar == "Consultar"}
-                                                                    id="fecha"
-                                                                    name="fecha"
-                                                                    disabled="disabled"
+                                                                           onChange={handleChange}
+                                                                           className="form-control"
+                                                                           type="text"
+                                                                           InputLabelProps={{
+                                                                               shrink: true,
+                                                                           }}
+                                                                           label="Fecha / Hora"
+                                                                           placeholder={state.fecha}
+                                                                           readOnly={state.agregar == "Consultar"}
+                                                                           id="fecha"
+                                                                           name="fecha"
+                                                                           disabled="disabled"
                                                                 />
                                                             </div>
                                                         </div>
                                                         <div className="col-sm-4 col-md-2-5 unit">
                                                             <label className="input select">
-                                                                <FormControl fullWidth variant="outlined" margin="dense">
-                                                                    <InputLabel id="idEstatusGuiaLabel"> Estatus de la Guia</InputLabel>
+                                                                <FormControl fullWidth variant="outlined"
+                                                                             margin="dense">
+                                                                    <InputLabel id="idEstatusGuiaLabel"> Estatus de la
+                                                                        Guia</InputLabel>
                                                                     <Select
                                                                         native
                                                                         labelId="idEstatusGuiaLabel"
@@ -2134,7 +2203,9 @@ function Guia(props) {
                                                                         <option value=""></option>
                                                                         {dataEstatusGuia.map(
                                                                             (estatusGuia) => (
-                                                                                <option key={estatusGuia.m_nIdEstatusGuia} value={estatusGuia.m_nIdEstatusGuia} >
+                                                                                <option
+                                                                                    key={estatusGuia.m_nIdEstatusGuia}
+                                                                                    value={estatusGuia.m_nIdEstatusGuia}>
                                                                                     {
                                                                                         estatusGuia.m_sEstatus
                                                                                     }
@@ -2149,7 +2220,8 @@ function Guia(props) {
                                                         <div className="col-sm-4 col-md-2-5 unit">
 
                                                             <label className="input select">
-                                                                <FormControl fullWidth variant="outlined" margin="dense">
+                                                                <FormControl fullWidth variant="outlined"
+                                                                             margin="dense">
                                                                     <InputLabel id="idMonedaLabel"> Moneda</InputLabel>
                                                                     <Select
                                                                         native
@@ -2169,7 +2241,8 @@ function Guia(props) {
                                                                         </option>
                                                                         {dataMoneda.map(
                                                                             (moneda) => (
-                                                                                <option key={moneda.m_nIdMoneda} value={moneda.m_nIdMoneda}>
+                                                                                <option key={moneda.m_nIdMoneda}
+                                                                                        value={moneda.m_nIdMoneda}>
                                                                                     {
                                                                                         moneda.m_sMoneda
                                                                                     }
@@ -2184,8 +2257,10 @@ function Guia(props) {
                                                         <div className="col-sm-4 col-md-2-5 unit">
 
                                                             <label className="input select">
-                                                                <FormControl fullWidth variant="outlined" margin="dense">
-                                                                    <InputLabel id="tipoCambioLabel">Tipo de Cambio</InputLabel>
+                                                                <FormControl fullWidth variant="outlined"
+                                                                             margin="dense">
+                                                                    <InputLabel id="tipoCambioLabel">Tipo de
+                                                                        Cambio</InputLabel>
                                                                     <Select
                                                                         native
                                                                         labelId="tipoCambioLabel"
@@ -2210,7 +2285,7 @@ function Guia(props) {
                                                                         ))}
                                                                     </Select>
                                                                 </FormControl>
-                                                                <i className="fa fa-arrow-down" />
+                                                                <i className="fa fa-arrow-down"/>
                                                             </label>
                                                         </div>
 
@@ -2243,19 +2318,20 @@ function Guia(props) {
                                                                         <div className="col-md-4 unit">
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
-                                                                                    onChange={handleChange}
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    InputLabelProps={{
-                                                                                        shrink: true,
-                                                                                    }}
-                                                                                    label="Nombre"
-                                                                                    value={state.nombreRemitente}
-                                                                                    readOnly={state.agregar == "Consultar"}
-                                                                                    id="nombreRemitente"
-                                                                                    name="nombreRemitente"
-                                                                                    disabled="disabled"
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           onChange={handleChange}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           InputLabelProps={{
+                                                                                               shrink: true,
+                                                                                           }}
+                                                                                           label="Nombre"
+                                                                                           value={state.nombreRemitente}
+                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           id="nombreRemitente"
+                                                                                           name="nombreRemitente"
+                                                                                           disabled="disabled"
                                                                                 />
                                                                             </div>
                                                                         </div>
@@ -2263,19 +2339,20 @@ function Guia(props) {
                                                                         <div className="col-md-4 unit">
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
-                                                                                    onChange={handleChange}
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    label="RFC"
-                                                                                    InputLabelProps={{
-                                                                                        shrink: true,
-                                                                                    }}
-                                                                                    value={state.RFCRemitente}
-                                                                                    readOnly={state.agregar == "Consultar"}
-                                                                                    id="RFCRemitente"
-                                                                                    name="RFCRemitente"
-                                                                                    disabled="disabled"
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           onChange={handleChange}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           label="RFC"
+                                                                                           InputLabelProps={{
+                                                                                               shrink: true,
+                                                                                           }}
+                                                                                           value={state.RFCRemitente}
+                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           id="RFCRemitente"
+                                                                                           name="RFCRemitente"
+                                                                                           disabled="disabled"
                                                                                 />
                                                                             </div>
                                                                         </div>
@@ -2283,19 +2360,20 @@ function Guia(props) {
                                                                         <div className="col-md-4 unit">
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
-                                                                                    onChange={handleChange}
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    InputLabelProps={{
-                                                                                        shrink: true,
-                                                                                    }}
-                                                                                    label="Domicilio"
-                                                                                    value={state.domicilioRemitente}
-                                                                                    readOnly={state.agregar == "Consultar"}
-                                                                                    id="domicilioRemitente"
-                                                                                    name="domicilioRemitente"
-                                                                                    disabled="disabled"
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           onChange={handleChange}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           InputLabelProps={{
+                                                                                               shrink: true,
+                                                                                           }}
+                                                                                           label="Domicilio"
+                                                                                           value={state.domicilioRemitente}
+                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           id="domicilioRemitente"
+                                                                                           name="domicilioRemitente"
+                                                                                           disabled="disabled"
                                                                                 />
                                                                             </div>
                                                                         </div>
@@ -2303,19 +2381,20 @@ function Guia(props) {
                                                                         <div className="col-md-4 unit">
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
-                                                                                    onChange={handleChange}
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    InputLabelProps={{
-                                                                                        shrink: true,
-                                                                                    }}
-                                                                                    label="Código Postal"
-                                                                                    value={state.codigoPostalRemitente}
-                                                                                    readOnly={state.agregar == "Consultar"}
-                                                                                    id="codigoPostalRemitente"
-                                                                                    name="codigoPostalRemitente"
-                                                                                    disabled="disabled"
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           onChange={handleChange}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           InputLabelProps={{
+                                                                                               shrink: true,
+                                                                                           }}
+                                                                                           label="Código Postal"
+                                                                                           value={state.codigoPostalRemitente}
+                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           id="codigoPostalRemitente"
+                                                                                           name="codigoPostalRemitente"
+                                                                                           disabled="disabled"
                                                                                 />
                                                                             </div>
                                                                         </div>
@@ -2323,19 +2402,20 @@ function Guia(props) {
                                                                         <div className="col-md-4 unit">
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
-                                                                                    onChange={handleChange}
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    InputLabelProps={{
-                                                                                        shrink: true,
-                                                                                    }}
-                                                                                    label="Ciudad"
-                                                                                    value={state.ciudadRemitente}
-                                                                                    readOnly={state.agregar == "Consultar"}
-                                                                                    id="ciudadRemitente"
-                                                                                    name="ciudadRemitente"
-                                                                                    disabled="disabled"
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           onChange={handleChange}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           InputLabelProps={{
+                                                                                               shrink: true,
+                                                                                           }}
+                                                                                           label="Ciudad"
+                                                                                           value={state.ciudadRemitente}
+                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           id="ciudadRemitente"
+                                                                                           name="ciudadRemitente"
+                                                                                           disabled="disabled"
                                                                                 />
 
                                                                             </div>
@@ -2344,19 +2424,20 @@ function Guia(props) {
                                                                         <div className="col-md-4 unit">
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
-                                                                                    onChange={handleChange}
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    InputLabelProps={{
-                                                                                        shrink: true,
-                                                                                    }}
-                                                                                    label="Correo Electrónico"
-                                                                                    value={state.correoRemitente}
-                                                                                    readOnly={state.agregar == "Consultar"}
-                                                                                    id="correoRemitente"
-                                                                                    name="correoRemitente"
-                                                                                    disabled="disabled"
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           onChange={handleChange}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           InputLabelProps={{
+                                                                                               shrink: true,
+                                                                                           }}
+                                                                                           label="Correo Electrónico"
+                                                                                           value={state.correoRemitente}
+                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           id="correoRemitente"
+                                                                                           name="correoRemitente"
+                                                                                           disabled="disabled"
                                                                                 />
                                                                             </div>
                                                                         </div>
@@ -2364,19 +2445,20 @@ function Guia(props) {
                                                                         <div className="col-md-4 unit">
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
-                                                                                    onChange={handleChange}
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    InputLabelProps={{
-                                                                                        shrink: true,
-                                                                                    }}
-                                                                                    label="Teléfono"
-                                                                                    value={state.telefonoRemitente}
-                                                                                    readOnly={state.agregar == "Consultar"}
-                                                                                    id="telefonoRemitente"
-                                                                                    name="telefonoRemitente"
-                                                                                    disabled="disabled"
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           onChange={handleChange}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           InputLabelProps={{
+                                                                                               shrink: true,
+                                                                                           }}
+                                                                                           label="Teléfono"
+                                                                                           value={state.telefonoRemitente}
+                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           id="telefonoRemitente"
+                                                                                           name="telefonoRemitente"
+                                                                                           disabled="disabled"
                                                                                 />
                                                                             </div>
                                                                         </div>
@@ -2384,19 +2466,20 @@ function Guia(props) {
                                                                         <div className="col-md-4 unit">
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
-                                                                                    onChange={handleChange}
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    InputLabelProps={{
-                                                                                        shrink: true,
-                                                                                    }}
-                                                                                    label="Contacto"
-                                                                                    value={state.contactoRemitente}
-                                                                                    readOnly={state.agregar == "Consultar"}
-                                                                                    id="contactoRemitente"
-                                                                                    name="contactoRemitente"
-                                                                                    disabled="disabled"
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           onChange={handleChange}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           InputLabelProps={{
+                                                                                               shrink: true,
+                                                                                           }}
+                                                                                           label="Contacto"
+                                                                                           value={state.contactoRemitente}
+                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           id="contactoRemitente"
+                                                                                           name="contactoRemitente"
+                                                                                           disabled="disabled"
                                                                                 />
                                                                             </div>
                                                                         </div>
@@ -2404,19 +2487,20 @@ function Guia(props) {
                                                                         <div className="col-md-4 unit">
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
-                                                                                    onChange={handleChange}
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    InputLabelProps={{
-                                                                                        shrink: true,
-                                                                                    }}
-                                                                                    label="Origen"
-                                                                                    value={state.origenRemitente}
-                                                                                    readOnly={state.agregar == "Consultar"}
-                                                                                    id="origenRemitente"
-                                                                                    name="origenRemitente"
-                                                                                    disabled="disabled"
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           onChange={handleChange}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           InputLabelProps={{
+                                                                                               shrink: true,
+                                                                                           }}
+                                                                                           label="Origen"
+                                                                                           value={state.origenRemitente}
+                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           id="origenRemitente"
+                                                                                           name="origenRemitente"
+                                                                                           disabled="disabled"
                                                                                 />
                                                                             </div>
                                                                         </div>
@@ -2439,18 +2523,19 @@ function Guia(props) {
                                                                         <div className="col-md-4 unit">
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
 
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    InputLabelProps={{
-                                                                                        shrink: true,
-                                                                                    }}
-                                                                                    label="Nombre"
-                                                                                    value={state.sNombreDestinatario}
-                                                                                    readOnly={state.agregar == "Consultar"}
-                                                                                    id="sNombreDestinatario"
-                                                                                    disabled="disabled"
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           InputLabelProps={{
+                                                                                               shrink: true,
+                                                                                           }}
+                                                                                           label="Nombre"
+                                                                                           value={state.sNombreDestinatario}
+                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           id="sNombreDestinatario"
+                                                                                           disabled="disabled"
                                                                                 />
                                                                             </div>
                                                                         </div>
@@ -2458,17 +2543,18 @@ function Guia(props) {
                                                                         <div className="col-md-4 unit">
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    InputLabelProps={{
-                                                                                        shrink: true,
-                                                                                    }}
-                                                                                    label="RFC"
-                                                                                    value={state.sRFCDestinatario}
-                                                                                    readOnly={state.agregar == "Consultar"}
-                                                                                    id="sRFCDestinatario"
-                                                                                    disabled="disabled"
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           InputLabelProps={{
+                                                                                               shrink: true,
+                                                                                           }}
+                                                                                           label="RFC"
+                                                                                           value={state.sRFCDestinatario}
+                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           id="sRFCDestinatario"
+                                                                                           disabled="disabled"
                                                                                 />
                                                                             </div>
                                                                         </div>
@@ -2476,17 +2562,18 @@ function Guia(props) {
                                                                         <div className="col-md-4 unit">
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    InputLabelProps={{
-                                                                                        shrink: true,
-                                                                                    }}
-                                                                                    label="Domicilio"
-                                                                                    value={state.sDomicilioDestinatario}
-                                                                                    readOnly={state.agregar == "Consultar"}
-                                                                                    id="sDomicilioDestinatario"
-                                                                                    disabled="disabled"
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           InputLabelProps={{
+                                                                                               shrink: true,
+                                                                                           }}
+                                                                                           label="Domicilio"
+                                                                                           value={state.sDomicilioDestinatario}
+                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           id="sDomicilioDestinatario"
+                                                                                           disabled="disabled"
                                                                                 />
                                                                             </div>
                                                                         </div>
@@ -2494,17 +2581,18 @@ function Guia(props) {
                                                                         <div className="col-md-4 unit">
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    InputLabelProps={{
-                                                                                        shrink: true,
-                                                                                    }}
-                                                                                    label="Código Postal"
-                                                                                    value={state.codigoPostalDestinatario}
-                                                                                    readOnly={state.agregar == "Consultar"}
-                                                                                    id="idCodigoPostalDestinatario"
-                                                                                    disabled="disabled"
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           InputLabelProps={{
+                                                                                               shrink: true,
+                                                                                           }}
+                                                                                           label="Código Postal"
+                                                                                           value={state.codigoPostalDestinatario}
+                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           id="idCodigoPostalDestinatario"
+                                                                                           disabled="disabled"
                                                                                 />
                                                                             </div>
                                                                         </div>
@@ -2512,17 +2600,18 @@ function Guia(props) {
                                                                         <div className="col-md-4 unit">
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    InputLabelProps={{
-                                                                                        shrink: true,
-                                                                                    }}
-                                                                                    label="Ciudad"
-                                                                                    value={state.ciudadDestinatario}
-                                                                                    readOnly={state.agregar == "Consultar"}
-                                                                                    id="ciudadDestinatario"
-                                                                                    disabled="disabled"
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           InputLabelProps={{
+                                                                                               shrink: true,
+                                                                                           }}
+                                                                                           label="Ciudad"
+                                                                                           value={state.ciudadDestinatario}
+                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           id="ciudadDestinatario"
+                                                                                           disabled="disabled"
                                                                                 />
                                                                             </div>
                                                                         </div>
@@ -2530,17 +2619,18 @@ function Guia(props) {
                                                                         <div className="col-md-4 unit">
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    InputLabelProps={{
-                                                                                        shrink: true,
-                                                                                    }}
-                                                                                    label="Correo Electrónico"
-                                                                                    value={state.sCorreoDestinatario}
-                                                                                    readOnly={state.agregar == "Consultar"}
-                                                                                    id="sCorreoDestinatario"
-                                                                                    disabled="disabled"
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           InputLabelProps={{
+                                                                                               shrink: true,
+                                                                                           }}
+                                                                                           label="Correo Electrónico"
+                                                                                           value={state.sCorreoDestinatario}
+                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           id="sCorreoDestinatario"
+                                                                                           disabled="disabled"
                                                                                 />
                                                                             </div>
                                                                         </div>
@@ -2548,17 +2638,18 @@ function Guia(props) {
                                                                         <div className="col-md-4 unit">
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    InputLabelProps={{
-                                                                                        shrink: true,
-                                                                                    }}
-                                                                                    label="Teléfono"
-                                                                                    value={state.sTelefonoDestinatario}
-                                                                                    readOnly={state.agregar == "Consultar"}
-                                                                                    id="sTelefonoDestinatario"
-                                                                                    disabled="disabled"
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           InputLabelProps={{
+                                                                                               shrink: true,
+                                                                                           }}
+                                                                                           label="Teléfono"
+                                                                                           value={state.sTelefonoDestinatario}
+                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           id="sTelefonoDestinatario"
+                                                                                           disabled="disabled"
                                                                                 />
                                                                             </div>
                                                                         </div>
@@ -2566,17 +2657,18 @@ function Guia(props) {
                                                                         <div className="col-md-4 unit">
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    InputLabelProps={{
-                                                                                        shrink: true,
-                                                                                    }}
-                                                                                    label="Contacto"
-                                                                                    value={state.sContactoDestinatario}
-                                                                                    readOnly={state.agregar == "Consultar"}
-                                                                                    id="sContactoDestinatario"
-                                                                                    disabled="disabled"
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           InputLabelProps={{
+                                                                                               shrink: true,
+                                                                                           }}
+                                                                                           label="Contacto"
+                                                                                           value={state.sContactoDestinatario}
+                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           id="sContactoDestinatario"
+                                                                                           disabled="disabled"
                                                                                 />
                                                                             </div>
                                                                         </div>
@@ -2584,17 +2676,18 @@ function Guia(props) {
                                                                         <div className="col-md-4 unit">
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    InputLabelProps={{
-                                                                                        shrink: true,
-                                                                                    }}
-                                                                                    label="Destino"
-                                                                                    value={state.CiudadDestino}
-                                                                                    readOnly={state.agregar == "Consultar"}
-                                                                                    id="CiudadDestino"
-                                                                                    disabled="disabled"
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           InputLabelProps={{
+                                                                                               shrink: true,
+                                                                                           }}
+                                                                                           label="Destino"
+                                                                                           value={state.CiudadDestino}
+                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           id="CiudadDestino"
+                                                                                           disabled="disabled"
                                                                                 />
                                                                             </div>
                                                                         </div>
@@ -2614,7 +2707,7 @@ function Guia(props) {
 
                                         </div>
                                         <div className="row">
-                                            <div className="col-md-6"  >
+                                            <div className="col-md-6">
                                                 <div className="widget-wrap">
                                                     <div className="widget-header">
                                                         <div className="col-md-12">
@@ -2640,7 +2733,7 @@ function Guia(props) {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="col-md-6"  >
+                                            <div className="col-md-6">
                                                 <div className="widget-wrap">
                                                     <div className="widget-header">
                                                         <div className="col-md-12">
@@ -2678,107 +2771,116 @@ function Guia(props) {
 
                                         </div>
                                         <div className="row">
-                                            <div className="col-md-12"  >
+                                            <div className="col-md-12">
                                                 <div className="widget-container">
                                                     <div className="widget-content">
                                                         <div className="row">
                                                             <div className="col-md-12">
                                                                 {/*<form className="j-forms">*/}
-                                                                    <div className="form-content">
-                                                                        <div className="col-sm-4 col-md-2-5 unit">
+                                                                <div className="form-content">
+                                                                    <div className="col-sm-4 col-md-2-5 unit">
 
-                                                                            <label className="input select">
-                                                                                <FormControl fullWidth variant="outlined" margin="dense">
-                                                                                    <InputLabel id="idTipoCobroLabel">Tipo Cobro</InputLabel>
-                                                                                    <Select
-                                                                                        native
-                                                                                        labelId="idTipoCobroLabel"
-                                                                                        label="Tipo Cobro"
-                                                                                        className="form-control"
-                                                                                        required
-                                                                                        onChange={handleChange}
-                                                                                        id="idTipoCobro"
-                                                                                        name="idTipoCobro"
-                                                                                        read="true"
-                                                                                        value={state.idTipoCobro}
-                                                                                        // disabled={state.agregar == "Consultar"}
-                                                                                        disabled="disabled">
+                                                                        <label className="input select">
+                                                                            <FormControl fullWidth variant="outlined"
+                                                                                         margin="dense">
+                                                                                <InputLabel id="idTipoCobroLabel">Tipo
+                                                                                    Cobro</InputLabel>
+                                                                                <Select
+                                                                                    native
+                                                                                    labelId="idTipoCobroLabel"
+                                                                                    label="Tipo Cobro"
+                                                                                    className="form-control"
+                                                                                    required
+                                                                                    onChange={handleChange}
+                                                                                    id="idTipoCobro"
+                                                                                    name="idTipoCobro"
+                                                                                    read="true"
+                                                                                    value={state.idTipoCobro}
+                                                                                    // disabled={state.agregar == "Consultar"}
+                                                                                    disabled="disabled">
 
-                                                                                        <option value="0">
-                                                                                            Seleccionar
-                                                                                        </option>
-                                                                                        {dataTipoCobro.map(
-                                                                                            (tipoCobro) => (
-                                                                                                <option key={tipoCobro.m_nIdTipoCobro} value={tipoCobro.m_nIdTipoCobro}>
-                                                                                                    {
-                                                                                                        tipoCobro.m_sDescripcion
-                                                                                                    }
-                                                                                                </option>
-                                                                                            )
-                                                                                        )}
-                                                                                    </Select>
-                                                                                </FormControl>
-                                                                            </label>
-                                                                        </div>
-                                                                        <div className="col-sm-4 col-md-2-5">
-
-                                                                            <label className="input select">
-                                                                                <FormControl fullWidth variant="outlined" margin="dense">
-                                                                                    <InputLabel id="idTipoServicioLabel">Tipo Servicio</InputLabel>
-                                                                                    <Select
-                                                                                        native
-                                                                                        labelId="idTipoServicioLabel"
-                                                                                        label="Tipo Servicio"
-                                                                                        className="form-control"
-                                                                                        required
-                                                                                        onChange={handleChange}
-                                                                                        disabled={state.agregar == "Consultar"}
-                                                                                        id="idTipoServicio"
-                                                                                        name="idTipoServicio"
-                                                                                        read="true"
-                                                                                        value={state.idTipoServicio}
-                                                                                        InputLabelProps={{
-                                                                                            shrink: true,
-                                                                                        }}
-                                                                                    >
-                                                                                        <option value=""></option>
-                                                                                        {dataTipoServicio.map(
-                                                                                            (tipoServicio) => (
-                                                                                                <option key={tipoServicio.m_nIdTipoServicio} value={tipoServicio.m_nIdTipoServicio}>
-                                                                                                    {
-                                                                                                        tipoServicio.m_sDescripcion
-                                                                                                    }
-                                                                                                </option>
-                                                                                            )
-                                                                                        )}
-                                                                                    </Select>
-                                                                                </FormControl>
-                                                                            </label>
-                                                                        </div>
-                                                                        <div className="col-sm-4 col-md-2-5">
-
-                                                                            <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
-                                                                                           onChange={handleChange}
-                                                                                           className="form-control"
-                                                                                           type="text"
-                                                                                           InputLabelProps={{
-                                                                                                shrink: true,
-                                                                                            }}
-                                                                                           label="Valor Declarado"
-                                                                                           placeholder={state.ValorDeclarado}
-                                                                                           readOnly={state.agregar == "Consultar"}
-                                                                                           value={state.ValorDeclarado}
-                                                                                           disabled
-                                                                                           id="ValorDeclarado"
-                                                                                           name="ValorDeclarado"
-                                                                                           startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-
-
+                                                                                    <option value="0">
+                                                                                        Seleccionar
+                                                                                    </option>
+                                                                                    {dataTipoCobro.map(
+                                                                                        (tipoCobro) => (
+                                                                                            <option
+                                                                                                key={tipoCobro.m_nIdTipoCobro}
+                                                                                                value={tipoCobro.m_nIdTipoCobro}>
+                                                                                                {
+                                                                                                    tipoCobro.m_sDescripcion
+                                                                                                }
+                                                                                            </option>
+                                                                                        )
+                                                                                    )}
+                                                                                </Select>
+                                                                            </FormControl>
+                                                                        </label>
                                                                     </div>
+                                                                    <div className="col-sm-4 col-md-2-5">
+
+                                                                        <label className="input select">
+                                                                            <FormControl fullWidth variant="outlined"
+                                                                                         margin="dense">
+                                                                                <InputLabel id="idTipoServicioLabel">Tipo
+                                                                                    Servicio</InputLabel>
+                                                                                <Select
+                                                                                    native
+                                                                                    labelId="idTipoServicioLabel"
+                                                                                    label="Tipo Servicio"
+                                                                                    className="form-control"
+                                                                                    required
+                                                                                    onChange={handleChange}
+                                                                                    disabled={state.agregar == "Consultar"}
+                                                                                    id="idTipoServicio"
+                                                                                    name="idTipoServicio"
+                                                                                    read="true"
+                                                                                    value={state.idTipoServicio}
+                                                                                    InputLabelProps={{
+                                                                                        shrink: true,
+                                                                                    }}
+                                                                                >
+                                                                                    <option value=""></option>
+                                                                                    {dataTipoServicio.map(
+                                                                                        (tipoServicio) => (
+                                                                                            <option
+                                                                                                key={tipoServicio.m_nIdTipoServicio}
+                                                                                                value={tipoServicio.m_nIdTipoServicio}>
+                                                                                                {
+                                                                                                    tipoServicio.m_sDescripcion
+                                                                                                }
+                                                                                            </option>
+                                                                                        )
+                                                                                    )}
+                                                                                </Select>
+                                                                            </FormControl>
+                                                                        </label>
+                                                                    </div>
+                                                                    <div className="col-sm-4 col-md-2-5">
+
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       InputLabelProps={{
+                                                                                           shrink: true,
+                                                                                       }}
+                                                                                       label="Valor Declarado"
+                                                                                       placeholder={state.ValorDeclarado}
+                                                                                       readOnly={state.agregar == "Consultar"}
+                                                                                       value={state.ValorDeclarado}
+                                                                                       disabled
+                                                                                       id="ValorDeclarado"
+                                                                                       name="ValorDeclarado"
+                                                                                       startAdornment={<InputAdornment
+                                                                                           position="start">$</InputAdornment>}
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                </div>
                                                                 {/*</form>*/}
                                                             </div>
                                                         </div>
@@ -2805,8 +2907,12 @@ function Guia(props) {
                                                             {
                                                                 state.idEmbarque &&
                                                                 <div>
-                                                                    <Tabs value={state.tab} onChange={handleTabChange} aria-label="simple tabs example" variant="scrollable" scrollButtons="auto">
-                                                                        <Tab label="Concetos Adicionales por Destino" {...a11yProps(0)} className={{ backgroundColor: "white !important" }} />
+                                                                    <Tabs value={state.tab} onChange={handleTabChange}
+                                                                          aria-label="simple tabs example"
+                                                                          variant="scrollable" scrollButtons="auto">
+                                                                        <Tab
+                                                                            label="Concetos Adicionales por Destino" {...a11yProps(0)}
+                                                                            className={{backgroundColor: "white !important"}}/>
                                                                     </Tabs>
                                                                     <ConceptosAdicionales guias={true}
                                                                                           conceptosAdicionales={state.conceptosAdicionales}
@@ -2834,7 +2940,8 @@ function Guia(props) {
                                                         >
                                                             Cancelar
                                                         </button>*/}
-                                                        <button type="submit" className="btn btn-primary primary-btn" disabled={state.agregar == "Consultar"}>
+                                                        <button type="submit" className="btn btn-primary primary-btn"
+                                                                disabled={state.agregar == "Consultar"}>
                                                             Aceptar
                                                         </button>
                                                     </div>
@@ -2842,9 +2949,8 @@ function Guia(props) {
                                                 </div>
 
 
-
-
-                                            </div></div>
+                                            </div>
+                                        </div>
 
                                     </div>
 
@@ -2865,21 +2971,26 @@ function Guia(props) {
                                                         </label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleUpload}
-                                                                className="form-control"
-                                                                type="file"
-                                                                placeholder="some text"
-                                                                id="importar"
+                                                                       onChange={handleUpload}
+                                                                       className="form-control"
+                                                                       type="file"
+                                                                       placeholder="some text"
+                                                                       id="importar"
                                                             />
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <br></br>
                                                 <div className="form-footer" className="col-md-12">
-                                                    <button className="btn btn-default btn-block ex-noty" data-layout="topCenter" data-type="information">Notificación</button>
-                                                    <button href="#Listado" role="tab" data-toggle="tab" data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
+                                                    <button className="btn btn-default btn-block ex-noty"
+                                                            data-layout="topCenter" data-type="information">Notificación
+                                                    </button>
+                                                    <button href="#Listado" role="tab" data-toggle="tab"
+                                                            data-layout="topCenter" data-type="information"
+                                                            className="btn btn-secondary secondary-btn"
                                                     >
-                                                        Cancelar</button>
+                                                        Cancelar
+                                                    </button>
                                                 </div>
                                             </form>
                                         </div>
@@ -2888,7 +2999,7 @@ function Guia(props) {
                             </div>
                         </div>
                         <div id="Imprimir" className="tab-pane fade">
-                            <div style={{ padding: "20px" }} className="widget-wrap">
+                            <div style={{padding: "20px"}} className="widget-wrap">
                                 <div id="impresionDiv">
 
                                     {framesPaqueteImp}
@@ -2910,16 +3021,16 @@ function Guia(props) {
                                                         <label className="label">Folio Guía</label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                InputLabelProps={{
-                                                                    shrink: true,
-                                                                }}
-                                                                value={state.folioGuia}
-                                                                id="folioGuia"
-                                                                name="folioGuia"
-                                                                readOnly
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       InputLabelProps={{
+                                                                           shrink: true,
+                                                                       }}
+                                                                       value={state.folioGuia}
+                                                                       id="folioGuia"
+                                                                       name="folioGuia"
+                                                                       readOnly
                                                             />
                                                         </div>
                                                     </div>
@@ -2928,13 +3039,13 @@ function Guia(props) {
                                                         <label className="label">Sucursal</label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                value={state.sucursalCancelacion}
-                                                                id="sucursalCancelacion"
-                                                                name="sucursalCancelacion"
-                                                                readOnly
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       value={state.sucursalCancelacion}
+                                                                       id="sucursalCancelacion"
+                                                                       name="sucursalCancelacion"
+                                                                       readOnly
                                                             />
                                                         </div>
                                                     </div>
@@ -2943,16 +3054,16 @@ function Guia(props) {
                                                         <label className="label">Fecha</label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                InputLabelProps={{
-                                                                    shrink: true,
-                                                                }}
-                                                                value={state.fechaCancelado}
-                                                                id="fechaCancelado"
-                                                                name="fechaCancelado"
-                                                                readOnly
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       InputLabelProps={{
+                                                                           shrink: true,
+                                                                       }}
+                                                                       value={state.fechaCancelado}
+                                                                       id="fechaCancelado"
+                                                                       name="fechaCancelado"
+                                                                       readOnly
                                                             />
                                                         </div>
                                                     </div>
@@ -2961,16 +3072,16 @@ function Guia(props) {
                                                         <label className="label">Usuario</label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                InputLabelProps={{
-                                                                    shrink: true,
-                                                                }}
-                                                                value={state.usuarioCancela}
-                                                                id="usuarioCancela"
-                                                                name="usuarioCancela"
-                                                                readOnly
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       InputLabelProps={{
+                                                                           shrink: true,
+                                                                       }}
+                                                                       value={state.usuarioCancela}
+                                                                       id="usuarioCancela"
+                                                                       name="usuarioCancela"
+                                                                       readOnly
                                                             />
                                                         </div>
                                                     </div>
@@ -2979,16 +3090,16 @@ function Guia(props) {
                                                         <label className="label">Estatus</label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                InputLabelProps={{
-                                                                    shrink: true,
-                                                                }}
-                                                                value={state.estatusGuia}
-                                                                id="estatusGuia"
-                                                                name="estatusGuia"
-                                                                readOnly
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       InputLabelProps={{
+                                                                           shrink: true,
+                                                                       }}
+                                                                       value={state.estatusGuia}
+                                                                       id="estatusGuia"
+                                                                       name="estatusGuia"
+                                                                       readOnly
                                                             />
                                                         </div>
                                                     </div>
@@ -2997,15 +3108,15 @@ function Guia(props) {
                                                         <label className="label">Motivo</label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                InputLabelProps={{
-                                                                    shrink: true,
-                                                                }}
-                                                                value={state.MotivoCancelacion}
-                                                                id="MotivoCancelacion"
-                                                                name="MotivoCancelacion"
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       InputLabelProps={{
+                                                                           shrink: true,
+                                                                       }}
+                                                                       value={state.MotivoCancelacion}
+                                                                       id="MotivoCancelacion"
+                                                                       name="MotivoCancelacion"
                                                             />
                                                         </div>
                                                     </div>
@@ -3045,7 +3156,7 @@ function Guia(props) {
 
             {/*Rightbar Start Here*/}
             <aside className="rightbar">
-                <BarraLateralDerecha />
+                <BarraLateralDerecha/>
             </aside>
 
         </div>
@@ -3054,7 +3165,7 @@ function Guia(props) {
 }
 
 function TabPanel(props) {
-    const { children, value, index, ...other } = props;
+    const {children, value, index, ...other} = props;
 
     return (
         <div

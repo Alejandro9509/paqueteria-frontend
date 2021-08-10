@@ -1211,15 +1211,16 @@ function Informes({ history }) {
             obtenerGuia().then(async (respuesta) => {
                 setDataGuias(respuesta.data);
                 if (cubicar) {
-                    let array = await cubicarGuias(
+                     cubicarGuias(
                         respuesta.data,
                         state.IdCiudadOrigen,
                         state.IdCiudadDestino,
                         state.IdRemolque1,
                         state.IdRemolque2
-                    );
-                    setInformes(array);
-                    console.log(array)
+                    ).then(result => {
+                        setInformes(result);
+                    })
+
                 }
             })
         }

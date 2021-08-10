@@ -1,5 +1,6 @@
-import { useEffect, useRef } from "react";
+import {useEffect, useRef} from "react";
 import axios from "axios";
+import {trackPromise} from "react-promise-tracker";
 
 const XLocateClient = window.XLocateClient;
 const XRouteClient = window.XRouteClient;
@@ -29,6 +30,7 @@ export function useInterval(callback, delay) {
         function tick() {
             savedCallback.current();
         }
+
         if (delay !== null) {
             let id = setInterval(tick, delay);
             return () => clearInterval(id);
@@ -50,29 +52,47 @@ export function remove_array_element(array, index) {
 }
 
 
-export async function cubicarGuias(guias, origin, destiny, remolque1, remolque2) {
-    guias = guias.filter(g => g.m_nIdCiudadDestino !== origin.m_nIdCiudad && origin.m_nIdCiudad === g.m_nIdCiudadOrigen)
-    var locationOrigin = await searchLocation(origin.m_sCiudad)
-    var locationDestiny = await searchLocation(destiny.m_sCiudad)
-    var guiasCoordenadas = []
-    if(guias.length === 0){
-        return []
-    }
-    for (var i = 0; i < guias.length; i++) {
-        var g = guias[i]
-        var location = await searchLocation(g.m_sCiudadDestino)
-        guiasCoordenadas.push({ idGuia: g.m_nIdGuia, index: i, folio: g.m_nFolioGuia, destino: g.m_sCiudadDestino, paquetes: g.m_nNoPaquetes, lat: location.y, lng: location.x, embarqueId: g.m_nIdEmbarque, arrayPaquetes: [] })
-    };
+export  function cubicarGuias(guias, origin, destiny, remolque1, remolque2) {
+    var result;
+    trackPromise(
+        result = new Promise(async (resolve, reject)  => {
+            guias = guias.filter(g => g.m_nIdCiudadDestino !== origin.m_nIdCiudad && origin.m_nIdCiudad === g.m_nIdCiudadOrigen)
+            var locationOrigin = await searchLocation(origin.m_sCiudad)
+            var locationDestiny = await searchLocation(destiny.m_sCiudad)
+            var guiasCoordenadas = []
+            if (guias.length === 0) {
+                return []
+            }
+            for (var i = 0; i < guias.length; i++) {
+                var g = guias[i]
+                var location = await searchLocation(g.m_sCiudadDestino)
+                guiasCoordenadas.push({
+                    idGuia: g.m_nIdGuia,
+                    index: i,
+                    folio: g.m_nFolioGuia,
+                    destino: g.m_sCiudadDestino,
+                    paquetes: g.m_nNoPaquetes,
+                    lat: location.y,
+                    lng: location.x,
+                    embarqueId: g.m_nIdEmbarque,
+                    arrayPaquetes: g.m_arrClsDetalle
+                })
+            }
+            ;
+            if (guiasCoordenadas.length === 0) {
+                reject("No se encontraron guias en la ruta seleccionada")
+                return
+            }
+            var routeEncode = await route(locationOrigin, locationDestiny)
+            var locationMatch = await calculateReachableLocations(routeEncode, guiasCoordenadas)
+            var guiasMatch = guiasCoordenadas.filter(g => locationMatch.includes(g.index))
+            var bins = await packBins(remolque1, remolque2, guiasMatch)
+            var destinos = getUniqueListBy(bins, "destino")
+            resolve(destinos.map(d => bins.filter(b => b.destino === d.destino)))
+        })
+    )
+    return result
 
-    var routeEncode = await route(locationOrigin, locationDestiny)
-    var locationMatch = await calculateReachableLocations(routeEncode, guiasCoordenadas)
-    var guiasMatch = guiasCoordenadas.filter(g => locationMatch.includes(g.index))
-    for (var i = 0; i < guiasMatch.length; i++) {
-        guiasMatch[i].arrayPaquetes = await obtenerEmbarque(guiasMatch[i].embarqueId)
-    }
-    var bins = await packBins(remolque1, remolque2, guiasMatch)
-    var destinos = getUniqueListBy(bins, "destino")
-    return destinos.map(d => bins.filter(b => b.destino === d.destino))
 }
 
 async function searchLocation(city) {
@@ -86,10 +106,10 @@ async function searchLocation(city) {
         if (location.results.length !== 0) {
             return location.results[0].location.referenceCoordinate
         } else {
-            return { x: 0.0, y: 0.0 }
+            return {x: 0.0, y: 0.0}
         }
     } else {
-        return { x: 0.0, y: 0.0 }
+        return {x: 0.0, y: 0.0}
     }
 
 }
@@ -147,9 +167,9 @@ async function calculateReachableLocations(routeEncode, guias) {
             }
         }
     );
-    if(location.reachableLocations) {
+    if (location.reachableLocations) {
         return location.reachableLocations.map(r => r.inputLocationIndex);
-    }else {
+    } else {
         return []
     }
 
@@ -184,25 +204,25 @@ async function packBins(remolque1, remolque2, guias) {
             "items": items.map((i, index) => (
                 {
                     "id": `${index}-${i.m_nIdEmbarque}`,
-                        "numberOfItems": 1,
-                        "dimensions": {
-                            "x": i.m_xAlto < 50 ? 50 : i.m_xAlto,
-                            "y": i.m_xAncho < 50 ? 50 : i.m_xAncho,
-                            "z": i.m_xLargo < 50 ? 50 : i.m_xLargo
-                        },
-                        "weight": i.m_xPeso
+                    "numberOfItems": 1,
+                    "dimensions": {
+                        "x": i.m_xAlto < 50 ? 50 : i.m_xAlto,
+                        "y": i.m_xAncho < 50 ? 50 : i.m_xAncho,
+                        "z": i.m_xLargo < 50 ? 50 : i.m_xLargo
+                    },
+                    "weight": i.m_xPeso
                 }
             ))
         }
     );
-    console.log([].concat.apply([], location.packedBins.map(p=> p.packedItems)))
-    return getUniqueListBy([].concat.apply([], location.packedBins.map(p=> p.packedItems)).map(i => guias.find(r => r.embarqueId === parseInt(i.itemTypeId.split("-")[1]))), "idGuia");
+    console.log([].concat.apply([], location.packedBins.map(p => p.packedItems)))
+    return getUniqueListBy([].concat.apply([], location.packedBins.map(p => p.packedItems)).map(i => guias.find(r => r.embarqueId === parseInt(i.itemTypeId.split("-")[1]))), "idGuia");
 
 }
 
 async function obtenerEmbarque(id) {
     const url = `${process.env.REACT_APP_API_URL}/Embarques/GetById/${id}`;
-    var location = await axios.get(url, { headers })
+    var location = await axios.get(url, {headers})
     console.log(location)
     return location.data.m_arrPaquetes
 }
