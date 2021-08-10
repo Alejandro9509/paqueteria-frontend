@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Los conceptos adicionales ahora se pueden modificar">
-      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionales.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionales.js" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Los conceptos de maniobra, entrega, y recoleccion ahora se pueden modificar">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesEntrega.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesEntrega.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesManiobra.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesManiobra.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesRecoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesRecoleccion.js" afterDir="false" />
@@ -445,7 +445,14 @@
       <option name="project" value="LOCAL" />
       <updated>1628541218067</updated>
     </task>
-    <option name="localTasksCounter" value="46" />
+    <task id="LOCAL-00046" summary="*Los conceptos de maniobra, entrega, y recoleccion ahora se pueden modificar">
+      <created>1628541719740</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1628541719740</updated>
+    </task>
+    <option name="localTasksCounter" value="47" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -489,7 +496,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Ajustes en embarque al agregar uno nuevo:&#10;*Campo moneda se modifica correctamente.&#10;*los sobres se agregan al listado de paquetes y se mandan a la base de datos." />
     <MESSAGE value="Ajustes en embarque al mostrar informacion para modificar" />
     <MESSAGE value="Se resolvio el problema al mostrar los sobres y paquetes cuando se modifica o edita" />
     <MESSAGE value="Ajustes al crear guia a partir de embarque" />
@@ -514,7 +520,8 @@
     <MESSAGE value="*Se ocultaron botones de cancelar para obligar la navegacion con tabs.&#10;*Se mejor limpieza de campos." />
     <MESSAGE value="*Ajustes menores de codigo" />
     <MESSAGE value="*Los conceptos adicionales ahora se pueden modificar" />
-    <option name="LAST_COMMIT_MESSAGE" value="*Los conceptos adicionales ahora se pueden modificar" />
+    <MESSAGE value="*Los conceptos de maniobra, entrega, y recoleccion ahora se pueden modificar" />
+    <option name="LAST_COMMIT_MESSAGE" value="*Los conceptos de maniobra, entrega, y recoleccion ahora se pueden modificar" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

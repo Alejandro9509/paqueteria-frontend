@@ -167,7 +167,10 @@ class ConceptosAdicionales extends Component {
             importeRet: "0",
             retiene: 0,
             traslada: 0,
-            importeIVA: "0"
+            importeIVA: "0",
+            rangoMinimo: 0,
+            rangoMaximo: 0,
+            tipoCalculo: 0,
         })
     }
 
@@ -189,7 +192,10 @@ class ConceptosAdicionales extends Component {
             importeRet: concepto.importeRet,
             retiene: concepto.retiene,
             traslada: concepto.traslada,
-            importeIVA: concepto.importeIVA
+            importeIVA: concepto.importeIVA,
+            rangoMinimo: concepto.rangoMinimo,
+            rangoMaximo: concepto.rangoMaximo,
+            tipoCalculo: concepto.tipoCalculo,
         })
     }
 
