@@ -4,19 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="94d8e9cf-07c8-4a10-b81b-63018b1e29c3" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/public/js/ebapi-modules.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarIssues.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarIssues.xml" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Los conceptos de maniobra, entrega, y recoleccion ahora se pueden modificar">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Constants/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Constants/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Util/Util.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Util.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Catalogos.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Catalogos.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/GrupoCliente.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/GrupoCliente.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Informes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Informes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/routesCatalogos.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routesCatalogos.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Recoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Recoleccion.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,7 +21,7 @@
     </option>
   </component>
   <component name="Git.Merge.Settings">
-    <option name="BRANCH" value="support/clientes" />
+    <option name="BRANCH" value="bugfix/guia" />
     <option name="OPTIONS">
       <set>
         <option value="NO_FF" />
@@ -41,7 +31,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="support/tarifas" />
+        <entry key="$PROJECT_DIR$" value="bugfix/CorreccionesGrupoClientesJF" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -72,19 +62,17 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/public/js" />
     <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="preferences.general" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/public/js" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/iconos/Menu/IconoUltimaMilla" />
       <recent name="$PROJECT_DIR$/src/Components/Map" />
@@ -114,7 +102,7 @@
       </list>
     </option>
   </component>
-  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -138,7 +126,7 @@
       <workItem from="1625257752021" duration="3073000" />
       <workItem from="1625678512731" duration="595000" />
       <workItem from="1625854871315" duration="946000" />
-      <workItem from="1628525736834" duration="6670000" />
+      <workItem from="1628006996868" duration="13293000" />
     </task>
     <task id="LOCAL-00001" summary="*Algunos pedazos de codigos se sustituyeron con componentes.&#10;*Listado de formatos se muestra correctamente&#10;*Mejor acomodo en pestaña domicilios">
       <created>1624952066000</created>
@@ -189,41 +177,214 @@
       <option name="project" value="LOCAL" />
       <updated>1627356533411</updated>
     </task>
-    <task id="LOCAL-00008" summary="Se hicieron cambios al agregar un informe desde cubicar,&#10;Se agregaro el listado de guias en el detalle de paradas">
-      <created>1627436032990</created>
+    <task id="LOCAL-00008" summary="Se agregaron validacionees para obligar a seleccionar sucursal y destino antes de otros datos">
+      <created>1627419598939</created>
       <option name="number" value="00008" />
       <option name="presentableId" value="LOCAL-00008" />
       <option name="project" value="LOCAL" />
-      <updated>1627436032990</updated>
+      <updated>1627419598939</updated>
     </task>
-    <task id="LOCAL-00009" summary="Se hicieron cambios al agregar un informe desde cubicar,&#10;Se agregaro el listado de guias en el detalle de paradas">
-      <created>1627439294884</created>
+    <task id="LOCAL-00009" summary="Se hicieron ajustes para mandar el id de destino en lugar el nombre a los servicios">
+      <created>1627420097343</created>
       <option name="number" value="00009" />
       <option name="presentableId" value="LOCAL-00009" />
       <option name="project" value="LOCAL" />
-      <updated>1627439294884</updated>
+      <updated>1627420097343</updated>
     </task>
-    <task id="LOCAL-00010" summary="Archivo de configiración">
-      <created>1628525781567</created>
+    <task id="LOCAL-00010" summary="Se habilitaron campos de minimo y maximo para pastaña de conceptos de entrega por rangos">
+      <created>1627426088771</created>
       <option name="number" value="00010" />
       <option name="presentableId" value="LOCAL-00010" />
       <option name="project" value="LOCAL" />
-      <updated>1628525781567</updated>
+      <updated>1627426088771</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Se arregló problema de duplicidad de registros y la funcion modificar ya funciona">
+      <created>1627444117527</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1627444117527</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Ajustes">
+      <created>1627445082721</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1627445082721</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Se autocompleta la informacion de remitente y destinatario al seleccionar">
+      <created>1627496295098</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1627496295098</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Se agregó validacion para hacer la fecha de vencimiento obligatoria">
+      <created>1627499252192</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1627499252192</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Se arreglo relleno de datos al modificar sucursal">
+      <created>1627515450904</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1627515450904</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Ajustes al agregar usuarios">
+      <created>1627521214583</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1627521214583</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Ajustes en crear embarque">
+      <created>1627523445560</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1627523445560</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Ajustes en embarque al agregar uno nuevo:&#10;*Campo moneda se modifica correctamente.&#10;*los sobres se agregan al listado de paquetes y se mandan a la base de datos.">
+      <created>1627533967600</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1627533967600</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Ajustes en embarque al mostrar informacion para modificar">
+      <created>1627540058341</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1627540058341</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Se resolvio el problema al mostrar los sobres y paquetes cuando se modifica o edita">
+      <created>1627583587933</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1627583587934</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Ajustes al crear guia a partir de embarque">
+      <created>1627606448194</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1627606448194</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Se recuperan las opciones de impuestos de los servicios en sucursales">
+      <created>1627628575701</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1627628575701</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Se recuperan las opciones de impuestos de los servicios en sucursales">
+      <created>1627629213333</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1627629213333</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Ajustes para registrar embarque cuando es entrega en domicilio">
+      <created>1627636188110</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1627636188110</updated>
+    </task>
+    <task id="LOCAL-00025" summary="Se recupera dato Tipo de servicio al modificar/ consultar una guia">
+      <created>1627639262638</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1627639262638</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Se obtiene el codigo postal del remitente y destinatario">
+      <created>1627650495815</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1627650495815</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Se corigio el envio de parametros para el modificar de Zonas">
+      <created>1627980559355</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1627980559355</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Se corigio la consulta de forma que esta no permita la modificacion de datos en los siguientes catalogos: Tarifas, Remitente/destinatario y Rutas">
+      <created>1628110663190</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1628110663190</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Se elimino el codigo que no se estaba usando, se corrigieron los consultar y como se interactua con la informacion, se arreglo el problema de que consultar modificaba">
+      <created>1628241188508</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1628241188508</updated>
+    </task>
+    <task id="LOCAL-00030" summary="* Se renombraron variables para mayor entendimiento en ciudades">
+      <created>1628386757831</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1628386757831</updated>
+    </task>
+    <task id="LOCAL-00031" summary="* Se renombraron variables para mayor entendimiento en zonas">
+      <created>1628387272782</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1628387272782</updated>
+    </task>
+    <task id="LOCAL-00032" summary="*Los codigos postales ya se acumulan por ciudad">
+      <created>1628396161531</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1628396161531</updated>
+    </task>
+    <task id="LOCAL-00033" summary="*Las localidades ya se acumulan">
+      <created>1628397385643</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1628397385643</updated>
+    </task>
+    <task id="LOCAL-00034" summary="*Limpieza de código">
+      <created>1628397519080</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1628397519080</updated>
+    </task>
+    <task id="LOCAL-00035" summary="*Se arregló validacion para que mande a modificar o agregar respectivamente">
+      <created>1628399351166</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1628399351166</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
@@ -253,84 +414,49 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Vista de ultima milla" />
-    <MESSAGE value="*Algunos pedazos de codigos se sustituyeron con componentes.&#10;*Listado de formatos se muestra correctamente&#10;*Mejor acomodo en pestaña domicilios" />
-    <MESSAGE value="*Headers de tabla en pestaña formatos se ven correctamente.&#10;*Pestaña inputs de Procecsos especiales fueron reemplazados con componentes." />
-    <MESSAGE value="*Se agregó campo numRegistroIdentidadFiscal en seccion General, pestaña Inf. Adicional.&#10;*Se reemplazaron inputs por componentes." />
-    <MESSAGE value="*Se agregó modulo de convenios" />
-    <MESSAGE value="*Se integró listado de atajos en toolbar" />
-    <MESSAGE value="* Se traen los accesos directos de los servicios" />
-    <MESSAGE value="Se agregaron filtros para conceptos de tarifas" />
-    <MESSAGE value="Se agregaron los filtros necesarios" />
-    <MESSAGE value="Se hicieron cambios al agregar un informe desde cubicar,&#10;Se agregaro el listado de guias en el detalle de paradas" />
-    <MESSAGE value="Archivo de configiración" />
-    <option name="LAST_COMMIT_MESSAGE" value="Archivo de configiración" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="2267" y="-410" key="CommitChangelistDialog2" timestamp="1628525780823">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state x="2267" y="-221" key="CommitChangelistDialog2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1627436032441" />
-    <state x="465" y="81" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1627439294546" />
-    <state x="2267" y="-410" key="CommitChangelistDialog2/0.25.1440.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1628525780823" />
-    <state width="1419" height="348" key="GridCell.Tab.0.bottom" timestamp="1627439307337">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state width="2539" height="348" key="GridCell.Tab.0.bottom/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1627422143049" />
-    <state width="1419" height="348" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1627439307337" />
-    <state width="1419" height="348" key="GridCell.Tab.0.center" timestamp="1627439307334">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state width="2539" height="348" key="GridCell.Tab.0.center/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1627422143045" />
-    <state width="1419" height="348" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1627439307334" />
-    <state width="1419" height="348" key="GridCell.Tab.0.left" timestamp="1627439307333">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state width="2539" height="348" key="GridCell.Tab.0.left/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1627422143044" />
-    <state width="1419" height="348" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1627439307333" />
-    <state width="1419" height="348" key="GridCell.Tab.0.right" timestamp="1627439307336">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state width="2539" height="348" key="GridCell.Tab.0.right/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1627422143048" />
-    <state width="1419" height="348" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1627439307336" />
-    <state x="2433" y="-100" key="MultipleFileMergeDialog" timestamp="1628525802502">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state x="2433" y="-100" key="MultipleFileMergeDialog/0.25.1440.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1628525802502" />
-    <state x="320" y="187" key="Vcs.Push.Dialog.v2" timestamp="1627439300751">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1627439300751" />
-    <state x="2509" y="101" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1627435971977">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state x="2509" y="101" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1627435971977" />
-    <state x="2386" y="-63" width="667" height="486" key="find.popup" timestamp="1627436115419">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state x="2386" y="-63" width="667" height="486" key="find.popup/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1627436115419" />
-    <state x="2368" y="-25" key="git4idea.merge.GitPullDialog" timestamp="1628525789118">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state x="2368" y="-25" key="git4idea.merge.GitPullDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1628525748663" />
-    <state x="2368" y="-25" key="git4idea.merge.GitPullDialog/0.25.1440.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1628525789118" />
+    <MESSAGE value="Se habilitaron campos de minimo y maximo para pastaña de conceptos de entrega por rangos" />
+    <MESSAGE value="Se arregló problema de duplicidad de registros y la funcion modificar ya funciona" />
+    <MESSAGE value="Ajustes" />
+    <MESSAGE value="Se autocompleta la informacion de remitente y destinatario al seleccionar" />
+    <MESSAGE value="Se agregó validacion para hacer la fecha de vencimiento obligatoria" />
+    <MESSAGE value="Se arreglo relleno de datos al modificar sucursal" />
+    <MESSAGE value="Ajustes al agregar usuarios" />
+    <MESSAGE value="Ajustes en crear embarque" />
+    <MESSAGE value="Ajustes en embarque al agregar uno nuevo:&#10;*Campo moneda se modifica correctamente.&#10;*los sobres se agregan al listado de paquetes y se mandan a la base de datos." />
+    <MESSAGE value="Ajustes en embarque al mostrar informacion para modificar" />
+    <MESSAGE value="Se resolvio el problema al mostrar los sobres y paquetes cuando se modifica o edita" />
+    <MESSAGE value="Ajustes al crear guia a partir de embarque" />
+    <MESSAGE value="Se recuperan las opciones de impuestos de los servicios en sucursales" />
+    <MESSAGE value="Ajustes para registrar embarque cuando es entrega en domicilio" />
+    <MESSAGE value="Se recupera dato Tipo de servicio al modificar/ consultar una guia" />
+    <MESSAGE value="Se obtiene el codigo postal del remitente y destinatario" />
+    <MESSAGE value="Se corigio el envio de parametros para el modificar de Zonas" />
+    <MESSAGE value="Se corigio la consulta de forma que esta no permita la modificacion de datos en los siguientes catalogos: Tarifas, Remitente/destinatario y Rutas" />
+    <MESSAGE value="Se elimino el codigo que no se estaba usando, se corrigieron los consultar y como se interactua con la informacion, se arreglo el problema de que consultar modificaba" />
+    <MESSAGE value="* Se renombraron variables para mayor entendimiento en ciudades" />
+    <MESSAGE value="* Se renombraron variables para mayor entendimiento en zonas" />
+    <MESSAGE value="*Los codigos postales ya se acumulan por ciudad" />
+    <MESSAGE value="*Las localidades ya se acumulan" />
+    <MESSAGE value="*Limpieza de código" />
+    <MESSAGE value="*Se arregló validacion para que mande a modificar o agregar respectivamente" />
+    <option name="LAST_COMMIT_MESSAGE" value="*Se arregló validacion para que mande a modificar o agregar respectivamente" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/Views/Recoleccion.js</url>
-          <line>2960</line>
+          <line>2813</line>
           <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/Views/Recoleccion.js</url>
-          <line>1286</line>
-          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

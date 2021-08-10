@@ -22,44 +22,24 @@ import {DataGrid} from '@material-ui/data-grid';
 import Noty from 'noty';
 import {SignalCellularNoSimOutlined} from "@material-ui/icons";
 import ConceptosAdicionales from "./Tarifas/ConceptosAdicionales";
+import { Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, Select, Step, StepLabel, Stepper, TextField, Tooltip } from "@material-ui/core";
+import { dataGridLocaleText } from "../Constants";
+import { obtenerCiudades } from "../Util/Contexts/CiudadesContext";
+import { obtenerEstatusGuia } from "../Util/Contexts/EstatusContext";
+import { obtenerEmbarquesId, obtenerEmbarqueMoneda } from "../Util/Contexts/EmbarquesContext";
+import { ultimoFolioGuia, eliminarGuia, obtenerGuiaId, cancelarGuia, obtenerGuiasFiltro, obtenerGuia, modificarGuia, agregarGuia, imprimirGuia } from "../Util/Contexts/GuiaContext";
+import { obtenerMonedas } from "../Util/Contexts/MonedaContext";
+import { obtenerTipoCambio } from "../Util/Contexts/TipoCambioContext";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
+import { obtenerSucursales } from "../Util/Contexts/SucursalContext";
 import {
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    FormControl,
-    InputLabel,
-    Select,
-    Step,
-    StepLabel,
-    Stepper,
-    TextField,
-    Tooltip
-} from "@material-ui/core";
-import {dataGridLocaleText, TICKET_ZABRA_TAMPLATE} from "../Constants";
-import {obtenerCiudades} from "../Util/Contexts/CiudadesContext";
-import {obtenerEstatusGuia} from "../Util/Contexts/EstatusContext";
-import {obtenerEmbarquesId, obtenerEmbarqueMoneda} from "../Util/Contexts/EmbarquesContext";
-import {
-    ultimoFolioGuia,
-    eliminarGuia,
-    obtenerGuiaId,
-    cancelarGuia,
-    obtenerGuiasFiltro,
-    obtenerGuia,
-    modificarGuia,
-    agregarGuia,
-    imprimirGuia
-} from "../Util/Contexts/GuiaContext";
-import {obtenerMonedas} from "../Util/Contexts/MonedaContext";
-import {obtenerTipoCambio} from "../Util/Contexts/TipoCambioContext";
-import {validarPermisos} from "../Util/Contexts/UsuarioContext";
-import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
-import {obtenerConceptosFacturacion} from "../Util/Contexts/ConceptosFacturacionContext";
-import {obtenerTipoCobro} from "../Util/Contexts/TipoCobroContext";
-import {obtenerTipoServicio} from "../Util/Contexts/TipoServiciosContext";
-import {obtenerImpuestosTipo} from "../Util/Contexts/ImpuestosContext";
-import {imprimirFormatosId, obtenerFormatosImpresion} from "../Util/Contexts/FormatosImpresionContext";
+    obtenerConceptosDefectoListado,
+    obtenerConceptosFacturacion
+} from "../Util/Contexts/ConceptosFacturacionContext";
+import { obtenerTipoCobro } from "../Util/Contexts/TipoCobroContext";
+import { obtenerTipoServicio } from "../Util/Contexts/TipoServiciosContext";
+import { obtenerImpuestosTipo } from "../Util/Contexts/ImpuestosContext";
+import { imprimirFormatosId, obtenerFormatosImpresion } from "../Util/Contexts/FormatosImpresionContext";
 import {obtenerCodigoPostalId} from "../Util/Contexts/CodigoPostalContext";
 
 function showSuccess(mensaje) {
@@ -108,105 +88,51 @@ function Guia(props) {
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
     const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [state, setState] = React.useState({
-        showPopUp: false,
-        idGuia: 0,
-        agregar: "Agregar",
-        fechaInicial: "",
-        conceptosAdicionales: [],
-        ivaTraslada: [],
-        ivaRetiene: [],
-        fechaFinal: today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate(),
+        //VARIABLES PARA LISTADO DE GUIAS
         sucursalListado: 0,
+        fechaFinal: today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate(),
+        fechaInicial: "",
         estatusListado: 0,
-        sucursal: "",
-        folioRecoleccion: "",
-        folioEmbarque: "",
-        folioGuia: "",
-        folioInforme: "",
-        fecha: "",
-        DerechoBorrar: 145,
-        paquetesI: [{
-            CiudadOrigen: "",
-            Remitente: "",
-            CiudadRemitente: "",
-            RFC: "",
-            Direccion: "",
-            Zona: "",
-            CP: 0,
-            Telefono: "",
-            CiudadDestino: "",
-            RFCDestinatario: "",
-            DireccionDestinatario: "",
-            ZonaDestinatario: "",
-            CPDestinatario: 0,
-            CiudadDestinatario: "",
-            TelefonoDestinatario: "",
-            FolioPaquete: "",
-            Cantidad: 0,
-            Descripcion: ""
-        }],
-        origen: "",
-        destino: "",
+        idGuia: 0,
+        //VARIABLES PARA CANCELAR GUIA
+        //variable de folioGuia es la misma que en agregar
         usuarioCancela: "",
         fechaCancelado: "",
-        idEmbarque: 0,
-        hora: "",
-        idEstatusGuia: '',
+        usuarioCancelacion: 0,
         estatusGuia: "",
+        MotivoCancelacion: "",
+        //VARIABLES PARA AGREGAR GUIA
+        //Informacion General
+        idSucursalAgregar: localStorage.getItem("Sucursal"),
+        folioGuia: "",
+        idEmbarque: 0,
+        folioInforme: "",
+        tracking: "",
+        fecha: "",
+        idEstatusGuia: '',
         idMoneda: 0,
         tipoCambio: 0,
-        idTipoCobro: 0,
+        //Remitente
         nombreRemitente: "",
-        rfcRemitente: "",
+        RFCRemitente: "",
         domicilioRemitente: "",
-        idCodigoPostalRemitente: 0,
+        codigoPostalRemitente: "",
         ciudadRemitente: 0,
         correoRemitente: "",
         telefonoRemitente: "",
         contactoRemitente: "",
-        idCiudadOrigen: 0,
+        origenRemitente: "",
+        //Destinatario
         sNombreDestinatario: "",
         sRFCDestinatario: "",
         sDomicilioDestinatario: "",
-        idCodigoPostalDestinatario: "",
         codigoPostalDestinatario: "",
+        ciudadDestinatario: "",
         sCorreoDestinatario: "",
-        idCIudadDestinatario: 0,
         sTelefonoDestinatario: "",
         sContactoDestinatario: "",
-        idCiudadDestino: 0,
-        fechaEntrega: "",
-        HoraEntrega: "",
-        NoPaquetes: 0,
-        NoSobres: 0,
-        idOperador: 0,
-        idCiudadRemitente: 0,
-        idUnidad: 0,
-        fechaSalida: "",
-        horaSalida: "",
-        arrClsDetalle: [],
-        FechaCancelacion: "",
-        usuarioCancelacion: 0,
-        MotivoCancelacion: "",
-        entregarMismoDomicilio: false,
-        fechaLlegada: "",
-        horaLlegada: "",
-        codigoPostalEntrega: 0,
-        idCiudadEntrega: 0,
-        idZonaEntrega: 0,
-        domicilioEntrega: "",
-        entregarEn: "",
-        datosAdicionalesis: "",
-        tracking: 0,
-        arClsGuiaConceptos: [],
-        creadoPor: localStorage.getItem("UsuarioId"),
-        modificadoPor: localStorage.getItem("UsuarioId"),
-        creadoEl: "",
-        modificadoEl: "",
-        idSucursal: localStorage.getItem("Sucursal"),
-        idSucursalAgregar: localStorage.getItem("Sucursal"),
-        valorDeclarado: 0,
         CiudadDestino: "",
+        //Paquetes/sobres
         paquetes: [
             {
                 peso: "",
@@ -228,23 +154,47 @@ function Guia(props) {
                 id: ""
             },
         ],
-        conceptos: [
-            {
-                IdConceptoFacturacion: 0,
-                Importe: 0,
-                IdImpuestoTraslada: 0,
-                ImporteIva: 0,
-                IdImpuestoRetiene: 0,
-                ImporteRetiene: 0,
-                Total: 0,
-                PorcentajeIva: 0,
-                PorcentajeRetiene: 0,
-                IdGuiaConcepto: 0
-            }
-        ],
-        tab: 0,
+        //Detalle de faturación
+        idTipoCobro: 0,
         idTipoServicio: '',
-        height: window.innerHeight
+        ValorDeclarado: "",
+        //Conceptos de facturacion
+        conceptosAdicionales: [],
+        ivaTraslada: [],
+        ivaRetiene: [],
+        //Aqui se almacenaran los conceptos de las guias que ya fueron creadas
+        arClsGuiaConceptos: [],
+
+        //VARIABLES PARA TAB IMPRIMIR (creo)
+        paquetesI: [{
+            CiudadOrigen: "",
+            Remitente: "",
+            CiudadRemitente: "",
+            RFC: "",
+            Direccion: "",
+            Zona: "",
+            CP: 0,
+            Telefono: "",
+            CiudadDestino: "",
+            RFCDestinatario: "",
+            DireccionDestinatario: "",
+            ZonaDestinatario: "",
+            CPDestinatario: 0,
+            CiudadDestinatario: "",
+            TelefonoDestinatario: "",
+            FolioPaquete: "",
+            Cantidad: 0,
+            Descripcion: ""
+        }],
+
+        //VARIABLES PARA VISTAEN GENERAL
+        agregar: "Agregar",
+        height: window.innerHeight,
+        creadoPor: localStorage.getItem("UsuarioId"),
+        modificadoPor: localStorage.getItem("UsuarioId"),
+        creadoEl: "",
+        modificadoEl: "",
+
     })
 
     function cargaDiv(indice, valor) {
@@ -253,21 +203,15 @@ function Guia(props) {
     }
 
     const [dataFolioGuia, SetDataFolioGuia] = React.useState([]);
-
     const [fileUploaded, setFileUploaded] = React.useState([])
     const [stepActive, setStepActive] = React.useState(1);
+    //Listado de sucursales. Se usa en listado y agregar.
     const [dataSucursal, setDataSucursal] = React.useState([])
-
     const [dataMoneda, setDataMoneda] = React.useState([])
     const [dataTipoCobro, setDataTipoCobro] = React.useState([])
     const [dataEstatusGuia, setDataEstatusGuia] = React.useState([])
     const [dataEmbarque, setDataEmbarque] = React.useState([])
-    const [dataConcepto, setDataConcepto] = React.useState([])
-    // const [dataImpuestoTraslado, setDataImpuestoTraslado] = React.useState([])
-    // const [dataImpuestoRetiene, setDataImpuestoRetiene] = React.useState([])
-
-
-    // const [dataCiudad, setDataCiudad] = React.useState([])
+    const [dataConceptosDefecto, setDataConceptosDefecto] = useState([])
 
     const [dataTipoServicio, setDataTipoServicio] = React.useState([])
 
@@ -283,7 +227,7 @@ function Guia(props) {
 
             "CreadoPor": state.creadoPor,
             "ModificadoPor": state.modificadoPor,
-            "IdSucursal": state.idSucursal,
+            "IdSucursal": state.idSucursalAgregar,
             "ValorDeclarado": state.ValorDeclarado,
             "idTipoServicio": state.idTipoServicio,
 
@@ -311,27 +255,25 @@ function Guia(props) {
                 //window.location.reload();
                 let resp = respuesta.data;
                 let vGuia = resp.substring(resp.indexOf(":") + 2);
-                limpiarCampos()
+                handleShowListado()
                 getImpresion(vGuia);
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
             });
             /*showSuccess('Guia agregada')
-            limpiarCampos()*/
+            limpiarCamposAgregar()*/
         } else {
             modificarGuia(state.idGuia, params).then(respuesta => {
                 showSuccess(respuesta.data)
-                getAllData()
-                limpiarCampos()
+                handleShowListado()
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
             });
             /*showSuccess('Guia modificada')
-            limpiarCampos()*/
+            limpiarCamposAgregar()*/
         }
-
     }
 
     function getUltimoFolioGuia() {
@@ -431,7 +373,7 @@ function Guia(props) {
 
     function handleShowModificar(id) {
         obtenerGuiaId(id).then(respuesta => {
-            console.log('MOdifica guia:')
+            console.log('Modifica guia:')
             console.log(respuesta.data)
             //Primero se obtienen las monedas que corresponden a la sucursal
             //Despues se obtienen los datos del embarque al que pertenece la guia para mostrar los datos
@@ -441,17 +383,14 @@ function Guia(props) {
                 return {
                     ...state,
                     agregar: "Modificar",
-                    showPopUp: true,
-                    dTipoServicio: respuesta.data.m_nIdTipoServicio,
+                    idTipoServicio: respuesta.data.m_nIdTipoServicio,
                     idEstatusGuia: respuesta.data.m_nIdEstatusGuia,
 
                     fecha: respuesta.data.m_dFecha,
                     folioGuia: respuesta.data.m_nFolioGuia,
-                    folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
                     idGuia: respuesta.data.m_nIdGuia,
-                    hora: respuesta.data.m_sHora,
                     tracking: respuesta.data.m_nTracking,
-                    arClsGuiaConceptos: respuesta.data.m_arClsGuiaConceptos,
+                    conceptosAdicionales: respuesta.data.m_arClsGuiaConceptos,
                     creadoEl: respuesta.data.m_dCreadoEl,
                 }
             })
@@ -459,7 +398,6 @@ function Guia(props) {
         }).catch(function (err) {
             console.log(err.data)
         });
-
     }
 
     function handleShowConsultar(id) {
@@ -473,17 +411,14 @@ function Guia(props) {
                 return {
                     ...state,
                     agregar: "Consultar",
-                    showPopUp: true,
                     idTipoServicio: respuesta.data.m_nIdTipoServicio,
                     idEstatusGuia: respuesta.data.m_nIdEstatusGuia,
 
                     fecha: respuesta.data.m_dFecha,
                     folioGuia: respuesta.data.m_nFolioGuia,
-                    folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
                     idGuia: respuesta.data.m_nIdGuia,
-                    hora: respuesta.data.m_sHora,
                     tracking: respuesta.data.m_nTracking,
-                    arClsGuiaConceptos: respuesta.data.m_arClsGuiaConceptos,
+                    conceptosAdicionales: respuesta.data.m_arClsGuiaConceptos,
                     creadoEl: respuesta.data.m_dCreadoEl,
 
                 }
@@ -491,10 +426,11 @@ function Guia(props) {
         }).catch(function (err) {
             console.log(err.data)
         });
-
     }
 
+    //Muestra la pestaña de cancelar
     function handleShowCancelar() {
+        limpiarCamposAgregar()
         obtenerGuiaId(state.idGuia).then((respuesta) => {
             setState({
                 ...state,
@@ -506,10 +442,11 @@ function Guia(props) {
                 motivoCancelacion: respuesta.data.m_sMotivoCancelacion
             })
             if (respuesta.data.m_nFolioInforme != 0)
-                showSuccess("Guía no se puede cancelar")
+                showSuccess("Guía no se puede cancelar ya que no pertenece a ningun informe.")
         })
     }
 
+    //Funcion para cancelar una guia. Se usa en pestaña cancelar.
     const handleCancelar = (e) => {
         e.preventDefault();
         var params = {
@@ -520,6 +457,7 @@ function Guia(props) {
         console.log(JSON.stringify(params))
         cancelarGuia(state.idGuia, params).then((respuesta) => {
             console.log(respuesta.data)
+            showSuccess(respuesta.data)
         })
     }
 
@@ -576,73 +514,22 @@ function Guia(props) {
         //getImpresion(38);
     }*/
 
+    //Prepara campos para agregar guia
     function handleShowAgregar() {
-        setState({
+        setState(state => {
+            return {
             ...state,
-            agregar: "Agregar",
-            showPopUp: true,
-
-            sucursal: "",
-            folioRecoleccion: "",
-            folioEmbarque: "",
-            folioGuia: dataFolioGuia.length !== 0 ? dataFolioGuia[0].m_sFolioGuia : null,
-            folioInforme: "",
-            fecha: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
-            origen: "",
-            destino: "",
-            usuarioCancela: "",
-            fechaCancelado: "",
-            idGuia: 0,
-            hora: "",
-            idEstatusGuia: '',
-            idMoneda: 0,
-            tipoCambio: 0,
-            idTipoCobro: 0,
-            nombreRemitente: "",
-            rfcRemitente: "",
-            domicilioRemitente: "",
-            idCodigoPostalRemitente: 0,
-            ciudadRemitente: 0,
-            correoRemitente: "",
-            telefonoRemitente: "",
-            contactoRemitente: "",
-            idCiudadOrigen: 0,
-            sNombreDestinatario: "",
-            sRFCDestinatario: "",
-            sDomicilioDestinatario: "",
-            idCodigoPostalDestinatario: "",
-            sCorreoDestinatario: "",
-            idCIudadDestinatario: 0,
-            sTelefonoDestinatario: "",
-            sContactoDestinatario: "",
-            idCiudadDestino: 0,
-            fechaEntrega: "",
-            HoraEntrega: "",
-            NoPaquetes: 0,
-            NoSobres: 0,
-            idOperador: 0,
-            idCiudadRemitente: 0,
-            idUnidad: 0,
-            fechaSalida: "",
-            horaSalida: "",
-            arrClsDetalle: [],
-            FechaCancelacion: "",
-            usuarioCancelacion: 0,
-            entregarMismoDomicilio: false,
-            fechaLlegada: "",
-            horaLlegada: "",
-            codigoPostalEntrega: 0,
-            idCiudadEntrega: 0,
-            idZonaEntrega: 0,
-            domicilioEntrega: "",
-            entregarEn: "",
-            datosAdicionalesis: "",
-            tracking: 0,
-            arClsGuiaConceptos: [],
-            creadoEl: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
-            modificadoEl: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
+                agregar: "Agregar",
+                fecha: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
+            }
         });
+        limpiarCamposAgregar()
         //getImpresion(38);
+    }
+
+    const handleShowListado = () => {
+        limpiarCamposAgregar()
+        getAllData()
     }
 
     const handleChange = event => {
@@ -653,6 +540,7 @@ function Guia(props) {
         });
     };
 
+    //Hace filtrado de guias por fechas. Se usa en listado de guias
     const handleFechaInicialFiltro = async (event) => {
         setState({
             ...state,
@@ -664,6 +552,7 @@ function Guia(props) {
         })
     }
 
+    //Hace filtrado de guias por fechas. Se usa en listado de guias
     const handleFechaFinalFiltro = async (event) => {
         setState({
             ...state,
@@ -675,6 +564,7 @@ function Guia(props) {
         })
     }
 
+    //Hace filtrado de guias por sucursal. Se usa en listado de guias
     const handleSucursalFiltro = async (event) => {
         setState({
             ...state,
@@ -685,6 +575,7 @@ function Guia(props) {
         })
     }
 
+    //Hace filtrado de guias por estatus. Se usa en listado de guias
     const handleEstatusFiltro = async (event) => {
         setState({
             ...state,
@@ -825,19 +716,43 @@ function Guia(props) {
             return;
         }
         getAllData()
+        getConceptosDefecto()
         getAllDataSucursal()
         getAllDataMoneda()
         getAllDataTipoCobro()
         getAllDataTipoServicio()
         getAllDataEstatusGuia()
-        // getAllCiudades();
-        getAllConceptos()
-        // getAllImpuestosTraslado();
-        // getAllImpuestosRetiene();
         getUltimoFolioGuia()
         getTipoCambio()
         getFormatosImpresion()
     }, []);
+
+    const getConceptosDefecto = () => {
+        obtenerConceptosDefectoListado().then(conceptosDefecto => {
+            setDataConceptosDefecto(conceptosDefecto.data)
+            if (props.location.idEmbarque != undefined) {
+
+                obtenerEmbarquesId(props.location.idEmbarque).then(respuesta => {
+                    setState(state => {
+                        return {
+                            ...state,
+                            fecha: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
+                        }
+                    })
+
+                    console.log('Embarque datos:')
+                    console.log(respuesta.data)
+
+
+                    setDataFromEmbarque(respuesta, conceptosDefecto.data)
+                    obtenerEmbarqueMoneda(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, state.idGuia).then(respuesta => {
+                        setDataEmbarque(respuesta.data)
+                    })
+
+                });
+            }
+        })
+    }
 
     async function getAllData() {
         obtenerGuia().then(respuesta => {
@@ -904,30 +819,10 @@ function Guia(props) {
         });
     }
 
-    async function getAllConceptos() {
-        obtenerConceptosFacturacion().then(respuestaConceptos => {
-            setDataConcepto(respuestaConceptos.data)
-            if (props.location.idEmbarque != undefined) {
-
-                obtenerEmbarquesId(props.location.idEmbarque).then(respuesta => {
-                    setState(state => {
-                        return {
-                            ...state,
-                            fecha: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
-                        }
-                    })
-
-                    console.log('Embarque datos:')
-                    console.log(respuesta.data)
-
-
-                    setDataFromEmbarque(respuesta, respuestaConceptos.data)
-                    obtenerEmbarqueMoneda(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, state.idGuia).then(respuesta => {
-                        setDataEmbarque(respuesta.data)
-                    })
-
-                });
-            }
+    //Recibe el id de embarque para obtener sus datos del servidor y mostrarlos en pantalla
+    function handleEmbarque(embarque) {
+        obtenerEmbarquesId(embarque).then(respuesta => {
+            setDataFromEmbarque(respuesta, dataConceptosDefecto)
         });
     }
 
@@ -988,7 +883,7 @@ function Guia(props) {
             return {
                 ...state,
                 idEmbarque: respuesta.data.m_nIdEmbarque,
-                idSucursal: respuesta.data.IdSucursal,
+                idSucursalAgregar: respuesta.data.IdSucursal,
                 idMoneda: respuesta.data.m_nIdMoneda,
                 tipoCambio: respuesta.data.m_cTIpoCambio,
                 idTipoCobro: respuesta.data.m_nIdTIpoCobro,
@@ -997,18 +892,15 @@ function Guia(props) {
                 nombreRemitente: respuesta.data.m_sNOmbreRemitente,
                 RFCRemitente: respuesta.data.m_sRFCRemitente,
                 domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                idCodigoPostalRemitente: respuesta.data.m_nIdCodigoPostalRemitente,
                 ciudadRemitente: respuesta.data.m_sCiudadRemitente,
                 correoRemitente: respuesta.data.m_sCorreoRemitente,
                 telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
                 contactoRemitente: respuesta.data.m_sContactoRemitente,
                 origenRemitente: respuesta.data.m_sCiudadOrigen,
-                idCiudadOrigen: respuesta.data.m_nIdCiudadOrigen,
 
                 sNombreDestinatario: respuesta.data.m_sNombreDestinatario,
                 sRFCDestinatario: respuesta.data.m_sRFCDestinatario,
                 sDomicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                idCodigoPostalDestinatario: respuesta.data.m_nIdCodigoPostalDestinatario,
                 ciudadDestinatario: respuesta.data.m_sCIudadDestinatario,
                 sCorreoDestinatario: respuesta.data.m_sCorreoDestinatario,
                 sTelefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
@@ -1022,23 +914,22 @@ function Guia(props) {
                 ValorDeclarado: valorDeclaradoTotal,
 
                 folioGuia: respuesta.data.m_nFolioGuia,
-                folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
                 idGuia: respuesta.data.m_nIdGuia,
-                hora: respuesta.data.m_sHora,
                 tracking: respuesta.data.m_nTracking,
                 arClsGuiaConceptos: respuesta.data.m_arClsGuiaConceptos,
                 creadoEl: respuesta.data.m_dCreadoEl,
 
             }
         })
-        obtenerTarifasPorEmbarque(respuesta.data.m_nIdEmbarque, respuestaConceptos, paquetesTemp)
+        obtenerTarifasPorEmbarque(respuesta.data.m_nIdEmbarque, respuestaConceptos, paquetesTemp, respuesta.data)
     }
 
-    const obtenerTarifasPorEmbarque = (idEmbarque, respuestaConceptos, paquetesTemp) => {
+    const obtenerTarifasPorEmbarque = (idEmbarque, respuestaConceptos,paquetesTemp, embarque) => {
         const conceptosTemp = []
         let ivaTraslada = []
         let ivaRetiene = []
-        axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${idEmbarque}`, {headers}).then(tarifa => {
+        axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${idEmbarque}`, { headers }).then(tarifa => {
+            obtenerConceptosByTarifa(tarifa.data[0].m_nIdTarifa)
             console.log('tarifas by embarque')
             console.log(tarifa.data)
             let pesoTotal = 0
@@ -1046,21 +937,131 @@ function Guia(props) {
                 pesoTotal = pesoTotal + p.peso
             })
             if (tarifa.data.length !== 0) {
+                //se recorre el listado de conceptos de la tarifa del embarque
                 tarifa.data[0].m_arrArConceptos.forEach(element => {
-                    if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal) {
-                        conceptosTemp.push({
-                            concepto: respuestaConceptos.find(c => c.m_nIdConceptosFacturacion == element.m_nIdConceptosFacturacion),
-                            importe: element.m_cImporte,
-                            retiene: element.m_nIdImpuestoRetiene,
-                            traslada: element.m_nIdImpuestoTraslada,
-                            importeRet: element.m_cImporteRetiene,
-                            importeIVA: element.m_cImporteIva,
-                            rangoMinimo: element.m_xnRangoMinimo,
-                            rangoMaximo: element.m_xnRangoMaximo,
-                            nombreConcepto: element.m_sConcepto,
-                            tipoCalculo: element.m_nIdTipoCalculo
-                        })
-                    }
+                    //Se recorre el arreglo de conceptos por defecto para ver si el concepto de tarifa es uno de ellos y buscar a cual corresponde
+                    console.log('conceptos defecto: ', respuestaConceptos)
+                    respuestaConceptos.forEach(concepto => {
+                        if (concepto.m_nIdConceptosFacturacion == element.m_nIdConceptosFacturacion){
+                            //Si el embarque implica recolecta y el concepto por defecto es el de recolecta se calcula el rango maximo y minimo
+                            if (concepto.m_nIdConcepto == 2 && (embarque.m_bEsRecolecta == 1 || embarque.m_bEsRecolecta == true)){
+                                //Si el peso total de los paquetes es menor mayor al rango minimo  y menor al rango maximo se va mostrar en la lista
+                                if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal ){
+                                    conceptosTemp.push({
+                                        concepto: element,
+                                        importe: element.m_cImporte,
+                                        retiene: element.m_nIdImpuestoRetiene,
+                                        traslada: element.m_nIdImpuestoTraslada,
+                                        importeRet: element.m_cImporteRetiene,
+                                        importeIVA: element.m_cImporteIva,
+                                        rangoMinimo: element.m_xnRangoMinimo,
+                                        rangoMaximo: element.m_xnRangoMaximo,
+                                        nombreConcepto: element.m_sConcepto,
+                                        tipoCalculo: element.m_nIdTipoCalculo
+                                    })
+                                }
+                            }
+                            //Si el concepto es de entrega pasa directo a comparar el peso porque eso siempre se cobra
+                            if (concepto.m_nIdConcepto == 1 ){
+                                if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal ){
+                                    conceptosTemp.push({
+                                        concepto: element,
+                                        importe: element.m_cImporte,
+                                        retiene: element.m_nIdImpuestoRetiene,
+                                        traslada: element.m_nIdImpuestoTraslada,
+                                        importeRet: element.m_cImporteRetiene,
+                                        importeIVA: element.m_cImporteIva,
+                                        rangoMinimo: element.m_xnRangoMinimo,
+                                        rangoMaximo: element.m_xnRangoMaximo,
+                                        nombreConcepto: element.m_sConcepto,
+                                        tipoCalculo: element.m_nIdTipoCalculo
+                                    })
+                                }
+                            }
+                            //Si el embarque implica envio a domicilio y el concepto es el de envio a domicilio se calcula el peso
+                            if (concepto.m_nIdConcepto == 3 && !embarque.m_bEntregaEnSucursal){
+                                if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal ){
+                                    conceptosTemp.push({
+                                        concepto: element,
+                                        importe: element.m_cImporte,
+                                        retiene: element.m_nIdImpuestoRetiene,
+                                        traslada: element.m_nIdImpuestoTraslada,
+                                        importeRet: element.m_cImporteRetiene,
+                                        importeIVA: element.m_cImporteIva,
+                                        rangoMinimo: element.m_xnRangoMinimo,
+                                        rangoMaximo: element.m_xnRangoMaximo,
+                                        nombreConcepto: element.m_sConcepto,
+                                        tipoCalculo: element.m_nIdTipoCalculo
+                                    })
+                                }
+                            }
+                        }
+                    })
+
+                    //Esta de aqui es otra forma de hacerlo donde no se usa un for each anidadado. funcionan los dos.
+                    //Se busca si el concepto en curso es uno por defecto
+                    /*let concepto = respuestaConceptos.find(c => c.m_nIdConceptosFacturacion == element.m_nIdConceptosFacturacion)
+                    // console.log('concepto defecto encontrado: ', concepto)
+                    //Si es uno por defecto se checa los diferentes estados del embarque
+                    if (concepto != undefined){
+                        console.log('concepto defecto: ', concepto)
+                        //Si el embarque implica recolecta y el concepto por defecto es el de recolecta se calcula el rango maximo y minimo
+                        if (concepto.m_nIdConcepto == 2 && (embarque.m_bEsRecolecta == 1 || embarque.m_bEsRecolecta == true)){
+                            //Si el peso total de los paquetes es menor mayor al rango minimo  y menor al rango maximo se va mostrar en la lista
+                            if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal ){
+                                conceptosTemp.push({
+                                    concepto: element,
+                                    importe: element.m_cImporte,
+                                    retiene: element.m_nIdImpuestoRetiene,
+                                    traslada: element.m_nIdImpuestoTraslada,
+                                    importeRet: element.m_cImporteRetiene,
+                                    importeIVA: element.m_cImporteIva,
+                                    rangoMinimo: element.m_xnRangoMinimo,
+                                    rangoMaximo: element.m_xnRangoMaximo,
+                                    nombreConcepto: element.m_sConcepto,
+                                    tipoCalculo: element.m_nIdTipoCalculo
+                                })
+                            }
+                        }
+                        //Si el concepto es de entrega pasa directo a comparar el peso porque eso siempre se cobra
+                        if (concepto.m_nIdConcepto == 1 ){
+                            if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal ){
+                                conceptosTemp.push({
+                                    concepto: element,
+                                    importe: element.m_cImporte,
+                                    retiene: element.m_nIdImpuestoRetiene,
+                                    traslada: element.m_nIdImpuestoTraslada,
+                                    importeRet: element.m_cImporteRetiene,
+                                    importeIVA: element.m_cImporteIva,
+                                    rangoMinimo: element.m_xnRangoMinimo,
+                                    rangoMaximo: element.m_xnRangoMaximo,
+                                    nombreConcepto: element.m_sConcepto,
+                                    tipoCalculo: element.m_nIdTipoCalculo
+                                })
+                            }
+                        }
+                        //Si el embarque implica envio a domicilio y el concepto es el de envio a domicilio se calcula el peso
+                        if (concepto.m_nIdConcepto == 3 && !embarque.m_bEntregaEnSucursal){
+                            if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal ){
+                                conceptosTemp.push({
+                                    concepto: element,
+                                    importe: element.m_cImporte,
+                                    retiene: element.m_nIdImpuestoRetiene,
+                                    traslada: element.m_nIdImpuestoTraslada,
+                                    importeRet: element.m_cImporteRetiene,
+                                    importeIVA: element.m_cImporteIva,
+                                    rangoMinimo: element.m_xnRangoMinimo,
+                                    rangoMaximo: element.m_xnRangoMaximo,
+                                    nombreConcepto: element.m_sConcepto,
+                                    tipoCalculo: element.m_nIdTipoCalculo
+                                })
+                            }
+                        }
+                        console.log('Embarque es recoleccion: ', (embarque.m_bEsRecolecta == 1 || embarque.m_bEsRecolecta == true) && concepto.m_nIdConcepto == 1)
+                        console.log('Embarque es entrega: ', concepto.m_nIdConcepto == 2)
+                        console.log('Embarque es envio a domicilio', concepto.m_nIdConcepto == 3 && !embarque.m_bEntregaEnSucursal)
+                    }*/
+
                 })
                 ivaTraslada = getUniqueListBy(conceptosTemp, "traslada").map(i => i.traslada);
                 ivaRetiene = getUniqueListBy(conceptosTemp, "retiene").map(i => i.retiene);
@@ -1079,71 +1080,86 @@ function Guia(props) {
         })
     }
 
-    const limpiarCampos = () => {
-        setState(state => {
-            return {
-                ...state,
-                //Informacion general
-                idSucursal: '',
-                folioGuia: 0,
-                IdEmbarque: 0,
-                folioInforme: '',
-                tracking: '',
-                fecha: '',
-                idEstatusGuia: '',
-                idMoneda: 0,
-                tipoCambio: 0,
-                //Datos remitente
-                nombreRemitente: '',
-                RFCRemitente: '',
-                domicilioRemitente: '',
-                idCodigoPostalRemitente: '',
-                ciudadRemitente: '',
-                correoRemitente: '',
-                telefonoRemitente: '',
-                contactoRemitente: '',
-                origenRemitente: '',
-                idCiudadOrigen: '',
-                //Datos destinatario
-                sNombreDestinatario: '',
-                sRFCDestinatario: '',
-                sDomicilioDestinatario: '',
-                idCodigoPostalDestinatario: '',
-                ciudadDestinatario: '',
-                sCorreoDestinatario: '',
-                sTelefonoDestinatario: '',
-                sContactoDestinatario: '',
-                CiudadDestino: '',
-                //Paquetes
-                paquetes: [],
-                sobres: [],
-                //Detalles de facturacion
-                idTipoCobro: 0,
-                idTipoServicio: '',
-                ValorDeclarado: '',
-                //Conceptos de facturacion
-                arClsGuiaConceptos: [],
-                //Otros datos  no visuales
-                folioRecoleccion: '',
-                idGuia: '',
-                hora: '',
-                idEmbarque: '',
-                creadoEl: '',
-            }
+    const [dataTodosConceptosByEmbarque, setDataTodosConceptosByEmbarque] = useState([])
+
+    const obtenerConceptosByTarifa = (idTarifa) => {
+        console.log('idtarifa: ', idTarifa)
+        axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetById/${idTarifa}`, { headers }).then(tarifa => {
+            console.log(tarifa.data)
+            setDataTodosConceptosByEmbarque(tarifa.data.m_arrArConceptos)
+
         })
     }
 
-    /*async function getAllImpuestosRetiene() {
-        obtenerImpuestosTipo(2).then(respuesta => {
-            setDataImpuestoRetiene(respuesta.data)
-        });
-    };*/
-
-    /*async function getAllImpuestosTraslado() {
-        obtenerImpuestosTipo(1).then(respuesta => {
-            setDataImpuestoTraslado(respuesta.data)
-        });
-    };*/
+    const limpiarCamposAgregar = () => {
+        setState(state => {
+            return {
+                ...state,
+                //Informacion General
+                idSucursalAgregar: localStorage.getItem("Sucursal"),
+                folioGuia: "",
+                idEmbarque: 0,
+                folioInforme: "",
+                tracking: "",
+                fecha: "",
+                idEstatusGuia: '',
+                idMoneda: 0,
+                tipoCambio: 0,
+                //Remitente
+                nombreRemitente: "",
+                RFCRemitente: "",
+                domicilioRemitente: "",
+                codigoPostalRemitente: "",
+                ciudadRemitente: 0,
+                correoRemitente: "",
+                telefonoRemitente: "",
+                contactoRemitente: "",
+                origenRemitente: "",
+                //Destinatario
+                sNombreDestinatario: "",
+                sRFCDestinatario: "",
+                sDomicilioDestinatario: "",
+                codigoPostalDestinatario: "",
+                ciudadDestinatario: "",
+                sCorreoDestinatario: "",
+                sTelefonoDestinatario: "",
+                sContactoDestinatario: "",
+                CiudadDestino: "",
+                //Paquetes/sobres
+                paquetes: [
+                    {
+                        peso: "",
+                        largo: "",
+                        ancho: "",
+                        alto: "",
+                        volumen: "",
+                        tipoEmbalaje: "",
+                        valorDeclarado: "",
+                        descripcionPaquete: "",
+                        ctd: "",
+                        observacionesPaquete: "",
+                        id: ""
+                    },
+                ],
+                sobres: [
+                    {
+                        descripcionSobre: "",
+                        id: ""
+                    },
+                ],
+                //Detalle de faturación
+                idTipoCobro: 0,
+                idTipoServicio: '',
+                ValorDeclarado: "",
+                //Conceptos de facturacion
+                conceptosAdicionales: [],
+                ivaTraslada: [],
+                ivaRetiene: [],
+                //Aqui se almacenaran los conceptos de las guias que ya fueron creadas
+                arClsGuiaConceptos: [],
+            }
+        })
+    }
 
     async function getAllDataMoneda() {
         obtenerMonedas().then(respuesta => {
@@ -1163,34 +1179,11 @@ function Guia(props) {
         });
     };
 
-
     async function getAllDataEstatusGuia() {
         obtenerEstatusGuia().then(respuesta => {
             setDataEstatusGuia(respuesta.data)
         });
     };
-
-    /*async function getAllCiudades() {
-        obtenerCiudades().then(respuesta => {
-            setDataCiudad(respuesta.data)
-        });
-    };*/
-
-    /*async function cargaEmbarqueSucursal(valor) {
-        //showSuccess(valor);
-        setState({
-            ...state,
-            idSucursal: valor
-        });
-        //showSuccess (state.idSucursal +"-" +state.idMoneda);
-
-        if (valor == "" || valor == "0") return;
-        if (state.idMoneda == "" || state.idMoneda == "0") return;
-
-        obtenerEmbarqueMoneda(valor, state.idMoneda, state.idGuia).then(respuesta => {
-            setDataEmbarque(respuesta.data)
-        });
-    };*/
 
     function cargaEmbarqueModificar(valorSucursal, valorMoneda, valorGuia) {
         obtenerEmbarqueMoneda(valorSucursal, valorMoneda, valorGuia).then(respuesta => {
@@ -1205,27 +1198,13 @@ function Guia(props) {
             idMoneda: idMoneda
         });
 
-        if (state.idSucursal === "" || state.idSucursal === "0") return;
+        if (state.idSucursalAgregar === "" || state.idSucursalAgregar === "0") return;
         if (idMoneda === "" || idMoneda === "0") return;
 
-        obtenerEmbarqueMoneda(state.idSucursal, idMoneda, state.idGuia).then(respuesta => {
+        obtenerEmbarqueMoneda(state.idSucursalAgregar, idMoneda, state.idGuia).then(respuesta => {
             setDataEmbarque(respuesta.data)
         });
     };
-
-    //Recibe el id de embarque para obtener sus datos del servidor y mostrarlos en pantalla
-    function handleEmbarque(embarque) {
-        obtenerEmbarquesId(embarque).then(respuesta => {
-            setDataFromEmbarque(respuesta, dataConcepto)
-        });
-    };
-
-    //Recibe la guia para tomar el id del embarque y buscar sus datos para mostrarlos en pantalla
-    /*function handleEmbarqueModificar(guia) {
-        obtenerEmbarquesId(guia.data.m_nIdEmbarque).then(respuesta => {
-            setDataFromEmbarque(respuesta, dataConcepto)
-        });
-    };*/
 
     const headers = {
         'Content-Type': 'application/json'
@@ -1843,12 +1822,11 @@ function Guia(props) {
             <section className="main-container">
 
                 <div className="container-fluid">
-
-
+                    {/*tabs de pantalla*/}
                     <ul className="nav navStatica nav-tabs">
                         <li className={props.location.idEmbarque != undefined ? "" : "active"}>
-                            <a data-toggle="tab" href="#Listado">
-                                <i className="fa fa-list"/> Listado
+                            <a data-toggle="tab" href="#Listado" onClick={() => handleShowListado()}>
+                                <i className="fa fa-list" /> Listado
                             </a>
                         </li>
                         <li className={props.location.idEmbarque != undefined ? "active" : ""}>
@@ -2783,66 +2761,7 @@ function Guia(props) {
                                                 </div>
                                             </div>
                                         </div>
-
-
                                     </div>
-                                    {/*<div className="widget-wrap" id="paquetesSobres">
-                                        <div className="widget-header">
-                                            <div className="col-md-6">
-                                                <h2>Número de Paquetes</h2>
-                                            </div>
-                                            <div className="col-md-6">
-                                                <h2>Número de Sobres</h2>
-                                            </div>
-
-                                        </div>
-                                        <div className="row">
-                                            <div className="col-md-6"  >
-                                                <div className="widget-container">
-                                                    <div className="widget-content">
-                                                        <div className="row">
-                                                            <div className="col-md-12">
-                                                                <form className="j-forms">
-                                                                    <div className="form-content">
-
-
-                                                                        <div style={{ padding: "20px" }}>
-                                                                            <Carousel
-                                                                                className={classes.paqueteCarrusel}
-                                                                                widgets={[IndicatorDots, Buttons]}
-                                                                                frames={framesPaquete}
-                                                                            ></Carousel>
-                                                                        </div>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="col-md-6"  >
-                                                <div className="widget-container">
-                                                    <div className="widget-content">
-                                                        <div className="clone-widget">
-                                                            <form className="j-forms">
-                                                                <div className="form-content">
-
-
-                                                                    <div style={{ padding: "20px" }}>
-                                                                        <Carousel
-                                                                            className={classes.paqueteCarrusel}
-                                                                            widgets={[IndicatorDots, Buttons]}
-                                                                            frames={framesSobres}
-                                                                        ></Carousel>
-                                                                    </div>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>*/}
                                     <div className="widget-wrap" id="detalleFacturacion">
                                         <div className="widget-header">
 
@@ -3001,9 +2920,9 @@ function Guia(props) {
                                                                                           removeConcepto={removeConcepto}
                                                                                           ivaRetiene={state.ivaRetiene}
                                                                                           ivaTraslada={state.ivaTraslada}
-                                                                                          noMostrarRangos={false}>
-
-                                                                    </ConceptosAdicionales>
+                                                                                          noMostrarRangos={false}
+                                                                                          customConceptos={true}
+                                                                                          listadoConceptosAlternativos={dataTodosConceptosByEmbarque}/>
                                                                 </div>
 
                                                             }
@@ -3013,14 +2932,14 @@ function Guia(props) {
 
                                                     <div className="form-footer" className="col-md-12">
 
-                                                        <button
+                                                        {/*<button
                                                             href="#Listado"
                                                             role="tab"
                                                             data-toggle="tab"
                                                             className="btn btn-secondary secondary-btn"
                                                         >
                                                             Cancelar
-                                                        </button>
+                                                        </button>*/}
                                                         <button type="submit" className="btn btn-primary primary-btn"
                                                                 disabled={state.agregar == "Consultar"}>
                                                             Aceptar
@@ -3203,14 +3122,15 @@ function Guia(props) {
                                                     </div>
 
                                                     <div className="form-footer" className="col-md-12">
-                                                        <button
+                                                        {/*<button
                                                             href="#Listado"
                                                             role="tab"
                                                             data-toggle="tab"
                                                             className="btn btn-secondary secondary-btn"
+                                                            onClick={handleShowListado}
                                                         >
                                                             Cancelar
-                                                        </button>
+                                                        </button>*/}
                                                         <button
                                                             type="submit"
                                                             className="btn btn-primary primary-btn"

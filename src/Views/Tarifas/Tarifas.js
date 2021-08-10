@@ -209,7 +209,7 @@ class Tarifas extends Component {
             m_nFactorConversion: data.factorConversion,
             m_arrArCobros: data.tiposCobroSeleccionado.map(c => ({ m_nIdTipoCobro: c.m_nIdTipoCobro })),
             m_arrArServicios: data.tiposServicioSeleccionado.map(s => ({ m_nIdTipoServicio: s.m_nIdTipoServicio })),
-            m_arrArConceptos: data.conceptosAdicionales.map(c => ({
+            m_arrArConceptos: data.todosConceptos.map(c => ({
                 m_nIdConceptosFacturacion: c.idConcepto,
                 m_cImporte: c.importe,
                 m_nIdImpuestoTraslada: c.traslada,
