@@ -23,7 +23,7 @@ import Noty from 'noty';
 import {SignalCellularNoSimOutlined} from "@material-ui/icons";
 import ConceptosAdicionales from "./Tarifas/ConceptosAdicionales";
 import { Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, Select, Step, StepLabel, Stepper, TextField, Tooltip } from "@material-ui/core";
-import { dataGridLocaleText } from "../Constants";
+import {dataGridLocaleText, TICKET_ZABRA_TAMPLATE} from "../Constants";
 import { obtenerCiudades } from "../Util/Contexts/CiudadesContext";
 import { obtenerEstatusGuia } from "../Util/Contexts/EstatusContext";
 import { obtenerEmbarquesId, obtenerEmbarqueMoneda } from "../Util/Contexts/EmbarquesContext";
