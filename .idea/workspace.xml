@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Se arregló validacion para que mande a modificar o agregar respectivamente">
-      <change beforePath="$PROJECT_DIR$/src/Views/Zonas/Zonas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Zonas/Zonas.js" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Los conceptos de maniobra, entrega, y recoleccion ahora se pueden modificar">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Recoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Recoleccion.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,7 +21,7 @@
     </option>
   </component>
   <component name="Git.Merge.Settings">
-    <option name="BRANCH" value="support/general" />
+    <option name="BRANCH" value="bugfix/guia" />
     <option name="OPTIONS">
       <set>
         <option value="NO_FF" />
@@ -448,12 +449,12 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/Views/Recoleccion.js</url>
-          <line>2699</line>
+          <line>2787</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/Views/Recoleccion.js</url>
-          <line>1078</line>
+          <line>1165</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
