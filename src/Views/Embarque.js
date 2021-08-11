@@ -158,7 +158,7 @@ function Embarque(props) {
         fechaFinal: '',
         sucursalListado: '',
         estatusListado: '',
-        idEmbarque: '',
+        idEmbarque: 0,
         //==VARIABLES DE CANCELAR==
         // folioEmbarque: '', se usa en agregar tambien
         sucursalCancelacion: '',
@@ -903,19 +903,24 @@ function Embarque(props) {
                 showSuccess(err);
             });
     }
-
+    //Funcion para cancelar un embarque. Se usa en tab cancelar.
     const handleCancelar = (e) => {
         e.preventDefault();
 
-        var params = {
+        let params = {
             motivoCancelacion: state.motivoCancelacion,
             usuarioCancelacion: localStorage.getItem("UsuarioId"),
             fechaCancelacion: state.fechaCancelacion,
         };
         cancelarEmbarque(state, params).then((respuesta) => {
-            console.log(respuesta.data);
+            showSuccess(respuesta.data);
+            getAllEmbarque()
+            $('.nav-tabs li ').removeClass('active');
+            $('.nav-tabs li').eq(0).addClass('active');
+            $('.tab-content div ').removeClass('in show');
+            $('#Listado').addClass('in show');
         });
-        $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(2).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Cancelar').addClass('in show');
+
 
     };
 
@@ -1008,8 +1013,12 @@ function Embarque(props) {
         hours = hours ? hours : 12; // the hour '0' should be '12'
         minutes = minutes < 10 ? "0" + minutes : minutes;
         var strTime = hours + ":" + minutes + " " + ampm;
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(2).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Cancelar').addClass('in show');
+
         obtenerEmbarqueCancelado(state).then((respuesta) => {
-            console.log(respuesta.data.m_nSePuedeCancelar);
             setState({
                 ...state,
                 folioEmbarque: respuesta.data.m_nFolioEmbarque,
@@ -1033,8 +1042,6 @@ function Embarque(props) {
             });
             if (respuesta.data.m_nSePuedeCancelar === 0) {
                 showSuccess("Embarque no se puede cancelar");
-            } else {
-
             }
         });
     }
@@ -1044,21 +1051,7 @@ function Embarque(props) {
         setState(state => {
             return {
                 ...state,
-                //==VARIABLES DE LISTADO==
-                fechaInicial: '',
-                    fechaFinal: '',
-                sucursalListado: '',
-                estatusListado: '',
-                idEmbarque: '',
-                //==VARIABLES DE CANCELAR==
-                // folioEmbarque: '', se usa en agregar tambien
-                sucursalCancelacion: '',
-                fechaCancelacion: '',
-                usuario: localStorage.getItem("Usuario"),
-                // estatusEmbarque: '', se usa en agregar tambien
-                motivoCancelacion: '',
-
-                //==VARIABLES DE AGREGAR
+                 //==VARIABLES DE AGREGAR
                 //Informacion general
                 idSucursalAgregar: localStorage.getItem("Sucursal"),
                 folioRecoleccion: '',
@@ -1242,23 +1235,6 @@ function Embarque(props) {
         });
         $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
 
-    }
-
-    //Funcion para cancelar un embarque. Se usa en tab cancelar.
-    function handleShowCancelarConfirmacion() {
-        confirmAlert({
-            title: 'Confirmar Eliminar',
-            message: 'Está seguro de cancelar Embarque?',
-            buttons: [
-                {
-                    label: 'Si',
-                    onClick: () => handleCancelar
-                },
-                {
-                    label: 'No',
-                }
-            ]
-        })
     }
 
     function handleShowModificar(id) {
@@ -1641,6 +1617,7 @@ function Embarque(props) {
 
     async function getAllSucursales() {
         obtenerSucursales().then((respuesta) => {
+            console.log('sucursales: ', respuesta.data)
             setDataSucursal(respuesta.data);
         });
     }
@@ -3007,8 +2984,15 @@ function Embarque(props) {
                     <ul className="nav navStatica nav-tabs">
                         <li className={props.location.idRecoleccion != undefined ? "" : "active"}>
 
-                            <a onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
-                                <i className="fa fa-list" /> Listado
+                            <a onClick={(event) => {
+                                event.stopPropagation();
+                                setState({...state, agregar: "Agregar"});
+                                $('.nav-tabs li ').removeClass('active');
+                                $('.nav-tabs li').eq(0).addClass('active');
+                                $('.tab-content div ').removeClass('in show');
+                                $('#Listado').addClass('in show');
+                            }}>
+                                <i className="fa fa-list"/> Listado
                             </a>
                         </li>
 
@@ -4898,7 +4882,7 @@ function Embarque(props) {
                                 <div className="widget-container">
                                     <div className="widget-content">
                                         <div className="row">
-                                            <form className="j-forms" onSubmit={handleShowCancelarConfirmacion}>
+                                            <form className="j-forms" onSubmit={handleCancelar}>
                                                 <div className="form-content">
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
@@ -4973,11 +4957,12 @@ function Embarque(props) {
                                                     <div className="col-sm-12 col-md-12 col-lg-12 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense" label="Motivo"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                value={state.motivoCancelacion}
-                                                                name="motivoCancelacion"
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       value={state.motivoCancelacion}
+                                                                       name="motivoCancelacion"
+                                                                       required
                                                             />
                                                         </div>
                                                     </div>
