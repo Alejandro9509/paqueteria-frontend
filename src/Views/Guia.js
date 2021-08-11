@@ -765,6 +765,7 @@ function Guia(props) {
         var ivaTraslada = []
         var ivaRetiene = []
         conceptosAdicionales.push({
+            idConcepto : data.concepto.m_nIdConceptosFacturacion,
             concepto: data.concepto,
             importe: data.importe,
             retiene: data.retiene,
@@ -773,8 +774,10 @@ function Guia(props) {
             importeIVA: data.importeIVA,
             rangoMinimo: data.rangoMinimo,
             rangoMaximo: data.rangoMaximo,
-            nombreConcepto: data.nombreConcepto,
-            tipoCalculo: data.tipoCalculo
+            tipoCalculo: data.tipoCalculo,
+            nombreConcepto: data.concepto.m_sConcepto,
+            agregadoDesde: data.agregadoDesde
+
         })
         ivaTraslada = getUniqueListBy(conceptosAdicionales, "traslada").map(i => i.traslada);
         ivaRetiene = getUniqueListBy(conceptosAdicionales, "retiene").map(i => i.retiene);
@@ -945,6 +948,7 @@ function Guia(props) {
                 tarifa.data[0].m_arrArConceptos.forEach(element => {
                     conceptosTemp.push({
                         concepto: element,
+                        idConcepto: element.m_nIdConceptosFacturacion,
                         importe: element.m_cImporte,
                         retiene: element.m_nIdImpuestoRetiene,
                         traslada: element.m_nIdImpuestoTraslada,

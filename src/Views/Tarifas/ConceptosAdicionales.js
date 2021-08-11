@@ -164,6 +164,7 @@ class ConceptosAdicionales extends Component {
         const conceptoSelect = this.state.conceptos.find((c) => c.m_nIdConceptosFacturacion == concepto.idConcepto)
         console.log('concepto click', conceptoSelect)
         console.log('concepto completo', concepto)
+        console.log('conceptos ', this.state.conceptos)
         this.setState({
             concepto: conceptoSelect,
             importe: concepto.importe,
@@ -176,7 +177,7 @@ class ConceptosAdicionales extends Component {
     }
 
     render() {
-
+        console.log('conceptos a listar: ', this.props.conceptosAdicionales)
         return (
             <div>
                 <Dialog open={this.state.openDialog} onClose={() => this.setState({ openDialog: false })}>
