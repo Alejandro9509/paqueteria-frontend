@@ -117,7 +117,6 @@ class PaquetesList extends Component {
                 this.props.paquetesSeleccionadas.slice(selectedIndex + 1),
             );
         }
-        console.log(newSelected)
         this.props.selectPaquetes(newSelected)
     };
 
@@ -257,7 +256,7 @@ class PaquetesList extends Component {
                                         </TableCell>
                                         <TableCell align="left">{u.m_nFolioGuia}</TableCell>
                                         <TableCell align="left">Capacidad</TableCell>
-                                        <TableCell align="left">{u.m_nIdTIpoCobro === 3  ?  "Por cobrar destinatario" : u.m_nIdTIpoCobro === 5 ? "Por cobrar remitente" : "Pendiente de pago"}</TableCell>
+                                        <TableCell align="left">{u.m_nIdTIpoCobro === 3  ?  "Por cobrar destinatario" : u.m_nIdTIpoCobro === 5 ? "Por cobrar remitente" :  u.m_bPagado ? "Pagada" : "Pendiente de pago"}</TableCell>
                                         <TableCell align="left">{u.m_sNombreDestinatario}</TableCell>
                                         <TableCell align="left">{u.m_sDomicilioDestinatario}</TableCell>
                                         <TableCell align="left">Sin definir</TableCell>

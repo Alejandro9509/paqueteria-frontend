@@ -231,3 +231,11 @@ export function getUniqueListBy(arr, key) {
     return [...new Map(arr.map(item => [item[key], item])).values()]
 }
 
+export function encode_utf8(s) {
+    return unescape(encodeURIComponent(s));
+}
+
+export function decode_utf8(s) {
+    return decodeURIComponent(escape(s));
+}
+

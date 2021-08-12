@@ -127,10 +127,17 @@ class DetalleParadas extends Component {
                         </div>
                         <Grid container spacing={1}>
                             <Grid item md={6} sm={12}>
-                                <div style={{height: "100px", padding: "10px 0 10px 0"}}>
+                                <div style={{height: "150px", padding: "10px 0 10px 0"}}>
                                     <PieChart
-                                        lineWidth={15}
-                                        paddingAngle={5}
+                                        label={({ dataEntry }) => `${allGuias.length} \n Paradas`}
+                                        lineWidth={20}
+                                        totalValue={allGuias.length}
+                                        labelStyle={{
+                                            fontSize: '10px',
+                                            textAlign:"center",
+                                            fill: 'black',
+                                        }}
+                                        labelPosition={0}
                                         data={[
                                             {
                                                 title: '',
@@ -153,7 +160,7 @@ class DetalleParadas extends Component {
 
                             </Grid>
                             <Grid item md={6} sm={12}>
-                                <Grid container spacing={1} style={{paddingTop: "10px", paddingRight: "10px"}}>
+                                <Grid container spacing={1} justify={"space-between"} style={{paddingTop: "10px", paddingRight: "10px", height:"100%"}}>
                                     <Grid item sm={12}>
                                         <div style={{
                                             backgroundColor: "#F5E23E",
@@ -161,8 +168,7 @@ class DetalleParadas extends Component {
                                             width: "100%",
                                             textAlign: "center"
                                         }}>
-                                            <strong>Pendientes </strong> {allGuias.filter(g => g.m_nIdEstatusGuia !== 8 && g.m_nIdEstatusGuia !== 7).length} de {totalPaquetes}
-                                            <strong>{parseInt((allGuias.filter(g => g.m_nIdEstatusGuia !== 8 && g.m_nIdEstatusGuia !== 7).length / totalPaquetes) * 100)}%</strong>
+                                            <strong>Pendientes </strong> {allGuias.filter(g => g.m_nIdEstatusGuia !== 8 && g.m_nIdEstatusGuia !== 7).length} de {totalPaquetes} <strong>{parseInt((allGuias.filter(g => g.m_nIdEstatusGuia !== 8 && g.m_nIdEstatusGuia !== 7).length / totalPaquetes) * 100)}%</strong>
                                         </div>
                                     </Grid>
                                     <Grid item sm={12}>
@@ -172,8 +178,7 @@ class DetalleParadas extends Component {
                                             width: "100%",
                                             textAlign: "center"
                                         }}>
-                                            <strong>Exitosas </strong> {allGuias.filter(g => g.m_nIdEstatusGuia === 7).length} de {totalPaquetes}
-                                            <strong> {parseInt((allGuias.filter(g => g.m_nIdEstatusGuia === 7).length / totalPaquetes) * 100)}%</strong>
+                                            <strong>Exitosas </strong> {allGuias.filter(g => g.m_nIdEstatusGuia === 7).length} de {totalPaquetes} <strong> {parseInt((allGuias.filter(g => g.m_nIdEstatusGuia === 7).length / totalPaquetes) * 100)}%</strong>
                                         </div>
                                     </Grid>
                                     <Grid item sm={12}>
@@ -183,8 +188,7 @@ class DetalleParadas extends Component {
                                             width: "100%",
                                             textAlign: "center"
                                         }}>
-                                            <strong>Fallidas </strong> {allGuias.filter(g => g.m_nIdEstatusGuia === 8).length} de {totalPaquetes}
-                                            <strong>{parseInt((allGuias.filter(g => g.m_nIdEstatusGuia === 8).length / totalPaquetes) * 100)}%</strong>
+                                            <strong>Fallidas </strong> {allGuias.filter(g => g.m_nIdEstatusGuia === 8).length} de {totalPaquetes} <strong>{parseInt((allGuias.filter(g => g.m_nIdEstatusGuia === 8).length / totalPaquetes) * 100)}%</strong>
                                         </div>
                                     </Grid>
                                 </Grid>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useMemo} from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
 
@@ -8,14 +8,14 @@ import {Tab, Tabs, Box, InputAdornment} from '@material-ui/core';
 import ConceptosAdicionalesManiobra from './Tarifas/ConceptosAdicionalesManiobra';
 import ConceptosAdicionalesEntrega from './Tarifas/ConceptosAdicionalesEntrega';
 import ConceptosAdicionalesRecoleccion from './Tarifas/ConceptosAdicionalesRecoleccion';
-import Carousel, {propTypes} from "re-carousel";
+import Carousel, { propTypes } from "re-carousel";
 import IndicatorDots from "../Util/Dots";
 import Buttons from "../Util/CarruselButtons";
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import * as XLSX from 'xlsx';
-import {useTable, useFilters, useAsyncDebounce, useSortBy} from 'react-table'
+import { useTable, useFilters, useAsyncDebounce, useSortBy } from 'react-table'
 import $ from 'jquery';
-import {getUniqueListBy, remove_array_element} from "../Util/Util";
+import { getUniqueListBy, remove_array_element } from "../Util/Util";
 import Barra from "../Util/jquery-barcode"
 import {DataGrid} from '@material-ui/data-grid';
 
@@ -54,6 +54,9 @@ function showSuccess(mensaje) {
 
 window.jQuery = window.$ = $;
 var EB = window.EB;
+var BrowserPrint = window.BrowserPrint;
+var selected_device;
+var devices = [];
 const styles = {
     paqueteCarrusel: {
         height: "170px !important",
@@ -606,11 +609,38 @@ function Guia(props) {
         });
     };
 
-    function printTicket() {
-        EB = window.EB
+    useEffect(value => {
+        BrowserPrint.getDefaultDevice("printer", function(device)
+        {
+
+            //Add device to list of devices and to html select element
+            selected_device = device;
+            devices.push(device);
+
+            //Discover any other devices available to the application
+            BrowserPrint.getLocalDevices(function(device_list){
+                for(var i = 0; i < device_list.length; i++)
+                {
+                    //Add device to list of devices and to html select element
+                    var device = device_list[i];
+                    if(!selected_device || device.uid != selected_device.uid)
+                    {
+                        devices.push(device);
+                    }
+                }
+
+            }, function(){alert("Error getting local devices")},"printer");
+
+        }, function(error){
+            alert(error);
+        })
+    },[])
+
+    function printTicket(guia) {
+       /* EB = window.EB
         EB.PrinterZebra.searchPrinters({
             "deviceAddress": "192.148.1.143",
-            "devicePort": 9600,
+            "devicePort": 9100,
             "connectionType": EB.Printer.CONNECTION_TYPE_TCP
         }, function (cb) {
 
@@ -621,7 +651,15 @@ function Guia(props) {
 
                 })
             })
-        })
+        })*/
+       guia.m_arrClsDetalle.forEach(p => {
+           console.log(TICKET_ZABRA_TAMPLATE(guia, p))
+           selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p), undefined, errorCallback);
+       })
+
+    }
+    var errorCallback = function(errorMessage){
+        alert("Error: " + errorMessage);
     }
 
     const columns = React.useMemo(() => [
@@ -647,7 +685,7 @@ function Guia(props) {
                         </Tooltip>
                         <Tooltip title="iMPRIMIR">
                             <a href="#" className="btn btn-default btn-xs"
-                               onClick={() => printTicket()}><i className="zmdi zmdi-print"
+                               onClick={() => printTicket(row.row)}><i className="zmdi zmdi-print"
                                                                 style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
@@ -716,7 +754,6 @@ function Guia(props) {
             return;
         }
         getAllData()
-        getConceptosDefecto()
         getAllDataSucursal()
         getAllDataMoneda()
         getAllDataTipoCobro()
@@ -3054,16 +3091,16 @@ function Guia(props) {
                                                         <label className="label">Fecha</label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                       onChange={handleChange}
-                                                                       className="form-control"
-                                                                       type="text"
-                                                                       InputLabelProps={{
-                                                                           shrink: true,
-                                                                       }}
-                                                                       value={state.fechaCancelado}
-                                                                       id="fechaCancelado"
-                                                                       name="fechaCancelado"
-                                                                       readOnly
+                                                                onChange={handleChange}
+                                                                className="form-control"
+                                                                type="text"
+                                                                InputLabelProps={{
+                                                                    shrink: true,
+                                                                }}
+                                                                value={state.fechaCancelado}
+                                                                id="fechaCancelado"
+                                                                name="fechaCancelado"
+                                                                readOnly
                                                             />
                                                         </div>
                                                     </div>

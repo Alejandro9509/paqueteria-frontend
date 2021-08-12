@@ -2,7 +2,7 @@ import React, {Component, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import Cabecera from "../../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
-import {MapContainer, Polyline, Popup, TileLayer} from "react-leaflet";
+import {MapContainer, Polyline, Popup, TileLayer, Marker} from "react-leaflet";
 import {arrayGuias, arrayPonts} from "../../Util/Data";
 import {
     Chip,
@@ -40,7 +40,9 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import Buttons from "../../Util/CarruselButtons";
-import {reasignarGuia} from "../../Util/Contexts/GuiaContext"; // Import css
+import {reasignarGuia} from "../../Util/Contexts/GuiaContext";
+import L from "leaflet";
+import MarkerImage from "../../iconos/Mapa/sucursalMarcador.png"; // Import css
 
 
 function showSuccess(mensaje) {
@@ -51,6 +53,16 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
+const MarkerIcon = new L.Icon({
+    iconUrl: MarkerImage,
+    iconRetinaUrl: MarkerImage,
+    iconAnchor: null,
+    popupAnchor: null,
+    shadowUrl: null,
+    shadowSize: null,
+    shadowAnchor: null,
+    iconSize: new L.Point(20, 20),
+});
 
 var actualizar = true
 
@@ -72,7 +84,7 @@ class UltimaMilla extends Component {
             filtros: {},
             modoEdicion: true,
             ultimaMilla: null,
-            openDialog:false,
+            openDialog: false,
 
         }
         this.generarRuta = this.generarRuta.bind(this)
@@ -134,8 +146,10 @@ class UltimaMilla extends Component {
 
     async changeMapLocation(location) {
         searchLocationWeb(location.m_sMunicipio, location.m_sCalle).then((data) => {
-            this.setState({lat: data.y, lng: data.x})
-            this.state.map.setView([data.y, data.x], 15)
+            if (data) {
+                this.setState({lat: data.y, lng: data.x})
+                this.state.map.setView([data.y, data.x], 15)
+            }
         })
 
     }
@@ -199,11 +213,11 @@ class UltimaMilla extends Component {
         this.setState({fullScreen: false})
     }
 
-    selectGuiaReasignar(idParadaFuente, idGuia){
-        this.setState({openDialog: true,paradaFuente: idParadaFuente, idGuia: idGuia })
+    selectGuiaReasignar(idParadaFuente, idGuia) {
+        this.setState({openDialog: true, paradaFuente: idParadaFuente, idGuia: idGuia})
     }
 
-    reasignarParada(event){
+    reasignarParada(event) {
         event.preventDefault()
         reasignarGuia(this.state.unidadSeleccionada, this.state.paradaFuente, this.state.idGuia).then((data) => {
             showSuccess("Se realizó el cambio de operador")
@@ -216,7 +230,7 @@ class UltimaMilla extends Component {
             <div>
                 {
                     this.state.openDialog &&
-                    <Dialog open={this.state.openDialog} onClose={() =>this.setState({openDialog: false})}>
+                    <Dialog open={this.state.openDialog} onClose={() => this.setState({openDialog: false})}>
                         <DialogTitle>Reasignar Paquete</DialogTitle>
 
                         <DialogContent>
@@ -295,6 +309,11 @@ class UltimaMilla extends Component {
                                     )
                                 }
                                 {
+                                    this.state.tour &&
+                                    <Marker key={"sucursal"} icon={MarkerIcon}
+                                            position={[this.state.lat, this.state.lng]}></Marker>
+                                }
+                                {
                                     this.state.ultimaMilla && this.state.ultimaMilla.m_arrClsParadaUltimaMilla.map(t =>
                                         <TourUltimaMilla data={t} sucursal={this.state}/>
                                     )
@@ -302,7 +321,8 @@ class UltimaMilla extends Component {
 
                                 {
                                     !this.state.modoEdicion && (this.state.fullScreen === false || this.state.cronogramaFullscreen) &&
-                                    <Cronograma selectGuiaReasignar={this.selectGuiaReasignar} tour={this.state.ultimaMilla}/>
+                                    <Cronograma selectGuiaReasignar={this.selectGuiaReasignar}
+                                                tour={this.state.ultimaMilla}/>
                                 }
                                 {
                                     !this.state.modoEdicion && (this.state.fullScreen === false || this.state.chatFullscreen) &&
@@ -310,7 +330,7 @@ class UltimaMilla extends Component {
                                 }
                                 {
                                     !this.state.modoEdicion && (this.state.fullScreen === false || this.state.resumenFullscreen) &&
-                                    <DetalleParadas  tour={this.state.ultimaMilla}/>
+                                    <DetalleParadas tour={this.state.ultimaMilla}/>
                                 }
                                 <IconButton
                                     onClick={() => this.state.fullScreen ? this.closeFullscreen() : this.openFullscreen()}
