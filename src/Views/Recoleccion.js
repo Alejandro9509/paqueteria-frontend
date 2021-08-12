@@ -374,7 +374,6 @@ function Recoleccion() {
     useEffect( value => {
         if (state.ciudadRemitente != ""){
             obtenerCodigosPostalesPorCiudad(state.ciudadRemitente).then((respuesta) => {
-                console.log(respuesta.data)
                 if (respuesta.data.length > 0){
                     setDataCodigosPostalesRemitente(respuesta.data);
                 }
@@ -386,7 +385,6 @@ function Recoleccion() {
     useEffect( value => {
         if (state.ciudadDestinatario != ""){
             obtenerCodigosPostalesPorCiudad(state.ciudadDestinatario).then((respuesta) => {
-                console.log(respuesta.data)
                 if (respuesta.data.length > 0){
                     setDataCodigosPostalesDestinatario(respuesta.data);
                 }
@@ -415,6 +413,13 @@ function Recoleccion() {
             });
         }
     }, [state.ciudadEntrega])
+
+    useEffect( value => {
+        if (state.tipoUnidad != 0 && state.tipoUnidad != ''){
+            // console.log('tipo Unidad select: ', state.tipoUnidad)
+            getAllUnidades(state.tipoUnidad.m_nIdTipoUnidad);
+        }
+    }, [state.tipoUnidad])
 
     useEffect((value) => {
         if (
@@ -740,8 +745,6 @@ function Recoleccion() {
                 openDialog: false
             });
         }
-
-        console.log(dobleClick);
     }
 
     //funcion para cancelar un embarque. Se usa en tab cancelar.
@@ -1647,7 +1650,6 @@ function Recoleccion() {
 
     function getAllSucursales() {
         obtenerSucursales().then((respuesta) => {
-            console.log('sucursales', respuesta.data)
             setDataSucursal(respuesta.data);
         });
     }
@@ -1764,17 +1766,21 @@ function Recoleccion() {
 
     function getAllTipoUnidad() {
         obtenerTipoUnidades().then((respuesta) => {
-            setDataTipoUnidad(respuesta.data);
-            getAllUnidades(1);
+            if (respuesta.data == "Vacio"){
+                setDataTipoUnidad([])
+            }else{
+                setDataTipoUnidad(respuesta.data)
+            }
+            // getAllUnidades(1);
         });
     }
 
     function getAllUnidades(id) {
+
         obtenerUnidadesTipo(id).then((respuesta) => {
-            console.log(respuesta.data);
+            console.log('unidades listado: ',respuesta);
             setDataUnidad(respuesta.data);
         });
-        console.log(dataUnidad);
     }
 
     const handleUpload = (e) => {
@@ -4899,11 +4905,14 @@ function Recoleccion() {
                                                                     <div className="input">
                                                                         <Autocomplete
                                                                             freeSolo
-                                                                            onChange={(event, newValue) =>
+                                                                            onChange={(event, newValue) => {
+                                                                                console.log('tipoUnidad select: ', newValue)
                                                                                 setState({
                                                                                     ...state,
                                                                                     tipoUnidad: newValue,
                                                                                 })
+                                                                            }
+
                                                                             }
                                                                             value={state.tipoUnidad}
                                                                             id="tipoUnidad"
