@@ -162,8 +162,6 @@ function Guia(props) {
         conceptosAdicionales: [],
         ivaTraslada: [],
         ivaRetiene: [],
-        //Aqui se almacenaran los conceptos de las guias que ya fueron creadas
-        arClsGuiaConceptos: [],
 
         //VARIABLES PARA TAB IMPRIMIR (creo)
         paquetesI: [{
@@ -373,28 +371,14 @@ function Guia(props) {
 
     function handleShowModificar(id) {
         obtenerGuiaId(id).then(respuesta => {
-            console.log('Modifica guia:')
-            console.log(respuesta.data)
-            //Primero se obtienen las monedas que corresponden a la sucursal
-            //Despues se obtienen los datos del embarque al que pertenece la guia para mostrar los datos
             cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)
-            handleEmbarque(respuesta.data.m_nIdEmbarque)
             setState(state => {
                 return {
                     ...state,
                     agregar: "Modificar",
-                    idTipoServicio: respuesta.data.m_nIdTipoServicio,
-                    idEstatusGuia: respuesta.data.m_nIdEstatusGuia,
-
-                    fecha: respuesta.data.m_dFecha,
-                    folioGuia: respuesta.data.m_nFolioGuia,
-                    idGuia: respuesta.data.m_nIdGuia,
-                    tracking: respuesta.data.m_nTracking,
-                    conceptosAdicionales: respuesta.data.m_arClsGuiaConceptos,
-                    creadoEl: respuesta.data.m_dCreadoEl,
                 }
-            })
-
+            });
+            setDataGuiaParaConsultarModificar(respuesta)
         }).catch(function (err) {
             console.log(err.data)
         });
@@ -402,30 +386,120 @@ function Guia(props) {
 
     function handleShowConsultar(id) {
         obtenerGuiaId(id).then(respuesta => {
-            console.log('Consulta guia:')
-            console.log(respuesta.data)
             cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)
-            handleEmbarque(respuesta.data.m_nIdEmbarque)
-
+            // handleEmbarque(respuesta.data.m_nIdEmbarque)
             setState(state => {
                 return {
                     ...state,
                     agregar: "Consultar",
-                    idTipoServicio: respuesta.data.m_nIdTipoServicio,
-                    idEstatusGuia: respuesta.data.m_nIdEstatusGuia,
-
-                    fecha: respuesta.data.m_dFecha,
-                    folioGuia: respuesta.data.m_nFolioGuia,
-                    idGuia: respuesta.data.m_nIdGuia,
-                    tracking: respuesta.data.m_nTracking,
-                    conceptosAdicionales: respuesta.data.m_arClsGuiaConceptos,
-                    creadoEl: respuesta.data.m_dCreadoEl,
-
                 }
             });
+            setDataGuiaParaConsultarModificar(respuesta)
+
         }).catch(function (err) {
             console.log(err.data)
         });
+    }
+
+    const setDataGuiaParaConsultarModificar = (respuesta) => {
+        console.log('Guia datos:',respuesta.data )
+        console.log('Tracking', respuesta.data.m_nTracking)
+        console.log('m_nFolioGuia', respuesta.data.m_nFolioGuia)
+
+        const paquetes = []
+        const sobres = []
+        const {m_arrClsDetalle} = respuesta.data
+
+        m_arrClsDetalle.forEach((item) => {
+            if (item.m_nTipo == 1){
+                sobres.push(item)
+            }else if (item.m_nTipo == 2){
+                paquetes.push(item)
+            }
+        })
+
+        paquetes.forEach((paq) => {
+            paq["peso"] = paq.m_xPeso
+            paq["largo"] = paq.m_xLargo
+            paq["ancho"] = paq.m_xAncho
+            paq["alto"] = paq.m_xAlto
+            paq["volumen"] = paq.m_xVolumen
+            paq["tipoEmbalaje"] = paq.m_nTipo
+            paq["valorDeclarado"] = paq.m_cValorDeclarado
+            paq["descripcionPaquete"] = paq.m_sDescripcion
+            paq["observacionesPaquete"] = paq.m_sObservaciones
+            paq["id"] = paq.m_nIdEmbarqueDetalle
+        })
+
+        sobres.forEach((sob) => {
+            sob["descripcionSobre"] = sob.m_sDescripcion
+            sob["id"] = sob.m_nIdEmbarqueDetalle
+        })
+
+        obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalRemitente).then(respuesta => {
+            setState(state => {
+                return {
+                    ...state,
+                    codigoPostalRemitente: respuesta.data.m_sCP,
+                }
+            })
+        })
+
+        obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalDestinatario).then(respuesta => {
+            setState(state => {
+                return {
+                    ...state,
+                    codigoPostalDestinatario: respuesta.data.m_sCP
+                }
+            })
+        })
+
+        setState(state => {
+            return {
+                ...state,
+                idEmbarque: respuesta.data.m_nIdEmbarque,
+                idSucursalAgregar: respuesta.data.IdSucursal,
+                idMoneda: respuesta.data.m_nIdMoneda,
+                tipoCambio: respuesta.data.m_cTIpoCambio,
+                folioInforme: respuesta.data.m_nFolioInforme,
+                tracking: respuesta.data.m_nTracking,
+                folioGuia: respuesta.data.m_nFolioGuia,
+                idGuia: respuesta.data.m_nIdGuia,
+                IdEmbarque: respuesta.data.m_nIdEmbarque,
+                idEstatusGuia: respuesta.data.m_nIdEstatusGuia,
+                fecha: respuesta.data.m_dFecha,
+                creadoEl: respuesta.data.m_dCreadoEl,
+
+                nombreRemitente: respuesta.data.m_sNOmbreRemitente,
+                RFCRemitente: respuesta.data.m_sRFCRemitente,
+                domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
+                ciudadRemitente: respuesta.data.m_sCiudadRemitente,
+                correoRemitente: respuesta.data.m_sCorreoRemitente,
+                telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
+                contactoRemitente: respuesta.data.m_sContactoRemitente,
+                origenRemitente: respuesta.data.m_sCiudadOrigen,
+
+                sNombreDestinatario: respuesta.data.m_sNombreDestinatario,
+                sRFCDestinatario: respuesta.data.m_sRFCDestinatario,
+                sDomicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
+                ciudadDestinatario: respuesta.data.m_sCIudadDestinatario,
+                sCorreoDestinatario: respuesta.data.m_sCorreoDestinatario,
+                sTelefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
+                sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
+                CiudadDestino: respuesta.data.m_sCiudadDestino,
+
+                paquetes: paquetes,
+                sobres: sobres,
+
+                ValorDeclarado: respuesta.data.m_cValorDeclarado,
+                idTipoServicio: respuesta.data.m_nIdTipoServicio,
+                idTipoCobro: respuesta.data.m_nIdTIpoCobro,
+
+                conceptosAdicionales: respuesta.data.m_arClsGuiaConceptos,
+
+
+            }
+        })
     }
 
     //Muestra la pestaña de cancelar
@@ -910,8 +984,6 @@ function Guia(props) {
 
                 folioGuia: respuesta.data.m_nFolioGuia,
                 idGuia: respuesta.data.m_nIdGuia,
-                tracking: respuesta.data.m_nTracking,
-                arClsGuiaConceptos: respuesta.data.m_arClsGuiaConceptos,
                 creadoEl: respuesta.data.m_dCreadoEl,
 
             }
@@ -1185,8 +1257,6 @@ function Guia(props) {
                 conceptosAdicionales: [],
                 ivaTraslada: [],
                 ivaRetiene: [],
-                //Aqui se almacenaran los conceptos de las guias que ya fueron creadas
-                arClsGuiaConceptos: [],
             }
         })
     }
@@ -2117,6 +2187,9 @@ function Guia(props) {
                                                                            id="folioGuia"
                                                                            name="folioGuia"
                                                                            disabled="disabled"
+                                                                           InputLabelProps={{
+                                                                               shrink: true,
+                                                                           }}
                                                                 />
                                                             </div>
                                                         </div>
@@ -2185,6 +2258,9 @@ function Guia(props) {
                                                                            id="tracking"
                                                                            name="tracking"
                                                                            disabled="disabled"
+                                                                           InputLabelProps={{
+                                                                               shrink: true,
+                                                                           }}
                                                                 />
                                                             </div>
                                                         </div>
