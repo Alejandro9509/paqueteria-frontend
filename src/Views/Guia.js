@@ -165,8 +165,6 @@ function Guia(props) {
         conceptosAdicionales: [],
         ivaTraslada: [],
         ivaRetiene: [],
-        //Aqui se almacenaran los conceptos de las guias que ya fueron creadas
-        arClsGuiaConceptos: [],
 
         //VARIABLES PARA TAB IMPRIMIR (creo)
         paquetesI: [{
@@ -220,7 +218,6 @@ function Guia(props) {
 
     const handleAceptar = (e) => {
         e.preventDefault()
-        console.log(state.conceptosAdicionales)
         let params = {
             "TIpoCambio": state.tipoCambio,
             "FolioGuia": state.folioGuia,
@@ -264,8 +261,6 @@ function Guia(props) {
                 console.log(err)
                 showSuccess(err)
             });
-            /*showSuccess('Guia agregada')
-            limpiarCamposAgregar()*/
         } else {
             modificarGuia(state.idGuia, params).then(respuesta => {
                 showSuccess(respuesta.data)
@@ -376,28 +371,14 @@ function Guia(props) {
 
     function handleShowModificar(id) {
         obtenerGuiaId(id).then(respuesta => {
-            console.log('Modifica guia:')
-            console.log(respuesta.data)
-            //Primero se obtienen las monedas que corresponden a la sucursal
-            //Despues se obtienen los datos del embarque al que pertenece la guia para mostrar los datos
             cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)
-            handleEmbarque(respuesta.data.m_nIdEmbarque)
             setState(state => {
                 return {
                     ...state,
                     agregar: "Modificar",
-                    idTipoServicio: respuesta.data.m_nIdTipoServicio,
-                    idEstatusGuia: respuesta.data.m_nIdEstatusGuia,
-
-                    fecha: respuesta.data.m_dFecha,
-                    folioGuia: respuesta.data.m_nFolioGuia,
-                    idGuia: respuesta.data.m_nIdGuia,
-                    tracking: respuesta.data.m_nTracking,
-                    conceptosAdicionales: respuesta.data.m_arClsGuiaConceptos,
-                    creadoEl: respuesta.data.m_dCreadoEl,
                 }
-            })
-
+            });
+            setDataGuiaParaConsultarModificar(respuesta)
         }).catch(function (err) {
             console.log(err.data)
         });
@@ -405,30 +386,135 @@ function Guia(props) {
 
     function handleShowConsultar(id) {
         obtenerGuiaId(id).then(respuesta => {
-            console.log('Consulta guia:')
-            console.log(respuesta.data)
             cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)
-            handleEmbarque(respuesta.data.m_nIdEmbarque)
-
+            // handleEmbarque(respuesta.data.m_nIdEmbarque)
             setState(state => {
                 return {
                     ...state,
                     agregar: "Consultar",
-                    idTipoServicio: respuesta.data.m_nIdTipoServicio,
-                    idEstatusGuia: respuesta.data.m_nIdEstatusGuia,
-
-                    fecha: respuesta.data.m_dFecha,
-                    folioGuia: respuesta.data.m_nFolioGuia,
-                    idGuia: respuesta.data.m_nIdGuia,
-                    tracking: respuesta.data.m_nTracking,
-                    conceptosAdicionales: respuesta.data.m_arClsGuiaConceptos,
-                    creadoEl: respuesta.data.m_dCreadoEl,
-
                 }
             });
+            setDataGuiaParaConsultarModificar(respuesta)
+
         }).catch(function (err) {
             console.log(err.data)
         });
+    }
+
+    const setDataGuiaParaConsultarModificar = (respuesta) => {
+        console.log('Guia datos:',respuesta.data )
+
+        const paquetes = []
+        const sobres = []
+        const {m_arrClsDetalle, m_arClsGuiaConceptos} = respuesta.data
+
+        m_arrClsDetalle.forEach((item) => {
+            if (item.m_nTipo == 1){
+                sobres.push(item)
+            }else if (item.m_nTipo == 2){
+                paquetes.push(item)
+            }
+        })
+
+        paquetes.forEach((paq) => {
+            paq["peso"] = paq.m_xPeso
+            paq["largo"] = paq.m_xLargo
+            paq["ancho"] = paq.m_xAncho
+            paq["alto"] = paq.m_xAlto
+            paq["volumen"] = paq.m_xVolumen
+            paq["tipoEmbalaje"] = paq.m_nTipo
+            paq["valorDeclarado"] = paq.m_cValorDeclarado
+            paq["descripcionPaquete"] = paq.m_sDescripcion
+            paq["observacionesPaquete"] = paq.m_sObservaciones
+            paq["id"] = paq.m_nIdEmbarqueDetalle
+        })
+
+        sobres.forEach((sob) => {
+            sob["descripcionSobre"] = sob.m_sDescripcion
+            sob["id"] = sob.m_nIdEmbarqueDetalle
+        })
+
+        obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalRemitente).then(respuesta => {
+            setState(state => {
+                return {
+                    ...state,
+                    codigoPostalRemitente: respuesta.data.m_sCP,
+                }
+            })
+        })
+
+        obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalDestinatario).then(respuesta => {
+            setState(state => {
+                return {
+                    ...state,
+                    codigoPostalDestinatario: respuesta.data.m_sCP
+                }
+            })
+        })
+        const conceptosAdicionales = []
+
+        m_arClsGuiaConceptos.forEach((element) => {
+            conceptosAdicionales.push({
+                concepto: element,
+                idConcepto: element.m_nIdConceptosFacturacion,
+                importe: element.m_cImporte,
+                retiene: element.m_nIdImpuestoRetiene,
+                traslada: element.m_nIdImpuestoTraslada,
+                importeRet: element.m_cImporteRetiene,
+                importeIVA: element.m_cImporteIva,
+                rangoMinimo: element.m_xnRangoMinimo,
+                rangoMaximo: element.m_xnRangoMaximo,
+                nombreConcepto: element.m_sConcepto,
+                tipoCalculo: element.m_nIdTipoCalculo
+            })
+        })
+
+        setState(state => {
+            return {
+                ...state,
+                idEmbarque: respuesta.data.m_nIdEmbarque,
+                idSucursalAgregar: respuesta.data.IdSucursal,
+                idMoneda: respuesta.data.m_nIdMoneda,
+                tipoCambio: respuesta.data.m_cTIpoCambio,
+                folioInforme: respuesta.data.m_nFolioInforme,
+                tracking: respuesta.data.m_nTracking,
+                folioGuia: respuesta.data.m_nFolioGuia,
+                idGuia: respuesta.data.m_nIdGuia,
+                IdEmbarque: respuesta.data.m_nIdEmbarque,
+                idEstatusGuia: respuesta.data.m_nIdEstatusGuia,
+                fecha: respuesta.data.m_dFecha,
+                creadoEl: respuesta.data.m_dCreadoEl,
+
+                nombreRemitente: respuesta.data.m_sNOmbreRemitente,
+                RFCRemitente: respuesta.data.m_sRFCRemitente,
+                domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
+                ciudadRemitente: respuesta.data.m_sCiudadRemitente,
+                correoRemitente: respuesta.data.m_sCorreoRemitente,
+                telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
+                contactoRemitente: respuesta.data.m_sContactoRemitente,
+                origenRemitente: respuesta.data.m_sCiudadOrigen,
+
+                sNombreDestinatario: respuesta.data.m_sNombreDestinatario,
+                sRFCDestinatario: respuesta.data.m_sRFCDestinatario,
+                sDomicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
+                ciudadDestinatario: respuesta.data.m_sCIudadDestinatario,
+                sCorreoDestinatario: respuesta.data.m_sCorreoDestinatario,
+                sTelefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
+                sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
+                CiudadDestino: respuesta.data.m_sCiudadDestino,
+
+                paquetes: paquetes,
+                sobres: sobres,
+
+                ValorDeclarado: respuesta.data.m_cValorDeclarado,
+                idTipoServicio: respuesta.data.m_nIdTipoServicio,
+                idTipoCobro: respuesta.data.m_nIdTIpoCobro,
+
+                conceptosAdicionales: conceptosAdicionales,
+
+
+            }
+        })
     }
 
     //Muestra la pestaña de cancelar
@@ -802,6 +888,7 @@ function Guia(props) {
         var ivaTraslada = []
         var ivaRetiene = []
         conceptosAdicionales.push({
+            idConcepto : data.concepto.m_nIdConceptosFacturacion,
             concepto: data.concepto,
             importe: data.importe,
             retiene: data.retiene,
@@ -810,8 +897,10 @@ function Guia(props) {
             importeIVA: data.importeIVA,
             rangoMinimo: data.rangoMinimo,
             rangoMaximo: data.rangoMaximo,
-            nombreConcepto: data.nombreConcepto,
-            tipoCalculo: data.tipoCalculo
+            tipoCalculo: data.tipoCalculo,
+            nombreConcepto: data.concepto.m_sConcepto,
+            agregadoDesde: data.agregadoDesde
+
         })
         ivaTraslada = getUniqueListBy(conceptosAdicionales, "traslada").map(i => i.traslada);
         ivaRetiene = getUniqueListBy(conceptosAdicionales, "retiene").map(i => i.retiene);
@@ -866,37 +955,28 @@ function Guia(props) {
     const setDataFromEmbarque = (respuesta, respuestaConceptos) => {
         console.log('Embarque datos:')
         console.log(respuesta.data)
-        const paquetesTemp = [];
-        const sobresTemp = [];
         let valorDeclaradoTotal = 0
 
         const {m_arrPaquetes: paquetes, m_arrSobres: sobres} = respuesta.data
 
         paquetes.forEach((paq) => {
-            if (!(paq.m_nIdEmbarqueDetalle === "" || paq.m_nIdEmbarqueDetalle === "0")) {
-                paquetesTemp.push({
-                    peso: paq.m_xPeso,
-                    largo: paq.m_xLargo,
-                    ancho: paq.m_xAncho,
-                    alto: paq.m_xAlto,
-                    volumen: paq.m_xVolumen,
-                    tipoEmbalaje: paq.m_nTipo,
-                    valorDeclarado: paq.m_cValorDeclarado,
-                    descripcionPaquete: paq.m_sDescripcion,
-                    id: paq.m_nIdEmbarqueDetalle,
-                    ctd: paq.ctd
-                })
-                valorDeclaradoTotal = valorDeclaradoTotal + paq.m_cValorDeclarado
-            }
-        })
+            paq["peso"] = paq.m_xPeso
+            paq["largo"] = paq.m_xLargo
+            paq["ancho"] = paq.m_xAncho
+            paq["alto"] = paq.m_xAlto
+            paq["volumen"] = paq.m_xVolumen
+            paq["tipoEmbalaje"] = paq.m_nTipo
+            paq["valorDeclarado"] = paq.m_cValorDeclarado
+            paq["descripcionPaquete"] = paq.m_sDescripcion
+            paq["observacionesPaquete"] = paq.m_sObservaciones
+            paq["id"] = paq.m_nIdEmbarqueDetalle
+            valorDeclaradoTotal = valorDeclaradoTotal + paq.m_cValorDeclarado
+
+            })
 
         sobres.forEach((sob) => {
-            if (!(sob.m_nIdEmbarqueDetalle === "" || sob.m_nIdEmbarqueDetalle === "0")) {
-                sobresTemp.push({
-                    descripcionSobre: sob.m_sDescripcion,
-                    id: sob.m_nIdEmbarqueDetalle
-                })
-            }
+            sob["descripcionSobre"] = sob.m_sDescripcion
+            sob["id"] = sob.m_nIdEmbarqueDetalle
         })
 
         obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalRemitente).then(respuesta => {
@@ -907,6 +987,7 @@ function Guia(props) {
                 }
             })
         })
+
         obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalDestinatario).then(respuesta => {
             setState(state => {
                 return {
@@ -924,7 +1005,7 @@ function Guia(props) {
                 idMoneda: respuesta.data.m_nIdMoneda,
                 tipoCambio: respuesta.data.m_cTIpoCambio,
                 idTipoCobro: respuesta.data.m_nIdTIpoCobro,
-                folioInforme: respuesta.data.m_nFolioInforme != "" ? respuesta.data.m_nFolioInforme : '',
+                folioInforme: respuesta.data.m_nFolioInforme,
 
                 nombreRemitente: respuesta.data.m_sNOmbreRemitente,
                 RFCRemitente: respuesta.data.m_sRFCRemitente,
@@ -944,160 +1025,52 @@ function Guia(props) {
                 sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
                 CiudadDestino: respuesta.data.m_sCiudadDestino,
 
-                paquetes: paquetesTemp,
-                sobres: sobresTemp,
+                paquetes: paquetes,
+                sobres: sobres,
 
                 IdEmbarque: respuesta.data.m_nIdEmbarque,
                 ValorDeclarado: valorDeclaradoTotal,
 
                 folioGuia: respuesta.data.m_nFolioGuia,
                 idGuia: respuesta.data.m_nIdGuia,
-                tracking: respuesta.data.m_nTracking,
-                arClsGuiaConceptos: respuesta.data.m_arClsGuiaConceptos,
                 creadoEl: respuesta.data.m_dCreadoEl,
 
             }
         })
-        obtenerTarifasPorEmbarque(respuesta.data.m_nIdEmbarque, respuestaConceptos, paquetesTemp, respuesta.data)
+
+        obtenerTarifasPorEmbarque(respuesta.data.m_nIdEmbarque, respuestaConceptos, paquetes, respuesta.data)
     }
+
+    const [dataTodosConceptosByEmbarque, setDataTodosConceptosByEmbarque] = useState([])
 
     const obtenerTarifasPorEmbarque = (idEmbarque, respuestaConceptos,paquetesTemp, embarque) => {
         const conceptosTemp = []
         let ivaTraslada = []
         let ivaRetiene = []
         axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${idEmbarque}`, { headers }).then(tarifa => {
-            obtenerConceptosByTarifa(tarifa.data[0].m_nIdTarifa)
             console.log('tarifas by embarque')
             console.log(tarifa.data)
             let pesoTotal = 0
             paquetesTemp.forEach((p) => {
                 pesoTotal = pesoTotal + p.peso
             })
+            obtenerConceptosByTarifa(tarifa.data[0].m_nIdTarifa, pesoTotal)
             if (tarifa.data.length !== 0) {
                 //se recorre el listado de conceptos de la tarifa del embarque
                 tarifa.data[0].m_arrArConceptos.forEach(element => {
-                    //Se recorre el arreglo de conceptos por defecto para ver si el concepto de tarifa es uno de ellos y buscar a cual corresponde
-                    console.log('conceptos defecto: ', respuestaConceptos)
-                    respuestaConceptos.forEach(concepto => {
-                        if (concepto.m_nIdConceptosFacturacion == element.m_nIdConceptosFacturacion){
-                            //Si el embarque implica recolecta y el concepto por defecto es el de recolecta se calcula el rango maximo y minimo
-                            if (concepto.m_nIdConcepto == 2 && (embarque.m_bEsRecolecta == 1 || embarque.m_bEsRecolecta == true)){
-                                //Si el peso total de los paquetes es menor mayor al rango minimo  y menor al rango maximo se va mostrar en la lista
-                                if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal ){
-                                    conceptosTemp.push({
-                                        concepto: element,
-                                        importe: element.m_cImporte,
-                                        retiene: element.m_nIdImpuestoRetiene,
-                                        traslada: element.m_nIdImpuestoTraslada,
-                                        importeRet: element.m_cImporteRetiene,
-                                        importeIVA: element.m_cImporteIva,
-                                        rangoMinimo: element.m_xnRangoMinimo,
-                                        rangoMaximo: element.m_xnRangoMaximo,
-                                        nombreConcepto: element.m_sConcepto,
-                                        tipoCalculo: element.m_nIdTipoCalculo
-                                    })
-                                }
-                            }
-                            //Si el concepto es de entrega pasa directo a comparar el peso porque eso siempre se cobra
-                            if (concepto.m_nIdConcepto == 1 ){
-                                if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal ){
-                                    conceptosTemp.push({
-                                        concepto: element,
-                                        importe: element.m_cImporte,
-                                        retiene: element.m_nIdImpuestoRetiene,
-                                        traslada: element.m_nIdImpuestoTraslada,
-                                        importeRet: element.m_cImporteRetiene,
-                                        importeIVA: element.m_cImporteIva,
-                                        rangoMinimo: element.m_xnRangoMinimo,
-                                        rangoMaximo: element.m_xnRangoMaximo,
-                                        nombreConcepto: element.m_sConcepto,
-                                        tipoCalculo: element.m_nIdTipoCalculo
-                                    })
-                                }
-                            }
-                            //Si el embarque implica envio a domicilio y el concepto es el de envio a domicilio se calcula el peso
-                            if (concepto.m_nIdConcepto == 3 && !embarque.m_bEntregaEnSucursal){
-                                if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal ){
-                                    conceptosTemp.push({
-                                        concepto: element,
-                                        importe: element.m_cImporte,
-                                        retiene: element.m_nIdImpuestoRetiene,
-                                        traslada: element.m_nIdImpuestoTraslada,
-                                        importeRet: element.m_cImporteRetiene,
-                                        importeIVA: element.m_cImporteIva,
-                                        rangoMinimo: element.m_xnRangoMinimo,
-                                        rangoMaximo: element.m_xnRangoMaximo,
-                                        nombreConcepto: element.m_sConcepto,
-                                        tipoCalculo: element.m_nIdTipoCalculo
-                                    })
-                                }
-                            }
-                        }
+                    conceptosTemp.push({
+                        concepto: element,
+                        idConcepto: element.m_nIdConceptosFacturacion,
+                        importe: element.m_cImporte,
+                        retiene: element.m_nIdImpuestoRetiene,
+                        traslada: element.m_nIdImpuestoTraslada,
+                        importeRet: element.m_cImporteRetiene,
+                        importeIVA: element.m_cImporteIva,
+                        rangoMinimo: element.m_xnRangoMinimo,
+                        rangoMaximo: element.m_xnRangoMaximo,
+                        nombreConcepto: element.m_sConcepto,
+                        tipoCalculo: element.m_nIdTipoCalculo
                     })
-
-                    //Esta de aqui es otra forma de hacerlo donde no se usa un for each anidadado. funcionan los dos.
-                    //Se busca si el concepto en curso es uno por defecto
-                    /*let concepto = respuestaConceptos.find(c => c.m_nIdConceptosFacturacion == element.m_nIdConceptosFacturacion)
-                    // console.log('concepto defecto encontrado: ', concepto)
-                    //Si es uno por defecto se checa los diferentes estados del embarque
-                    if (concepto != undefined){
-                        console.log('concepto defecto: ', concepto)
-                        //Si el embarque implica recolecta y el concepto por defecto es el de recolecta se calcula el rango maximo y minimo
-                        if (concepto.m_nIdConcepto == 2 && (embarque.m_bEsRecolecta == 1 || embarque.m_bEsRecolecta == true)){
-                            //Si el peso total de los paquetes es menor mayor al rango minimo  y menor al rango maximo se va mostrar en la lista
-                            if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal ){
-                                conceptosTemp.push({
-                                    concepto: element,
-                                    importe: element.m_cImporte,
-                                    retiene: element.m_nIdImpuestoRetiene,
-                                    traslada: element.m_nIdImpuestoTraslada,
-                                    importeRet: element.m_cImporteRetiene,
-                                    importeIVA: element.m_cImporteIva,
-                                    rangoMinimo: element.m_xnRangoMinimo,
-                                    rangoMaximo: element.m_xnRangoMaximo,
-                                    nombreConcepto: element.m_sConcepto,
-                                    tipoCalculo: element.m_nIdTipoCalculo
-                                })
-                            }
-                        }
-                        //Si el concepto es de entrega pasa directo a comparar el peso porque eso siempre se cobra
-                        if (concepto.m_nIdConcepto == 1 ){
-                            if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal ){
-                                conceptosTemp.push({
-                                    concepto: element,
-                                    importe: element.m_cImporte,
-                                    retiene: element.m_nIdImpuestoRetiene,
-                                    traslada: element.m_nIdImpuestoTraslada,
-                                    importeRet: element.m_cImporteRetiene,
-                                    importeIVA: element.m_cImporteIva,
-                                    rangoMinimo: element.m_xnRangoMinimo,
-                                    rangoMaximo: element.m_xnRangoMaximo,
-                                    nombreConcepto: element.m_sConcepto,
-                                    tipoCalculo: element.m_nIdTipoCalculo
-                                })
-                            }
-                        }
-                        //Si el embarque implica envio a domicilio y el concepto es el de envio a domicilio se calcula el peso
-                        if (concepto.m_nIdConcepto == 3 && !embarque.m_bEntregaEnSucursal){
-                            if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal ){
-                                conceptosTemp.push({
-                                    concepto: element,
-                                    importe: element.m_cImporte,
-                                    retiene: element.m_nIdImpuestoRetiene,
-                                    traslada: element.m_nIdImpuestoTraslada,
-                                    importeRet: element.m_cImporteRetiene,
-                                    importeIVA: element.m_cImporteIva,
-                                    rangoMinimo: element.m_xnRangoMinimo,
-                                    rangoMaximo: element.m_xnRangoMaximo,
-                                    nombreConcepto: element.m_sConcepto,
-                                    tipoCalculo: element.m_nIdTipoCalculo
-                                })
-                            }
-                        }
-                        console.log('Embarque es recoleccion: ', (embarque.m_bEsRecolecta == 1 || embarque.m_bEsRecolecta == true) && concepto.m_nIdConcepto == 1)
-                        console.log('Embarque es entrega: ', concepto.m_nIdConcepto == 2)
-                        console.log('Embarque es envio a domicilio', concepto.m_nIdConcepto == 3 && !embarque.m_bEntregaEnSucursal)
-                    }*/
 
                 })
                 ivaTraslada = getUniqueListBy(conceptosTemp, "traslada").map(i => i.traslada);
@@ -1117,13 +1090,154 @@ function Guia(props) {
         })
     }
 
-    const [dataTodosConceptosByEmbarque, setDataTodosConceptosByEmbarque] = useState([])
+    //contiene la logica de fos formas de filtrar los conceptos de una tarifa para dejar solo los que son por defecto...
+    // y el peso de paquetes esté dentro del rango. Esta logica fue la base para hacer la que está en los servicios web
+    const filtrarConceptosPorDefecto = (todosConceptos, conceptosDefecto, pesoTotal, embarque) => {
+        const conceptosTemp = []
+        let ivaTraslada = []
+        let ivaRetiene = []
+        //Logica para filtrar guias y solo dejar las que son por defecto y el peso está dentro del rango
+        todosConceptos.forEach( element => {
+            conceptosDefecto.forEach(concepto => {
+                if (concepto.m_nIdConceptosFacturacion == element.m_nIdConceptosFacturacion){
+                    //Si el embarque implica recolecta y el concepto por defecto es el de recolecta se calcula el rango maximo y minimo
+                    if (concepto.m_nIdConcepto == 2 && (embarque.m_bEsRecolecta == 1 || embarque.m_bEsRecolecta == true)){
+                        //Si el peso total de los paquetes es menor mayor al rango minimo  y menor al rango maximo se va mostrar en la lista
+                        if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal ){
+                            conceptosTemp.push({
+                                concepto: element,
+                                importe: element.m_cImporte,
+                                retiene: element.m_nIdImpuestoRetiene,
+                                traslada: element.m_nIdImpuestoTraslada,
+                                importeRet: element.m_cImporteRetiene,
+                                importeIVA: element.m_cImporteIva,
+                                rangoMinimo: element.m_xnRangoMinimo,
+                                rangoMaximo: element.m_xnRangoMaximo,
+                                nombreConcepto: element.m_sConcepto,
+                                tipoCalculo: element.m_nIdTipoCalculo
+                            })
+                        }
+                    }
+                    //Si el concepto es de entrega pasa directo a comparar el peso porque eso siempre se cobra
+                    if (concepto.m_nIdConcepto == 1 ){
+                        if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal ){
+                            conceptosTemp.push({
+                                concepto: element,
+                                importe: element.m_cImporte,
+                                retiene: element.m_nIdImpuestoRetiene,
+                                traslada: element.m_nIdImpuestoTraslada,
+                                importeRet: element.m_cImporteRetiene,
+                                importeIVA: element.m_cImporteIva,
+                                rangoMinimo: element.m_xnRangoMinimo,
+                                rangoMaximo: element.m_xnRangoMaximo,
+                                nombreConcepto: element.m_sConcepto,
+                                tipoCalculo: element.m_nIdTipoCalculo
+                            })
+                        }
+                    }
+                    //Si el embarque implica envio a domicilio y el concepto es el de envio a domicilio se calcula el peso
+                    if (concepto.m_nIdConcepto == 3 && !embarque.m_bEntregaEnSucursal){
+                        if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal ){
+                            conceptosTemp.push({
+                                concepto: element,
+                                importe: element.m_cImporte,
+                                retiene: element.m_nIdImpuestoRetiene,
+                                traslada: element.m_nIdImpuestoTraslada,
+                                importeRet: element.m_cImporteRetiene,
+                                importeIVA: element.m_cImporteIva,
+                                rangoMinimo: element.m_xnRangoMinimo,
+                                rangoMaximo: element.m_xnRangoMaximo,
+                                nombreConcepto: element.m_sConcepto,
+                                tipoCalculo: element.m_nIdTipoCalculo
+                            })
+                        }
+                    }
+                }
+            })
+        })
 
-    const obtenerConceptosByTarifa = (idTarifa) => {
-        console.log('idtarifa: ', idTarifa)
+        //Esta de aqui es otra forma de hacerlo donde no se usa un for each anidadado. funcionan los dos.
+        //Se busca si el concepto en curso es uno por defecto
+
+        //Si es uno por defecto se checa los diferentes estados del embarque
+        todosConceptos.forEach( element => {
+            let concepto = conceptosDefecto.find(c => c.m_nIdConceptosFacturacion == element.m_nIdConceptosFacturacion)
+            if (concepto != undefined) {
+                console.log('concepto defecto: ', concepto)
+                //Si el embarque implica recolecta y el concepto por defecto es el de recolecta se calcula el rango maximo y minimo
+                if (concepto.m_nIdConcepto == 2 && (embarque.m_bEsRecolecta == 1 || embarque.m_bEsRecolecta == true)) {
+                    //Si el peso total de los paquetes es menor mayor al rango minimo  y menor al rango maximo se va mostrar en la lista
+                    if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal) {
+                        conceptosTemp.push({
+                            concepto: element,
+                            importe: element.m_cImporte,
+                            retiene: element.m_nIdImpuestoRetiene,
+                            traslada: element.m_nIdImpuestoTraslada,
+                            importeRet: element.m_cImporteRetiene,
+                            importeIVA: element.m_cImporteIva,
+                            rangoMinimo: element.m_xnRangoMinimo,
+                            rangoMaximo: element.m_xnRangoMaximo,
+                            nombreConcepto: element.m_sConcepto,
+                            tipoCalculo: element.m_nIdTipoCalculo
+                        })
+                    }
+                }
+                //Si el concepto es de entrega pasa directo a comparar el peso porque eso siempre se cobra
+                if (concepto.m_nIdConcepto == 1) {
+                    if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal) {
+                        conceptosTemp.push({
+                            concepto: element,
+                            importe: element.m_cImporte,
+                            retiene: element.m_nIdImpuestoRetiene,
+                            traslada: element.m_nIdImpuestoTraslada,
+                            importeRet: element.m_cImporteRetiene,
+                            importeIVA: element.m_cImporteIva,
+                            rangoMinimo: element.m_xnRangoMinimo,
+                            rangoMaximo: element.m_xnRangoMaximo,
+                            nombreConcepto: element.m_sConcepto,
+                            tipoCalculo: element.m_nIdTipoCalculo
+                        })
+                    }
+                }
+                //Si el embarque implica envio a domicilio y el concepto es el de envio a domicilio se calcula el peso
+                if (concepto.m_nIdConcepto == 3 && !embarque.m_bEntregaEnSucursal) {
+                    if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal) {
+                        conceptosTemp.push({
+                            concepto: element,
+                            importe: element.m_cImporte,
+                            retiene: element.m_nIdImpuestoRetiene,
+                            traslada: element.m_nIdImpuestoTraslada,
+                            importeRet: element.m_cImporteRetiene,
+                            importeIVA: element.m_cImporteIva,
+                            rangoMinimo: element.m_xnRangoMinimo,
+                            rangoMaximo: element.m_xnRangoMaximo,
+                            nombreConcepto: element.m_sConcepto,
+                            tipoCalculo: element.m_nIdTipoCalculo
+                        })
+                    }
+                }
+                console.log('Embarque es recoleccion: ', (embarque.m_bEsRecolecta == 1 || embarque.m_bEsRecolecta == true) && concepto.m_nIdConcepto == 1)
+                console.log('Embarque es entrega: ', concepto.m_nIdConcepto == 2)
+                console.log('Embarque es envio a domicilio', concepto.m_nIdConcepto == 3 && !embarque.m_bEntregaEnSucursal)
+            }
+        })
+        ivaTraslada = getUniqueListBy(conceptosTemp, "traslada").map(i => i.traslada);
+        ivaRetiene = getUniqueListBy(conceptosTemp, "retiene").map(i => i.retiene);
+    }
+
+    const obtenerConceptosByTarifa = (idTarifa, pesoTotal) => {
+        console.log('pesoTotal: ', pesoTotal)
+        const conceptosDentroRango = []
         axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetById/${idTarifa}`, { headers }).then(tarifa => {
             console.log(tarifa.data)
-            setDataTodosConceptosByEmbarque(tarifa.data.m_arrArConceptos)
+
+            tarifa.data.m_arrArConceptos.forEach( element => {
+                if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal) {
+                    conceptosDentroRango.push(element)
+                }
+            })
+
+            setDataTodosConceptosByEmbarque(conceptosDentroRango)
 
         })
     }
@@ -1192,8 +1306,6 @@ function Guia(props) {
                 conceptosAdicionales: [],
                 ivaTraslada: [],
                 ivaRetiene: [],
-                //Aqui se almacenaran los conceptos de las guias que ya fueron creadas
-                arClsGuiaConceptos: [],
             }
         })
     }
@@ -2124,6 +2236,9 @@ function Guia(props) {
                                                                            id="folioGuia"
                                                                            name="folioGuia"
                                                                            disabled="disabled"
+                                                                           InputLabelProps={{
+                                                                               shrink: true,
+                                                                           }}
                                                                 />
                                                             </div>
                                                         </div>
@@ -2192,6 +2307,9 @@ function Guia(props) {
                                                                            id="tracking"
                                                                            name="tracking"
                                                                            disabled="disabled"
+                                                                           InputLabelProps={{
+                                                                               shrink: true,
+                                                                           }}
                                                                 />
                                                             </div>
                                                         </div>

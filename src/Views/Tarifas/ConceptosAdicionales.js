@@ -77,32 +77,11 @@ class ConceptosAdicionales extends Component {
 
     getAllConceptos() {
         obtenerConceptosFacturacion().then(respuesta => {
-            /*if (this.props.conceptosAdicionales.length == 0){
-                if (this.props.edit) {
-                    this.props.select.m_arrArConceptos.forEach(element => {
-                        this.props.removeConcepto(element)
-                    })
-                    this.props.select.m_arrArConceptos.forEach(element => {
-                        this.props.addConcepto({
-                            concepto: respuesta.data.find(c => c.m_nIdConceptosFacturacion === element.m_nIdConceptosFacturacion),
-                            importe: element.m_cImporte,
-                            traslada: element.m_nIdImpuestoTraslada,
-                            importeIVA: element.m_cImporteIva,
-                            retiene: element.m_nIdImpuestoRetiene,
-                            importeRet: element.m_cImporteRetiene,
-                            nombreConcepto: element.m_sConcepto,
-                            rangoMinimo: element.m_xnRangoMinimo,
-                            rangoMaximo: element.m_xnRangoMaximo,
-                            agregadoDesde: element.m_nIdAgregadoDesde
-                        })
-                    })
-                }
-            }*/
             this.setState({ conceptos: respuesta.data })
+            console.log('conceptos facturacion', respuesta.data)
         });
     }
-
-
+    
     handleChange(event) {
         event.preventDefault()
         if (event.target.name === "importe") {
@@ -114,6 +93,15 @@ class ConceptosAdicionales extends Component {
         }
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const {customConceptos, listadoConceptosAlternativos} = this.props
+        if (listadoConceptosAlternativos != prevProps.listadoConceptosAlternativos){
+            if (customConceptos){
+                this.setState({ conceptos: listadoConceptosAlternativos })
+            }
+        }
+
+    }
 
     componentWillUnmount() {
 
@@ -171,11 +159,12 @@ class ConceptosAdicionales extends Component {
     }
 
     handleRowClick(event, index, concepto) {
-        const {conceptosAdicionales,removeConcepto} = this.props
+        const {removeConcepto} = this.props
         removeConcepto(index)
         const conceptoSelect = this.state.conceptos.find((c) => c.m_nIdConceptosFacturacion == concepto.idConcepto)
         console.log('concepto click', conceptoSelect)
         console.log('concepto completo', concepto)
+        console.log('conceptos ', this.state.conceptos)
         this.setState({
             concepto: conceptoSelect,
             importe: concepto.importe,
@@ -188,9 +177,7 @@ class ConceptosAdicionales extends Component {
     }
 
     render() {
-
-        const {removeConcepto} = this.props
-
+        console.log('conceptos a listar: ', this.props.conceptosAdicionales)
         return (
             <div>
                 <Dialog open={this.state.openDialog} onClose={() => this.setState({ openDialog: false })}>
@@ -229,11 +216,12 @@ class ConceptosAdicionales extends Component {
                                         console.log(newValue)
                                         this.setState({
                                             concepto: newValue,
+                                            importe: newValue.m_cImporte,
                                             nombreConcepto: newValue.m_sConcepto,
-                                            importeRet: "0",
-                                            retiene: 0,
-                                            traslada: 0,
-                                            importeIVA: "0"
+                                            importeRet: newValue.m_cImporteRetiene,
+                                            retiene: newValue.m_nIdImpuestoRetiene,
+                                            traslada: newValue.m_nIdImpuestoTraslada,
+                                            importeIVA: newValue.m_cImporteIva
                                         })
                                     }
                                     }

@@ -4,22 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se agrego el import faltante">
-      <change afterPath="$PROJECT_DIR$/public/js/BrowserPrint-3.0.216.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/eb.printer.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/eb.printerzebra.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/iconos/Mapa/sucursalMarcador.png" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Se corrigieron datos al agregar embarque">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Constants/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Constants/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Util/Contexts/UltimaMillaContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/UltimaMillaContext.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Util/Util.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Util.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/DetalleParadas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/DetalleParadas.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/FiltersMap.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/FiltersMap.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/PaquetesList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/PaquetesList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/Tour.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/Tour.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/UltimaMilla.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/UltimaMilla.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,7 +62,6 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/public/js" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -87,11 +73,7 @@
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/public/js" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/iconos/Mapa" />
       <recent name="$PROJECT_DIR$/src/iconos/Menu/IconoUltimaMilla" />
       <recent name="$PROJECT_DIR$/src/Components/Map" />
     </key>
@@ -120,7 +102,7 @@
       </list>
     </option>
   </component>
-  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -391,14 +373,28 @@
       <option name="project" value="LOCAL" />
       <updated>1628399351166</updated>
     </task>
-    <task id="LOCAL-00036" summary="Se agrego el import faltante">
-      <created>1628617486466</created>
+    <task id="LOCAL-00036" summary="*Se arregló problema par que se vea el listado de unidades por id de tipo">
+      <created>1628749514212</created>
       <option name="number" value="00036" />
       <option name="presentableId" value="LOCAL-00036" />
       <option name="project" value="LOCAL" />
-      <updated>1628617486467</updated>
+      <updated>1628749514212</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="*Se arregló problema que impedia seleccionar unidad">
+      <created>1628751683982</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1628751683982</updated>
+    </task>
+    <task id="LOCAL-00038" summary="*Se corrigieron datos al agregar embarque">
+      <created>1628794437290</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1628794437290</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -409,9 +405,7 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
@@ -441,10 +435,9 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se arregló problema de duplicidad de registros y la funcion modificar ya funciona" />
-    <MESSAGE value="Ajustes" />
     <MESSAGE value="Se autocompleta la informacion de remitente y destinatario al seleccionar" />
     <MESSAGE value="Se agregó validacion para hacer la fecha de vencimiento obligatoria" />
     <MESSAGE value="Se arreglo relleno de datos al modificar sucursal" />
@@ -467,49 +460,17 @@
     <MESSAGE value="*Las localidades ya se acumulan" />
     <MESSAGE value="*Limpieza de código" />
     <MESSAGE value="*Se arregló validacion para que mande a modificar o agregar respectivamente" />
-    <MESSAGE value="Se agrego el import faltante" />
-    <option name="LAST_COMMIT_MESSAGE" value="Se agrego el import faltante" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="2250" y="-221" key="CommitChangelistDialog2" timestamp="1628617486288">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state x="2250" y="-221" key="CommitChangelistDialog2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1628617486288" />
-    <state width="2539" height="487" key="GridCell.Tab.0.bottom" timestamp="1628707317781">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state width="2539" height="487" key="GridCell.Tab.0.bottom/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1628707317781" />
-    <state width="1419" height="284" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1628625277753" />
-    <state width="2539" height="487" key="GridCell.Tab.0.center" timestamp="1628707317780">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state width="2539" height="487" key="GridCell.Tab.0.center/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1628707317780" />
-    <state width="1419" height="284" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1628625277752" />
-    <state width="2539" height="487" key="GridCell.Tab.0.left" timestamp="1628707317778">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state width="2539" height="487" key="GridCell.Tab.0.left/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1628707317774" />
-    <state width="1419" height="284" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1628625277751" />
-    <state width="2539" height="487" key="GridCell.Tab.0.right" timestamp="1628707317781">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state width="2539" height="487" key="GridCell.Tab.0.right/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1628707317781" />
-    <state width="1419" height="284" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1628625277753" />
-    <state x="2320" y="-83" key="Vcs.Push.Dialog.v2" timestamp="1628617490698">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state x="2320" y="-83" key="Vcs.Push.Dialog.v2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1628617490698" />
-    <state x="2386" y="-63" width="816" height="550" key="find.popup" timestamp="1628807133826">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state x="2386" y="-63" width="816" height="550" key="find.popup/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1628807133826" />
+    <MESSAGE value="*Se arregló problema par que se vea el listado de unidades por id de tipo" />
+    <MESSAGE value="*Se arregló problema que impedia seleccionar unidad" />
+    <MESSAGE value="*Se corrigieron datos al agregar embarque" />
+    <option name="LAST_COMMIT_MESSAGE" value="*Se corrigieron datos al agregar embarque" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/Views/Recoleccion.js</url>
-          <line>2927</line>
+          <line>2733</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
