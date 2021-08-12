@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Se arregló problema que impedia seleccionar unidad">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Util/Contexts/TipoUnidadContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/TipoUnidadContext.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Recoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Recoleccion.js" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Se corrigieron datos al agregar embarque">
+      <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -388,7 +386,14 @@
       <option name="project" value="LOCAL" />
       <updated>1628751683982</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="*Se corrigieron datos al agregar embarque">
+      <created>1628794437290</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1628794437290</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -432,7 +437,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Ajustes" />
     <MESSAGE value="Se autocompleta la informacion de remitente y destinatario al seleccionar" />
     <MESSAGE value="Se agregó validacion para hacer la fecha de vencimiento obligatoria" />
     <MESSAGE value="Se arreglo relleno de datos al modificar sucursal" />
@@ -457,7 +461,8 @@
     <MESSAGE value="*Se arregló validacion para que mande a modificar o agregar respectivamente" />
     <MESSAGE value="*Se arregló problema par que se vea el listado de unidades por id de tipo" />
     <MESSAGE value="*Se arregló problema que impedia seleccionar unidad" />
-    <option name="LAST_COMMIT_MESSAGE" value="*Se arregló problema que impedia seleccionar unidad" />
+    <MESSAGE value="*Se corrigieron datos al agregar embarque" />
+    <option name="LAST_COMMIT_MESSAGE" value="*Se corrigieron datos al agregar embarque" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
